@@ -1,53 +1,55 @@
-# Database dependencies
-sqlalchemy>=2.0.0
-psycopg2-binary>=2.9.0
-
-# Neon database support (remove non-existent package)
-# neon-cli>=0.4.0
-
-# AI/ML dependencies  
-openai>=1.0.0
-google-generativeai>=0.3.0
-
-# Web framework (likely needed for authentication system)
+# Web Framework
 fastapi>=0.100.0
 uvicorn[standard]>=0.20.0
 
-# Data validation and serialization
+# Database and ORM
+sqlalchemy>=2.0.0
+psycopg2-binary>=2.9.0
+alembic>=1.11.0
+
+# Data Validation and Serialization
 pydantic>=2.0.0
 pydantic-settings>=2.0.0
-
-# Environment variable management
-python-dotenv>=1.0.0
-
-# Development dependencies
-pytest>=7.0.0
-pytest-asyncio>=0.21.0
-black>=23.0.0
-isort>=5.12.0
-flake8>=6.0.0
 
 # Security
 python-jose[cryptography]>=3.3.0
 passlib[bcrypt]>=1.7.4
+python-dotenv>=1.0.0
 
-# Optional: for better JSON handling
+# AI and LLM Interaction
+openai>=1.0.0
+google-generativeai>=0.3.0
+tiktoken>=0.5.0
+
+# Asynchronous Task Queue
+celery[redis]>=5.3.0
+redis>=5.0.0
+
+# Reporting and Document Generation
+reportlab>=4.0.8
+python-docx>=1.1.0
+jinja2>=3.1.0
+
+# External Integrations and HTTP
+aiohttp>=3.9.0
+google-api-python-client>=2.80.0
+google-auth-httplib2>=0.1.0
+google-auth-oauthlib>=0.8.0
+
+# Development and Testing
+pytest>=7.0.0
+pytest-asyncio>=0.21.0
+httpx>=0.25.0
+locust>=2.15.0
+black>=23.0.0
+isort>=5.12.0
+flake8>=6.0.0
+
+# Utilities
+python-json-logger>=2.0.7
+PyYAML>=6.0
+python-multipart>=0.0.20
+email-validator>=2.0.0
+dnspython>=2.0.0
+bleach>=6.0.0
 orjson>=3.8.0
-
-# Additional dependencies for infrastructure
-python-json-logger>=2.0.0  # For JSON logging
-redis>=4.5.0  # For caching and sessions
-bleach>=6.0.0  # For input sanitization
-python-multipart>=0.0.20  # For FastAPI form data
-email-validator>=2.0.0  # For email validation in Pydantic
-dnspython>=2.0.0  # Required by email-validator
-
-# Reporting dependencies
-reportlab>=4.0.0  # For PDF generation
-python-docx>=1.0.0  # For Word document generation
-pyyaml>=6.0.0  # For YAML configuration support
-
-# Google API and OAuth integration dependencies
-google-api-python-client>=2.80.0  # Google API client library
-google-auth-httplib2>=0.1.0  # Google Auth HTTP library
-google-auth-oauthlib>=0.8.0  # Google OAuth2 flow library

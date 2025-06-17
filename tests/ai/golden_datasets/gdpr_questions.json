@@ -1,0 +1,167 @@
+[
+  {
+    "id": "gdpr_001",
+    "question": "What is the maximum fine for GDPR violations?",
+    "expected_answer": "Up to €20 million or 4% of annual global turnover, whichever is higher",
+    "framework": "GDPR",
+    "category": "penalties",
+    "keywords": ["€20 million", "4%", "turnover", "fine", "penalty"],
+    "difficulty": "basic",
+    "source": "GDPR Article 83",
+    "last_updated": "2024-01-01"
+  },
+  {
+    "id": "gdpr_002", 
+    "question": "How long do you have to report a data breach under GDPR?",
+    "expected_answer": "72 hours to the supervisory authority, without undue delay",
+    "framework": "GDPR",
+    "category": "breach_notification",
+    "keywords": ["72 hours", "supervisory authority", "breach", "notification", "report"],
+    "difficulty": "basic",
+    "source": "GDPR Article 33",
+    "last_updated": "2024-01-01"
+  },
+  {
+    "id": "gdpr_003",
+    "question": "What are the six lawful bases for processing personal data under GDPR?",
+    "expected_answer": "Consent, contract, legal obligation, vital interests, public task, and legitimate interests",
+    "framework": "GDPR", 
+    "category": "lawful_basis",
+    "keywords": ["consent", "contract", "legal obligation", "vital interests", "public task", "legitimate interests"],
+    "difficulty": "intermediate",
+    "source": "GDPR Article 6",
+    "last_updated": "2024-01-01"
+  },
+  {
+    "id": "gdpr_004",
+    "question": "What is data protection by design and by default?",
+    "expected_answer": "Implementing appropriate technical and organisational measures to ensure data protection principles are integrated into processing activities from the outset",
+    "framework": "GDPR",
+    "category": "data_protection_principles", 
+    "keywords": ["data protection by design", "technical measures", "organisational measures", "from the outset"],
+    "difficulty": "intermediate",
+    "source": "GDPR Article 25",
+    "last_updated": "2024-01-01"
+  },
+  {
+    "id": "gdpr_005",
+    "question": "What are the rights of data subjects under GDPR?",
+    "expected_answer": "Right to information, access, rectification, erasure, restrict processing, data portability, object to processing, and not to be subject to automated decision-making",
+    "framework": "GDPR",
+    "category": "data_subject_rights",
+    "keywords": ["information", "access", "rectification", "erasure", "restrict", "portability", "object", "automated decision-making"],
+    "difficulty": "intermediate", 
+    "source": "GDPR Articles 12-22",
+    "last_updated": "2024-01-01"
+  },
+  {
+    "id": "gdpr_006",
+    "question": "When is a Data Protection Impact Assessment (DPIA) required?",
+    "expected_answer": "When processing is likely to result in high risk to the rights and freedoms of individuals, particularly for systematic monitoring, large-scale sensitive data processing, or innovative technologies",
+    "framework": "GDPR",
+    "category": "dpia",
+    "keywords": ["high risk", "systematic monitoring", "large-scale", "sensitive data", "innovative technologies"],
+    "difficulty": "advanced",
+    "source": "GDPR Article 35",
+    "last_updated": "2024-01-01"
+  },
+  {
+    "id": "gdpr_007",
+    "question": "What constitutes personal data under GDPR?",
+    "expected_answer": "Any information relating to an identified or identifiable natural person, including names, identification numbers, location data, online identifiers, and factors specific to physical, physiological, genetic, mental, economic, cultural or social identity",
+    "framework": "GDPR",
+    "category": "definitions",
+    "keywords": ["identified", "identifiable", "natural person", "online identifiers", "genetic", "physiological"],
+    "difficulty": "intermediate",
+    "source": "GDPR Article 4",
+    "last_updated": "2024-01-01"
+  },
+  {
+    "id": "gdpr_008",
+    "question": "What are the principles for processing personal data under GDPR?",
+    "expected_answer": "Lawfulness, fairness and transparency; purpose limitation; data minimisation; accuracy; storage limitation; integrity and confidentiality; accountability",
+    "framework": "GDPR",
+    "category": "data_protection_principles",
+    "keywords": ["lawfulness", "fairness", "transparency", "purpose limitation", "data minimisation", "accuracy", "storage limitation", "integrity", "confidentiality", "accountability"],
+    "difficulty": "intermediate",
+    "source": "GDPR Article 5",
+    "last_updated": "2024-01-01"
+  },
+  {
+    "id": "gdpr_009",
+    "question": "When must you appoint a Data Protection Officer (DPO) under GDPR?",
+    "expected_answer": "When processing is carried out by a public authority, core activities consist of regular and systematic monitoring of data subjects on a large scale, or core activities consist of large-scale processing of special categories of data or criminal conviction data",
+    "framework": "GDPR",
+    "category": "dpo",
+    "keywords": ["public authority", "systematic monitoring", "large scale", "special categories", "criminal conviction"],
+    "difficulty": "advanced",
+    "source": "GDPR Article 37",
+    "last_updated": "2024-01-01"
+  },
+  {
+    "id": "gdpr_010",
+    "question": "What constitutes consent under GDPR?",
+    "expected_answer": "Consent must be freely given, specific, informed, and unambiguous indication of the data subject's wishes by a statement or clear affirmative action",
+    "framework": "GDPR",
+    "category": "consent",
+    "keywords": ["freely given", "specific", "informed", "unambiguous", "affirmative action"],
+    "difficulty": "intermediate",
+    "source": "GDPR Article 4(11)",
+    "last_updated": "2024-01-01"
+  },
+  {
+    "id": "gdpr_011",
+    "question": "How long can personal data be retained under GDPR?",
+    "expected_answer": "Personal data should be kept for no longer than necessary for the purposes for which it was collected, with specific retention periods determined by the controller based on legal requirements and business needs",
+    "framework": "GDPR", 
+    "category": "retention",
+    "keywords": ["no longer than necessary", "purposes", "retention periods", "legal requirements"],
+    "difficulty": "intermediate",
+    "source": "GDPR Article 5(1)(e)",
+    "last_updated": "2024-01-01"
+  },
+  {
+    "id": "gdpr_012",
+    "question": "What are special categories of personal data under GDPR?",
+    "expected_answer": "Data revealing racial or ethnic origin, political opinions, religious or philosophical beliefs, trade union membership, genetic data, biometric data for identification, health data, and data concerning sex life or sexual orientation",
+    "framework": "GDPR",
+    "category": "special_categories", 
+    "keywords": ["racial", "ethnic", "political", "religious", "philosophical", "trade union", "genetic", "biometric", "health", "sex life", "sexual orientation"],
+    "difficulty": "intermediate",
+    "source": "GDPR Article 9",
+    "last_updated": "2024-01-01"
+  },
+  {
+    "id": "gdpr_013",
+    "question": "What is the difference between a controller and processor under GDPR?",
+    "expected_answer": "A controller determines the purposes and means of processing personal data, while a processor processes personal data on behalf of the controller under specific instructions",
+    "framework": "GDPR",
+    "category": "definitions",
+    "keywords": ["controller", "processor", "purposes", "means", "instructions", "on behalf"],
+    "difficulty": "intermediate",
+    "source": "GDPR Article 4",
+    "last_updated": "2024-01-01"
+  },
+  {
+    "id": "gdpr_014",
+    "question": "What documentation must be maintained under GDPR?",
+    "expected_answer": "Records of processing activities including purposes, categories of data subjects and personal data, recipients, retention periods, security measures, and transfers to third countries",
+    "framework": "GDPR",
+    "category": "documentation",
+    "keywords": ["records", "processing activities", "categories", "recipients", "retention periods", "security measures", "transfers"],
+    "difficulty": "advanced",
+    "source": "GDPR Article 30", 
+    "last_updated": "2024-01-01"
+  },
+  {
+    "id": "gdpr_015",
+    "question": "What constitutes a personal data breach under GDPR?",
+    "expected_answer": "A breach of security leading to the accidental or unlawful destruction, loss, alteration, unauthorised disclosure of, or access to, personal data",
+    "framework": "GDPR",
+    "category": "breach",
+    "keywords": ["breach of security", "destruction", "loss", "alteration", "unauthorised disclosure", "unauthorised access"],
+    "difficulty": "basic",
+    "source": "GDPR Article 4(12)",
+    "last_updated": "2024-01-01"
+  }
+]

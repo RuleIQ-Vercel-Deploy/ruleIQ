@@ -8,10 +8,51 @@ services:
     environment:
       - ENV=development
       - DATABASE_URL=postgresql+psycopg2://postgres:postgres@db:5432/compliancegpt
+      - REDIS_URL=redis://redis:6379/0
       - GOOGLE_API_KEY=${GOOGLE_API_KEY}
       - ALLOWED_ORIGINS=http://localhost:3000,http://localhost:8080
     depends_on:
       db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - .:/app
+    restart: unless-stopped
+    networks:
+      - compliancegpt-network
+
+  celery_worker:
+    build: .
+    command: celery -A celery_app worker --loglevel=info --concurrency=2 --queues=evidence,compliance,notifications,reports
+    environment:
+      - ENV=development
+      - DATABASE_URL=postgresql+psycopg2://postgres:postgres@db:5432/compliancegpt
+      - REDIS_URL=redis://redis:6379/0
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY}
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - .:/app
+    restart: unless-stopped
+    networks:
+      - compliancegpt-network
+
+  celery_beat:
+    build: .
+    command: celery -A celery_app beat --loglevel=info
+    environment:
+      - ENV=development
+      - DATABASE_URL=postgresql+psycopg2://postgres:postgres@db:5432/compliancegpt
+      - REDIS_URL=redis://redis:6379/0
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY}
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
         condition: service_healthy
     volumes:
       - .:/app

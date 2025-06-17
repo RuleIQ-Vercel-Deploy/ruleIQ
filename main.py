@@ -9,6 +9,7 @@ from api.routers import (
     assessments,
     auth,
     business_profiles,
+    chat,
     evidence,
     frameworks,
     implementation,
@@ -84,6 +85,7 @@ app.include_router(evidence.router, prefix="/api/evidence", tags=["Evidence"])
 app.include_router(readiness.router, prefix="/api/readiness", tags=["Readiness Assessment"])
 app.include_router(reporting.router, prefix="/api/reports", tags=["Reports"])
 app.include_router(integrations.router, prefix="/api/integrations", tags=["Integrations"])
+app.include_router(chat.router, prefix="/api", tags=["AI Assistant"])
 
 @app.get("/", response_model=APIInfoResponse, summary="API Information")
 async def root():

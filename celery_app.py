@@ -16,7 +16,7 @@ celery_app = Celery(
     'compliancegpt',
     broker=os.getenv('REDIS_URL', 'redis://localhost:6379/0'),
     backend=os.getenv('REDIS_URL', 'redis://localhost:6379/0'),
-    include=['workers.evidence_tasks', 'workers.compliance_tasks', 'workers.notification_tasks']
+    include=['workers.evidence_tasks', 'workers.compliance_tasks', 'workers.notification_tasks', 'workers.reporting_tasks']
 )
 
 # Load configuration from a separate config file or apply directly
@@ -74,6 +74,18 @@ celery_app.conf.beat_schedule = {
         'task': 'workers.compliance_tasks.generate_daily_reports',
         'schedule': crontab(hour=4, minute=0),
         'options': {'queue': 'compliance'}
+    },
+    # Runs weekly on Sunday at 5:00 AM UTC to clean up old reports
+    'cleanup-old-reports': {
+        'task': 'workers.reporting_tasks.cleanup_old_reports',
+        'schedule': crontab(hour=5, minute=0, day_of_week=0),
+        'options': {'queue': 'reports'}
+    },
+    # Runs monthly on the 1st at 6:00 AM UTC to send report summaries
+    'send-report-summaries': {
+        'task': 'workers.reporting_tasks.send_report_summary_notifications',
+        'schedule': crontab(hour=6, minute=0, day_of_month=1),
+        'options': {'queue': 'reports'}
     }
 }
 

@@ -4,18 +4,26 @@ Reporting API endpoints for ComplianceGPT
 
 from typing import Dict, Any, List, Optional
 from uuid import UUID
-from fastapi import APIRouter, Depends, HTTPException, Response
+from fastapi import APIRouter, Depends, HTTPException, Response, Query, BackgroundTasks
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel, Field
 from sqlalchemy.orm import Session
 import io
+import base64
+import logging
 
 from api.dependencies.auth import get_current_user
 from database.db_setup import get_db
+from database.business_profile import BusinessProfile
 from services.reporting.report_generator import ReportGenerator
 from services.reporting.pdf_generator import PDFGenerator
 from services.reporting.template_manager import TemplateManager
+from services.reporting.report_scheduler import ReportScheduler
+from workers.reporting_tasks import generate_report_on_demand
 from sqlalchemy_access import User
+
+# Set up logging
+logger = logging.getLogger(__name__)
 
 router = APIRouter()
 
@@ -45,6 +53,35 @@ class ReportStatus(BaseModel):
     status: str
     message: str
     data: Optional[Dict[str, Any]] = None
+
+# Additional models for scheduling
+class CreateScheduleRequest(BaseModel):
+    """Request model for creating a scheduled report"""
+    business_profile_id: UUID
+    report_type: str
+    frequency: str = Field(..., regex="^(daily|weekly|monthly)$")
+    recipients: List[str] = Field(..., min_items=1)
+    parameters: Dict[str, Any] = Field(default_factory=dict)
+    schedule_config: Dict[str, Any] = Field(default_factory=dict)
+
+class ScheduleResponse(BaseModel):
+    """Response model for report schedules"""
+    schedule_id: str
+    business_profile_id: UUID
+    report_type: str
+    frequency: str
+    recipients: List[str]
+    parameters: Dict[str, Any]
+    active: bool
+    created_at: str
+
+class UpdateScheduleRequest(BaseModel):
+    """Request model for updating a schedule"""
+    frequency: Optional[str] = Field(None, regex="^(daily|weekly|monthly)$")
+    recipients: Optional[List[str]] = None
+    parameters: Optional[Dict[str, Any]] = None
+    active: Optional[bool] = None
+    schedule_config: Optional[Dict[str, Any]] = None
 
 
 @router.get("/templates", response_model=TemplateListResponse)
@@ -270,3 +307,148 @@ def _get_supported_parameters(report_type: str) -> Dict[str, Any]:
     }
     
     return type_specific_params.get(report_type, common_params)
+
+
+# Scheduling endpoints
+@router.post("/schedules", response_model=ScheduleResponse)
+async def create_schedule(
+    request: CreateScheduleRequest,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """Create a new scheduled report"""
+    try:
+        # Verify access to business profile
+        profile = db.query(BusinessProfile).filter(
+            BusinessProfile.id == str(request.business_profile_id),
+            BusinessProfile.user_id == str(current_user.id)
+        ).first()
+        
+        if not profile:
+            raise HTTPException(status_code=404, detail="Business profile not found")
+        
+        # Create the schedule
+        scheduler = ReportScheduler(db)
+        schedule_id = scheduler.create_schedule(
+            user_id=str(current_user.id),
+            business_profile_id=str(request.business_profile_id),
+            report_type=request.report_type,
+            frequency=request.frequency,
+            parameters=request.parameters,
+            recipients=request.recipients,
+            schedule_config=request.schedule_config
+        )
+        
+        # Get the created schedule
+        schedule = scheduler.get_schedule(schedule_id)
+        
+        return ScheduleResponse(
+            schedule_id=schedule.schedule_id,
+            business_profile_id=UUID(schedule.business_profile_id),
+            report_type=schedule.report_type,
+            frequency=schedule.frequency,
+            recipients=schedule.recipients,
+            parameters=schedule.parameters,
+            active=schedule.active,
+            created_at=schedule.created_at.isoformat()
+        )
+    
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        logger.error(f"Schedule creation failed: {e}")
+        raise HTTPException(status_code=500, detail="Failed to create schedule")
+
+
+@router.get("/schedules")
+async def list_schedules(
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """List all report schedules for the current user"""
+    try:
+        scheduler = ReportScheduler(db)
+        schedules = scheduler.list_user_schedules(str(current_user.id))
+        
+        schedule_responses = [
+            ScheduleResponse(
+                schedule_id=schedule.schedule_id,
+                business_profile_id=UUID(schedule.business_profile_id),
+                report_type=schedule.report_type,
+                frequency=schedule.frequency,
+                recipients=schedule.recipients,
+                parameters=schedule.parameters,
+                active=schedule.active,
+                created_at=schedule.created_at.isoformat()
+            )
+            for schedule in schedules
+        ]
+        
+        return {"schedules": schedule_responses, "total": len(schedule_responses)}
+    
+    except Exception as e:
+        logger.error(f"Failed to list schedules: {e}")
+        raise HTTPException(status_code=500, detail="Failed to list schedules")
+
+
+@router.delete("/schedules/{schedule_id}")
+async def delete_schedule(
+    schedule_id: str,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """Delete a report schedule"""
+    try:
+        scheduler = ReportScheduler(db)
+        schedule = scheduler.get_schedule(schedule_id)
+        
+        if not schedule or schedule.user_id != str(current_user.id):
+            raise HTTPException(status_code=404, detail="Schedule not found")
+        
+        success = scheduler.delete_schedule(schedule_id)
+        
+        if not success:
+            raise HTTPException(status_code=500, detail="Failed to delete schedule")
+        
+        return {"message": "Schedule deleted successfully"}
+    
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Failed to delete schedule: {e}")
+        raise HTTPException(status_code=500, detail="Failed to delete schedule")
+
+
+@router.post("/schedules/{schedule_id}/execute")
+async def execute_schedule(
+    schedule_id: str,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """Manually execute a scheduled report"""
+    try:
+        scheduler = ReportScheduler(db)
+        schedule = scheduler.get_schedule(schedule_id)
+        
+        if not schedule or schedule.user_id != str(current_user.id):
+            raise HTTPException(status_code=404, detail="Schedule not found")
+        
+        # Execute the schedule
+        result = scheduler.execute_schedule(schedule_id)
+        
+        if result.get("status") == "error":
+            raise HTTPException(status_code=500, detail=result.get("error", "Execution failed"))
+        
+        return {
+            "status": result["status"],
+            "task_id": result.get("task_id"),
+            "schedule_id": schedule_id,
+            "executed_at": result["executed_at"],
+            "message": "Report generation started successfully"
+        }
+    
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Failed to execute schedule: {e}")
+        raise HTTPException(status_code=500, detail="Failed to execute schedule")
