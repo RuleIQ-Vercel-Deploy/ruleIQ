@@ -1,7 +1,7 @@
-# ComplianceGPT Codebase Context Specification
+# Experiment - AI-Powered Compliance Automation Platform
 
 ## Project Overview
-ComplianceGPT is an AI-powered compliance automation platform targeting UK SMBs. The system provides end-to-end compliance management including scoping, policy generation, implementation planning, evidence collection, and readiness assessment.
+Experiment is an AI-powered compliance automation platform targeting UK SMBs. The system provides end-to-end compliance management including scoping, policy generation, implementation planning, evidence collection, and readiness assessment.
 
 ## Technology Stack
 
@@ -141,24 +141,59 @@ config/
 └── log_config.yaml    # Structured logging configuration
 ```
 
-### `/tests/` - Testing Framework
-**Comprehensive testing covering all application layers**
+### `/tests/` - Comprehensive Testing Framework
+**Production-ready testing infrastructure with advanced observability**
 
 ```
 tests/
-├── conftest.py        # Pytest configuration and fixtures
-├── test_services.py   # Service layer unit tests
-├── test_security.py   # Security testing
-├── test_performance.py # Performance benchmarks
-├── test_integration.py # API integration tests
-├── test_e2e_workflows.py # End-to-end workflow tests
-├── test_ai_ethics.py  # AI behavior validation
-├── test_compliance_accuracy.py # Compliance logic validation
-├── test_usability.py  # User experience testing
-├── integration/       # Integration test suites
-│   └── test_evidence_flow.py # End-to-end evidence workflows
-└── load/             # Load testing configurations
-    └── locustfile.py     # Multi-user load testing scenarios
+├── conftest.py              # Advanced pytest configuration with 50+ fixtures
+├── pytest.ini              # Enhanced configuration with coverage gates
+├── TESTING_PLAN.md          # Master testing strategy and implementation guide
+├── unit/                    # Unit tests with mocked dependencies
+│   ├── services/                # Service layer unit tests
+│   │   ├── test_evidence_service.py     # Evidence management tests
+│   │   ├── test_ai_assistant.py         # AI assistant service tests
+│   │   └── test_business_service.py     # Business profile tests
+│   └── utils/                   # Utility function tests
+│       └── test_circuit_breaker.py      # Circuit breaker pattern tests
+├── integration/             # Integration tests with real dependencies
+│   ├── api/                     # API endpoint integration tests
+│   │   ├── test_evidence_endpoints.py   # Evidence API tests
+│   │   ├── test_auth_endpoints.py       # Authentication API tests
+│   │   └── test_reporting_endpoints.py  # Reporting API tests
+│   └── database/                # Database integration tests
+│       └── test_evidence_operations.py  # Database operation tests
+├── e2e/                     # End-to-end user workflow tests
+│   ├── test_user_onboarding_flow.py     # Complete onboarding workflow
+│   ├── test_compliance_assessment.py    # Assessment workflow tests
+│   └── test_report_generation.py        # Report generation workflow
+├── security/                # Security and vulnerability tests
+│   ├── test_authentication.py           # Auth security tests
+│   ├── test_authorization.py            # Access control tests
+│   └── test_input_validation.py         # Input sanitization tests
+├── ai/                      # AI-specific tests with golden datasets
+│   ├── golden_datasets/             # Curated test datasets
+│   │   ├── gdpr_questions.json          # GDPR compliance questions
+│   │   └── framework_mappings.json      # Framework mapping data
+│   ├── test_compliance_accuracy.py     # AI compliance accuracy tests
+│   ├── test_bias_detection.py          # Bias and fairness tests
+│   └── test_context_management.py      # Context handling tests
+├── performance/             # Advanced performance testing suite
+│   ├── locustfile.py                # Multi-user load testing scenarios
+│   ├── test_api_performance.py         # API benchmark tests
+│   ├── test_database_performance.py    # Database performance tests
+│   ├── run_performance_tests.py        # Performance test orchestration
+│   └── README.md                    # Performance testing documentation
+├── monitoring/              # Test observability and metrics
+│   └── test_metrics.py              # Test execution metrics and monitoring
+├── fixtures/                # Shared test data and fixtures
+│   ├── sample_evidence.json        # Sample evidence data
+│   ├── mock_responses.json          # Mock API responses
+│   └── test_frameworks.json         # Test compliance frameworks
+└── utils/                   # Testing utilities and helpers
+    ├── test_helpers.py              # Common test helper functions
+    ├── mock_factories.py            # Mock object factories
+    └── data_generators.py           # Test data generators
 ```
 
 ### `/scripts/` - Operational Scripts
@@ -428,25 +463,49 @@ AI_CONFIG = {
 
 ## Testing Strategy
 
-### 1. **Unit Testing**
+The testing framework provides comprehensive coverage across all application layers with advanced observability and monitoring capabilities.
+
+### 1. **Unit Testing** (95% coverage for critical services)
 - Service layer unit tests with mocked dependencies
-- Database model testing with test fixtures
+- Database model testing with test fixtures  
 - AI service testing with mocked responses
+- Circuit breaker and utility function tests
 
-### 2. **Integration Testing**
-- API endpoint testing with test database
-- End-to-end workflow validation
-- External service integration testing
+### 2. **Integration Testing** (Real database and service interactions)
+- API endpoint testing with authentication
+- Database transaction and connection testing
+- Service integration validation
+- Error handling and edge case testing
 
-### 3. **Load Testing**
+### 3. **End-to-End Testing** (Complete user workflows)
+- User onboarding and assessment workflows
+- Evidence collection and management flows
+- Report generation and distribution processes
+- AI assistant interaction scenarios
+
+### 4. **Security Testing** (Comprehensive vulnerability scanning)
+- Authentication and authorization security
+- Input validation and sanitization testing
+- JWT token security and session management
+- XSS, SQL injection, and CSRF protection
+
+### 5. **AI-Specific Testing** (Golden datasets and accuracy validation)
+- Compliance accuracy testing with curated datasets
+- Framework identification and terminology validation
+- Bias detection and fairness testing
+- Context management and conversation testing
+
+### 6. **Performance Testing** (Load testing and benchmarking)
 - Multi-user scenario simulation with Locust
-- Performance benchmarking
-- Scalability validation
+- API performance benchmarking with pytest-benchmark
+- Database performance under varying load conditions
+- Memory profiling and resource usage monitoring
 
-### 4. **Security Testing**
-- Authentication and authorization testing
-- Input validation testing
-- Security vulnerability scanning
+### 7. **Test Observability** (Metrics and monitoring)
+- Real-time test execution metrics collection
+- Performance trend analysis and regression detection
+- Coverage tracking with module-specific requirements
+- Dashboard data generation for test insights
 
 ## Deployment & Operations
 
@@ -510,11 +569,26 @@ uvicorn main:app --reload
 
 ### 2. **Testing Workflow**
 ```bash
-# Run all tests
+# Run all tests with coverage
 pytest
 
+# Run specific test categories
+pytest tests/unit/          # Unit tests
+pytest tests/integration/   # Integration tests
+pytest tests/e2e/          # End-to-end tests
+pytest tests/security/     # Security tests
+pytest tests/ai/           # AI accuracy tests
+
+# Performance testing
+pytest tests/performance/ --benchmark-only
+python tests/performance/run_performance_tests.py
+
 # Load testing
-locust -f tests/load/locustfile.py --host=http://localhost:8000
+locust -f tests/performance/locustfile.py --host=http://localhost:8000
+
+# Security scanning
+bandit -r . -f json -o security_report.json
+safety check --json --output safety_report.json
 
 # Deployment readiness
 python scripts/deploy.py --health-check
@@ -544,6 +618,47 @@ alembic upgrade head
 3. **CDN Integration**: Global content delivery optimization
 4. **Caching Strategy**: Advanced caching for improved performance
 
+## CI/CD Pipeline & Automation
+
+### GitHub Actions Workflows
+The project includes comprehensive CI/CD automation with the following workflows:
+
+#### 1. **Test Suite** (`.github/workflows/test-suite.yml`)
+- **Triggers**: Push to main/develop, pull requests
+- **Services**: PostgreSQL 13, Redis 7
+- **Coverage**: Unit, integration, security, AI tests with 70% coverage requirement
+- **Outputs**: Test results, coverage reports, security scan results
+
+#### 2. **Performance Testing** (`.github/workflows/performance-tests.yml`)
+- **Triggers**: Weekly schedule, manual dispatch
+- **Testing**: API benchmarks, database performance, load testing
+- **Monitoring**: Performance regression detection, baseline comparisons
+- **Outputs**: Performance reports, benchmark results
+
+#### 3. **Security Scanning** (`.github/workflows/security-scan.yml`)
+- **Triggers**: Push events, pull requests, weekly schedule
+- **Tools**: Bandit, Safety, Semgrep, TruffleHog, Trivy
+- **Scope**: Static analysis, dependency vulnerabilities, secrets detection, Docker security
+- **Outputs**: Security reports, vulnerability assessments
+
+#### 4. **Deployment Pipeline** (`.github/workflows/deployment.yml`)
+- **Triggers**: Successful test completion, manual deployment
+- **Environments**: Staging, production with proper gates
+- **Features**: Docker builds, security validation, rollback capability
+- **Monitoring**: Health checks, smoke tests, deployment verification
+
+### Coverage Requirements
+- **Overall**: 70% minimum coverage
+- **Critical Services** (auth, evidence): 95% coverage  
+- **High Priority Services**: 85% coverage
+- **Medium Priority Services**: 75% coverage
+
+### Security Gates
+- **Critical Issues**: Block deployment
+- **High Severity**: Require review (>10 fails build)
+- **Dependency Vulnerabilities**: Automated scanning and updates
+- **Secrets Detection**: Prevent credential exposure
+
 ---
 
-This codebase context specification provides a comprehensive understanding of the ComplianceGPT project structure, components, and operational patterns. It serves as the definitive reference for development, maintenance, and future enhancements.
+This codebase context specification provides a comprehensive understanding of the Experiment project structure, components, and operational patterns. It serves as the definitive reference for development, maintenance, and future enhancements.
