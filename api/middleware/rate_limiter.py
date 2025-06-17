@@ -1,0 +1,113 @@
+import time
+from typing import Dict, Tuple
+
+from fastapi import HTTPException, Request, status
+from fastapi.responses import JSONResponse
+
+
+class RateLimiter:
+    def __init__(self, requests_per_minute: int = 60):
+        self.requests_per_minute = requests_per_minute
+        self.requests: Dict[str, list] = {}
+        self.cleanup_interval = 300  # Clean up old entries every 5 minutes
+        self._last_cleanup = time.time()
+
+    async def check_rate_limit(self, identifier: str) -> Tuple[bool, int]:
+        """Check if request is within rate limit. Returns (allowed, retry_after_seconds)"""
+        current_time = time.time()
+        minute_ago = current_time - 60
+
+        # Cleanup old entries periodically
+        if current_time - self._last_cleanup > self.cleanup_interval:
+            await self._cleanup_old_entries()
+
+        # Get or create request list for this identifier
+        if identifier not in self.requests:
+            self.requests[identifier] = []
+
+        # Remove requests older than 1 minute
+        self.requests[identifier] = [
+            req_time for req_time in self.requests[identifier]
+            if req_time > minute_ago
+        ]
+
+        # Check if limit exceeded
+        if len(self.requests[identifier]) >= self.requests_per_minute:
+            retry_after = int(60 - (current_time - self.requests[identifier][0]))
+            return False, retry_after
+
+        # Add current request
+        self.requests[identifier].append(current_time)
+        return True, 0
+
+    async def _cleanup_old_entries(self):
+        """Remove entries with no recent requests"""
+        current_time = time.time()
+        minute_ago = current_time - 60
+
+        self.requests = {
+            k: [t for t in v if t > minute_ago]
+            for k, v in self.requests.items()
+            if any(t > minute_ago for t in v)
+        }
+        self._last_cleanup = current_time
+
+# Global rate limiter instances
+general_limiter = RateLimiter(requests_per_minute=60)
+auth_limiter = RateLimiter(requests_per_minute=10)  # Stricter for auth endpoints
+
+async def rate_limit_middleware(request: Request, call_next):
+    """General rate limiting middleware"""
+    # Skip rate limiting for docs
+    if request.url.path in ["/docs", "/redoc", "/openapi.json"]:
+        return await call_next(request)
+
+    # Get client identifier (IP address)
+    client_ip = request.client.host if request.client else "unknown"
+
+    # Check rate limit
+    allowed, retry_after = await general_limiter.check_rate_limit(client_ip)
+
+    if not allowed:
+        return JSONResponse(
+            status_code=status.HTTP_429_TOO_MANY_REQUESTS,
+            content={
+                "error": {
+                    "message": "Rate limit exceeded",
+                    "code": "RATE_LIMIT_EXCEEDED",
+                    "retry_after": retry_after
+                }
+            },
+            headers={
+                "Retry-After": str(retry_after),
+                "X-RateLimit-Limit": str(general_limiter.requests_per_minute),
+                "X-RateLimit-Remaining": "0",
+                "X-RateLimit-Reset": str(int(time.time()) + retry_after)
+            }
+        )
+
+    # Process request
+    response = await call_next(request)
+
+    # Add rate limit headers
+    remaining = general_limiter.requests_per_minute - len(general_limiter.requests.get(client_ip, []))
+    response.headers["X-RateLimit-Limit"] = str(general_limiter.requests_per_minute)
+    response.headers["X-RateLimit-Remaining"] = str(max(0, remaining))
+    response.headers["X-RateLimit-Reset"] = str(int(time.time()) + 60)
+
+    return response
+
+def auth_rate_limit():
+    """Dependency for auth endpoint rate limiting"""
+    async def check_limit(request: Request):
+        client_ip = request.client.host if request.client else "unknown"
+        allowed, retry_after = await auth_limiter.check_rate_limit(client_ip)
+
+        if not allowed:
+            raise HTTPException(
+                status_code=status.HTTP_429_TOO_MANY_REQUESTS,
+                detail=f"Too many authentication attempts. Try again in {retry_after} seconds",
+                headers={"Retry-After": str(retry_after)}
+            )
+
+    return check_limit

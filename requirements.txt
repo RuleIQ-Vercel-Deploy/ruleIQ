@@ -1,0 +1,53 @@
+# Database dependencies
+sqlalchemy>=2.0.0
+psycopg2-binary>=2.9.0
+
+# Neon database support (remove non-existent package)
+# neon-cli>=0.4.0
+
+# AI/ML dependencies  
+openai>=1.0.0
+google-generativeai>=0.3.0
+
+# Web framework (likely needed for authentication system)
+fastapi>=0.100.0
+uvicorn[standard]>=0.20.0
+
+# Data validation and serialization
+pydantic>=2.0.0
+pydantic-settings>=2.0.0
+
+# Environment variable management
+python-dotenv>=1.0.0
+
+# Development dependencies
+pytest>=7.0.0
+pytest-asyncio>=0.21.0
+black>=23.0.0
+isort>=5.12.0
+flake8>=6.0.0
+
+# Security
+python-jose[cryptography]>=3.3.0
+passlib[bcrypt]>=1.7.4
+
+# Optional: for better JSON handling
+orjson>=3.8.0
+
+# Additional dependencies for infrastructure
+python-json-logger>=2.0.0  # For JSON logging
+redis>=4.5.0  # For caching and sessions
+bleach>=6.0.0  # For input sanitization
+python-multipart>=0.0.20  # For FastAPI form data
+email-validator>=2.0.0  # For email validation in Pydantic
+dnspython>=2.0.0  # Required by email-validator
+
+# Reporting dependencies
+reportlab>=4.0.0  # For PDF generation
+python-docx>=1.0.0  # For Word document generation
+pyyaml>=6.0.0  # For YAML configuration support
+
+# Google API and OAuth integration dependencies
+google-api-python-client>=2.80.0  # Google API client library
+google-auth-httplib2>=0.1.0  # Google Auth HTTP library
+google-auth-oauthlib>=0.8.0  # Google OAuth2 flow library
