@@ -1,381 +1,187 @@
 """
-API endpoints for managing third-party integrations.
+API endpoints for managing third-party integrations (Asynchronous & Secure).
 """
 
-from fastapi import APIRouter, Depends, HTTPException, status, BackgroundTasks
+from fastapi import APIRouter, Depends, HTTPException, status
 from typing import List, Dict, Any, Optional
-from uuid import UUID
-from sqlalchemy.orm import Session
-from pydantic import BaseModel, Field
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.future import select
+from sqlalchemy.exc import SQLAlchemyError
+from pydantic import BaseModel
 from datetime import datetime
 
-from database.db_setup import get_db
-from api.dependencies.auth import get_current_user
-from api.integrations.google_workspace_integration import GoogleWorkspaceIntegration
-from api.integrations.base.base_integration import IntegrationConfig, IntegrationStatus
-from sqlalchemy_access import User
+from database.db_setup import get_async_db
+from database.user import User
+from database.integration_configuration import IntegrationConfiguration
+from api.dependencies.auth import get_current_active_user
+from api.integrations.base.base_integration import BaseIntegration, IntegrationConfig, IntegrationStatus
+from config.logging_config import get_logger
 
+logger = get_logger(__name__)
 router = APIRouter()
 
 # Pydantic models for requests/responses
 class IntegrationCredentials(BaseModel):
-    """Model for integration credentials"""
     provider: str
     credentials: Dict[str, Any]
     settings: Optional[Dict[str, Any]] = None
 
 class IntegrationResponse(BaseModel):
-    """Response model for integration operations"""
     provider: str
     status: str
     message: Optional[str] = None
-    evidence_types: Optional[List[Dict[str, Any]]] = None
-    last_sync: Optional[str] = None
-
-class EvidenceCollectionResponse(BaseModel):
-    """Response model for evidence collection"""
-    provider: str
-    status: str
-    evidence_items_collected: int
-    evidence_items: Optional[List[Dict[str, Any]]] = None
-    collection_time: str
+    is_enabled: Optional[bool] = None
+    last_sync_at: Optional[datetime] = None
+    last_sync_status: Optional[str] = None
 
 class IntegrationListResponse(BaseModel):
-    """Response model for listing integrations"""
     available_providers: List[Dict[str, Any]]
-    configured_integrations: List[Dict[str, Any]]
+    configured_integrations: List[IntegrationResponse]
 
-# Available integration providers
+# A simple integration factory would be better, but for now, we can use a dummy instance
+# to access the encryption/decryption methods which don't depend on the provider specifics.
+class GenericIntegration(BaseIntegration):
+    """A generic class to access base methods like encryption without a real provider."""
+    @property
+    def provider_name(self) -> str: return "generic"
+    async def test_connection(self) -> bool: return False
+    async def authenticate(self) -> bool: return False
+    async def collect_evidence(self, *args, **kwargs) -> List: return []
+    async def get_available_evidence_types(self) -> List: return []
+
+# Available integration providers (simplified for now)
 AVAILABLE_PROVIDERS = {
-    "google_workspace": {
-        "name": "Google Workspace",
-        "description": "Collect user activity logs, admin actions, and directory information",
-        "evidence_types": ["user_access_logs", "admin_activity_logs", "user_directory", "access_groups"],
-        "frameworks": ["SOC2", "ISO27001", "GDPR"],
-        "setup_instructions": "Requires Admin API access and OAuth2 credentials"
-    },
-    "microsoft_365": {
-        "name": "Microsoft 365",
-        "description": "Collect audit logs, user activities, and security configurations",
-        "evidence_types": ["audit_logs", "security_events", "user_activities"],
-        "frameworks": ["SOC2", "ISO27001", "GDPR"],
-        "setup_instructions": "Coming soon"
-    },
-    "aws": {
-        "name": "Amazon Web Services",
-        "description": "Collect CloudTrail logs, IAM configurations, and security findings",
-        "evidence_types": ["cloudtrail_logs", "iam_configs", "security_findings"],
-        "frameworks": ["SOC2", "ISO27001"],
-        "setup_instructions": "Coming soon"
-    }
+    "google_workspace": {"name": "Google Workspace"},
+    "microsoft_365": {"name": "Microsoft 365"}
 }
 
-@router.get("/", response_model=IntegrationListResponse, summary="List available and configured integrations")
-async def list_integrations(
-    current_user: User = Depends(get_current_user),
-    db: Session = Depends(get_db)
-):
-    """
-    Get a list of available integration providers and user's configured integrations.
-    """
-    # TODO: In a real implementation, fetch user's configured integrations from database
-    configured_integrations = []
-    
-    # Mock some configured integrations for demonstration
-    if current_user:
-        configured_integrations = [
-            {
-                "provider": "google_workspace",
-                "status": "connected",
-                "last_sync": "2024-01-15T10:30:00Z",
-                "evidence_count": 156
-            }
-        ]
-    
-    return IntegrationListResponse(
-        available_providers=[
-            {"provider": k, **v} for k, v in AVAILABLE_PROVIDERS.items()
-        ],
-        configured_integrations=configured_integrations
-    )
-
-@router.post("/connect", response_model=IntegrationResponse, summary="Connect a new integration")
+@router.post("/connect", response_model=IntegrationResponse, summary="Connect or Update Integration")
 async def connect_integration(
-    integration_data: IntegrationCredentials,
-    current_user: User = Depends(get_current_user),
-    db: Session = Depends(get_db)
+    payload: IntegrationCredentials,
+    current_user: User = Depends(get_current_active_user),
+    db: AsyncSession = Depends(get_async_db)
 ):
-    """
-    Connect and configure a new third-party integration.
-    """
-    provider = integration_data.provider.lower()
-    
+    provider = payload.provider.lower()
     if provider not in AVAILABLE_PROVIDERS:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail=f"Provider '{provider}' is not supported. Available providers: {list(AVAILABLE_PROVIDERS.keys())}"
-        )
-    
-    try:
-        if provider == "google_workspace":
-            # Create configuration
-            config = IntegrationConfig(
-                user_id=current_user.id,
-                provider=provider,
-                credentials=integration_data.credentials,
-                settings=integration_data.settings
-            )
-            
-            # Test the connection
-            integration = GoogleWorkspaceIntegration(config)
-            connection_successful = await integration.test_connection()
-            
-            if not connection_successful:
-                raise HTTPException(
-                    status_code=status.HTTP_400_BAD_REQUEST,
-                    detail="Failed to connect to Google Workspace. Please check your credentials and permissions."
-                )
-            
-            # Get supported evidence types
-            evidence_types = await integration.get_supported_evidence_types()
-            
-            # TODO: Save the configuration to database (encrypted)
-            # For now, we'll simulate success
-            
-            return IntegrationResponse(
-                provider=provider,
-                status="connected",
-                message="Successfully connected to Google Workspace",
-                evidence_types=evidence_types
-            )
-        
-        else:
-            raise HTTPException(
-                status_code=status.HTTP_501_NOT_IMPLEMENTED,
-                detail=f"Integration for '{provider}' is not yet implemented"
-            )
-            
-    except Exception as e:
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Failed to connect integration: {str(e)}"
-        )
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=f"Provider '{provider}' not supported.")
 
-@router.post("/{provider}/test", response_model=IntegrationResponse, summary="Test integration connection")
-async def test_integration(
-    provider: str,
-    current_user: User = Depends(get_current_user),
-    db: Session = Depends(get_db)
-):
-    """
-    Test the connection to a configured integration.
-    """
-    provider = provider.lower()
-    
-    if provider not in AVAILABLE_PROVIDERS:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Provider '{provider}' not found"
-        )
-    
-    # TODO: Fetch user's saved configuration from database
-    # For now, simulate with mock credentials
-    mock_credentials = {"token": "mock_token", "refresh_token": "mock_refresh"}
-    
     try:
-        if provider == "google_workspace":
-            config = IntegrationConfig(
+        # Use a generic integration instance to access encryption methods
+        temp_config = IntegrationConfig(user_id=current_user.id, provider=provider, credentials={})
+        integration_handler = GenericIntegration(temp_config)
+        
+        # Encrypt the credentials
+        encrypted_creds = integration_handler.encrypt_credentials_to_str(payload.credentials)
+        if not encrypted_creds:
+            logger.error(f"Credential encryption failed for user {current_user.id}, provider {provider}. Aborting connection.")
+            raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Credential encryption failed.")
+
+        # Check if integration already exists
+        stmt = select(IntegrationConfiguration).where(
+            IntegrationConfiguration.user_id == current_user.id,
+            IntegrationConfiguration.provider == provider
+        )
+        result = await db.execute(stmt)
+        config = result.scalars().first()
+
+        if config:
+            # Update existing configuration
+            config.credentials = encrypted_creds
+            config.settings = payload.settings
+            config.status = IntegrationStatus.CONNECTED.value
+            config.is_enabled = True
+            config.updated_at = datetime.utcnow()
+            message = f"Successfully updated and reconnected {provider} integration."
+            logger.info(f"Integration updated for user {current_user.id}, provider {provider}")
+        else:
+            # Create new configuration
+            config = IntegrationConfiguration(
                 user_id=current_user.id,
                 provider=provider,
-                credentials=mock_credentials
+                credentials=encrypted_creds,
+                settings=payload.settings,
+                status=IntegrationStatus.CONNECTED.value,
+                is_enabled=True
             )
-            
-            integration = GoogleWorkspaceIntegration(config)
-            connection_successful = await integration.test_connection()
-            
-            return IntegrationResponse(
-                provider=provider,
-                status="connected" if connection_successful else "error",
-                message="Connection test successful" if connection_successful else "Connection test failed"
-            )
+            db.add(config)
+            message = f"Successfully connected {provider} integration."
+            logger.info(f"New integration created for user {current_user.id}, provider {provider}")
         
-        else:
-            raise HTTPException(
-                status_code=status.HTTP_501_NOT_IMPLEMENTED,
-                detail=f"Testing for '{provider}' is not yet implemented"
-            )
-            
-    except Exception as e:
+        await db.commit()
+        await db.refresh(config)
+
         return IntegrationResponse(
             provider=provider,
-            status="error",
-            message=f"Connection test failed: {str(e)}"
+            status=config.status,
+            message=message,
+            is_enabled=config.is_enabled
         )
-
-@router.post("/{provider}/collect", response_model=EvidenceCollectionResponse, summary="Trigger evidence collection")
-async def collect_evidence(
-    provider: str,
-    background_tasks: BackgroundTasks,
-    current_user: User = Depends(get_current_user),
-    db: Session = Depends(get_db)
-):
-    """
-    Trigger evidence collection from the specified integration provider.
-    """
-    provider = provider.lower()
-    
-    if provider not in AVAILABLE_PROVIDERS:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Provider '{provider}' not found"
-        )
-    
-    # TODO: Fetch user's saved configuration from database
-    # For now, simulate with mock credentials
-    mock_credentials = {"token": "mock_token", "refresh_token": "mock_refresh"}
-    
-    try:
-        if provider == "google_workspace":
-            config = IntegrationConfig(
-                user_id=current_user.id,
-                provider=provider,
-                credentials=mock_credentials,
-                status=IntegrationStatus.CONNECTED
-            )
-            
-            integration = GoogleWorkspaceIntegration(config)
-            
-            # Collect evidence
-            collected_evidence = await integration.collect_evidence()
-            
-            # TODO: Save collected evidence to database
-            # For now, we'll just return the count and sample data
-            
-            return EvidenceCollectionResponse(
-                provider=provider,
-                status="completed",
-                evidence_items_collected=len(collected_evidence),
-                evidence_items=collected_evidence[:3],  # Return first 3 items as sample
-                collection_time=datetime.utcnow().isoformat()
-            )
-        
-        else:
-            raise HTTPException(
-                status_code=status.HTTP_501_NOT_IMPLEMENTED,
-                detail=f"Evidence collection for '{provider}' is not yet implemented"
-            )
-            
+    except SQLAlchemyError as e:
+        await db.rollback()
+        logger.error(f"Database error connecting integration for user {current_user.id}, provider {provider}: {e}", exc_info=True)
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Database operation failed.")
     except Exception as e:
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Evidence collection failed: {str(e)}"
-        )
+        await db.rollback()
+        logger.error(f"Error connecting integration for user {current_user.id}, provider {provider}: {e}", exc_info=True)
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
 
-@router.get("/{provider}/evidence-types", summary="Get supported evidence types")
-async def get_evidence_types(
-    provider: str,
-    current_user: User = Depends(get_current_user)
-):
-    """
-    Get the evidence types supported by the specified provider.
-    """
-    provider = provider.lower()
-    
-    if provider not in AVAILABLE_PROVIDERS:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Provider '{provider}' not found"
-        )
-    
-    try:
-        if provider == "google_workspace":
-            # Create a temporary integration to get evidence types
-            config = IntegrationConfig(
-                user_id=current_user.id,
-                provider=provider,
-                credentials={}  # Empty credentials for metadata only
-            )
-            
-            integration = GoogleWorkspaceIntegration(config)
-            evidence_types = await integration.get_supported_evidence_types()
-            
-            return {
-                "provider": provider,
-                "evidence_types": evidence_types
-            }
-        
-        else:
-            # Return static information for other providers
-            provider_info = AVAILABLE_PROVIDERS[provider]
-            return {
-                "provider": provider,
-                "evidence_types": [
-                    {
-                        "type": evidence_type,
-                        "title": evidence_type.replace('_', ' ').title(),
-                        "description": f"Evidence collection for {evidence_type}",
-                        "frameworks": provider_info["frameworks"],
-                        "status": "coming_soon"
-                    }
-                    for evidence_type in provider_info["evidence_types"]
-                ]
-            }
-            
-    except Exception as e:
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Failed to get evidence types: {str(e)}"
-        )
-
-@router.delete("/{provider}", summary="Disconnect integration")
+@router.delete("/{provider}", summary="Disconnect integration", status_code=status.HTTP_204_NO_CONTENT)
 async def disconnect_integration(
     provider: str,
-    current_user: User = Depends(get_current_user),
-    db: Session = Depends(get_db)
+    current_user: User = Depends(get_current_active_user),
+    db: AsyncSession = Depends(get_async_db)
 ):
-    """
-    Disconnect and remove an integration configuration.
-    """
-    provider = provider.lower()
-    
-    if provider not in AVAILABLE_PROVIDERS:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Provider '{provider}' not found"
+    provider_key = provider.lower()
+    if provider_key not in AVAILABLE_PROVIDERS:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Provider '{provider}' not found.")
+
+    try:
+        stmt = select(IntegrationConfiguration).where(
+            IntegrationConfiguration.user_id == current_user.id,
+            IntegrationConfiguration.provider == provider_key
         )
-    
-    # TODO: Remove the integration configuration from database
-    # For now, simulate success
-    
-    return {
-        "provider": provider,
-        "status": "disconnected",
-        "message": f"Successfully disconnected {provider} integration"
-    }
+        result = await db.execute(stmt)
+        config = result.scalars().first()
+
+        if not config:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Integration '{provider}' not configured.")
+
+        await db.delete(config)
+        await db.commit()
+        logger.info(f"Integration {provider_key} disconnected for user {current_user.id}")
+    except SQLAlchemyError as e:
+        await db.rollback()
+        logger.error(f"Database error disconnecting {provider_key} for user {current_user.id}: {e}", exc_info=True)
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Database operation failed.")
 
 @router.get("/{provider}/status", response_model=IntegrationResponse, summary="Get integration status")
 async def get_integration_status(
     provider: str,
-    current_user: User = Depends(get_current_user),
-    db: Session = Depends(get_db)
+    current_user: User = Depends(get_current_active_user),
+    db: AsyncSession = Depends(get_async_db)
 ):
-    """
-    Get the current status of an integration.
-    """
-    provider = provider.lower()
-    
-    if provider not in AVAILABLE_PROVIDERS:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Provider '{provider}' not found"
+    provider_key = provider.lower()
+    if provider_key not in AVAILABLE_PROVIDERS:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Provider '{provider}' not supported.")
+
+    try:
+        stmt = select(IntegrationConfiguration).where(
+            IntegrationConfiguration.user_id == current_user.id,
+            IntegrationConfiguration.provider == provider_key
         )
-    
-    # TODO: Fetch actual status from database
-    # For now, return mock status
-    
-    return IntegrationResponse(
-        provider=provider,
-        status="connected",
-        message="Integration is active and collecting evidence",
-        last_sync="2024-01-15T10:30:00Z"
-    )
+        result = await db.execute(stmt)
+        config = result.scalars().first()
+
+        if not config:
+            return IntegrationResponse(provider=provider_key, status="not_configured", is_enabled=False)
+
+        return IntegrationResponse(
+            provider=config.provider,
+            status=config.status,
+            is_enabled=config.is_enabled,
+            last_sync_at=config.last_sync_at,
+            last_sync_status=config.last_sync_status
+        )
+    except SQLAlchemyError as e:
+        logger.error(f"Database error fetching status for {provider_key}, user {current_user.id}: {e}", exc_info=True)
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Database operation failed.")

@@ -14,7 +14,7 @@ class SendMessageRequest(BaseModel):
 class MessageResponse(BaseModel):
     """Response schema for a chat message."""
     id: UUID
-    role: str = Field(..., regex="^(user|assistant)$")
+    role: str = Field(..., pattern="^(user|assistant)$")
     content: str
     metadata: Optional[Dict[str, Any]] = None
     sequence_number: int

@@ -14,13 +14,13 @@ import logging
 
 from api.dependencies.auth import get_current_user
 from database.db_setup import get_db
-from database.business_profile import BusinessProfile
+from database.models import BusinessProfile, User
 from services.reporting.report_generator import ReportGenerator
 from services.reporting.pdf_generator import PDFGenerator
 from services.reporting.template_manager import TemplateManager
 from services.reporting.report_scheduler import ReportScheduler
 from workers.reporting_tasks import generate_report_on_demand
-from sqlalchemy_access import User
+
 
 # Set up logging
 logger = logging.getLogger(__name__)
@@ -59,7 +59,7 @@ class CreateScheduleRequest(BaseModel):
     """Request model for creating a scheduled report"""
     business_profile_id: UUID
     report_type: str
-    frequency: str = Field(..., regex="^(daily|weekly|monthly)$")
+    frequency: str = Field(..., pattern="^(daily|weekly|monthly)$")
     recipients: List[str] = Field(..., min_items=1)
     parameters: Dict[str, Any] = Field(default_factory=dict)
     schedule_config: Dict[str, Any] = Field(default_factory=dict)
@@ -77,7 +77,7 @@ class ScheduleResponse(BaseModel):
 
 class UpdateScheduleRequest(BaseModel):
     """Request model for updating a schedule"""
-    frequency: Optional[str] = Field(None, regex="^(daily|weekly|monthly)$")
+    frequency: Optional[str] = Field(None, pattern="^(daily|weekly|monthly)$")
     recipients: Optional[List[str]] = None
     parameters: Optional[Dict[str, Any]] = None
     active: Optional[bool] = None

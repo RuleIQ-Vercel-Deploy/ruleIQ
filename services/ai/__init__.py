@@ -1,9 +1,9 @@
 """
-AI services package for ComplianceGPT assistant functionality.
+AI Services Package
+
+Exposes core AI functionalities like the ComplianceAssistant.
 """
 
 from .assistant import ComplianceAssistant
-from .context_manager import ContextManager
-from .prompt_templates import PromptTemplates
 
-__all__ = ['ComplianceAssistant', 'ContextManager', 'PromptTemplates']
+__all__ = ["ComplianceAssistant"]

@@ -5,23 +5,30 @@ from uuid import UUID
 from fastapi import APIRouter, Depends
 from fastapi.responses import StreamingResponse
 
+from sqlalchemy.ext.asyncio import AsyncSession
+
 from api.dependencies.auth import get_current_active_user
+from api.dependencies.database import get_async_db
 from api.schemas.models import ComplianceReport, ReadinessAssessmentResponse
 from database.user import User
 from services.readiness_service import (
-    calculate_readiness_score,
+    generate_readiness_assessment,
     generate_compliance_report,
     get_historical_assessments,
 )
 
 router = APIRouter()
 
+
 @router.get("/assessment", response_model=ReadinessAssessmentResponse)
 async def get_readiness_assessment(
-    framework_id: Optional[UUID] = None,
-    current_user: User = Depends(get_current_active_user)
+    framework_id: UUID,
+    current_user: User = Depends(get_current_active_user),
+    db: AsyncSession = Depends(get_async_db),
 ):
-    assessment = calculate_readiness_score(current_user, framework_id)
+    assessment = await generate_readiness_assessment(
+        db=db, user=current_user, framework_id=framework_id
+    )
     return assessment
 
 @router.get("/history")

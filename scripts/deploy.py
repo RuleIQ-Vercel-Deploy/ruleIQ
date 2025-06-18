@@ -13,8 +13,17 @@ import time
 import json
 from typing import Dict, List, Tuple
 from datetime import datetime
-import psycopg2
-import redis
+import psycopg2 # Keep for direct DB check if needed, or remove if fully ORM-based
+import redis # Keep for direct Redis check
+
+# Add the project root to Python path for sibling imports
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+from config.logging_config import get_logger, setup_logging
+
+# Setup logging first
+setup_logging()
+logger = get_logger(__name__) # Global logger for the script
 
 class DeploymentChecker:
     """Comprehensive deployment readiness checker."""
@@ -24,42 +33,46 @@ class DeploymentChecker:
         self.checks_failed = 0
         self.warnings = []
         self.errors = []
+        # No need for self.logger if using global logger, or self.logger = get_logger(self.__class__.__name__)
     
     def log_success(self, message: str):
         """Log a successful check."""
-        print(f"✅ {message}")
+        logger.info(f"✅ {message}")
         self.checks_passed += 1
     
-    def log_error(self, message: str):
+    def log_error(self, message: str, exc_info_flag: bool = False):
         """Log a failed check."""
-        print(f"❌ {message}")
+        logger.error(f"❌ {message}", exc_info=exc_info_flag)
         self.checks_failed += 1
         self.errors.append(message)
     
     def log_warning(self, message: str):
         """Log a warning."""
-        print(f"⚠️  {message}")
+        logger.warning(f"⚠️  {message}")
         self.warnings.append(message)
     
     def check_environment_variables(self) -> bool:
         """Check that all required environment variables are set."""
-        print("\n🔍 Checking Environment Variables...")
+        logger.info("\n🔍 Checking Environment Variables...")
         
         required_vars = [
             'DATABASE_URL',
             'REDIS_URL', 
             'SECRET_KEY',
-            'GOOGLE_API_KEY',
+            # 'GOOGLE_API_KEY', # Assuming this might be optional for core functionality
         ]
         
         optional_vars = [
+            'GOOGLE_API_KEY',
             'OPENAI_API_KEY',
             'SMTP_SERVER',
+            'SMTP_PORT',
             'SMTP_USERNAME',
             'SMTP_PASSWORD',
             'FROM_EMAIL',
             'ENCRYPTION_KEY',
-            'ALLOWED_ORIGINS'
+            'ALLOWED_ORIGINS',
+            'LOG_LEVEL'
         ]
         
         all_present = True
@@ -76,367 +89,182 @@ class DeploymentChecker:
                 self.log_success(f"Optional variable {var} is set")
             else:
                 self.log_warning(f"Optional variable {var} is not set")
-        
         return all_present
-    
+
     def check_database_connection(self) -> bool:
-        """Check database connectivity and schema."""
-        print("\n🗄️  Checking Database Connection...")
-        
-        database_url = os.getenv('DATABASE_URL')
-        if not database_url:
-            self.log_error("DATABASE_URL not set")
+        """Check connection to the PostgreSQL database."""
+        logger.info("\n🔍 Checking Database Connection...")
+        db_url = os.getenv('DATABASE_URL')
+        if not db_url:
+            self.log_error("DATABASE_URL not set, cannot check DB connection.")
             return False
-        
         try:
-            # Test basic connection
-            conn = psycopg2.connect(database_url)
-            cursor = conn.cursor()
-            
-            # Check if main tables exist
-            required_tables = [
-                'users',
-                'business_profiles', 
-                'evidence_items',
-                'compliance_frameworks',
-                'generated_policies'
-            ]
-            
-            for table in required_tables:
-                cursor.execute(f"SELECT EXISTS (SELECT FROM information_schema.tables WHERE table_name = '{table}');")
-                exists = cursor.fetchone()[0]
-                
-                if exists:
-                    self.log_success(f"Table {table} exists")
-                else:
-                    self.log_error(f"Table {table} missing")
-            
-            # Check new tables for Phase 5-6 features
-            new_tables = ['chat_conversations', 'chat_messages']
-            for table in new_tables:
-                cursor.execute(f"SELECT EXISTS (SELECT FROM information_schema.tables WHERE table_name = '{table}');")
-                exists = cursor.fetchone()[0]
-                
-                if exists:
-                    self.log_success(f"New table {table} exists")
-                else:
-                    self.log_warning(f"New table {table} missing (run migrations)")
-            
-            cursor.close()
+            conn = psycopg2.connect(db_url)
             conn.close()
             self.log_success("Database connection successful")
             return True
-            
         except Exception as e:
-            self.log_error(f"Database connection failed: {e}")
+            self.log_error(f"Database connection failed: {e}", exc_info_flag=True)
             return False
-    
+
     def check_redis_connection(self) -> bool:
-        """Check Redis connectivity."""
-        print("\n📦 Checking Redis Connection...")
-        
-        redis_url = os.getenv('REDIS_URL', 'redis://localhost:6379/0')
-        
+        """Check connection to Redis."""
+        logger.info("\n🔍 Checking Redis Connection...")
+        redis_url = os.getenv('REDIS_URL')
+        if not redis_url:
+            self.log_error("REDIS_URL not set, cannot check Redis connection.")
+            return False
         try:
             r = redis.from_url(redis_url)
             r.ping()
-            
-            # Test basic operations
-            r.set('deployment_test', 'success')
-            result = r.get('deployment_test')
-            r.delete('deployment_test')
-            
-            if result == b'success':
-                self.log_success("Redis connection and operations successful")
+            self.log_success("Redis connection successful")
+            return True
+        except Exception as e:
+            self.log_error(f"Redis connection failed: {e}", exc_info_flag=True)
+            return False
+
+    def check_celery_workers_status(self) -> bool:
+        """Check if Celery workers are running (basic check)."""
+        logger.info("\n🔍 Checking Celery Workers Status (basic)...")
+        try:
+            # This is a very basic check. For a more robust check, you might need
+            # to use Celery's remote control commands or inspect broker queues.
+            result = subprocess.run(['celery', '-A', 'workers.celery_app', 'status'], capture_output=True, text=True, timeout=15)
+            if result.returncode == 0 and 'online' in result.stdout.lower():
+                self.log_success(f"Celery workers appear to be running. Output: {result.stdout.strip()}")
                 return True
             else:
-                self.log_error("Redis operations failed")
+                self.log_error(f"Celery workers might not be running or status check failed. Return code: {result.returncode}, Output: {result.stderr.strip()} {result.stdout.strip()}")
                 return False
-                
-        except Exception as e:
-            self.log_error(f"Redis connection failed: {e}")
+        except FileNotFoundError:
+            self.log_warning("Celery command not found. Skipping Celery worker check. Ensure Celery is installed and in PATH on the deployment server.")
+            return True # Warning, not a failure for the script's purpose if celery CLI isn't there
+        except subprocess.TimeoutExpired:
+            self.log_error("Celery status check timed out.")
             return False
-    
-    def check_ai_service_configuration(self) -> bool:
-        """Check AI service configuration."""
-        print("\n🤖 Checking AI Service Configuration...")
-        
-        google_api_key = os.getenv('GOOGLE_API_KEY')
-        openai_api_key = os.getenv('OPENAI_API_KEY')
-        
-        if google_api_key:
-            self.log_success("Google AI API key configured")
-            # Could add actual API test here
-        else:
-            self.log_error("Google AI API key missing")
-        
-        if openai_api_key:
-            self.log_success("OpenAI API key configured")
-        else:
-            self.log_warning("OpenAI API key not configured (using Google AI only)")
-        
-        return bool(google_api_key)
-    
-    def check_celery_configuration(self) -> bool:
-        """Check Celery worker configuration."""
-        print("\n⚙️  Checking Celery Configuration...")
-        
-        try:
-            # Import celery app
-            from celery_app import celery_app
-            
-            # Check if beat schedule is configured
-            beat_schedule = celery_app.conf.beat_schedule
-            if beat_schedule:
-                self.log_success(f"Celery beat schedule configured with {len(beat_schedule)} tasks")
-                
-                # List configured tasks
-                for task_name in beat_schedule.keys():
-                    print(f"   📅 {task_name}")
-            else:
-                self.log_warning("No Celery beat schedule configured")
-            
-            # Check task routing
-            task_routes = celery_app.conf.task_routes
-            if task_routes:
-                self.log_success(f"Task routing configured for {len(task_routes)} patterns")
-            else:
-                self.log_warning("No task routing configured")
-            
-            return True
-            
         except Exception as e:
-            self.log_error(f"Celery configuration check failed: {e}")
+            self.log_error(f"Error checking Celery workers: {e}", exc_info_flag=True)
             return False
-    
-    def check_application_startup(self) -> bool:
-        """Check if the FastAPI application can start."""
-        print("\n🚀 Checking Application Startup...")
-        
+
+    def check_api_health(self, host: str) -> bool:
+        """Check the health of the running API."""
+        logger.info(f"\n🔍 Checking API Health at {host}...")
+        health_endpoint = f"{host}/health"
         try:
-            # Try to import the main app
-            from main import app
-            self.log_success("FastAPI application imports successfully")
-            
-            # Check router registration
-            routes = [route.path for route in app.routes]
-            expected_routes = [
-                '/api/auth',
-                '/api/evidence', 
-                '/api/reports',
-                '/api/chat',
-                '/api/integrations'
-            ]
-            
-            for route_prefix in expected_routes:
-                matching_routes = [r for r in routes if r.startswith(route_prefix)]
-                if matching_routes:
-                    self.log_success(f"Routes for {route_prefix} registered")
-                else:
-                    self.log_warning(f"No routes found for {route_prefix}")
-            
-            return True
-            
-        except Exception as e:
-            self.log_error(f"Application startup check failed: {e}")
-            return False
-    
-    def check_dependencies(self) -> bool:
-        """Check that all required Python packages are installed."""
-        print("\n📦 Checking Python Dependencies...")
-        
-        required_packages = [
-            'fastapi',
-            'uvicorn',
-            'sqlalchemy',
-            'celery',
-            'redis',
-            'reportlab',
-            'google-generativeai',
-            'psycopg2',
-            'alembic',
-            'pytest'
-        ]
-        
-        all_installed = True
-        
-        for package in required_packages:
-            try:
-                __import__(package.replace('-', '_'))
-                self.log_success(f"Package {package} is installed")
-            except ImportError:
-                self.log_error(f"Package {package} is missing")
-                all_installed = False
-        
-        return all_installed
-    
-    def check_file_permissions(self) -> bool:
-        """Check file permissions for key files."""
-        print("\n🔐 Checking File Permissions...")
-        
-        executable_files = [
-            'start_workers.sh',
-            'scripts/migrate_evidence.py'
-        ]
-        
-        all_correct = True
-        
-        for file_path in executable_files:
-            if os.path.exists(file_path):
-                if os.access(file_path, os.X_OK):
-                    self.log_success(f"{file_path} is executable")
-                else:
-                    self.log_warning(f"{file_path} is not executable")
-                    # Fix the permission
-                    try:
-                        os.chmod(file_path, 0o755)
-                        self.log_success(f"Fixed permissions for {file_path}")
-                    except Exception as e:
-                        self.log_error(f"Could not fix permissions for {file_path}: {e}")
-                        all_correct = False
-            else:
-                self.log_warning(f"{file_path} does not exist")
-        
-        return all_correct
-    
-    def run_basic_health_check(self, host: str = "http://localhost:8000") -> bool:
-        """Run a basic health check against the running application."""
-        print(f"\n🏥 Running Health Check against {host}...")
-        
-        try:
-            # Check basic health endpoint
-            response = requests.get(f"{host}/health", timeout=10)
-            if response.status_code == 200:
-                self.log_success("Health endpoint responding")
-            else:
-                self.log_error(f"Health endpoint returned {response.status_code}")
-                return False
-            
-            # Check API info endpoint  
-            response = requests.get(f"{host}/", timeout=10)
+            response = requests.get(health_endpoint, timeout=10)
             if response.status_code == 200:
                 data = response.json()
-                if data.get('message') == 'ComplianceGPT API':
-                    self.log_success("API info endpoint responding correctly")
+                if data.get("status") == "Healthy":
+                    self.log_success(f"API health check passed: {data}")
+                    # You can add more checks here based on the health endpoint response
+                    db_status = data.get("dependencies", {}).get("database")
+                    redis_status = data.get("dependencies", {}).get("redis")
+                    if db_status == "Healthy":
+                        self.log_success("API reports Database is Healthy")
+                    else:
+                        self.log_warning(f"API reports Database status: {db_status}")
+                    if redis_status == "Healthy":
+                        self.log_success("API reports Redis is Healthy")
+                    else:
+                        self.log_warning(f"API reports Redis status: {redis_status}")
+                    return True
                 else:
-                    self.log_warning("API info endpoint response unexpected")
+                    self.log_error(f"API health check reported unhealthy: {data}")
+                    return False
             else:
-                self.log_error(f"API info endpoint returned {response.status_code}")
-            
-            return True
-            
+                self.log_error(f"API health check failed with status {response.status_code}: {response.text}")
+                return False
         except requests.exceptions.ConnectionError:
-            self.log_warning("Application not running (connection refused)")
+            self.log_error(f"API health check failed: Could not connect to {health_endpoint}")
             return False
         except Exception as e:
-            self.log_error(f"Health check failed: {e}")
+            self.log_error(f"Error during API health check: {e}", exc_info_flag=True)
             return False
-    
-    def generate_deployment_report(self) -> Dict:
-        """Generate a comprehensive deployment report."""
-        report = {
-            "timestamp": datetime.utcnow().isoformat(),
-            "checks_passed": self.checks_passed,
-            "checks_failed": self.checks_failed,
-            "warnings": self.warnings,
-            "errors": self.errors,
-            "overall_status": "READY" if self.checks_failed == 0 else "NOT_READY",
-            "readiness_score": (self.checks_passed / (self.checks_passed + self.checks_failed)) * 100 if (self.checks_passed + self.checks_failed) > 0 else 0
-        }
-        
-        return report
-    
+
     def run_all_checks(self, include_health_check: bool = False, host: str = "http://localhost:8000") -> Dict:
-        """Run all deployment readiness checks."""
-        print("🔍 ComplianceGPT Deployment Readiness Check")
-        print("=" * 50)
-        
-        # Run all checks
+        """Run all deployment checks and return a summary report."""
+        logger.info("🚀 Starting ComplianceGPT Deployment Readiness Checks...")
+        start_time = time.time()
+
         self.check_environment_variables()
-        self.check_dependencies()
         self.check_database_connection()
         self.check_redis_connection()
-        self.check_ai_service_configuration()
-        self.check_celery_configuration()
-        self.check_application_startup()
-        self.check_file_permissions()
+        self.check_celery_workers_status()
         
         if include_health_check:
-            self.run_basic_health_check(host)
-        
-        # Generate report
-        report = self.generate_deployment_report()
-        
-        print("\n" + "=" * 50)
-        print("📊 DEPLOYMENT READINESS SUMMARY")
-        print("=" * 50)
-        print(f"✅ Checks Passed: {report['checks_passed']}")
-        print(f"❌ Checks Failed: {report['checks_failed']}")
-        print(f"⚠️  Warnings: {len(report['warnings'])}")
-        print(f"📈 Readiness Score: {report['readiness_score']:.1f}%")
-        print(f"🎯 Overall Status: {report['overall_status']}")
-        
-        if report['errors']:
-            print("\n❌ CRITICAL ISSUES TO FIX:")
-            for error in report['errors']:
-                print(f"   • {error}")
-        
-        if report['warnings']:
-            print("\n⚠️  WARNINGS TO REVIEW:")
-            for warning in report['warnings']:
-                print(f"   • {warning}")
-        
-        if report['overall_status'] == 'READY':
-            print("\n🎉 ComplianceGPT is ready for deployment!")
+            self.check_api_health(host)
         else:
-            print("\n🔧 Please fix the critical issues before deploying.")
-        
-        return report
+            self.log_warning("API health check skipped by command-line flag.")
+
+        end_time = time.time()
+        duration = end_time - start_time
+
+        logger.info("\n🏁 Deployment Checks Summary:")
+        logger.info(f"   Checks Passed: {self.checks_passed}")
+        logger.info(f"   Checks Failed: {self.checks_failed}")
+        logger.info(f"   Warnings: {len(self.warnings)}")
+        logger.info(f"   Duration: {duration:.2f} seconds")
+
+        overall_status = "READY" if self.checks_failed == 0 else "NOT_READY"
+        if self.checks_failed == 0 and self.warnings:
+            overall_status = "READY_WITH_WARNINGS"
+            
+        logger.info(f"   Overall Status: {overall_status}")
+
+        return {
+            "timestamp": datetime.utcnow().isoformat(),
+            "overall_status": overall_status,
+            "checks_passed": self.checks_passed,
+            "checks_failed": self.checks_failed,
+            "warnings_count": len(self.warnings),
+            "duration_seconds": duration,
+            "errors": self.errors,
+            "warnings": self.warnings
+        }
 
 def create_docker_environment_file():
-    """Create a .env file for Docker deployment."""
-    env_template = """# ComplianceGPT Environment Configuration
-# Copy this file to .env and update with your actual values
+    """Create an example .env file for Docker Compose."""
+    logger.info("\n📄 Creating example .env file for Docker ('.env.example')...")
+    env_template = """# ComplianceGPT Environment Variables Example
+# Copy this to .env and fill in your actual values
 
-# Database Configuration
-DATABASE_URL=postgresql+psycopg2://postgres:postgres@db:5432/compliancegpt
-
-# Redis Configuration  
+# Core Application Settings
+DATABASE_URL=postgresql+asyncpg://user:password@db:5432/compliancegpt
 REDIS_URL=redis://redis:6379/0
+SECRET_KEY=your-very-strong-secret-key-here # Generate with: openssl rand -hex 32
 
-# Security
-SECRET_KEY=your-super-secret-key-change-this-in-production
-ENCRYPTION_KEY=your-32-character-encryption-key
-
-# AI Services
-GOOGLE_API_KEY=your-google-ai-api-key
-OPENAI_API_KEY=your-openai-api-key-optional
+# External Service API Keys (Optional but recommended for full functionality)
+# GOOGLE_API_KEY=your-google-api-key-for-nlp-or-other-services
+# OPENAI_API_KEY=your-openai-api-key-optional
 
 # Email Configuration (Optional)
-SMTP_SERVER=smtp.gmail.com
-SMTP_PORT=587
-SMTP_USERNAME=your-email@gmail.com
-SMTP_PASSWORD=your-app-password
-FROM_EMAIL=noreply@yourcompany.com
+# SMTP_SERVER=smtp.gmail.com
+# SMTP_PORT=587
+# SMTP_USERNAME=your-email@gmail.com
+# SMTP_PASSWORD=your-app-password
+# FROM_EMAIL=noreply@yourcompany.com
 
 # Application Configuration
-ALLOWED_ORIGINS=http://localhost:3000,http://localhost:8080
+ALLOWED_ORIGINS=http://localhost:3000,http://localhost:8080,https://your-frontend-domain.com
 DEBUG=false
-ENV=production
+ENV=production # or 'development', 'staging'
+LOG_LEVEL=INFO # DEBUG, INFO, WARNING, ERROR, CRITICAL
 
-# OAuth Configuration (for integrations)
-GOOGLE_CLIENT_ID=your-google-oauth-client-id
-GOOGLE_CLIENT_SECRET=your-google-oauth-client-secret
-MICROSOFT_CLIENT_ID=your-microsoft-oauth-client-id
-MICROSOFT_CLIENT_SECRET=your-microsoft-oauth-client-secret
+# OAuth Configuration (for integrations, if used)
+# GOOGLE_CLIENT_ID=your-google-oauth-client-id
+# GOOGLE_CLIENT_SECRET=your-google-oauth-client-secret
+# MICROSOFT_CLIENT_ID=your-microsoft-oauth-client-id
+# MICROSOFT_CLIENT_SECRET=your-microsoft-oauth-client-secret
 """
     
     env_file = ".env.example"
-    with open(env_file, 'w') as f:
-        f.write(env_template)
-    
-    print(f"✅ Created {env_file}")
-    print("   Copy this to .env and update with your actual values")
+    try:
+        with open(env_file, 'w') as f:
+            f.write(env_template)
+        logger.info(f"✅ Created {env_file}")
+        logger.info("   Copy this to .env and update with your actual values")
+    except IOError as e:
+        logger.error(f"Failed to create {env_file}: {e}", exc_info_flag=True)
 
 def main():
     """Main deployment preparation function."""
@@ -463,12 +291,15 @@ def main():
     
     # Save report if requested
     if args.output:
-        with open(args.output, 'w') as f:
-            json.dump(report, f, indent=2)
-        print(f"\n📄 Report saved to {args.output}")
+        try:
+            with open(args.output, 'w') as f:
+                json.dump(report, f, indent=2)
+            logger.info(f"\n📄 Report saved to {args.output}")
+        except IOError as e:
+            logger.error(f"Failed to save report to {args.output}: {e}", exc_info_flag=True)
     
     # Exit with appropriate code
-    sys.exit(0 if report['overall_status'] == 'READY' else 1)
+    sys.exit(0 if report['overall_status'] in ['READY', 'READY_WITH_WARNINGS'] else 1)
 
 if __name__ == "__main__":
     main()

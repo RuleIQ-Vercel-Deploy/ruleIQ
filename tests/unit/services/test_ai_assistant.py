@@ -11,7 +11,7 @@ from unittest.mock import Mock, patch, AsyncMock
 from uuid import uuid4
 
 from services.ai.assistant import ComplianceAssistant
-from api.middleware.error_handler import ValidationAPIError
+from core.exceptions import ValidationAPIError
 
 
 @pytest.mark.unit

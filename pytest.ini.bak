@@ -1,0 +1,189 @@
+[pytest]
+# Test discovery
+testpaths = tests
+python_files = test_*.py *_test.py
+python_classes = Test*
+python_functions = test_*
+
+# Test execution options
+addopts = 
+    --strict-markers
+    --strict-config
+    --verbose
+    --tb=short
+    --maxfail=5
+    --durations=10
+    --cov=.
+    --cov-report=term-missing:skip-covered
+    --cov-report=html:htmlcov
+    --cov-report=xml:coverage.xml
+    --cov-report=json:coverage.json
+    --cov-fail-under=70
+    --cov-branch
+    --asyncio-mode=auto
+    --disable-warnings
+
+# Test markers for categorization with detailed descriptions
+markers =
+    # Core test categories
+    unit: Unit tests for individual components (isolated, fast, mocked dependencies)
+    integration: Integration tests for API endpoints and service interactions
+    e2e: End-to-end user journey tests (complete workflows)
+    
+    # Domain-specific categories
+    database: Database-related tests (models, queries, transactions)
+    api: API endpoint tests (HTTP requests, responses, validation)
+    auth: Authentication and authorization tests
+    security: Security and vulnerability tests (XSS, SQL injection, etc.)
+    ai: AI integration and compliance logic tests
+    compliance: Regulatory compliance content validation
+    ethical: Ethical AI and bias testing
+    
+    # Performance and reliability
+    performance: Performance and load tests
+    slow: Tests that take >5 seconds to run
+    memory: Memory usage and leak tests
+    concurrency: Concurrent operation tests
+    
+    # Environment and dependencies
+    external: Tests that require external services (disabled in CI by default)
+    network: Tests requiring network access
+    docker: Tests requiring Docker containers
+    
+    # Quality and maintenance
+    regression: Regression tests for known bugs
+    smoke: Quick smoke tests for basic functionality
+    golden: Golden dataset validation tests
+    contract: Contract testing for service boundaries
+    
+    # Development workflow
+    wip: Work in progress (do not run in CI)
+    
+# Coverage settings
+[coverage:run]
+source = 
+    api/
+    services/
+    workers/
+    utils/
+    database/
+    config/
+omit = 
+    */tests/*
+    */__init__.py
+    */main.py
+    */db_setup.py
+    
+[coverage:report]
+# Fail if coverage drops below these thresholds
+fail_under = 70
+show_missing = true
+precision = 2
+# Per-module coverage targets
+[coverage:paths]
+source = 
+    src
+    .
+# Path mapping for coverage reports
+[coverage:path]
+source = 
+    api/
+    services/
+    workers/
+    utils/
+    database/
+    config/
+
+[coverage:html]
+directory = htmlcov
+
+[coverage:xml]
+output = coverage.xml
+
+[coverage:json]
+output = coverage.json
+
+[coverage:fail_under]
+# Set minimum coverage per module
+api/routers/* = 80
+services/ = 75
+# High priority services: 90% coverage
+# Critical security services: 85% coverage  
+# Medium priority services: 75% coverage
+exclude_lines =
+    pragma: no cover
+    def __repr__
+    if self.debug:
+    if settings.DEBUG
+    raise AssertionError
+    raise NotImplementedError
+    if 0:
+    if __name__ == .__main__.:
+    class .*\bProtocol\):
+    @(abc\.)?abstractmethod
+    
+# Test environment configuration
+env = 
+    ENV = testing
+    DEBUG = false
+    DATABASE_URL = postgresql+psycopg2://test_user:test_pass@localhost:5432/test_compliancegpt
+    REDIS_URL = redis://localhost:6379/1
+    SECRET_KEY = test_secret_key_for_testing_only_32_characters_long
+    GOOGLE_API_KEY = test_key_mock_do_not_use_in_production
+    OPENAI_API_KEY = test_openai_key_mock
+    ALLOWED_ORIGINS = ["http://localhost:3000", "http://testserver"]
+    RATE_LIMIT_REQUESTS = 1000
+    RATE_LIMIT_WINDOW = 60
+    LOG_LEVEL = WARNING
+    ENABLE_METRICS = false
+    CELERY_ALWAYS_EAGER = true
+    CELERY_EAGER_PROPAGATES_EXCEPTIONS = true
+
+# Minimum Python version
+minversion = 3.11
+
+# Filter warnings
+filterwarnings =
+    ignore::DeprecationWarning
+    ignore::PendingDeprecationWarning  
+    ignore::UserWarning:google.*
+    ignore::RuntimeWarning:asyncio
+    ignore::pytest.PytestUnraisableExceptionWarning
+    error::UserWarning:tests.*
+
+# Test timeouts (in seconds)
+timeout = 300
+timeout_method = thread
+
+# Parallel execution settings
+# Use with: pytest -n auto
+dist = worksteal
+numprocesses = auto
+
+# Test ordering and collection
+collect_ignore = [
+    "setup.py",
+    "venv/",
+    "htmlcov/",
+    ".tox/",
+    "build/",
+    "dist/"
+]
+
+# Logging configuration for tests  
+log_level = INFO
+log_cli = true
+log_cli_level = WARNING
+log_cli_format = %(asctime)s [%(levelname)8s] %(name)s: %(message)s
+log_cli_date_format = %Y-%m-%d %H:%M:%S
+
+# Test result output
+junit_family = xunit2
+junit_logging = all
+junit_log_passing_tests = false
+
+# Fail fast on first test collection error
+collect_ignore_glob = [
+    "**/node_modules/**",
+    "**/.git/**"
+]

@@ -4,13 +4,13 @@ from uuid import UUID
 from fastapi import APIRouter, Depends, HTTPException
 
 from api.dependencies.auth import get_current_active_user
-from api.schemas.models import FrameworkRecommendation, FrameworkResponse
+from api.schemas.models import FrameworkRecommendation, ComplianceFrameworkResponse
 from database.user import User
 from services.framework_service import get_framework_by_id, get_relevant_frameworks
 
 router = APIRouter()
 
-@router.get("/", response_model=List[FrameworkResponse])
+@router.get("/", response_model=List[ComplianceFrameworkResponse])
 async def list_frameworks(
     current_user: User = Depends(get_current_active_user)
 ):
@@ -32,7 +32,7 @@ async def get_framework_recommendations(
         for rec in recommendations
     ]
 
-@router.get("/{framework_id}", response_model=FrameworkResponse)
+@router.get("/{framework_id}", response_model=ComplianceFrameworkResponse)
 async def get_framework(
     framework_id: UUID,
     current_user: User = Depends(get_current_active_user)

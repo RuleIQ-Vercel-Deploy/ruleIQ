@@ -11,7 +11,7 @@ from enum import Enum
 from functools import wraps
 from typing import Awaitable, Callable, Optional, Tuple, Type, TypeVar
 
-from api.middleware.error_handler import APIError
+from core.exceptions import APIError
 
 logger = logging.getLogger(__name__)
 

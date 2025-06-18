@@ -5,6 +5,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from api.middleware.error_handler import error_handler_middleware
+from api.request_id_middleware import RequestIDMiddleware
 from api.routers import (
     assessments,
     auth,
@@ -22,19 +23,18 @@ from api.routers import (
 from api.schemas import APIInfoResponse, HealthCheckResponse
 from config.logging_config import get_logger, setup_logging
 from config.settings import settings
-from database.db_setup import Base, engine
+from database.db_setup import create_db_and_tables
 
 # Setup logging
 setup_logging()
 logger = get_logger(__name__)
 
-# Create database tables
-Base.metadata.create_all(bind=engine)
-
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # Startup
     logger.logger.info("Starting ComplianceGPT API...")
+    await create_db_and_tables()
+    logger.logger.info("Database tables created or verified.")
     logger.logger.info(f"Environment: {settings.env.value}")
     logger.logger.info(f"Debug mode: {settings.debug}")
     yield
@@ -61,6 +61,7 @@ app.add_middleware(
 )
 
 # Custom middleware
+app.add_middleware(RequestIDMiddleware)
 app.middleware("http")(error_handler_middleware)
 
 # Rate limiting

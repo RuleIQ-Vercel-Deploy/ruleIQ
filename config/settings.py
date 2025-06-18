@@ -34,7 +34,15 @@ class Settings(BaseSettings):
 
     # Environment
     env: Environment = Field(default=Environment.DEVELOPMENT, env="ENV")
-    debug: bool = Field(default=True, env="DEBUG")
+    debug: bool = Field(default=False, env="DEBUG")
+
+    @field_validator('debug', mode='before')
+    @classmethod
+    def validate_debug_bool(cls, v):
+        """Coerce string 'truthy' values to boolean"""
+        if isinstance(v, str):
+            return v.lower() in ('true', '1', 't', 'y', 'yes', 'on')
+        return bool(v)
 
     # Server
     host: str = Field(default="0.0.0.0", env="HOST")
@@ -43,6 +51,14 @@ class Settings(BaseSettings):
     # Database
     database_url: str = Field(..., env="DATABASE_URL")
     database_echo: bool = Field(default=False, env="DATABASE_ECHO")
+
+    @field_validator('database_url')
+    @classmethod
+    def validate_database_url(cls, v):
+        """Validate database URL format"""
+        if not v.startswith(('postgresql://', 'postgresql+psycopg2://', 'postgresql+asyncpg://')):
+            raise ValueError("Database URL must be a valid PostgreSQL connection string")
+        return v
 
     # Security
     secret_key: str = Field(..., env="SECRET_KEY")
@@ -54,6 +70,14 @@ class Settings(BaseSettings):
         default=["http://localhost:3000"],
         env="ALLOWED_ORIGINS"
     )
+
+    @field_validator('allowed_origins', mode='before')
+    @classmethod
+    def parse_cors_origins(cls, v):
+        """Parse CORS origins from comma-separated string"""
+        if isinstance(v, str):
+            return [origin.strip() for origin in v.split(',')]
+        return v
 
     # AI Configuration
     google_api_key: str = Field(..., env="GOOGLE_API_KEY")
@@ -69,7 +93,7 @@ class Settings(BaseSettings):
         env="LOG_FORMAT"
     )
 
-    # File Upload
+    # File Uploads
     max_file_size: int = Field(default=10 * 1024 * 1024, env="MAX_FILE_SIZE")  # 10MB
     upload_dir: str = Field(default="uploads", env="UPLOAD_DIR")
 
@@ -80,30 +104,6 @@ class Settings(BaseSettings):
     # Monitoring
     enable_metrics: bool = Field(default=True, env="ENABLE_METRICS")
     sentry_dsn: Optional[str] = Field(default=None, env="SENTRY_DSN")
-
-    @field_validator('allowed_origins', mode='before')
-    @classmethod
-    def parse_cors_origins(cls, v):
-        """Parse CORS origins from comma-separated string"""
-        if isinstance(v, str):
-            return [origin.strip() for origin in v.split(',')]
-        return v
-
-    @field_validator('env')
-    @classmethod
-    def validate_environment(cls, v):
-        """Validate environment setting"""
-        if v not in Environment:
-            raise ValueError(f"Invalid environment: {v}")
-        return v
-
-    @field_validator('database_url')
-    @classmethod
-    def validate_database_url(cls, v):
-        """Validate database URL format"""
-        if not v.startswith(('postgresql://', 'postgresql+psycopg2://')):
-            raise ValueError("Database URL must be a PostgreSQL connection string")
-        return v
 
     @property
     def is_development(self) -> bool:

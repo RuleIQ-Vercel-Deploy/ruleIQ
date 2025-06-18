@@ -2,322 +2,318 @@ from datetime import datetime
 from typing import Dict, List, Optional
 from uuid import UUID
 
-from core.assessment_session import AssessmentSession
-from core.business_profile import BusinessProfile
-from core.framework_service import get_relevant_frameworks
-from sqlalchemy_access import User, authenticated
+import sqlalchemy as sa
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.future import select
+
+from core.exceptions import DatabaseException, NotFoundException
+from database.models import AssessmentSession, BusinessProfile, User
+from services.framework_service import get_relevant_frameworks
 
 
-@authenticated
-def start_assessment_session(user: User, session_type: str = "compliance_scoping") -> AssessmentSession:
-    """Start a new assessment session for the user."""
+class AssessmentService:
+    def __init__(self):
+        pass  # db session will be passed to methods
 
-    # Check if there's an active session
-    existing_sessions = AssessmentSession.sql(
-        "SELECT * FROM assessment_sessions WHERE user_id = %(user_id)s AND status = 'in_progress' ORDER BY created_at DESC",
-        {"user_id": user.id}
-    )
+    async def start_assessment_session(self, db: AsyncSession, user: User, session_type: str = "compliance_scoping") -> AssessmentSession:
+        """Start a new assessment session for the user."""
+        try:
+            # Check if there's an active session
+            stmt_existing = (
+                select(AssessmentSession)
+                .where(AssessmentSession.user_id == user.id)
+                .where(AssessmentSession.status == "in_progress")
+                .order_by(AssessmentSession.created_at.desc())
+            )
+            result_existing = await db.execute(stmt_existing)
+            existing_session = result_existing.scalars().first()
 
-    if existing_sessions:
-        # Return the most recent active session
-        return AssessmentSession(**existing_sessions[0])
+            if existing_session:
+                return existing_session
 
-    # Get business profile if it exists
-    profile_results = BusinessProfile.sql(
-        "SELECT * FROM business_profiles WHERE user_id = %(user_id)s",
-        {"user_id": user.id}
-    )
+            # Get business profile if it exists
+            stmt_profile = select(BusinessProfile).where(BusinessProfile.user_id == user.id)
+            result_profile = await db.execute(stmt_profile)
+            business_profile = result_profile.scalars().first()
+            business_profile_id = business_profile.id if business_profile else None
 
-    business_profile_id = None
-    if profile_results:
-        business_profile_id = profile_results[0]["id"]
+            # Create new session
+            new_session = AssessmentSession(
+                user_id=user.id,
+                business_profile_id=business_profile_id,
+                session_type=session_type,
+                status="in_progress",  # Ensure status is set
+                total_stages=5,  # Basic info, Industry, Data handling, Tech stack, Compliance goals
+                total_questions=25,
+                current_stage=1,  # Start at stage 1
+                answers={}
+            )
+            db.add(new_session)
+            await db.commit()
+            await db.refresh(new_session)
+            return new_session
+        except sa.exc.SQLAlchemyError as e:
+            await db.rollback()
+            raise DatabaseException(f"Error starting assessment session: {e}")
 
-    # Create new session
-    session = AssessmentSession(
-        user_id=user.id,
-        business_profile_id=business_profile_id,
-        session_type=session_type,
-        total_stages=5,  # Basic info, Industry, Data handling, Tech stack, Compliance goals
-        total_questions=25
-    )
+    async def get_assessment_session(self, db: AsyncSession, user: User, session_id: UUID) -> Optional[AssessmentSession]:
+        """Get a specific assessment session."""
+        try:
+            stmt = (
+                select(AssessmentSession)
+                .where(AssessmentSession.id == session_id)
+                .where(AssessmentSession.user_id == user.id)
+            )
+            result = await db.execute(stmt)
+            session = result.scalars().first()
+            # if not session:
+            #     raise NotFoundException(f"Assessment session {session_id} not found for user {user.id}")
+            return session
+        except sa.exc.SQLAlchemyError as e:
+            # Log error appropriately
+            raise DatabaseException(f"Error retrieving assessment session {session_id}: {e}")
 
-    session.sync()
-    return session
+    async def get_current_assessment_session(self, db: AsyncSession, user: User) -> Optional[AssessmentSession]:
+        """Get the current active assessment session for the user."""
+        try:
+            stmt = (
+                select(AssessmentSession)
+                .where(AssessmentSession.user_id == user.id)
+                .where(AssessmentSession.status == "in_progress")
+                .order_by(AssessmentSession.created_at.desc())
+            )
+            result = await db.execute(stmt)
+            session = result.scalars().first()
+            return session  # Can be None if no active session, handled by caller
+        except sa.exc.SQLAlchemyError as e:
+            # Log error appropriately
+            raise DatabaseException(f"Error retrieving current assessment session for user {user.id}: {e}")
 
-@authenticated
-def get_assessment_session(user: User, session_id: UUID) -> Optional[AssessmentSession]:
-    """Get a specific assessment session."""
-    results = AssessmentSession.sql(
-        "SELECT * FROM assessment_sessions WHERE id = %(session_id)s AND user_id = %(user_id)s",
-        {"session_id": session_id, "user_id": user.id}
-    )
+    async def update_assessment_response(self, db: AsyncSession, user: User, session_id: UUID, question_id: str, answer: Dict) -> AssessmentSession:
+        """Update an assessment response."""
+        try:
+            session = await self.get_assessment_session(db, user, session_id)
+            if not session:
+                # Consider using NotFoundException if get_assessment_session can return None and it's an error here
+                raise NotFoundException(f"Assessment session {session_id} not found for user {user.id} during update.")
 
-    if results:
-        return AssessmentSession(**results[0])
-    return None
+            if session.status != "in_progress":
+                raise ValueError("Assessment session is not in progress and cannot be updated.")  # Or a custom domain exception
 
-@authenticated
-def get_current_assessment_session(user: User) -> Optional[AssessmentSession]:
-    """Get the current active assessment session for the user."""
-    results = AssessmentSession.sql(
-        "SELECT * FROM assessment_sessions WHERE user_id = %(user_id)s AND status = 'in_progress' ORDER BY created_at DESC LIMIT 1",
-        {"user_id": user.id}
-    )
+            # Ensure answers is initialized if it's None (though model default should handle this)
+            if session.answers is None:
+                session.answers = {}
 
-    if results:
-        return AssessmentSession(**results[0])
-    return None
+            session.answers[question_id] = answer
+            session.last_updated = datetime.utcnow()
+            # Potentially update current_stage based on answered questions
+            # For example: session.current_stage = calculate_next_stage(session.answers)
 
-@authenticated
-def update_assessment_response(
-    user: User,
-    session_id: UUID,
-    question_id: str,
-    response: str,
-    move_to_next_stage: bool = False
-) -> AssessmentSession:
-    """Update an assessment response and optionally move to next stage."""
+            db.add(session)  # Add to session for SQLAlchemy to track changes
+            await db.commit()
+            await db.refresh(session)
+            return session
+        except sa.exc.SQLAlchemyError as e:
+            await db.rollback()
+            # Log error appropriately
+            raise DatabaseException(f"Error updating assessment response for session {session_id}: {e}")
+        except NotFoundException:  # Re-raise if we want it to propagate
+            raise
+        except ValueError as e:  # Catch specific domain errors
+            # Log error appropriately
+            raise  # Or wrap in a custom API error
 
-    session = get_assessment_session(user, session_id)
-    if not session:
-        raise ValueError("Assessment session not found")
+    async def complete_assessment_session(self, db: AsyncSession, user: User, session_id: UUID) -> AssessmentSession:
+        """Complete an assessment session and generate recommendations."""
+        try:
+            session = await self.get_assessment_session(db, user, session_id)
+            if not session:
+                raise NotFoundException(f"Assessment session {session_id} not found for user {user.id} to complete.")
 
-    # Update response
-    session.responses[question_id] = response
-    session.questions_answered = len(session.responses)
-    session.last_activity = datetime.now()
+            if session.status != "in_progress":
+                # Consider a more specific exception, e.g., InvalidSessionStateError
+                raise ValueError(f"Assessment session {session_id} is not 'in_progress' (status: {session.status}). Cannot complete.")
 
-    # Move to next stage if requested
-    if move_to_next_stage and session.current_stage < session.total_stages:
-        session.current_stage += 1
+            # Perform any final validation or processing
+            session.status = "completed"
+            session.completed_at = datetime.utcnow()
 
-    session.sync()
-    return session
+            # Generate recommendations based on answers
+            # This would typically involve analyzing session.answers
+            relevant_frameworks_data = await get_relevant_frameworks(db, user)
 
-@authenticated
-def complete_assessment_session(user: User, session_id: UUID) -> AssessmentSession:
-    """Complete an assessment session and generate recommendations."""
+            recommendations = []
+            if relevant_frameworks_data:
+                for framework_info in relevant_frameworks_data:
+                    # Basic recommendation: suggest frameworks with high relevance
+                    # Ensure framework_info structure is as expected by get_relevant_frameworks
+                    # It returns a list of dicts like: {"framework": framework_object.to_dict(), "relevance_score": score}
+                    if framework_info.get("relevance_score", 0) > 50:  # Adjusted threshold based on calculate_framework_relevance logic
+                        framework_details = framework_info.get("framework", {})
+                        recommendations.append({
+                            "framework_id": str(framework_details.get("id")),
+                            "framework_name": framework_details.get("name"),
+                            "reason": f"High relevance score: {framework_info['relevance_score']}"
+                        })
 
-    session = get_assessment_session(user, session_id)
-    if not session:
-        raise ValueError("Assessment session not found")
+            session.recommendations = recommendations  # Ensure AssessmentSession model has this field as JSON or similar
 
-    # Update business profile with assessment data
-    profile_results = BusinessProfile.sql(
-        "SELECT * FROM business_profiles WHERE user_id = %(user_id)s",
-        {"user_id": user.id}
-    )
+            db.add(session)
+            await db.commit()
+            await db.refresh(session)
+            return session
+        except sa.exc.SQLAlchemyError as e:
+            await db.rollback()
+            # Log error appropriately
+            raise DatabaseException(f"Error completing assessment session {session_id}: {e}")
+        except NotFoundException:  # Re-raise
+            raise
+        except ValueError as e:  # Re-raise specific domain error
+            # Log error appropriately
+            raise
 
-    if profile_results:
-        profile = BusinessProfile(**profile_results[0])
+    def get_assessment_questions(self, user: User, stage: int) -> List[Dict]:
+        """Get assessment questions for a specific stage."""
 
-        # Extract key information from responses
-        profile.assessment_completed = True
-        profile.assessment_data = session.responses
+        questions = {
+            1: [  # Basic Information
+                {
+                    "id": "company_name",
+                    "question": "What is your company's name?",
+                    "type": "text",
+                    "required": True
+                },
+                {
+                    "id": "industry",
+                    "question": "What industry is your company in?",
+                    "type": "select",
+                    "options": [
+                        "Technology", "Finance", "Healthcare", "Retail", "Manufacturing", "Other"
+                    ],
+                    "required": True
+                },
+                {
+                    "id": "company_size",
+                    "question": "What is the size of your company (number of employees)?",
+                    "type": "select",
+                    "options": [
+                        "1-50", "51-200", "201-1000", "1000+"
+                    ],
+                    "required": True
+                }
+            ],
+            2: [  # Data Handling
+                {
+                    "id": "data_types_handled",
+                    "question": "What types of sensitive data does your company handle?",
+                    "type": "checkbox",
+                    "options": [
+                        "Personally Identifiable Information (PII)",
+                        "Payment Card Industry (PCI) data",
+                        "Protected Health Information (PHI)",
+                        "Intellectual Property",
+                        "Financial Data (non-PCI)",
+                        "None of the above"
+                    ],
+                    "required": True
+                },
+                {
+                    "id": "data_storage_location",
+                    "question": "Where is this sensitive data primarily stored?",
+                    "type": "select",
+                    "options": [
+                        "Cloud (e.g., AWS, Azure, GCP)",
+                        "On-premise servers",
+                        "Hybrid (Cloud and On-premise)",
+                        "Third-party SaaS applications"
+                    ],
+                    "required": True
+                }
+            ],
+            3: [  # Technology Stack
+                {
+                    "id": "cloud_providers",
+                    "question": "Which cloud providers do you use (if any)?",
+                    "type": "checkbox",
+                    "options": [
+                        "AWS", "Azure", "Google Cloud Platform (GCP)", "Oracle Cloud", "Other", "None"
+                    ],
+                    "required": False
+                },
+                {
+                    "id": "saas_tools",
+                    "question": "List key SaaS tools critical to your operations (e.g., Salesforce, Office 365, Slack).",
+                    "type": "textarea",
+                    "required": False
+                },
+                {
+                    "id": "development_practices",
+                    "question": "Does your company follow secure software development practices (e.g., OWASP, DevSecOps)?",
+                    "type": "radio",
+                    "options": ["Yes", "No", "Partially", "Unsure"],
+                    "required": True
+                }
+            ],
+            4: [  # Current Compliance Posture
+                {
+                    "id": "existing_certifications",
+                    "question": "Does your company currently hold any compliance certifications?",
+                    "type": "checkbox",
+                    "options": [
+                        "ISO 27001", "SOC 2", "PCI DSS", "HIPAA Compliant", "GDPR Compliant", "None"
+                    ],
+                    "required": False
+                },
+                {
+                    "id": "planned_frameworks",
+                    "question": "Which compliance frameworks is your company planning to achieve?",
+                    "type": "checkbox",
+                    "options": [
+                        "GDPR", "ISO 27001", "Cyber Essentials", "FCA", "PCI DSS", "SOC 2"
+                    ],
+                    "required": False
+                },
+                {
+                    "id": "compliance_budget",
+                    "question": "What is your budget range for compliance initiatives?",
+                    "type": "select",
+                    "options": [
+                        "Under £10K", "£10K-£25K", "£25K-£50K", "£50K-£100K", "Over £100K"
+                    ],
+                    "required": False
+                }
+            ],
+            5: [  # Goals and Timeline
+                {
+                    "id": "compliance_timeline",
+                    "question": "What is your target timeline for achieving compliance?",
+                    "type": "select",
+                    "options": [
+                        "3 months", "6 months", "12 months", "18+ months"
+                    ],
+                    "required": True
+                },
+                {
+                    "id": "primary_driver",
+                    "question": "What is the primary driver for your compliance initiative?",
+                    "type": "select",
+                    "options": [
+                        "Customer requirements", "Regulatory requirement", "Business growth",
+                        "Risk management", "Competitive advantage"
+                    ],
+                    "required": True
+                },
+                {
+                    "id": "biggest_challenge",
+                    "question": "What do you expect to be your biggest compliance challenge?",
+                    "type": "select",
+                    "options": [
+                        "Understanding requirements", "Resource allocation", "Technical implementation",
+                        "Policy development", "Evidence collection", "Ongoing maintenance"
+                    ],
+                    "required": False
+                }
+            ]
+        }
 
-        # Update profile fields based on responses
-        if "handles_personal_data" in session.responses:
-            profile.handles_personal_data = session.responses["handles_personal_data"].lower() == "yes"
-        if "processes_payments" in session.responses:
-            profile.processes_payments = session.responses["processes_payments"].lower() == "yes"
-        if "stores_health_data" in session.responses:
-            profile.stores_health_data = session.responses["stores_health_data"].lower() == "yes"
-        if "provides_financial_services" in session.responses:
-            profile.provides_financial_services = session.responses["provides_financial_services"].lower() == "yes"
-
-        profile.sync()
-
-    # Generate framework recommendations
-    relevant_frameworks = get_relevant_frameworks(user)
-
-    session.recommendations = relevant_frameworks
-    session.recommended_frameworks = [fw["framework"].name for fw in relevant_frameworks[:5]]
-    session.priority_order = [fw["framework"].name for fw in relevant_frameworks]
-
-    # Generate next steps
-    next_steps = []
-    if relevant_frameworks:
-        top_framework = relevant_frameworks[0]["framework"]
-        next_steps = [
-            f"Start with {top_framework.display_name} as your highest priority framework",
-            "Generate comprehensive policies for your top framework",
-            "Create implementation plans for required controls",
-            "Set up evidence collection processes",
-            "Schedule regular compliance readiness assessments"
-        ]
-
-    session.next_steps = next_steps
-    session.status = "completed"
-    session.completed_at = datetime.now()
-
-    session.sync()
-    return session
-
-@authenticated
-def get_assessment_questions(user: User, stage: int) -> List[Dict]:
-    """Get assessment questions for a specific stage."""
-
-    questions = {
-        1: [  # Basic Company Information
-            {
-                "id": "company_name",
-                "question": "What is your company name?",
-                "type": "text",
-                "required": True
-            },
-            {
-                "id": "industry",
-                "question": "What industry does your company operate in?",
-                "type": "select",
-                "options": [
-                    "Financial Services", "Healthcare", "Technology", "Manufacturing",
-                    "Retail", "Education", "Government", "Non-profit", "Other"
-                ],
-                "required": True
-            },
-            {
-                "id": "employee_count",
-                "question": "How many employees does your company have?",
-                "type": "number",
-                "required": True
-            },
-            {
-                "id": "annual_revenue",
-                "question": "What is your approximate annual revenue?",
-                "type": "select",
-                "options": [
-                    "Under £1M", "£1M-£5M", "£5M-£25M", "£25M-£100M", "Over £100M"
-                ],
-                "required": False
-            }
-        ],
-        2: [  # Data and Services
-            {
-                "id": "handles_personal_data",
-                "question": "Does your company collect, process, or store personal data of customers or employees?",
-                "type": "radio",
-                "options": ["Yes", "No"],
-                "required": True
-            },
-            {
-                "id": "processes_payments",
-                "question": "Does your company process payment card transactions?",
-                "type": "radio",
-                "options": ["Yes", "No"],
-                "required": True
-            },
-            {
-                "id": "stores_health_data",
-                "question": "Does your company handle health or medical information?",
-                "type": "radio",
-                "options": ["Yes", "No"],
-                "required": True
-            },
-            {
-                "id": "provides_financial_services",
-                "question": "Does your company provide regulated financial services?",
-                "type": "radio",
-                "options": ["Yes", "No"],
-                "required": True
-            },
-            {
-                "id": "international_operations",
-                "question": "Does your company operate internationally or serve customers outside the UK?",
-                "type": "radio",
-                "options": ["Yes", "No"],
-                "required": True
-            }
-        ],
-        3: [  # Technology Infrastructure
-            {
-                "id": "cloud_providers",
-                "question": "Which cloud providers does your company use? (Select all that apply)",
-                "type": "checkbox",
-                "options": [
-                    "AWS", "Microsoft Azure", "Google Cloud", "IBM Cloud", "None", "Other"
-                ],
-                "required": False
-            },
-            {
-                "id": "saas_tools",
-                "question": "Which SaaS tools does your company use? (Select all that apply)",
-                "type": "checkbox",
-                "options": [
-                    "Microsoft 365", "Google Workspace", "Salesforce", "Slack",
-                    "Zoom", "Atlassian", "Other"
-                ],
-                "required": False
-            },
-            {
-                "id": "development_tools",
-                "question": "Which development/collaboration tools does your company use?",
-                "type": "checkbox",
-                "options": [
-                    "GitHub", "GitLab", "Bitbucket", "Azure DevOps", "Other", "None"
-                ],
-                "required": False
-            }
-        ],
-        4: [  # Current Compliance State
-            {
-                "id": "existing_frameworks",
-                "question": "Which compliance frameworks is your company currently compliant with?",
-                "type": "checkbox",
-                "options": [
-                    "GDPR", "ISO 27001", "Cyber Essentials", "FCA", "PCI DSS", "SOC 2", "None"
-                ],
-                "required": False
-            },
-            {
-                "id": "planned_frameworks",
-                "question": "Which compliance frameworks is your company planning to achieve?",
-                "type": "checkbox",
-                "options": [
-                    "GDPR", "ISO 27001", "Cyber Essentials", "FCA", "PCI DSS", "SOC 2"
-                ],
-                "required": False
-            },
-            {
-                "id": "compliance_budget",
-                "question": "What is your budget range for compliance initiatives?",
-                "type": "select",
-                "options": [
-                    "Under £10K", "£10K-£25K", "£25K-£50K", "£50K-£100K", "Over £100K"
-                ],
-                "required": False
-            }
-        ],
-        5: [  # Goals and Timeline
-            {
-                "id": "compliance_timeline",
-                "question": "What is your target timeline for achieving compliance?",
-                "type": "select",
-                "options": [
-                    "3 months", "6 months", "12 months", "18+ months"
-                ],
-                "required": True
-            },
-            {
-                "id": "primary_driver",
-                "question": "What is the primary driver for your compliance initiative?",
-                "type": "select",
-                "options": [
-                    "Customer requirements", "Regulatory requirement", "Business growth",
-                    "Risk management", "Competitive advantage"
-                ],
-                "required": True
-            },
-            {
-                "id": "biggest_challenge",
-                "question": "What do you expect to be your biggest compliance challenge?",
-                "type": "select",
-                "options": [
-                    "Understanding requirements", "Resource allocation", "Technical implementation",
-                    "Policy development", "Evidence collection", "Ongoing maintenance"
-                ],
-                "required": False
-            }
-        ]
-    }
-
-    return questions.get(stage, [])
+        return questions.get(stage, [])

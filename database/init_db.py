@@ -1,15 +1,16 @@
-#!/usr/bin/env python3
 """
-Database initialization script for ComplianceGPT
+Database initialization script for ComplianceGPT (Asynchronous)
 
 This script creates all database tables and optionally populates them with default data.
 Run this script after setting up your DATABASE_URL environment variable.
 """
 
+import asyncio
 import os
 import sys
 
 from dotenv import load_dotenv
+from sqlalchemy import select
 
 # Load environment variables
 load_dotenv()
@@ -17,80 +18,76 @@ load_dotenv()
 # Add the project root to Python path
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from database.db_setup import Base, engine
+from config.logging_config import get_logger, setup_logging
+from database.db_setup import Base, async_engine, get_async_db
 from services.framework_service import initialize_default_frameworks
 
+# Setup logging first
+setup_logging()
+logger = get_logger(__name__)
 
-def create_tables():
-    """Create all database tables"""
-    print("Creating database tables...")
+async def create_tables():
+    """Create all database tables asynchronously."""
+    logger.info("Creating database tables...")
     try:
-        Base.metadata.create_all(bind=engine)
-        print("✓ Database tables created successfully")
+        async with async_engine.begin() as conn:
+            await conn.run_sync(Base.metadata.create_all)
+        logger.info("Database tables created successfully.")
         return True
     except Exception as e:
-        print(f"✗ Error creating tables: {e}")
+        logger.error(f"Error creating tables: {e}", exc_info=True)
         return False
 
-
-def populate_default_data():
-    """Populate database with default frameworks and data"""
-    print("Populating default data...")
+async def populate_default_data():
+    """Populate database with default frameworks and data asynchronously."""
+    logger.info("Populating default data...")
     try:
-        initialize_default_frameworks()
-        print("✓ Default frameworks initialized")
+        async for db in get_async_db():
+            await initialize_default_frameworks(db)
+            # Ensure to commit if initialize_default_frameworks doesn't commit itself for new items
+            # However, initialize_default_frameworks already handles its commit.
+        logger.info("Default frameworks initialized successfully.")
         return True
     except Exception as e:
-        print(f"✗ Error populating default data: {e}")
+        logger.error(f"Error populating default data: {e}", exc_info=True)
         return False
 
-
-def test_connection():
-    """Test database connection"""
-    print("Testing database connection...")
+async def test_connection():
+    """Test database connection asynchronously."""
+    logger.info("Testing database connection...")
     try:
-        from database.db_setup import SessionLocal
-        db = SessionLocal()
-        db.execute("SELECT 1")
-        db.close()
-        print("✓ Database connection successful")
+        async for db in get_async_db():
+            await db.execute(select(1))
+        logger.info("Database connection successful.")
         return True
     except Exception as e:
-        print(f"✗ Database connection failed: {e}")
+        logger.error(f"Database connection failed: {e}", exc_info=True)
         return False
 
+async def main():
+    """Main asynchronous initialization function."""
+    logger.info("ComplianceGPT Database Initialization")
+    logger.info("========================================")
 
-def main():
-    """Main initialization function"""
-    print("ComplianceGPT Database Initialization")
-    print("=" * 40)
-
-    # Check if DATABASE_URL is set
-    if not os.getenv("DATABASE_URL"):
-        print("✗ DATABASE_URL environment variable not set")
-        print("Please set DATABASE_URL in your .env file")
+    database_url = os.getenv("DATABASE_URL")
+    if not database_url:
+        logger.error("DATABASE_URL environment variable not set. Please set it in your .env file.")
         return False
 
-    print(f"Database URL: {os.getenv('DATABASE_URL')}")
-    print()
+    logger.info(f"Database URL: {database_url}")
 
-    # Test connection
-    if not test_connection():
+    if not await test_connection():
         return False
 
-    # Create tables
-    if not create_tables():
+    if not await create_tables():
         return False
 
-    # Populate default data
-    if not populate_default_data():
+    if not await populate_default_data():
         return False
 
-    print()
-    print("✓ Database initialization completed successfully!")
+    logger.info("Database initialization completed successfully!")
     return True
 
-
 if __name__ == "__main__":
-    success = main()
+    success = asyncio.run(main())
     sys.exit(0 if success else 1)

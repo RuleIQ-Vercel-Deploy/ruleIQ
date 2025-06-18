@@ -1,176 +1,109 @@
+"""
+Asynchronous service for managing business profiles and assessments.
+"""
+
 from datetime import datetime
-from typing import Dict, List, Optional
+from typing import Any, Dict, List, Optional
 
-from core.business_profile import BusinessProfile
-from sqlalchemy_access import User, authenticated, public
+from sqlalchemy import select
+from sqlalchemy.exc import SQLAlchemyError
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from core.exceptions import DatabaseException, NotFoundException
+from database.models import BusinessProfile, User
 
 
-@authenticated
-def create_business_profile(
+async def create_or_update_business_profile(
+    db: AsyncSession,
     user: User,
-    company_name: str,
-    industry: str,
-    employee_count: int,
-    annual_revenue: Optional[str] = None,
-    handles_personal_data: bool = False,
-    processes_payments: bool = False,
-    stores_health_data: bool = False,
-    provides_financial_services: bool = False,
-    operates_critical_infrastructure: bool = False,
-    has_international_operations: bool = False,
-    cloud_providers: Optional[List[str]] = None,
-    saas_tools: Optional[List[str]] = None,
-    development_tools: Optional[List[str]] = None,
-    existing_frameworks: Optional[List[str]] = None,
-    planned_frameworks: Optional[List[str]] = None,
-    compliance_budget: Optional[str] = None,
-    compliance_timeline: Optional[str] = None
+    profile_data: Dict[str, Any]
 ) -> BusinessProfile:
     """Create or update a business profile for the authenticated user."""
+    try:
+        stmt = select(BusinessProfile).where(BusinessProfile.user_id == user.id)
+        result = await db.execute(stmt)
+        existing_profile = result.scalars().first()
 
-    # Check if profile already exists
-    if planned_frameworks is None:
-        planned_frameworks = []
-    if existing_frameworks is None:
-        existing_frameworks = []
-    if development_tools is None:
-        development_tools = []
-    if saas_tools is None:
-        saas_tools = []
-    if cloud_providers is None:
-        cloud_providers = []
-    existing_profiles = BusinessProfile.sql(
-        "SELECT * FROM business_profiles WHERE user_id = %(user_id)s",
-        {"user_id": user.id}
-    )
+        if existing_profile:
+            # Update existing profile
+            for key, value in profile_data.items():
+                if hasattr(existing_profile, key):
+                    setattr(existing_profile, key, value)
+            existing_profile.updated_at = datetime.utcnow()
+            profile = existing_profile
+        else:
+            # Create new profile
+            profile = BusinessProfile(user_id=user.id, **profile_data)
+            db.add(profile)
 
-    if existing_profiles:
-        # Update existing profile
-        profile_data = existing_profiles[0]
-        profile = BusinessProfile(**profile_data)
+        await db.commit()
+        await db.refresh(profile)
+        return profile
+    except SQLAlchemyError as e:
+        await db.rollback()
+        raise DatabaseException("Failed to create or update business profile.") from e
 
-        # Update fields
-        profile.company_name = company_name
-        profile.industry = industry
-        profile.employee_count = employee_count
-        profile.annual_revenue = annual_revenue
-        profile.handles_personal_data = handles_personal_data
-        profile.processes_payments = processes_payments
-        profile.stores_health_data = stores_health_data
-        profile.provides_financial_services = provides_financial_services
-        profile.operates_critical_infrastructure = operates_critical_infrastructure
-        profile.has_international_operations = has_international_operations
-        profile.cloud_providers = cloud_providers
-        profile.saas_tools = saas_tools
-        profile.development_tools = development_tools
-        profile.existing_frameworks = existing_frameworks
-        profile.planned_frameworks = planned_frameworks
-        profile.compliance_budget = compliance_budget
-        profile.compliance_timeline = compliance_timeline
-        profile.updated_at = datetime.now()
-    else:
-        # Create new profile
-        profile = BusinessProfile(
-            user_id=user.id,
-            company_name=company_name,
-            industry=industry,
-            employee_count=employee_count,
-            annual_revenue=annual_revenue,
-            handles_personal_data=handles_personal_data,
-            processes_payments=processes_payments,
-            stores_health_data=stores_health_data,
-            provides_financial_services=provides_financial_services,
-            operates_critical_infrastructure=operates_critical_infrastructure,
-            has_international_operations=has_international_operations,
-            cloud_providers=cloud_providers,
-            saas_tools=saas_tools,
-            development_tools=development_tools,
-            existing_frameworks=existing_frameworks,
-            planned_frameworks=planned_frameworks,
-            compliance_budget=compliance_budget,
-            compliance_timeline=compliance_timeline
-        )
 
-    profile.sync()
-    return profile
-
-@authenticated
-def get_business_profile(user: User) -> Optional[BusinessProfile]:
+async def get_business_profile(
+    db: AsyncSession,
+    user: User
+) -> Optional[BusinessProfile]:
     """Get the business profile for the authenticated user."""
-    results = BusinessProfile.sql(
-        "SELECT * FROM business_profiles WHERE user_id = %(user_id)s",
-        {"user_id": user.id}
-    )
+    try:
+        stmt = select(BusinessProfile).where(BusinessProfile.user_id == user.id)
+        result = await db.execute(stmt)
+        return result.scalars().first()
+    except SQLAlchemyError as e:
+        raise DatabaseException("Failed to retrieve business profile.") from e
 
-    if results:
-        return BusinessProfile(**results[0])
-    return None
 
-@authenticated
-def update_assessment_status(user: User, assessment_completed: bool, assessment_data: Dict) -> BusinessProfile:
+async def update_assessment_status(
+    db: AsyncSession,
+    user: User,
+    assessment_completed: bool,
+    assessment_data: Dict
+) -> BusinessProfile:
     """Update the assessment completion status and data."""
-    profile = get_business_profile(user)
+    profile = await get_business_profile(db, user)
     if not profile:
-        raise ValueError("Business profile not found")
+        raise NotFoundException("Business profile not found for the current user.")
 
-    profile.assessment_completed = assessment_completed
-    profile.assessment_data = assessment_data
-    profile.updated_at = datetime.now()
-    profile.sync()
+    try:
+        profile.assessment_completed = assessment_completed
+        profile.assessment_data = assessment_data
+        profile.updated_at = datetime.utcnow()
+        
+        await db.commit()
+        await db.refresh(profile)
 
-    return profile
+        return profile
+    except SQLAlchemyError as e:
+        await db.rollback()
+        raise DatabaseException("Failed to update assessment status.") from e
 
-@public
+
 def get_supported_industries() -> List[str]:
     """Get list of supported industries for business profiles."""
     return [
-        "Financial Services",
-        "Healthcare",
-        "Technology",
-        "Manufacturing",
-        "Retail",
-        "Education",
-        "Government",
-        "Non-profit",
-        "Professional Services",
-        "Real Estate",
-        "Transportation",
-        "Energy",
-        "Media",
-        "Hospitality",
-        "Other"
+        "Financial Services", "Healthcare", "Technology", "Manufacturing",
+        "Retail", "Education", "Government", "Non-profit",
+        "Professional Services", "Real Estate", "Transportation", "Energy",
+        "Media", "Hospitality", "Other"
     ]
 
-@public
+
 def get_cloud_provider_options() -> List[str]:
     """Get list of supported cloud providers."""
     return [
-        "AWS (Amazon Web Services)",
-        "Microsoft Azure",
-        "Google Cloud Platform",
-        "IBM Cloud",
-        "Oracle Cloud",
-        "DigitalOcean",
-        "Linode",
-        "Vultr",
-        "Other"
+        "AWS (Amazon Web Services)", "Microsoft Azure", "Google Cloud Platform",
+        "IBM Cloud", "Oracle Cloud", "DigitalOcean", "Linode", "Vultr", "Other"
     ]
 
-@public
+
 def get_saas_tool_options() -> List[str]:
     """Get list of common SaaS tools for integration guidance."""
     return [
-        "Microsoft 365",
-        "Google Workspace",
-        "Salesforce",
-        "Slack",
-        "Zoom",
-        "Atlassian (Jira/Confluence)",
-        "HubSpot",
-        "Zendesk",
-        "DocuSign",
-        "Dropbox",
-        "Box",
-        "ServiceNow",
-        "Other"
+        "Microsoft 365", "Google Workspace", "Salesforce", "Slack", "Zoom",
+        "Atlassian (Jira/Confluence)", "HubSpot", "Zendesk", "DocuSign",
+        "Dropbox", "Box", "ServiceNow", "Other"
     ]

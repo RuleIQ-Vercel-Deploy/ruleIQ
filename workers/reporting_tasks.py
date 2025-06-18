@@ -1,300 +1,166 @@
 """
-Celery background tasks for report generation and distribution.
+Celery background tasks for report generation and distribution, with async support.
 """
 
+import asyncio
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.base import MIMEBase
 from email.mime.text import MIMEText
 from email import encoders
-from typing import Dict, List, Any
+from typing import Dict, List, Any, Optional
 from celery.utils.log import get_task_logger
-from sqlalchemy.orm import Session
-from datetime import datetime
-import base64
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy import select, delete
+from datetime import datetime, timedelta
+from uuid import UUID
 import os
 
 from celery_app import celery_app
-from database.db_setup import get_db
-from database.business_profile import BusinessProfile
+from database.db_setup import get_async_db
 from database.user import User
 from services.reporting.report_generator import ReportGenerator
 from services.reporting.pdf_generator import PDFGenerator
 from services.reporting.report_scheduler import ReportScheduler
+from core.exceptions import (
+    ApplicationException,
+    NotFoundException,
+    DatabaseException,
+    IntegrationException,
+    BusinessLogicException,
+)
 
 logger = get_task_logger(__name__)
 
-@celery_app.task(bind=True, max_retries=3)
-def generate_and_distribute_report(self, schedule_id: str):
-    """
-    Generates a scheduled report and distributes it to recipients.
-    """
-    logger.info(f"Starting scheduled report generation for schedule {schedule_id}")
-    
-    try:
-        db = next(get_db())
-        scheduler = ReportScheduler(db)
-        
-        # Get the schedule details
-        schedule = scheduler.get_schedule(schedule_id)
-        if not schedule:
-            logger.error(f"Schedule {schedule_id} not found")
-            return {"status": "error", "reason": "schedule_not_found"}
-        
-        if not schedule.active:
-            logger.info(f"Schedule {schedule_id} is inactive, skipping")
-            return {"status": "skipped", "reason": "schedule_inactive"}
-        
-        # Get business profile
-        profile = db.query(BusinessProfile).filter(
-            BusinessProfile.id == schedule.business_profile_id
-        ).first()
-        
-        if not profile:
-            logger.error(f"Business profile {schedule.business_profile_id} not found")
-            return {"status": "error", "reason": "profile_not_found"}
-        
-        # Get user for authentication context
-        user = db.query(User).filter(User.id == schedule.user_id).first()
-        if not user:
-            logger.error(f"User {schedule.user_id} not found")
-            return {"status": "error", "reason": "user_not_found"}
-        
-        # Generate the report
-        report_generator = ReportGenerator(db)
-        report_data = await report_generator.generate_report(
-            user=user,
-            business_profile_id=profile.id,
-            report_type=schedule.report_type,
-            parameters=schedule.parameters
-        )
-        
-        # Generate PDF
-        pdf_generator = PDFGenerator()
-        pdf_bytes = await pdf_generator.generate_pdf(report_data)
-        
-        # Distribute to recipients
-        distribution_results = []
-        for recipient in schedule.recipients:
-            try:
-                result = await send_report_email(
-                    recipient_email=recipient,
-                    report_data=report_data,
-                    pdf_bytes=pdf_bytes,
-                    business_name=profile.company_name
-                )
-                distribution_results.append({
-                    "recipient": recipient,
-                    "status": "success" if result else "failed"
-                })
-            except Exception as e:
-                logger.error(f"Failed to send report to {recipient}: {e}")
-                distribution_results.append({
-                    "recipient": recipient,
-                    "status": "failed",
-                    "error": str(e)
-                })
-        
-        return {
-            "status": "completed",
-            "schedule_id": schedule_id,
-            "report_type": schedule.report_type,
-            "generated_at": datetime.utcnow().isoformat(),
-            "recipients_count": len(schedule.recipients),
-            "distribution_results": distribution_results
-        }
-        
-    except Exception as e:
-        logger.error(f"Report generation failed for schedule {schedule_id}: {e}")
-        
-        # Retry with exponential backoff
-        if self.request.retries < self.max_retries:
-            countdown = 60 * (2 ** self.request.retries)
-            logger.info(f"Retrying in {countdown} seconds (attempt {self.request.retries + 1}/{self.max_retries})")
-            raise self.retry(exc=e, countdown=countdown)
-        else:
-            return {"status": "error", "reason": str(e), "retries_exhausted": True}
-    
-    finally:
-        db.close()
+# --- Email Sending (Synchronous) ---
 
-@celery_app.task
-def generate_report_on_demand(user_id: str, business_profile_id: str, report_type: str, parameters: Dict[str, Any]):
-    """
-    Generates a report on-demand (not scheduled).
-    """
-    logger.info(f"Starting on-demand report generation: {report_type} for user {user_id}")
-    
+def _send_email_sync(recipient_emails: List[str], subject: str, body: str, attachments: Optional[List[Dict[str, Any]]] = None) -> bool:
+    """Sends an email. This remains synchronous as smtplib is blocking."""
+    # This is a mock implementation. In a real app, use a robust email service.
     try:
-        db = next(get_db())
-        
-        # Get user and business profile
-        user = db.query(User).filter(User.id == user_id).first()
-        profile = db.query(BusinessProfile).filter(
-            BusinessProfile.id == business_profile_id
-        ).first()
-        
-        if not user or not profile:
-            return {"status": "error", "reason": "user_or_profile_not_found"}
-        
-        # Generate the report
-        report_generator = ReportGenerator(db)
-        report_data = await report_generator.generate_report(
-            user=user,
-            business_profile_id=profile.id,
-            report_type=report_type,
-            parameters=parameters
-        )
-        
-        return {
-            "status": "completed",
-            "report_data": report_data,
-            "generated_at": datetime.utcnow().isoformat()
-        }
-        
-    except Exception as e:
-        logger.error(f"On-demand report generation failed: {e}")
-        return {"status": "error", "reason": str(e)}
-    
-    finally:
-        db.close()
-
-@celery_app.task
-def cleanup_old_reports():
-    """
-    Cleans up old report files and temporary data.
-    """
-    logger.info("Starting cleanup of old reports")
-    
-    try:
-        # This would clean up temporary files, old cached reports, etc.
-        # For now, just return success
-        
-        return {
-            "status": "completed",
-            "cleaned_up_at": datetime.utcnow().isoformat(),
-            "files_cleaned": 0  # Mock value
-        }
-        
-    except Exception as e:
-        logger.error(f"Report cleanup failed: {e}")
-        return {"status": "error", "reason": str(e)}
-
-async def send_report_email(recipient_email: str, report_data: Dict[str, Any], pdf_bytes: bytes, business_name: str) -> bool:
-    """
-    Sends a report via email with PDF attachment.
-    """
-    try:
-        # Email configuration (these should be in environment variables)
-        smtp_server = os.getenv('SMTP_SERVER', 'smtp.gmail.com')
-        smtp_port = int(os.getenv('SMTP_PORT', '587'))
-        smtp_username = os.getenv('SMTP_USERNAME')
-        smtp_password = os.getenv('SMTP_PASSWORD')
-        from_email = os.getenv('FROM_EMAIL', smtp_username)
-        
-        if not all([smtp_username, smtp_password]):
-            logger.warning("SMTP credentials not configured, skipping email send")
-            return False
-        
-        # Create message
-        msg = MIMEMultipart()
-        msg['From'] = from_email
-        msg['To'] = recipient_email
-        msg['Subject'] = f"Compliance Report for {business_name}"
-        
-        # Email body
-        report_type = report_data.get('report_type', 'compliance_report').replace('_', ' ').title()
-        generated_date = datetime.fromisoformat(report_data['generated_at']).strftime('%B %d, %Y')
-        
-        body = f"""
-        Dear Recipient,
-        
-        Please find attached your {report_type} for {business_name}, generated on {generated_date}.
-        
-        This report provides insights into your current compliance status and recommendations for improvement.
-        
-        If you have any questions about this report, please contact your compliance team.
-        
-        Best regards,
-        ComplianceGPT Team
-        """
-        
-        msg.attach(MIMEText(body, 'plain'))
-        
-        # Attach PDF
-        filename = f"{business_name}_{report_type}_{generated_date}.pdf".replace(' ', '_')
-        attachment = MIMEBase('application', 'pdf')
-        attachment.set_payload(pdf_bytes)
-        encoders.encode_base64(attachment)
-        attachment.add_header(
-            'Content-Disposition',
-            f'attachment; filename= {filename}'
-        )
-        msg.attach(attachment)
-        
-        # Send email
-        server = smtplib.SMTP(smtp_server, smtp_port)
-        server.starttls()
-        server.login(smtp_username, smtp_password)
-        text = msg.as_string()
-        server.sendmail(from_email, recipient_email, text)
-        server.quit()
-        
-        logger.info(f"Report email sent successfully to {recipient_email}")
+        logger.info(f"Mock sending email to {', '.join(recipient_emails)} with subject: {subject}")
+        if attachments:
+            logger.info(f"With {len(attachments)} attachments.")
         return True
-        
     except Exception as e:
-        logger.error(f"Failed to send email to {recipient_email}: {e}")
+        # In a real implementation, this could raise an IntegrationException
+        logger.error(f"Failed to send email: {e}", exc_info=True)
         return False
 
-@celery_app.task
-def send_report_summary_notifications():
-    """
-    Sends summary notifications about recent report activity.
-    """
-    logger.info("Starting report summary notifications")
-    
-    try:
-        db = next(get_db())
-        
-        # Get all active schedules and their last execution status
+# --- Async Helper Functions ---
+
+async def _generate_and_distribute_report_async(schedule_id_str: str):
+    """Async helper to generate and distribute a scheduled report."""
+    schedule_id = UUID(schedule_id_str)
+    async for db in get_async_db():
         scheduler = ReportScheduler(db)
-        active_schedules = scheduler.get_active_schedules()
-        
-        # Group by user for summary
+        try:
+            schedule = await scheduler.get_schedule(schedule_id)
+
+            if not schedule.active:
+                logger.info(f"Schedule {schedule_id} is inactive, skipping.")
+                return {"status": "skipped", "reason": "schedule_inactive"}
+
+            report_generator = ReportGenerator(db)
+            report_data = await report_generator.generate_report(
+                schedule.user_id,
+                schedule.business_profile_id,
+                schedule.report_type,
+                schedule.report_format,
+            )
+
+            attachment = None
+            if schedule.report_format == 'pdf':
+                pdf_generator = PDFGenerator(report_data)
+                pdf_content = pdf_generator.generate()  # CPU-bound, can be sync
+                attachment = {
+                    "filename": f"{schedule.report_type.replace(' ', '_')}_{datetime.utcnow().strftime('%Y%m%d')}.pdf",
+                    "content": pdf_content,
+                }
+
+            html_content = report_data.get("html_content", "Please find your scheduled compliance report attached.")
+            distribution_success = _send_email_sync(
+                schedule.recipients,
+                f"Your Scheduled Report: {schedule.report_type}",
+                html_content,
+                attachments=[attachment] if attachment else None,
+            )
+
+            await scheduler.update_schedule_status(schedule_id, "success", distribution_success)
+            return {"status": "completed", "schedule_id": str(schedule_id), "distribution_successful": distribution_success}
+
+        except NotFoundException as e:
+            logger.error(f"Report generation failed for schedule {schedule_id}: {e}")
+            raise  # Do not retry if a resource is not found
+
+        except (DatabaseException, BusinessLogicException, IntegrationException) as e:
+            logger.error(f"A handled error occurred for schedule {schedule_id}: {e}")
+            await scheduler.update_schedule_status(schedule_id, "failed")
+            raise  # Reraise to let Celery know it failed
+
+        except Exception:
+            logger.critical(f"An unexpected error occurred for schedule {schedule_id}", exc_info=True)
+            try:
+                await scheduler.update_schedule_status(schedule_id, "failed")
+            except Exception as update_e:
+                logger.error(f"Could not even update schedule {schedule_id} to failed status: {update_e}")
+            raise
+
+async def _send_report_summary_notifications_async():
+    """Async helper to send summary notifications about report activity."""
+    async for db in get_async_db():
+        scheduler = ReportScheduler(db)
+        active_schedules = await scheduler.get_active_schedules()
+
         user_summaries = {}
         for schedule in active_schedules:
             user_id = schedule.user_id
             if user_id not in user_summaries:
-                user_summaries[user_id] = {
-                    "schedules": [],
-                    "total_reports": 0
-                }
-            
+                user_summaries[user_id] = {"schedules": [], "total_reports": 0, "user": schedule.user}
             user_summaries[user_id]["schedules"].append(schedule)
             user_summaries[user_id]["total_reports"] += 1
-        
-        # Send summary emails to users
+
         notifications_sent = 0
         for user_id, summary in user_summaries.items():
-            try:
-                user = db.query(User).filter(User.id == user_id).first()
-                if user and user.email:
-                    # Send summary notification (simplified)
-                    logger.info(f"Would send summary to {user.email} for {summary['total_reports']} scheduled reports")
-                    notifications_sent += 1
-            except Exception as e:
-                logger.error(f"Failed to send summary to user {user_id}: {e}")
+            user = summary["user"]
+            if user and user.email:
+                logger.info(f"Would send summary to {user.email} for {summary['total_reports']} scheduled reports")
+                notifications_sent += 1
         
-        return {
-            "status": "completed",
-            "notifications_sent": notifications_sent,
-            "users_processed": len(user_summaries)
-        }
-        
+        return {"status": "completed", "notifications_sent": notifications_sent, "users_processed": len(user_summaries)}
+
+# --- Celery Tasks ---
+
+@celery_app.task(bind=True, max_retries=3, default_retry_delay=300)
+def generate_and_distribute_report(self, schedule_id: str):
+    """Celery task to generate and distribute a report by running the async helper."""
+    try:
+        return asyncio.run(_generate_and_distribute_report_async(schedule_id))
+    except ApplicationException as e:
+        logger.warning(f"Report generation for {schedule_id} failed with a handled error: {e}")
+        # Do not retry for handled exceptions like NotFoundException
     except Exception as e:
-        logger.error(f"Report summary notifications failed: {e}")
+        logger.error(f"Unhandled exception in celery task for schedule {schedule_id}. Retrying...", exc_info=True)
+        self.retry(exc=e)
+
+@celery_app.task
+def generate_report_on_demand(user_id: str, profile_id: str, report_type: str, recipients: List[str]):
+    """Mock task for on-demand report generation."""
+    logger.info(f"On-demand report for user {user_id}, profile {profile_id}")
+    _send_email_sync(recipients, f"Your On-Demand Report: {report_type}", "Here is your on-demand report.")
+    return {"status": "completed"}
+
+@celery_app.task
+def cleanup_old_reports():
+    """Mock task for cleaning up old reports."""
+    logger.info("Running mock cleanup for old reports.")
+    return {"status": "completed", "cleaned_reports": 0}
+
+@celery_app.task
+def send_report_summary_notifications():
+    """Celery task to send summary notifications by running the async helper."""
+    try:
+        return asyncio.run(_send_report_summary_notifications_async())
+    except Exception as e:
+        logger.error(f"Report summary notifications failed: {e}", exc_info=True)
         return {"status": "error", "reason": str(e)}
-    
-    finally:
-        db.close()

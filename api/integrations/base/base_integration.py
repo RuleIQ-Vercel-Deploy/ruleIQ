@@ -4,176 +4,130 @@ This abstract class defines the contract that all specific
 integration implementations (like Google, AWS, etc.) must follow.
 """
 
+import json
 from abc import ABC, abstractmethod
 from typing import Dict, List, Any, Optional
 from datetime import datetime
 from enum import Enum
-from dataclasses import dataclass
-import logging
+from dataclasses import dataclass, field
 from uuid import UUID
 
-logger = logging.getLogger(__name__)
+from cryptography.fernet import Fernet, InvalidToken
+from config.app_config import get_cipher_suite # Import the cipher
+from config.logging_config import get_logger
+
+logger = get_logger(__name__)
 
 class IntegrationStatus(str, Enum):
-    """Enumeration for the connection status of an integration."""
     CONNECTED = "connected"
     DISCONNECTED = "disconnected"
     ERROR = "error"
     NEEDS_REAUTH = "needs_reauth"
+    PENDING_VERIFICATION = "pending_verification"
 
 @dataclass
 class IntegrationConfig:
-    """Dataclass to hold configuration and credentials for an integration."""
     user_id: UUID
     provider: str
-    credentials: Dict[str, Any]  # Store encrypted credentials here
+    # credentials will be stored encrypted in the DB, decrypted when loaded into this model
+    credentials: Dict[str, Any] 
     settings: Optional[Dict[str, Any]] = None
     status: IntegrationStatus = IntegrationStatus.DISCONNECTED
     last_sync: Optional[datetime] = None
+    # To hold the raw encrypted credentials if needed for re-encryption on key rotation (advanced)
+    # encrypted_credentials_str: Optional[str] = field(default=None, repr=False) 
 
 class BaseIntegration(ABC):
-    """
-    Abstract Base Class for all compliance integrations.
-    It provides a common structure for authentication, testing connections,
-    and collecting evidence.
-    """
-
     def __init__(self, config: IntegrationConfig):
         self.config = config
+        self.cipher = get_cipher_suite()
+        if not self.cipher:
+            logger.error(
+                f"Fernet cipher not available for integration {self.config.provider} for user {self.config.user_id}. "
+                f"Credentials will not be encrypted/decrypted. This is a security risk."
+            )
 
     @property
     @abstractmethod
     def provider_name(self) -> str:
-        """The official name of the provider (e.g., 'google_workspace')."""
         pass
 
     @abstractmethod
     async def test_connection(self) -> bool:
-        """
-        Tests the connection to the provider using the stored credentials.
-        Returns True if successful, False otherwise.
-        """
         pass
 
     @abstractmethod
     async def authenticate(self) -> bool:
-        """
-        Authenticates with the provider. This might involve refreshing tokens.
-        Returns True if authentication is successful.
-        """
         pass
 
     @abstractmethod
-    async def collect_evidence(self) -> List[Dict[str, Any]]:
-        """
-        Collects all supported evidence types from the provider.
-        Returns a list of standardized evidence dictionaries.
-        """
+    async def collect_evidence(self, evidence_type: str, since: Optional[datetime] = None) -> List[Dict[str, Any]]:
         pass
 
-    def format_evidence(
-        self,
-        evidence_type: str,
-        title: str,
-        description: str,
-        raw_data: Dict,
-        compliance_frameworks: List[str],
-        control_mappings: Dict[str, str]
-    ) -> Dict[str, Any]:
-        """
-        A helper method to format collected data into a standardized
-        evidence structure.
-        """
-        return {
-            "integration_source": self.provider_name,
-            "evidence_type": evidence_type,
-            "title": title,
-            "description": description,
-            "raw_data": raw_data,
-            "collected_at": datetime.utcnow(),
-            "compliance_frameworks": compliance_frameworks,
-            "control_mappings": control_mappings
-        }
+    @abstractmethod
+    async def get_available_evidence_types(self) -> List[Dict[str, Any]]:
+        pass
 
-    async def get_supported_evidence_types(self) -> List[Dict[str, Any]]:
-        """
-        Returns a list of evidence types that this integration can collect.
-        Each evidence type includes metadata about what it provides.
-        """
-        return []
-
-    async def refresh_credentials(self) -> bool:
-        """
-        Attempts to refresh expired credentials if possible.
-        Returns True if successful, False otherwise.
-        """
-        return await self.authenticate()
-
-    def get_integration_info(self) -> Dict[str, Any]:
-        """
-        Returns metadata about this integration.
-        """
-        return {
-            "provider": self.provider_name,
-            "status": self.config.status.value,
-            "last_sync": self.config.last_sync.isoformat() if self.config.last_sync else None,
-            "user_id": str(self.config.user_id)
-        }
-
-    async def validate_credentials(self, credentials: Dict[str, Any]) -> bool:
-        """
-        Validates credentials without storing them.
-        Useful for testing credentials before saving.
-        """
-        # Create a temporary config for testing
-        temp_config = IntegrationConfig(
-            user_id=self.config.user_id,
-            provider=self.config.provider,
-            credentials=credentials
-        )
-        
-        # Temporarily replace config
-        original_config = self.config
-        self.config = temp_config
-        
+    async def validate_credentials(self, credentials_to_test: Dict[str, Any]) -> bool:
+        original_creds = self.config.credentials
+        self.config.credentials = credentials_to_test # Temporarily set for test_connection
         try:
             result = await self.test_connection()
             return result
+        except Exception as e:
+            logger.error(f"Error validating credentials for {self.provider_name}: {e}", exc_info=True)
+            return False
         finally:
-            # Restore original config
-            self.config = original_config
+            self.config.credentials = original_creds # Restore original
 
-    def encrypt_credentials(self, credentials: Dict[str, Any]) -> Dict[str, Any]:
-        """
-        Encrypts sensitive credential data before storage.
-        In a production system, this would use proper encryption.
-        """
-        # TODO: Implement proper encryption
-        # For now, return as-is (in production, encrypt sensitive fields)
-        logger.warning("Credential encryption not implemented - using plaintext storage")
-        return credentials
+    def encrypt_credentials_to_str(self, credentials_dict: Dict[str, Any]) -> Optional[str]:
+        if not self.cipher:
+            logger.error("Cannot encrypt credentials: Fernet cipher is not initialized.")
+            # Fallback: store as JSON string if encryption fails (highly insecure, for dev only)
+            # In production, this should raise an error or prevent saving.
+            logger.critical("Storing credentials as unencrypted JSON string due to missing cipher. THIS IS INSECURE.")
+            return json.dumps(credentials_dict) # Insecure fallback
+        
+        try:
+            credentials_json = json.dumps(credentials_dict)
+            credentials_bytes = credentials_json.encode('utf-8')
+            encrypted_bytes = self.cipher.encrypt(credentials_bytes)
+            return encrypted_bytes.decode('utf-8') # Store as string (Fernet tokens are URL-safe base64)
+        except Exception as e:
+            logger.error(f"Failed to encrypt credentials: {e}", exc_info=True)
+            return None # Or raise an error
 
-    def decrypt_credentials(self, encrypted_credentials: Dict[str, Any]) -> Dict[str, Any]:
-        """
-        Decrypts credential data after retrieval from storage.
-        In a production system, this would use proper decryption.
-        """
-        # TODO: Implement proper decryption
-        # For now, return as-is (in production, decrypt sensitive fields)
-        return encrypted_credentials
+    def decrypt_credentials_from_str(self, encrypted_credentials_str: str) -> Optional[Dict[str, Any]]:
+        if not self.cipher:
+            logger.error("Cannot decrypt credentials: Fernet cipher is not initialized.")
+            # Attempt to parse as JSON if it might be an unencrypted fallback
+            try:
+                logger.warning("Attempting to parse credentials as unencrypted JSON string due to missing cipher.")
+                return json.loads(encrypted_credentials_str)
+            except json.JSONDecodeError:
+                logger.error("Failed to parse stored credentials as JSON, and cipher is missing.")
+                return None
+
+        try:
+            encrypted_bytes = encrypted_credentials_str.encode('utf-8')
+            decrypted_bytes = self.cipher.decrypt(encrypted_bytes)
+            credentials_json = decrypted_bytes.decode('utf-8')
+            return json.loads(credentials_json)
+        except InvalidToken:
+            logger.error("Failed to decrypt credentials: Invalid Fernet token. Key might be wrong or data corrupted.")
+            return None
+        except Exception as e:
+            logger.error(f"Failed to decrypt credentials: {e}", exc_info=True)
+            return None # Or raise an error
 
 class IntegrationError(Exception):
-    """Base exception for integration-related errors."""
     pass
 
 class AuthenticationError(IntegrationError):
-    """Raised when authentication fails."""
     pass
 
 class ConnectionError(IntegrationError):
-    """Raised when connection to the provider fails."""
     pass
 
 class EvidenceCollectionError(IntegrationError):
-    """Raised when evidence collection fails."""
     pass

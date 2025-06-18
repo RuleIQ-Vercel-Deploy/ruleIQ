@@ -22,6 +22,8 @@ ignore = [
     "N802",  # Function name should be lowercase
     "SIM102", # Use a single if-statement
     "SIM108", # Use ternary operator
+    "W291",  # Trailing whitespace
+    "W293",  # Blank line contains whitespace
 ]
 
 # Directories to exclude
@@ -46,7 +48,7 @@ exclude = [
 "*/__init__.py" = ["F401"]  # Allow unused imports in __init__.py
 
 [isort]
-known-first-party = ["api", "database", "services", "config", "core", "sqlalchemy_access"]
+known-first-party = ["api", "database", "services", "config", "core"]
 section-order = ["future", "standard-library", "third-party", "first-party", "local-folder"]
 
 [format]

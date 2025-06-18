@@ -11,7 +11,7 @@ from unittest.mock import Mock, patch, MagicMock
 from uuid import uuid4
 
 from services.evidence_service import EvidenceService
-from api.middleware.error_handler import ValidationAPIError, NotFoundAPIError
+from core.exceptions import ValidationAPIError, NotFoundAPIError
 
 
 @pytest.mark.unit

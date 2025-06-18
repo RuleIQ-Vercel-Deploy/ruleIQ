@@ -1,249 +1,145 @@
 """
-Celery background tasks for sending notifications and alerts.
+Celery background tasks for sending notifications and alerts, with async support.
 """
 
-from datetime import datetime, timedelta
-from typing import List, Dict, Any, Optional
+import asyncio
+from typing import Dict, Any
 from celery.utils.log import get_task_logger
-from sqlalchemy.orm import Session
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy import select
+from sqlalchemy.exc import SQLAlchemyError
+from uuid import UUID
 import smtplib
-from email.mime.text import MIMEText
-from email.mime.multipart import MIMEMultipart
-import os
 
 from celery_app import celery_app
-from database.db_setup import get_db
-from database.business_profile import BusinessProfile
-from database.user import User
+from database.db_setup import get_async_db
+from database.models import User
+from core.exceptions import (
+    NotFoundException,
+    DatabaseException,
+    IntegrationException,
+    BusinessLogicException,
+)
 
 logger = get_task_logger(__name__)
 
-@celery_app.task
-def send_compliance_alert(user_id: str, alert_type: str, alert_data: Dict[str, Any]):
-    """
-    Sends a compliance alert notification to a user.
-    """
-    logger.info(f"Sending compliance alert to user {user_id}: {alert_type}")
-    
-    try:
-        db = next(get_db())
-        
-        # Get user information
-        user = db.query(User).filter(User.id == user_id).first()
-        if not user:
-            logger.error(f"User {user_id} not found")
-            return {"status": "error", "reason": "user_not_found"}
-        
-        # Prepare notification content based on alert type
-        subject, body = _prepare_alert_content(alert_type, alert_data, user)
-        
-        # Send notification (mock implementation)
-        notification_result = _send_email_notification(user.email, subject, body)
-        
-        return {
-            "status": "sent",
-            "user_id": user_id,
-            "alert_type": alert_type,
-            "notification_method": notification_result["method"]
-        }
-        
-    except Exception as e:
-        logger.error(f"Failed to send compliance alert to user {user_id}: {e}")
-        return {"status": "error", "reason": str(e)}
-    finally:
-        db.close()
+# --- Email Sending (Synchronous) ---
 
-@celery_app.task
-def send_weekly_summary(user_id: str):
-    """
-    Sends a weekly compliance summary to a user.
-    """
-    logger.info(f"Sending weekly summary to user {user_id}")
-    
+def _send_email_notification(recipient_email: str, subject: str, body: str) -> Dict[str, Any]:
+    """Sends an email notification. This remains a synchronous function."""
     try:
-        db = next(get_db())
-        
-        user = db.query(User).filter(User.id == user_id).first()
-        if not user:
-            return {"status": "error", "reason": "user_not_found"}
-        
-        profile = db.query(BusinessProfile).filter(BusinessProfile.user_id == user_id).first()
-        if not profile:
-            return {"status": "error", "reason": "profile_not_found"}
-        
-        # Generate weekly summary data
-        summary_data = _generate_weekly_summary(profile, db)
-        
-        subject = f"Weekly Compliance Summary - {profile.company_name}"
-        body = _format_weekly_summary(summary_data)
-        
-        notification_result = _send_email_notification(user.email, subject, body)
-        
-        return {
-            "status": "sent",
-            "user_id": user_id,
-            "summary_data": summary_data
-        }
-        
+        # This is a mock implementation. In a real app, use a robust email service.
+        logger.info(f"Mock sending email to {recipient_email} with subject: '{subject}'")
+        return {"method": "email", "status": "sent"}
+    except smtplib.SMTPException as e:
+        logger.error(f"SMTP error while sending email to {recipient_email}: {e}", exc_info=True)
+        raise IntegrationException(f"Failed to send email due to SMTP error: {e}") from e
     except Exception as e:
-        logger.error(f"Failed to send weekly summary to user {user_id}: {e}")
-        return {"status": "error", "reason": str(e)}
-    finally:
-        db.close()
+        logger.error(f"Failed to send email to {recipient_email}: {e}", exc_info=True)
+        raise IntegrationException(f"An unexpected error occurred while sending email to {recipient_email}.") from e
 
-@celery_app.task
-def send_evidence_expiry_notifications():
-    """
-    Sends notifications for evidence items that are expiring soon.
-    """
-    logger.info("Checking for evidence expiry notifications")
-    
-    try:
-        db = next(get_db())
-        
-        # Find evidence expiring in the next 7 days
-        notification_window = datetime.utcnow() + timedelta(days=7)
-        
-        # Mock implementation - in real system, query for evidence with expiry dates
-        expiring_evidence = []  # Would contain actual evidence items
-        
-        notifications_sent = 0
-        for evidence in expiring_evidence:
-            try:
-                # Send expiry notification
-                send_compliance_alert.delay(
-                    evidence.user_id,
-                    "evidence_expiring",
-                    {
-                        "evidence_id": evidence.id,
-                        "evidence_name": evidence.evidence_name,
-                        "expires_at": notification_window.isoformat()
-                    }
-                )
-                notifications_sent += 1
-                
-            except Exception as e:
-                logger.error(f"Failed to send expiry notification for evidence {evidence.id}: {e}")
-        
-        return {
-            "status": "completed",
-            "notifications_sent": notifications_sent,
-            "expiring_items": len(expiring_evidence)
-        }
-        
-    except Exception as e:
-        logger.error(f"Evidence expiry notification check failed: {e}")
-        return {"status": "error", "reason": str(e)}
-    finally:
-        db.close()
+# --- Content Preparation (Synchronous) ---
 
-# Helper functions
-def _prepare_alert_content(alert_type: str, alert_data: Dict[str, Any], user) -> tuple[str, str]:
-    """
-    Prepares email subject and body based on alert type.
-    """
-    if alert_type == "expired_evidence":
-        subject = "Action Required: Evidence Items Have Expired"
-        body = f"""
-        Dear {user.username},
-        
-        {alert_data.get('count', 0)} of your evidence items have expired and need to be renewed.
-        
-        Please log in to your ComplianceGPT dashboard to review and update your evidence.
-        
-        Best regards,
-        ComplianceGPT Team
-        """
-    elif alert_type == "evidence_expiring":
-        subject = "Reminder: Evidence Expiring Soon"
-        body = f"""
-        Dear {user.username},
-        
-        Your evidence item "{alert_data.get('evidence_name', 'Unknown')}" will expire soon.
-        
-        Please review and renew this evidence to maintain your compliance status.
-        
-        Best regards,
-        ComplianceGPT Team
-        """
-    else:
-        subject = "Compliance Alert"
-        body = f"""
-        Dear {user.username},
-        
-        We have a compliance update for your account.
-        
-        Please log in to your dashboard for more details.
-        
-        Best regards,
-        ComplianceGPT Team
-        """
-    
+def _prepare_alert_content(alert_type: str, alert_data: Dict[str, Any], user: User) -> (str, str):
+    """Prepares the subject and body for an alert email."""
+    subject = f"Compliance Alert: {alert_type.replace('_', ' ').title()}"
+    body = f"Dear {user.full_name or 'User'},
+
+A new compliance alert requires your attention: {alert_data.get('details', 'No details provided')}."
     return subject, body
 
-def _send_email_notification(email: str, subject: str, body: str) -> Dict[str, Any]:
-    """
-    Sends an email notification (mock implementation).
-    """
-    # Mock email sending - in production, use proper SMTP settings
-    logger.info(f"Mock email sent to {email}: {subject}")
-    
-    return {
-        "method": "email",
-        "recipient": email,
-        "sent_at": datetime.utcnow().isoformat(),
-        "status": "delivered"  # Mock status
-    }
+def _format_weekly_summary(summary_data: Dict[str, Any], user: User) -> (str, str):
+    """Formats the weekly summary data into an email-friendly format."""
+    subject = "Your Weekly Compliance Summary"
+    body = f"Dear {user.full_name or 'User'},
 
-def _generate_weekly_summary(profile: BusinessProfile, db: Session) -> Dict[str, Any]:
-    """
-    Generates weekly summary data for a business profile.
-    """
-    from database.evidence_item import EvidenceItem
-    
-    # Calculate summary metrics
-    week_ago = datetime.utcnow() - timedelta(days=7)
-    
-    # Count evidence items added this week
-    new_evidence_count = db.query(EvidenceItem).filter(
-        EvidenceItem.user_id == str(profile.user_id),
-        EvidenceItem.created_at > week_ago
-    ).count()
-    
-    # Total evidence count
-    total_evidence_count = db.query(EvidenceItem).filter(
-        EvidenceItem.user_id == str(profile.user_id)
-    ).count()
-    
-    return {
-        "company_name": profile.company_name,
-        "week_period": f"{week_ago.strftime('%Y-%m-%d')} to {datetime.utcnow().strftime('%Y-%m-%d')}",
-        "new_evidence_this_week": new_evidence_count,
-        "total_evidence_items": total_evidence_count,
-        "compliance_score": 85.0,  # Mock score
-        "pending_actions": 3,  # Mock actions
-        "frameworks": profile.compliance_frameworks or []
-    }
+Here is your compliance summary for the past week:
+"
+    body += f"- New Evidence Items: {summary_data.get('new_evidence_count', 0)}\n"
+    body += f"- Average Quality Score: {summary_data.get('avg_quality_score', 'N/A')}\n"
+    return subject, body
 
-def _format_weekly_summary(summary_data: Dict[str, Any]) -> str:
-    """
-    Formats the weekly summary data into an email body.
-    """
-    return f"""
-    Weekly Compliance Summary for {summary_data['company_name']}
-    Period: {summary_data['week_period']}
-    
-    📊 This Week's Activity:
-    • New evidence items collected: {summary_data['new_evidence_this_week']}
-    • Total evidence items: {summary_data['total_evidence_items']}
-    • Current compliance score: {summary_data['compliance_score']}%
-    
-    ⚠️ Items requiring attention: {summary_data['pending_actions']}
-    
-    🛡️ Active frameworks: {', '.join(summary_data['frameworks']) if summary_data['frameworks'] else 'None configured'}
-    
-    Log in to your dashboard to review detailed progress and take any necessary actions.
-    
-    Best regards,
-    ComplianceGPT Team
-    """
+# --- Async Helper Functions ---
+
+async def _send_compliance_alert_async(user_id_str: str, alert_type: str, alert_data: Dict[str, Any]) -> Dict[str, Any]:
+    """Async helper to send a single compliance alert."""
+    user_id = UUID(user_id_str)
+    async for db in get_async_db():
+        try:
+            user_res = await db.execute(select(User).where(User.id == user_id))
+            user = user_res.scalars().first()
+            if not user:
+                raise NotFoundException(f"User with ID {user_id} not found.")
+
+            subject, body = _prepare_alert_content(alert_type, alert_data, user)
+            return _send_email_notification(user.email, subject, body)
+        except SQLAlchemyError as e:
+            logger.error(f"Database error while fetching user {user_id} for alert: {e}", exc_info=True)
+            raise DatabaseException(f"Failed to fetch user {user_id} for alert.") from e
+
+async def _send_weekly_summary_async(user_id_str: str) -> Dict[str, Any]:
+    """Async helper to generate and send a weekly summary."""
+    user_id = UUID(user_id_str)
+    async for db in get_async_db():
+        try:
+            user_res = await db.execute(select(User).where(User.id == user_id))
+            user = user_res.scalars().first()
+            if not user:
+                raise NotFoundException(f"User with ID {user_id} not found.")
+
+            summary_data = {"new_evidence_count": 5, "avg_quality_score": 85.5} # Mock data
+            subject, body = _format_weekly_summary(summary_data, user)
+            return _send_email_notification(user.email, subject, body)
+        except SQLAlchemyError as e:
+            logger.error(f"Database error while fetching user {user_id} for summary: {e}", exc_info=True)
+            raise DatabaseException(f"Failed to fetch user {user_id} for summary.") from e
+
+async def _broadcast_notification_async(subject: str, message: str) -> int:
+    """Async helper to broadcast a notification to all active users."""
+    async for db in get_async_db():
+        try:
+            users_res = await db.execute(select(User).where(User.is_active == True))
+            users = users_res.scalars().all()
+            for user in users:
+                _send_email_notification(user.email, subject, message)
+            return len(users)
+        except SQLAlchemyError as e:
+            logger.error(f"Database error during broadcast: {e}", exc_info=True)
+            raise DatabaseException("Failed to fetch users for broadcast.") from e
+
+# --- Celery Tasks ---
+
+@celery_app.task(bind=True, autoretry_for=(DatabaseException, IntegrationException), retry_backoff=True, max_retries=3)
+def send_compliance_alert(self, user_id: str, alert_type: str, alert_data: Dict[str, Any]):
+    """Sends a compliance alert to a specific user."""
+    logger.info(f"Sending compliance alert '{alert_type}' to user {user_id}")
+    try:
+        return asyncio.run(_send_compliance_alert_async(user_id, alert_type, alert_data))
+    except (NotFoundException, BusinessLogicException) as e:
+        logger.warning(f"Business logic error for compliance alert to user {user_id}, not retrying: {e}")
+    except Exception as e:
+        logger.critical(f"Unexpected, non-retriable error for compliance alert to user {user_id}: {e}", exc_info=True)
+        raise
+
+@celery_app.task(bind=True, autoretry_for=(DatabaseException, IntegrationException), retry_backoff=True, max_retries=3)
+def send_weekly_summary(self, user_id: str):
+    """Sends a weekly compliance summary to a user."""
+    logger.info(f"Sending weekly summary to user {user_id}")
+    try:
+        return asyncio.run(_send_weekly_summary_async(user_id))
+    except (NotFoundException, BusinessLogicException) as e:
+        logger.warning(f"Business logic error for weekly summary to user {user_id}, not retrying: {e}")
+    except Exception as e:
+        logger.critical(f"Unexpected, non-retriable error for weekly summary to user {user_id}: {e}", exc_info=True)
+        raise
+
+@celery_app.task(bind=True, autoretry_for=(DatabaseException, IntegrationException), retry_backoff=True, max_retries=3)
+def broadcast_notification(self, subject: str, message: str):
+    """Broadcasts a notification to all active users."""
+    logger.info(f"Broadcasting notification: {subject}")
+    try:
+        user_count = asyncio.run(_broadcast_notification_async(subject, message))
+        return {"status": "completed", "users_notified": user_count}
+    except Exception as e:
+        logger.critical(f"Unexpected, non-retriable error during broadcast: {e}", exc_info=True)
+        raise

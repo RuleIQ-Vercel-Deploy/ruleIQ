@@ -1,49 +1,53 @@
 """
-Main service for processing and enriching collected evidence.
+Asynchronous service for processing and enriching collected evidence.
 """
 
-from datetime import datetime
+from datetime import datetime, timedelta
 import hashlib
 import json
-from sqlalchemy.orm import Session
+from typing import List, Dict, Any
+from uuid import UUID
 
-from database.evidence_item import EvidenceItem
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy import select, and_
+from sqlalchemy.orm.attributes import flag_modified
+from sqlalchemy.exc import SQLAlchemyError
+
+from database.models import EvidenceItem
 from .quality_scorer import QualityScorer
+from core.exceptions import DatabaseException, BusinessLogicException
+from config.logging_config import get_logger
+
+logger = get_logger(__name__)
 
 class EvidenceProcessor:
-    """Processes raw evidence to add scores, tags, and mappings."""
+    """Processes raw evidence to add scores, tags, and mappings asynchronously."""
 
-    def __init__(self, db: Session):
+    def __init__(self, db: AsyncSession):
         self.db = db
-        self.quality_scorer = QualityScorer()
+        self.quality_scorer = QualityScorer() # QualityScorer is synchronous and CPU-bound
 
     def process_evidence(self, evidence: EvidenceItem) -> None:
         """
-        Runs the full enrichment pipeline on a single evidence item.
+        Runs the full enrichment pipeline on a single evidence item in-memory.
+        The caller is responsible for committing the changes. This method is synchronous
+        to allow for efficient in-memory batch processing before a final async commit.
         """
         try:
-            # Calculate quality score
             quality_score = self.quality_scorer.calculate_score(evidence)
             
-            # Generate content hash
+            raw_data_for_hash = json.loads(evidence.raw_data) if isinstance(evidence.raw_data, str) else evidence.raw_data
+
             content_to_hash = {
                 'evidence_type': evidence.evidence_type,
-                'evidence_name': evidence.evidence_name,
                 'description': evidence.description,
-                'raw_data': evidence.raw_data
+                'raw_data': raw_data_for_hash
             }
             content_hash = hashlib.sha256(
                 json.dumps(content_to_hash, sort_keys=True, default=str).encode()
             ).hexdigest()
 
-            # Update metadata in-place
-            metadata = {}
-            if evidence.collection_notes:
-                try:
-                    metadata = json.loads(evidence.collection_notes) if isinstance(evidence.collection_notes, str) else evidence.collection_notes
-                except (json.JSONDecodeError, TypeError):
-                    metadata = {}
-            
+            metadata = evidence.metadata or {}
             metadata.update({
                 'quality_score': quality_score,
                 'content_hash': content_hash,
@@ -51,78 +55,37 @@ class EvidenceProcessor:
                 'processed_at': datetime.utcnow().isoformat(),
             })
             
-            # Store metadata back to collection_notes as JSON
-            evidence.collection_notes = json.dumps(metadata)
-            
-            # The commit will be handled by the calling task
-            
-        except Exception as e:
-            print(f"Error processing evidence {evidence.id}: {e}")
-            raise
+            evidence.metadata = metadata
+            flag_modified(evidence, "metadata")
 
-    def batch_process_evidence(self, evidence_items: list) -> dict:
-        """
-        Process multiple evidence items in batch.
-        
-        Args:
-            evidence_items: List of EvidenceItem objects to process
-            
-        Returns:
-            Dictionary with processing statistics
-        """
-        processed_count = 0
-        error_count = 0
-        
-        for evidence in evidence_items:
-            try:
-                self.process_evidence(evidence)
-                processed_count += 1
-            except Exception as e:
-                error_count += 1
-                print(f"Failed to process evidence {evidence.id}: {e}")
-        
-        return {
-            'total_items': len(evidence_items),
-            'processed_count': processed_count,
-            'error_count': error_count,
-            'success_rate': (processed_count / len(evidence_items) * 100) if evidence_items else 0
-        }
+        except (TypeError, ValueError, AttributeError, json.JSONDecodeError) as e:
+            logger.error(f"Failed to process evidence {evidence.id} due to data error: {e}", exc_info=True)
+            metadata = evidence.metadata or {}
+            metadata.update({'processed': False, 'error': str(e)})
+            evidence.metadata = metadata
+            flag_modified(evidence, "metadata")
+            # Do not re-raise to allow batch processing to continue
 
-    def get_processing_statistics(self, business_profile_id: str, days: int = 30) -> dict:
-        """
-        Get processing statistics for a business profile.
-        
-        Args:
-            business_profile_id: ID of the business profile
-            days: Number of days to analyze
-            
-        Returns:
-            Dictionary with processing statistics
-        """
+    async def get_processing_stats(self, user_id: UUID, days: int = 30) -> Dict[str, Any]:
+        """Retrieves processing statistics for a given user."""
         try:
-            from datetime import timedelta
-            from sqlalchemy import and_
-            
             cutoff_date = datetime.utcnow() - timedelta(days=days)
             
-            # Query for processed evidence items
-            processed_items = self.db.query(EvidenceItem).filter(
+            stmt = select(EvidenceItem).where(
                 and_(
-                    EvidenceItem.user_id == business_profile_id,
+                    EvidenceItem.user_id == user_id,
                     EvidenceItem.created_at > cutoff_date,
-                    EvidenceItem.collection_notes.like('%"processed": true%')
+                    EvidenceItem.metadata['processed'].as_boolean() == True
                 )
-            ).all()
+            )
+            result = await self.db.execute(stmt)
+            processed_items = result.scalars().all()
             
-            # Calculate average quality score
-            quality_scores = []
-            for item in processed_items:
-                try:
-                    metadata = json.loads(item.collection_notes) if isinstance(item.collection_notes, str) else item.collection_notes
-                    if metadata and 'quality_score' in metadata:
-                        quality_scores.append(metadata['quality_score'])
-                except (json.JSONDecodeError, TypeError):
-                    continue
+            quality_scores = [
+                item.metadata['quality_score']
+                for item in processed_items
+                if item.metadata and 'quality_score' in item.metadata
+            ]
             
             avg_quality_score = sum(quality_scores) / len(quality_scores) if quality_scores else 0
             
@@ -137,12 +100,9 @@ class EvidenceProcessor:
                 'analysis_period_days': days
             }
             
+        except SQLAlchemyError as e:
+            logger.error(f"Database error while getting processing stats for user {user_id}: {e}", exc_info=True)
+            raise DatabaseException("Failed to retrieve processing statistics.") from e
         except Exception as e:
-            print(f"Error getting processing statistics: {e}")
-            return {
-                'processed_items': 0,
-                'average_quality_score': 0,
-                'quality_score_distribution': {'high': 0, 'medium': 0, 'low': 0},
-                'analysis_period_days': days,
-                'error': str(e)
-            }
+            logger.error(f"Unexpected error getting processing stats for user {user_id}: {e}", exc_info=True)
+            raise BusinessLogicException("An unexpected error occurred while calculating statistics.") from e

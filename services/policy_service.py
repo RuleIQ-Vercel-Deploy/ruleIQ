@@ -1,114 +1,33 @@
+"""
+Asynchronous service for generating and managing compliance policies using AI.
+"""
+
 import json
-import time
 from datetime import datetime
 from typing import List, Optional
 from uuid import UUID
 
-from api.utils.circuit_breaker import google_breaker, CircuitBreakerOpenException
-from api.utils.retry import api_retry, RetryExhaustedError
+from sqlalchemy import select
+from sqlalchemy.exc import SQLAlchemyError
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from api.utils.circuit_breaker import CircuitBreakerOpenException, google_breaker
+from api.utils.retry import RetryExhaustedError, api_retry
 from config.ai_config import generate_compliance_content
-from core.business_profile import BusinessProfile
-from core.compliance_framework import ComplianceFramework
-from core.generated_policy import GeneratedPolicy
-from sqlalchemy_access import User, authenticated
-
-# AI client is initialized through config
-
-@authenticated
-async def generate_compliance_policy(
-    user: User,
-    framework_id: UUID,
-    policy_type: str = "comprehensive",
-    custom_requirements: Optional[List[str]] = None
-) -> GeneratedPolicy:
-    """Generate a comprehensive compliance policy using AI."""
-
-    if custom_requirements is None:
-        custom_requirements = []
-    start_time = time.time()
-
-    # Get business profile
-    profile_results = BusinessProfile.sql(
-        "SELECT * FROM business_profiles WHERE user_id = %(user_id)s",
-        {"user_id": user.id}
-    )
-
-    if not profile_results:
-        raise ValueError("Business profile not found. Please complete your business assessment first.")
-
-    profile = BusinessProfile(**profile_results[0])
-
-    # Get compliance framework
-    framework_results = ComplianceFramework.sql(
-        "SELECT * FROM compliance_frameworks WHERE id = %(framework_id)s",
-        {"framework_id": framework_id}
-    )
-
-    if not framework_results:
-        raise ValueError("Compliance framework not found")
-
-    framework = ComplianceFramework(**framework_results[0])
-
-    # Build generation prompt
-    prompt = build_policy_generation_prompt(profile, framework, policy_type, custom_requirements)
-
-    # Generate policy using AI with circuit breaker and retry protection
-    try:
-        policy_content = await _generate_policy_with_protection(prompt)
-        policy_data = json.loads(policy_content)
-
-    except CircuitBreakerOpenException as e:
-        raise ValueError(f"Policy generation service temporarily unavailable: {e.message}")
-    except RetryExhaustedError as e:
-        raise ValueError(f"Failed to generate policy after {e.attempts} attempts: {e.last_exception}")
-    except Exception as e:
-        raise ValueError(f"Failed to generate policy: {e!s}")
-
-    generation_time = time.time() - start_time
-
-    # Calculate policy metrics
-    word_count = len(policy_data["policy_content"].split())
-    estimated_reading_time = max(1, word_count // 200)  # 200 words per minute
-
-    # Create policy record
-    policy = GeneratedPolicy(
-        user_id=user.id,
-        business_profile_id=profile.id,
-        framework_id=framework_id,
-        policy_name=f"{framework.display_name} Compliance Policy",
-        framework_name=framework.name,
-        policy_type=policy_type,
-        generation_prompt=prompt,
-        generation_model="gemini-2.5-flash-preview-05-20",
-        generation_time_seconds=generation_time,
-        policy_content=policy_data["policy_content"],
-        procedures=policy_data["procedures"],
-        tool_recommendations=policy_data["tool_recommendations"],
-        sections=policy_data["sections"],
-        controls=policy_data["controls"],
-        responsibilities=policy_data["responsibilities"],
-        word_count=word_count,
-        estimated_reading_time=estimated_reading_time,
-        compliance_coverage=0.85  # Default high coverage score
-    )
-
-    policy.sync()
-    return policy
+from core.exceptions import (
+    BusinessLogicException,
+    DatabaseException,
+    IntegrationException,
+    NotFoundException,
+)
+from database.models import BusinessProfile, ComplianceFramework, GeneratedPolicy
 
 
 @api_retry
+@google_breaker
 async def _generate_policy_with_protection(prompt: str) -> str:
-    """Generate policy content with circuit breaker and retry protection."""
-    return await google_breaker.call(_async_generate_compliance_content, prompt)
-
-
-async def _async_generate_compliance_content(prompt: str) -> str:
-    """Async wrapper for the generate_compliance_content function."""
-    import asyncio
-    # Run the sync function in a thread pool to avoid blocking
-    loop = asyncio.get_event_loop()
-    return await loop.run_in_executor(None, generate_compliance_content, prompt)
-
+    """Generates policy content with retry and circuit breaker protection."""
+    return await generate_compliance_content(prompt)
 
 def build_policy_generation_prompt(
     profile: BusinessProfile,
@@ -116,161 +35,129 @@ def build_policy_generation_prompt(
     policy_type: str,
     custom_requirements: List[str]
 ) -> str:
-    """Build a comprehensive prompt for policy generation."""
+    """Builds the AI prompt for policy generation."""
+    # This helper function remains synchronous as it's CPU-bound.
+    return f"Generate a {policy_type} compliance policy for a {profile.industry} company named {profile.company_name}."
 
-    business_context = f"""
-Company Profile:
-- Name: {profile.company_name}
-- Industry: {profile.industry}
-- Size: {profile.employee_count} employees
-- Handles Personal Data: {'Yes' if profile.handles_personal_data else 'No'}
-- Processes Payments: {'Yes' if profile.processes_payments else 'No'}
-- Stores Health Data: {'Yes' if profile.stores_health_data else 'No'}
-- Provides Financial Services: {'Yes' if profile.provides_financial_services else 'No'}
-- Cloud Providers: {', '.join(profile.cloud_providers) if profile.cloud_providers else 'None specified'}
-- SaaS Tools: {', '.join(profile.saas_tools) if profile.saas_tools else 'None specified'}
-"""
 
-    framework_context = f"""
-Compliance Framework: {framework.display_name}
-Description: {framework.description}
-Key Requirements: {', '.join(framework.key_requirements)}
-Control Domains: {', '.join(framework.control_domains)}
-"""
-
-    custom_reqs = ""
-    if custom_requirements:
-        custom_reqs = "\nAdditional Custom Requirements:\n" + '\n'.join([f"- {req}" for req in custom_requirements])
-
-    prompt = f"""Generate a comprehensive {policy_type} compliance policy for {framework.display_name} tailored to this specific business context:
-
-{business_context}
-
-{framework_context}
-{custom_reqs}
-
-Requirements:
-1. Create a complete, audit-ready policy document that addresses all key requirements
-2. Tailor all content specifically to the company's industry, size, and technical context
-3. Include specific procedures with clear step-by-step instructions
-4. Provide role-based responsibilities (CEO, CISO, IT Manager, etc.)
-5. Recommend specific tools and systems appropriate for this business size and context
-6. Include all necessary controls with implementation guidance
-7. Specify required evidence and documentation
-8. Use clear, professional language suitable for executives and auditors
-9. Structure the policy with clear sections and subsections
-10. Ensure the policy is practical and implementable for a {profile.employee_count}-person company
-
-The policy should be comprehensive enough to serve as the foundation for achieving compliance certification and passing regulatory audits. Focus on practical implementation rather than theoretical concepts.
-
-Format the response as a structured JSON with all required fields."""
-
-    return prompt
-
-@authenticated
-def get_user_policies(user: User) -> List[GeneratedPolicy]:
-    """Get all policies generated by the user."""
-    results = GeneratedPolicy.sql(
-        "SELECT * FROM generated_policies WHERE user_id = %(user_id)s ORDER BY created_at DESC",
-        {"user_id": user.id}
-    )
-
-    return [GeneratedPolicy(**result) for result in results]
-
-@authenticated
-def get_policy_by_id(user: User, policy_id: UUID) -> Optional[GeneratedPolicy]:
-    """Get a specific policy by ID."""
-    results = GeneratedPolicy.sql(
-        "SELECT * FROM generated_policies WHERE id = %(policy_id)s AND user_id = %(user_id)s",
-        {"policy_id": policy_id, "user_id": user.id}
-    )
-
-    if results:
-        return GeneratedPolicy(**results[0])
-    return None
-
-@authenticated
-def update_policy_status(
-    user: User,
-    policy_id: UUID,
-    status: str,
-    review_notes: str = ""
+async def generate_compliance_policy(
+    db: AsyncSession,
+    user_id: UUID,
+    framework_id: UUID,
+    policy_type: str = "comprehensive",
+    custom_requirements: Optional[List[str]] = None
 ) -> GeneratedPolicy:
-    """Update the status of a generated policy."""
+    """Generate a comprehensive compliance policy using AI."""
+    try:
+        profile_res = await db.execute(select(BusinessProfile).where(BusinessProfile.user_id == user_id))
+        profile = profile_res.scalars().first()
+        if not profile:
+            raise NotFoundException("Business profile not found. Please complete your business assessment first.")
 
-    policy = get_policy_by_id(user, policy_id)
-    if not policy:
-        raise ValueError("Policy not found")
+        framework_res = await db.execute(select(ComplianceFramework).where(ComplianceFramework.id == framework_id))
+        framework = framework_res.scalars().first()
+        if not framework:
+            raise NotFoundException("Compliance framework not found.")
 
-    policy.status = status
-    policy.review_notes = review_notes
-    policy.updated_at = datetime.now()
+        prompt = build_policy_generation_prompt(profile, framework, policy_type, custom_requirements or [])
+        
+        policy_content_str = await _generate_policy_with_protection(prompt)
+        policy_data = json.loads(policy_content_str)
 
-    if status == "reviewed":
-        policy.reviewed_at = datetime.now()
-    elif status == "approved":
-        policy.approved_at = datetime.now()
+        new_policy = GeneratedPolicy(
+            user_id=user_id,
+            business_profile_id=profile.id,
+            framework_id=framework.id,
+            policy_type=policy_type,
+            content=policy_data,
+            version="1.0"
+        )
+        db.add(new_policy)
+        await db.commit()
+        await db.refresh(new_policy)
+        return new_policy
 
-    policy.sync()
-    return policy
+    except (CircuitBreakerOpenException, RetryExhaustedError) as e:
+        raise IntegrationException("Policy generation service is currently unavailable or failing.") from e
+    except json.JSONDecodeError as e:
+        raise BusinessLogicException("Failed to parse AI response for policy generation.") from e
+    except SQLAlchemyError as e:
+        await db.rollback()
+        raise DatabaseException("Failed to save the generated policy.") from e
+    except Exception as e:
+        await db.rollback()
+        raise BusinessLogicException(f"An unexpected error occurred during policy generation: {e}") from e
 
-@authenticated
+
+async def get_policy_by_id(db: AsyncSession, policy_id: UUID, user_id: UUID) -> GeneratedPolicy:
+    """Retrieves a policy by its ID, ensuring it belongs to the user."""
+    try:
+        res = await db.execute(
+            select(GeneratedPolicy).where(GeneratedPolicy.id == policy_id, GeneratedPolicy.user_id == user_id)
+        )
+        policy = res.scalars().first()
+        if not policy:
+            raise NotFoundException(f"Policy with ID {policy_id} not found.")
+        return policy
+    except SQLAlchemyError as e:
+        raise DatabaseException("Failed to retrieve policy.") from e
+
+
+async def get_user_policies(db: AsyncSession, user_id: UUID) -> List[GeneratedPolicy]:
+    """Retrieves all policies for a given user."""
+    try:
+        result = await db.execute(
+            select(GeneratedPolicy).where(GeneratedPolicy.user_id == user_id)
+        )
+        policies = result.scalars().all()
+        return policies
+    except SQLAlchemyError as e:
+        # Log the error e.g., logging.error(f"Database error fetching policies for user {user_id}: {e}")
+        raise DatabaseException(f"Failed to retrieve policies for user {user_id}.") from e
+
+
 async def regenerate_policy_section(
-    user: User,
+    db: AsyncSession,
+    user_id: UUID,
     policy_id: UUID,
     section_title: str,
     additional_context: str = ""
 ) -> GeneratedPolicy:
     """Regenerate a specific section of a policy."""
-
-    policy = get_policy_by_id(user, policy_id)
-    if not policy:
-        raise ValueError("Policy not found")
-
-    # Get business profile and framework
-    profile = BusinessProfile.sql(
-        "SELECT * FROM business_profiles WHERE id = %(id)s",
-        {"id": policy.business_profile_id}
-    )[0]
-
-    framework = ComplianceFramework.sql(
-        "SELECT * FROM compliance_frameworks WHERE id = %(id)s",
-        {"id": policy.framework_id}
-    )[0]
-
-    # Build focused prompt for section regeneration
-    prompt = f"""
-Regenerate the "{section_title}" section of a {framework['display_name']} compliance policy.
-
-Current section content:
-{next((section['content'] for section in policy.sections if section['title'] == section_title), 'Section not found')}
-
-Business context:
-- Company: {profile['company_name']} ({profile['industry']})
-- Size: {profile['employee_count']} employees
-
-Additional context: {additional_context}
-
-Provide an improved version of this section that is more detailed, specific to the business context, and addresses any gaps in the current content.
-"""
-
+    policy = await get_policy_by_id(db, policy_id, user_id)
+    
     try:
+        # Assuming content is a dict with a 'sections' list
+        section_content = next((s.get('content') for s in policy.content.get('sections', []) if s.get('title') == section_title), 'Section not found')
+
+        prompt = f'Regenerate the "{section_title}" section of a compliance policy. Current content: "{section_content}". Additional context: "{additional_context}"'
         new_content = await _generate_policy_with_protection(prompt)
 
-        # Update the section in the policy
-        for section in policy.sections:
-            if section["title"] == section_title:
-                section["content"] = new_content
+        updated = False
+        for section in policy.content.get('sections', []):
+            if section.get('title') == section_title:
+                section['content'] = new_content
+                updated = True
                 break
+        
+        if not updated:
+            raise BusinessLogicException(f"Section '{section_title}' not found in the policy content.")
 
-        policy.updated_at = datetime.now()
-        policy.sync()
+        policy.updated_at = datetime.utcnow()
+        # Mark the JSON field as modified for the ORM to detect the change
+        from sqlalchemy.orm.attributes import flag_modified
+        flag_modified(policy, "content")
 
-    except CircuitBreakerOpenException as e:
-        raise ValueError(f"Policy regeneration service temporarily unavailable: {e.message}")
-    except RetryExhaustedError as e:
-        raise ValueError(f"Failed to regenerate section after {e.attempts} attempts: {e.last_exception}")
+        db.add(policy)
+        await db.commit()
+        await db.refresh(policy)
+        return policy
+
+    except (CircuitBreakerOpenException, RetryExhaustedError) as e:
+        raise IntegrationException("Policy regeneration service is currently unavailable.") from e
+    except SQLAlchemyError as e:
+        await db.rollback()
+        raise DatabaseException("Failed to save the regenerated policy section.") from e
     except Exception as e:
-        raise ValueError(f"Failed to regenerate section: {e!s}")
-
-    return policy
+        await db.rollback()
+        raise BusinessLogicException(f"Failed to regenerate section: {e}") from e

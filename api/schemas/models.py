@@ -1,10 +1,8 @@
-from datetime import datetime
+from datetime import date, datetime
 from typing import Any, Dict, List, Optional
 from uuid import UUID
 
 from pydantic import BaseModel, EmailStr, Field, validator
-
-from api.utils.validators import InputValidators
 
 
 # User schemas
@@ -15,7 +13,8 @@ class UserCreate(UserBase):
     password: str = Field(..., min_length=8, max_length=128)
 
     @validator('password')
-    def validate_password_strength(self, v):
+    @classmethod
+    def validate_password_strength(cls, v):
         from api.dependencies.auth import validate_password
         is_valid, message = validate_password(v)
         if not is_valid:
@@ -42,34 +41,24 @@ class Token(BaseModel):
 class TokenData(BaseModel):
     user_id: Optional[str] = None
 
-# Business Profile schemas with validation
+# --- Shared Detail Models ---
+
+class RecommendationDetail(BaseModel):
+    """A specific recommendation for improving compliance posture."""
+    title: str = Field(..., description="The title of the recommendation.")
+    description: str = Field(..., description="A detailed description of the recommendation.")
+    priority: str = Field(..., pattern=r'^(Low|Medium|High)$', description="The priority for implementing the recommendation.")
+    estimated_effort: str = Field(..., pattern=r'^(Low|Medium|High)$', description="Estimated effort to implement.")
+    related_controls: List[str] = Field(default_factory=list, description="List of control IDs this recommendation addresses.")
+
+# Business Profile schemas
 class BusinessProfileBase(BaseModel):
     company_name: str = Field(..., min_length=2, max_length=100)
     industry: str = Field(..., min_length=2, max_length=50)
     employee_count: int = Field(..., ge=1, le=1000000)
-    annual_revenue: Optional[str] = Field(None, pattern=r'^(Under £\d+[MK]|£\d+[MK]-£\d+[MK]|Over £\d+[MK])$')
-    country: str = Field(default="UK", pattern=r'^[A-Z]{2,3}$')
-    handles_personal_data: bool = Field(..., description="Handles personal data")
-    processes_payments: bool = Field(..., description="Processes payments")
-    stores_health_data: bool = Field(..., description="Stores health data")
-    provides_financial_services: bool = Field(..., description="Provides financial services")
-    operates_critical_infrastructure: bool = Field(..., description="Operates critical infrastructure")
-    has_international_operations: bool = Field(..., description="Has international operations")
-    cloud_providers: List[str] = Field(default_factory=list, max_items=10)
-    saas_tools: List[str] = Field(default_factory=list, max_items=20)
-    development_tools: List[str] = Field(default_factory=list, max_items=10)
-    existing_frameworks: List[str] = Field(default_factory=list, max_items=10)
-    planned_frameworks: List[str] = Field(default_factory=list, max_items=10)
-    compliance_budget: Optional[str] = Field(None, pattern=r'^(Under £\d+K|£\d+K-£\d+K|Over £\d+K)$')
-    compliance_timeline: Optional[str] = Field(None, pattern=r'^\d+ months?$')
-
-    @validator('company_name')
-    def validate_company_name(self, v):
-        return InputValidators.validate_company_name(v)
-
-    @validator('cloud_providers', 'saas_tools', 'development_tools', 'existing_frameworks', 'planned_frameworks', each_item=True)
-    def validate_list_items(self, v):
-        return InputValidators.validate_safe_string(v, 50)
+    annual_revenue: Optional[str] = Field(None, pattern=r'^(Under £\\d+[MK]|£\\d+[MK]-£\\d+[MK]|Over £\\d+[MK])$')
+    country: str = Field(default='United Kingdom', max_length=50)
+    data_sensitivity: str = Field(default='Low', pattern=r'^(Low|Moderate|High|Confidential)$')
 
 class BusinessProfileCreate(BusinessProfileBase):
     pass
@@ -78,40 +67,117 @@ class BusinessProfileUpdate(BaseModel):
     company_name: Optional[str] = Field(None, min_length=2, max_length=100)
     industry: Optional[str] = Field(None, min_length=2, max_length=50)
     employee_count: Optional[int] = Field(None, ge=1, le=1000000)
-    annual_revenue: Optional[str] = None
-    handles_personal_data: Optional[bool] = None
-    processes_payments: Optional[bool] = None
-    stores_health_data: Optional[bool] = None
-    provides_financial_services: Optional[bool] = None
-    operates_critical_infrastructure: Optional[bool] = None
-    has_international_operations: Optional[bool] = None
-    cloud_providers: Optional[List[str]] = None
-    saas_tools: Optional[List[str]] = None
-    development_tools: Optional[List[str]] = None
-    existing_frameworks: Optional[List[str]] = None
-    planned_frameworks: Optional[List[str]] = None
-    compliance_budget: Optional[str] = None
-    compliance_timeline: Optional[str] = None
+    annual_revenue: Optional[str] = Field(None, pattern=r'^(Under £\\d+[MK]|£\\d+[MK]-£\\d+[MK]|Over £\\d+[MK])$')
+    country: Optional[str] = Field(None, max_length=50)
+    data_sensitivity: Optional[str] = Field(None, pattern=r'^(Low|Moderate|High|Confidential)$')
+
 
 class BusinessProfileResponse(BusinessProfileBase):
     id: UUID
     user_id: UUID
-    assessment_completed: bool
-    assessment_data: Dict[str, Any]
     created_at: datetime
     updated_at: datetime
 
     class Config:
         from_attributes = True
 
-# Assessment schemas
-class AssessmentSessionCreate(BaseModel):
-    session_type: str = Field(default="compliance_scoping", pattern=r'^[a-z_]+$')
 
-class AssessmentResponseUpdate(BaseModel):
-    question_id: str = Field(..., pattern=r'^[a-z_]+$')
-    response: str = Field(..., min_length=1, max_length=5000)
-    move_to_next_stage: bool = False
+# Compliance Framework Schemas
+class ComplianceFrameworkResponse(BaseModel):
+    id: UUID
+    name: str
+    description: str
+    category: str
+    version: Optional[str]
+    controls: List[Dict[str, Any]]
+
+    class Config:
+        from_attributes = True
+
+class FrameworkRecommendation(BaseModel):
+    framework_id: UUID
+    name: str
+    relevance_score: float
+    reasoning: str
+
+
+# Policy Schemas
+class PolicyGenerateRequest(BaseModel):
+    framework_name: str = Field(..., description="The name of the compliance framework (e.g., 'ISO 27001').")
+    business_profile_id: UUID = Field(..., description="The ID of the business profile to tailor the policy for.")
+    policy_title: Optional[str] = Field(None, description="A specific title for the policy document.")
+    tone: str = Field("formal", pattern=r'^(formal|informal|strict)$', description="The tone of the generated policy.")
+    specific_controls: Optional[List[str]] = Field(None, description="A list of specific control IDs to focus on.")
+
+
+class GeneratedPolicyResponse(BaseModel):
+    policy_title: str
+    content: str
+    version: str
+    created_at: datetime
+
+
+# Evidence Schemas
+class EvidenceCreate(BaseModel):
+    title: str = Field(..., description="A descriptive title for the evidence.")
+    description: Optional[str] = Field(None, description="A detailed description of the evidence content.")
+    control_id: str = Field(..., description="The specific control ID this evidence addresses (e.g., 'AC-1').")
+    framework_id: UUID = Field(..., description="The compliance framework this evidence belongs to.")
+    business_profile_id: UUID = Field(..., description="The business profile this evidence is associated with.")
+    source: str = Field("manual_upload", description="The source of the evidence (e.g., 'manual_upload', 'integration:jira').")
+    tags: Optional[List[str]] = Field(None, description="Keywords for searching and filtering.")
+
+
+class EvidenceUpdate(BaseModel):
+    title: Optional[str] = Field(None, description="A new title for the evidence.")
+    description: Optional[str] = Field(None, description="An updated description of the evidence.")
+    status: Optional[str] = Field(None, pattern=r'^(pending_review|approved|rejected)$', description="The review status of the evidence.")
+    tags: Optional[List[str]] = Field(None, description="A new list of keywords.")
+
+
+class EvidenceStatusUpdate(BaseModel):
+    status: str = Field(..., pattern=r'^(pending_review|approved|rejected)$', description="The new review status for the evidence.")
+
+
+class EvidenceResponse(EvidenceCreate):
+    id: UUID
+    user_id: UUID
+    file_path: Optional[str]
+    status: str
+    created_at: datetime
+    updated_at: datetime
+
+    class Config:
+        from_attributes = True
+
+
+class RecentEvidenceItem(BaseModel):
+    id: UUID
+    title: str
+    control_id: str
+    status: str
+    updated_at: datetime
+
+
+class EvidenceDashboardResponse(BaseModel):
+    total_items: int
+    status_counts: Dict[str, int]
+    completion_percentage: float
+    recently_updated: List[RecentEvidenceItem]
+
+
+# Assessment Session Schemas
+class AssessmentQuestion(BaseModel):
+    question_id: str = Field(..., description="Unique identifier for the question.")
+    text: str = Field(..., description="The text of the assessment question.")
+    question_type: str = Field(..., pattern=r'^(multiple_choice|free_text|yes_no)$', description="The type of question.")
+    options: Optional[List[Dict[str, str]]] = Field(None, description="A list of options for multiple-choice questions, e.g., [{'value': 'opt1', 'label': 'Option 1'}].")
+
+
+class AssessmentSessionCreate(BaseModel):
+    business_profile_id: UUID
+    session_type: str = "compliance_scoping"
+
 
 class AssessmentSessionResponse(BaseModel):
     id: UUID
@@ -121,180 +187,79 @@ class AssessmentSessionResponse(BaseModel):
     status: str
     current_stage: int
     total_stages: int
-    questions_answered: int
-    total_questions: int
     responses: Dict[str, Any]
-    recommendations: List[Dict[str, Any]]
-    recommended_frameworks: List[str]
-    priority_order: List[str]
-    next_steps: List[str]
-    created_at: datetime
-    last_activity: datetime
+    recommendations: List[Any]
+    started_at: datetime
     completed_at: Optional[datetime]
 
     class Config:
         from_attributes = True
 
-class AssessmentQuestion(BaseModel):
-    id: str
-    question: str
-    type: str
-    options: Optional[List[str]] = None
-    required: bool = True
 
-# Framework schemas
-class FrameworkBase(BaseModel):
-    name: str
-    display_name: str
-    description: str
-    category: str
-    region: str
-    mandatory_for: List[str]
-    applicable_industries: List[str]
-    company_size_range: Dict[str, int]
-    key_requirements: List[str]
-    typical_controls: int
-    estimated_effort: str
-    certification_available: bool
-    regulatory_body: Optional[str]
-    penalties_for_non_compliance: Optional[str]
+class AssessmentResponseUpdate(BaseModel):
+    responses: Dict[str, Any] = Field(..., description="The user's responses to the assessment questions.")
+    status: Optional[str] = Field(None, pattern=r'^(in_progress|completed)$', description="The updated status of the assessment session.")
 
-class FrameworkResponse(FrameworkBase):
-    id: UUID
-    created_at: datetime
-    updated_at: datetime
 
-    class Config:
-        from_attributes = True
-
-class FrameworkRecommendation(BaseModel):
-    framework: FrameworkResponse
-    relevance_score: float = Field(..., ge=0, le=100)
-    reasons: List[str]
-    priority: str = Field(..., pattern=r'^(High|Medium|Low)$')
-
-# Policy schemas
-class PolicyGenerateRequest(BaseModel):
-    framework_id: UUID
-    control_ids: Optional[List[UUID]] = None
-    customizations: Optional[Dict[str, Any]] = None
-
-class GeneratedPolicyResponse(BaseModel):
-    id: UUID
+# Implementation Plan Schemas
+class ImplementationPlanCreate(BaseModel):
     business_profile_id: UUID
     framework_id: UUID
-    policy_name: str
-    policy_type: str
-    content: str
-    sections: Dict[str, Any]
-    customizations: Dict[str, Any]
-    version: int
-    status: str
-    generated_by: str
-    approved: bool
-    approved_by: Optional[UUID]
-    approved_at: Optional[datetime]
-    created_at: datetime
-    updated_at: datetime
+    title: str
+    phases: List[Dict[str, Any]]
+    planned_start_date: Optional[date] = None
+    planned_end_date: Optional[date] = None
 
-    class Config:
-        from_attributes = True
-
-# Implementation Plan schemas
-class ImplementationPlanCreate(BaseModel):
-    framework_id: UUID
-    control_ids: Optional[List[UUID]] = None
-
-class ImplementationTaskUpdate(BaseModel):
-    status: str = Field(..., pattern=r'^(not_started|in_progress|completed|blocked)$')
-    assigned_to: Optional[str] = Field(None, max_length=100)
-    actual_start: Optional[datetime] = None
-    actual_end: Optional[datetime] = None
-    notes: Optional[str] = Field(None, max_length=2000)
 
 class ImplementationPlanResponse(BaseModel):
     id: UUID
+    user_id: UUID
     business_profile_id: UUID
     framework_id: UUID
-    plan_name: str
-    total_phases: int
-    total_tasks: int
-    estimated_duration_weeks: int
-    estimated_budget: Optional[float]
-    phases: List[Dict[str, Any]]
-    tasks: List[Dict[str, Any]]
-    milestones: List[Dict[str, Any]]
-    resources_required: List[Dict[str, Any]]
-    risk_factors: List[Dict[str, Any]]
-    status: str
-    progress_percentage: float = Field(..., ge=0, le=100)
-    created_at: datetime
-    updated_at: datetime
-    start_date: Optional[datetime]
-    target_end_date: Optional[datetime]
-
-    class Config:
-        from_attributes = True
-
-# Evidence schemas
-class EvidenceItemCreate(BaseModel):
-    framework_id: UUID
-    control_id: UUID
-    evidence_type: str = Field(..., pattern=r'^(document|screenshot|log|report|certificate)$')
-    title: str = Field(..., min_length=3, max_length=200)
-    description: Optional[str] = Field(None, max_length=1000)
-    file_url: Optional[str] = None
-    automation_possible: bool = False
-    collection_method: Optional[str] = Field(None, pattern=r'^(manual|automated|hybrid)$')
-
-class EvidenceItemUpdate(BaseModel):
-    status: str = Field(..., pattern=r'^(not_collected|collected|approved|rejected|expired)$')
-    file_url: Optional[str] = None
-    collected_data: Optional[Dict[str, Any]] = None
-    notes: Optional[str] = Field(None, max_length=1000)
-
-class EvidenceItemResponse(BaseModel):
-    id: UUID
-    business_profile_id: UUID
-    framework_id: UUID
-    control_id: UUID
-    evidence_type: str
     title: str
-    description: Optional[str]
     status: str
-    file_url: Optional[str]
-    automation_possible: bool
-    automation_configured: bool
-    collection_method: Optional[str]
-    collected_data: Dict[str, Any]
-    last_collected: Optional[datetime]
-    review_status: str
-    reviewed_by: Optional[UUID]
-    reviewed_at: Optional[datetime]
-    review_notes: Optional[str]
+    phases: List[Dict[str, Any]]
+    planned_start_date: Optional[date] = None
+    planned_end_date: Optional[date] = None
+    actual_start_date: Optional[date] = None
+    actual_end_date: Optional[date] = None
     created_at: datetime
     updated_at: datetime
 
     class Config:
         from_attributes = True
 
-# Readiness Assessment schemas
+
+class ImplementationTaskUpdate(BaseModel):
+    status: Optional[str] = Field(None, description="New status of the task (e.g., 'pending', 'in_progress', 'completed', 'blocked')")
+    notes: Optional[str] = Field(None, description="Additional notes for the task update.")
+    assignee_id: Optional[UUID] = Field(None, description="ID of the user assigned to the task.")
+    due_date: Optional[date] = Field(None, description="New due date for the task.")
+    completion_percentage: Optional[int] = Field(None, ge=0, le=100, description="Percentage of task completion.")
+
+
+# Readiness and Reporting Schemas
 class ReadinessAssessmentResponse(BaseModel):
-    overall_score: float = Field(..., ge=0, le=100)
-    framework_scores: Dict[str, float]
-    control_coverage: Dict[str, Dict[str, Any]]
-    gaps: List[Dict[str, Any]]
-    recommendations: List[Dict[str, Any]]
-    risk_level: str = Field(..., pattern=r'^(Low|Medium|High|Critical)$')
-    projected_timeline: str
-    next_review_date: datetime
-    executive_summary: str
-    timestamp: datetime
+    id: UUID
+    user_id: UUID
+    framework_id: UUID
+    business_profile_id: UUID
+    overall_score: float
+    score_breakdown: Dict[str, Any]
+    priority_actions: Optional[List[Dict[str, Any]]]
+    quick_wins: Optional[List[Dict[str, Any]]]
+    score_trend: str
+    estimated_readiness_date: Optional[datetime]
+    created_at: datetime
+    updated_at: datetime
+
+    class Config:
+        from_attributes = True
+
 
 class ComplianceReport(BaseModel):
-    title: str = Field(..., min_length=3, max_length=200)
-    framework: str
-    report_type: str = Field(..., pattern=r'^(executive|detailed|audit|gap_analysis)$')
-    format: str = Field(default="pdf", pattern=r'^(pdf|docx|html)$')
-    include_evidence: bool = True
-    include_recommendations: bool = True
+    framework: str = Field(..., description="The name or ID of the compliance framework for the report.")
+    report_type: str = Field(default="summary", description="Type of report to generate (e.g., 'summary', 'detailed', 'attestation').")
+    format: str = Field(default="pdf", pattern=r'^(pdf|json)$', description="The output format for the report.")
+    include_evidence: bool = Field(default=False, description="Whether to include evidence summaries in the report.")
+    include_recommendations: bool = Field(default=True, description="Whether to include actionable recommendations.")
