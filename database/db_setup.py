@@ -64,7 +64,18 @@ def _init_async_db():
     global _async_engine, _AsyncSessionLocal
     if _async_engine is None:
         _, _, async_db_url = _get_configured_database_urls()
-        _async_engine = create_async_engine(async_db_url, echo=os.getenv("SQLALCHEMY_ECHO", "False").lower() == "true")
+
+        # Handle SSL configuration for asyncpg
+        engine_kwargs = {
+            "echo": os.getenv("SQLALCHEMY_ECHO", "False").lower() == "true"
+        }
+
+        # If the URL contains sslmode=require, remove it and add ssl=True to engine kwargs
+        if "sslmode=require" in async_db_url:
+            async_db_url = async_db_url.replace("?sslmode=require", "").replace("&sslmode=require", "")
+            engine_kwargs["connect_args"] = {"ssl": True}
+
+        _async_engine = create_async_engine(async_db_url, **engine_kwargs)
         _AsyncSessionLocal = sessionmaker(
             bind=_async_engine,
             class_=AsyncSession,

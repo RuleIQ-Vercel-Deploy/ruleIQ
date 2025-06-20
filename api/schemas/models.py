@@ -119,24 +119,40 @@ class GeneratedPolicyResponse(BaseModel):
 
 # Evidence Schemas
 class EvidenceCreate(BaseModel):
-    title: str = Field(..., description="A descriptive title for the evidence.")
-    description: Optional[str] = Field(None, description="A detailed description of the evidence content.")
-    control_id: str = Field(..., description="The specific control ID this evidence addresses (e.g., 'AC-1').")
+    title: str = Field(..., min_length=1, max_length=255, description="A descriptive title for the evidence.")
+    description: Optional[str] = Field(None, max_length=2000, description="A detailed description of the evidence content.")
+    control_id: str = Field(..., min_length=1, max_length=50, description="The specific control ID this evidence addresses (e.g., 'AC-1').")
     framework_id: UUID = Field(..., description="The compliance framework this evidence belongs to.")
     business_profile_id: UUID = Field(..., description="The business profile this evidence is associated with.")
-    source: str = Field("manual_upload", description="The source of the evidence (e.g., 'manual_upload', 'integration:jira').")
+    source: str = Field("manual_upload", min_length=1, description="The source of the evidence (e.g., 'manual_upload', 'integration:jira').")
     tags: Optional[List[str]] = Field(None, description="Keywords for searching and filtering.")
+    evidence_type: str = Field("document", description="The type of evidence (e.g., 'document', 'policy_document', 'screenshot', 'log_file').")
 
 
 class EvidenceUpdate(BaseModel):
-    title: Optional[str] = Field(None, description="A new title for the evidence.")
-    description: Optional[str] = Field(None, description="An updated description of the evidence.")
-    status: Optional[str] = Field(None, pattern=r'^(pending_review|approved|rejected)$', description="The review status of the evidence.")
-    tags: Optional[List[str]] = Field(None, description="A new list of keywords.")
+    title: Optional[str] = Field(None, min_length=1, max_length=255, description="A descriptive title for the evidence.")
+    description: Optional[str] = Field(None, max_length=2000, description="A detailed description of the evidence content.")
+    status: Optional[str] = Field(None, description="The review status of the evidence.")
+    tags: Optional[List[str]] = Field(None, description="Keywords for searching and filtering.")
+    evidence_type: Optional[str] = Field(None, description="The type of evidence.")
 
+
+class EvidenceBulkUpdate(BaseModel):
+    """Schema for bulk updating evidence items."""
+    evidence_ids: List[UUID]
+    status: str
+    reason: Optional[str] = None
+
+
+class EvidenceBulkUpdateResponse(BaseModel):
+    """Schema for bulk update response."""
+    updated_count: int
+    failed_count: int
+    failed_ids: Optional[List[UUID]] = None
 
 class EvidenceStatusUpdate(BaseModel):
     status: str = Field(..., pattern=r'^(pending_review|approved|rejected)$', description="The new review status for the evidence.")
+    notes: Optional[str] = Field(None, description="Optional notes about the status update.")
 
 
 class EvidenceResponse(EvidenceCreate):

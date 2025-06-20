@@ -2,6 +2,7 @@ from typing import List
 from uuid import UUID
 
 from fastapi import APIRouter, Depends, HTTPException, status
+from pydantic import BaseModel
 
 from api.dependencies.auth import get_current_active_user
 from api.schemas.models import (
@@ -13,7 +14,70 @@ from api.schemas.models import (
 from database.user import User
 from services.assessment_service import AssessmentService
 
+
+class QuickAssessmentRequest(BaseModel):
+    business_profile_id: str
+    assessment_type: str
+    industry_standard: bool
+
+
+class FrameworkInfo(BaseModel):
+    name: str
+    description: str = ""
+
+
+class QuickRecommendation(BaseModel):
+    framework: FrameworkInfo
+    priority: str = "medium"
+    description: str = ""
+
+
+class QuickAssessmentResponse(BaseModel):
+    recommendations: List[QuickRecommendation]
+
 router = APIRouter()
+
+@router.post("/quick", response_model=QuickAssessmentResponse)
+async def quick_assessment(
+    request: QuickAssessmentRequest
+):
+    """Generate quick compliance recommendations based on business profile."""
+
+    # For now, return basic recommendations based on industry standards
+    # This would typically integrate with the assessment service for more sophisticated analysis
+    recommendations = []
+
+    # Always recommend GDPR for EU businesses or those handling EU data
+    recommendations.append(QuickRecommendation(
+        framework=FrameworkInfo(
+            name="GDPR (General Data Protection Regulation)",
+            description="EU data protection regulation"
+        ),
+        priority="high",
+        description="Essential for businesses handling personal data of EU residents"
+    ))
+
+    # Add industry-specific recommendations
+    if request.industry_standard:
+        recommendations.append(QuickRecommendation(
+            framework=FrameworkInfo(
+                name="ISO 27001",
+                description="Information security management standard"
+            ),
+            priority="medium",
+            description="Industry standard for information security management"
+        ))
+
+        recommendations.append(QuickRecommendation(
+            framework=FrameworkInfo(
+                name="SOC 2",
+                description="Security and availability controls"
+            ),
+            priority="medium",
+            description="Important for service organizations handling customer data"
+        ))
+
+    return QuickAssessmentResponse(recommendations=recommendations)
 
 @router.post("/start", response_model=AssessmentSessionResponse)
 async def start_assessment(

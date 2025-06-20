@@ -19,129 +19,156 @@ from core.exceptions import ValidationAPIError
 class TestComplianceAssistant:
     """Test AI assistant business logic"""
 
-    def test_process_message_compliance_question(self, db_session, mock_ai_client):
+    @pytest.mark.asyncio
+    async def test_process_message_compliance_question(self, db_session, mock_ai_client):
         """Test processing compliance-related message"""
+        from database.user import User
+
         conversation_id = uuid4()
-        user_id = uuid4()
         business_profile_id = uuid4()
         message = "What are the key requirements for GDPR compliance?"
+
+        # Create a mock user
+        user = User(
+            id=uuid4(),
+            email="test@example.com",
+            hashed_password="hashed_password",
+            is_active=True
+        )
 
         # Mock AI response
         mock_ai_response = """
         The key requirements for GDPR compliance include:
-        
+
         1. **Lawful Basis for Processing**: Establish a lawful basis for processing personal data
         2. **Data Subject Rights**: Implement processes to handle data subject requests
         3. **Privacy by Design**: Build privacy considerations into systems and processes
         4. **Data Protection Impact Assessments**: Conduct DPIAs for high-risk processing
         5. **Breach Notification**: Report breaches within 72 hours
-        
+
         For your specific business context, I recommend starting with a data mapping exercise.
         """
-        
-        mock_ai_client.generate_content.return_value.text = mock_ai_response
 
-        with patch.object(ComplianceAssistant, 'process_message') as mock_process:
-            mock_process.return_value = (
-                mock_ai_response,
-                {
-                    "intent": "compliance_guidance",
-                    "framework": "GDPR",
-                    "confidence": 0.95,
-                    "sources": ["GDPR Articles 5, 6, 25, 33, 35"],
-                    "follow_up_suggestions": [
-                        "Would you like me to help you create a data mapping template?",
-                        "Should I explain each data subject right in detail?"
-                    ]
-                }
-            )
+        mock_ai_client.generate_content_async.return_value.text = mock_ai_response
 
-            assistant = ComplianceAssistant(db_session)
-            response, metadata = assistant.process_message(
-                conversation_id, user_id, message, business_profile_id
+        # Mock the context manager to avoid database calls
+        with patch.object(ComplianceAssistant, '__init__', return_value=None):
+            assistant = ComplianceAssistant.__new__(ComplianceAssistant)
+            assistant.model = mock_ai_client
+            assistant.context_manager = Mock()
+            assistant.context_manager.get_conversation_context = AsyncMock(return_value={})
+            assistant.prompt_templates = Mock()
+            assistant.prompt_templates.get_main_prompt = Mock(return_value="test prompt")
+            assistant.safety_settings = {}
+
+            response, metadata = await assistant.process_message(
+                conversation_id, user, message, business_profile_id
             )
 
             assert "GDPR" in response
             assert "requirements" in response.lower()
-            assert metadata["intent"] == "compliance_guidance"
-            assert metadata["framework"] == "GDPR"
-            assert metadata["confidence"] > 0.9
-            mock_process.assert_called_once()
+            assert "timestamp" in metadata
+            assert metadata["context_used"] is True
 
-    def test_process_message_out_of_scope(self, db_session, mock_ai_client):
+    @pytest.mark.asyncio
+    async def test_process_message_out_of_scope(self, db_session, mock_ai_client):
         """Test processing out-of-scope message"""
+        from database.user import User
+
         conversation_id = uuid4()
-        user_id = uuid4()
         business_profile_id = uuid4()
         message = "What's the weather like today?"
 
+        # Create a mock user
+        user = User(
+            id=uuid4(),
+            email="test@example.com",
+            hashed_password="hashed_password",
+            is_active=True
+        )
+
         # Mock AI response for out-of-scope
         mock_ai_response = """
-        I'm a compliance assistant focused on helping with regulatory requirements and 
-        compliance guidance. I can't provide weather information, but I'd be happy to 
+        I'm a compliance assistant focused on helping with regulatory requirements and
+        compliance guidance. I can't provide weather information, but I'd be happy to
         help you with:
-        
+
         - GDPR, ISO 27001, SOC 2, or other compliance frameworks
         - Policy development and review
         - Evidence collection guidance
         - Compliance gap analysis
-        
+
         What compliance topic can I assist you with today?
         """
-        
-        mock_ai_client.generate_content.return_value.text = mock_ai_response
 
-        with patch.object(ComplianceAssistant, 'process_message') as mock_process:
-            mock_process.return_value = (
-                mock_ai_response,
-                {
-                    "intent": "out_of_scope",
-                    "framework": None,
-                    "confidence": 0.99,
-                    "redirect_attempted": True,
-                    "suggested_topics": [
-                        "GDPR compliance",
-                        "ISO 27001 certification",
-                        "Policy development"
-                    ]
-                }
-            )
+        mock_ai_client.generate_content_async.return_value.text = mock_ai_response
 
-            assistant = ComplianceAssistant(db_session)
-            response, metadata = assistant.process_message(
-                conversation_id, user_id, message, business_profile_id
+        # Mock the context manager to avoid database calls
+        with patch.object(ComplianceAssistant, '__init__', return_value=None):
+            assistant = ComplianceAssistant.__new__(ComplianceAssistant)
+            assistant.model = mock_ai_client
+            assistant.context_manager = Mock()
+            assistant.context_manager.get_conversation_context = AsyncMock(return_value={})
+            assistant.prompt_templates = Mock()
+            assistant.prompt_templates.get_main_prompt = Mock(return_value="test prompt")
+            assistant.safety_settings = {}
+
+            response, metadata = await assistant.process_message(
+                conversation_id, user, message, business_profile_id
             )
 
             assert "compliance assistant" in response.lower()
             assert "can't provide weather" in response.lower()
-            assert metadata["intent"] == "out_of_scope"
-            assert metadata["redirect_attempted"] is True
-            mock_process.assert_called_once()
+            assert "timestamp" in metadata
+            assert metadata["context_used"] is True
 
-    def test_classify_user_intent_compliance_guidance(self, db_session, mock_ai_client):
-        """Test intent classification for compliance guidance"""
-        message = "How do I implement ISO 27001 access controls?"
+    @pytest.mark.asyncio
+    async def test_get_evidence_recommendations(self, db_session, mock_ai_client):
+        """Test getting evidence recommendations"""
+        from database.user import User
 
-        with patch.object(ComplianceAssistant, '_classify_intent') as mock_classify:
-            mock_classify.return_value = {
-                "intent": "compliance_guidance",
-                "framework": "ISO 27001",
-                "category": "access_controls",
-                "confidence": 0.92,
-                "entities": {
-                    "framework": "ISO 27001",
-                    "control_domain": "access_controls",
-                    "action": "implement"
-                }
-            }
+        business_profile_id = uuid4()
+        target_framework = "ISO 27001"
 
-            assistant = ComplianceAssistant(db_session)
-            result = assistant._classify_intent(message)
+        # Create a mock user
+        user = User(
+            id=uuid4(),
+            email="test@example.com",
+            hashed_password="hashed_password",
+            is_active=True
+        )
 
-            assert result["intent"] == "compliance_guidance"
-            assert result["framework"] == "ISO 27001"
-            assert result["confidence"] > 0.9
-            mock_classify.assert_called_once_with(message)
+        # Mock AI response for evidence recommendations
+        mock_ai_response = """
+        For ISO 27001 compliance, you should collect the following evidence:
+
+        1. Information Security Policy documentation
+        2. Risk assessment and treatment records
+        3. Access control procedures and logs
+        4. Incident response documentation
+        5. Security awareness training records
+        """
+
+        mock_ai_client.generate_content_async.return_value.text = mock_ai_response
+
+        # Mock the context manager to avoid database calls
+        with patch.object(ComplianceAssistant, '__init__', return_value=None):
+            assistant = ComplianceAssistant.__new__(ComplianceAssistant)
+            assistant.model = mock_ai_client
+            assistant.context_manager = Mock()
+            assistant.context_manager.get_conversation_context = AsyncMock(return_value={'business_profile': {}})
+            assistant.prompt_templates = Mock()
+            assistant.prompt_templates.get_evidence_recommendation_prompt = Mock(return_value="test prompt")
+            assistant.safety_settings = {}
+
+            recommendations = await assistant.get_evidence_recommendations(
+                user, business_profile_id, target_framework
+            )
+
+            assert len(recommendations) > 0
+            assert recommendations[0]["framework"] == target_framework
+            assert "ISO 27001" in recommendations[0]["recommendations"]
+            assert "generated_at" in recommendations[0]
 
     def test_classify_user_intent_evidence_guidance(self, db_session, mock_ai_client):
         """Test intent classification for evidence guidance"""
@@ -168,7 +195,8 @@ class TestComplianceAssistant:
             assert "audit" in result["category"]
             mock_classify.assert_called_once_with(message)
 
-    def test_generate_contextual_response_with_business_context(self, db_session, mock_ai_client):
+    @pytest.mark.asyncio
+    async def test_generate_contextual_response_with_business_context(self, db_session, mock_ai_client):
         """Test generating response with business profile context"""
         user_message = "What compliance frameworks should I prioritize?"
         business_context = {
@@ -185,7 +213,7 @@ class TestComplianceAssistant:
         1. **GDPR** (High Priority) - Since you process personal health information
         2. **ISO 27001** (Medium Priority) - Strong security foundation for healthcare
         3. **SOC 2 Type II** (Medium Priority) - If you provide services to other healthcare orgs
-        
+
         Given your current HIPAA compliance, you already have a good foundation for these frameworks.
         """
 
@@ -193,13 +221,13 @@ class TestComplianceAssistant:
             mock_generate.return_value = mock_response
 
             assistant = ComplianceAssistant(db_session)
-            result = assistant._generate_response(user_message, business_context)
+            result = await assistant._generate_response(user_message, business_context, {}, {})
 
             assert "healthcare" in result.lower()
             assert "GDPR" in result
             assert "ISO 27001" in result
             assert "HIPAA" in result
-            mock_generate.assert_called_once_with(user_message, business_context)
+            mock_generate.assert_called_once_with(user_message, business_context, {}, {})
 
     def test_handle_adversarial_input(self, db_session, mock_ai_client):
         """Test handling adversarial input attempts"""
@@ -309,17 +337,23 @@ class TestComplianceAssistant:
     @pytest.mark.asyncio
     async def test_async_message_processing(self, db_session, mock_ai_client):
         """Test asynchronous message processing"""
+        from database.user import User
+
         conversation_id = uuid4()
         user_id = uuid4()
         business_profile_id = uuid4()
         message = "Help me understand SOC 2 Type II requirements"
 
+        # Create a mock user object
+        mock_user = Mock(spec=User)
+        mock_user.id = user_id
+
         mock_ai_client.generate_content_async = AsyncMock(return_value=Mock(
             text="SOC 2 Type II requirements focus on the operational effectiveness of controls..."
         ))
 
-        with patch.object(ComplianceAssistant, 'process_message_async') as mock_process_async:
-            mock_process_async.return_value = (
+        with patch.object(ComplianceAssistant, 'process_message') as mock_process:
+            mock_process.return_value = (
                 "SOC 2 Type II requirements focus on the operational effectiveness of controls...",
                 {
                     "intent": "compliance_guidance",
@@ -330,14 +364,14 @@ class TestComplianceAssistant:
             )
 
             assistant = ComplianceAssistant(db_session)
-            response, metadata = await assistant.process_message_async(
-                conversation_id, user_id, message, business_profile_id
+            response, metadata = await assistant.process_message(
+                conversation_id, mock_user, message, business_profile_id
             )
 
             assert "SOC 2" in response
             assert metadata["async_processed"] is True
             assert metadata["processing_time_ms"] > 0
-            mock_process_async.assert_called_once()
+            mock_process.assert_called_once()
 
     def test_rate_limit_handling(self, db_session, mock_ai_client):
         """Test handling AI service rate limits"""

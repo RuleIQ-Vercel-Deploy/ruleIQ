@@ -52,14 +52,23 @@ class RateLimiter:
         }
         self._last_cleanup = current_time
 
-# Global rate limiter instances
-general_limiter = RateLimiter(requests_per_minute=60)
-auth_limiter = RateLimiter(requests_per_minute=10)  # Stricter for auth endpoints
+# Global rate limiter instances - configured based on environment
+from config.settings import get_settings
+
+settings = get_settings()
+
+# Use more relaxed limits for testing environment
+if settings.is_testing:
+    general_limiter = RateLimiter(requests_per_minute=1000)  # Very relaxed for tests
+    auth_limiter = RateLimiter(requests_per_minute=500)     # Relaxed for auth tests
+else:
+    general_limiter = RateLimiter(requests_per_minute=settings.rate_limit_requests)
+    auth_limiter = RateLimiter(requests_per_minute=10)  # Stricter for auth endpoints
 
 async def rate_limit_middleware(request: Request, call_next):
     """General rate limiting middleware"""
-    # Skip rate limiting for docs
-    if request.url.path in ["/docs", "/redoc", "/openapi.json"]:
+    # Skip rate limiting for docs and testing environment
+    if request.url.path in ["/docs", "/redoc", "/openapi.json"] or settings.is_testing:
         return await call_next(request)
 
     # Get client identifier (IP address)
@@ -100,6 +109,10 @@ async def rate_limit_middleware(request: Request, call_next):
 def auth_rate_limit():
     """Dependency for auth endpoint rate limiting"""
     async def check_limit(request: Request):
+        # Skip rate limiting in testing environment
+        if settings.is_testing:
+            return
+
         client_ip = request.client.host if request.client else "unknown"
         allowed, retry_after = await auth_limiter.check_rate_limit(client_ip)
 

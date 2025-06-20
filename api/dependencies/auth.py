@@ -8,6 +8,7 @@ from datetime import datetime, timedelta
 from typing import Dict, Optional
 from uuid import UUID
 
+import redis.asyncio as redis
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from jose import JWTError, jwt
@@ -16,6 +17,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 
 from api.context import user_id_var
+from config.settings import settings
 from core.exceptions import NotAuthenticatedException
 from database.db_setup import get_async_db
 from database.user import User
@@ -28,6 +30,74 @@ REFRESH_TOKEN_EXPIRE_DAYS = 7
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/token", auto_error=False)
+
+# Redis client for token blacklisting
+_redis_client: Optional[redis.Redis] = None
+_redis_available: Optional[bool] = None
+
+# Fallback in-memory blacklist for when Redis is unavailable
+_fallback_blacklist: Dict[str, float] = {}
+
+async def get_redis_client() -> Optional[redis.Redis]:
+    """Get or create Redis client for token blacklisting."""
+    global _redis_client, _redis_available
+
+    if _redis_available is False:
+        return None
+
+    if _redis_client is None:
+        try:
+            _redis_client = redis.from_url(settings.redis_url, decode_responses=True)
+            # Test the connection
+            await _redis_client.ping()
+            _redis_available = True
+        except Exception:
+            _redis_available = False
+            _redis_client = None
+            return None
+
+    return _redis_client
+
+async def blacklist_token(token: str) -> None:
+    """Add a token to the blacklist with TTL."""
+    redis_client = await get_redis_client()
+
+    if redis_client:
+        try:
+            # Set TTL to match token expiration (30 minutes for access tokens)
+            await redis_client.setex(f"blacklist:{token}", ACCESS_TOKEN_EXPIRE_MINUTES * 60, "1")
+            return
+        except Exception:
+            # Redis failed, fall back to in-memory
+            pass
+
+    # Fallback to in-memory blacklist
+    import time
+    expiry_time = time.time() + (ACCESS_TOKEN_EXPIRE_MINUTES * 60)
+    _fallback_blacklist[token] = expiry_time
+
+async def is_token_blacklisted(token: str) -> bool:
+    """Check if a token is blacklisted."""
+    redis_client = await get_redis_client()
+
+    if redis_client:
+        try:
+            result = await redis_client.get(f"blacklist:{token}")
+            return result is not None
+        except Exception:
+            # Redis failed, fall back to in-memory
+            pass
+
+    # Fallback to in-memory blacklist
+    import time
+    current_time = time.time()
+
+    # Clean up expired tokens
+    expired_tokens = [t for t, exp in _fallback_blacklist.items() if exp < current_time]
+    for token_to_remove in expired_tokens:
+        _fallback_blacklist.pop(token_to_remove, None)
+
+    return token in _fallback_blacklist
 
 def validate_password(password: str) -> tuple[bool, str]:
     """Validate password strength."""
@@ -83,6 +153,10 @@ async def get_current_user(token: Optional[str] = Depends(oauth2_scheme), db: As
     if token is None:
         return None
 
+    # Check if token is blacklisted (logged out)
+    if await is_token_blacklisted(token):
+        raise NotAuthenticatedException("Token has been invalidated.")
+
     payload = decode_token(token)
     if not payload or payload.get("type") != "access":
         raise NotAuthenticatedException("Could not validate credentials.")
@@ -106,7 +180,7 @@ async def get_current_user(token: Optional[str] = Depends(oauth2_scheme), db: As
 
 async def get_current_active_user(current_user: User = Depends(get_current_user)) -> User:
     if current_user is None:
-        raise NotAuthenticatedException("Authentication required.")
+        raise NotAuthenticatedException("Not authenticated")
 
     if not current_user.is_active:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Inactive user")

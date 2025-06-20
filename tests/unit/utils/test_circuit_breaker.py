@@ -6,6 +6,7 @@ from cascading failures and managing service resilience.
 """
 
 import asyncio
+import time
 import pytest
 from unittest.mock import Mock, patch, AsyncMock
 from datetime import datetime, timedelta
@@ -378,12 +379,12 @@ class TestCircuitBreakerMetrics:
     def test_circuit_breaker_state_timing(self):
         """Test circuit breaker tracks state timing correctly"""
         breaker = CircuitBreaker("test_service")
-        
+
         initial_time = breaker._last_state_change
         assert initial_time > 0
-        
-        # State change time should be tracked
-        current_time = datetime.utcnow().timestamp()
+
+        # State change time should be tracked using the same time source
+        current_time = time.time()
         assert abs(initial_time - current_time) < 1.0  # Within 1 second
 
     @pytest.mark.asyncio

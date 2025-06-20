@@ -28,7 +28,7 @@ class ReportSchedule(Base):
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
     last_run_at = Column(DateTime, nullable=True)
     
-    user = relationship("User")
+    owner = relationship("User", back_populates="report_schedules")
     business_profile = relationship("BusinessProfile")
 
     def to_dict(self):

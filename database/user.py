@@ -3,6 +3,7 @@ from datetime import datetime
 
 from sqlalchemy import Boolean, Column, DateTime, String
 from sqlalchemy.dialects.postgresql import UUID as PG_UUID
+from sqlalchemy.orm import relationship
 
 from .db_setup import Base  # Import Base from our new db_setup.py
 
@@ -14,3 +15,11 @@ class User(Base):
   hashed_password = Column(String, nullable=False)
   is_active = Column(Boolean, default=True)
   created_at = Column(DateTime, default=datetime.utcnow)
+
+  # Relationships to other models
+  business_profiles = relationship("BusinessProfile", back_populates="owner")
+  evidences = relationship("Evidence", back_populates="owner")
+  assessments = relationship("AssessmentSession", back_populates="owner")
+  implementation_plans = relationship("ImplementationPlan", back_populates="owner")
+  readiness_assessments = relationship("ReadinessAssessment", back_populates="owner")
+  report_schedules = relationship("ReportSchedule", back_populates="owner")

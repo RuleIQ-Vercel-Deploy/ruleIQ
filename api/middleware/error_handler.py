@@ -40,6 +40,7 @@ async def error_handler_middleware(request: Request, call_next):
         return JSONResponse(
             status_code=exc.status_code,
             content={
+                "detail": exc.message,  # FastAPI standard field for compatibility
                 "error": {
                     "type": exc.__class__.__name__,
                     "message": exc.message,
@@ -57,6 +58,7 @@ async def error_handler_middleware(request: Request, call_next):
         return JSONResponse(
             status_code=422,  # Unprocessable Entity
             content={
+                "detail": exc.errors(),  # FastAPI standard field for validation errors
                 "error": {
                     "type": "ValidationException",
                     "message": "Input validation failed",
@@ -76,6 +78,7 @@ async def error_handler_middleware(request: Request, call_next):
         return JSONResponse(
             status_code=500,
             content={
+                "detail": "A database error occurred. Please check logs for details.",
                 "error": {
                     "type": "DatabaseException",
                     "message": "A database error occurred. Please check logs for details.",
@@ -95,6 +98,7 @@ async def error_handler_middleware(request: Request, call_next):
         return JSONResponse(
             status_code=500,
             content={
+                "detail": "An unexpected internal server error occurred.",
                 "error": {
                     "type": "InternalServerError",
                     "message": "An unexpected internal server error occurred.",

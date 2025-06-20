@@ -10,17 +10,28 @@ from api.dependencies.auth import (
     create_access_token,
     create_refresh_token,
     get_password_hash,
+    oauth2_scheme,
     validate_password,
     verify_password,
 )
 from api.middleware.rate_limiter import auth_rate_limit
 from api.schemas.models import Token, UserCreate, UserResponse
+from pydantic import BaseModel
+
+class LoginRequest(BaseModel):
+    email: str
+    password: str
 from database.db_setup import get_db
 from database.user import User
 
 router = APIRouter()
 
-@router.post("/register", response_model=UserResponse, dependencies=[Depends(auth_rate_limit())])
+@router.post(
+    "/register",
+    response_model=UserResponse,
+    status_code=status.HTTP_201_CREATED,
+    dependencies=[Depends(auth_rate_limit())]
+)
 async def register(user: UserCreate, db: Session = Depends(get_db)):
     # Validate password
     is_valid, message = validate_password(user.password)
@@ -34,8 +45,8 @@ async def register(user: UserCreate, db: Session = Depends(get_db)):
     db_user = db.query(User).filter(User.email == user.email).first()
     if db_user:
         raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Email already registered"
+            status_code=status.HTTP_409_CONFLICT,
+            detail="Email already exists"
         )
 
     # Create new user
@@ -53,7 +64,7 @@ async def register(user: UserCreate, db: Session = Depends(get_db)):
     return db_user
 
 @router.post("/token", response_model=Token, dependencies=[Depends(auth_rate_limit())])
-async def login(
+async def login_for_access_token(
     form_data: OAuth2PasswordRequestForm = Depends(),
     db: Session = Depends(get_db)
 ):
@@ -63,6 +74,34 @@ async def login(
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Incorrect email or password",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+
+    # Create tokens
+    access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    access_token = create_access_token(
+        data={"sub": str(user.id)}, expires_delta=access_token_expires
+    )
+    refresh_token = create_refresh_token(data={"sub": str(user.id)})
+
+    return {
+        "access_token": access_token,
+        "refresh_token": refresh_token,
+        "token_type": "bearer"
+    }
+
+@router.post("/login", response_model=Token, dependencies=[Depends(auth_rate_limit())])
+async def login(
+    login_data: LoginRequest,
+    db: Session = Depends(get_db)
+):
+    """Login endpoint - accepts JSON data for compatibility with tests"""
+    # Authenticate user
+    user = db.query(User).filter(User.email == login_data.email).first()
+    if not user or not verify_password(login_data.password, user.hashed_password):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid credentials",
             headers={"WWW-Authenticate": "Bearer"},
         )
 
@@ -112,7 +151,11 @@ async def refresh_token(
     }
 
 @router.post("/logout")
-async def logout():
-    # In a JWT-based system, logout is typically handled client-side
-    # You could implement token blacklisting here if needed
+async def logout(token: str = Depends(oauth2_scheme)):
+    """Logout endpoint that blacklists the current token."""
+    from api.dependencies.auth import blacklist_token
+
+    if token:
+        await blacklist_token(token)
+
     return {"message": "Successfully logged out"}

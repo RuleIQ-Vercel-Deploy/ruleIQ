@@ -47,16 +47,14 @@ class CircuitBreakerOpenException(APIError):
         if recovery_time:
             message += f", recovery in {recovery_time:.1f}s"
 
-        super().__init__(
-            message=message,
-            status_code=503,
-            error_code="CIRCUIT_BREAKER_OPEN",
-            details={
-                "service_name": service_name,
-                "failure_count": failure_count,
-                "recovery_time": recovery_time
-            }
-        )
+        super().__init__(message=message, status_code=503)
+
+        # Add additional details as instance attributes
+        self.details = {
+            "service_name": service_name,
+            "failure_count": failure_count,
+            "recovery_time": recovery_time
+        }
 
 
 class CircuitBreaker:

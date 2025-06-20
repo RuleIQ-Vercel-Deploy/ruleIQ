@@ -11,9 +11,10 @@ from uuid import uuid4
 from datetime import datetime
 
 from main import app
-from database.db_setup import get_async_db, Base, _init_async_db, _async_engine
+import database.db_setup as db_setup
+from database.db_setup import get_async_db, Base
 from sqlalchemy.ext.asyncio import AsyncSession
-from database.models import User, BusinessProfile, EvidenceItem
+from database.models import User, BusinessProfile, Evidence as EvidenceItem
 
 # The AsyncClient is instantiated within test fixtures or functions, not globally.
 
@@ -22,8 +23,8 @@ from database.models import User, BusinessProfile, EvidenceItem
 @pytest.fixture(scope="session", autouse=True)
 async def manage_test_database_schema():
     """Create and drop test database schema for the session."""
-    _init_async_db() # Ensure async engine is initialized
-    engine_to_use = _async_engine
+    db_setup._init_async_db() # Ensure async engine is initialized
+    engine_to_use = db_setup._async_engine
     async with engine_to_use.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
     yield
@@ -43,9 +44,8 @@ async def test_user(async_test_db: AsyncSession) -> User:
     """Create a test user."""
     user = User(
         id=uuid4(),
-        username="testuser@example.com",
         email="testuser@example.com",
-        password_hash="fake_hash"
+        hashed_password="fake_hash"
     )
     async_test_db.add(user)
     await async_test_db.commit()

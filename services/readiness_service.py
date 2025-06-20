@@ -8,7 +8,7 @@ from sqlalchemy import select
 from database.models import (
     BusinessProfile as BusinessProfileModel,
     ComplianceFramework as ComplianceFrameworkModel,
-    EvidenceItem as EvidenceItemModel,
+    Evidence as EvidenceItemModel,
     GeneratedPolicy as GeneratedPolicyModel,
     ImplementationPlan as ImplementationPlanModel,
     ReadinessAssessment as ReadinessAssessmentModel,

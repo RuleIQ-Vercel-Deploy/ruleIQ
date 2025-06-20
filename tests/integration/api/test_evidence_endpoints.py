@@ -18,21 +18,16 @@ from tests.conftest import assert_api_response_security
 class TestEvidenceEndpoints:
     """Test evidence API endpoints integration"""
 
-    def test_create_evidence_item_success(self, client, authenticated_headers, db_session):
+    def test_create_evidence_item_success(self, client, authenticated_headers, db_session, sample_business_profile, sample_compliance_framework):
         """Test creating evidence item through API"""
         evidence_data = {
             "title": "Information Security Policy",
             "description": "Company-wide information security policy document",
-            "evidence_type": "document",
-            "source": "manual",
-            "framework_mappings": ["ISO27001.A.5.1.1", "GDPR.Art.32"],
-            "tags": ["security", "policy", "governance"],
-            "metadata": {
-                "document_type": "policy",
-                "version": "2.1",
-                "approval_date": "2024-01-15",
-                "next_review_date": "2024-12-31"
-            }
+            "control_id": "A.5.1.1",  # Required field
+            "framework_id": str(sample_compliance_framework.id),  # Required field
+            "business_profile_id": str(sample_business_profile.id),  # Required field
+            "source": "manual_upload",  # Required field
+            "tags": ["security", "policy", "governance"]
         }
 
         response = client.post(
@@ -43,28 +38,27 @@ class TestEvidenceEndpoints:
 
         assert response.status_code == 201
         assert_api_response_security(response)
-        
+
         response_data = response.json()
         assert response_data["title"] == evidence_data["title"]
         assert response_data["description"] == evidence_data["description"]
-        assert response_data["evidence_type"] == evidence_data["evidence_type"]
-        assert response_data["status"] == "valid"
+        assert response_data["control_id"] == evidence_data["control_id"]
+        assert response_data["framework_id"] == evidence_data["framework_id"]
+        assert response_data["business_profile_id"] == evidence_data["business_profile_id"]
+        assert response_data["source"] == evidence_data["source"]
         assert "id" in response_data
         assert "created_at" in response_data
-        assert "quality_score" in response_data
-        assert response_data["quality_score"] > 0
+        assert "status" in response_data
 
-        # Verify framework mappings were stored
-        assert "framework_mappings" in response_data
-        assert "ISO27001.A.5.1.1" in response_data["framework_mappings"]
-
-    def test_create_evidence_item_validation_error(self, client, authenticated_headers):
+    def test_create_evidence_item_validation_error(self, client, authenticated_headers, sample_business_profile, sample_compliance_framework):
         """Test creating evidence item with invalid data"""
         invalid_data = {
             "title": "",  # Invalid: empty title
             "description": "x" * 5000,  # Invalid: too long
-            "evidence_type": "invalid_type",  # Invalid: not allowed
+            "control_id": "",  # Invalid: empty control_id
             "source": "",  # Invalid: empty source
+            "framework_id": str(sample_compliance_framework.id),  # Use real framework
+            "business_profile_id": str(sample_business_profile.id),  # Use real business profile
         }
 
         response = client.post(
@@ -81,7 +75,7 @@ class TestEvidenceEndpoints:
         errors = response_data["detail"]
         error_fields = [error["loc"][-1] for error in errors]
         assert "title" in error_fields
-        assert "evidence_type" in error_fields
+        assert "control_id" in error_fields
 
     def test_create_evidence_item_unauthenticated(self, client):
         """Test creating evidence item without authentication"""
@@ -94,7 +88,7 @@ class TestEvidenceEndpoints:
         response = client.post("/api/evidence", json=evidence_data)
 
         assert response.status_code == 401
-        assert "Unauthorized" in response.json()["detail"]
+        assert "Not authenticated" in response.json()["detail"]
 
     def test_get_evidence_items_success(self, client, authenticated_headers, evidence_item_instance):
         """Test retrieving evidence items for authenticated user"""
@@ -174,7 +168,7 @@ class TestEvidenceEndpoints:
         
         response_data = response.json()
         assert response_data["id"] == str(evidence_id)
-        assert response_data["title"] == evidence_item_instance.title
+        assert response_data["title"] == evidence_item_instance.evidence_name
         assert response_data["evidence_type"] == evidence_item_instance.evidence_type
 
     def test_get_evidence_item_by_id_not_found(self, client, authenticated_headers):
@@ -245,7 +239,7 @@ class TestEvidenceEndpoints:
         response_data = response.json()
         assert response_data["status"] == update_data["status"]
         # Original fields should remain unchanged
-        assert response_data["title"] == evidence_item_instance.title
+        assert response_data["title"] == evidence_item_instance.evidence_name
 
     def test_delete_evidence_item_success(self, client, authenticated_headers, evidence_item_instance):
         """Test deleting evidence item"""

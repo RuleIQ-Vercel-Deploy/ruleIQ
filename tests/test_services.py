@@ -32,7 +32,11 @@ from services.framework_service import (
 )
 
 from services.policy_service import generate_compliance_policy
-from services.readiness_service import ReadinessService
+from services.readiness_service import (
+    generate_readiness_assessment,
+    get_readiness_dashboard,
+    generate_compliance_report
+)
 
 
 @pytest.mark.unit
@@ -744,7 +748,7 @@ class TestImplementationService:
         ]
 
         # Patch the helper get_implementation_plan used internally by update_task_status
-        with patch('services.implementation_service.get_implementation_plan') as mock_get_plan,
+        with patch('services.implementation_service.get_implementation_plan') as mock_get_plan, \
              patch('sqlalchemy.orm.attributes.flag_modified') as mock_flag_modified:
             
             mock_get_plan.return_value = mock_plan
@@ -903,95 +907,112 @@ class TestReadinessService:
 
     async def test_calculate_overall_readiness(self, db_session):
         """Test overall compliance readiness calculation"""
-        business_profile_id = uuid4()
+        mock_user = Mock()
+        mock_user.id = uuid4()
+        framework_id = uuid4()
 
-        with patch('services.readiness_service.ReadinessService.calculate_readiness') as mock_calculate:
-            mock_calculate.return_value = {
-                "overall_score": 72.5,
-                "framework_scores": {
-                    "GDPR": 80.0,
-                    "ISO27001": 65.0
-                },
-                "control_coverage": {
-                    "GDPR": {
-                        "implemented": 12,
-                        "total": 20,
-                        "coverage_percentage": 60.0
-                    }
-                },
-                "risk_level": "Medium",
-                "projected_timeline": "6-8 months to full compliance"
-            }
+        with patch('services.readiness_service.generate_readiness_assessment') as mock_generate:
+            mock_assessment = Mock()
+            mock_assessment.overall_score = 72.5
+            mock_assessment.policy_score = 80.0
+            mock_assessment.implementation_score = 65.0
+            mock_assessment.evidence_score = 75.0
+            mock_assessment.priority_actions = [{"action": "Improve policy coverage", "urgency": "high"}]
+            mock_assessment.quick_wins = [{"action": "Upload missing evidence", "effort": "low"}]
+            mock_generate.return_value = mock_assessment
 
-            result = ReadinessService.calculate_readiness(business_profile_id)
+            result = await generate_readiness_assessment(
+                db=db_session,
+                user=mock_user,
+                framework_id=framework_id,
+                assessment_type="full"
+            )
 
-            assert 0 <= result["overall_score"] <= 100
-            assert result["risk_level"] in ["Low", "Medium", "High", "Critical"]
-            assert "framework_scores" in result
-            mock_calculate.assert_called_once_with(business_profile_id)
+            assert 0 <= result.overall_score <= 100
+            assert hasattr(result, 'policy_score')
+            assert hasattr(result, 'implementation_score')
+            assert hasattr(result, 'evidence_score')
+            mock_generate.assert_called_once_with(
+                db=db_session,
+                user=mock_user,
+                framework_id=framework_id,
+                assessment_type="full"
+            )
 
     async def test_identify_compliance_gaps(self, db_session):
         """Test compliance gap identification"""
-        assessment_data = {
-            "implemented_controls": ["gdpr_art_5", "gdpr_art_6"],
-            "required_controls": ["gdpr_art_5", "gdpr_art_6", "gdpr_art_25", "gdpr_art_32"],
-            "framework": "GDPR"
-        }
+        mock_user = Mock()
+        mock_user.id = uuid4()
 
-        with patch('services.readiness_service.ReadinessService.identify_gaps') as mock_identify:
-            mock_identify.return_value = [
-                {
-                    "control_id": "gdpr_art_25",
-                    "title": "Data protection by design and by default",
-                    "gap_type": "not_implemented",
-                    "priority": "High",
-                    "effort_estimate": "4-6 weeks"
-                },
-                {
-                    "control_id": "gdpr_art_32",
-                    "title": "Security of processing",
-                    "gap_type": "partially_implemented",
-                    "priority": "Medium",
-                    "effort_estimate": "2-3 weeks"
-                }
-            ]
-
-            result = ReadinessService.identify_gaps(assessment_data)
-
-            assert len(result) >= 1
-            assert all("control_id" in gap for gap in result)
-            assert all("priority" in gap for gap in result)
-            mock_identify.assert_called_once_with(assessment_data)
-
-    async def test_generate_executive_summary(self, db_session):
-        """Test executive summary generation"""
-        readiness_data = {
-            "overall_score": 68.5,
-            "framework_scores": {"GDPR": 75.0, "ISO27001": 62.0},
-            "gaps": [{"priority": "High", "count": 3}, {"priority": "Medium", "count": 7}],
-            "risk_level": "Medium"
-        }
-
-        with patch('services.readiness_service.ReadinessService.generate_summary') as mock_generate:
-            mock_generate.return_value = {
-                "summary": "Your organization has achieved 68.5% compliance readiness across assessed frameworks. While GDPR compliance is progressing well at 75%, ISO 27001 requires additional attention. Priority should be given to addressing 3 high-priority gaps in the next quarter.",
-                "key_metrics": {
-                    "compliance_percentage": 68.5,
-                    "frameworks_assessed": 2,
-                    "critical_gaps": 3,
-                    "estimated_completion": "Q3 2024"
-                },
-                "next_steps": [
-                    "Address high-priority GDPR gaps",
-                    "Implement ISO 27001 security controls",
-                    "Schedule quarterly readiness review"
+        with patch('services.readiness_service.get_readiness_dashboard') as mock_dashboard:
+            mock_dashboard.return_value = {
+                "total_frameworks": 2,
+                "average_score": 72.5,
+                "framework_scores": [
+                    {"name": "GDPR", "score": 80.0, "trend": "improving"},
+                    {"name": "ISO 27001", "score": 65.0, "trend": "stable"}
+                ],
+                "priority_actions": [
+                    {
+                        "framework": "GDPR",
+                        "action": "Data protection by design and by default",
+                        "urgency": "High",
+                        "impact": "High"
+                    },
+                    {
+                        "framework": "ISO 27001",
+                        "action": "Security of processing",
+                        "urgency": "Medium",
+                        "impact": "Medium"
+                    }
                 ]
             }
 
-            result = ReadinessService.generate_summary(readiness_data)
+            result = await get_readiness_dashboard(db=db_session, user=mock_user)
 
+            assert "total_frameworks" in result
+            assert "priority_actions" in result
+            assert len(result["priority_actions"]) >= 1
+            mock_dashboard.assert_called_once_with(db=db_session, user=mock_user)
+
+    async def test_generate_executive_summary(self, db_session):
+        """Test executive summary generation"""
+        mock_user = Mock()
+        mock_user.id = uuid4()
+        framework = "GDPR"
+        report_type = "executive_summary"
+        format_type = "json"
+
+        with patch('services.readiness_service.generate_compliance_report') as mock_generate:
+            mock_generate.return_value = {
+                "report_metadata": {
+                    "user_id": mock_user.id,
+                    "framework": framework,
+                    "report_type": report_type,
+                    "generated_at": "2024-01-01T00:00:00"
+                },
+                "summary": "Your organization has achieved 68.5% compliance readiness across assessed frameworks.",
+                "recommendations": "Address high-priority GDPR gaps",
+                "evidence": "Evidence included."
+            }
+
+            result = await generate_compliance_report(
+                user=mock_user,
+                framework=framework,
+                report_type=report_type,
+                format=format_type,
+                include_evidence=True,
+                include_recommendations=True
+            )
+
+            assert "report_metadata" in result
             assert "summary" in result
-            assert "key_metrics" in result
-            assert "next_steps" in result
-            assert len(result["next_steps"]) >= 1
-            mock_generate.assert_called_once_with(readiness_data)
+            assert "recommendations" in result
+            mock_generate.assert_called_once_with(
+                user=mock_user,
+                framework=framework,
+                report_type=report_type,
+                format=format_type,
+                include_evidence=True,
+                include_recommendations=True
+            )
