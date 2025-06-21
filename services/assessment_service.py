@@ -44,9 +44,8 @@ class AssessmentService:
                 session_type=session_type,
                 status="in_progress",  # Ensure status is set
                 total_stages=5,  # Basic info, Industry, Data handling, Tech stack, Compliance goals
-                total_questions=25,
                 current_stage=1,  # Start at stage 1
-                answers={}
+                responses={}
             )
             db.add(new_session)
             await db.commit()
@@ -100,14 +99,14 @@ class AssessmentService:
             if session.status != "in_progress":
                 raise ValueError("Assessment session is not in progress and cannot be updated.")  # Or a custom domain exception
 
-            # Ensure answers is initialized if it's None (though model default should handle this)
-            if session.answers is None:
-                session.answers = {}
+            # Ensure responses is initialized if it's None (though model default should handle this)
+            if session.responses is None:
+                session.responses = {}
 
-            session.answers[question_id] = answer
-            session.last_updated = datetime.utcnow()
+            session.responses[question_id] = answer
+            session.updated_at = datetime.utcnow()
             # Potentially update current_stage based on answered questions
-            # For example: session.current_stage = calculate_next_stage(session.answers)
+            # For example: session.current_stage = calculate_next_stage(session.responses)
 
             db.add(session)  # Add to session for SQLAlchemy to track changes
             await db.commit()
@@ -138,8 +137,8 @@ class AssessmentService:
             session.status = "completed"
             session.completed_at = datetime.utcnow()
 
-            # Generate recommendations based on answers
-            # This would typically involve analyzing session.answers
+            # Generate recommendations based on responses
+            # This would typically involve analyzing session.responses
             relevant_frameworks_data = await get_relevant_frameworks(db, user)
 
             recommendations = []

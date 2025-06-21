@@ -154,7 +154,7 @@ def test_execution_tracker(request):
     """Track individual test execution metrics"""
     test_name = request.node.name
     test_type = "unit"  # Default
-    
+
     # Determine test type from path
     test_path = str(request.fspath)
     if "integration" in test_path:
@@ -167,15 +167,18 @@ def test_execution_tracker(request):
         test_type = "security"
     elif "ai" in test_path:
         test_type = "ai"
-    
+
     start_time = time.time()
-    
+
     yield
-    
+
     # Record execution after test completes
     duration = time.time() - start_time
-    status = "passed" if not request.node.rep_call.failed else "failed"
-    
+    # Use a safer approach to determine test status
+    status = "passed"  # Default to passed
+    if hasattr(request.node, 'rep_call') and request.node.rep_call.failed:
+        status = "failed"
+
     metrics_collector.record_test_execution(test_name, duration, status, test_type)
 
 

@@ -3,6 +3,7 @@ from datetime import datetime
 
 from sqlalchemy import Boolean, Column, DateTime, Float, ForeignKey, Integer, String, Text
 from sqlalchemy.dialects.postgresql import UUID as PG_UUID
+from sqlalchemy.orm import relationship
 
 from .db_setup import Base
 
@@ -60,3 +61,18 @@ class EvidenceItem(Base):
 
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    # Relationships for efficient querying
+    user = relationship("User", back_populates="evidence_items")
+    business_profile = relationship("BusinessProfile", back_populates="evidence_items")
+    framework = relationship("ComplianceFramework", back_populates="evidence_items")
+
+    @property
+    def title(self):
+        """Property to map 'title' field from API to 'evidence_name' in database."""
+        return self.evidence_name
+
+    @title.setter
+    def title(self, value):
+        """Setter to map 'title' field from API to 'evidence_name' in database."""
+        self.evidence_name = value

@@ -1,0 +1,228 @@
+{
+  "test_executions": [
+    {
+      "test_name": "test_metrics_collection_functionality",
+      "duration": 1.0017905235290527,
+      "status": "passed",
+      "test_type": "unit",
+      "timestamp": 1750518851.6223035
+    },
+    {
+      "test_name": "test_test_statistics_calculation",
+      "duration": 0.0004215240478515625,
+      "status": "passed",
+      "test_type": "unit",
+      "timestamp": 1750518851.6235006
+    },
+    {
+      "test_name": "test_resource_monitoring_during_test",
+      "duration": 1.0020627975463867,
+      "status": "passed",
+      "test_type": "unit",
+      "timestamp": 1750518852.6261358
+    },
+    {
+      "test_name": "test_performance_metric_tracking",
+      "duration": 0.0004138946533203125,
+      "status": "passed",
+      "test_type": "unit",
+      "timestamp": 1750518852.627338
+    },
+    {
+      "test_name": "test_error_rate_tracking",
+      "duration": 0.00038909912109375,
+      "status": "passed",
+      "test_type": "unit",
+      "timestamp": 1750518852.6282995
+    },
+    {
+      "test_name": "trend_test_0",
+      "duration": 0.5,
+      "status": "passed",
+      "test_type": "unit",
+      "timestamp": 1750518852.6291828
+    },
+    {
+      "test_name": "trend_test_1",
+      "duration": 1.2,
+      "status": "passed",
+      "test_type": "unit",
+      "timestamp": 1750518852.6291847
+    },
+    {
+      "test_name": "trend_test_2",
+      "duration": 0.8,
+      "status": "passed",
+      "test_type": "unit",
+      "timestamp": 1750518852.6291862
+    },
+    {
+      "test_name": "trend_test_3",
+      "duration": 2.1,
+      "status": "passed",
+      "test_type": "unit",
+      "timestamp": 1750518852.629187
+    },
+    {
+      "test_name": "trend_test_4",
+      "duration": 1.0,
+      "status": "passed",
+      "test_type": "unit",
+      "timestamp": 1750518852.6291878
+    },
+    {
+      "test_name": "trend_test_5",
+      "duration": 0.9,
+      "status": "passed",
+      "test_type": "unit",
+      "timestamp": 1750518852.6291885
+    },
+    {
+      "test_name": "trend_test_6",
+      "duration": 1.5,
+      "status": "passed",
+      "test_type": "unit",
+      "timestamp": 1750518852.6291897
+    },
+    {
+      "test_name": "test_test_duration_trends",
+      "duration": 0.0005505084991455078,
+      "status": "passed",
+      "test_type": "unit",
+      "timestamp": 1750518852.629466
+    },
+    {
+      "test_name": "test_generate_test_report",
+      "duration": 1.0018203258514404,
+      "status": "passed",
+      "test_type": "unit",
+      "timestamp": 1750518853.6318374
+    },
+    {
+      "test_name": "test_metrics_export_format",
+      "duration": 1.0017366409301758,
+      "status": "passed",
+      "test_type": "unit",
+      "timestamp": 1750518854.6351266
+    },
+    {
+      "test_name": "test_performance_threshold_detection",
+      "duration": 0.0003795623779296875,
+      "status": "passed",
+      "test_type": "unit",
+      "timestamp": 1750518854.6363459
+    },
+    {
+      "test_name": "test_trend_analysis",
+      "duration": 0.000392913818359375,
+      "status": "passed",
+      "test_type": "unit",
+      "timestamp": 1750518854.6372266
+    },
+    {
+      "test_name": "test_coverage_metric_structure",
+      "duration": 0.0003840923309326172,
+      "status": "passed",
+      "test_type": "unit",
+      "timestamp": 1750518854.6381032
+    },
+    {
+      "test_name": "test_coverage_trend_tracking",
+      "duration": 0.0004024505615234375,
+      "status": "passed",
+      "test_type": "unit",
+      "timestamp": 1750518854.6389644
+    },
+    {
+      "test_name": "test_coverage_threshold_compliance",
+      "duration": 0.26287198066711426,
+      "status": "passed",
+      "test_type": "unit",
+      "timestamp": 1750518854.902282
+    }
+  ],
+  "performance_data": {
+    "database_query_time": [
+      {
+        "value": 125.3,
+        "unit": "ms",
+        "timestamp": 1750518852.6271267
+      }
+    ],
+    "api_response_time": [
+      {
+        "value": 89.7,
+        "unit": "ms",
+        "timestamp": 1750518852.627128
+      },
+      {
+        "value": 95.2,
+        "unit": "ms",
+        "timestamp": 1750518852.627129
+      },
+      {
+        "value": 78.9,
+        "unit": "ms",
+        "timestamp": 1750518852.6271298
+      }
+    ],
+    "file_processing_time": [
+      {
+        "value": 2.5,
+        "unit": "s",
+        "timestamp": 1750518852.6271286
+      }
+    ]
+  },
+  "resource_usage": [
+    {
+      "timestamp": 1750518850.620264,
+      "cpu_percent": 9.0,
+      "memory_percent": 72.7,
+      "memory_available_gb": 7.469879150390625,
+      "disk_free_gb": 656.7738609313965
+    },
+    {
+      "timestamp": 1750518852.6252847,
+      "cpu_percent": 4.1,
+      "memory_percent": 72.7,
+      "memory_available_gb": 7.470821380615234,
+      "disk_free_gb": 656.773853302002
+    },
+    {
+      "timestamp": 1750519498.711634,
+      "cpu_percent": 3.3,
+      "memory_percent": 72.9,
+      "memory_available_gb": 7.418022155761719,
+      "disk_free_gb": 656.7705192565918
+    }
+  ],
+  "error_rates": {
+    "assertion_error": 2,
+    "timeout": 1,
+    "connection_error": 1
+  },
+  "coverage_trends": [
+    {
+      "timestamp": 1749914054.638763,
+      "coverage": 78.5
+    },
+    {
+      "timestamp": 1750086854.638765,
+      "coverage": 80.2
+    },
+    {
+      "timestamp": 1750259654.6387658,
+      "coverage": 82.1
+    },
+    {
+      "timestamp": 1750432454.6387663,
+      "coverage": 83.7
+    },
+    {
+      "timestamp": 1750518854.6387665,
+      "coverage": 85.5
+    }
+  ],
+  "total_duration": 648.091274023056
+}

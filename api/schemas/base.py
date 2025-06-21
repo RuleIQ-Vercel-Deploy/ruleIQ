@@ -57,10 +57,12 @@ class PaginatedResponse(BaseResponse):
 
 
 class HealthCheckResponse(BaseSchema):
-    """Health check response"""
-    status: str = Field(..., description="Service status")
-    timestamp: datetime = Field(default_factory=datetime.utcnow, description="Check timestamp")
+    """Health check response with database monitoring"""
+    status: str = Field(..., description="Service status (healthy, warning, degraded, error)")
+    message: Optional[str] = Field(default=None, description="Status message")
+    timestamp: Optional[str] = Field(default=None, description="Check timestamp")
     version: str = Field(default="1.0.0", description="API version")
+    database: Optional[Dict[str, Any]] = Field(default=None, description="Database monitoring data")
 
 
 class APIInfoResponse(BaseSchema):

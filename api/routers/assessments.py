@@ -3,8 +3,10 @@ from uuid import UUID
 
 from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import BaseModel
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from api.dependencies.auth import get_current_active_user
+from api.dependencies.database import get_async_db
 from api.schemas.models import (
     AssessmentQuestion,
     AssessmentResponseUpdate,
@@ -79,21 +81,34 @@ async def quick_assessment(
 
     return QuickAssessmentResponse(recommendations=recommendations)
 
+@router.post("/", response_model=AssessmentSessionResponse)
+async def create_assessment(
+    session_data: AssessmentSessionCreate,
+    current_user: User = Depends(get_current_active_user),
+    db: AsyncSession = Depends(get_async_db)
+):
+    """Create a new assessment session - alias for /start endpoint for compatibility"""
+    assessment_service = AssessmentService()
+    session = await assessment_service.start_assessment_session(db, current_user, session_data.session_type)
+    return session
+
 @router.post("/start", response_model=AssessmentSessionResponse)
 async def start_assessment(
     session_data: AssessmentSessionCreate,
     current_user: User = Depends(get_current_active_user),
-    assessment_service: AssessmentService = Depends(AssessmentService) # Inject service
+    db: AsyncSession = Depends(get_async_db)
 ):
-    session = assessment_service.start_assessment_session(current_user, session_data.session_type)
+    assessment_service = AssessmentService()
+    session = await assessment_service.start_assessment_session(db, current_user, session_data.session_type)
     return session
 
 @router.get("/current", response_model=AssessmentSessionResponse)
 async def get_current_session(
     current_user: User = Depends(get_current_active_user),
-    assessment_service: AssessmentService = Depends(AssessmentService) # Inject service
+    db: AsyncSession = Depends(get_async_db)
 ):
-    session = assessment_service.get_active_assessment_session(current_user) # Corrected method name
+    assessment_service = AssessmentService()
+    session = await assessment_service.get_current_assessment_session(db, current_user)
     if not session:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
@@ -104,10 +119,10 @@ async def get_current_session(
 @router.get("/questions/{stage}", response_model=List[AssessmentQuestion])
 async def get_questions(
     stage: int,
-    current_user: User = Depends(get_current_active_user),
-    assessment_service: AssessmentService = Depends(AssessmentService) # Inject service
+    current_user: User = Depends(get_current_active_user)
 ):
-    questions = assessment_service.get_assessment_questions_for_stage(current_user, stage) # Corrected method name
+    assessment_service = AssessmentService()
+    questions = assessment_service.get_assessment_questions(current_user, stage)
     return questions
 
 @router.put("/{session_id}/response")
@@ -115,14 +130,43 @@ async def update_response(
     session_id: UUID,
     response_data: AssessmentResponseUpdate,
     current_user: User = Depends(get_current_active_user),
-    assessment_service: AssessmentService = Depends(AssessmentService) # Inject service
+    db: AsyncSession = Depends(get_async_db)
 ):
-    session = assessment_service.update_assessment_response(
+    assessment_service = AssessmentService()
+    session = await assessment_service.update_assessment_response(
+        db,
         current_user,
         session_id,
         response_data.question_id,
-        response_data.response,
-        response_data.move_to_next_stage
+        response_data.response
+    )
+    return session
+
+@router.post("/{session_id}/responses")
+async def update_responses(
+    session_id: UUID,
+    response_data: dict,
+    current_user: User = Depends(get_current_active_user),
+    db: AsyncSession = Depends(get_async_db)
+):
+    """Update assessment responses - alias for compatibility"""
+    assessment_service = AssessmentService()
+    # Extract question_id and response from the request data
+    question_id = response_data.get("question_id")
+    response = response_data.get("response")
+
+    if not question_id:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="question_id is required"
+        )
+
+    session = await assessment_service.update_assessment_response(
+        db,
+        current_user,
+        session_id,
+        question_id,
+        response
     )
     return session
 
@@ -130,7 +174,8 @@ async def update_response(
 async def complete_assessment(
     session_id: UUID,
     current_user: User = Depends(get_current_active_user),
-    assessment_service: AssessmentService = Depends(AssessmentService) # Inject service
+    db: AsyncSession = Depends(get_async_db)
 ):
-    session = assessment_service.complete_assessment_session(current_user, session_id)
+    assessment_service = AssessmentService()
+    session = await assessment_service.complete_assessment_session(db, current_user, session_id)
     return session

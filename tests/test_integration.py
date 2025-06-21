@@ -82,28 +82,28 @@ class TestAuthenticationEndpoints:
 class TestBusinessProfileEndpoints:
     """Test business profile management endpoints"""
 
-    def test_create_business_profile(self, client, authenticated_headers, sample_business_profile):
+    def test_create_business_profile(self, client, authenticated_headers, sample_business_profile_data):
         """Test creating a business profile"""
         response = client.post(
             "/api/business-profiles",
             headers=authenticated_headers,
-            json=sample_business_profile
+            json=sample_business_profile_data
         )
         assert response.status_code == 201
 
         response_data = response.json()
-        assert response_data["company_name"] == sample_business_profile["company_name"]
-        assert response_data["industry"] == sample_business_profile["industry"]
+        assert response_data["company_name"] == sample_business_profile_data["company_name"]
+        assert response_data["industry"] == sample_business_profile_data["industry"]
         assert "id" in response_data
         assert "created_at" in response_data
 
-    def test_get_business_profile(self, client, authenticated_headers, sample_business_profile):
+    def test_get_business_profile(self, client, authenticated_headers, sample_business_profile_data):
         """Test retrieving a business profile"""
         # Create profile first
         create_response = client.post(
             "/api/business-profiles",
             headers=authenticated_headers,
-            json=sample_business_profile
+            json=sample_business_profile_data
         )
         profile_id = create_response.json()["id"]
 
@@ -113,15 +113,15 @@ class TestBusinessProfileEndpoints:
 
         response_data = response.json()
         assert response_data["id"] == profile_id
-        assert response_data["company_name"] == sample_business_profile["company_name"]
+        assert response_data["company_name"] == sample_business_profile_data["company_name"]
 
-    def test_update_business_profile(self, client, authenticated_headers, sample_business_profile):
+    def test_update_business_profile(self, client, authenticated_headers, sample_business_profile_data):
         """Test updating a business profile"""
         # Create profile first
         create_response = client.post(
             "/api/business-profiles",
             headers=authenticated_headers,
-            json=sample_business_profile
+            json=sample_business_profile_data
         )
         profile_id = create_response.json()["id"]
 
@@ -158,7 +158,7 @@ class TestBusinessProfileEndpoints:
         assert response.status_code == 422
 
         error_data = response.json()
-        assert "error" in error_data
+        assert "detail" in error_data  # FastAPI returns validation errors in "detail" field
 
 
 @pytest.mark.integration
@@ -295,20 +295,20 @@ class TestFrameworkEndpoints:
         assert "requirements" in response_data
         assert "implementation_guidance" in response_data
 
-    def test_framework_recommendations(self, client, authenticated_headers, sample_business_profile):
+    def test_framework_recommendations(self, client, authenticated_headers, sample_business_profile_data):
         """Test getting framework recommendations based on business profile"""
         # Create business profile first
         client.post(
             "/api/business-profiles",
             headers=authenticated_headers,
-            json=sample_business_profile
+            json=sample_business_profile_data
         )
 
         # Get recommendations
         response = client.post(
             "/api/frameworks/recommend",
             headers=authenticated_headers,
-            json=sample_business_profile
+            json=sample_business_profile_data
         )
         assert response.status_code == 200
 
@@ -328,7 +328,7 @@ class TestFrameworkEndpoints:
 class TestPolicyEndpoints:
     """Test policy generation endpoints"""
 
-    def test_generate_policy(self, client, authenticated_headers, mock_ai_client, sample_business_profile):
+    def test_generate_policy(self, client, authenticated_headers, mock_ai_client, sample_business_profile_data):
         """Test AI-powered policy generation"""
         # Setup mock AI response
         mock_ai_client.generate_content.return_value.text = """
@@ -345,7 +345,7 @@ class TestPolicyEndpoints:
         client.post(
             "/api/business-profiles",
             headers=authenticated_headers,
-            json=sample_business_profile
+            json=sample_business_profile_data
         )
 
         # Get framework ID
@@ -356,8 +356,8 @@ class TestPolicyEndpoints:
         policy_request = {
             "framework_id": framework_id,
             "customizations": {
-                "company_name": sample_business_profile["company_name"],
-                "industry": sample_business_profile["industry"]
+                "company_name": sample_business_profile_data["company_name"],
+                "industry": sample_business_profile_data["industry"]
             }
         }
 
@@ -383,13 +383,13 @@ class TestPolicyEndpoints:
         assert "policies" in response_data
         assert isinstance(response_data["policies"], list)
 
-    def test_update_policy_status(self, client, authenticated_headers, mock_ai_client, sample_business_profile):
+    def test_update_policy_status(self, client, authenticated_headers, mock_ai_client, sample_business_profile_data):
         """Test updating policy approval status"""
         # Generate a policy first
         client.post(
             "/api/business-profiles",
             headers=authenticated_headers,
-            json=sample_business_profile
+            json=sample_business_profile_data
         )
 
         frameworks_response = client.get("/api/frameworks", headers=authenticated_headers)
@@ -426,13 +426,13 @@ class TestPolicyEndpoints:
 class TestImplementationEndpoints:
     """Test implementation planning endpoints"""
 
-    def test_generate_implementation_plan(self, client, authenticated_headers, sample_business_profile):
+    def test_generate_implementation_plan(self, client, authenticated_headers, sample_business_profile_data):
         """Test generating implementation plans"""
         # Setup prerequisites
         client.post(
             "/api/business-profiles",
             headers=authenticated_headers,
-            json=sample_business_profile
+            json=sample_business_profile_data
         )
 
         frameworks_response = client.get("/api/frameworks", headers=authenticated_headers)
@@ -466,13 +466,13 @@ class TestImplementationEndpoints:
         assert "plans" in response_data
         assert isinstance(response_data["plans"], list)
 
-    def test_update_task_progress(self, client, authenticated_headers, sample_business_profile):
+    def test_update_task_progress(self, client, authenticated_headers, sample_business_profile_data):
         """Test updating implementation task progress"""
         # Generate plan first
         client.post(
             "/api/business-profiles",
             headers=authenticated_headers,
-            json=sample_business_profile
+            json=sample_business_profile_data
         )
 
         frameworks_response = client.get("/api/frameworks", headers=authenticated_headers)
@@ -513,13 +513,13 @@ class TestImplementationEndpoints:
 class TestEvidenceEndpoints:
     """Test evidence collection endpoints"""
 
-    def test_get_evidence_requirements(self, client, authenticated_headers, sample_business_profile):
+    def test_get_evidence_requirements(self, client, authenticated_headers, sample_business_profile_data):
         """Test retrieving evidence requirements"""
         # Setup prerequisites
         client.post(
             "/api/business-profiles",
             headers=authenticated_headers,
-            json=sample_business_profile
+            json=sample_business_profile_data
         )
 
         frameworks_response = client.get("/api/frameworks", headers=authenticated_headers)
@@ -536,13 +536,13 @@ class TestEvidenceEndpoints:
         assert "requirements" in response_data
         assert isinstance(response_data["requirements"], list)
 
-    def test_create_evidence_item(self, client, authenticated_headers, sample_business_profile):
+    def test_create_evidence_item(self, client, authenticated_headers, sample_business_profile_data):
         """Test creating evidence items"""
         # Setup prerequisites
         client.post(
             "/api/business-profiles",
             headers=authenticated_headers,
-            json=sample_business_profile
+            json=sample_business_profile_data
         )
 
         frameworks_response = client.get("/api/frameworks", headers=authenticated_headers)
@@ -571,13 +571,13 @@ class TestEvidenceEndpoints:
         assert response_data["evidence_type"] == evidence_data["evidence_type"]
         assert "id" in response_data
 
-    def test_update_evidence_status(self, client, authenticated_headers, sample_business_profile):
+    def test_update_evidence_status(self, client, authenticated_headers, sample_business_profile_data):
         """Test updating evidence collection status"""
         # Setup and create evidence item
         client.post(
             "/api/business-profiles",
             headers=authenticated_headers,
-            json=sample_business_profile
+            json=sample_business_profile_data
         )
 
         frameworks_response = client.get("/api/frameworks", headers=authenticated_headers)
@@ -617,13 +617,13 @@ class TestEvidenceEndpoints:
 class TestReadinessEndpoints:
     """Test compliance readiness assessment endpoints"""
 
-    def test_get_readiness_assessment(self, client, authenticated_headers, sample_business_profile):
+    def test_get_readiness_assessment(self, client, authenticated_headers, sample_business_profile_data):
         """Test getting compliance readiness assessment"""
         # Setup prerequisites
         client.post(
             "/api/business-profiles",
             headers=authenticated_headers,
-            json=sample_business_profile
+            json=sample_business_profile_data
         )
 
         # Get readiness assessment
@@ -640,13 +640,13 @@ class TestReadinessEndpoints:
         assert 0 <= response_data["overall_score"] <= 100
         assert response_data["risk_level"] in ["Low", "Medium", "High", "Critical"]
 
-    def test_generate_compliance_report(self, client, authenticated_headers, sample_business_profile):
+    def test_generate_compliance_report(self, client, authenticated_headers, sample_business_profile_data):
         """Test generating compliance reports"""
         # Setup prerequisites
         client.post(
             "/api/business-profiles",
             headers=authenticated_headers,
-            json=sample_business_profile
+            json=sample_business_profile_data
         )
 
         # Generate report
@@ -676,7 +676,7 @@ class TestReadinessEndpoints:
 class TestEndToEndWorkflow:
     """Test complete end-to-end user workflows"""
 
-    def test_complete_compliance_journey(self, client, authenticated_headers, mock_ai_client, sample_business_profile):
+    def test_complete_compliance_journey(self, client, authenticated_headers, mock_ai_client, sample_business_profile_data):
         """Test complete compliance implementation journey"""
         # Setup AI mock
         mock_ai_client.generate_content.return_value.text = "Generated compliance content"
@@ -685,7 +685,7 @@ class TestEndToEndWorkflow:
         profile_response = client.post(
             "/api/business-profiles",
             headers=authenticated_headers,
-            json=sample_business_profile
+            json=sample_business_profile_data
         )
         assert profile_response.status_code == 201
 

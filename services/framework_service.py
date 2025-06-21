@@ -28,7 +28,7 @@ async def get_all_frameworks(db: AsyncSession) -> List[ComplianceFramework]:
         logger.error(f"Database error while getting all frameworks: {e}", exc_info=True)
         raise DatabaseException("Failed to retrieve compliance frameworks.") from e
 
-async def get_framework_by_id(db: AsyncSession, framework_id: UUID) -> Optional[ComplianceFramework]:
+async def get_framework_by_id(db: AsyncSession, user: User, framework_id: UUID) -> Optional[ComplianceFramework]:
     """Get a specific compliance framework by ID."""
     try:
         result = await db.execute(

@@ -12,7 +12,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, and_, func
 from sqlalchemy.exc import SQLAlchemyError
 
-from database.models import EvidenceItem
+from database.evidence_item import EvidenceItem
 from core.exceptions import DatabaseException, BusinessLogicException
 from config.logging_config import get_logger
 

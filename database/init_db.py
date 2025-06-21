@@ -19,7 +19,7 @@ load_dotenv()
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from config.logging_config import get_logger, setup_logging
-from database.db_setup import Base, async_engine, get_async_db
+from database.db_setup import Base, get_async_db, _init_async_db
 from services.framework_service import initialize_default_frameworks
 
 # Setup logging first
@@ -30,7 +30,11 @@ async def create_tables():
     """Create all database tables asynchronously."""
     logger.info("Creating database tables...")
     try:
-        async with async_engine.begin() as conn:
+        # Initialize the async database engine
+        _init_async_db()
+        from database.db_setup import _async_engine
+
+        async with _async_engine.begin() as conn:
             await conn.run_sync(Base.metadata.create_all)
         logger.info("Database tables created successfully.")
         return True

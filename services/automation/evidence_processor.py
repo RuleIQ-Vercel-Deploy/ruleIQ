@@ -13,7 +13,7 @@ from sqlalchemy import select, and_
 from sqlalchemy.orm.attributes import flag_modified
 from sqlalchemy.exc import SQLAlchemyError
 
-from database.models import EvidenceItem
+from database.evidence_item import EvidenceItem
 from .quality_scorer import QualityScorer
 from core.exceptions import DatabaseException, BusinessLogicException
 from config.logging_config import get_logger

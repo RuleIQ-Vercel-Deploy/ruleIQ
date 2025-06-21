@@ -1,0 +1,324 @@
+============================= test session starts ==============================
+platform linux -- Python 3.13.2, pytest-8.4.1, pluggy-1.6.0
+benchmark: 5.1.0 (defaults: timer=time.perf_counter disable_gc=False min_rounds=5 min_time=0.000005 max_time=1.0 calibration_precision=10 warmup=False warmup_iterations=100000)
+rootdir: /home/omar/Documents/NexCompli
+configfile: pytest.ini
+testpaths: tests
+plugins: timeout-2.4.0, asyncio-1.0.0, cov-6.2.1, anyio-4.9.0, dotenv-0.5.2, mock-3.14.1, xdist-3.7.0, parallel-0.1.1, benchmark-5.1.0
+timeout: 300.0s
+timeout method: thread
+timeout func_only: False
+asyncio: mode=Mode.AUTO, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+collected 315 items
+
+tests/ai/test_compliance_accuracy.py::TestComplianceAccuracy::test_gdpr_basic_questions_accuracy PASSED [  0%]
+tests/ai/test_compliance_accuracy.py::TestComplianceAccuracy::test_gdpr_intermediate_questions_accuracy PASSED [  0%]
+tests/ai/test_compliance_accuracy.py::TestComplianceAccuracy::test_gdpr_advanced_questions_accuracy PASSED [  0%]
+tests/ai/test_compliance_accuracy.py::TestComplianceAccuracy::test_source_citation_accuracy PASSED [  1%]
+tests/ai/test_compliance_accuracy.py::TestComplianceAccuracy::test_response_completeness PASSED [  1%]
+tests/ai/test_compliance_accuracy.py::TestComplianceAccuracy::test_framework_specific_terminology PASSED [  1%]
+tests/ai/test_compliance_accuracy.py::TestComplianceAccuracy::test_consistency_across_similar_questions PASSED [  2%]
+tests/ai/test_compliance_accuracy.py::TestComplianceAccuracy::test_regulatory_compliance_alignment PASSED [  2%]
+tests/ai/test_compliance_accuracy.py::TestFrameworkCoverage::test_framework_identification_accuracy PASSED [  2%]
+tests/ai/test_compliance_accuracy.py::TestFrameworkCoverage::test_cross_framework_guidance PASSED [  3%]
+tests/e2e/test_user_onboarding_flow.py::TestUserOnboardingFlow::test_complete_user_onboarding_workflow PASSED [  3%]
+tests/e2e/test_user_onboarding_flow.py::TestUserOnboardingFlow::test_user_onboarding_with_assessment_restart PASSED [  3%]
+tests/e2e/test_user_onboarding_flow.py::TestUserOnboardingFlow::test_user_onboarding_with_minimal_data PASSED [  4%]
+tests/e2e/test_user_onboarding_flow.py::TestUserOnboardingFlow::test_user_onboarding_error_recovery PASSED [  4%]
+tests/e2e/test_user_onboarding_flow.py::TestOnboardingIntegration::test_onboarding_triggers_background_tasks PASSED [  4%]
+tests/e2e/test_user_onboarding_flow.py::TestOnboardingIntegration::test_onboarding_creates_audit_trail PASSED [  5%]
+tests/e2e/test_user_onboarding_flow.py::TestOnboardingIntegration::test_onboarding_sets_user_preferences PASSED [  5%]
+tests/integration/api/test_evidence_endpoints.py::TestEvidenceEndpoints::test_create_evidence_item_success PASSED [  5%]
+tests/integration/api/test_evidence_endpoints.py::TestEvidenceEndpoints::test_create_evidence_item_validation_error PASSED [  6%]
+tests/integration/api/test_evidence_endpoints.py::TestEvidenceEndpoints::test_create_evidence_item_unauthenticated PASSED [  6%]
+tests/integration/api/test_evidence_endpoints.py::TestEvidenceEndpoints::test_get_evidence_items_success PASSED [  6%]
+tests/integration/api/test_evidence_endpoints.py::TestEvidenceEndpoints::test_get_evidence_items_empty PASSED [  6%]
+tests/integration/api/test_evidence_endpoints.py::TestEvidenceEndpoints::test_get_evidence_items_with_filtering PASSED [  7%]
+tests/integration/api/test_evidence_endpoints.py::TestEvidenceEndpoints::test_get_evidence_item_by_id_success PASSED [  7%]
+tests/integration/api/test_evidence_endpoints.py::TestEvidenceEndpoints::test_get_evidence_item_by_id_not_found PASSED [  7%]
+tests/integration/api/test_evidence_endpoints.py::TestEvidenceEndpoints::test_get_evidence_item_unauthorized_access PASSED [  8%]
+tests/integration/api/test_evidence_endpoints.py::TestEvidenceEndpoints::test_update_evidence_item_success PASSED [  8%]
+tests/integration/api/test_evidence_endpoints.py::TestEvidenceEndpoints::test_update_evidence_item_partial PASSED [  8%]
+tests/integration/api/test_evidence_endpoints.py::TestEvidenceEndpoints::test_delete_evidence_item_success PASSED [  9%]
+tests/integration/api/test_evidence_endpoints.py::TestEvidenceEndpoints::test_delete_evidence_item_unauthorized PASSED [  9%]
+tests/integration/api/test_evidence_endpoints.py::TestEvidenceEndpoints::test_bulk_update_evidence_status PASSED [  9%]
+tests/integration/api/test_evidence_endpoints.py::TestEvidenceEndpoints::test_get_evidence_statistics FAILED [ 10%]
+tests/integration/api/test_evidence_endpoints.py::TestEvidenceEndpoints::test_search_evidence_items PASSED [ 10%]
+tests/integration/api/test_evidence_endpoints.py::TestEvidenceValidationEndpoints::test_validate_evidence_quality PASSED [ 10%]
+tests/integration/api/test_evidence_endpoints.py::TestEvidenceValidationEndpoints::test_identify_evidence_requirements PASSED [ 11%]
+tests/integration/api/test_evidence_endpoints.py::TestEvidenceValidationEndpoints::test_configure_evidence_automation PASSED [ 11%]
+tests/integration/api/test_evidence_endpoints.py::TestEvidencePaginationAndSorting::test_evidence_pagination PASSED [ 11%]
+tests/integration/api/test_evidence_endpoints.py::TestEvidencePaginationAndSorting::test_evidence_sorting PASSED [ 12%]
+tests/integration/test_evidence_flow.py::TestEvidenceCollectionFlow::test_full_evidence_and_reporting_flow PASSED [ 12%]
+tests/integration/test_evidence_flow.py::TestEvidenceCollectionFlow::test_ai_assistant_evidence_query PASSED [ 12%]
+tests/integration/test_evidence_flow.py::TestEvidenceCollectionFlow::test_scheduled_report_generation PASSED [ 13%]
+tests/integration/test_evidence_flow.py::TestAPIEndpointsIntegration::test_business_profile_to_evidence_workflow PASSED [ 13%]
+tests/integration/test_evidence_flow.py::TestAPIEndpointsIntegration::test_framework_to_readiness_assessment PASSED [ 13%]
+tests/integration/test_evidence_flow.py::TestErrorHandlingAndResilience::test_integration_failure_handling PASSED [ 13%]
+tests/integration/test_evidence_flow.py::TestErrorHandlingAndResilience::test_report_generation_with_no_data PASSED [ 14%]
+tests/integration/test_evidence_flow.py::TestAsyncOperations::test_async_evidence_collection PASSED [ 14%]
+tests/integration/test_evidence_flow.py::TestAsyncOperations::test_ai_assistant_async_processing PASSED [ 14%]
+tests/monitoring/test_metrics.py::TestObservability::test_metrics_collection_functionality PASSED [ 15%]
+tests/monitoring/test_metrics.py::TestObservability::test_test_statistics_calculation PASSED [ 15%]
+tests/monitoring/test_metrics.py::TestObservability::test_resource_monitoring_during_test PASSED [ 15%]
+tests/monitoring/test_metrics.py::TestObservability::test_performance_metric_tracking PASSED [ 16%]
+tests/monitoring/test_metrics.py::TestObservability::test_error_rate_tracking PASSED [ 16%]
+tests/monitoring/test_metrics.py::TestObservability::test_test_duration_trends PASSED [ 16%]
+tests/monitoring/test_metrics.py::TestMetricsReporting::test_generate_test_report PASSED [ 17%]
+tests/monitoring/test_metrics.py::TestMetricsReporting::test_metrics_export_format PASSED [ 17%]
+tests/monitoring/test_metrics.py::TestMetricsReporting::test_performance_threshold_detection PASSED [ 17%]
+tests/monitoring/test_metrics.py::TestMetricsReporting::test_trend_analysis PASSED [ 18%]
+tests/monitoring/test_metrics.py::TestCoverageTracking::test_coverage_metric_structure PASSED [ 18%]
+tests/monitoring/test_metrics.py::TestCoverageTracking::test_coverage_trend_tracking PASSED [ 18%]
+tests/monitoring/test_metrics.py::TestCoverageTracking::test_coverage_threshold_compliance PASSED [ 19%]
+tests/performance/test_api_performance.py::TestAPIPerformance::test_authentication_performance PASSED [ 19%]
+tests/performance/test_api_performance.py::TestAPIPerformance::test_evidence_creation_performance PASSED [ 19%]
+tests/performance/test_api_performance.py::TestAPIPerformance::test_evidence_search_performance PASSED [ 20%]
+tests/performance/test_api_performance.py::TestAPIPerformance::test_dashboard_performance PASSED [ 20%]
+tests/performance/test_api_performance.py::TestAPIPerformance::test_ai_chat_performance SKIPPED [ 20%]
+tests/performance/test_api_performance.py::TestAPIPerformance::test_concurrent_request_performance FAILED [ 20%]
+tests/performance/test_api_performance.py::TestAPIPerformance::test_bulk_operation_performance PASSED [ 21%]
+tests/performance/test_api_performance.py::TestMemoryPerformance::test_large_dataset_handling +++++++++++++++++++++++++++++++++++ Timeout ++++++++++++++++++++++++++++++++++++
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Captured stdout ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+{"timestamp": 1750481276.96989, "level": "INFO", "name": "httpx", "message": "HTTP Request: POST http://testserver/api/evidence \"HTTP/1.1 307 Temporary Redirect\"", "request_id": null, "user_id": null}
+{"timestamp": 1750481281.978637, "level": "INFO", "name": "httpx", "message": "HTTP Request: POST http://testserver/api/evidence/ \"HTTP/1.1 201 Created\"", "request_id": null, "user_id": null}
+{"timestamp": 1750481281.9802916, "level": "INFO", "name": "httpx", "message": "HTTP Request: POST http://testserver/api/evidence \"HTTP/1.1 307 Temporary Redirect\"", "request_id": null, "user_id": null}
+{"timestamp": 1750481287.1093628, "level": "INFO", "name": "httpx", "message": "HTTP Request: POST http://testserver/api/evidence/ \"HTTP/1.1 201 Created\"", "request_id": null, "user_id": null}
+{"timestamp": 1750481287.111427, "level": "INFO", "name": "httpx", "message": "HTTP Request: POST http://testserver/api/evidence \"HTTP/1.1 307 Temporary Redirect\"", "request_id": null, "user_id": null}
+{"timestamp": 1750481292.2842164, "level": "INFO", "name": "httpx", "message": "HTTP Request: POST http://testserver/api/evidence/ \"HTTP/1.1 201 Created\"", "request_id": null, "user_id": null}
+{"timestamp": 1750481292.2858765, "level": "INFO", "name": "httpx", "message": "HTTP Request: POST http://testserver/api/evidence \"HTTP/1.1 307 Temporary Redirect\"", "request_id": null, "user_id": null}
+{"timestamp": 1750481297.3360298, "level": "INFO", "name": "httpx", "message": "HTTP Request: POST http://testserver/api/evidence/ \"HTTP/1.1 201 Created\"", "request_id": null, "user_id": null}
+{"timestamp": 1750481297.3378055, "level": "INFO", "name": "httpx", "message": "HTTP Request: POST http://testserver/api/evidence \"HTTP/1.1 307 Temporary Redirect\"", "request_id": null, "user_id": null}
+{"timestamp": 1750481302.5418358, "level": "INFO", "name": "httpx", "message": "HTTP Request: POST http://testserver/api/evidence/ \"HTTP/1.1 201 Created\"", "request_id": null, "user_id": null}
+{"timestamp": 1750481302.5435991, "level": "INFO", "name": "httpx", "message": "HTTP Request: POST http://testserver/api/evidence \"HTTP/1.1 307 Temporary Redirect\"", "request_id": null, "user_id": null}
+{"timestamp": 1750481307.6085386, "level": "INFO", "name": "httpx", "message": "HTTP Request: POST http://testserver/api/evidence/ \"HTTP/1.1 201 Created\"", "request_id": null, "user_id": null}
+{"timestamp": 1750481307.6116061, "level": "INFO", "name": "httpx", "message": "HTTP Request: POST http://testserver/api/evidence \"HTTP/1.1 307 Temporary Redirect\"", "request_id": null, "user_id": null}
+{"timestamp": 1750481312.6736832, "level": "INFO", "name": "httpx", "message": "HTTP Request: POST http://testserver/api/evidence/ \"HTTP/1.1 201 Created\"", "request_id": null, "user_id": null}
+{"timestamp": 1750481312.6756651, "level": "INFO", "name": "httpx", "message": "HTTP Request: POST http://testserver/api/evidence \"HTTP/1.1 307 Temporary Redirect\"", "request_id": null, "user_id": null}
+{"timestamp": 1750481318.1848419, "level": "INFO", "name": "httpx", "message": "HTTP Request: POST http://testserver/api/evidence/ \"HTTP/1.1 201 Created\"", "request_id": null, "user_id": null}
+{"timestamp": 1750481318.1870463, "level": "INFO", "name": "httpx", "message": "HTTP Request: POST http://testserver/api/evidence \"HTTP/1.1 307 Temporary Redirect\"", "request_id": null, "user_id": null}
+{"timestamp": 1750481323.4048517, "level": "INFO", "name": "httpx", "message": "HTTP Request: POST http://testserver/api/evidence/ \"HTTP/1.1 201 Created\"", "request_id": null, "user_id": null}
+{"timestamp": 1750481323.4066997, "level": "INFO", "name": "httpx", "message": "HTTP Request: POST http://testserver/api/evidence \"HTTP/1.1 307 Temporary Redirect\"", "request_id": null, "user_id": null}
+{"timestamp": 1750481328.621912, "level": "INFO", "name": "httpx", "message": "HTTP Request: POST http://testserver/api/evidence/ \"HTTP/1.1 201 Created\"", "request_id": null, "user_id": null}
+{"timestamp": 1750481328.6236947, "level": "INFO", "name": "httpx", "message": "HTTP Request: POST http://testserver/api/evidence \"HTTP/1.1 307 Temporary Redirect\"", "request_id": null, "user_id": null}
+{"timestamp": 1750481333.6967306, "level": "INFO", "name": "httpx", "message": "HTTP Request: POST http://testserver/api/evidence/ \"HTTP/1.1 201 Created\"", "request_id": null, "user_id": null}
+{"timestamp": 1750481333.6986783, "level": "INFO", "name": "httpx", "message": "HTTP Request: POST http://testserver/api/evidence \"HTTP/1.1 307 Temporary Redirect\"", "request_id": null, "user_id": null}
+{"timestamp": 1750481338.7568936, "level": "INFO", "name": "httpx", "message": "HTTP Request: POST http://testserver/api/evidence/ \"HTTP/1.1 201 Created\"", "request_id": null, "user_id": null}
+{"timestamp": 1750481338.7587764, "level": "INFO", "name": "httpx", "message": "HTTP Request: POST http://testserver/api/evidence \"HTTP/1.1 307 Temporary Redirect\"", "request_id": null, "user_id": null}
+{"timestamp": 1750481343.956118, "level": "INFO", "name": "httpx", "message": "HTTP Request: POST http://testserver/api/evidence/ \"HTTP/1.1 201 Created\"", "request_id": null, "user_id": null}
+{"timestamp": 1750481343.9579108, "level": "INFO", "name": "httpx", "message": "HTTP Request: POST http://testserver/api/evidence \"HTTP/1.1 307 Temporary Redirect\"", "request_id": null, "user_id": null}
+{"timestamp": 1750481348.9982097, "level": "INFO", "name": "httpx", "message": "HTTP Request: POST http://testserver/api/evidence/ \"HTTP/1.1 201 Created\"", "request_id": null, "user_id": null}
+{"timestamp": 1750481349.0006206, "level": "INFO", "name": "httpx", "message": "HTTP Request: POST http://testserver/api/evidence \"HTTP/1.1 307 Temporary Redirect\"", "request_id": null, "user_id": null}
+{"timestamp": 1750481354.032192, "level": "INFO", "name": "httpx", "message": "HTTP Request: POST http://testserver/api/evidence/ \"HTTP/1.1 201 Created\"", "request_id": null, "user_id": null}
+{"timestamp": 1750481354.0339859, "level": "INFO", "name": "httpx", "message": "HTTP Request: POST http://testserver/api/evidence \"HTTP/1.1 307 Temporary Redirect\"", "request_id": null, "user_id": null}
+{"timestamp": 1750481359.1902277, "level": "INFO", "name": "httpx", "message": "HTTP Request: POST http://testserver/api/evidence/ \"HTTP/1.1 201 Created\"", "request_id": null, "user_id": null}
+{"timestamp": 1750481359.192714, "level": "INFO", "name": "httpx", "message": "HTTP Request: POST http://testserver/api/evidence \"HTTP/1.1 307 Temporary Redirect\"", "request_id": null, "user_id": null}
+{"timestamp": 1750481364.2756414, "level": "INFO", "name": "httpx", "message": "HTTP Request: POST http://testserver/api/evidence/ \"HTTP/1.1 201 Created\"", "request_id": null, "user_id": null}
+{"timestamp": 1750481364.277421, "level": "INFO", "name": "httpx", "message": "HTTP Request: POST http://testserver/api/evidence \"HTTP/1.1 307 Temporary Redirect\"", "request_id": null, "user_id": null}
+{"timestamp": 1750481378.0351088, "level": "INFO", "name": "httpx", "message": "HTTP Request: POST http://testserver/api/evidence/ \"HTTP/1.1 201 Created\"", "request_id": null, "user_id": null}
+{"timestamp": 1750481378.0369854, "level": "INFO", "name": "httpx", "message": "HTTP Request: POST http://testserver/api/evidence \"HTTP/1.1 307 Temporary Redirect\"", "request_id": null, "user_id": null}
+{"timestamp": 1750481386.0875921, "level": "INFO", "name": "httpx", "message": "HTTP Request: POST http://testserver/api/evidence/ \"HTTP/1.1 201 Created\"", "request_id": null, "user_id": null}
+{"timestamp": 1750481386.0895548, "level": "INFO", "name": "httpx", "message": "HTTP Request: POST http://testserver/api/evidence \"HTTP/1.1 307 Temporary Redirect\"", "request_id": null, "user_id": null}
+{"timestamp": 1750481391.158115, "level": "INFO", "name": "httpx", "message": "HTTP Request: POST http://testserver/api/evidence/ \"HTTP/1.1 201 Created\"", "request_id": null, "user_id": null}
+{"timestamp": 1750481391.1597657, "level": "INFO", "name": "httpx", "message": "HTTP Request: POST http://testserver/api/evidence \"HTTP/1.1 307 Temporary Redirect\"", "request_id": null, "user_id": null}
+{"timestamp": 1750481396.2700317, "level": "INFO", "name": "httpx", "message": "HTTP Request: POST http://testserver/api/evidence/ \"HTTP/1.1 201 Created\"", "request_id": null, "user_id": null}
+{"timestamp": 1750481396.271854, "level": "INFO", "name": "httpx", "message": "HTTP Request: POST http://testserver/api/evidence \"HTTP/1.1 307 Temporary Redirect\"", "request_id": null, "user_id": null}
+{"timestamp": 1750481401.3524075, "level": "INFO", "name": "httpx", "message": "HTTP Request: POST http://testserver/api/evidence/ \"HTTP/1.1 201 Created\"", "request_id": null, "user_id": null}
+{"timestamp": 1750481401.3541815, "level": "INFO", "name": "httpx", "message": "HTTP Request: POST http://testserver/api/evidence \"HTTP/1.1 307 Temporary Redirect\"", "request_id": null, "user_id": null}
+{"timestamp": 1750481406.5285182, "level": "INFO", "name": "httpx", "message": "HTTP Request: POST http://testserver/api/evidence/ \"HTTP/1.1 201 Created\"", "request_id": null, "user_id": null}
+{"timestamp": 1750481406.5305145, "level": "INFO", "name": "httpx", "message": "HTTP Request: POST http://testserver/api/evidence \"HTTP/1.1 307 Temporary Redirect\"", "request_id": null, "user_id": null}
+{"timestamp": 1750481411.5820708, "level": "INFO", "name": "httpx", "message": "HTTP Request: POST http://testserver/api/evidence/ \"HTTP/1.1 201 Created\"", "request_id": null, "user_id": null}
+{"timestamp": 1750481411.5839767, "level": "INFO", "name": "httpx", "message": "HTTP Request: POST http://testserver/api/evidence \"HTTP/1.1 307 Temporary Redirect\"", "request_id": null, "user_id": null}
+{"timestamp": 1750481416.6747842, "level": "INFO", "name": "httpx", "message": "HTTP Request: POST http://testserver/api/evidence/ \"HTTP/1.1 201 Created\"", "request_id": null, "user_id": null}
+{"timestamp": 1750481416.6768692, "level": "INFO", "name": "httpx", "message": "HTTP Request: POST http://testserver/api/evidence \"HTTP/1.1 307 Temporary Redirect\"", "request_id": null, "user_id": null}
+{"timestamp": 1750481421.7765083, "level": "INFO", "name": "httpx", "message": "HTTP Request: POST http://testserver/api/evidence/ \"HTTP/1.1 201 Created\"", "request_id": null, "user_id": null}
+{"timestamp": 1750481421.778382, "level": "INFO", "name": "httpx", "message": "HTTP Request: POST http://testserver/api/evidence \"HTTP/1.1 307 Temporary Redirect\"", "request_id": null, "user_id": null}
+{"timestamp": 1750481426.8237731, "level": "INFO", "name": "httpx", "message": "HTTP Request: POST http://testserver/api/evidence/ \"HTTP/1.1 201 Created\"", "request_id": null, "user_id": null}
+{"timestamp": 1750481426.8255122, "level": "INFO", "name": "httpx", "message": "HTTP Request: POST http://testserver/api/evidence \"HTTP/1.1 307 Temporary Redirect\"", "request_id": null, "user_id": null}
+{"timestamp": 1750481432.2182105, "level": "INFO", "name": "httpx", "message": "HTTP Request: POST http://testserver/api/evidence/ \"HTTP/1.1 201 Created\"", "request_id": null, "user_id": null}
+{"timestamp": 1750481432.2200103, "level": "INFO", "name": "httpx", "message": "HTTP Request: POST http://testserver/api/evidence \"HTTP/1.1 307 Temporary Redirect\"", "request_id": null, "user_id": null}
+{"timestamp": 1750481437.2517512, "level": "INFO", "name": "httpx", "message": "HTTP Request: POST http://testserver/api/evidence/ \"HTTP/1.1 201 Created\"", "request_id": null, "user_id": null}
+{"timestamp": 1750481437.2535632, "level": "INFO", "name": "httpx", "message": "HTTP Request: POST http://testserver/api/evidence \"HTTP/1.1 307 Temporary Redirect\"", "request_id": null, "user_id": null}
+{"timestamp": 1750481442.3839304, "level": "INFO", "name": "httpx", "message": "HTTP Request: POST http://testserver/api/evidence/ \"HTTP/1.1 201 Created\"", "request_id": null, "user_id": null}
+{"timestamp": 1750481442.3860629, "level": "INFO", "name": "httpx", "message": "HTTP Request: POST http://testserver/api/evidence \"HTTP/1.1 307 Temporary Redirect\"", "request_id": null, "user_id": null}
+{"timestamp": 1750481447.5072753, "level": "INFO", "name": "httpx", "message": "HTTP Request: POST http://testserver/api/evidence/ \"HTTP/1.1 201 Created\"", "request_id": null, "user_id": null}
+{"timestamp": 1750481447.5092318, "level": "INFO", "name": "httpx", "message": "HTTP Request: POST http://testserver/api/evidence \"HTTP/1.1 307 Temporary Redirect\"", "request_id": null, "user_id": null}
+{"timestamp": 1750481452.6136625, "level": "INFO", "name": "httpx", "message": "HTTP Request: POST http://testserver/api/evidence/ \"HTTP/1.1 201 Created\"", "request_id": null, "user_id": null}
+{"timestamp": 1750481452.615478, "level": "INFO", "name": "httpx", "message": "HTTP Request: POST http://testserver/api/evidence \"HTTP/1.1 307 Temporary Redirect\"", "request_id": null, "user_id": null}
+{"timestamp": 1750481457.7856593, "level": "INFO", "name": "httpx", "message": "HTTP Request: POST http://testserver/api/evidence/ \"HTTP/1.1 201 Created\"", "request_id": null, "user_id": null}
+{"timestamp": 1750481457.787519, "level": "INFO", "name": "httpx", "message": "HTTP Request: POST http://testserver/api/evidence \"HTTP/1.1 307 Temporary Redirect\"", "request_id": null, "user_id": null}
+{"timestamp": 1750481462.8559046, "level": "INFO", "name": "httpx", "message": "HTTP Request: POST http://testserver/api/evidence/ \"HTTP/1.1 201 Created\"", "request_id": null, "user_id": null}
+{"timestamp": 1750481462.8578439, "level": "INFO", "name": "httpx", "message": "HTTP Request: POST http://testserver/api/evidence \"HTTP/1.1 307 Temporary Redirect\"", "request_id": null, "user_id": null}
+{"timestamp": 1750481468.039166, "level": "INFO", "name": "httpx", "message": "HTTP Request: POST http://testserver/api/evidence/ \"HTTP/1.1 201 Created\"", "request_id": null, "user_id": null}
+{"timestamp": 1750481468.041297, "level": "INFO", "name": "httpx", "message": "HTTP Request: POST http://testserver/api/evidence \"HTTP/1.1 307 Temporary Redirect\"", "request_id": null, "user_id": null}
+{"timestamp": 1750481473.1657743, "level": "INFO", "name": "httpx", "message": "HTTP Request: POST http://testserver/api/evidence/ \"HTTP/1.1 201 Created\"", "request_id": null, "user_id": null}
+{"timestamp": 1750481473.1678476, "level": "INFO", "name": "httpx", "message": "HTTP Request: POST http://testserver/api/evidence \"HTTP/1.1 307 Temporary Redirect\"", "request_id": null, "user_id": null}
+{"timestamp": 1750481478.3713756, "level": "INFO", "name": "httpx", "message": "HTTP Request: POST http://testserver/api/evidence/ \"HTTP/1.1 201 Created\"", "request_id": null, "user_id": null}
+{"timestamp": 1750481478.3731213, "level": "INFO", "name": "httpx", "message": "HTTP Request: POST http://testserver/api/evidence \"HTTP/1.1 307 Temporary Redirect\"", "request_id": null, "user_id": null}
+{"timestamp": 1750481483.4416504, "level": "INFO", "name": "httpx", "message": "HTTP Request: POST http://testserver/api/evidence/ \"HTTP/1.1 201 Created\"", "request_id": null, "user_id": null}
+{"timestamp": 1750481483.4433153, "level": "INFO", "name": "httpx", "message": "HTTP Request: POST http://testserver/api/evidence \"HTTP/1.1 307 Temporary Redirect\"", "request_id": null, "user_id": null}
+{"timestamp": 1750481488.5150146, "level": "INFO", "name": "httpx", "message": "HTTP Request: POST http://testserver/api/evidence/ \"HTTP/1.1 201 Created\"", "request_id": null, "user_id": null}
+{"timestamp": 1750481488.5167046, "level": "INFO", "name": "httpx", "message": "HTTP Request: POST http://testserver/api/evidence \"HTTP/1.1 307 Temporary Redirect\"", "request_id": null, "user_id": null}
+{"timestamp": 1750481493.712355, "level": "INFO", "name": "httpx", "message": "HTTP Request: POST http://testserver/api/evidence/ \"HTTP/1.1 201 Created\"", "request_id": null, "user_id": null}
+{"timestamp": 1750481493.7147355, "level": "INFO", "name": "httpx", "message": "HTTP Request: POST http://testserver/api/evidence \"HTTP/1.1 307 Temporary Redirect\"", "request_id": null, "user_id": null}
+{"timestamp": 1750481498.7600102, "level": "INFO", "name": "httpx", "message": "HTTP Request: POST http://testserver/api/evidence/ \"HTTP/1.1 201 Created\"", "request_id": null, "user_id": null}
+{"timestamp": 1750481498.7618077, "level": "INFO", "name": "httpx", "message": "HTTP Request: POST http://testserver/api/evidence \"HTTP/1.1 307 Temporary Redirect\"", "request_id": null, "user_id": null}
+{"timestamp": 1750481503.9515557, "level": "INFO", "name": "httpx", "message": "HTTP Request: POST http://testserver/api/evidence/ \"HTTP/1.1 201 Created\"", "request_id": null, "user_id": null}
+{"timestamp": 1750481503.9535506, "level": "INFO", "name": "httpx", "message": "HTTP Request: POST http://testserver/api/evidence \"HTTP/1.1 307 Temporary Redirect\"", "request_id": null, "user_id": null}
+{"timestamp": 1750481509.0138478, "level": "INFO", "name": "httpx", "message": "HTTP Request: POST http://testserver/api/evidence/ \"HTTP/1.1 201 Created\"", "request_id": null, "user_id": null}
+{"timestamp": 1750481509.0155654, "level": "INFO", "name": "httpx", "message": "HTTP Request: POST http://testserver/api/evidence \"HTTP/1.1 307 Temporary Redirect\"", "request_id": null, "user_id": null}
+{"timestamp": 1750481514.118639, "level": "INFO", "name": "httpx", "message": "HTTP Request: POST http://testserver/api/evidence/ \"HTTP/1.1 201 Created\"", "request_id": null, "user_id": null}
+{"timestamp": 1750481514.120403, "level": "INFO", "name": "httpx", "message": "HTTP Request: POST http://testserver/api/evidence \"HTTP/1.1 307 Temporary Redirect\"", "request_id": null, "user_id": null}
+{"timestamp": 1750481519.175832, "level": "INFO", "name": "httpx", "message": "HTTP Request: POST http://testserver/api/evidence/ \"HTTP/1.1 201 Created\"", "request_id": null, "user_id": null}
+{"timestamp": 1750481519.177715, "level": "INFO", "name": "httpx", "message": "HTTP Request: POST http://testserver/api/evidence \"HTTP/1.1 307 Temporary Redirect\"", "request_id": null, "user_id": null}
+{"timestamp": 1750481524.274776, "level": "INFO", "name": "httpx", "message": "HTTP Request: POST http://testserver/api/evidence/ \"HTTP/1.1 201 Created\"", "request_id": null, "user_id": null}
+{"timestamp": 1750481524.2774172, "level": "INFO", "name": "httpx", "message": "HTTP Request: POST http://testserver/api/evidence \"HTTP/1.1 307 Temporary Redirect\"", "request_id": null, "user_id": null}
+{"timestamp": 1750481529.45304, "level": "INFO", "name": "httpx", "message": "HTTP Request: POST http://testserver/api/evidence/ \"HTTP/1.1 201 Created\"", "request_id": null, "user_id": null}
+{"timestamp": 1750481529.4547584, "level": "INFO", "name": "httpx", "message": "HTTP Request: POST http://testserver/api/evidence \"HTTP/1.1 307 Temporary Redirect\"", "request_id": null, "user_id": null}
+{"timestamp": 1750481534.5080273, "level": "INFO", "name": "httpx", "message": "HTTP Request: POST http://testserver/api/evidence/ \"HTTP/1.1 201 Created\"", "request_id": null, "user_id": null}
+{"timestamp": 1750481534.5098507, "level": "INFO", "name": "httpx", "message": "HTTP Request: POST http://testserver/api/evidence \"HTTP/1.1 307 Temporary Redirect\"", "request_id": null, "user_id": null}
+{"timestamp": 1750481539.5220938, "level": "INFO", "name": "httpx", "message": "HTTP Request: POST http://testserver/api/evidence/ \"HTTP/1.1 201 Created\"", "request_id": null, "user_id": null}
+{"timestamp": 1750481539.52454, "level": "INFO", "name": "httpx", "message": "HTTP Request: POST http://testserver/api/evidence \"HTTP/1.1 307 Temporary Redirect\"", "request_id": null, "user_id": null}
+{"timestamp": 1750481544.6985402, "level": "INFO", "name": "httpx", "message": "HTTP Request: POST http://testserver/api/evidence/ \"HTTP/1.1 201 Created\"", "request_id": null, "user_id": null}
+{"timestamp": 1750481544.700232, "level": "INFO", "name": "httpx", "message": "HTTP Request: POST http://testserver/api/evidence \"HTTP/1.1 307 Temporary Redirect\"", "request_id": null, "user_id": null}
+{"timestamp": 1750481549.773517, "level": "INFO", "name": "httpx", "message": "HTTP Request: POST http://testserver/api/evidence/ \"HTTP/1.1 201 Created\"", "request_id": null, "user_id": null}
+{"timestamp": 1750481549.775217, "level": "INFO", "name": "httpx", "message": "HTTP Request: POST http://testserver/api/evidence \"HTTP/1.1 307 Temporary Redirect\"", "request_id": null, "user_id": null}
+{"timestamp": 1750481554.9119344, "level": "INFO", "name": "httpx", "message": "HTTP Request: POST http://testserver/api/evidence/ \"HTTP/1.1 201 Created\"", "request_id": null, "user_id": null}
+{"timestamp": 1750481554.9138567, "level": "INFO", "name": "httpx", "message": "HTTP Request: POST http://testserver/api/evidence \"HTTP/1.1 307 Temporary Redirect\"", "request_id": null, "user_id": null}
+{"timestamp": 1750481560.0265477, "level": "INFO", "name": "httpx", "message": "HTTP Request: POST http://testserver/api/evidence/ \"HTTP/1.1 201 Created\"", "request_id": null, "user_id": null}
+{"timestamp": 1750481560.0282876, "level": "INFO", "name": "httpx", "message": "HTTP Request: POST http://testserver/api/evidence \"HTTP/1.1 307 Temporary Redirect\"", "request_id": null, "user_id": null}
+{"timestamp": 1750481565.1251879, "level": "INFO", "name": "httpx", "message": "HTTP Request: POST http://testserver/api/evidence/ \"HTTP/1.1 201 Created\"", "request_id": null, "user_id": null}
+{"timestamp": 1750481565.1272585, "level": "INFO", "name": "httpx", "message": "HTTP Request: POST http://testserver/api/evidence \"HTTP/1.1 307 Temporary Redirect\"", "request_id": null, "user_id": null}
+{"timestamp": 1750481570.2920077, "level": "INFO", "name": "httpx", "message": "HTTP Request: POST http://testserver/api/evidence/ \"HTTP/1.1 201 Created\"", "request_id": null, "user_id": null}
+{"timestamp": 1750481570.2940102, "level": "INFO", "name": "httpx", "message": "HTTP Request: POST http://testserver/api/evidence \"HTTP/1.1 307 Temporary Redirect\"", "request_id": null, "user_id": null}
+~~~~~~~~~~~~~~~~~~~~~ Stack of asyncio_0 (135476337956544) ~~~~~~~~~~~~~~~~~~~~~
+  File "/home/omar/miniconda3/lib/python3.13/threading.py", line 1012, in _bootstrap
+    self._bootstrap_inner()
+  File "/home/omar/miniconda3/lib/python3.13/threading.py", line 1041, in _bootstrap_inner
+    self.run()
+  File "/home/omar/miniconda3/lib/python3.13/threading.py", line 992, in run
+    self._target(*self._args, **self._kwargs)
+  File "/home/omar/miniconda3/lib/python3.13/concurrent/futures/thread.py", line 90, in _worker
+    work_item = work_queue.get(block=True)
+~~~~~~~~~ Stack of Thread-616 (run_blocking_portal) (135476354741952) ~~~~~~~~~~
+  File "/home/omar/miniconda3/lib/python3.13/threading.py", line 1012, in _bootstrap
+    self._bootstrap_inner()
+  File "/home/omar/miniconda3/lib/python3.13/threading.py", line 1041, in _bootstrap_inner
+    self.run()
+  File "/home/omar/miniconda3/lib/python3.13/threading.py", line 992, in run
+    self._target(*self._args, **self._kwargs)
+  File "/home/omar/Documents/NexCompli/venv/lib/python3.13/site-packages/anyio/from_thread.py", line 481, in run_blocking_portal
+    _eventloop.run(
+  File "/home/omar/Documents/NexCompli/venv/lib/python3.13/site-packages/anyio/_core/_eventloop.py", line 74, in run
+    return async_backend.run(func, args, {}, backend_options)
+  File "/home/omar/Documents/NexCompli/venv/lib/python3.13/site-packages/anyio/_backends/_asyncio.py", line 2310, in run
+    return runner.run(wrapper())
+  File "/home/omar/miniconda3/lib/python3.13/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+  File "/home/omar/miniconda3/lib/python3.13/asyncio/base_events.py", line 712, in run_until_complete
+    self.run_forever()
+  File "/home/omar/miniconda3/lib/python3.13/asyncio/base_events.py", line 683, in run_forever
+    self._run_once()
+  File "/home/omar/miniconda3/lib/python3.13/asyncio/base_events.py", line 2002, in _run_once
+    event_list = self._selector.select(timeout)
+  File "/home/omar/miniconda3/lib/python3.13/selectors.py", line 452, in select
+    fd_event_list = self._selector.poll(timeout, max_ev)
+~~~~~~~~~~~~~~~~~~~~~ Stack of asyncio_0 (135477668415168) ~~~~~~~~~~~~~~~~~~~~~
+  File "/home/omar/miniconda3/lib/python3.13/threading.py", line 1012, in _bootstrap
+    self._bootstrap_inner()
+  File "/home/omar/miniconda3/lib/python3.13/threading.py", line 1041, in _bootstrap_inner
+    self.run()
+  File "/home/omar/miniconda3/lib/python3.13/threading.py", line 992, in run
+    self._target(*self._args, **self._kwargs)
+  File "/home/omar/miniconda3/lib/python3.13/concurrent/futures/thread.py", line 90, in _worker
+    work_item = work_queue.get(block=True)
+~~~~~~~~~~~~~~~~~~~~ Stack of MainThread (135477824574976) ~~~~~~~~~~~~~~~~~~~~~
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/home/omar/Documents/NexCompli/venv/lib/python3.13/site-packages/pytest/__main__.py", line 9, in <module>
+    raise SystemExit(pytest.console_main())
+  File "/home/omar/Documents/NexCompli/venv/lib/python3.13/site-packages/_pytest/config/__init__.py", line 201, in console_main
+    code = main()
+  File "/home/omar/Documents/NexCompli/venv/lib/python3.13/site-packages/_pytest/config/__init__.py", line 175, in main
+    ret: ExitCode | int = config.hook.pytest_cmdline_main(config=config)
+  File "/home/omar/Documents/NexCompli/venv/lib/python3.13/site-packages/pluggy/_hooks.py", line 512, in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+  File "/home/omar/Documents/NexCompli/venv/lib/python3.13/site-packages/pluggy/_manager.py", line 120, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+  File "/home/omar/Documents/NexCompli/venv/lib/python3.13/site-packages/pluggy/_callers.py", line 121, in _multicall
+    res = hook_impl.function(*args)
+  File "/home/omar/Documents/NexCompli/venv/lib/python3.13/site-packages/_pytest/main.py", line 336, in pytest_cmdline_main
+    return wrap_session(config, _main)
+  File "/home/omar/Documents/NexCompli/venv/lib/python3.13/site-packages/_pytest/main.py", line 289, in wrap_session
+    session.exitstatus = doit(config, session) or 0
+  File "/home/omar/Documents/NexCompli/venv/lib/python3.13/site-packages/_pytest/main.py", line 343, in _main
+    config.hook.pytest_runtestloop(session=session)
+  File "/home/omar/Documents/NexCompli/venv/lib/python3.13/site-packages/pluggy/_hooks.py", line 512, in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+  File "/home/omar/Documents/NexCompli/venv/lib/python3.13/site-packages/pluggy/_manager.py", line 120, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+  File "/home/omar/Documents/NexCompli/venv/lib/python3.13/site-packages/pluggy/_callers.py", line 121, in _multicall
+    res = hook_impl.function(*args)
+  File "/home/omar/Documents/NexCompli/venv/lib/python3.13/site-packages/_pytest/main.py", line 367, in pytest_runtestloop
+    item.config.hook.pytest_runtest_protocol(item=item, nextitem=nextitem)
+  File "/home/omar/Documents/NexCompli/venv/lib/python3.13/site-packages/pluggy/_hooks.py", line 512, in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+  File "/home/omar/Documents/NexCompli/venv/lib/python3.13/site-packages/pluggy/_manager.py", line 120, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+  File "/home/omar/Documents/NexCompli/venv/lib/python3.13/site-packages/pluggy/_callers.py", line 121, in _multicall
+    res = hook_impl.function(*args)
+  File "/home/omar/Documents/NexCompli/venv/lib/python3.13/site-packages/_pytest/runner.py", line 117, in pytest_runtest_protocol
+    runtestprotocol(item, nextitem=nextitem)
+  File "/home/omar/Documents/NexCompli/venv/lib/python3.13/site-packages/_pytest/runner.py", line 136, in runtestprotocol
+    reports.append(call_and_report(item, "call", log))
+  File "/home/omar/Documents/NexCompli/venv/lib/python3.13/site-packages/_pytest/runner.py", line 245, in call_and_report
+    call = CallInfo.from_call(
+  File "/home/omar/Documents/NexCompli/venv/lib/python3.13/site-packages/_pytest/runner.py", line 344, in from_call
+    result: TResult | None = func()
+  File "/home/omar/Documents/NexCompli/venv/lib/python3.13/site-packages/_pytest/runner.py", line 246, in <lambda>
+    lambda: runtest_hook(item=item, **kwds), when=when, reraise=reraise
+  File "/home/omar/Documents/NexCompli/venv/lib/python3.13/site-packages/pluggy/_hooks.py", line 512, in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+  File "/home/omar/Documents/NexCompli/venv/lib/python3.13/site-packages/pluggy/_manager.py", line 120, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+  File "/home/omar/Documents/NexCompli/venv/lib/python3.13/site-packages/pluggy/_callers.py", line 121, in _multicall
+    res = hook_impl.function(*args)
+  File "/home/omar/Documents/NexCompli/venv/lib/python3.13/site-packages/_pytest/runner.py", line 178, in pytest_runtest_call
+    item.runtest()
+  File "/home/omar/Documents/NexCompli/venv/lib/python3.13/site-packages/_pytest/python.py", line 1671, in runtest
+    self.ihook.pytest_pyfunc_call(pyfuncitem=self)
+  File "/home/omar/Documents/NexCompli/venv/lib/python3.13/site-packages/pluggy/_hooks.py", line 512, in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+  File "/home/omar/Documents/NexCompli/venv/lib/python3.13/site-packages/pluggy/_manager.py", line 120, in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+  File "/home/omar/Documents/NexCompli/venv/lib/python3.13/site-packages/pluggy/_callers.py", line 121, in _multicall
+    res = hook_impl.function(*args)
+  File "/home/omar/Documents/NexCompli/venv/lib/python3.13/site-packages/_pytest/python.py", line 157, in pytest_pyfunc_call
+    result = testfunction(**testargs)
+  File "/home/omar/Documents/NexCompli/tests/performance/test_api_performance.py", line 256, in test_large_dataset_handling
+    response = client.post("/api/evidence",
+  File "/home/omar/Documents/NexCompli/venv/lib/python3.13/site-packages/starlette/testclient.py", line 538, in post
+    return super().post(
+  File "/home/omar/Documents/NexCompli/venv/lib/python3.13/site-packages/httpx/_client.py", line 1144, in post
+    return self.request(
+  File "/home/omar/Documents/NexCompli/venv/lib/python3.13/site-packages/starlette/testclient.py", line 437, in request
+    return super().request(
+  File "/home/omar/Documents/NexCompli/venv/lib/python3.13/site-packages/httpx/_client.py", line 825, in request
+    return self.send(request, auth=auth, follow_redirects=follow_redirects)
+  File "/home/omar/Documents/NexCompli/venv/lib/python3.13/site-packages/httpx/_client.py", line 914, in send
+    response = self._send_handling_auth(
+  File "/home/omar/Documents/NexCompli/venv/lib/python3.13/site-packages/httpx/_client.py", line 942, in _send_handling_auth
+    response = self._send_handling_redirects(
+  File "/home/omar/Documents/NexCompli/venv/lib/python3.13/site-packages/httpx/_client.py", line 979, in _send_handling_redirects
+    response = self._send_single_request(request)
+  File "/home/omar/Documents/NexCompli/venv/lib/python3.13/site-packages/httpx/_client.py", line 1014, in _send_single_request
+    response = transport.handle_request(request)
+  File "/home/omar/Documents/NexCompli/venv/lib/python3.13/site-packages/starlette/testclient.py", line 337, in handle_request
+    portal.call(self.app, scope, receive, send)
+  File "/home/omar/Documents/NexCompli/venv/lib/python3.13/site-packages/anyio/from_thread.py", line 290, in call
+    return cast(T_Retval, self.start_task_soon(func, *args).result())
+  File "/home/omar/miniconda3/lib/python3.13/concurrent/futures/_base.py", line 451, in result
+    self._condition.wait(timeout)
+  File "/home/omar/miniconda3/lib/python3.13/threading.py", line 359, in wait
+    waiter.acquire()
++++++++++++++++++++++++++++++++++++ Timeout ++++++++++++++++++++++++++++++++++++

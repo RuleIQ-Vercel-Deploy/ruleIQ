@@ -4,6 +4,7 @@ Database setup for ComplianceGPT, including synchronous and asynchronous configu
 
 import os
 
+from typing import AsyncGenerator
 from sqlalchemy import create_engine
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import declarative_base, sessionmaker
@@ -56,7 +57,18 @@ def _init_sync_db():
     global _engine, _SessionLocal
     if _engine is None:
         _, sync_db_url, _ = _get_configured_database_urls()
-        _engine = create_engine(sync_db_url)
+
+        # Connection pool configuration for sync engine
+        engine_kwargs = {
+            "echo": os.getenv("SQLALCHEMY_ECHO", "False").lower() == "true",
+            "pool_size": 20,  # Number of connections to maintain in the pool
+            "max_overflow": 30,  # Additional connections beyond pool_size
+            "pool_pre_ping": True,  # Validate connections before use
+            "pool_recycle": 3600,  # Recycle connections after 1 hour
+            "pool_timeout": 30,  # Timeout when getting connection from pool
+        }
+
+        _engine = create_engine(sync_db_url, **engine_kwargs)
         _SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=_engine)
 
 def _init_async_db():
@@ -67,13 +79,23 @@ def _init_async_db():
 
         # Handle SSL configuration for asyncpg
         engine_kwargs = {
-            "echo": os.getenv("SQLALCHEMY_ECHO", "False").lower() == "true"
+            "echo": os.getenv("SQLALCHEMY_ECHO", "False").lower() == "true",
+            # Connection pool configuration to prevent "another operation is in progress" errors
+            "pool_size": 20,  # Number of connections to maintain in the pool
+            "max_overflow": 30,  # Additional connections beyond pool_size
+            "pool_pre_ping": True,  # Validate connections before use
+            "pool_recycle": 3600,  # Recycle connections after 1 hour
+            "pool_timeout": 30,  # Timeout when getting connection from pool
+            # Async-specific pool settings
+            "pool_reset_on_return": "commit",  # Reset connection state on return
         }
 
         # If the URL contains sslmode=require, remove it and add ssl=True to engine kwargs
         if "sslmode=require" in async_db_url:
             async_db_url = async_db_url.replace("?sslmode=require", "").replace("&sslmode=require", "")
-            engine_kwargs["connect_args"] = {"ssl": True}
+            if "connect_args" not in engine_kwargs:
+                engine_kwargs["connect_args"] = {}
+            engine_kwargs["connect_args"]["ssl"] = True
 
         _async_engine = create_async_engine(async_db_url, **engine_kwargs)
         _AsyncSessionLocal = sessionmaker(
@@ -97,8 +119,20 @@ def get_db():
     finally:
         db.close()
 
+def get_db_session():
+    """
+    Generator function for database sessions.
+    Provides a synchronous database session and ensures it's closed afterwards.
+    """
+    _init_sync_db() # Ensure engine and SessionLocal are initialized
+    db = _SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
+
 # --- Dependency for Asynchronous Database Session ---
-async def get_async_db() -> AsyncSession:
+async def get_async_db() -> AsyncGenerator[AsyncSession, None]:
     """
     Provides an asynchronous database session and ensures it's closed afterwards.
     """
@@ -116,3 +150,42 @@ async def create_db_and_tables():
     _init_async_db()
     async with _async_engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
+
+async def cleanup_db_connections():
+    """Cleanup database connections and dispose engines."""
+    global _engine, _async_engine
+
+    if _async_engine:
+        await _async_engine.dispose()
+        _async_engine = None
+
+    if _engine:
+        _engine.dispose()
+        _engine = None
+
+def get_engine_info():
+    """Get information about current database engines for debugging."""
+    info = {
+        "sync_engine_initialized": _engine is not None,
+        "async_engine_initialized": _async_engine is not None,
+    }
+
+    if _async_engine:
+        pool = _async_engine.pool
+        info.update({
+            "async_pool_size": pool.size(),
+            "async_pool_checked_in": pool.checkedin(),
+            "async_pool_checked_out": pool.checkedout(),
+            "async_pool_overflow": pool.overflow(),
+        })
+
+    if _engine:
+        pool = _engine.pool
+        info.update({
+            "sync_pool_size": pool.size(),
+            "sync_pool_checked_in": pool.checkedin(),
+            "sync_pool_checked_out": pool.checkedout(),
+            "sync_pool_overflow": pool.overflow(),
+        })
+
+    return info

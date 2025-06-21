@@ -22,6 +22,7 @@ class BusinessProfile(Base):
     employee_count = Column(Integer, nullable=False)
     annual_revenue = Column(String, nullable=True) # Consider Numeric/Decimal or specific range type
     country = Column(String, default="UK")
+    data_sensitivity = Column(String, default="Low", nullable=False)  # Re-added for framework relevance calculation
 
     # Business characteristics (truncated column names to match database)
     handles_persona = Column(Boolean, nullable=False)  # handles_personal_data truncated
@@ -49,5 +50,6 @@ class BusinessProfile(Base):
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
-    # Relationship to User
+    # Relationships
     owner = relationship("User", back_populates="business_profiles")
+    evidence_items = relationship("EvidenceItem", back_populates="business_profile")

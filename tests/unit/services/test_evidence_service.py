@@ -18,7 +18,7 @@ from core.exceptions import ValidationAPIError, NotFoundAPIError
 class TestEvidenceService:
     """Test evidence service business logic"""
 
-    def test_create_evidence_item_success(self, db_session, sample_user):
+    async def test_create_evidence_item_success(self, db_session, sample_user):
         """Test creating evidence item with valid data"""
         evidence_data = {
             "title": "Security Policy",
@@ -38,7 +38,7 @@ class TestEvidenceService:
                 "quality_score": 85.0
             }
 
-            result = EvidenceService.create_evidence(sample_user.id, evidence_data)
+            result = await EvidenceService.create_evidence(sample_user.id, evidence_data)
 
             assert result["title"] == evidence_data["title"]
             assert result["user_id"] == str(sample_user.id)
@@ -46,7 +46,7 @@ class TestEvidenceService:
             assert result["quality_score"] > 0
             mock_create.assert_called_once_with(sample_user.id, evidence_data)
 
-    def test_create_evidence_item_validation_error(self, db_session, sample_user):
+    async def test_create_evidence_item_validation_error(self, db_session, sample_user):
         """Test creating evidence item with invalid data raises validation error"""
         invalid_data = {
             "title": "",  # Invalid: empty title
@@ -58,7 +58,7 @@ class TestEvidenceService:
             mock_create.side_effect = ValidationAPIError("Invalid evidence data")
 
             with pytest.raises(ValidationAPIError):
-                EvidenceService.create_evidence(sample_user.id, invalid_data)
+                await EvidenceService.create_evidence(sample_user.id, invalid_data)
 
     def test_validate_evidence_quality_high_score(self, db_session):
         """Test evidence quality validation returns high score for good evidence"""
@@ -75,7 +75,7 @@ class TestEvidenceService:
             }
         }
 
-        with patch('services.evidence_service.EvidenceService.validate_quality') as mock_validate:
+        with patch('services.evidence_service.EvidenceService.validate_evidence_quality') as mock_validate:
             mock_validate.return_value = {
                 "quality_score": 92,
                 "validation_results": {
@@ -88,7 +88,7 @@ class TestEvidenceService:
                 "recommendations": ["Consider adding implementation timeline"]
             }
 
-            result = EvidenceService.validate_quality(evidence_data)
+            result = EvidenceService.validate_evidence_quality(evidence_data)
 
             assert result["quality_score"] >= 90
             assert result["validation_results"]["completeness"] == "excellent"
@@ -107,7 +107,7 @@ class TestEvidenceService:
             }
         }
 
-        with patch('services.evidence_service.EvidenceService.validate_quality') as mock_validate:
+        with patch('services.evidence_service.EvidenceService.validate_evidence_quality') as mock_validate:
             mock_validate.return_value = {
                 "quality_score": 35,
                 "validation_results": {
@@ -128,7 +128,7 @@ class TestEvidenceService:
                 ]
             }
 
-            result = EvidenceService.validate_quality(poor_evidence_data)
+            result = EvidenceService.validate_evidence_quality(poor_evidence_data)
 
             assert result["quality_score"] < 50
             assert result["validation_results"]["completeness"] == "poor"
@@ -357,7 +357,7 @@ class TestEvidenceService:
         evidence_id = uuid4()
 
         with patch('services.evidence_service.EvidenceService.delete_evidence') as mock_delete:
-            mock_delete.side_effect = NotFoundAPIError(f"Evidence item {evidence_id} not found")
+            mock_delete.side_effect = NotFoundAPIError("Evidence item", evidence_id)
 
             with pytest.raises(NotFoundAPIError):
                 EvidenceService.delete_evidence(evidence_id, sample_user.id)

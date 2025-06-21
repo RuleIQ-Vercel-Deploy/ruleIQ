@@ -21,6 +21,7 @@ from config.settings import settings
 from core.exceptions import NotAuthenticatedException
 from database.db_setup import get_async_db
 from database.user import User
+from services.auth_service import auth_service
 
 # Security configuration
 SECRET_KEY = os.getenv("SECRET_KEY", secrets.token_urlsafe(32))
@@ -143,11 +144,39 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None) -
 def create_refresh_token(data: dict) -> str:
     return create_token(data, "refresh", timedelta(days=REFRESH_TOKEN_EXPIRE_DAYS))
 
+def validate_token_expiry(payload: Dict) -> None:
+    """Validate that token has not expired with additional checks."""
+    exp = payload.get("exp")
+    if not exp:
+        raise NotAuthenticatedException("Token missing expiration time.")
+
+    # Convert to datetime for comparison
+    exp_datetime = datetime.fromtimestamp(exp)
+    current_time = datetime.utcnow()
+
+    if exp_datetime < current_time:
+        raise NotAuthenticatedException("Token has expired. Please log in again.")
+
+    # Optional: Check if token is about to expire (within 5 minutes)
+    time_until_expiry = exp_datetime - current_time
+    if time_until_expiry.total_seconds() < 300:  # 5 minutes
+        # Log warning but don't reject the token
+        import logging
+        logging.warning(f"Token expires in {time_until_expiry.total_seconds()} seconds")
+
 def decode_token(token: str) -> Optional[Dict]:
+    """Decode JWT token with proper error handling for expiry."""
     try:
-        return jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-    except JWTError:
-        return None
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        # Additional expiry validation
+        validate_token_expiry(payload)
+        return payload
+    except jwt.ExpiredSignatureError:
+        raise NotAuthenticatedException("Token has expired. Please log in again.")
+    except jwt.InvalidTokenError:
+        raise NotAuthenticatedException("Invalid token format.")
+    except JWTError as e:
+        raise NotAuthenticatedException(f"Token validation failed: {str(e)}")
 
 async def get_current_user(token: Optional[str] = Depends(oauth2_scheme), db: AsyncSession = Depends(get_async_db)) -> Optional[User]:
     if token is None:
@@ -157,7 +186,12 @@ async def get_current_user(token: Optional[str] = Depends(oauth2_scheme), db: As
     if await is_token_blacklisted(token):
         raise NotAuthenticatedException("Token has been invalidated.")
 
-    payload = decode_token(token)
+    try:
+        payload = decode_token(token)
+    except NotAuthenticatedException:
+        # Re-raise specific token validation errors (including expiry)
+        raise
+
     if not payload or payload.get("type") != "access":
         raise NotAuthenticatedException("Could not validate credentials.")
 
@@ -194,7 +228,12 @@ async def get_current_user_from_refresh_token(token: Optional[str] = Depends(oau
     if token is None: # Refresh token might be passed in body or header, adjust if oauth2_scheme isn't right for it
         raise NotAuthenticatedException("Refresh token not provided.")
 
-    payload = decode_token(token)
+    try:
+        payload = decode_token(token)
+    except NotAuthenticatedException:
+        # Re-raise specific token validation errors (including expiry)
+        raise
+
     if not payload or payload.get("type") != "refresh":
         raise NotAuthenticatedException("Invalid refresh token.")
 

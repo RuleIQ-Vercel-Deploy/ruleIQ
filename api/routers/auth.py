@@ -1,5 +1,5 @@
 from datetime import timedelta
-from uuid import uuid4
+from uuid import UUID, uuid4
 
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
@@ -14,6 +14,7 @@ from api.dependencies.auth import (
     validate_password,
     verify_password,
 )
+from services.auth_service import auth_service
 from api.middleware.rate_limiter import auth_rate_limit
 from api.schemas.models import Token, UserCreate, UserResponse
 from pydantic import BaseModel
@@ -82,6 +83,13 @@ async def login_for_access_token(
     access_token = create_access_token(
         data={"sub": str(user.id)}, expires_delta=access_token_expires
     )
+
+    # Create session for tracking
+    session_id = await auth_service.create_user_session(
+        user,
+        access_token,
+        metadata={"login_method": "form_data"}
+    )
     refresh_token = create_refresh_token(data={"sub": str(user.id)})
 
     return {
@@ -111,6 +119,13 @@ async def login(
         data={"sub": str(user.id)}, expires_delta=access_token_expires
     )
     refresh_token = create_refresh_token(data={"sub": str(user.id)})
+
+    # Create session for tracking
+    session_id = await auth_service.create_user_session(
+        user,
+        access_token,
+        metadata={"login_method": "json"}
+    )
 
     return {
         "access_token": access_token,
@@ -152,10 +167,21 @@ async def refresh_token(
 
 @router.post("/logout")
 async def logout(token: str = Depends(oauth2_scheme)):
-    """Logout endpoint that blacklists the current token."""
-    from api.dependencies.auth import blacklist_token
+    """Logout endpoint that blacklists the current token and invalidates sessions."""
+    from api.dependencies.auth import blacklist_token, decode_token
 
     if token:
+        # Blacklist the token
         await blacklist_token(token)
+
+        # Also invalidate user sessions
+        try:
+            payload = decode_token(token)
+            if payload and payload.get("sub"):
+                user_id = UUID(payload["sub"])
+                await auth_service.logout_user(user_id)
+        except Exception:
+            # If token decode fails, still consider logout successful
+            pass
 
     return {"message": "Successfully logged out"}

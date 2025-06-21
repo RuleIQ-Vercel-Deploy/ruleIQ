@@ -58,10 +58,49 @@ class BusinessProfileBase(BaseModel):
     employee_count: int = Field(..., ge=1, le=1000000)
     annual_revenue: Optional[str] = Field(None, pattern=r'^(Under £\\d+[MK]|£\\d+[MK]-£\\d+[MK]|Over £\\d+[MK])$')
     country: str = Field(default='United Kingdom', max_length=50)
-    data_sensitivity: str = Field(default='Low', pattern=r'^(Low|Moderate|High|Confidential)$')
+    data_sensitivity: str = Field(default='Low', pattern=r'^(Low|Moderate|High|Confidential)$')  # Re-added for framework relevance
 
-class BusinessProfileCreate(BusinessProfileBase):
-    pass
+    # Required boolean fields (matching database model)
+    handles_persona: bool = Field(..., description="Handles personal data")
+    processes_payme: bool = Field(..., description="Processes payments")
+    stores_health_d: bool = Field(..., description="Stores health data")
+    provides_financ: bool = Field(..., description="Provides financial services")
+    operates_critic: bool = Field(..., description="Operates critical infrastructure")
+    has_internation: bool = Field(..., description="Has international operations")
+
+    # Optional JSONB fields with defaults
+    existing_framew: Optional[List[str]] = Field(default_factory=list)
+    planned_framewo: Optional[List[str]] = Field(default_factory=list)
+    cloud_providers: Optional[List[str]] = Field(default_factory=list)
+    saas_tools: Optional[List[str]] = Field(default_factory=list)
+    development_too: Optional[List[str]] = Field(default_factory=list)
+    compliance_budg: Optional[str] = Field(None)
+    compliance_time: Optional[str] = Field(None)
+
+class BusinessProfileCreate(BaseModel):
+    company_name: str = Field(..., min_length=2, max_length=100)
+    industry: str = Field(..., min_length=2, max_length=50)
+    employee_count: int = Field(..., ge=1, le=1000000)
+    annual_revenue: Optional[str] = Field(None, pattern=r'^(Under £\\d+[MK]|£\\d+[MK]-£\\d+[MK]|Over £\\d+[MK])$')
+    country: str = Field(default='United Kingdom', max_length=50)
+    data_sensitivity: str = Field(default='Low', pattern=r'^(Low|Moderate|High|Confidential)$')  # Re-added for framework relevance
+
+    # Optional boolean fields with defaults (for minimal profile creation)
+    handles_persona: bool = Field(default=False, description="Handles personal data")
+    processes_payme: bool = Field(default=False, description="Processes payments")
+    stores_health_d: bool = Field(default=False, description="Stores health data")
+    provides_financ: bool = Field(default=False, description="Provides financial services")
+    operates_critic: bool = Field(default=False, description="Operates critical infrastructure")
+    has_internation: bool = Field(default=False, description="Has international operations")
+
+    # Optional JSONB fields with defaults
+    existing_framew: Optional[List[str]] = Field(default_factory=list)
+    planned_framewo: Optional[List[str]] = Field(default_factory=list)
+    cloud_providers: Optional[List[str]] = Field(default_factory=list)
+    saas_tools: Optional[List[str]] = Field(default_factory=list)
+    development_too: Optional[List[str]] = Field(default_factory=list)
+    compliance_budg: Optional[str] = Field(None)
+    compliance_time: Optional[str] = Field(None)
 
 class BusinessProfileUpdate(BaseModel):
     company_name: Optional[str] = Field(None, min_length=2, max_length=100)
@@ -69,7 +108,24 @@ class BusinessProfileUpdate(BaseModel):
     employee_count: Optional[int] = Field(None, ge=1, le=1000000)
     annual_revenue: Optional[str] = Field(None, pattern=r'^(Under £\\d+[MK]|£\\d+[MK]-£\\d+[MK]|Over £\\d+[MK])$')
     country: Optional[str] = Field(None, max_length=50)
-    data_sensitivity: Optional[str] = Field(None, pattern=r'^(Low|Moderate|High|Confidential)$')
+    # data_sensitivity: Optional[str] = Field(None, pattern=r'^(Low|Moderate|High|Confidential)$')  # Temporarily removed
+
+    # Optional boolean fields
+    handles_persona: Optional[bool] = Field(None)
+    processes_payme: Optional[bool] = Field(None)
+    stores_health_d: Optional[bool] = Field(None)
+    provides_financ: Optional[bool] = Field(None)
+    operates_critic: Optional[bool] = Field(None)
+    has_internation: Optional[bool] = Field(None)
+
+    # Optional JSONB fields
+    existing_framew: Optional[List[str]] = Field(None)
+    planned_framewo: Optional[List[str]] = Field(None)
+    cloud_providers: Optional[List[str]] = Field(None)
+    saas_tools: Optional[List[str]] = Field(None)
+    development_too: Optional[List[str]] = Field(None)
+    compliance_budg: Optional[str] = Field(None)
+    compliance_time: Optional[str] = Field(None)
 
 
 class BusinessProfileResponse(BusinessProfileBase):
@@ -95,10 +151,10 @@ class ComplianceFrameworkResponse(BaseModel):
         from_attributes = True
 
 class FrameworkRecommendation(BaseModel):
-    framework_id: UUID
-    name: str
+    framework: ComplianceFrameworkResponse
     relevance_score: float
-    reasoning: str
+    reasons: Optional[List[str]] = []
+    priority: Optional[str] = "medium"
 
 
 # Policy Schemas
@@ -180,6 +236,85 @@ class EvidenceDashboardResponse(BaseModel):
     status_counts: Dict[str, int]
     completion_percentage: float
     recently_updated: List[RecentEvidenceItem]
+
+
+class EvidenceListResponse(BaseModel):
+    """Response schema for evidence list endpoint."""
+    evidence_items: List[EvidenceResponse]
+    total_count: int
+    page: int
+    page_size: int
+
+
+class EvidenceStatisticsResponse(BaseModel):
+    """Response schema for evidence statistics."""
+    total_evidence_items: int
+    by_status: Dict[str, int]
+    by_type: Dict[str, int]
+    by_framework: Dict[str, int]
+    average_quality_score: float
+
+
+class EvidenceSearchResult(BaseModel):
+    """Individual search result item."""
+    id: UUID
+    title: str
+    description: Optional[str]
+    evidence_type: str
+    status: str
+    relevance_score: float
+    created_at: datetime
+    updated_at: datetime
+
+
+class EvidenceSearchResponse(BaseModel):
+    """Response schema for evidence search."""
+    results: List[EvidenceSearchResult]
+    total_count: int
+    page: int
+    page_size: int
+
+
+class EvidenceValidationResult(BaseModel):
+    """Response schema for evidence validation."""
+    quality_score: int
+    validation_results: Dict[str, str]
+    issues: List[str]
+    recommendations: List[str]
+
+
+class EvidenceRequirement(BaseModel):
+    """Individual evidence requirement."""
+    control_id: str
+    evidence_type: str
+    title: str
+    description: str
+    automation_possible: bool
+
+
+class EvidenceRequirementsResponse(BaseModel):
+    """Response schema for evidence requirements."""
+    requirements: List[EvidenceRequirement]
+
+
+class EvidenceAutomationResponse(BaseModel):
+    """Response schema for evidence automation configuration."""
+    configuration_successful: bool
+    automation_enabled: bool
+    test_connection: bool
+    next_collection: str
+
+
+class ComplianceStatusResponse(BaseModel):
+    """Response schema for compliance status."""
+    overall_score: float
+    status: str
+    message: str
+    framework_scores: Dict[str, float]
+    evidence_summary: Dict[str, Any]
+    recent_activity: List[Dict[str, Any]]
+    recommendations: List[str]
+    last_updated: str
 
 
 # Assessment Session Schemas

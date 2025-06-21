@@ -21,6 +21,7 @@ from .db_setup import Base
 from .user import User
 from .business_profile import BusinessProfile
 from .compliance_framework import ComplianceFramework
+from .evidence_item import EvidenceItem
 from .generated_policy import GeneratedPolicy
 from .implementation_plan import ImplementationPlan
 from .integration_configuration import IntegrationConfiguration
@@ -86,6 +87,8 @@ class AssessmentSession(Base):
     completed_at = Column(DateTime, nullable=True)
     overall_progress = Column(Float, default=0.0)
     estimated_time_remaining_minutes = Column(Integer, nullable=True)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
     owner = relationship("User", back_populates="assessments")
     questions = relationship("AssessmentQuestion", back_populates="session", cascade="all, delete-orphan")

@@ -40,21 +40,21 @@ def _send_email_notification(recipient_email: str, subject: str, body: str) -> D
 
 # --- Content Preparation (Synchronous) ---
 
-def _prepare_alert_content(alert_type: str, alert_data: Dict[str, Any], user: User) -> (str, str):
+def _prepare_alert_content(alert_type: str, alert_data: Dict[str, Any], user: User) -> tuple[str, str]:
     """Prepares the subject and body for an alert email."""
     subject = f"Compliance Alert: {alert_type.replace('_', ' ').title()}"
-    body = f"Dear {user.full_name or 'User'},
+    body = f"""Dear {user.full_name or 'User'},
 
-A new compliance alert requires your attention: {alert_data.get('details', 'No details provided')}."
+A new compliance alert requires your attention: {alert_data.get('details', 'No details provided')}."""
     return subject, body
 
-def _format_weekly_summary(summary_data: Dict[str, Any], user: User) -> (str, str):
+def _format_weekly_summary(summary_data: Dict[str, Any], user: User) -> tuple[str, str]:
     """Formats the weekly summary data into an email-friendly format."""
     subject = "Your Weekly Compliance Summary"
-    body = f"Dear {user.full_name or 'User'},
+    body = f"""Dear {user.full_name or 'User'},
 
 Here is your compliance summary for the past week:
-"
+"""
     body += f"- New Evidence Items: {summary_data.get('new_evidence_count', 0)}\n"
     body += f"- Average Quality Score: {summary_data.get('avg_quality_score', 'N/A')}\n"
     return subject, body
