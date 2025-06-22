@@ -159,18 +159,25 @@ class FrameworkRecommendation(BaseModel):
 
 # Policy Schemas
 class PolicyGenerateRequest(BaseModel):
-    framework_name: str = Field(..., description="The name of the compliance framework (e.g., 'ISO 27001').")
-    business_profile_id: UUID = Field(..., description="The ID of the business profile to tailor the policy for.")
-    policy_title: Optional[str] = Field(None, description="A specific title for the policy document.")
-    tone: str = Field("formal", pattern=r'^(formal|informal|strict)$', description="The tone of the generated policy.")
-    specific_controls: Optional[List[str]] = Field(None, description="A list of specific control IDs to focus on.")
+    framework_id: UUID = Field(..., description="The ID of the compliance framework.")
+    policy_type: Optional[str] = Field("comprehensive", description="The type of policy to generate.")
+    custom_requirements: Optional[List[str]] = Field(None, description="A list of custom requirements to include.")
 
 
 class GeneratedPolicyResponse(BaseModel):
-    policy_title: str
+    id: UUID
+    policy_name: str
     content: str
-    version: str
+    status: str
     created_at: datetime
+
+    class Config:
+        from_attributes = True
+
+
+class PolicyListResponse(BaseModel):
+    """Response schema for listing policies."""
+    policies: List[GeneratedPolicyResponse]
 
 
 # Evidence Schemas
@@ -179,7 +186,7 @@ class EvidenceCreate(BaseModel):
     description: Optional[str] = Field(None, max_length=2000, description="A detailed description of the evidence content.")
     control_id: str = Field(..., min_length=1, max_length=50, description="The specific control ID this evidence addresses (e.g., 'AC-1').")
     framework_id: UUID = Field(..., description="The compliance framework this evidence belongs to.")
-    business_profile_id: UUID = Field(..., description="The business profile this evidence is associated with.")
+    business_profile_id: Optional[UUID] = Field(None, description="The business profile this evidence is associated with (auto-populated if not provided).")
     source: str = Field("manual_upload", min_length=1, description="The source of the evidence (e.g., 'manual_upload', 'integration:jira').")
     tags: Optional[List[str]] = Field(None, description="Keywords for searching and filtering.")
     evidence_type: str = Field("document", description="The type of evidence (e.g., 'document', 'policy_document', 'screenshot', 'log_file').")
@@ -326,7 +333,7 @@ class AssessmentQuestion(BaseModel):
 
 
 class AssessmentSessionCreate(BaseModel):
-    business_profile_id: UUID
+    business_profile_id: Optional[UUID] = None
     session_type: str = "compliance_scoping"
 
 
@@ -354,12 +361,13 @@ class AssessmentResponseUpdate(BaseModel):
 
 # Implementation Plan Schemas
 class ImplementationPlanCreate(BaseModel):
-    business_profile_id: UUID
     framework_id: UUID
-    title: str
-    phases: List[Dict[str, Any]]
-    planned_start_date: Optional[date] = None
-    planned_end_date: Optional[date] = None
+    control_domain: Optional[str] = Field(
+        default="All Domains", description="Control domain to focus on"
+    )
+    timeline_weeks: Optional[int] = Field(
+        default=12, description="Timeline in weeks for implementation"
+    )
 
 
 class ImplementationPlanResponse(BaseModel):
@@ -387,6 +395,11 @@ class ImplementationTaskUpdate(BaseModel):
     assignee_id: Optional[UUID] = Field(None, description="ID of the user assigned to the task.")
     due_date: Optional[date] = Field(None, description="New due date for the task.")
     completion_percentage: Optional[int] = Field(None, ge=0, le=100, description="Percentage of task completion.")
+
+
+class ImplementationPlanListResponse(BaseModel):
+    """Response schema for listing implementation plans."""
+    plans: List[ImplementationPlanResponse]
 
 
 # Readiness and Reporting Schemas

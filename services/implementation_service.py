@@ -47,12 +47,14 @@ async def generate_implementation_plan(
 
     # Generate implementation plan using AI
     plan_data = await generate_plan_with_ai(
-        profile, framework, policy, control_domain, timeline_weeks
+        db, profile, framework.id, user.id
     )
 
     # Calculate timeline dates
-    start_date = datetime.utcnow()
-    end_date = start_date + timedelta(weeks=timeline_weeks)
+    start_datetime = datetime.utcnow()
+    end_datetime = start_datetime + timedelta(weeks=timeline_weeks)
+    start_date = start_datetime.date()
+    end_date = end_datetime.date()
 
     # Create and save the new plan
     new_plan = ImplementationPlan(

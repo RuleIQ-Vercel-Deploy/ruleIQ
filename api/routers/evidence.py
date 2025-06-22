@@ -34,8 +34,22 @@ async def create_new_evidence(
     current_user: User = Depends(get_current_active_user),
 ):
     """Create a new evidence item."""
+    from sqlalchemy import select
+    from database.models import BusinessProfile
+
+    # Get user's business profile automatically
+    profile_stmt = select(BusinessProfile).where(BusinessProfile.user_id == current_user.id)
+    profile_result = await db.execute(profile_stmt)
+    profile = profile_result.scalars().first()
+    if not profile:
+        raise HTTPException(status_code=400, detail="Business profile not found. Please complete your business assessment first.")
+
+    # Add business_profile_id to evidence data
+    evidence_dict = evidence_data.model_dump(exclude_none=True)
+    evidence_dict["business_profile_id"] = profile.id
+
     evidence = await EvidenceService.create_evidence_item(
-        db=db, user=current_user, evidence_data=evidence_data.model_dump(exclude_none=True)
+        db=db, user=current_user, evidence_data=evidence_dict
     )
     # Convert EvidenceItem to expected response format
     return EvidenceService._convert_evidence_item_to_response(evidence)
@@ -171,6 +185,33 @@ async def validate_evidence_quality(
     }
 
 
+@router.get("/requirements", response_model=EvidenceRequirementsResponse)
+async def get_evidence_requirements(
+    framework_id: UUID,
+    db: AsyncSession = Depends(get_async_db),
+    current_user: User = Depends(get_current_active_user),
+):
+    """Get evidence requirements for a framework."""
+    # Placeholder implementation
+    requirements = [
+        {
+            "control_id": "AC-1",
+            "evidence_type": "document",
+            "title": "Access Control Policy",
+            "description": "Document outlining access control procedures",
+            "automation_possible": True
+        },
+        {
+            "control_id": "AC-2",
+            "evidence_type": "document",
+            "title": "Account Management Procedures",
+            "description": "Procedures for managing user accounts",
+            "automation_possible": False
+        }
+    ]
+    return {"requirements": requirements}
+
+
 @router.post("/requirements", response_model=EvidenceRequirementsResponse)
 async def identify_evidence_requirements(
     request_data: dict,
@@ -243,13 +284,13 @@ async def update_evidence_item(
 
 
 @router.patch("/{evidence_id}", response_model=EvidenceResponse)
-async def partial_update_evidence_item(
+async def update_evidence_status(
     evidence_id: UUID,
     evidence_update: EvidenceUpdate,
     db: AsyncSession = Depends(get_async_db),
     current_user: User = Depends(get_current_active_user),
 ):
-    """Partially update an evidence item."""
+    """Update an evidence item status and other fields."""
     evidence, status = await EvidenceService.update_evidence_item(
         db=db,
         user=current_user,
@@ -264,6 +305,7 @@ async def partial_update_evidence_item(
 
     # Convert EvidenceItem to expected response format
     return EvidenceService._convert_evidence_item_to_response(evidence)
+
 
 
 @router.delete("/{evidence_id}", status_code=204)

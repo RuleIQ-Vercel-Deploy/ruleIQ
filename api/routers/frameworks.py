@@ -6,7 +6,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from api.dependencies.auth import get_current_active_user
 from api.dependencies.database import get_async_db
-from api.schemas.models import FrameworkRecommendation, ComplianceFrameworkResponse
+from api.schemas.models import FrameworkRecommendation, ComplianceFrameworkResponse, ComplianceFrameworkResponse
 from database.user import User
 from services.framework_service import get_framework_by_id, get_relevant_frameworks
 
@@ -30,8 +30,8 @@ async def get_framework_recommendations(
         FrameworkRecommendation(
             framework=rec["framework"],
             relevance_score=rec["relevance_score"],
-            reasons=rec["reasons"],
-            priority=rec["priority"]
+            reasons=rec.get("reasons", []),
+            priority=rec.get("priority", "medium")
         )
         for rec in recommendations
     ]
@@ -63,4 +63,17 @@ async def get_framework(
     framework = await get_framework_by_id(db, current_user, framework_id)
     if not framework:
         raise HTTPException(status_code=404, detail="Framework not found")
-    return framework
+
+    # Convert to proper response format with controls
+    controls = []
+    if framework.control_domains:
+        controls = [{"name": domain, "description": f"{domain} controls"} for domain in framework.control_domains]
+
+    return ComplianceFrameworkResponse(
+        id=framework.id,
+        name=framework.name,
+        description=framework.description,
+        category=framework.category,
+        version=framework.version,
+        controls=controls
+    )

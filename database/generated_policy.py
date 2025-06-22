@@ -54,3 +54,8 @@ class GeneratedPolicy(Base):
 
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    @property
+    def content(self):
+        """Alias for policy_content for backward compatibility"""
+        return self.policy_content

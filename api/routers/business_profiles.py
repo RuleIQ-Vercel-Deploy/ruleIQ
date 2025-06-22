@@ -23,10 +23,8 @@ async def create_business_profile(
     result = await db.execute(stmt)
     existing = result.scalars().first()
     if existing:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Business profile already exists"
-        )
+        # Return existing profile instead of throwing error
+        return existing
 
     # Get profile data and filter out fields that don't exist in the database model
     profile_data = profile.model_dump()

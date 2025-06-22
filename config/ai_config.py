@@ -104,7 +104,7 @@ def get_ai_model(model_type: Optional[ModelType] = None) -> genai.GenerativeMode
     return ai_config.get_model(model_type)
 
 
-def generate_compliance_content(prompt: str, model_type: Optional[ModelType] = None) -> str:
+async def generate_compliance_content(prompt: str, model_type: Optional[ModelType] = None) -> str:
     """Generate compliance-focused content using optimized settings"""
     model = get_ai_model(model_type)
 

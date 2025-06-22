@@ -89,7 +89,9 @@ async def create_assessment(
 ):
     """Create a new assessment session - alias for /start endpoint for compatibility"""
     assessment_service = AssessmentService()
-    session = await assessment_service.start_assessment_session(db, current_user, session_data.session_type)
+    session = await assessment_service.start_assessment_session(
+        db, current_user, session_data.session_type, session_data.business_profile_id
+    )
     return session
 
 @router.post("/start", response_model=AssessmentSessionResponse)
@@ -99,7 +101,9 @@ async def start_assessment(
     db: AsyncSession = Depends(get_async_db)
 ):
     assessment_service = AssessmentService()
-    session = await assessment_service.start_assessment_session(db, current_user, session_data.session_type)
+    session = await assessment_service.start_assessment_session(
+        db, current_user, session_data.session_type, session_data.business_profile_id
+    )
     return session
 
 @router.get("/current", response_model=AssessmentSessionResponse)
@@ -169,6 +173,38 @@ async def update_responses(
         response
     )
     return session
+
+@router.get("/{session_id}/recommendations")
+async def get_assessment_recommendations(
+    session_id: UUID,
+    current_user: User = Depends(get_current_active_user),
+    db: AsyncSession = Depends(get_async_db)
+):
+    """Get recommendations for an assessment session."""
+    assessment_service = AssessmentService()
+    session = await assessment_service.get_assessment_session(db, current_user, session_id)
+    if not session:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Assessment session not found"
+        )
+
+    # Return recommendations from the session or generate basic ones
+    recommendations = session.recommendations if session.recommendations else [
+        {
+            "framework": "GDPR",
+            "priority": "high",
+            "description": "Essential for businesses handling personal data"
+        },
+        {
+            "framework": "ISO 27001",
+            "priority": "medium",
+            "description": "Comprehensive information security management"
+        }
+    ]
+
+    return {"recommendations": recommendations}
+
 
 @router.post("/{session_id}/complete", response_model=AssessmentSessionResponse)
 async def complete_assessment(

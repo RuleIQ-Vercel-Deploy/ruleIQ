@@ -410,15 +410,19 @@ class TestPolicyEndpoints:
     def test_generate_policy(self, client, authenticated_headers, mock_ai_client, sample_business_profile_data):
         """Test AI-powered policy generation"""
         # Setup mock AI response
-        mock_ai_client.generate_content.return_value.text = """
-        # Data Protection Policy
-
-        ## 1. Purpose and Scope
-        This policy establishes guidelines for the protection of personal data...
-
-        ## 2. Data Processing Principles
-        We commit to processing personal data in accordance with GDPR principles...
-        """
+        mock_ai_client.generate_content.return_value.text = """{
+            "title": "Data Protection Policy",
+            "sections": [
+                {
+                    "title": "Purpose and Scope",
+                    "content": "This policy establishes guidelines for the protection of personal data..."
+                },
+                {
+                    "title": "Data Processing Principles",
+                    "content": "We commit to processing personal data in accordance with GDPR principles..."
+                }
+            ]
+        }"""
 
         # Create business profile
         client.post(
@@ -429,7 +433,7 @@ class TestPolicyEndpoints:
 
         # Get framework ID
         frameworks_response = client.get("/api/frameworks", headers=authenticated_headers)
-        framework_id = frameworks_response.json()["frameworks"][0]["id"]
+        framework_id = frameworks_response.json()[0]["id"]
 
         # Generate policy
         policy_request = {
@@ -472,9 +476,11 @@ class TestPolicyEndpoints:
         )
 
         frameworks_response = client.get("/api/frameworks", headers=authenticated_headers)
-        framework_id = frameworks_response.json()["frameworks"][0]["id"]
+        framework_id = frameworks_response.json()[0]["id"]
 
-        mock_ai_client.generate_content.return_value.text = "Sample policy content"
+        mock_ai_client.generate_content.return_value.text = (
+            '{"title": "Sample Policy", "content": "Sample policy content"}'
+        )
 
         policy_response = client.post(
             "/api/policies/generate",
@@ -515,7 +521,7 @@ class TestImplementationEndpoints:
         )
 
         frameworks_response = client.get("/api/frameworks", headers=authenticated_headers)
-        framework_id = frameworks_response.json()["frameworks"][0]["id"]
+        framework_id = frameworks_response.json()[0]["id"]
 
         # Generate implementation plan
         plan_request = {
@@ -530,10 +536,10 @@ class TestImplementationEndpoints:
         assert response.status_code == 201
 
         response_data = response.json()
-        assert "plan_name" in response_data
-        assert "total_phases" in response_data
-        assert "total_tasks" in response_data
-        assert "estimated_duration_weeks" in response_data
+        assert "title" in response_data
+        assert "phases" in response_data
+        assert "status" in response_data
+        assert "id" in response_data
         assert response_data["status"] == "not_started"
 
     def test_get_implementation_plans(self, client, authenticated_headers):
@@ -555,7 +561,7 @@ class TestImplementationEndpoints:
         )
 
         frameworks_response = client.get("/api/frameworks", headers=authenticated_headers)
-        framework_id = frameworks_response.json()["frameworks"][0]["id"]
+        framework_id = frameworks_response.json()[0]["id"]
 
         plan_response = client.post(
             "/api/implementation/plans",
@@ -566,8 +572,12 @@ class TestImplementationEndpoints:
 
         # Get plan details to find a task
         plan_details = client.get(f"/api/implementation/plans/{plan_id}", headers=authenticated_headers)
-        tasks = plan_details.json()["tasks"]
-        task_id = tasks[0]["id"] if tasks else None
+        phases = plan_details.json()["phases"]
+        # Extract tasks from phases
+        all_tasks = []
+        for phase in phases:
+            all_tasks.extend(phase.get("tasks", []))
+        task_id = all_tasks[0]["task_id"] if all_tasks else None
 
         if task_id:
             # Update task
@@ -585,7 +595,8 @@ class TestImplementationEndpoints:
             assert response.status_code == 200
 
             response_data = response.json()
-            assert "task_updated" in response_data
+            assert "message" in response_data
+            assert response_data["message"] == "Task updated"
 
 
 @pytest.mark.integration
@@ -602,7 +613,7 @@ class TestEvidenceEndpoints:
         )
 
         frameworks_response = client.get("/api/frameworks", headers=authenticated_headers)
-        framework_id = frameworks_response.json()["frameworks"][0]["id"]
+        framework_id = frameworks_response.json()[0]["id"]
 
         # Get evidence requirements
         response = client.get(
@@ -625,7 +636,7 @@ class TestEvidenceEndpoints:
         )
 
         frameworks_response = client.get("/api/frameworks", headers=authenticated_headers)
-        framework_id = frameworks_response.json()["frameworks"][0]["id"]
+        framework_id = frameworks_response.json()[0]["id"]
 
         # Create evidence item
         evidence_data = {
@@ -660,7 +671,7 @@ class TestEvidenceEndpoints:
         )
 
         frameworks_response = client.get("/api/frameworks", headers=authenticated_headers)
-        framework_id = frameworks_response.json()["frameworks"][0]["id"]
+        framework_id = frameworks_response.json()[0]["id"]
 
         evidence_response = client.post(
             "/api/evidence",
@@ -758,7 +769,9 @@ class TestEndToEndWorkflow:
     def test_complete_compliance_journey(self, client, authenticated_headers, mock_ai_client, sample_business_profile_data):
         """Test complete compliance implementation journey"""
         # Setup AI mock
-        mock_ai_client.generate_content.return_value.text = "Generated compliance content"
+        mock_ai_client.generate_content.return_value.text = (
+            '{"title": "Generated Policy", "content": "Generated compliance content"}'
+        )
 
         # 1. Create business profile
         profile_response = client.post(
@@ -799,7 +812,7 @@ class TestEndToEndWorkflow:
 
         # 4. Generate policies
         frameworks_response = client.get("/api/frameworks", headers=authenticated_headers)
-        framework_id = frameworks_response.json()["frameworks"][0]["id"]
+        framework_id = frameworks_response.json()[0]["id"]
 
         policy_response = client.post(
             "/api/policies/generate",

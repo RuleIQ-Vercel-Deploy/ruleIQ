@@ -15,7 +15,7 @@ class AssessmentService:
     def __init__(self):
         pass  # db session will be passed to methods
 
-    async def start_assessment_session(self, db: AsyncSession, user: User, session_type: str = "compliance_scoping") -> AssessmentSession:
+    async def start_assessment_session(self, db: AsyncSession, user: User, session_type: str = "compliance_scoping", business_profile_id: Optional[UUID] = None) -> AssessmentSession:
         """Start a new assessment session for the user."""
         try:
             # Check if there's an active session
@@ -31,11 +31,12 @@ class AssessmentService:
             if existing_session:
                 return existing_session
 
-            # Get business profile if it exists
-            stmt_profile = select(BusinessProfile).where(BusinessProfile.user_id == user.id)
-            result_profile = await db.execute(stmt_profile)
-            business_profile = result_profile.scalars().first()
-            business_profile_id = business_profile.id if business_profile else None
+            # Get business profile if not provided
+            if not business_profile_id:
+                stmt_profile = select(BusinessProfile).where(BusinessProfile.user_id == user.id)
+                result_profile = await db.execute(stmt_profile)
+                business_profile = result_profile.scalars().first()
+                business_profile_id = business_profile.id if business_profile else None
 
             # Create new session
             new_session = AssessmentSession(
@@ -177,26 +178,34 @@ class AssessmentService:
         questions = {
             1: [  # Basic Information
                 {
-                    "id": "company_name",
-                    "question": "What is your company's name?",
-                    "type": "text",
+                    "question_id": "company_name",
+                    "text": "What is your company's name?",
+                    "question_type": "free_text",
                     "required": True
                 },
                 {
-                    "id": "industry",
-                    "question": "What industry is your company in?",
-                    "type": "select",
+                    "question_id": "industry",
+                    "text": "What industry is your company in?",
+                    "question_type": "multiple_choice",
                     "options": [
-                        "Technology", "Finance", "Healthcare", "Retail", "Manufacturing", "Other"
+                        {"value": "technology", "label": "Technology"},
+                        {"value": "finance", "label": "Finance"},
+                        {"value": "healthcare", "label": "Healthcare"},
+                        {"value": "retail", "label": "Retail"},
+                        {"value": "manufacturing", "label": "Manufacturing"},
+                        {"value": "other", "label": "Other"}
                     ],
                     "required": True
                 },
                 {
-                    "id": "company_size",
-                    "question": "What is the size of your company (number of employees)?",
-                    "type": "select",
+                    "question_id": "company_size",
+                    "text": "What is the size of your company (number of employees)?",
+                    "question_type": "multiple_choice",
                     "options": [
-                        "1-50", "51-200", "201-1000", "1000+"
+                        {"value": "1-50", "label": "1-50"},
+                        {"value": "51-200", "label": "51-200"},
+                        {"value": "201-1000", "label": "201-1000"},
+                        {"value": "1000+", "label": "1000+"}
                     ],
                     "required": True
                 }

@@ -60,17 +60,21 @@ async def generate_compliance_policy(
             raise NotFoundException("Compliance framework not found.")
 
         prompt = build_policy_generation_prompt(profile, framework, policy_type, custom_requirements or [])
-        
+
         policy_content_str = await _generate_policy_with_protection(prompt)
         policy_data = json.loads(policy_content_str)
 
         new_policy = GeneratedPolicy(
             user_id=user_id,
-            business_profile_id=profile.id,
+            business_profil=profile.id,
             framework_id=framework.id,
+            policy_name=policy_data.get("title", f"{framework.name} Policy"),
+            framework_name=framework.name,
             policy_type=policy_type,
-            content=policy_data,
-            version="1.0"
+            generation_prompt=prompt,
+            generation_time_seconds=1.0,  # Placeholder
+            policy_content=policy_content_str,
+            sections=policy_data.get("sections", [])
         )
         db.add(new_policy)
         await db.commit()
