@@ -173,8 +173,6 @@ def decode_token(token: str) -> Optional[Dict]:
         return payload
     except jwt.ExpiredSignatureError:
         raise NotAuthenticatedException("Token has expired. Please log in again.")
-    except jwt.InvalidTokenError:
-        raise NotAuthenticatedException("Invalid token format.")
     except JWTError as e:
         raise NotAuthenticatedException(f"Token validation failed: {str(e)}")
 

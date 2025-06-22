@@ -81,6 +81,16 @@ async def quick_assessment(
 
     return QuickAssessmentResponse(recommendations=recommendations)
 
+@router.get("/", response_model=List[AssessmentSessionResponse])
+async def list_assessments(
+    current_user: User = Depends(get_current_active_user),
+    db: AsyncSession = Depends(get_async_db)
+):
+    """List all assessment sessions for the current user"""
+    assessment_service = AssessmentService()
+    sessions = await assessment_service.get_user_assessment_sessions(db, current_user)
+    return sessions
+
 @router.post("/", response_model=AssessmentSessionResponse)
 async def create_assessment(
     session_data: AssessmentSessionCreate,

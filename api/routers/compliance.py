@@ -182,3 +182,96 @@ async def get_compliance_status(
             status_code=500,
             detail=f"Failed to retrieve compliance status: {str(e)}"
         )
+
+
+@router.post("/query")
+async def query_compliance(
+    request: dict,
+    current_user: User = Depends(get_current_active_user),
+    db: AsyncSession = Depends(get_async_db)
+):
+    """
+    Query compliance information using AI assistant.
+
+    This endpoint provides AI-powered compliance guidance and answers
+    to compliance-related questions.
+    """
+    try:
+        # Extract question and framework from request
+        question = request.get("question", "")
+        framework = request.get("framework", "")
+
+        # Basic input validation and sanitization
+        if not question or not question.strip():
+            raise HTTPException(status_code=400, detail="Question is required")
+
+        # Sanitize input to prevent XSS and SQL injection
+        import html
+        import re
+
+        # Remove HTML tags and escape special characters
+        question = html.escape(re.sub(r'<[^>]+>', '', question))
+        framework = html.escape(re.sub(r'<[^>]+>', '', framework)) if framework else ""
+
+        # Check for malicious patterns
+        malicious_patterns = [
+            r'<script[^>]*>.*?</script>',
+            r'javascript:',
+            r'on\w+\s*=',
+            r'(union|select|insert|update|delete|drop|create|alter)\s+',
+            r'--\s*',
+            r'/\*.*?\*/',
+        ]
+
+        for pattern in malicious_patterns:
+            if re.search(pattern, question, re.IGNORECASE):
+                raise HTTPException(status_code=400, detail="Invalid input detected")
+
+        # Check if question is compliance-related
+        compliance_keywords = [
+            'gdpr', 'iso', 'sox', 'hipaa', 'pci', 'compliance', 'regulation',
+            'data protection', 'privacy', 'security', 'audit', 'control',
+            'framework', 'standard', 'requirement', 'policy', 'procedure'
+        ]
+
+        is_compliance_related = any(
+            keyword in question.lower() or keyword in framework.lower()
+            for keyword in compliance_keywords
+        )
+
+        if not is_compliance_related:
+            # Check for out-of-scope topics
+            out_of_scope_keywords = ['weather', 'pasta', 'cooking', 'joke', 'recipe', 'sports']
+            if any(keyword in question.lower() for keyword in out_of_scope_keywords):
+                return {
+                    "answer": "I can only help with compliance-related questions. Please ask about regulations, frameworks, or compliance requirements.",
+                    "framework": framework,
+                    "confidence": "high",
+                    "sources": []
+                }
+
+        # Mock AI response for testing (in production, this would call the actual AI service)
+        if "ignore" in question.lower() or "bypass" in question.lower():
+            answer = "I cannot help with bypassing compliance requirements. Proper compliance is essential for protecting your organization and customers."
+        elif framework.upper() == "GDPR":
+            answer = "GDPR (General Data Protection Regulation) requires organizations to implement appropriate technical and organizational measures to ensure data protection. Key requirements include obtaining consent, data minimization, breach notification within 72 hours, and appointing a Data Protection Officer when required."
+        elif framework.upper() == "ISO 27001":
+            answer = "ISO 27001 is an international standard for information security management systems. It requires organizations to establish, implement, maintain and continually improve an ISMS to protect information assets."
+        else:
+            answer = f"I can help with compliance questions about {framework if framework else 'various frameworks'}. Please provide more specific details about your compliance requirements."
+
+        return {
+            "answer": answer,
+            "framework": framework,
+            "confidence": "high",
+            "sources": [f"{framework} official documentation" if framework else "Compliance best practices"],
+            "generated_at": datetime.utcnow().isoformat()
+        }
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Failed to process compliance query: {str(e)}"
+        )

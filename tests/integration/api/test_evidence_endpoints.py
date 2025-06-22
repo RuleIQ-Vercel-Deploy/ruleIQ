@@ -310,26 +310,30 @@ class TestEvidenceEndpoints:
 
     def test_bulk_update_evidence_status(self, client, authenticated_headers, db_session, sample_user, sample_business_profile, sample_compliance_framework):
         """Test bulk updating evidence status"""
-        # Create multiple evidence items
+        # Create multiple evidence items directly in database for speed
+        from database.evidence_item import EvidenceItem
+        evidence_items = []
         evidence_ids = []
+
         for i in range(3):
-            evidence_data = {
-                "title": f"Test Evidence {i+1}",  # API uses 'title' field
-                "description": f"Test evidence description {i+1}",
-                "control_id": f"A.5.1.{i+1}",
-                "framework_id": str(sample_compliance_framework.id),
-                "business_profile_id": str(sample_business_profile.id),
-                "source": "manual_upload",
-                "evidence_type": "document"  # Added missing field
-            }
-            
-            response = client.post(
-                "/api/evidence",
-                json=evidence_data,
-                headers=authenticated_headers
+            evidence = EvidenceItem(
+                user_id=sample_user.id,
+                business_profile_id=sample_business_profile.id,
+                framework_id=sample_compliance_framework.id,
+                evidence_name=f"Test Evidence {i+1}",
+                description=f"Test evidence description {i+1}",
+                control_reference=f"A.5.1.{i+1}",
+                evidence_type="document",
+                collection_method="manual"
             )
-            assert response.status_code == 201
-            evidence_ids.append(response.json()["id"])
+            evidence_items.append(evidence)
+            db_session.add(evidence)
+
+        db_session.commit()
+
+        # Get the IDs after commit
+        for evidence in evidence_items:
+            evidence_ids.append(str(evidence.id))
 
         # Bulk update status
         bulk_update_data = {
@@ -515,24 +519,24 @@ class TestEvidencePaginationAndSorting:
 
     def test_evidence_pagination(self, client, authenticated_headers, db_session, sample_user, sample_business_profile, sample_compliance_framework):
         """Test evidence list pagination"""
-        # Create multiple evidence items
+        # Create multiple evidence items directly in database for speed
+        from database.evidence_item import EvidenceItem
+        evidence_items = []
         for i in range(25):
-            evidence_data = {
-                "title": f"Evidence Item {i+1:02d}",  # API uses 'title' field
-                "description": f"Description for evidence item {i+1}",
-                "control_id": f"A.5.1.{i+1}",
-                "framework_id": str(sample_compliance_framework.id),
-                "business_profile_id": str(sample_business_profile.id),
-                "source": "manual_upload",
-                "evidence_type": "document"  # Added missing field
-            }
-            
-            response = client.post(
-                "/api/evidence",
-                json=evidence_data,
-                headers=authenticated_headers
+            evidence = EvidenceItem(
+                user_id=sample_user.id,
+                business_profile_id=sample_business_profile.id,
+                framework_id=sample_compliance_framework.id,
+                evidence_name=f"Evidence Item {i+1:02d}",
+                description=f"Description for evidence item {i+1}",
+                control_reference=f"A.5.1.{i+1}",
+                evidence_type="document",
+                collection_method="manual"
             )
-            assert response.status_code == 201
+            evidence_items.append(evidence)
+            db_session.add(evidence)
+
+        db_session.commit()
 
         # Test first page
         response = client.get(
@@ -582,26 +586,29 @@ class TestEvidencePaginationAndSorting:
 
     def test_evidence_sorting(self, client, authenticated_headers, db_session, sample_user, sample_business_profile, sample_compliance_framework):
         """Test evidence list sorting"""
-        # Create evidence items with different dates
+        # Create evidence items directly in database for speed
+        from database.evidence_item import EvidenceItem
+        from datetime import datetime, timedelta
+
         evidence_items = []
         for i in range(5):
-            evidence_data = {
-                "title": f"Evidence {chr(65+i)}",  # A, B, C, D, E - API uses 'title' field
-                "description": f"Description {i+1}",
-                "control_id": f"A.5.1.{i+1}",
-                "framework_id": str(sample_compliance_framework.id),
-                "business_profile_id": str(sample_business_profile.id),
-                "source": "manual_upload",
-                "evidence_type": "document"  # Added missing field
-            }
-            
-            response = client.post(
-                "/api/evidence",
-                json=evidence_data,
-                headers=authenticated_headers
+            # Create with different timestamps for sorting tests
+            created_time = datetime.utcnow() - timedelta(minutes=i)
+            evidence = EvidenceItem(
+                user_id=sample_user.id,
+                business_profile_id=sample_business_profile.id,
+                framework_id=sample_compliance_framework.id,
+                evidence_name=f"Evidence {chr(65+i)}",  # A, B, C, D, E
+                description=f"Description {i+1}",
+                control_reference=f"A.5.1.{i+1}",
+                evidence_type="document",
+                collection_method="manual",
+                created_at=created_time
             )
-            assert response.status_code == 201
-            evidence_items.append(response.json())
+            evidence_items.append(evidence)
+            db_session.add(evidence)
+
+        db_session.commit()
 
         # Test sorting by title ascending
         response = client.get(

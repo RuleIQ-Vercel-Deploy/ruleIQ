@@ -36,7 +36,7 @@ class DuplicateEntryException(DatabaseException):
 
 class NotAuthenticatedException(ApplicationException):
     """Raised when a user is not authenticated for a required action."""
-    def __init__(self, message: str = "Not authenticated"):
+    def __init__(self, message: str = "Could not validate credentials"):
         super().__init__(message, status_code=401)
 
 # --- Business Logic and Service Exceptions ---

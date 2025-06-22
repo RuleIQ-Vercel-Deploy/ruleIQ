@@ -40,11 +40,11 @@ from services.readiness_service import (
 
 
 @pytest.mark.unit
-@pytest.mark.asyncio
 class TestBusinessService:
     """Test business profile service logic"""
 
-    async def test_create_business_profile_valid_data(self, db_session, sample_business_profile):
+    @pytest.mark.asyncio
+    async def test_create_business_profile_valid_data(self, db_session, sample_business_profile_data):
         """Test creating a business profile with valid data"""
         # The service function create_or_update_business_profile expects a User object.
         # We'll create a mock User object for this test.
@@ -52,43 +52,39 @@ class TestBusinessService:
         mock_user.id = uuid4()
 
         # Mock the service method 'create_or_update_business_profile'
-        with patch('services.business_service.create_or_update_business_profile') as mock_create_or_update:
+        with patch('tests.test_services.create_or_update_business_profile') as mock_create_or_update:
             # The real function returns a BusinessProfile ORM object.
-            # For a unit test, we can return a dictionary if that's what the assertions expect,
-            # or a mock ORM object.
+            # Create a mock ORM object that behaves like BusinessProfile
             mock_profile_id = uuid4()
-            mock_returned_profile_dict = {
-                **sample_business_profile,
-                "id": mock_profile_id,
-                "user_id": mock_user.id, # Assuming the returned dict should have user_id
-                "created_at": datetime.utcnow(),
-                # Add other fields that a BusinessProfile ORM object would have if needed by assertions
-            }
-            # If the real function returns an ORM object, you might want to mock that instead:
-            # mock_returned_orm_object = patch('database.models.BusinessProfile').start()
-            # for key, value in mock_returned_profile_dict.items():
-            #     setattr(mock_returned_orm_object, key, value)
-            # mock_create_or_update.return_value = mock_returned_orm_object
-            mock_create_or_update.return_value = mock_returned_profile_dict # Keeping it simple with dict for now
+            mock_returned_profile = Mock(spec=BusinessProfile)
+            mock_returned_profile.id = mock_profile_id
+            mock_returned_profile.user_id = mock_user.id
+            mock_returned_profile.company_name = sample_business_profile_data["company_name"]
+            mock_returned_profile.industry = sample_business_profile_data["industry"]
+            mock_returned_profile.employee_count = sample_business_profile_data["employee_count"]
+            mock_returned_profile.created_at = datetime.utcnow()
+
+            mock_create_or_update.return_value = mock_returned_profile
 
             # Call the actual (mocked) service function
             result = await create_or_update_business_profile(
                 db=db_session,
                 user=mock_user,
-                profile_data=sample_business_profile
+                profile_data=sample_business_profile_data
             )
 
-            # Assertions need to match the structure of mock_returned_profile_dict
-            assert result["company_name"] == sample_business_profile["company_name"]
-            assert result["user_id"] == mock_user.id
-            assert "id" in result
+            # Assertions need to match the structure of the ORM object
+            assert result.company_name == sample_business_profile_data["company_name"]
+            assert result.user_id == mock_user.id
+            assert result.id == mock_profile_id
             mock_create_or_update.assert_called_once_with(
                 db=db_session,
                 user=mock_user,
-                profile_data=sample_business_profile
+                profile_data=sample_business_profile_data
             )
         patch.stopall() # Stop patches started with patch().start()
 
+    @pytest.mark.asyncio
     async def test_create_business_profile_invalid_data(self, db_session):
         """Test creating business profile with invalid data raises validation error"""
         mock_user = patch('database.models.User').start()
@@ -102,7 +98,7 @@ class TestBusinessService:
         }
 
         # Mock the service method 'create_or_update_business_profile' to raise ValidationAPIError
-        with patch('services.business_service.create_or_update_business_profile') as mock_create_or_update:
+        with patch('tests.test_services.create_or_update_business_profile') as mock_create_or_update:
             mock_create_or_update.side_effect = ValidationAPIError("Invalid profile data provided.")
 
             with pytest.raises(ValidationAPIError):
@@ -119,36 +115,40 @@ class TestBusinessService:
             )
         patch.stopall()
 
-    async def test_get_business_profile_exists(self, db_session, sample_business_profile):
+    @pytest.mark.asyncio
+    async def test_get_business_profile_exists(self, db_session, sample_business_profile_data):
         """Test retrieving an existing business profile"""
         mock_user = patch('database.models.User').start()
         mock_user.id = uuid4()
 
-        with patch('services.business_service.get_business_profile') as mock_get_profile:
+        with patch('tests.test_services.get_business_profile') as mock_get_profile:
             mock_profile_id = uuid4()
-            mock_returned_profile_dict = {
-                **sample_business_profile,
-                "id": mock_profile_id,
-                "user_id": mock_user.id,
-                "created_at": datetime.utcnow()
-            }
-            mock_get_profile.return_value = mock_returned_profile_dict
+            mock_returned_profile = Mock(spec=BusinessProfile)
+            mock_returned_profile.id = mock_profile_id
+            mock_returned_profile.user_id = mock_user.id
+            mock_returned_profile.company_name = sample_business_profile_data["company_name"]
+            mock_returned_profile.industry = sample_business_profile_data["industry"]
+            mock_returned_profile.employee_count = sample_business_profile_data["employee_count"]
+            mock_returned_profile.created_at = datetime.utcnow()
+
+            mock_get_profile.return_value = mock_returned_profile
 
             result = await get_business_profile(db=db_session, user=mock_user)
 
             assert result is not None
-            assert result["id"] == mock_profile_id
-            assert result["user_id"] == mock_user.id
-            assert result["company_name"] == sample_business_profile["company_name"]
+            assert result.id == mock_profile_id
+            assert result.user_id == mock_user.id
+            assert result.company_name == sample_business_profile_data["company_name"]
             mock_get_profile.assert_called_once_with(db=db_session, user=mock_user)
         patch.stopall()
 
+    @pytest.mark.asyncio
     async def test_get_business_profile_not_exists(self, db_session):
         """Test retrieving a non-existent business profile returns None"""
         mock_user = patch('database.models.User').start()
         mock_user.id = uuid4()
 
-        with patch('services.business_service.get_business_profile') as mock_get_profile:
+        with patch('tests.test_services.get_business_profile') as mock_get_profile:
             mock_get_profile.return_value = None
 
             result = await get_business_profile(db=db_session, user=mock_user)
@@ -177,24 +177,27 @@ class TestBusinessService:
     #         assert any(req["framework"] == "GDPR" for req in result)
     #         mock_assess.assert_called_once_with(sample_business_profile)
 
-    async def test_update_assessment_details(self, db_session, sample_business_profile):
+    @pytest.mark.asyncio
+    async def test_update_assessment_details(self, db_session, sample_business_profile_data):
         """Test updating assessment details for a business profile"""
         mock_user = patch('database.models.User').start()
         mock_user.id = uuid4()
         assessment_data_payload = {"some_key": "some_value", "completed_date": datetime.utcnow().isoformat()}
 
-        with patch('services.business_service.update_assessment_status') as mock_update_status:
+        with patch('tests.test_services.update_assessment_status') as mock_update_status:
             mock_profile_id = uuid4()
-            
-            mock_returned_profile_dict = {
-                **sample_business_profile,
-                "id": mock_profile_id,
-                "user_id": mock_user.id,
-                "assessment_data": assessment_data_payload,
-                "assessment_completed": True,
-                "updated_at": datetime.utcnow()
-            }
-            mock_update_status.return_value = mock_returned_profile_dict
+
+            mock_returned_profile = Mock(spec=BusinessProfile)
+            mock_returned_profile.id = mock_profile_id
+            mock_returned_profile.user_id = mock_user.id
+            mock_returned_profile.company_name = sample_business_profile_data["company_name"]
+            mock_returned_profile.industry = sample_business_profile_data["industry"]
+            mock_returned_profile.employee_count = sample_business_profile_data["employee_count"]
+            mock_returned_profile.assessment_data = assessment_data_payload
+            mock_returned_profile.assessment_completed = True
+            mock_returned_profile.updated_at = datetime.utcnow()
+
+            mock_update_status.return_value = mock_returned_profile
 
             result = await update_assessment_status(
                 db=db_session,
@@ -203,9 +206,9 @@ class TestBusinessService:
                 assessment_data=assessment_data_payload
             )
 
-            assert result["assessment_completed"] is True
-            assert result["assessment_data"] == assessment_data_payload
-            assert result["user_id"] == mock_user.id
+            assert result.assessment_completed is True
+            assert result.assessment_data == assessment_data_payload
+            assert result.user_id == mock_user.id
             mock_update_status.assert_called_once_with(
                 db=db_session,
                 user=mock_user,
@@ -379,20 +382,21 @@ class TestPolicyService:
         # mock_ai_client.generate_content.return_value.text = mock_ai_response_text # Unused with this patch strategy
 
         # Patching the actual 'generate_compliance_policy' function
-        with patch('services.policy_service.generate_compliance_policy') as mock_gcp:
+        with patch('tests.test_services.generate_compliance_policy') as mock_gcp:
             # Mock the return value of generate_compliance_policy
             # The real function returns a GeneratedPolicy ORM object.
-            # For this unit test, we'll return a dictionary matching expected assertions.
+            # Create a mock ORM object that behaves like GeneratedPolicy
+            from database.models import GeneratedPolicy
             mock_policy_id = uuid4()
-            mock_returned_value = {
-                "id": mock_policy_id,
-                "user_id": user_id,
-                "framework_id": framework_id,
-                "policy_type": "data_protection",
-                "content": {"title": "Data Protection Policy", "text": mock_ai_response_text},
-                "version": "1.0"
-            }
-            mock_gcp.return_value = mock_returned_value
+            mock_returned_policy = Mock(spec=GeneratedPolicy)
+            mock_returned_policy.id = mock_policy_id
+            mock_returned_policy.user_id = user_id
+            mock_returned_policy.framework_id = framework_id
+            mock_returned_policy.policy_type = "data_protection"
+            mock_returned_policy.policy_content = mock_ai_response_text
+            mock_returned_policy.policy_name = "Data Protection Policy"
+
+            mock_gcp.return_value = mock_returned_policy
 
             # Calling the (mocked) generate_compliance_policy function
             result = await generate_compliance_policy(
@@ -402,12 +406,12 @@ class TestPolicyService:
                 policy_type="data_protection"
             )
 
-            # Assertions based on the structure of mock_returned_value
-            assert result["id"] == mock_policy_id
-            assert result["user_id"] == user_id
-            assert result["policy_type"] == "data_protection"
-            assert result["version"] == "1.0"
-            assert "content" in result
+            # Assertions based on the structure of the ORM object
+            assert result.id == mock_policy_id
+            assert result.user_id == user_id
+            assert result.policy_type == "data_protection"
+            assert result.policy_name == "Data Protection Policy"
+            assert result.policy_content == mock_ai_response_text
 
             # Assert that the mock was called with the correct arguments
             mock_gcp.assert_called_once_with(

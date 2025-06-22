@@ -89,6 +89,21 @@ class AssessmentService:
             # Log error appropriately
             raise DatabaseException(f"Error retrieving current assessment session for user {user.id}: {e}")
 
+    async def get_user_assessment_sessions(self, db: AsyncSession, user: User) -> List[AssessmentSession]:
+        """Get all assessment sessions for the user."""
+        try:
+            stmt = (
+                select(AssessmentSession)
+                .where(AssessmentSession.user_id == user.id)
+                .order_by(AssessmentSession.created_at.desc())
+            )
+            result = await db.execute(stmt)
+            sessions = result.scalars().all()
+            return sessions
+        except sa.exc.SQLAlchemyError as e:
+            # Log error appropriately
+            raise DatabaseException(f"Error retrieving assessment sessions for user {user.id}: {e}")
+
     async def update_assessment_response(self, db: AsyncSession, user: User, session_id: UUID, question_id: str, answer: Dict) -> AssessmentSession:
         """Update an assessment response."""
         try:
