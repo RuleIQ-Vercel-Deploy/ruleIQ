@@ -36,7 +36,7 @@ async def get_framework_by_id(db: AsyncSession, user: User, framework_id: UUID) 
         )
         framework = result.scalars().first()
         if not framework:
-            raise NotFoundException(f"Framework with ID {framework_id} not found.")
+            raise NotFoundException("Framework", framework_id)
         return framework
     except SQLAlchemyError as e:
         logger.error(f"Database error while getting framework {framework_id}: {e}", exc_info=True)
