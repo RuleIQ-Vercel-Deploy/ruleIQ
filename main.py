@@ -1,8 +1,10 @@
 from contextlib import asynccontextmanager
 
 import uvicorn
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.exceptions import RequestValidationError
+from fastapi.responses import JSONResponse
 
 from api.middleware.error_handler import error_handler_middleware
 from api.request_id_middleware import RequestIDMiddleware
@@ -26,6 +28,10 @@ from api.schemas import APIInfoResponse, HealthCheckResponse
 from config.logging_config import get_logger, setup_logging
 from config.settings import settings
 from database.db_setup import create_db_and_tables
+from database.user import User
+from api.dependencies.auth import get_current_active_user
+from api.dependencies.database import get_async_db
+from sqlalchemy.ext.asyncio import AsyncSession
 
 # Setup logging
 setup_logging()
@@ -70,6 +76,8 @@ app = FastAPI(
     lifespan=lifespan
 )
 
+
+
 # CORS configuration
 app.add_middleware(
     CORSMiddleware,
@@ -108,6 +116,15 @@ app.include_router(reporting.router, prefix="/api/reports", tags=["Reports"])
 app.include_router(integrations.router, prefix="/api/integrations", tags=["Integrations"])
 app.include_router(monitoring.router, prefix="/api/monitoring", tags=["Monitoring"])
 app.include_router(chat.router, prefix="/api", tags=["AI Assistant"])
+
+@app.get("/api/dashboard")
+async def get_dashboard(
+    current_user: User = Depends(get_current_active_user),
+    db: AsyncSession = Depends(get_async_db)
+):
+    """Get user dashboard data - alias for /api/users/dashboard"""
+    from api.routers.users import get_user_dashboard
+    return await get_user_dashboard(current_user, db)
 
 @app.get("/", response_model=APIInfoResponse, summary="API Information")
 async def root():

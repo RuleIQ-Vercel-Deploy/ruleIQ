@@ -123,12 +123,34 @@ async def generate_compliance_report_endpoint(
     # Generate a report ID for tracking
     report_id = str(uuid4())
 
+    # Use default framework if not provided
+    framework_name = report_request.framework or "GDPR"
+
+    # Use provided title or generate one
+    title = report_request.title or f"{framework_name} Compliance Report"
+
     # For now, return a simple response indicating the report was generated
     # In a real implementation, this would trigger async report generation
     return {
         "report_id": report_id,
         "status": "generated",
         "download_url": f"/api/reports/download/{report_id}",
-        "title": getattr(report_request, 'title', f"{report_request.framework} Compliance Report"),
+        "title": title,
         "format": report_request.format
+    }
+
+@router.get("/reports/{report_id}/download")
+async def download_compliance_report(
+    report_id: str,
+    current_user: User = Depends(get_current_active_user)
+):
+    """Download a generated compliance report."""
+    # For now, return a simple response indicating the report is available
+    # In a real implementation, this would return the actual report file
+    return {
+        "report_id": report_id,
+        "status": "ready",
+        "message": "Report is ready for download",
+        "content_type": "application/pdf",
+        "size": 1024
     }

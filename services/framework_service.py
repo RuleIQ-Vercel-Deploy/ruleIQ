@@ -95,6 +95,32 @@ async def initialize_default_frameworks(db: AsyncSession):
     """Populate the database with a default set of compliance frameworks."""
     frameworks_data = [
         {
+            "name": "GDPR",
+            "display_name": "General Data Protection Regulation",
+            "description": "EU regulation on data protection and privacy for individuals within the European Union and European Economic Area",
+            "category": "Data Protection",
+            "applicable_indu": ["All"],
+            "employee_thresh": 1,
+            "geographic_scop": ["EU", "UK"],
+            "key_requirement": [
+                "Lawful basis for processing",
+                "Data subject rights",
+                "Privacy by design and default",
+                "Data protection impact assessments",
+                "Breach notification"
+            ],
+            "control_domains": [
+                "Data Processing",
+                "Consent Management",
+                "Data Subject Rights",
+                "Privacy Impact Assessment",
+                "Breach Management"
+            ],
+            "complexity_scor": 3,
+            "implementation_": 16,  # implementation_time_weeks
+            "estimated_cost_": "£10,000-£50,000"
+        },
+        {
             "name": "Cyber Essentials",
             "display_name": "Cyber Essentials",
             "description": "A UK government-backed scheme to help organizations protect against common cyber attacks.",

@@ -106,7 +106,8 @@ async def update_task_status(
     task_found = False
     for phase in plan.phases:
         for task in phase.get("tasks", []):
-            if task.get("task_id") == task_id:
+            # Check both 'id' and 'task_id' for compatibility
+            if task.get("id") == task_id or task.get("task_id") == task_id:
                 task["status"] = status
                 task_found = True
                 break

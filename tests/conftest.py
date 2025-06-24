@@ -35,14 +35,28 @@ sys.path.insert(0, str(project_root))
 # Assuming these are the correct paths from your project structure
 import database.db_setup as db_setup
 from database.db_setup import get_async_db, Base
+
+# Import ALL database models to ensure they're registered with Base metadata
+# Import from individual files first
 from database.user import User
 from database.business_profile import BusinessProfile
 from database.evidence_item import EvidenceItem
 from database.compliance_framework import ComplianceFramework
-from database.generated_policy import GeneratedPolicy # Assuming this is the model for policy documents
+from database.generated_policy import GeneratedPolicy
+from database.implementation_plan import ImplementationPlan
+from database.integration_configuration import IntegrationConfiguration
+from database.report_schedule import ReportSchedule
 
-# Import the Evidence model from database.models to ensure the table is created
-from database.models import Evidence
+# Import additional models from models.py (these don't conflict with individual files)
+from database.models import Evidence, Policy, AssessmentQuestion, AssessmentSession, ReadinessAssessment
+
+# Import remaining models from individual files if they exist
+try:
+    from database.chat_conversation import ChatConversation
+    from database.chat_message import ChatMessage
+except ImportError:
+    # These might not exist yet
+    pass
 
 # Import FastAPI test client for API tests
 from fastapi.testclient import TestClient

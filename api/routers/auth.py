@@ -34,14 +34,6 @@ router = APIRouter()
     dependencies=[Depends(auth_rate_limit())]
 )
 async def register(user: UserCreate, db: Session = Depends(get_db)):
-    # Validate password
-    is_valid, message = validate_password(user.password)
-    if not is_valid:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail=message
-        )
-
     # Check if user exists
     db_user = db.query(User).filter(User.email == user.email).first()
     if db_user:

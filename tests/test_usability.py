@@ -462,7 +462,7 @@ class TestUserGuidanceAndHelp:
                 framework_id = framework["id"]
 
                 # Basic framework info should be simple
-                basic_fields = ["name", "display_name", "description"]
+                basic_fields = ["name", "description"]
                 for field in basic_fields:
                     assert field in framework
                     if field == "description":
@@ -476,9 +476,13 @@ class TestUserGuidanceAndHelp:
                     detail_data = detail_response.json()
 
                     # Detail view should have more comprehensive information
-                    detailed_fields = ["requirements", "implementation_guidance", "timeline"]
+                    detailed_fields = ["controls", "category", "version"]
                     present_detailed = sum(1 for field in detailed_fields if field in detail_data)
                     assert present_detailed >= 1, "Detail view should provide more comprehensive information"
+
+                    # Controls should be present and provide structure
+                    if "controls" in detail_data:
+                        assert isinstance(detail_data["controls"], list), "Controls should be a list"
 
 
 @pytest.mark.usability

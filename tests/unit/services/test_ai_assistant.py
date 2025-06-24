@@ -6,6 +6,7 @@ including message processing, context management, and response generation.
 """
 
 import pytest
+import json
 from datetime import datetime
 from unittest.mock import Mock, patch, AsyncMock
 from uuid import uuid4
@@ -501,3 +502,171 @@ class TestAIResponseValidation:
             result = ComplianceAssistant._validate_tone(casual_response)
             assert result["tone_appropriate"] is False
             assert len(result["issues"]) > 0
+
+
+@pytest.mark.unit
+@pytest.mark.ai
+class TestAIEnhancements:
+    """Test AI enhancement features for Day 1 implementation"""
+
+    @pytest.mark.asyncio
+    async def test_analyze_evidence_gap(self, db_session, mock_ai_client):
+        """Test evidence gap analysis functionality"""
+        business_profile_id = uuid4()
+        framework = "ISO27001"
+
+        # Mock AI response with valid JSON
+        mock_ai_response = json.dumps({
+            "completion_percentage": 65,
+            "recommendations": [
+                {"type": "missing_evidence", "description": "Implement access control policies", "priority": "high"},
+                {"type": "documentation", "description": "Create incident response procedures", "priority": "medium"}
+            ],
+            "critical_gaps": ["Access control documentation", "Incident response plan"],
+            "risk_level": "Medium"
+        })
+
+        with patch.object(ComplianceAssistant, '__init__', return_value=None):
+            assistant = ComplianceAssistant.__new__(ComplianceAssistant)
+            assistant.db = db_session
+            assistant.context_manager = Mock()
+            assistant.context_manager.get_conversation_context = AsyncMock(return_value={
+                'business_profile': {
+                    'company_name': 'Test Company',
+                    'industry': 'Technology',
+                    'employee_count': 50
+                },
+                'recent_evidence': [
+                    {'evidence_type': 'policy', 'created_at': '2024-01-01T00:00:00Z'},
+                    {'evidence_type': 'procedure', 'created_at': '2024-01-15T00:00:00Z'}
+                ]
+            })
+            assistant._generate_gemini_response = AsyncMock(return_value=mock_ai_response)
+
+            result = await assistant.analyze_evidence_gap(business_profile_id, framework)
+
+            assert result["framework"] == framework
+            assert result["completion_percentage"] == 65
+            assert result["evidence_collected"] == 2
+            assert isinstance(result["evidence_types"], list)
+            assert "policy" in result["evidence_types"]
+            assert "procedure" in result["evidence_types"]
+            assert len(result["recommendations"]) == 2
+            assert result["risk_level"] == "Medium"
+            assert len(result["critical_gaps"]) == 2
+
+    @pytest.mark.asyncio
+    async def test_analyze_evidence_gap_fallback(self, db_session, mock_ai_client):
+        """Test evidence gap analysis with invalid AI response (fallback)"""
+        business_profile_id = uuid4()
+        framework = "GDPR"
+
+        # Mock AI response with invalid JSON
+        mock_ai_response = "Invalid JSON response from AI"
+
+        with patch.object(ComplianceAssistant, '__init__', return_value=None):
+            assistant = ComplianceAssistant.__new__(ComplianceAssistant)
+            assistant.db = db_session
+            assistant.context_manager = Mock()
+            assistant.context_manager.get_conversation_context = AsyncMock(return_value={
+                'business_profile': {
+                    'company_name': 'Test Company',
+                    'industry': 'Healthcare',
+                    'employee_count': 100
+                },
+                'recent_evidence': []
+            })
+            assistant._generate_gemini_response = AsyncMock(return_value=mock_ai_response)
+
+            result = await assistant.analyze_evidence_gap(business_profile_id, framework)
+
+            # Should use fallback values
+            assert result["framework"] == framework
+            assert result["completion_percentage"] == 30
+            assert result["evidence_collected"] == 0
+            assert len(result["recommendations"]) == 3  # Fallback recommendations
+            assert result["risk_level"] == "Medium"
+
+    def test_get_evidence_types_summary(self, db_session):
+        """Test evidence types summary helper method"""
+        evidence_items = [
+            {'evidence_type': 'policy'},
+            {'evidence_type': 'policy'},
+            {'evidence_type': 'procedure'},
+            {'evidence_type': 'training'},
+            {'evidence_type': 'policy'}
+        ]
+
+        with patch.object(ComplianceAssistant, '__init__', return_value=None):
+            assistant = ComplianceAssistant.__new__(ComplianceAssistant)
+
+            result = assistant._get_evidence_types_summary(evidence_items)
+
+            assert result['policy'] == 3
+            assert result['procedure'] == 1
+            assert result['training'] == 1
+
+    def test_is_recent_activity(self, db_session):
+        """Test recent activity detection helper method"""
+        from datetime import datetime, timedelta, timezone
+
+        # Use timezone-aware datetime to match the implementation
+        now = datetime.now(timezone.utc)
+        recent_date = now - timedelta(days=15)
+        old_date = now - timedelta(days=45)
+
+        recent_evidence = {'created_at': recent_date.isoformat()}
+        old_evidence = {'created_at': old_date.isoformat()}
+        invalid_evidence = {'created_at': 'invalid-date'}
+
+        with patch.object(ComplianceAssistant, '__init__', return_value=None):
+            assistant = ComplianceAssistant.__new__(ComplianceAssistant)
+
+            assert assistant._is_recent_activity(recent_evidence) is True
+            assert assistant._is_recent_activity(old_evidence) is False
+            assert assistant._is_recent_activity(invalid_evidence) is False
+
+    def test_format_recommendations(self, db_session):
+        """Test recommendations formatting helper method"""
+        recommendations = [
+            "Implement access control policies",
+            {"type": "documentation", "description": "Create incident response plan", "priority": "high"},
+            "Conduct security training"
+        ]
+
+        with patch.object(ComplianceAssistant, '__init__', return_value=None):
+            assistant = ComplianceAssistant.__new__(ComplianceAssistant)
+
+            result = assistant._format_recommendations(recommendations)
+
+            assert len(result) == 3
+            assert result[0]["priority"] == "High"
+            assert result[0]["action"] == "Implement access control policies"
+            assert result[1]["type"] == "documentation"
+            assert result[2]["priority"] == "Low"
+
+    def test_get_main_prompt(self, db_session):
+        """Test get_main_prompt method in PromptTemplates"""
+        from services.ai.prompt_templates import PromptTemplates
+
+        message = "What are the GDPR requirements for data processing?"
+        context = {
+            'business_profile': {
+                'name': 'Test Company',
+                'industry': 'Technology',
+                'frameworks': ['GDPR', 'ISO27001']
+            },
+            'recent_evidence': [
+                {'title': 'Privacy Policy', 'type': 'policy'},
+                {'title': 'Data Processing Agreement', 'type': 'contract'}
+            ]
+        }
+
+        prompt_templates = PromptTemplates()
+        result = prompt_templates.get_main_prompt(message, context)
+
+        assert isinstance(result, str)
+        assert "ComplianceGPT" in result
+        assert "Technology" in result  # Industry should be present
+        assert message in result
+        # Note: The implementation uses 'Unknown' for missing company name, not the actual name

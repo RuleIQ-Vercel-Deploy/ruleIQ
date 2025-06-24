@@ -1,8 +1,10 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
+from sqlalchemy.ext.asyncio import AsyncSession
 from typing import Dict, Any
 
 from api.dependencies.auth import get_current_active_user
+from api.dependencies.database import get_async_db
 from api.schemas.models import UserResponse
 from database.db_setup import get_db
 from database.user import User
@@ -26,14 +28,15 @@ async def get_user_profile(
 @router.get("/dashboard")
 async def get_user_dashboard(
     current_user: User = Depends(get_current_active_user),
-    db: Session = Depends(get_db)
+    db: AsyncSession = Depends(get_async_db)
 ) -> Dict[str, Any]:
     """Get user dashboard data"""
+    from sqlalchemy import select
 
     # Get user's business profile
-    business_profile = db.query(BusinessProfile).filter(
-        BusinessProfile.user_id == str(current_user.id)
-    ).first()
+    stmt = select(BusinessProfile).where(BusinessProfile.user_id == current_user.id)
+    result = await db.execute(stmt)
+    business_profile = result.scalars().first()
 
     # Basic dashboard data
     dashboard_data = {
@@ -52,7 +55,15 @@ async def get_user_dashboard(
             "evidence_items": 0,  # Would be populated from evidence service
             "active_assessments": 0,  # Would be populated from assessment service
             "compliance_score": 0  # Would be populated from readiness service
-        }
+        },
+        "active_frameworks": [],  # Placeholder for active frameworks
+        "implementation_progress": {
+            "total_tasks": 0,
+            "completed_tasks": 0,
+            "in_progress_tasks": 0,
+            "percentage_complete": 0
+        },
+        "next_actions": []  # Placeholder for next recommended actions
     }
 
     return dashboard_data

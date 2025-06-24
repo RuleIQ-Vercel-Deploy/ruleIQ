@@ -1,6 +1,11 @@
+"""
+Authentication module for NexCompli.
+
+Provides JWT token-based authentication, password hashing, and user verification.
+"""
 import os
-from datetime import datetime, timedelta
-from typing import Optional
+from datetime import datetime, timedelta, timezone
+from typing import Any, Dict, Optional
 
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
@@ -31,26 +36,28 @@ def get_password_hash(password: str) -> str:
     """Hash a password."""
     return pwd_context.hash(password)
 
-def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
+def create_access_token(data: Dict[str, Any], expires_delta: Optional[timedelta] = None) -> str:
     """Create a JWT access token."""
     to_encode = data.copy()
     if expires_delta:
-        expire = datetime.utcnow() + expires_delta
+        expire = datetime.now(timezone.utc) + expires_delta
     else:
-        expire = datetime.utcnow() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+        expire = datetime.now(timezone.utc) + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     to_encode.update({"exp": expire, "type": "access"})
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
 
-def create_refresh_token(data: dict):
+def create_refresh_token(data: Dict[str, Any]) -> str:
     """Create a JWT refresh token."""
     to_encode = data.copy()
-    expire = datetime.utcnow() + timedelta(days=REFRESH_TOKEN_EXPIRE_DAYS)
+    expire = datetime.now(timezone.utc) + timedelta(days=REFRESH_TOKEN_EXPIRE_DAYS)
     to_encode.update({"exp": expire, "type": "refresh"})
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
 
-async def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)) -> User:
+async def get_current_user(
+    token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)
+) -> User:
     """Get the current authenticated user from JWT token."""
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
@@ -60,11 +67,11 @@ async def get_current_user(token: str = Depends(oauth2_scheme), db: Session = De
 
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        user_id: str = payload.get("sub")
+        user_id: Optional[str] = payload.get("sub")
         if user_id is None or payload.get("type") != "access":
             raise credentials_exception
-    except JWTError:
-        raise credentials_exception
+    except JWTError as exc:
+        raise credentials_exception from exc
 
     user = db.query(User).filter(User.id == user_id).first()
     if user is None:
@@ -74,6 +81,6 @@ async def get_current_user(token: str = Depends(oauth2_scheme), db: Session = De
 
 async def get_current_active_user(current_user: User = Depends(get_current_user)) -> User:
     """Ensure the current user is active."""
-    if hasattr(current_user, 'is_active') and not current_user.is_active:
+    if hasattr(current_user, 'is_active') and getattr(current_user, 'is_active', True) is False:
         raise HTTPException(status_code=400, detail="Inactive user")
     return current_user

@@ -91,7 +91,7 @@ async def list_assessments(
     sessions = await assessment_service.get_user_assessment_sessions(db, current_user)
     return sessions
 
-@router.post("/", response_model=AssessmentSessionResponse)
+@router.post("/", response_model=AssessmentSessionResponse, status_code=status.HTTP_201_CREATED)
 async def create_assessment(
     session_data: AssessmentSessionCreate,
     current_user: User = Depends(get_current_active_user),
@@ -104,7 +104,7 @@ async def create_assessment(
     )
     return session
 
-@router.post("/start", response_model=AssessmentSessionResponse)
+@router.post("/start", response_model=AssessmentSessionResponse, status_code=status.HTTP_201_CREATED)
 async def start_assessment(
     session_data: AssessmentSessionCreate,
     current_user: User = Depends(get_current_active_user),
@@ -184,6 +184,22 @@ async def update_responses(
     )
     return session
 
+@router.get("/{session_id}", response_model=AssessmentSessionResponse)
+async def get_assessment_session(
+    session_id: UUID,
+    current_user: User = Depends(get_current_active_user),
+    db: AsyncSession = Depends(get_async_db)
+):
+    """Get a specific assessment session by ID."""
+    assessment_service = AssessmentService()
+    session = await assessment_service.get_assessment_session(db, current_user, session_id)
+    if not session:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Assessment session not found"
+        )
+    return session
+
 @router.get("/{session_id}/recommendations")
 async def get_assessment_recommendations(
     session_id: UUID,
@@ -191,6 +207,9 @@ async def get_assessment_recommendations(
     db: AsyncSession = Depends(get_async_db)
 ):
     """Get recommendations for an assessment session."""
+    from sqlalchemy import select
+    from database.compliance_framework import ComplianceFramework
+
     assessment_service = AssessmentService()
     session = await assessment_service.get_assessment_session(db, current_user, session_id)
     if not session:
@@ -199,19 +218,29 @@ async def get_assessment_recommendations(
             detail="Assessment session not found"
         )
 
-    # Return recommendations from the session or generate basic ones
-    recommendations = session.recommendations if session.recommendations else [
-        {
-            "framework": "GDPR",
-            "priority": "high",
-            "description": "Essential for businesses handling personal data"
-        },
-        {
-            "framework": "ISO 27001",
-            "priority": "medium",
-            "description": "Comprehensive information security management"
-        }
-    ]
+    # Get actual frameworks from database
+    frameworks_result = await db.execute(
+        select(ComplianceFramework).where(ComplianceFramework.is_active == True)
+    )
+    frameworks = frameworks_result.scalars().all()
+
+    # Return recommendations from the session or generate basic ones with proper structure
+    if session.recommendations:
+        recommendations = session.recommendations
+    else:
+        recommendations = []
+        for framework in frameworks:
+            if "GDPR" in framework.name or "ISO" in framework.name:
+                priority = "High" if "GDPR" in framework.name else "Medium"
+                recommendations.append({
+                    "framework": {
+                        "id": str(framework.id),
+                        "name": framework.name,
+                        "description": framework.description
+                    },
+                    "priority": priority,
+                    "description": f"Recommended based on your business profile"
+                })
 
     return {"recommendations": recommendations}
 

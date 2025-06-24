@@ -62,7 +62,22 @@ async def generate_compliance_policy(
         prompt = build_policy_generation_prompt(profile, framework, policy_type, custom_requirements or [])
 
         policy_content_str = await _generate_policy_with_protection(prompt)
-        policy_data = json.loads(policy_content_str)
+
+        # Try to parse as JSON, if it fails, treat as plain text
+        try:
+            policy_data = json.loads(policy_content_str)
+        except json.JSONDecodeError:
+            # Handle plain text response from AI service
+            policy_data = {
+                "title": f"{framework.name} Policy for {profile.company_name}",
+                "content": policy_content_str,
+                "sections": [
+                    {
+                        "title": "Policy Content",
+                        "content": policy_content_str
+                    }
+                ]
+            }
 
         new_policy = GeneratedPolicy(
             user_id=user_id,
@@ -73,7 +88,7 @@ async def generate_compliance_policy(
             policy_type=policy_type,
             generation_prompt=prompt,
             generation_time_seconds=1.0,  # Placeholder
-            policy_content=policy_content_str,
+            policy_content=json.dumps(policy_data),  # Store as JSON string
             sections=policy_data.get("sections", [])
         )
         db.add(new_policy)

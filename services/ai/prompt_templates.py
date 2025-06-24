@@ -202,3 +202,197 @@ class PromptTemplates:
         """
         
         return {'system': system_prompt, 'user': user_prompt}
+    
+    def get_main_prompt(self, message: str, context: Dict[str, Any]) -> str:
+        """Creates the main prompt for general AI responses."""
+        business_info = context.get('business_profile', {})
+        recent_evidence = context.get('recent_evidence', [])
+        
+        return f"""You are ComplianceGPT, an expert AI compliance assistant. You help organizations understand and implement compliance requirements across various frameworks.
+
+Business Context:
+- Company: {business_info.get('company_name', 'Unknown')}
+- Industry: {business_info.get('industry', 'Unknown')}
+- Employee Count: {business_info.get('employee_count', 'Unknown')}
+- Current Frameworks: {', '.join(business_info.get('existing_framew', []))}
+- Evidence Collected: {len(recent_evidence)} items
+
+User Message: "{message}"
+
+Please provide a comprehensive, helpful response that:
+1. Addresses the user's specific question or need
+2. Considers their business context and industry
+3. Provides actionable guidance and next steps
+4. References relevant compliance frameworks when appropriate
+5. Maintains a professional, consultative tone
+
+If you need clarification on any aspect of their request, feel free to ask follow-up questions."""
+
+    def get_context_aware_recommendation_prompt(
+        self,
+        framework: str,
+        business_context: Dict[str, Any],
+        maturity_analysis: Dict[str, Any],
+        gaps_analysis: Dict[str, Any]
+    ) -> Dict[str, str]:
+        """Creates enhanced prompts for context-aware recommendations."""
+
+        system_prompt = f"""You are an expert compliance consultant specializing in {framework}.
+        Generate intelligent, context-aware evidence collection recommendations that consider:
+
+        1. Organization's specific business context and industry
+        2. Current compliance maturity and capabilities
+        3. Existing evidence gaps and priorities
+        4. Resource constraints and practical implementation
+        5. Automation opportunities and efficiency gains
+        6. Risk-based prioritization
+
+        Provide recommendations that are:
+        - Specific and actionable
+        - Prioritized by business impact and feasibility
+        - Tailored to organizational maturity level
+        - Include automation opportunities where applicable
+        - Consider industry-specific requirements
+
+        Return recommendations as a JSON array with detailed structure including:
+        - Control mapping and references
+        - Implementation steps and guidance
+        - Effort estimates and timelines
+        - Automation potential and tools
+        - Business justification and ROI
+        """
+
+        user_prompt = f"""
+        Generate context-aware recommendations for {framework} compliance.
+
+        Business Profile:
+        - Company: {business_context.get('company_name', 'Unknown')}
+        - Industry: {business_context.get('industry', 'Unknown')}
+        - Size: {business_context.get('employee_count', 0)} employees
+        - Maturity Level: {maturity_analysis.get('maturity_level', 'Basic')}
+        - Maturity Score: {maturity_analysis.get('maturity_score', 40)}/100
+
+        Current Compliance Status:
+        - Completion: {gaps_analysis.get('completion_percentage', 0)}%
+        - Evidence Items: {gaps_analysis.get('evidence_collected', 0)}
+        - Critical Gaps: {len(gaps_analysis.get('critical_gaps', []))}
+        - Risk Level: {gaps_analysis.get('risk_level', 'Medium')}
+
+        Generate 8-12 prioritized recommendations that address critical gaps while
+        considering organizational capacity and maturity level.
+        """
+
+        return {'system': system_prompt, 'user': user_prompt}
+
+    def get_workflow_generation_prompt(
+        self,
+        framework: str,
+        control_id: str,
+        business_context: Dict[str, Any],
+        workflow_type: str
+    ) -> Dict[str, str]:
+        """Creates prompts for intelligent workflow generation."""
+
+        system_prompt = f"""You are an expert compliance process designer specializing in {framework}.
+        Generate comprehensive, step-by-step evidence collection workflows that are:
+
+        1. Tailored to the organization's size and maturity
+        2. Practical and implementable with available resources
+        3. Include both manual and automated approaches
+        4. Provide realistic time estimates and dependencies
+        5. Include quality checkpoints and validation criteria
+        6. Consider industry-specific requirements
+        7. Include role assignments and responsibilities
+
+        Structure the workflow with clear phases, detailed steps, and practical guidance.
+        Include automation opportunities and tool recommendations where applicable.
+        """
+
+        control_context = f" for control {control_id}" if control_id else ""
+
+        user_prompt = f"""
+        Generate a {workflow_type} evidence collection workflow for {framework}{control_context}.
+
+        Organization Context:
+        - Company: {business_context.get('company_name', 'Unknown')}
+        - Industry: {business_context.get('industry', 'Unknown')}
+        - Size: {business_context.get('employee_count', 0)} employees
+        - Organization Type: {self._categorize_org_size(business_context.get('employee_count', 0))}
+
+        Requirements:
+        - Create 3-5 logical phases with 2-4 steps each
+        - Include specific deliverables and validation criteria
+        - Provide realistic effort estimates
+        - Consider automation opportunities
+        - Include role assignments and dependencies
+        - Address potential challenges and mitigation strategies
+
+        Generate a comprehensive workflow that can be immediately implemented.
+        """
+
+        return {'system': system_prompt, 'user': user_prompt}
+
+    def get_policy_generation_prompt(
+        self,
+        framework: str,
+        policy_type: str,
+        business_context: Dict[str, Any],
+        customization_options: Dict[str, Any]
+    ) -> Dict[str, str]:
+        """Creates prompts for customized policy generation."""
+
+        system_prompt = f"""You are an expert compliance policy writer specializing in {framework}.
+        Generate comprehensive, business-specific policies that are:
+
+        1. Fully compliant with {framework} requirements
+        2. Tailored to the organization's industry and size
+        3. Written in clear, professional language
+        4. Include specific procedures and controls
+        5. Address industry-specific risks and requirements
+        6. Practical and implementable
+        7. Include roles, responsibilities, and governance
+
+        The policy should be comprehensive yet practical, addressing all relevant
+        compliance requirements while being tailored to the organization's context.
+        """
+
+        industry = business_context.get('industry', 'Unknown')
+        org_size = self._categorize_org_size(business_context.get('employee_count', 0))
+
+        user_prompt = f"""
+        Generate a comprehensive {policy_type} policy for {framework} compliance.
+
+        Organization Profile:
+        - Company: {business_context.get('company_name', 'Organization')}
+        - Industry: {industry}
+        - Size: {business_context.get('employee_count', 0)} employees ({org_size})
+        - Geographic Scope: {customization_options.get('geographic_scope', 'Single location')}
+
+        Customization Requirements:
+        - Tone: {customization_options.get('tone', 'Professional')}
+        - Detail Level: {customization_options.get('detail_level', 'Standard')}
+        - Industry Focus: {industry}
+
+        Generate a policy with:
+        - 5-8 comprehensive sections
+        - Detailed procedures and controls
+        - Clear roles and responsibilities
+        - Compliance requirements mapping
+        - Implementation guidance
+        - Industry-specific considerations
+
+        Ensure the policy is immediately usable and addresses all {framework} requirements.
+        """
+
+        return {'system': system_prompt, 'user': user_prompt}
+
+    def _categorize_org_size(self, employee_count: int) -> str:
+        """Helper method to categorize organization size."""
+        if employee_count >= 1000:
+            return "enterprise"
+        elif employee_count >= 100:
+            return "medium"
+        elif employee_count >= 10:
+            return "small"
+        else:
+            return "micro"

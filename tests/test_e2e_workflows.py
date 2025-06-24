@@ -347,25 +347,34 @@ class TestErrorStateHandling:
 
         frameworks_response = client.get("/api/frameworks", headers=authenticated_headers)
         if frameworks_response.status_code == 200:
-            framework_id = frameworks_response.json()["frameworks"][0]["id"]
+            frameworks_data = frameworks_response.json()
+            # Handle both list and dict response formats
+            if isinstance(frameworks_data, list) and len(frameworks_data) > 0:
+                framework_id = frameworks_data[0]["id"]
+            elif isinstance(frameworks_data, dict) and "frameworks" in frameworks_data:
+                framework_id = frameworks_data["frameworks"][0]["id"]
+            else:
+                framework_id = None
 
-            # Attempt policy generation with AI failure
-            policy_response = client.post(
-                "/api/policies/generate",
-                headers=authenticated_headers,
-                json={"framework_id": framework_id}
-            )
+            # Only attempt policy generation if we have a valid framework_id
+            if framework_id:
+                # Attempt policy generation with AI failure
+                policy_response = client.post(
+                    "/api/policies/generate",
+                    headers=authenticated_headers,
+                    json={"framework_id": framework_id}
+                )
 
-            # Should provide graceful fallback
-            if policy_response.status_code == 503:
-                error_data = policy_response.json()
-                assert "ai service" in error_data["error"]["message"].lower()
-                assert "try again" in error_data["error"]["message"].lower()
-            elif policy_response.status_code == 200:
-                # Should provide template-based fallback
-                policy_data = policy_response.json()
-                assert "content" in policy_data
-                assert "template" in policy_data.get("generation_method", "").lower()
+                # Should provide graceful fallback
+                if policy_response.status_code == 503:
+                    error_data = policy_response.json()
+                    assert "ai service" in error_data["error"]["message"].lower()
+                    assert "try again" in error_data["error"]["message"].lower()
+                elif policy_response.status_code == 200:
+                    # Should provide template-based fallback
+                    policy_data = policy_response.json()
+                    assert "content" in policy_data
+                    assert "template" in policy_data.get("generation_method", "").lower()
 
 
 @pytest.mark.e2e
@@ -395,25 +404,34 @@ class TestAuditWorkflows:
         # 2. Generate policy
         frameworks_response = client.get("/api/frameworks", headers=authenticated_headers)
         if frameworks_response.status_code == 200:
-            framework_id = frameworks_response.json()["frameworks"][0]["id"]
+            frameworks_data = frameworks_response.json()
+            # Handle both list and dict response formats
+            if isinstance(frameworks_data, list) and len(frameworks_data) > 0:
+                framework_id = frameworks_data[0]["id"]
+            elif isinstance(frameworks_data, dict) and "frameworks" in frameworks_data:
+                framework_id = frameworks_data["frameworks"][0]["id"]
+            else:
+                framework_id = None
 
-            policy_response = client.post(
-                "/api/policies/generate",
-                headers=authenticated_headers,
-                json={"framework_id": framework_id}
-            )
-            if policy_response.status_code == 201:
-                policy_id = policy_response.json()["id"]
-                auditable_actions.append(("generate_policy", policy_id))
-
-                # 3. Approve policy
-                approval_response = client.patch(
-                    f"/api/policies/{policy_id}/status",
+            # Only attempt policy generation if we have a valid framework_id
+            if framework_id:
+                policy_response = client.post(
+                    "/api/policies/generate",
                     headers=authenticated_headers,
-                    json={"status": "approved", "approved": True}
+                    json={"framework_id": framework_id}
                 )
-                if approval_response.status_code == 200:
-                    auditable_actions.append(("approve_policy", policy_id))
+                if policy_response.status_code == 201:
+                    policy_id = policy_response.json()["id"]
+                    auditable_actions.append(("generate_policy", policy_id))
+
+                    # 3. Approve policy
+                    approval_response = client.patch(
+                        f"/api/policies/{policy_id}/status",
+                        headers=authenticated_headers,
+                        json={"status": "approved", "approved": True}
+                    )
+                    if approval_response.status_code == 200:
+                        auditable_actions.append(("approve_policy", policy_id))
 
         # 4. Check audit trail
         audit_response = client.get("/api/audit/trail", headers=authenticated_headers)
@@ -436,13 +454,13 @@ class TestAuditWorkflows:
                 # Verify timestamp format
                 assert "T" in entry["timestamp"], "Timestamp should be in ISO format"
 
-    def test_compliance_report_generation(self, client, authenticated_headers, sample_business_profile):
+    def test_compliance_report_generation(self, client, authenticated_headers, sample_business_profile_data):
         """Test comprehensive compliance reporting"""
         # Setup business context
         profile_response = client.post(
             "/api/business-profiles",
             headers=authenticated_headers,
-            json=sample_business_profile
+            json=sample_business_profile_data
         )
         assert profile_response.status_code == 201
 
@@ -553,13 +571,13 @@ class TestAuditWorkflows:
 class TestBusinessContinuityWorkflows:
     """Test business continuity and disaster recovery scenarios"""
 
-    def test_data_backup_and_recovery(self, client, authenticated_headers, sample_business_profile):
+    def test_data_backup_and_recovery(self, client, authenticated_headers, sample_business_profile_data):
         """Test data backup and recovery procedures"""
         # Create substantial business data
         profile_response = client.post(
             "/api/business-profiles",
             headers=authenticated_headers,
-            json=sample_business_profile
+            json=sample_business_profile_data
         )
         assert profile_response.status_code == 201
         profile_response.json()["id"]

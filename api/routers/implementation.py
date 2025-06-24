@@ -34,7 +34,33 @@ async def create_plan(
         control_domain=plan_data.control_domain,
         timeline_weeks=plan_data.timeline_weeks
     )
-    return plan
+
+    # Calculate computed fields for the response
+    total_phases = len(plan.phases) if plan.phases else 0
+    total_tasks = sum(len(phase.get("tasks", [])) for phase in plan.phases) if plan.phases else 0
+    estimated_duration_weeks = plan_data.timeline_weeks or 12
+
+    # Convert plan to dict and add computed fields
+    plan_dict = {
+        "id": plan.id,
+        "user_id": plan.user_id,
+        "business_profile_id": plan.business_profile_id,
+        "framework_id": plan.framework_id,
+        "title": plan.title,
+        "status": plan.status,
+        "phases": plan.phases,
+        "planned_start_date": plan.planned_start_date,
+        "planned_end_date": plan.planned_end_date,
+        "actual_start_date": plan.actual_start_date,
+        "actual_end_date": plan.actual_end_date,
+        "created_at": plan.created_at,
+        "updated_at": plan.updated_at,
+        "total_phases": total_phases,
+        "total_tasks": total_tasks,
+        "estimated_duration_weeks": estimated_duration_weeks
+    }
+
+    return plan_dict
 
 @router.get("/plans", response_model=ImplementationPlanListResponse)
 async def list_plans(
@@ -53,7 +79,42 @@ async def get_plan(
     plan = await get_implementation_plan(db, current_user, plan_id)
     if not plan:
         raise HTTPException(status_code=404, detail="Implementation plan not found")
-    return plan
+
+    # Calculate computed fields and flatten tasks for the response
+    total_phases = len(plan.phases) if plan.phases else 0
+    total_tasks = sum(len(phase.get("tasks", [])) for phase in plan.phases) if plan.phases else 0
+
+    # Flatten all tasks from all phases
+    all_tasks = []
+    for phase in plan.phases:
+        for task in phase.get("tasks", []):
+            all_tasks.append(task)
+
+    # Calculate estimated duration from phases
+    estimated_duration_weeks = sum(phase.get("duration_weeks", 0) for phase in plan.phases) if plan.phases else 12
+
+    # Convert plan to dict and add computed fields
+    plan_dict = {
+        "id": plan.id,
+        "user_id": plan.user_id,
+        "business_profile_id": plan.business_profile_id,
+        "framework_id": plan.framework_id,
+        "title": plan.title,
+        "status": plan.status,
+        "phases": plan.phases,
+        "planned_start_date": plan.planned_start_date,
+        "planned_end_date": plan.planned_end_date,
+        "actual_start_date": plan.actual_start_date,
+        "actual_end_date": plan.actual_end_date,
+        "created_at": plan.created_at,
+        "updated_at": plan.updated_at,
+        "total_phases": total_phases,
+        "total_tasks": total_tasks,
+        "estimated_duration_weeks": estimated_duration_weeks,
+        "tasks": all_tasks  # Flattened tasks for test compatibility
+    }
+
+    return plan_dict
 
 @router.patch("/plans/{plan_id}/tasks/{task_id}")
 async def update_task(
