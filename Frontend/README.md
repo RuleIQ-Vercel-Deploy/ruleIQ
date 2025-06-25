@@ -1,103 +1,86 @@
-# Frontend Application
+# NexCompli Frontend
 
-A modern React application built with TypeScript, featuring a clean UI, authentication, and responsive design.
+A modern Next.js 15 application for compliance management with AI-powered automation.
 
 ## 🚀 Features
 
-- **Modern React**: Built with React 18+ and TypeScript for type safety
-- **Responsive Design**: Mobile-first approach with Tailwind CSS
-- **Authentication**: User authentication with persistent state management
-- **Routing**: Client-side routing with React Router DOM
-- **UI Components**: Custom UI component library with consistent design
-- **State Management**: Zustand for lightweight state management
-- **Developer Experience**: Hot reload, TypeScript support, and modern tooling
-
-## 🛠️ Tech Stack
-
-- **Frontend Framework**: React 18+
-- **Language**: TypeScript
-- **Styling**: Tailwind CSS
-- **Routing**: React Router DOM
-- **State Management**: Zustand
-- **Build Tool**: Vite
-- **Package Manager**: npm/yarn/pnpm
+- **Next.js 15** with App Router
+- **TypeScript** for type safety
+- **Tailwind CSS** for styling
+- **Authentication** with JWT tokens and Zustand state management
+- **shadcn/ui** components for consistent UI
+- **React Query** for server state management
+- **Responsive Design** with mobile-first approach
 
 ## 📋 Prerequisites
 
-Before you begin, ensure you have the following installed:
-
-- **Node.js** (version 16.0 or higher)
-- **npm** (version 7.0 or higher) or **yarn** or **pnpm**
-- **Git**
+- **Node.js** (version 18.0 or higher)
+- **npm** (version 9.0 or higher)
+- **Backend API** running on port 8000
 
 ## 🚀 Getting Started
 
 ### Installation
 
-1. **Clone the repository**
-   ```bash
-   git clone <repository-url>
-   cd <project-name>
-   ```
-
-2. **Install dependencies**
+1. **Install dependencies**
    ```bash
    npm install
-   # or
-   yarn install
-   # or
-   pnpm install
    ```
 
-3. **Set up environment variables**
-   ```bash
-   cp .env.example .env.local
-   ```
+2. **Environment Configuration**
    
-   Edit `.env.local` and add your environment variables:
+   The `.env.local` file is already configured for local development:
    ```env
-   VITE_API_URL=http://localhost:3001
-   VITE_APP_NAME=Your App Name
+   NEXT_PUBLIC_API_URL=http://localhost:8000
+   NEXT_PUBLIC_APP_NAME=NexCompli
    ```
 
-4. **Start the development server**
+3. **Start the development server**
    ```bash
    npm run dev
-   # or
-   yarn dev
-   # or
-   pnpm dev
    ```
 
-5. **Open your browser**
+4. **Open your browser**
    
-   Navigate to [http://localhost:5173](http://localhost:5173)
+   Navigate to [http://localhost:3000](http://localhost:3000)
 
 ## 📁 Project Structure
 
 ```
-src/
-├── components/           # Reusable UI components
-│   ├── ui/              # Base UI components (Button, Avatar, etc.)
-│   └── layout/          # Layout components (Header, Sidebar, etc.)
-├── pages/               # Page components
-├── store/               # State management (Zustand stores)
-├── hooks/               # Custom React hooks
-├── utils/               # Utility functions
-├── types/               # TypeScript type definitions
-├── styles/              # Global styles and Tailwind config
-└── assets/              # Static assets (images, icons, etc.)
+app/
+├── api/                    # API integration files
+│   └── auth.ts            # Authentication API calls
+├── dashboard/             # Dashboard page
+│   └── page.tsx
+├── lib/                   # Utilities and configurations
+│   ├── api-client.ts      # Axios client configuration
+│   ├── utils.ts           # Utility functions
+│   └── validators.ts      # Zod schemas
+├── login/                 # Login page
+│   └── page.tsx
+├── store/                 # State management
+│   └── auth-store.ts      # Zustand auth store
+├── types/                 # TypeScript type definitions
+│   └── api.ts             # API response types
+├── globals.css            # Global styles
+├── layout.tsx             # Root layout
+├── page.tsx               # Home page
+└── providers.tsx          # React Query and Theme providers
 
-public/                  # Public assets
-├── favicon.ico
-└── index.html
+components/                # Reusable UI components
+├── ui/                    # shadcn/ui components
+│   ├── button.tsx
+│   ├── card.tsx
+│   ├── input.tsx
+│   └── ...
+└── ...
 
-Configuration files:
-├── package.json         # Dependencies and scripts
-├── tsconfig.json        # TypeScript configuration
-├── tailwind.config.js   # Tailwind CSS configuration
-├── vite.config.ts       # Vite configuration
-└── .env.example         # Environment variables template
+hooks/                     # Custom React hooks
+└── use-toast.ts          # Toast notification hook
+
+public/                    # Static assets
+├── placeholder-logo.png
+└── ...
 ```
 
 ## 📜 Available Scripts
@@ -106,249 +89,133 @@ Configuration files:
 |---------|-------------|
 | `npm run dev` | Start development server |
 | `npm run build` | Build for production |
-| `npm run preview` | Preview production build locally |
+| `npm run start` | Start production server |
 | `npm run lint` | Run ESLint |
-| `npm run lint:fix` | Fix ESLint errors |
 | `npm run type-check` | Run TypeScript type checking |
-| `npm run format` | Format code with Prettier |
 
-## ⚙️ Configuration
+## 🔧 Configuration
 
-### Environment Variables
+### API Integration
 
-Create a `.env.local` file in the root directory:
+The frontend connects to the backend API running on `http://localhost:8000`. Key endpoints:
 
-```env
-# API Configuration
-VITE_API_URL=http://localhost:3001
-VITE_API_TIMEOUT=10000
+- **Authentication**: `/api/auth/login`, `/api/auth/register`
+- **User Profile**: `/api/users/profile`
+- **Business Profiles**: `/api/business-profiles`
+- **Assessments**: `/api/assessments`
+- **Evidence**: `/api/evidence`
 
-# App Configuration
-VITE_APP_NAME=Your App Name
-VITE_APP_VERSION=1.0.0
+### Authentication Flow
 
-# Feature Flags
-VITE_ENABLE_ANALYTICS=false
-VITE_ENABLE_DEBUG=true
-```
+1. User logs in via `/login` page
+2. Credentials sent to `/api/auth/login`
+3. JWT tokens stored in localStorage
+4. Zustand store manages auth state
+5. API client automatically adds Bearer token to requests
+6. Protected routes redirect to login if not authenticated
 
-### Tailwind CSS
+### State Management
 
-The project uses Tailwind CSS for styling. Configuration can be found in `tailwind.config.js`:
-
-```js
-/** @type {import('tailwindcss').Config} */
-export default {
-  content: [
-    "./index.html",
-    "./src/**/*.{js,ts,jsx,tsx}",
-  ],
-  theme: {
-    extend: {
-      colors: {
-        primary: {
-          50: '#eff6ff',
-          500: '#3b82f6',
-          600: '#2563eb',
-          700: '#1d4ed8',
-        }
-      }
-    },
-  },
-  plugins: [],
-}
-```
-
-### TypeScript
-
-TypeScript configuration is in `tsconfig.json`. Key settings include:
-
-- Strict mode enabled
-- Path aliases configured (`@/` points to `src/`)
-- Modern ES modules support
-
-## 🏗️ Building for Production
-
-1. **Build the application**
-   ```bash
-   npm run build
-   ```
-
-2. **Preview the build locally**
-   ```bash
-   npm run preview
-   ```
-
-The build artifacts will be stored in the `dist/` directory.
-
-## 🚀 Deployment
-
-### Vercel (Recommended)
-
-1. **Install Vercel CLI**
-   ```bash
-   npm i -g vercel
-   ```
-
-2. **Deploy**
-   ```bash
-   vercel
-   ```
-
-### Netlify
-
-1. **Build the project**
-   ```bash
-   npm run build
-   ```
-
-2. **Deploy the `dist` folder** to Netlify
-
-### Docker
-
-```dockerfile
-FROM node:18-alpine as builder
-WORKDIR /app
-COPY package*.json ./
-RUN npm ci
-COPY . .
-RUN npm run build
-
-FROM nginx:alpine
-COPY --from=builder /app/dist /usr/share/nginx/html
-EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]
-```
-
-## 🧪 Testing
-
-```bash
-# Run tests
-npm run test
-
-# Run tests in watch mode
-npm run test:watch
-
-# Run tests with coverage
-npm run test:coverage
-```
+- **Zustand** for client state (authentication, user preferences)
+- **React Query** for server state (API data, caching, mutations)
+- **LocalStorage** for persistent auth tokens
 
 ## 🎨 UI Components
 
-The application includes a custom UI component library:
+The application uses shadcn/ui components with Tailwind CSS:
 
-### Button
 ```tsx
-import { Button } from '@/components/ui/button'
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 
-<Button variant="default" size="md">
-  Click me
-</Button>
+<Card>
+  <CardHeader>
+    <CardTitle>Dashboard</CardTitle>
+  </CardHeader>
+  <CardContent>
+    <Button>Get Started</Button>
+  </CardContent>
+</Card>
 ```
 
-### Avatar
-```tsx
-import { Avatar, AvatarFallback } from '@/components/ui/avatar'
+## 🚀 Deployment
 
-<Avatar>
-  <AvatarFallback>JD</AvatarFallback>
-</Avatar>
+### Build
+
+```bash
+npm run build
 ```
 
-### Dropdown Menu
-```tsx
-import {
-  DropdownMenu,
-  DropdownMenuTrigger,
-  DropdownMenuContent,
-  DropdownMenuItem,
-} from '@/components/ui/dropdown-menu'
+### Production Server
 
-<DropdownMenu>
-  <DropdownMenuTrigger>
-    <Button>Open Menu</Button>
-  </DropdownMenuTrigger>
-  <DropdownMenuContent>
-    <DropdownMenuItem>Profile</DropdownMenuItem>
-    <DropdownMenuItem>Settings</DropdownMenuItem>
-  </DropdownMenuContent>
-</DropdownMenu>
+```bash
+npm run start
 ```
 
-## 🔧 Troubleshooting
+### Environment Variables for Production
+
+```env
+NEXT_PUBLIC_API_URL=https://your-api-domain.com
+NEXT_PUBLIC_APP_NAME=NexCompli
+NODE_ENV=production
+```
+
+## 🔍 Key Pages
+
+- **Home (`/`)**: Landing page with feature overview
+- **Login (`/login`)**: Authentication page
+- **Dashboard (`/dashboard`)**: Main compliance dashboard
+- **Protected Routes**: Automatically redirect to login if not authenticated
+
+## 🛠️ Development
+
+### Adding New Pages
+
+1. Create page component in `app/[route]/page.tsx`
+2. Add authentication if needed
+3. Update navigation/routing as required
+
+### Adding API Endpoints
+
+1. Add types to `app/types/api.ts`
+2. Create API functions in `app/api/[feature].ts`
+3. Use React Query hooks for data fetching
+
+### Adding UI Components
+
+1. Install shadcn/ui component: `npx shadcn-ui@latest add [component]`
+2. Use existing components from `components/ui/`
+3. Follow Tailwind CSS conventions
+
+## 🔒 Security
+
+- JWT tokens stored in localStorage (consider httpOnly cookies for production)
+- API requests include CSRF protection headers
+- Environment variables for sensitive configuration
+- Automatic token cleanup on logout
+
+## 🐛 Troubleshooting
 
 ### Common Issues
 
-**Module not found errors**
-- Ensure all dependencies are installed: `npm install`
-- Check that path aliases are configured correctly in `vite.config.ts`
+**Build errors**
+- Run `npm run type-check` to identify TypeScript issues
+- Ensure all imports use correct paths with `@/` alias
 
-**TypeScript errors**
-- Run type checking: `npm run type-check`
-- Ensure all imports have proper type definitions
+**API connection issues**
+- Verify backend is running on port 8000
+- Check CORS configuration in backend
+- Verify `NEXT_PUBLIC_API_URL` in `.env.local`
 
-**Build failures**
-- Clear node_modules and reinstall: `rm -rf node_modules package-lock.json && npm install`
-- Check for any missing environment variables
-
-**Styling issues**
-- Ensure Tailwind CSS is properly configured
-- Check that all CSS classes are included in the content paths
-
-### Performance Optimization
-
-- **Code Splitting**: Use React.lazy() for route-based code splitting
-- **Bundle Analysis**: Use `npm run build -- --analyze` to analyze bundle size
-- **Image Optimization**: Use WebP format and proper sizing
-- **Caching**: Configure proper cache headers for static assets
-
-## 🤝 Contributing
-
-1. **Fork the repository**
-2. **Create a feature branch**
-   ```bash
-   git checkout -b feature/amazing-feature
-   ```
-3. **Commit your changes**
-   ```bash
-   git commit -m 'Add some amazing feature'
-   ```
-4. **Push to the branch**
-   ```bash
-   git push origin feature/amazing-feature
-   ```
-5. **Open a Pull Request**
-
-### Code Style
-
-- Use TypeScript for all new code
-- Follow the existing code style (Prettier configuration)
-- Write meaningful commit messages
-- Add tests for new features
+**Authentication issues**
+- Clear localStorage and try again
+- Check network tab for 401 responses
+- Verify JWT token format in API client
 
 ## 📝 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 🆘 Support
-
-If you encounter any issues or have questions:
-
-1. Check the [troubleshooting section](#-troubleshooting)
-2. Search existing [GitHub issues](link-to-issues)
-3. Create a new issue with detailed information
-
-## 🙏 Acknowledgments
-
-- [React](https://reactjs.org/) - The web framework used
-- [Tailwind CSS](https://tailwindcss.com/) - For styling
-- [Vite](https://vitejs.dev/) - Build tool
-- [TypeScript](https://www.typescriptlang.org/) - For type safety
+This project is part of the NexCompli compliance management platform.
 
 ---
 
-**Happy coding! 🎉**
-```
-
-This README provides a comprehensive overview of your frontend application including setup instructions, project structure, configuration details, and troubleshooting tips. You can customize it further based on your specific project requirements, such as:
-
+**Ready to manage compliance with AI! 🎉**

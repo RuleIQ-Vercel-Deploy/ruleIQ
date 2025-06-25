@@ -40,9 +40,9 @@ logger = get_logger(__name__)
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # Startup
-    logger.logger.info("Starting ComplianceGPT API...")
+    logger.info("Starting ComplianceGPT API...")
     await create_db_and_tables()
-    logger.logger.info("Database tables created or verified.")
+    logger.info("Database tables created or verified.")
 
     # Initialize default frameworks
     from database.db_setup import get_async_db
@@ -51,20 +51,20 @@ async def lifespan(app: FastAPI):
         async for db in get_async_db():
             await initialize_default_frameworks(db)
             break  # Only need one iteration
-        logger.logger.info("Default frameworks initialized.")
+        logger.info("Default frameworks initialized.")
     except Exception as e:
-        logger.logger.warning(f"Failed to initialize default frameworks: {e}")
+        logger.warning(f"Failed to initialize default frameworks: {e}")
 
     # Initialize cache manager
     from config.cache import get_cache_manager
     cache_manager = await get_cache_manager()
-    logger.logger.info("Cache manager initialized.")
+    logger.info("Cache manager initialized.")
 
-    logger.logger.info(f"Environment: {settings.env.value}")
-    logger.logger.info(f"Debug mode: {settings.debug}")
+    logger.info(f"Environment: {settings.env.value}")
+    logger.info(f"Debug mode: {settings.debug}")
     yield
     # Shutdown
-    logger.logger.info("Shutting down ComplianceGPT API...")
+    logger.info("Shutting down ComplianceGPT API...")
 
 app = FastAPI(
     title="ComplianceGPT API",

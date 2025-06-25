@@ -15,13 +15,13 @@
     "incremental": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"],
-      "@/components/*": ["./src/components/*"],
-      "@/lib/*": ["./src/lib/*"],
-      "@/types/*": ["./src/types/*"],
-      "@/api/*": ["./src/api/*"],
-      "@/store/*": ["./src/store/*"],
-      "@/hooks/*": ["./src/hooks/*"]
+      "@/*": ["./app/*"],
+      "@/components/*": ["./components/*"],
+      "@/lib/*": ["./app/lib/*"],
+      "@/types/*": ["./app/types/*"],
+      "@/api/*": ["./app/api/*"],
+      "@/store/*": ["./app/store/*"],
+      "@/hooks/*": ["./hooks/*"]
     },
     "plugins": [
       {
