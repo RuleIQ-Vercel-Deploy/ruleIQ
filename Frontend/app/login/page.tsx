@@ -37,7 +37,22 @@ export default function LoginPage() {
       login(tokens, user)
       router.push("/dashboard")
     } catch (err: any) {
-      setError(err.response?.data?.detail || "Login failed. Please try again.")
+      let errorMessage = "Login failed. Please try again."
+
+      if (err.response?.data) {
+        const errorData = err.response.data
+
+        // Handle FastAPI validation errors
+        if (Array.isArray(errorData.detail)) {
+          errorMessage = errorData.detail.map((e: any) => e.msg).join(", ")
+        } else if (typeof errorData.detail === "string") {
+          errorMessage = errorData.detail
+        } else if (errorData.message) {
+          errorMessage = errorData.message
+        }
+      }
+
+      setError(errorMessage)
     } finally {
       setIsLoading(false)
     }
