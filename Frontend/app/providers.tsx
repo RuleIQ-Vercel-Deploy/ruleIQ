@@ -3,6 +3,7 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { ThemeProvider } from "@/components/theme-provider"
 import { Toaster } from "@/components/ui/toaster"
+import { Toaster as SonnerToaster } from "sonner"
 import { useState } from "react"
 
 export function Providers({ children }: { children: React.ReactNode }) {
@@ -27,10 +28,11 @@ export function Providers({ children }: { children: React.ReactNode }) {
         defaultTheme="system"
         enableSystem
         disableTransitionOnChange
-        storageKey="nexcompli-theme"
+        storageKey="ruleiq-theme"
       >
         {children}
         <Toaster />
+        <SonnerToaster position="top-right" richColors />
       </ThemeProvider>
     </QueryClientProvider>
   )

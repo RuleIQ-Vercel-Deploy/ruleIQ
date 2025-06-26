@@ -1,6 +1,6 @@
 # Performance Testing Suite
 
-Comprehensive performance testing framework for ComplianceGPT backend services.
+Comprehensive performance testing framework for ruleIQ backend services.
 
 ## Overview
 

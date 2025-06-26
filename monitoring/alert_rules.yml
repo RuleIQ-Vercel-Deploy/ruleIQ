@@ -1,18 +1,18 @@
-# Prometheus alert rules for ComplianceGPT
+# Prometheus alert rules for ruleIQ
 # These rules define when to trigger alerts based on application metrics
 
 groups:
-  - name: compliancegpt_alerts
+  - name: ruleiq_alerts
     rules:
       # Application Health Alerts
       - alert: ApplicationDown
-        expr: up{job="compliancegpt-api"} == 0
+        expr: up{job="ruleiq-api"} == 0
         for: 1m
         labels:
           severity: critical
         annotations:
-          summary: "ComplianceGPT API is down"
-          description: "The ComplianceGPT API has been down for more than 1 minute."
+          summary: "ruleIQ API is down"
+          description: "The ruleIQ API has been down for more than 1 minute."
 
       - alert: HighErrorRate
         expr: rate(http_requests_total{status=~"5.."}[5m]) / rate(http_requests_total[5m]) > 0.05

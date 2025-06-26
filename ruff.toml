@@ -1,4 +1,4 @@
-# Ruff configuration for ComplianceGPT
+# Ruff configuration for ruleIQ
 target-version = "py38"
 line-length = 100
 select = [

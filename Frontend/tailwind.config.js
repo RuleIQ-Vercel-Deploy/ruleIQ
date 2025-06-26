@@ -18,6 +18,20 @@ module.exports = {
       },
     },
     extend: {
+      screens: {
+        'bp1': { 'max': '1024px' },
+        'bp2': { 'max': '768px' },
+        'bp3': { 'max': '640px' },
+        'bp4': { 'max': '480px' },
+        'bp5': { 'max': '400px' },
+        'bp6': { 'max': '320px' },
+        'bp7': { 'max': '280px' },
+      },
+      backgroundImage: {
+        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+        'grid-black': 'url("data:image/svg+xml,%3csvg width=\'100\' height=\'100\' xmlns=\'http://www.w3.org/2000/svg\'%3e%3cdefs%3e%3cpattern id=\'a\' patternUnits=\'userSpaceOnUse\' width=\'100\' height=\'100\' patternTransform=\'translate(-1,-1)\'%3e%3cpath d=\'M.5 100V.5h99.5v99.5z\' fill=\'none\' stroke=\'%23000\' stroke-width=\'1\'/%3e%3c/pattern%3e%3c/defs%3e%3crect width=\'100%25\' height=\'100%25\' fill=\'url(%23a)\'/%3e%3c/svg%3e")',
+        'grid-white': 'url("data:image/svg+xml,%3csvg width=\'100\' height=\'100\' xmlns=\'http://www.w3.org/2000/svg\'%3e%3cdefs%3e%3cpattern id=\'a\' patternUnits=\'userSpaceOnUse\' width=\'100\' height=\'100\' patternTransform=\'translate(-1,-1)\'%3e%3cpath d=\'M.5 100V.5h99.5v99.5z\' fill=\'none\' stroke=\'%23fff\' stroke-width=\'1\'/%3e%3c/pattern%3e%3c/defs%3e%3crect width=\'100%25\' height=\'100%25\' fill=\'url(%23a)\'/%3e%3c/svg%3e")',
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",

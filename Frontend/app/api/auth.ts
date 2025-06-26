@@ -4,14 +4,9 @@ import type { TokenResponse, User } from "@/types/api"
 
 export const authApi = {
   login: async (credentials: LoginInput): Promise<{ tokens: TokenResponse; user: User }> => {
-    const formData = new FormData()
-    formData.append("username", credentials.email)
-    formData.append("password", credentials.password)
-
-    const response = await apiClient.post("/auth/login", formData, {
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-      },
+    const response = await apiClient.post("/auth/login", {
+      email: credentials.email,
+      password: credentials.password,
     })
 
     // Get user profile after login

@@ -1,4 +1,4 @@
-# NexCompli Frontend
+# ruleIQ Frontend
 
 A modern Next.js 15 application for compliance management with AI-powered automation.
 

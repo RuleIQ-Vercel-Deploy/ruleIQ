@@ -92,3 +92,16 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+/* Enhanced Logo Styling */
+@layer components {
+  .logo-enhanced {
+    filter: contrast(1.15) saturate(1.1) brightness(1.05);
+    transition: all 0.3s ease;
+  }
+
+  .logo-enhanced:hover {
+    filter: contrast(1.2) saturate(1.15) brightness(1.1) drop-shadow(0 0 20px rgba(255, 255, 255, 0.3));
+    transform: scale(1.02);
+  }
+}

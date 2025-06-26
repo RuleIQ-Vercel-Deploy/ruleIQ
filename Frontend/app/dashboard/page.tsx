@@ -1,12 +1,13 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import Link from "next/link"
 import { useAuthStore } from "@/store/auth-store"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Progress } from "@/components/ui/progress"
-import { BarChart, Users, FileText, AlertTriangle } from "lucide-react"
+import { BarChart, Users, FileText, AlertTriangle, Building2, Settings } from "lucide-react"
 
 export default function DashboardPage() {
   const { user, isAuthenticated } = useAuthStore()
@@ -65,6 +66,12 @@ export default function DashboardPage() {
             </p>
           </div>
           <div className="flex items-center gap-2">
+            <Link href="/business-profile">
+              <Button variant="outline">
+                <Building2 className="mr-2 h-4 w-4" />
+                Business Profile
+              </Button>
+            </Link>
             <Button variant="outline">Export Report</Button>
           </div>
         </div>

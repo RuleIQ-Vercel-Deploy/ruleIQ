@@ -1,8 +1,8 @@
-# ComplianceGPT Architecture
+# ruleIQ Architecture
 
 ## view
 
-ComplianceGPT is an AI-powered compliance automation platform for UK SMBs. The system will guide businesses through compliance scoping, generate policies, create implementation plans, track evidence collection, and provide readiness assessments.
+ruleIQ is an AI-powered compliance automation platform for UK SMBs. The system will guide businesses through compliance scoping, generate policies, create implementation plans, track evidence collection, and provide readiness assessments.
 
 ## Core User Flows
 

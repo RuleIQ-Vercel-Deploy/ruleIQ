@@ -3,8 +3,13 @@ import './globals.css'
 import { Providers } from './providers'
 
 export const metadata: Metadata = {
-  title: 'NexCompli - Compliance Management Platform',
+  title: 'ruleIQ - AI-Driven Compliance Automation',
   description: 'Streamline your compliance management with AI-powered automation',
+  icons: {
+    icon: '/favicon.png',
+    shortcut: '/favicon.png',
+    apple: '/ruleiq-icon.png',
+  },
 }
 
 export default function RootLayout({
