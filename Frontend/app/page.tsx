@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { useAuthStore } from "@/store/auth-store";
+import { useAuthStore } from "@/lib/store/auth-store";
 import { motion } from "motion/react";
 import RuleIQHeader from "@/components/ruleiq-header";
 import { RuleIQLogo } from "@/components/ruleiq-logo";
@@ -18,6 +18,9 @@ import {
   TrendingUpIcon,
 } from "lucide-react";
 import { HoverBorderGradient } from "@/components/hover-border-gradient";
+import { AuroraBackground } from "@/components/ui/aurora-background";
+import { PricingSection } from "@/components/payment/pricing-card";
+
 
 // Benefit Card Component
 interface BenefitCardProps {
@@ -145,7 +148,6 @@ export default function HomePage() {
   const router = useRouter();
   const { isAuthenticated } = useAuthStore();
   const [mounted, setMounted] = useState(false);
-  const [isHovered, setIsHovered] = useState<boolean>(false);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [isHovered1, setIsHovered1] = useState(false);
   const [isHovered2, setIsHovered2] = useState(false);
@@ -169,91 +171,74 @@ export default function HomePage() {
   };
 
   return (
-    <div className="relative min-h-screen w-full h-full flex flex-col items-center overflow-hidden bg-gradient-to-b from-[#040508] to-[#0C0F15]">
-      <RuleIQHeader />
+    <div className="relative min-h-screen w-full h-full overflow-hidden">
+      <AuroraBackground className="dark:bg-zinc-900 min-h-screen h-auto w-full">
+        <RuleIQHeader />
 
-      <main className="relative pt-32 pb-16 container mx-auto px-4 z-10">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="text-center space-y-6 flex flex-col gap-8 items-center justify-center"
-        >
+        <main className="relative pt-8 pb-16 container mx-auto px-4 z-10">
+        <div className="hero-container-compact">
           <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.2 }}
-            className="inline-block"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="text-center flex flex-col items-center justify-center"
           >
-            <span className="relative px-4 py-2 rounded-xl flex flex-row gap-2 items-center bg-white/10 text-sm text-white/90 backdrop-blur-sm border border-white/10 overflow-hidden">
-              {/* Tinted Glowing Line */}
-              <motion.div
-                className="absolute top-0 w-[10px] h-full bg-blue-300 opacity-60 blur-md shadow-2xl"
-                initial={{ left: "-10%" }}
-                animate={{ left: "110%" }}
-                transition={{
-                  repeat: Infinity,
-                  duration: 2,
-                  ease: "linear",
-                }}
-              />
-
-              <WandSparkles className="w-4 h-4 relative z-10" />
-              <p className="relative z-10">
-                TRANSFORM YOUR COMPLIANCE WITH AI AUTOMATION
-              </p>
-            </span>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: -130 }}
-            animate={{ opacity: 1, y: -150 }}
-            transition={{ delay: 0.4 }}
-            className="flex justify-center items-center"
-            onHoverStart={() => setIsHovered(true)}
-            onHoverEnd={() => setIsHovered(false)}
-          >
+            {/* Transform Label */}
             <motion.div
-              animate={
-                isHovered
-                  ? {
-                      filter: "drop-shadow(0px 0px 20px rgba(0, 212, 221, 0.5))",
-                      scale: 1.05,
-                    }
-                  : {
-                      filter: "drop-shadow(0px 0px 0px rgba(0, 212, 221, 0))",
-                      scale: 1,
-                    }
-              }
-              transition={{ duration: 0.3, ease: "easeInOut" }}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2, duration: 0.8 }}
+              className="inline-block -mb-8"
             >
-              <RuleIQLogo variant="hero" size="2xl" className="w-full max-w-4xl drop-shadow-lg" />
+              <span className="px-4 py-2 rounded-xl flex flex-row gap-3 items-center bg-white/10 text-xs text-white/90 backdrop-blur-sm border border-white/20 shadow-lg">
+                <WandSparkles className="w-5 h-5 text-cyan-300" />
+                <p className="font-medium">
+                  TRANSFORM YOUR COMPLIANCE WITH AI AUTOMATION
+                </p>
+              </span>
             </motion.div>
+
+            {/* Main Logo */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.4, duration: 1, ease: "easeOut" }}
+              className="flex justify-center items-center -mb-12"
+            >
+              <RuleIQLogo
+                variant="hero"
+                size="2xl"
+                className="w-full max-w-4xl hero-logo"
+              />
+            </motion.div>
+
+            {/* Tagline */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.6, duration: 0.8 }}
+              className="text-center mb-32"
+            >
+              <h2 className="text-4xl hero-tagline uppercase tracking-wider">
+                A.I. COMPLIANCE AUTOMATED
+              </h2>
+            </motion.div>
+
+            {/* Description - Moved below the fold */}
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.8, duration: 0.8 }}
+              className="max-w-3xl mx-auto text-lg text-white/80 text-center leading-relaxed mb-12 mt-40"
+            >
+              Stop struggling with compliance management. Our AI-powered platform analyzes
+              your business, creates personalized compliance strategies, and helps you
+              execute them - all in real-time.
+            </motion.p>
           </motion.div>
+        </div>
 
-          <motion.div
-            initial={{ opacity: 0, y: -230 }}
-            animate={{ opacity: 1, y: -250 }}
-            transition={{ delay: 0.5 }}
-            className="text-center"
-          >
-            <h2 className="text-3xl font-light tracking-[0.3em] text-white/90 uppercase">
-              A.I. COMPLIANCE AUTOMATED
-            </h2>
-          </motion.div>
-
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.6 }}
-            className="max-w-2xl mx-auto text-[15px] text-white"
-          >
-            Stop struggling with compliance management. Our AI-powered platform analyzes
-            your business, creates personalized compliance strategies, and helps you
-            execute them - all in real-time.
-          </motion.p>
-
-          <motion.div
+        <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.8 }}
@@ -261,7 +246,7 @@ export default function HomePage() {
           >
             <HoverBorderGradient
               className="bg-gradient-to-b from-[rgb(91,105,139)] to-[#828282] px-6 font-extralight py-3 text-[16]"
-              onClick={() => router.push("/register")}
+              onClick={() => router.push("/checkout?plan=professional")}
             >
               Start Free Trial
             </HoverBorderGradient>
@@ -269,8 +254,8 @@ export default function HomePage() {
               Try ruleIQ free for 30 days
             </p>
           </motion.div>
-        </motion.div>
       </main>
+      </AuroraBackground>
 
       {/* Product Benefits Section */}
       <div className="min-h-screen mt-32 w-full h-full flex flex-col items-center overflow-hidden relative bg-gradient-to-b from-[#040508] to-[#0C0F15]">
@@ -554,59 +539,11 @@ export default function HomePage() {
             </p>
           </div>
 
-          {/* Pricing Cards Grid */}
-          <div className="grid grid-cols-3 bp1:grid-cols-1 mt-14 gap-8 mb-10 w-[90%] max-w-6xl">
-            <PricingCard
-              title="Starter"
-              price="$99"
-              period="per month"
-              description="Perfect for small businesses getting started with compliance"
-              features={[
-                "Up to 5 compliance frameworks",
-                "Basic gap analysis",
-                "Email support",
-                "Monthly compliance reports",
-                "5 team members",
-                "Standard integrations"
-              ]}
-              buttonText="Start Free Trial"
-              popular={false}
-            />
-            <PricingCard
-              title="Professional"
-              price="$299"
-              period="per month"
-              description="Ideal for growing companies with complex compliance needs"
-              features={[
-                "Unlimited compliance frameworks",
-                "AI-powered gap analysis",
-                "Priority support",
-                "Real-time monitoring",
-                "25 team members",
-                "Advanced integrations",
-                "Custom reporting",
-                "Audit trail management"
-              ]}
-              buttonText="Start Free Trial"
-              popular={true}
-            />
-            <PricingCard
-              title="Enterprise"
-              price="Custom"
-              period="contact us"
-              description="For large organizations requiring enterprise-grade compliance"
-              features={[
-                "Everything in Professional",
-                "Unlimited team members",
-                "Dedicated account manager",
-                "Custom compliance frameworks",
-                "White-label options",
-                "Advanced API access",
-                "SLA guarantees",
-                "On-premise deployment"
-              ]}
-              buttonText="Contact Sales"
-              popular={false}
+          {/* Pricing Cards Grid - New Payment-Enabled */}
+          <div className="mt-14 mb-10 w-[90%] max-w-6xl">
+            <PricingSection 
+              showHeader={false}
+              onSelectPlan={(planId) => router.push(`/checkout?plan=${planId}`)}
             />
           </div>
         </div>
@@ -635,7 +572,7 @@ export default function HomePage() {
             onMouseMove={handleMouseMove}
             onHoverStart={() => setIsHovered1(true)}
             onHoverEnd={() => setIsHovered1(false)}
-            onClick={() => router.push("/register")}
+            onClick={() => router.push("/checkout?plan=professional")}
           >
             <span className="relative z-10">Start Free Trial</span>
             {isHovered1 && (

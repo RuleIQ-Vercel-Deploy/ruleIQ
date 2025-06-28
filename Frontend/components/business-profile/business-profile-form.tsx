@@ -18,8 +18,8 @@ import { Separator } from "@/components/ui/separator"
 import { useToast } from "@/hooks/use-toast"
 
 import { businessProfileSchema, type BusinessProfileInput } from "@/lib/validators"
-import { businessProfileApi, INDUSTRY_OPTIONS, EMPLOYEE_COUNT_RANGES, ANNUAL_REVENUE_OPTIONS, COUNTRY_OPTIONS, DATA_SENSITIVITY_OPTIONS, COMPLIANCE_FRAMEWORKS, CLOUD_PROVIDERS, SAAS_TOOLS, DEVELOPMENT_TOOLS, COMPLIANCE_TIMELINE_OPTIONS } from "@/api/business-profiles"
-import type { BusinessProfile } from "@/types/api"
+import { businessProfileApi, INDUSTRY_OPTIONS, EMPLOYEE_COUNT_RANGES, ANNUAL_REVENUE_OPTIONS, COUNTRY_OPTIONS, DATA_SENSITIVITY_OPTIONS, COMPLIANCE_FRAMEWORKS, CLOUD_PROVIDERS, SAAS_TOOLS, DEVELOPMENT_TOOLS, COMPLIANCE_TIMELINE_OPTIONS } from "@/lib/api/business-profiles"
+import type { BusinessProfile } from "@/lib/types/api"
 import { formatValidationErrors } from "@/lib/utils"
 
 interface BusinessProfileFormProps {

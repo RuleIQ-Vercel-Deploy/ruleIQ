@@ -12,6 +12,16 @@ body {
   }
 }
 
+/* Aurora Background Animation */
+@keyframes aurora {
+  from {
+    background-position: 50% 50%, 50% 50%;
+  }
+  to {
+    background-position: 350% 50%, 350% 50%;
+  }
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -104,4 +114,80 @@ body {
     filter: contrast(1.2) saturate(1.15) brightness(1.1) drop-shadow(0 0 20px rgba(255, 255, 255, 0.3));
     transform: scale(1.02);
   }
+
+  /* Crisp Image Rendering for Hero Logo */
+  .hero-logo, .logo-image {
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+    image-rendering: optimizeQuality;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: pixelated;
+    -ms-interpolation-mode: nearest-neighbor;
+    backface-visibility: hidden;
+    transform: translateZ(0);
+  }
+
+  /* Retina Display Optimization */
+  .retina-optimized {
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+    image-rendering: optimizeQuality;
+    transform: translateZ(0);
+    will-change: transform;
+  }
+
+  /* Hero Container - Compact Layout */
+  .hero-container-compact {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 2rem;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    min-height: 85vh;
+    padding-top: 2rem;
+  }
+
+  /* Enhanced Hero Logo */
+  .hero-logo {
+    filter: drop-shadow(0 0 25px rgba(255,255,255,0.12)) drop-shadow(0 0 50px rgba(0,212,221,0.08));
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: transform, filter;
+  }
+
+  .hero-logo:hover {
+    transform: scale(1.03);
+    filter: drop-shadow(0 0 35px rgba(255,255,255,0.2)) drop-shadow(0 0 70px rgba(0,212,221,0.15));
+  }
+
+  /* Enhanced Tagline */
+  .hero-tagline {
+    background: linear-gradient(135deg, #ffffff 0%, #e5e7eb 50%, #d1d5db 100%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 0 30px rgba(255,255,255,0.1);
+    letter-spacing: 0.3em;
+    font-weight: 300;
+  }
+
+  /* Smooth Animations */
+  .fade-in-up {
+    animation: fadeInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Aurora effects removed as requested */
 }

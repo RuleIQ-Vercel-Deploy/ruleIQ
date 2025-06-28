@@ -2,8 +2,8 @@
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
 import { useToast } from "@/hooks/use-toast"
-import { businessProfileApi, type BusinessProfileCreateInput, type BusinessProfileUpdateInput } from "@/api/business-profiles"
-import type { BusinessProfile } from "@/types/api"
+import { businessProfileApi, type BusinessProfileCreateInput, type BusinessProfileUpdateInput } from "@/lib/api/business-profiles"
+import type { BusinessProfile } from "@/lib/types/api"
 import { formatValidationErrors } from "@/lib/utils"
 
 export function useBusinessProfile() {

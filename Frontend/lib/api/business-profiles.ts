@@ -1,5 +1,5 @@
 import apiClient from "@/lib/api-client"
-import type { BusinessProfile } from "@/types/api"
+import type { BusinessProfile } from "@/lib/types/api"
 
 export interface BusinessProfileCreateInput {
   company_name: string

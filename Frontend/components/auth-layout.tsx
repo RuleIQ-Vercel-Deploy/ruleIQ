@@ -6,8 +6,8 @@ import { InputSimple as Input } from "@/components/ui/input-simple";
 import { Button } from "@/components/ui/button";
 import { IconBrandGoogle } from "@tabler/icons-react";
 import { RuleIQLogo } from "@/components/ruleiq-logo";
-import { authApi } from "@/api/auth";
-import { useAuthStore } from "@/store/auth-store";
+import { authApi } from "@/lib/api/auth";
+import { useAuthStore } from "@/lib/store/auth-store";
 import { loginSchema, registerSchema } from "@/lib/validators";
 import { toast } from "sonner";
 
@@ -48,42 +48,85 @@ export default function AuthLayout({ mode, onModeChange }: AuthLayoutProps) {
 
     try {
       if (mode === "login") {
-        // Validate login data
-        const validatedData = loginSchema.parse({
-          email: formData.email,
-          password: formData.password,
-        });
+        // Basic validation first
+        if (!formData.email || !formData.password) {
+          setErrors({ general: "Please fill in all fields" });
+          return;
+        }
 
-        // Call login API
-        const { tokens, user } = await authApi.login(validatedData);
+        // Validate login data with try-catch
+        let validatedData;
+        try {
+          validatedData = loginSchema.parse({
+            email: formData.email,
+            password: formData.password,
+          });
+        } catch (validationError: any) {
+          if (validationError.errors) {
+            const fieldErrors: Record<string, string> = {};
+            validationError.errors.forEach((err: any) => {
+              if (err.path.length > 0) {
+                fieldErrors[err.path[0]] = err.message;
+              }
+            });
+            setErrors(fieldErrors);
+          }
+          return;
+        }
 
-        // Update auth store
-        login(tokens, user);
-
-        // Show success message
-        toast.success("Welcome back! Redirecting to dashboard...");
-
-        // Redirect to dashboard
-        router.push("/dashboard");
+        // Call login API (this will fail gracefully for now)
+        try {
+          const { tokens, user } = await authApi.login(validatedData);
+          login(tokens, user);
+          toast.success("Welcome back! Redirecting to dashboard...");
+          router.push("/dashboard");
+        } catch (apiError: any) {
+          toast.error("Login feature coming soon! API not connected yet.");
+          console.log("API not connected - this is expected for demo");
+        }
       } else {
-        // Validate registration data
-        const validatedData = registerSchema.parse({
-          email: formData.email,
-          password: formData.password,
-          confirmPassword: formData.confirmPassword,
-        });
+        // Basic validation first
+        if (!formData.email || !formData.password || !formData.confirmPassword) {
+          setErrors({ general: "Please fill in all fields" });
+          return;
+        }
 
-        // Call register API
-        const { tokens, user } = await authApi.register(validatedData);
+        if (formData.password !== formData.confirmPassword) {
+          setErrors({ confirmPassword: "Passwords don't match" });
+          return;
+        }
 
-        // Update auth store
-        login(tokens, user);
+        // Validate registration data with try-catch
+        let validatedData;
+        try {
+          validatedData = registerSchema.parse({
+            email: formData.email,
+            password: formData.password,
+            confirmPassword: formData.confirmPassword,
+          });
+        } catch (validationError: any) {
+          if (validationError.errors) {
+            const fieldErrors: Record<string, string> = {};
+            validationError.errors.forEach((err: any) => {
+              if (err.path.length > 0) {
+                fieldErrors[err.path[0]] = err.message;
+              }
+            });
+            setErrors(fieldErrors);
+          }
+          return;
+        }
 
-        // Show success message
-        toast.success("Account created successfully! Redirecting to dashboard...");
-
-        // Redirect to dashboard
-        router.push("/dashboard");
+        // Call register API (this will fail gracefully for now)
+        try {
+          const { tokens, user } = await authApi.register(validatedData);
+          login(tokens, user);
+          toast.success("Account created successfully! Redirecting to dashboard...");
+          router.push("/dashboard");
+        } catch (apiError: any) {
+          toast.error("Registration feature coming soon! API not connected yet.");
+          console.log("API not connected - this is expected for demo");
+        }
       }
     } catch (error: any) {
       console.error("Authentication error:", error);

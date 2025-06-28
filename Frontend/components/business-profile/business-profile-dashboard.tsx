@@ -11,9 +11,9 @@ import { Separator } from "@/components/ui/separator"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 
-import { businessProfileApi } from "@/api/business-profiles"
+import { businessProfileApi } from "@/lib/api/business-profiles"
 import { BusinessProfileForm } from "./business-profile-form"
-import type { BusinessProfile } from "@/types/api"
+import type { BusinessProfile } from "@/lib/types/api"
 
 interface BusinessProfileDashboardProps {
   onProfileUpdate?: (profile: BusinessProfile) => void

@@ -43,6 +43,8 @@
     "@radix-ui/react-toggle": "1.1.1",
     "@radix-ui/react-toggle-group": "1.1.1",
     "@radix-ui/react-tooltip": "1.1.6",
+    "@stripe/react-stripe-js": "^3.7.0",
+    "@stripe/stripe-js": "^7.4.0",
     "@tabler/icons-react": "^3.34.0",
     "@tanstack/react-query": "latest",
     "axios": "latest",
@@ -64,12 +66,12 @@
     "react-hook-form": "latest",
     "react-resizable-panels": "^2.1.7",
     "recharts": "latest",
-    "sonner": "^1.7.1",
+    "sonner": "^1.7.4",
     "tailwind-merge": "^2.5.5",
     "tailwindcss-animate": "^1.0.7",
     "vaul": "^0.9.6",
     "zod": "latest",
-    "zustand": "latest"
+    "zustand": "^5.0.6"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^6.4.2",

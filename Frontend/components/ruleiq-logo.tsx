@@ -26,7 +26,7 @@ export const RuleIQLogo = ({
     : variant === "cyan"
       ? "/ruleiq-logo-cyan.png"
       : variant === "hero"
-        ? "/ruleiq-hero-logo.png"
+        ? "/8.svg"
         : "/ruleiq-logo-navy.png";
 
   const altText = variant === "icon"
@@ -34,15 +34,15 @@ export const RuleIQLogo = ({
     : "ruleIQ - AI-Driven Compliance Automation";
 
   return (
-    <div className={`flex items-center ${className}`}>
-      <Image
-        src={logoSrc}
-        alt={altText}
-        width={variant === "icon" ? 800 : 4000}
-        height={variant === "icon" ? 800 : 2000}
-        className={`${sizeClasses[size]} w-auto logo-enhanced`}
-        priority
-      />
-    </div>
+    <Image
+      src={logoSrc}
+      alt={altText}
+      width={variant === "icon" ? 800 : 4000}
+      height={variant === "icon" ? 800 : 2000}
+      className={`${sizeClasses[size]} w-auto logo-enhanced ${variant === "hero" ? "hero-logo retina-optimized" : "logo-image retina-optimized"} ${className}`}
+      quality={100}
+      unoptimized={false}
+      priority
+    />
   );
 };
