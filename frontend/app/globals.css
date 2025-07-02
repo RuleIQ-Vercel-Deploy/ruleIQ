@@ -1,0 +1,255 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Dashboard grid styles */
+@import '../styles/dashboard-grid.css';
+
+@layer base {
+  :root {
+    /* Dark theme colors - aligned with ruleIQ brand */
+    --background: 224 44% 8%; /* Very dark navy background #0A0F1B */
+    --foreground: 0 0% 95%; /* Light text for dark backgrounds */
+
+    --card: 223 41% 12%; /* Slightly lighter than background #111929 */
+    --card-foreground: 0 0% 95%;
+
+    --popover: 223 41% 12%;
+    --popover-foreground: 0 0% 95%;
+
+    --primary: 223 55% 23%; /* Navy primary #17255A */
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 223 41% 15%; /* Darker secondary */
+    --secondary-foreground: 0 0% 90%;
+
+    --muted: 223 30% 20%; /* Muted backgrounds */
+    --muted-foreground: 0 0% 70%; /* Muted text */
+
+    --accent: 36 47% 52%; /* Gold accent #CB963E */
+    --accent-foreground: 223 55% 23%; /* Navy on gold */
+
+    --destructive: 354 84% 57%; /* Error red */
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 223 30% 20%; /* Subtle borders for dark theme */
+    --input: 223 30% 18%;
+    --ring: 36 47% 52%; /* Gold focus ring */
+
+    --radius: 0.5rem;
+  }
+  
+  /* Light theme (if user prefers) */
+  .light {
+    --background: 0 0% 100%; /* White background */
+    --foreground: 223 55% 23%; /* Navy text */
+
+    --card: 0 0% 100%;
+    --card-foreground: 223 55% 23%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 223 55% 23%;
+
+    --primary: 223 55% 23%; /* Navy primary */
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 210 25% 98%; /* Light blue-gray */
+    --secondary-foreground: 223 55% 23%;
+
+    --muted: 210 25% 96%;
+    --muted-foreground: 223 25% 45%;
+
+    --accent: 36 47% 52%; /* Gold accent */
+    --accent-foreground: 223 55% 23%;
+
+    --destructive: 354 84% 57%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 220 20% 90%;
+    --input: 220 20% 90%;
+    --ring: 223 55% 23%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  
+  /* Enhanced focus states with gold accent */
+  *:focus-visible {
+    @apply outline-none ring-2 ring-gold ring-offset-2 ring-offset-background;
+  }
+  
+  /* Button focus states */
+  button:focus-visible {
+    @apply outline-none ring-2 ring-gold ring-offset-2 ring-offset-background;
+  }
+  
+  /* Input focus states */
+  input:focus-visible,
+  textarea:focus-visible,
+  select:focus-visible {
+    @apply outline-none ring-2 ring-gold ring-offset-0 border-gold;
+  }
+  
+  /* Link focus states */
+  a:focus-visible {
+    @apply outline-none ring-2 ring-gold ring-offset-2 ring-offset-background rounded;
+  }
+  
+  /* Card/Interactive element focus */
+  [role="button"]:focus-visible,
+  [tabindex="0"]:focus-visible {
+    @apply outline-none ring-2 ring-gold ring-offset-2 ring-offset-background;
+  }
+  
+  /* Smooth transitions for interactive elements */
+  button,
+  a,
+  input,
+  textarea,
+  select,
+  [role="button"],
+  [tabindex="0"] {
+    @apply transition-all duration-200 ease-out;
+  }
+  
+  /* Hover states for interactive elements */
+  button:hover:not(:disabled),
+  a:hover,
+  [role="button"]:hover {
+    @apply scale-[1.02];
+  }
+  
+  /* Active/pressed states */
+  button:active:not(:disabled),
+  [role="button"]:active {
+    @apply scale-[0.98];
+  }
+  
+  /* Disabled states */
+  button:disabled,
+  input:disabled,
+  textarea:disabled,
+  select:disabled {
+    @apply cursor-not-allowed opacity-50;
+  }
+}
+
+@layer components {
+  /* Elevation system for dark theme */
+  .elevation-low {
+    @apply shadow-sm shadow-black/20;
+  }
+  
+  .elevation-medium {
+    @apply shadow-md shadow-black/30;
+  }
+  
+  .elevation-high {
+    @apply shadow-lg shadow-black/40;
+  }
+  
+  /* Glassmorphism effect for cards */
+  .glass {
+    @apply backdrop-blur-sm bg-card/50 border-border/50;
+  }
+  
+  /* Gradient borders */
+  .gradient-border {
+    @apply relative overflow-hidden;
+    background: linear-gradient(to right, hsl(var(--card)), hsl(var(--card))) padding-box,
+                linear-gradient(135deg, hsl(var(--gold)), hsl(var(--primary))) border-box;
+    border: 1px solid transparent;
+  }
+  
+  /* Glow effect on hover */
+  .glow-hover {
+    @apply transition-all duration-300;
+  }
+  
+  .glow-hover:hover {
+    box-shadow: 0 0 20px rgba(203, 150, 62, 0.3);
+  }
+  
+  /* Skip to main content link (accessibility) */
+  .skip-link {
+    @apply absolute left-0 top-0 z-[100] -translate-y-full bg-primary px-4 py-2 text-primary-foreground transition-transform focus:translate-y-0;
+  }
+}
+
+/* Tiptap editor styles */
+.tiptap {
+  @apply max-w-none rounded-md border border-input bg-transparent px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2;
+  min-height: 150px;
+}
+
+.tiptap p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  float: left;
+  color: hsl(var(--muted-foreground));
+  pointer-events: none;
+  height: 0;
+}
+
+/* Tiptap Editor Styles */
+@layer components {
+  .ProseMirror {
+    @apply min-h-[calc(100vh-200px)] p-4;
+  }
+  .ProseMirror:focus {
+    @apply outline-none;
+  }
+  .ProseMirror h1,
+  .ProseMirror h2,
+  .ProseMirror h3,
+  .ProseMirror h4,
+  .ProseMirror h5,
+  .ProseMirror h6 {
+    @apply text-gold; /* Gold color for headings */
+  }
+  .ProseMirror h1 {
+    @apply text-4xl font-bold my-4;
+  }
+  .ProseMirror h2 {
+    @apply text-3xl font-semibold my-3;
+  }
+  .ProseMirror h3 {
+    @apply text-2xl font-semibold my-2;
+  }
+  .ProseMirror p {
+    @apply my-2 leading-relaxed;
+  }
+  .ProseMirror ul,
+  .ProseMirror ol {
+    @apply my-4 ml-6;
+  }
+  .ProseMirror ul {
+    @apply list-disc;
+  }
+  .ProseMirror ol {
+    @apply list-decimal;
+  }
+  .ProseMirror li {
+    @apply my-1;
+  }
+  .ProseMirror strong {
+    @apply font-bold;
+  }
+  .ProseMirror em {
+    @apply italic;
+  }
+  .ProseMirror u {
+    @apply underline;
+  }
+  .ProseMirror s {
+    @apply line-through;
+  }
+  .ProseMirror a {
+    @apply text-cyan underline hover:text-cyan-light;
+  }
+}
