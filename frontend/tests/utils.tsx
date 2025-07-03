@@ -1,6 +1,7 @@
-import React, { ReactElement } from 'react'
-import { render, RenderOptions } from '@testing-library/react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { render, type RenderOptions } from '@testing-library/react'
+import React, { type ReactElement } from 'react'
+
 import { ThemeProvider } from '@/components/theme-provider'
 
 // Create a custom render function that includes providers
@@ -74,12 +75,12 @@ export const waitForLoadingToFinish = () =>
   new Promise(resolve => setTimeout(resolve, 0))
 
 export const createMockIntersectionObserver = () => {
-  const mockIntersectionObserver = jest.fn()
+  const mockIntersectionObserver = vi.fn()
   mockIntersectionObserver.mockReturnValue({
     observe: () => null,
     unobserve: () => null,
     disconnect: () => null,
   })
   window.IntersectionObserver = mockIntersectionObserver
-  window.IntersectionObserverEntry = jest.fn()
+  window.IntersectionObserverEntry = vi.fn() as any
 }

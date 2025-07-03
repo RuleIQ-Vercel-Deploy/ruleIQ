@@ -3,7 +3,7 @@ The primary AI service that orchestrates the conversational flow, classifies use
 and generates intelligent responses asynchronously.
 """
 
-from typing import Dict, List, Any, Tuple
+from typing import Dict, List, Any, Tuple, Optional
 from uuid import UUID, uuid4
 from datetime import datetime
 
@@ -20,6 +20,11 @@ from config.ai_config import get_ai_model
 from database.models import User
 from core.exceptions import (
     IntegrationException, BusinessLogicException, NotFoundException, DatabaseException
+)
+from .exceptions import (
+    AIServiceException, AITimeoutException, AIQuotaExceededException,
+    AIModelException, AIContentFilterException, AIParsingException,
+    handle_ai_error, map_gemini_error
 )
 from config.logging_config import get_logger
 
@@ -106,7 +111,7 @@ class ComplianceAssistant:
             logger.error(f"Unexpected error processing message for conversation {conversation_id}: {e}", exc_info=True)
             raise BusinessLogicException("An unexpected error occurred while processing your message.") from e
 
-    async def _generate_gemini_response(self, prompt: str, context: Dict[str, Any] = None) -> str:
+    async def _generate_gemini_response(self, prompt: str, context: Optional[Dict[str, Any]] = None) -> str:
         """Sends a prompt to the Gemini model and returns the text response with caching and optimization."""
         try:
             # Initialize components if needed
@@ -120,13 +125,14 @@ class ComplianceAssistant:
                 self.quality_monitor = await get_quality_monitor()
 
             # Apply performance optimization
-            priority = context.get('priority', 1) if context else 1
+            safe_context = context or {}
+            priority = safe_context.get('priority', 1)
             optimized_prompt, optimization_metadata = await self.performance_optimizer.optimize_ai_request(
-                prompt, context, priority
+                prompt, safe_context, priority
             )
 
             # Try to get cached response first (using optimized prompt)
-            cached_response = await self.ai_cache.get_cached_response(optimized_prompt, context)
+            cached_response = await self.ai_cache.get_cached_response(optimized_prompt, safe_context)
             if cached_response:
                 logger.debug("Using cached AI response")
 
@@ -168,7 +174,7 @@ class ComplianceAssistant:
 
                 # Record comprehensive analytics
                 await self._record_ai_analytics(
-                    response_time, estimated_tokens, context, optimization_metadata
+                    response_time, estimated_tokens, safe_context, optimization_metadata
                 )
 
                 # Cache the response with metadata
@@ -184,12 +190,12 @@ class ComplianceAssistant:
                 }
 
                 # Cache asynchronously (don't wait for it)
-                await self.ai_cache.cache_response(optimized_prompt, response_text, context, metadata)
+                await self.ai_cache.cache_response(optimized_prompt, response_text, safe_context, metadata)
 
                 # Perform quality assessment asynchronously
                 response_id = f"resp_{int(datetime.utcnow().timestamp() * 1000)}"
                 asyncio.create_task(self._assess_response_quality(
-                    response_id, response_text, optimized_prompt, context
+                    response_id, response_text, optimized_prompt, safe_context
                 ))
 
                 return response_text
@@ -206,8 +212,8 @@ class ComplianceAssistant:
         self,
         response_time: float,
         token_count: int,
-        context: Dict[str, Any] = None,
-        optimization_metadata: Dict[str, Any] = None
+        context: Optional[Dict[str, Any]] = None,
+        optimization_metadata: Optional[Dict[str, Any]] = None
     ):
         """Record comprehensive analytics for AI operations."""
         try:
@@ -1867,16 +1873,36 @@ class ComplianceAssistant:
             'business_context': business_context
         }
 
-    def _classify_intent(self, message: str) -> Dict[str, Any]:
-        """Classifies the user's intent from their message."""
+    def _classify_intent(self, message: str, assessment_context: Dict[str, Any] = None) -> Dict[str, Any]:
+        """Classifies the user's intent from their message, including assessment-specific intents."""
         import re
 
         message_lower = message.lower()
+        assessment_context = assessment_context or {}
 
-        # Define intent patterns
+        # Define intent patterns (enhanced for assessment support)
         intent_patterns = {
+            # Assessment-specific intents (Phase 2.2)
+            "assessment_help": [
+                r"help.*question", r"explain.*question", r"clarify.*question",
+                r"what.*mean", r"how.*answer", r"guidance.*question",
+                r"assessment.*help", r"question.*help"
+            ],
+            "question_clarification": [
+                r"clarify", r"explain.*better", r"don't understand",
+                r"what.*asking", r"rephrase", r"more.*detail"
+            ],
+            "gap_analysis": [
+                r"gap.*analysis", r"what.*missing", r"identify.*gaps",
+                r"compliance.*gaps", r"missing.*requirements", r"analyze.*gaps"
+            ],
+            "implementation_guidance": [
+                r"how.*implement", r"implementation.*plan", r"next.*steps",
+                r"action.*plan", r"roadmap", r"timeline.*implementation"
+            ],
+            # Existing intents
             "compliance_guidance": [
-                r"how.*implement", r"what.*requirements", r"guide.*compliance",
+                r"what.*requirements", r"guide.*compliance",
                 r"help.*gdpr", r"help.*iso", r"help.*soc", r"help.*hipaa"
             ],
             "evidence_guidance": [
@@ -1910,14 +1936,30 @@ class ComplianceAssistant:
         confidence = 0.5
         detected_framework = None
 
-        for intent, patterns in intent_patterns.items():
-            for pattern in patterns:
-                if re.search(pattern, message_lower):
-                    detected_intent = intent
-                    confidence = 0.85
+        # Check for assessment context first (higher priority)
+        if assessment_context:
+            if assessment_context.get('in_assessment'):
+                # Boost assessment-specific intent detection
+                for intent, patterns in intent_patterns.items():
+                    if intent.startswith('assessment_') or intent in ['question_clarification', 'gap_analysis', 'implementation_guidance']:
+                        for pattern in patterns:
+                            if re.search(pattern, message_lower):
+                                detected_intent = intent
+                                confidence = 0.9  # Higher confidence in assessment context
+                                break
+                        if detected_intent != "general_query":
+                            break
+
+        # If no assessment-specific intent found, check general intents
+        if detected_intent == "general_query":
+            for intent, patterns in intent_patterns.items():
+                for pattern in patterns:
+                    if re.search(pattern, message_lower):
+                        detected_intent = intent
+                        confidence = 0.85
+                        break
+                if detected_intent != "general_query":
                     break
-            if detected_intent != "general_query":
-                break
 
         # Detect framework
         for framework, pattern in frameworks.items():
@@ -1926,24 +1968,37 @@ class ComplianceAssistant:
                 confidence = min(confidence + 0.1, 0.95)
                 break
 
+        # Add assessment-specific metadata
+        assessment_metadata = {}
+        if assessment_context:
+            assessment_metadata = {
+                'framework_id': assessment_context.get('framework_id'),
+                'question_id': assessment_context.get('question_id'),
+                'section_id': assessment_context.get('section_id'),
+                'assessment_progress': assessment_context.get('progress', 0)
+            }
+
         return {
             "intent": detected_intent,
             "framework": detected_framework,
             "confidence": confidence,
             "message_length": len(message),
-            "contains_question": "?" in message
+            "contains_question": "?" in message,
+            "assessment_context": assessment_metadata
         }
 
-    def _extract_entities(self, message: str) -> Dict[str, List[str]]:
-        """Extracts compliance-related entities from the message."""
+    def _extract_entities(self, message: str, assessment_context: Dict[str, Any] = None) -> Dict[str, List[str]]:
+        """Extracts compliance-related entities from the message, including assessment-specific entities."""
         import re
 
         message_lower = message.lower()
+        assessment_context = assessment_context or {}
 
         # Define entity patterns
         frameworks = []
         evidence_types = []
         control_domains = []
+        assessment_entities = []
 
         # Framework patterns
         framework_patterns = {
@@ -1990,10 +2045,33 @@ class ComplianceAssistant:
             if re.search(pattern, message_lower):
                 control_domains.append(control_domain)
 
+        # Assessment-specific entity patterns (Phase 2.2)
+        assessment_patterns = {
+            "question_types": r"multiple.*choice|yes.*no|free.*text|rating|scale",
+            "assessment_stages": r"stage|phase|section|part",
+            "completion_status": r"complete|incomplete|in.*progress|pending",
+            "difficulty_indicators": r"difficult|confusing|unclear|complex|simple|easy"
+        }
+
+        # Extract assessment entities if in assessment context
+        if assessment_context and assessment_context.get('in_assessment'):
+            for entity_type, pattern in assessment_patterns.items():
+                if re.search(pattern, message_lower):
+                    assessment_entities.append(entity_type)
+
+        # Add context-specific entities
+        if assessment_context:
+            if assessment_context.get('framework_id'):
+                frameworks.append(assessment_context['framework_id'])
+            if assessment_context.get('section_id'):
+                assessment_entities.append(f"section_{assessment_context['section_id']}")
+
         return {
             "frameworks": frameworks,
             "evidence_types": evidence_types,
-            "control_domains": control_domains
+            "control_domains": control_domains,
+            "assessment_entities": assessment_entities,
+            "context_enhanced": bool(assessment_context)
         }
 
     def _handle_adversarial_input(self, message: str) -> Dict[str, Any]:
@@ -2305,81 +2383,474 @@ class ComplianceAssistant:
         try:
             # Get business context
             context = await self.context_manager.get_conversation_context(
-                conversation_id=uuid4(), 
+                conversation_id=uuid4(),
                 business_profile_id=business_profile_id
             )
-            
+
             # Build analysis prompt
             prompt = f"""Analyze compliance evidence gaps for {framework}:
-            
+
             Business Profile:
             - Company: {context.get('business_profile', {}).get('company_name', 'Unknown')}
             - Industry: {context.get('business_profile', {}).get('industry', 'Unknown')}
             - Size: {context.get('business_profile', {}).get('employee_count', 0)} employees
-            
+
             Current Evidence Status:
             - Total Evidence Items: {len(context.get('recent_evidence', []))}
             - Evidence Types: {self._get_evidence_types_summary(context.get('recent_evidence', []))}
-            
+
             Framework: {framework}
-            
+
             Provide a structured analysis with:
             1. Current completion percentage (0-100)
             2. Critical missing evidence types
             3. Top 3 priority recommendations with specific actions
             4. Risk assessment of current gaps
-            
-            Format as JSON with keys: completion_percentage, critical_gaps, recommendations, risk_level"""
-            
+            """
+
             # Generate AI response
-            response = await self._generate_gemini_response(prompt)
-            
-            # Parse response or provide fallback
-            try:
-                import json
-                parsed_response = json.loads(response)
-                
-                return {
-                    "framework": framework,
-                    "completion_percentage": parsed_response.get("completion_percentage", 0),
-                    "evidence_collected": len(context.get('recent_evidence', [])),
-                    "evidence_types": list(self._get_evidence_types_summary(context.get('recent_evidence', [])).keys()),
-                    "recent_activity": len([e for e in context.get('recent_evidence', [])
-                                         if self._is_recent_activity(e)]),
-                    "recommendations": self._format_recommendations(
-                        parsed_response.get("recommendations", [])
-                    ),
-                    "critical_gaps": parsed_response.get("critical_gaps", []),
-                    "risk_level": parsed_response.get("risk_level", "Medium")
-                }
-            except json.JSONDecodeError:
-                # Fallback structure if AI doesn't return valid JSON
-                return {
-                    "framework": framework,
-                    "completion_percentage": 30,
-                    "evidence_collected": len(context.get('recent_evidence', [])),
-                    "evidence_types": list(self._get_evidence_types_summary(context.get('recent_evidence', [])).keys()),
-                    "recent_activity": 0,
-                    "recommendations": [
-                        "Conduct comprehensive evidence collection audit",
-                        "Implement structured documentation processes",
-                        "Schedule regular compliance reviews"
-                    ],
-                    "critical_gaps": ["Missing policy documentation", "Insufficient audit trails"],
-                    "risk_level": "Medium"
-                }
-                
+            response = await self._generate_ai_response(
+                "You are a compliance expert analyzing evidence gaps.",
+                prompt
+            )
+
+            return {
+                "analysis": response,
+                "framework": framework,
+                "business_profile_id": str(business_profile_id),
+                "generated_at": datetime.utcnow().isoformat()
+            }
+
         except Exception as e:
-            logger.error(f"Error analyzing evidence gaps for framework {framework}: {e}", exc_info=True)
-            raise BusinessLogicException("Unable to analyze evidence gaps at this time") from e
-    
-    def _get_evidence_types_summary(self, evidence_items: List[Dict]) -> Dict[str, int]:
+            logger.error(f"Error analyzing evidence gap: {e}")
+            return {
+                "analysis": f"Unable to analyze evidence gaps for {framework} at this time.",
+                "framework": framework,
+                "business_profile_id": str(business_profile_id),
+                "error": str(e)
+            }
+
+    # Assessment-specific AI methods for Phase 2.2 integration
+
+    async def get_assessment_help(
+        self,
+        question_id: str,
+        question_text: str,
+        framework_id: str,
+        business_profile_id: UUID,
+        section_id: str = None,
+        user_context: Dict[str, Any] = None
+    ) -> Dict[str, Any]:
+        """
+        Provide AI-powered contextual guidance for specific assessment questions.
+
+        Args:
+            question_id: Unique identifier for the question
+            question_text: The actual question text
+            framework_id: The compliance framework (e.g., 'gdpr', 'iso27001')
+            business_profile_id: User's business profile for context
+            section_id: Optional section identifier within the framework
+            user_context: Additional context from the user
+
+        Returns:
+            Dict containing guidance, confidence score, related topics, etc.
+        """
+        try:
+            # Get comprehensive business context
+            context = await self.context_manager.get_conversation_context(
+                conversation_id=uuid4(),
+                business_profile_id=business_profile_id
+            )
+
+            # Build assessment-specific prompt
+            prompt_data = self.prompt_templates.get_assessment_help_prompt(
+                question_text=question_text,
+                framework_id=framework_id,
+                section_id=section_id,
+                business_context=context.get('business_profile', {}),
+                user_context=user_context or {}
+            )
+
+            # Generate AI response
+            response = await self._generate_ai_response(
+                prompt_data['system'],
+                prompt_data['user']
+            )
+
+            # Parse and structure the response
+            structured_response = self._parse_assessment_help_response(response)
+
+            # Add metadata
+            structured_response.update({
+                'request_id': f"help_{framework_id}_{question_id}_{uuid4().hex[:8]}",
+                'generated_at': datetime.utcnow().isoformat(),
+                'framework_id': framework_id,
+                'question_id': question_id
+            })
+
+            return structured_response
+
+        except Exception as e:
+            logger.error(f"Error generating assessment help: {e}")
+            return self._get_fallback_assessment_help(question_text, framework_id)
+
+    async def generate_assessment_followup(
+        self,
+        current_answers: Dict[str, Any],
+        framework_id: str,
+        business_profile_id: UUID,
+        assessment_context: Dict[str, Any] = None
+    ) -> Dict[str, Any]:
+        """
+        Generate intelligent follow-up questions based on current assessment progress.
+
+        Args:
+            current_answers: User's current assessment responses
+            framework_id: The compliance framework being assessed
+            business_profile_id: User's business profile for context
+            assessment_context: Additional assessment context
+
+        Returns:
+            Dict containing follow-up questions and recommendations
+        """
+        try:
+            # Get business context
+            context = await self.context_manager.get_conversation_context(
+                conversation_id=uuid4(),
+                business_profile_id=business_profile_id
+            )
+
+            # Build followup prompt
+            prompt_data = self.prompt_templates.get_assessment_followup_prompt(
+                current_answers=current_answers,
+                framework_id=framework_id,
+                business_context=context.get('business_profile', {}),
+                assessment_context=assessment_context or {}
+            )
+
+            # Generate AI response
+            response = await self._generate_ai_response(
+                prompt_data['system'],
+                prompt_data['user']
+            )
+
+            # Parse and structure the response
+            structured_response = self._parse_assessment_followup_response(response)
+
+            # Add metadata
+            structured_response.update({
+                'request_id': f"followup_{framework_id}_{uuid4().hex[:8]}",
+                'generated_at': datetime.utcnow().isoformat(),
+                'framework_id': framework_id
+            })
+
+            return structured_response
+
+        except Exception as e:
+            logger.error(f"Error generating assessment followup: {e}")
+            return self._get_fallback_assessment_followup(framework_id)
+
+    async def analyze_assessment_results(
+        self,
+        assessment_results: Dict[str, Any],
+        framework_id: str,
+        business_profile_id: UUID
+    ) -> Dict[str, Any]:
+        """
+        Perform comprehensive AI analysis of assessment results.
+
+        Args:
+            assessment_results: The completed assessment responses
+            framework_id: The compliance framework being assessed
+            business_profile_id: User's business profile for context
+
+        Returns:
+            Dict containing gaps, recommendations, risk assessment, etc.
+        """
+        try:
+            # Get business context
+            context = await self.context_manager.get_conversation_context(
+                conversation_id=uuid4(),
+                business_profile_id=business_profile_id
+            )
+
+            # Build analysis prompt
+            prompt_data = self.prompt_templates.get_assessment_analysis_prompt(
+                assessment_results=assessment_results,
+                framework_id=framework_id,
+                business_context=context.get('business_profile', {})
+            )
+
+            # Generate AI response
+            response = await self._generate_ai_response(
+                prompt_data['system'],
+                prompt_data['user']
+            )
+
+            # Parse and structure the response
+            structured_response = self._parse_assessment_analysis_response(response)
+
+            # Add metadata
+            structured_response.update({
+                'request_id': f"analysis_{framework_id}_{uuid4().hex[:8]}",
+                'generated_at': datetime.utcnow().isoformat(),
+                'framework_id': framework_id
+            })
+
+            return structured_response
+
+        except Exception as e:
+            logger.error(f"Error analyzing assessment results: {e}")
+            return self._get_fallback_assessment_analysis(framework_id)
+
+    async def get_assessment_recommendations(
+        self,
+        gaps: List[Dict[str, Any]],
+        business_profile: Dict[str, Any],
+        framework_id: str,
+        existing_policies: List[str] = None,
+        industry_context: str = None,
+        timeline_preferences: str = "standard"
+    ) -> Dict[str, Any]:
+        """
+        Generate personalized implementation recommendations based on assessment gaps.
+
+        Args:
+            gaps: Identified compliance gaps from assessment
+            business_profile: Business context and profile information
+            framework_id: The compliance framework
+            existing_policies: List of existing policies
+            industry_context: Industry-specific context
+            timeline_preferences: Implementation timeline preference
+
+        Returns:
+            Dict containing recommendations and implementation plan
+        """
+        try:
+            # Build recommendations prompt
+            prompt_data = self.prompt_templates.get_assessment_recommendations_prompt(
+                gaps=gaps,
+                business_profile=business_profile,
+                framework_id=framework_id,
+                existing_policies=existing_policies or [],
+                industry_context=industry_context,
+                timeline_preferences=timeline_preferences
+            )
+
+            # Generate AI response
+            response = await self._generate_ai_response(
+                prompt_data['system'],
+                prompt_data['user']
+            )
+
+            # Parse and structure the response
+            structured_response = self._parse_assessment_recommendations_response(response)
+
+            # Add metadata
+            structured_response.update({
+                'request_id': f"recommendations_{framework_id}_{uuid4().hex[:8]}",
+                'generated_at': datetime.utcnow().isoformat(),
+                'framework_id': framework_id
+            })
+
+            return structured_response
+
+        except Exception as e:
+            logger.error(f"Error generating assessment recommendations: {e}")
+            return self._get_fallback_assessment_recommendations(framework_id)
+
+    def _get_evidence_types_summary(self, evidence_items: List[Dict[str, Any]]) -> Dict[str, int]:
         """Summarize evidence types from evidence items."""
         type_counts = {}
         for item in evidence_items:
             evidence_type = item.get('evidence_type', 'unknown')
             type_counts[evidence_type] = type_counts.get(evidence_type, 0) + 1
         return type_counts
+
+    async def _generate_ai_response(self, system_prompt: str, user_prompt: str) -> str:
+        """Generate AI response using the configured model."""
+        try:
+            # Use the existing _generate_response method but with specific prompts
+            full_prompt = f"System: {system_prompt}\n\nUser: {user_prompt}"
+            response = await self.model.generate_content_async(full_prompt)
+            return response.text if hasattr(response, 'text') else str(response)
+        except Exception as e:
+            logger.error(f"Error generating AI response: {e}")
+            return "I apologize, but I'm unable to provide a response at this time. Please try again later."
+
+    def _parse_assessment_help_response(self, response: str) -> Dict[str, Any]:
+        """Parse AI response for assessment help into structured format."""
+        try:
+            import json
+            # Try to parse as JSON first
+            if response.strip().startswith('{'):
+                return json.loads(response)
+        except json.JSONDecodeError:
+            pass
+
+        # Fallback to structured parsing
+        return {
+            'guidance': response,
+            'confidence_score': 0.8,
+            'related_topics': [],
+            'follow_up_suggestions': [],
+            'source_references': []
+        }
+
+    def _parse_assessment_followup_response(self, response: str) -> Dict[str, Any]:
+        """Parse AI response for assessment followup into structured format."""
+        try:
+            import json
+            if response.strip().startswith('{'):
+                return json.loads(response)
+        except json.JSONDecodeError:
+            pass
+
+        return {
+            'follow_up_questions': [response],
+            'recommendations': [],
+            'confidence_score': 0.8
+        }
+
+    def _parse_assessment_analysis_response(self, response: str) -> Dict[str, Any]:
+        """Parse AI response for assessment analysis into structured format."""
+        try:
+            import json
+            if response.strip().startswith('{'):
+                return json.loads(response)
+        except json.JSONDecodeError:
+            pass
+
+        return {
+            'gaps': [],
+            'recommendations': [],
+            'risk_assessment': {'level': 'medium', 'description': response},
+            'compliance_insights': {'summary': response},
+            'evidence_requirements': []
+        }
+
+    def _parse_assessment_recommendations_response(self, response: str) -> Dict[str, Any]:
+        """Parse AI response for assessment recommendations into structured format."""
+        try:
+            import json
+            if response.strip().startswith('{'):
+                return json.loads(response)
+        except json.JSONDecodeError:
+            pass
+
+        return {
+            'recommendations': [],
+            'implementation_plan': {
+                'phases': [],
+                'total_timeline_weeks': 12,
+                'resource_requirements': []
+            },
+            'success_metrics': []
+        }
+
+    def _get_fallback_assessment_help(self, question_text: str, framework_id: str) -> Dict[str, Any]:
+        """Provide fallback response when AI assessment help fails."""
+        return {
+            'guidance': f"For questions about {framework_id}, please refer to the official documentation or consult with a compliance expert. The specific question '{question_text}' requires careful consideration of your business context.",
+            'confidence_score': 0.5,
+            'related_topics': [framework_id, 'compliance guidance'],
+            'follow_up_suggestions': ['Review framework documentation', 'Consult compliance expert'],
+            'source_references': [f'{framework_id} official documentation'],
+            'request_id': f"fallback_help_{framework_id}",
+            'generated_at': datetime.utcnow().isoformat()
+        }
+
+    def _get_fallback_assessment_followup(self, framework_id: str) -> Dict[str, Any]:
+        """Provide fallback response when AI assessment followup fails."""
+        return {
+            'follow_up_questions': [
+                f"What specific aspects of {framework_id} are you most concerned about?",
+                "Do you have existing policies that might be relevant?",
+                "What is your target timeline for compliance?"
+            ],
+            'recommendations': [
+                "Review current compliance posture",
+                "Identify key stakeholders",
+                "Establish implementation timeline"
+            ],
+            'confidence_score': 0.5,
+            'request_id': f"fallback_followup_{framework_id}",
+            'generated_at': datetime.utcnow().isoformat()
+        }
+
+    def _get_fallback_assessment_analysis(self, framework_id: str) -> Dict[str, Any]:
+        """Provide fallback response when AI assessment analysis fails."""
+        return {
+            'gaps': [
+                {
+                    'id': 'general_gap',
+                    'title': 'General Compliance Gap',
+                    'description': f'Unable to perform detailed analysis for {framework_id} at this time',
+                    'severity': 'medium',
+                    'category': 'general'
+                }
+            ],
+            'recommendations': [
+                {
+                    'id': 'general_rec',
+                    'title': 'Conduct Manual Review',
+                    'description': 'Perform manual compliance assessment with expert guidance',
+                    'priority': 'high',
+                    'effort_estimate': '2-4 weeks',
+                    'impact_score': 0.7
+                }
+            ],
+            'risk_assessment': {
+                'level': 'medium',
+                'description': 'Unable to assess specific risks at this time'
+            },
+            'compliance_insights': {
+                'summary': f'Manual review recommended for {framework_id} compliance'
+            },
+            'evidence_requirements': [],
+            'request_id': f"fallback_analysis_{framework_id}",
+            'generated_at': datetime.utcnow().isoformat()
+        }
+
+    def _get_fallback_assessment_recommendations(self, framework_id: str) -> Dict[str, Any]:
+        """Provide fallback response when AI assessment recommendations fail."""
+        return {
+            'recommendations': [
+                {
+                    'id': 'general_rec_1',
+                    'title': 'Establish Compliance Program',
+                    'description': f'Set up a structured compliance program for {framework_id}',
+                    'priority': 'high',
+                    'effort_estimate': '4-6 weeks',
+                    'impact_score': 0.8,
+                    'implementation_steps': [
+                        'Assign compliance team',
+                        'Review framework requirements',
+                        'Create implementation plan'
+                    ]
+                }
+            ],
+            'implementation_plan': {
+                'phases': [
+                    {
+                        'phase_number': 1,
+                        'phase_name': 'Planning and Assessment',
+                        'duration_weeks': 4,
+                        'tasks': ['Review requirements', 'Assess current state'],
+                        'dependencies': []
+                    }
+                ],
+                'total_timeline_weeks': 12,
+                'resource_requirements': ['Compliance team', 'Documentation tools']
+            },
+            'success_metrics': [
+                'Compliance program established',
+                'Key policies documented',
+                'Regular reviews scheduled'
+            ],
+            'request_id': f"fallback_recommendations_{framework_id}",
+            'generated_at': datetime.utcnow().isoformat()
+        }
     
     def _is_recent_activity(self, evidence_item: Dict) -> bool:
         """Check if evidence item represents recent activity (within last 30 days)."""

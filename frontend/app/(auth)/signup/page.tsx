@@ -115,7 +115,7 @@ const questionBank: Record<string, Question> = {
     field: "companySize",
     options: ["Just me", "2-10", "11-50", "51-200", "201-500", "500+"],
     icon: <Users className="h-5 w-5" />,
-    nextQuestion: (data, answer) => {
+    nextQuestion: (_data, answer) => {
       if (answer === "Just me" || answer === "2-10") return "smallBusinessConcerns";
       if (parseInt(answer) > 50) return "hasComplianceTeam";
       return "industry";
@@ -139,7 +139,7 @@ const questionBank: Record<string, Question> = {
     question: "Do you have a dedicated compliance or legal team?",
     field: "hasComplianceTeam",
     options: ["Yes, full team", "Yes, part-time", "No, but planning to", "No dedicated team"],
-    nextQuestion: (data, answer) => answer.includes("Yes") ? "complianceMaturity" : "industry"
+    nextQuestion: (_data, answer) => answer.includes("Yes") ? "complianceMaturity" : "industry"
   },
 
   complianceMaturity: {
@@ -158,7 +158,7 @@ const questionBank: Record<string, Question> = {
     question: (data) => `Which industry is ${data.companyName} in?`,
     field: "industry",
     options: ["Technology/SaaS", "Healthcare", "Financial Services", "E-commerce/Retail", "Manufacturing", "Education", "Professional Services", "Other"],
-    nextQuestion: (data, answer) => {
+    nextQuestion: (_data, answer) => {
       if (answer === "Healthcare") return "healthcareSpecific";
       if (answer === "Financial Services") return "financialSpecific";
       if (answer === "E-commerce/Retail") return "ecommerceSpecific";
@@ -205,7 +205,7 @@ const questionBank: Record<string, Question> = {
     question: (data) => `Is ${data.companyName} B2B or B2C?`,
     field: "businessModel",
     options: ["B2B only", "B2C only", "Both B2B and B2C", "B2G (Government)", "Non-profit"],
-    nextQuestion: (data, answer) => answer.includes("B2C") || answer === "Both B2B and B2C" ? "customerBase" : "regions"
+    nextQuestion: (_data, answer) => answer.includes("B2C") || answer === "Both B2B and B2C" ? "customerBase" : "regions"
   },
 
   customerBase: {
@@ -225,7 +225,7 @@ const questionBank: Record<string, Question> = {
     options: ["UK", "EU", "USA", "Canada", "Asia-Pacific", "Global"],
     multiple: true,
     icon: <Globe className="h-5 w-5" />,
-    nextQuestion: (data, answer) => {
+    nextQuestion: (_data, answer) => {
       if (answer.includes("EU") || answer.includes("UK")) return "gdprRelevant";
       if (answer.includes("USA")) return "usCompliance";
       return "dataTypes";
@@ -263,7 +263,7 @@ const questionBank: Record<string, Question> = {
     multiple: true,
     icon: <FileCheck className="h-5 w-5" />,
     priority: "high",
-    nextQuestion: (data, answer) => {
+    nextQuestion: (_data, answer) => {
       if (answer.includes("Payment/financial")) return "pciDssRelevant";
       if (answer.includes("Health records")) return "hipaaRelevant";
       return "currentCompliance";
@@ -397,9 +397,9 @@ const getQuestionFlow = (): string[] => {
 
 const getNextQuestion = (currentId: string, data: any, answer?: any): string | null => {
   const current = questionBank[currentId];
-  
-  // Check if current question has custom next logic
-  if (current.nextQuestion && answer !== undefined) {
+
+  // Check if current question exists and has custom next logic
+  if (current?.nextQuestion && answer !== undefined) {
     const nextId = current.nextQuestion(data, answer);
     // Validate that the returned question ID exists
     if (nextId && questionBank[nextId]) {
@@ -416,8 +416,11 @@ const getNextQuestion = (currentId: string, data: any, answer?: any): string | n
   // Find next unskipped question
   for (let i = currentIndex + 1; i < flow.length; i++) {
     const nextId = flow[i];
+    if (!nextId) continue;
+
     const nextQuestion = questionBank[nextId];
-    
+    if (!nextQuestion) continue;
+
     if (!nextQuestion.skipIf || !nextQuestion.skipIf(data)) {
       return nextId;
     }
@@ -459,14 +462,16 @@ export default function AIGuidedSignupPage() {
 
   React.useEffect(() => {
     // Start with greeting
-    const greetingQuestion = questionBank.greeting;
-    setMessages([{
-      id: 1,
-      type: "bot",
-      content: greetingQuestion.question as string,
-      options: greetingQuestion.options as string[],
-      icon: greetingQuestion.icon
-    }]);
+    const greetingQuestion = questionBank['greeting'];
+    if (greetingQuestion) {
+      setMessages([{
+        id: 1,
+        type: "bot",
+        content: greetingQuestion.question as string,
+        options: greetingQuestion.options as string[],
+        icon: greetingQuestion.icon
+      }]);
+    }
   }, []);
 
   const processQuestion = (question: Question, data: any): string => {
@@ -489,9 +494,9 @@ export default function AIGuidedSignupPage() {
       id: messages.length + 1,
       type: "bot",
       content,
-      options,
+      ...(options && { options }),
       isTyping: true,
-      icon
+      ...(icon && { icon })
     };
     
     setMessages(prev => [...prev, newMessage]);
@@ -550,8 +555,10 @@ export default function AIGuidedSignupPage() {
 
   const handleNext = async (answer?: any) => {
     const currentQuestion = questionBank[currentQuestionId];
+    if (!currentQuestion) return;
+
     const actualAnswer = answer || userInput;
-    
+
     if (currentQuestion.type === "input" && !answer) {
       if (!validateInput(userInput, currentQuestion.validation || "")) {
         addBotMessage(getValidationError(currentQuestion.validation || ""));
@@ -572,8 +579,10 @@ export default function AIGuidedSignupPage() {
     
     if (nextQuestionId) {
       const nextQuestion = questionBank[nextQuestionId];
+      if (!nextQuestion) return;
+
       setCurrentQuestionId(nextQuestionId);
-      
+
       setTimeout(() => {
         addBotMessage(
           processQuestion(nextQuestion, { ...formData, [currentQuestion.field!]: actualAnswer }),
@@ -589,8 +598,10 @@ export default function AIGuidedSignupPage() {
 
   const handleChoice = (choice: string) => {
     const currentQuestion = questionBank[currentQuestionId];
+    if (!currentQuestion) return;
+
     addUserMessage(choice);
-    
+
     if (currentQuestion.type === "choice") {
       handleNext(choice);
     } else if (currentQuestion.type === "multi-choice") {
@@ -621,15 +632,15 @@ export default function AIGuidedSignupPage() {
       return { firstName: '', lastName: '' };
     } else if (parts.length === 1) {
       // Single name - use as first name
-      return { firstName: parts[0], lastName: '' };
+      return { firstName: parts[0] || '', lastName: '' };
     } else if (parts.length === 2) {
       // Standard first and last name
-      return { firstName: parts[0], lastName: parts[1] };
+      return { firstName: parts[0] || '', lastName: parts[1] || '' };
     } else {
       // Multiple parts - assume first part is first name, rest is last name
-      return { 
-        firstName: parts[0], 
-        lastName: parts.slice(1).join(' ') 
+      return {
+        firstName: parts[0] || '',
+        lastName: parts.slice(1).join(' ')
       };
     }
   };
@@ -857,7 +868,7 @@ export default function AIGuidedSignupPage() {
                       <>
                         <p className="text-sm whitespace-pre-line">{message.content}</p>
                         
-                        {message.options && message.type === "bot" && (
+                        {message.options && message.type === "bot" && currentQuestion && (
                           <div className="mt-3 space-y-2">
                             {currentQuestion.type === "multi-choice" ? (
                               <div className="space-y-2">
@@ -964,7 +975,7 @@ export default function AIGuidedSignupPage() {
           </div>
           
           {/* Input Area */}
-          {currentQuestion.type === "input" && !isTyping && (
+          {currentQuestion && currentQuestion.type === "input" && !isTyping && (
             <form onSubmit={(e) => { e.preventDefault(); handleNext(); }} className="flex gap-2">
               <Input
                 type={currentQuestion.inputType || "text"}

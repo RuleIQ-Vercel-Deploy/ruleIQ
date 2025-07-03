@@ -54,21 +54,11 @@ export default function RegisterPage() {
     register,
     handleSubmit,
     formState: { errors },
-    watch,
   } = useForm<RegisterFormData>({
     resolver: zodResolver(registerSchema),
   });
 
-  const password = watch("password");
-
-  // Check password requirements for visual feedback
-  const passwordChecks = React.useMemo(() => ({
-    length: password?.length >= 8,
-    digit: passwordRegex.digit.test(password || ""),
-    uppercase: passwordRegex.uppercase.test(password || ""),
-    lowercase: passwordRegex.lowercase.test(password || ""),
-    special: passwordRegex.special.test(password || ""),
-  }), [password]);
+  // Password requirements are checked in the validation schema
 
   const onSubmit = async (data: RegisterFormData) => {
     setIsLoading(true);
@@ -78,7 +68,7 @@ export default function RegisterPage() {
       await authService.register({
         email: data.email,
         password: data.password,
-        name: data.email.split('@')[0],
+        name: data.email?.split('@')[0] || 'User',
         company_name: "",
         company_size: "",
         industry: ""

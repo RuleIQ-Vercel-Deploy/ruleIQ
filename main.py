@@ -9,6 +9,7 @@ from fastapi.responses import JSONResponse
 from api.middleware.error_handler import error_handler_middleware
 from api.request_id_middleware import RequestIDMiddleware
 from api.routers import (
+    ai_assessments,
     assessments,
     auth,
     business_profiles,
@@ -107,6 +108,7 @@ app.include_router(auth.router, prefix="/api/auth", tags=["Authentication"])
 app.include_router(users.router, prefix="/api/users", tags=["Users"])
 app.include_router(business_profiles.router, prefix="/api/business-profiles", tags=["Business Profiles"])
 app.include_router(assessments.router, prefix="/api/assessments", tags=["Assessments"])
+app.include_router(ai_assessments.router, prefix="/api", tags=["AI Assessment Assistant"])
 app.include_router(frameworks.router, prefix="/api/frameworks", tags=["Compliance Frameworks"])
 app.include_router(policies.router, prefix="/api/policies", tags=["Policies"])
 app.include_router(implementation.router, prefix="/api/implementation", tags=["Implementation Plans"])

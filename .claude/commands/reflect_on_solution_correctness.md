@@ -2,7 +2,7 @@
 
 ${PREVIOUS_RESPONSES}
 
-Please carefully review your previous ${NUMBER OF PERVIOUS} response and identify any issues: mistakes, inconsistencies, completeness, incorrect information, knowledge gaps, logic gaps, code smells, or other shortcomings. Start by understanding the problem. If you find any issues, please follow these steps:
+Please carefully review your previous ${NUMBER OF PREVIOUS} response and identify any issues: mistakes, inconsistencies, completeness, incorrect information, knowledge gaps, logic gaps, code smells, or other shortcomings. Start by understanding the problem. If you find any issues, please follow these steps:
 
 ## Step 1
 

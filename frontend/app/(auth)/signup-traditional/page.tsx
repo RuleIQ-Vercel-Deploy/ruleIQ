@@ -65,11 +65,24 @@ export default function TraditionalSignupPage() {
     setError("");
 
     try {
+      // Parse full name into first and last name
+      const nameParts = data.fullName.split(' ');
+      const firstName = nameParts[0] || '';
+      const lastName = nameParts.slice(1).join(' ') || '';
+
       await registerUser({
         email: data.email,
         password: data.password,
-        full_name: data.fullName,
-        company_name: data.companyName,
+        confirmPassword: data.confirmPassword,
+        firstName,
+        lastName,
+        companyName: data.companyName,
+        companySize: 'small', // Default value
+        industry: 'Other', // Default value
+        complianceFrameworks: [],
+        hasDataProtectionOfficer: false,
+        agreedToTerms: data.agreeToTerms,
+        agreedToDataProcessing: data.agreeToTerms,
       });
 
       addNotification({

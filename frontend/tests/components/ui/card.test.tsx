@@ -1,6 +1,8 @@
 import { describe, it, expect } from 'vitest'
-import { render, screen } from '../../utils'
+
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card'
+
+import { render, screen } from '../../utils'
 
 describe('Card Components', () => {
   it('renders Card with all subcomponents', () => {

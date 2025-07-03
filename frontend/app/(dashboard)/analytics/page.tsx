@@ -213,7 +213,7 @@ export default function AnalyticsPage() {
                     <Calendar
                       initialFocus
                       mode="range"
-                      defaultMonth={dateRange?.from}
+                      defaultMonth={dateRange?.from || new Date()}
                       selected={dateRange}
                       onSelect={setDateRange}
                       numberOfMonths={2}
@@ -348,22 +348,25 @@ export default function AnalyticsPage() {
                   <>
                     <TaskProgressChart 
                       data={[
-                        { category: "Policies", completed: 45, total: 50 },
-                        { category: "Assessments", completed: 23, total: 25 },
-                        { category: "Evidence", completed: 67, total: 75 },
-                        { category: "Training", completed: 12, total: 15 }
+                        { category: "Policies", completed: 45, pending: 3, overdue: 2 },
+                        { category: "Assessments", completed: 23, pending: 1, overdue: 1 },
+                        { category: "Evidence", completed: 67, pending: 5, overdue: 3 },
+                        { category: "Training", completed: 12, pending: 2, overdue: 1 }
                       ]}
                     />
                     <RiskMatrix 
                       risks={[
-                        { id: "1", name: "Data Breach", impact: "high", likelihood: "medium", category: "Security" },
-                        { id: "2", name: "Compliance Gap", impact: "medium", likelihood: "low", category: "Compliance" },
-                        { id: "3", name: "System Failure", impact: "high", likelihood: "low", category: "Operational" },
-                        { id: "4", name: "Access Control", impact: "medium", likelihood: "medium", category: "Security" }
+                        { id: "1", name: "Data Breach", impact: 4, likelihood: 3, category: "Security" },
+                        { id: "2", name: "Compliance Gap", impact: 3, likelihood: 2, category: "Compliance" },
+                        { id: "3", name: "System Failure", impact: 4, likelihood: 2, category: "Operational" },
+                        { id: "4", name: "Access Control", impact: 3, likelihood: 3, category: "Security" }
                       ]}
                     />
-                    <ActivityHeatmap 
-                      data={analyticsData.activity_data.slice(0, 84)}
+                    <ActivityHeatmap
+                      data={analyticsData.activity_data.slice(0, 84).map((item: any) => ({
+                        date: `${item.week}-${item.day}`,
+                        count: item.value
+                      }))}
                     />
                   </>
                 )}

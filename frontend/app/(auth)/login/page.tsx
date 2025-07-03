@@ -29,7 +29,7 @@ type LoginFormData = z.infer<typeof loginSchema>
 
 export default function LoginPage() {
   const router = useRouter()
-  const { isLoading, error, clearError } = useAuthStore()
+  const { error, clearError } = useAuthStore()
   const { addNotification } = useAppStore()
   const [showPassword, setShowPassword] = React.useState(false)
   const [isSubmitting, setIsSubmitting] = React.useState(false)

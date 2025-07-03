@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
+import { useEffect, useCallback } from "react";
 import { toast } from "sonner";
+
 import { useAuthStore } from "@/lib/stores/auth.store";
 
 interface Shortcut {

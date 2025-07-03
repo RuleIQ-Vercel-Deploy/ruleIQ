@@ -28,11 +28,11 @@ export default function AssessmentResultsPage({ params }: { params: { id: string
             <p className="text-lg text-grey-600 mt-1">Assessment ID: {params.id}</p>
           </div>
           <div className="flex items-center gap-3">
-            <Button variant="secondary-ruleiq" size="medium">
+            <Button variant="secondary">
               <Download className="mr-2 h-4 w-4" />
               Export PDF
             </Button>
-            <Button variant="accent" size="medium">
+            <Button variant="default">
               <Download className="mr-2 h-4 w-4" />
               Export Excel
             </Button>

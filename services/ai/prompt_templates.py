@@ -202,6 +202,199 @@ class PromptTemplates:
         """
         
         return {'system': system_prompt, 'user': user_prompt}
+
+    # Assessment-specific prompt templates for Phase 2.2 integration
+
+    def get_assessment_help_prompt(
+        self,
+        question_text: str,
+        framework_id: str,
+        section_id: str = None,
+        business_context: Dict[str, Any] = None,
+        user_context: Dict[str, Any] = None
+    ) -> Dict[str, str]:
+        """Creates prompts for assessment question help."""
+
+        system_prompt = f"""You are an expert compliance consultant specializing in {framework_id}.
+        Provide clear, actionable guidance for assessment questions.
+
+        Your response should be:
+        - Specific to the framework and business context
+        - Practical and implementable
+        - Include relevant examples when helpful
+        - Highlight key considerations and potential pitfalls
+
+        Format your response as JSON with these keys:
+        - guidance: Main guidance text
+        - confidence_score: Float between 0.0-1.0
+        - related_topics: Array of related topics
+        - follow_up_suggestions: Array of follow-up questions
+        - source_references: Array of relevant documentation
+        """
+
+        business_info = business_context or {}
+        user_info = user_context or {}
+
+        user_prompt = f"""
+        Assessment Question: "{question_text}"
+
+        Framework: {framework_id}
+        {f"Section: {section_id}" if section_id else ""}
+
+        Business Context:
+        - Company: {business_info.get('name', 'Unknown')}
+        - Industry: {business_info.get('industry', 'Unknown')}
+        - Size: {business_info.get('employee_count', 'Unknown')} employees
+        - Frameworks: {', '.join(business_info.get('frameworks', []))}
+
+        User Context:
+        {user_info}
+
+        Please provide comprehensive guidance for answering this assessment question.
+        """
+
+        return {'system': system_prompt, 'user': user_prompt}
+
+    def get_assessment_followup_prompt(
+        self,
+        current_answers: Dict[str, Any],
+        framework_id: str,
+        business_context: Dict[str, Any] = None,
+        assessment_context: Dict[str, Any] = None
+    ) -> Dict[str, str]:
+        """Creates prompts for generating assessment follow-up questions."""
+
+        system_prompt = f"""You are an expert compliance consultant for {framework_id}.
+        Based on the user's current assessment responses, generate intelligent follow-up questions
+        that will help complete their compliance assessment.
+
+        Your follow-up questions should:
+        - Build on their existing answers
+        - Identify gaps or areas needing clarification
+        - Be specific to their business context
+        - Help prioritize next steps
+
+        Format your response as JSON with these keys:
+        - follow_up_questions: Array of specific questions
+        - recommendations: Array of immediate recommendations
+        - confidence_score: Float between 0.0-1.0
+        """
+
+        business_info = business_context or {}
+        assessment_info = assessment_context or {}
+
+        user_prompt = f"""
+        Current Assessment Responses:
+        {current_answers}
+
+        Framework: {framework_id}
+
+        Business Context:
+        - Company: {business_info.get('name', 'Unknown')}
+        - Industry: {business_info.get('industry', 'Unknown')}
+        - Size: {business_info.get('employee_count', 'Unknown')} employees
+
+        Assessment Context:
+        - Type: {assessment_info.get('assessment_type', 'general')}
+        - Progress: {assessment_info.get('progress', 'unknown')}
+
+        Based on these responses, what follow-up questions should we ask to complete the assessment?
+        """
+
+        return {'system': system_prompt, 'user': user_prompt}
+
+    def get_assessment_analysis_prompt(
+        self,
+        assessment_results: Dict[str, Any],
+        framework_id: str,
+        business_context: Dict[str, Any] = None
+    ) -> Dict[str, str]:
+        """Creates prompts for comprehensive assessment analysis."""
+
+        system_prompt = f"""You are an expert compliance analyst specializing in {framework_id}.
+        Analyze the completed assessment results to identify gaps, risks, and provide detailed insights.
+
+        Your analysis should include:
+        - Specific compliance gaps with severity levels
+        - Risk assessment based on current state
+        - Evidence requirements for each gap
+        - Prioritized recommendations
+        - Implementation insights
+
+        Format your response as JSON with these keys:
+        - gaps: Array of gap objects with id, title, description, severity, category
+        - recommendations: Array of recommendation objects with id, title, description, priority, effort_estimate, impact_score
+        - risk_assessment: Object with level and description
+        - compliance_insights: Object with summary and key_findings
+        - evidence_requirements: Array of evidence requirement objects
+        """
+
+        business_info = business_context or {}
+
+        user_prompt = f"""
+        Assessment Results:
+        {assessment_results}
+
+        Framework: {framework_id}
+
+        Business Context:
+        - Company: {business_info.get('name', 'Unknown')}
+        - Industry: {business_info.get('industry', 'Unknown')}
+        - Size: {business_info.get('employee_count', 'Unknown')} employees
+        - Current Frameworks: {', '.join(business_info.get('frameworks', []))}
+
+        Please provide a comprehensive analysis of these assessment results, identifying gaps and providing actionable recommendations.
+        """
+
+        return {'system': system_prompt, 'user': user_prompt}
+
+    def get_assessment_recommendations_prompt(
+        self,
+        gaps: List[Dict[str, Any]],
+        business_profile: Dict[str, Any],
+        framework_id: str,
+        existing_policies: List[str] = None,
+        industry_context: str = None,
+        timeline_preferences: str = "standard"
+    ) -> Dict[str, str]:
+        """Creates prompts for generating personalized implementation recommendations."""
+
+        system_prompt = f"""You are an expert compliance implementation consultant for {framework_id}.
+        Based on identified gaps and business context, create a detailed implementation plan with personalized recommendations.
+
+        Your recommendations should:
+        - Address specific gaps identified
+        - Consider business size, industry, and resources
+        - Provide realistic timelines and effort estimates
+        - Include specific implementation steps
+        - Prioritize based on risk and impact
+
+        Format your response as JSON with these keys:
+        - recommendations: Array of detailed recommendation objects
+        - implementation_plan: Object with phases, timeline, and resource requirements
+        - success_metrics: Array of measurable success criteria
+        """
+
+        user_prompt = f"""
+        Identified Gaps:
+        {gaps}
+
+        Framework: {framework_id}
+
+        Business Profile:
+        - Company: {business_profile.get('name', 'Unknown')}
+        - Industry: {business_profile.get('industry', 'Unknown')}
+        - Size: {business_profile.get('employee_count', 'Unknown')} employees
+        - Budget Range: {business_profile.get('budget_range', 'Unknown')}
+
+        Existing Policies: {existing_policies or 'None specified'}
+        Industry Context: {industry_context or 'General'}
+        Timeline Preference: {timeline_preferences}
+
+        Please provide detailed, personalized recommendations with a practical implementation plan.
+        """
+
+        return {'system': system_prompt, 'user': user_prompt}
     
     def get_main_prompt(self, message: str, context: Dict[str, Any]) -> str:
         """Creates the main prompt for general AI responses."""

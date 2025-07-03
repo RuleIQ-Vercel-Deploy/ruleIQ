@@ -1,6 +1,8 @@
 import { describe, it, expect, vi } from 'vitest'
-import { render, screen, fireEvent } from '../../utils'
+
 import { Button } from '@/components/ui/button'
+
+import { render, screen, fireEvent } from '../../utils'
 
 describe('Button Component', () => {
   it('renders with default props', () => {

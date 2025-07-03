@@ -1,127 +1,236 @@
-"use client"
+"use client";
 
-import { ChevronLeft, ChevronRight, Save } from "lucide-react"
-import Link from "next/link"
-import * as React from "react"
+import { Loader2 } from "lucide-react";
+import { useRouter, useParams } from "next/navigation";
+import { useState, useEffect } from "react";
 
-import { AutoSaveIndicator } from "@/components/assessments/questionnaire/auto-save-indicator"
-import { QuestionCard } from "@/components/assessments/questionnaire/question-card"
-import { Button } from "@/components/ui/button"
-import { ProgressBar } from "@/components/ui/progress-bar"
-import { assessmentData } from "@/lib/data/questionnaire"
-import { cn } from "@/lib/utils"
+import { AssessmentWizard } from "@/components/assessments/AssessmentWizard";
+import { assessmentService } from "@/lib/api/assessments.service";
+import { 
+  type AssessmentFramework, 
+  type AssessmentResult,
+  type AssessmentProgress,
+  Question
+} from "@/lib/assessment-engine";
+import { useAppStore } from "@/lib/stores/app.store";
+import { useAuthStore } from "@/lib/stores/auth.store";
 
-export default function AssessmentPage({ params }: { params: { id: string } }) {
-  const [currentSectionIndex, setCurrentSectionIndex] = React.useState(0)
-  const { title, sections } = assessmentData
-  const currentSection = sections[currentSectionIndex]
-
-  const totalProgress = sections.reduce((acc, section) => acc + section.progress, 0) / sections.length
-
-  const handleNext = () => {
-    if (currentSectionIndex < sections.length - 1) {
-      setCurrentSectionIndex(currentSectionIndex + 1)
+// Mock framework data - in production this would come from API based on assessment
+const mockFramework: AssessmentFramework = {
+  id: "gdpr",
+  name: "GDPR Compliance Assessment",
+  description: "Comprehensive assessment for EU General Data Protection Regulation compliance",
+  version: "2.0",
+  scoringMethod: "percentage",
+  passingScore: 70,
+  estimatedDuration: 45,
+  tags: ["Privacy", "EU", "Data Rights"],
+  sections: [
+    {
+      id: "data-processing",
+      title: "Data Processing Activities",
+      description: "Assess your organization's data processing practices",
+      order: 1,
+      questions: [
+        {
+          id: "q1",
+          type: "radio",
+          text: "Do you maintain a record of processing activities (ROPA) as required by Article 30 of GDPR?",
+          description: "This record should detail the purposes of processing, categories of data subjects, and data transfers.",
+          options: [
+            { value: "yes", label: "Yes, fully documented and regularly updated" },
+            { value: "partial", label: "Partially documented" },
+            { value: "no", label: "No" }
+          ],
+          validation: { required: true },
+          weight: 3
+        },
+        {
+          id: "q2",
+          type: "checkbox",
+          text: "Which lawful bases do you rely on for processing personal data?",
+          description: "Select all that apply to your organization",
+          options: [
+            { value: "consent", label: "Consent" },
+            { value: "contract", label: "Contract" },
+            { value: "legal_obligation", label: "Legal Obligation" },
+            { value: "vital_interests", label: "Vital Interests" },
+            { value: "public_task", label: "Public Task" },
+            { value: "legitimate_interests", label: "Legitimate Interests" }
+          ],
+          validation: { required: true, min: 1 },
+          weight: 2
+        },
+        {
+          id: "q3",
+          type: "textarea",
+          text: "Describe your data retention policies and how you ensure data is not kept longer than necessary.",
+          validation: { required: true, minLength: 50 },
+          weight: 2
+        }
+      ]
+    },
+    {
+      id: "data-subject-rights",
+      title: "Data Subject Rights",
+      description: "Evaluate how you handle data subject requests",
+      order: 2,
+      questions: [
+        {
+          id: "q4",
+          type: "radio",
+          text: "Do you have a documented process for handling Data Subject Access Requests (DSARs)?",
+          options: [
+            { value: "yes", label: "Yes, with defined timelines and procedures" },
+            { value: "partial", label: "Informal process exists" },
+            { value: "no", label: "No documented process" }
+          ],
+          validation: { required: true },
+          weight: 3
+        },
+        {
+          id: "q5",
+          type: "scale",
+          text: "How confident are you in your ability to respond to DSARs within the 30-day deadline?",
+          scaleMin: 1,
+          scaleMax: 5,
+          scaleLabels: { min: "Not confident", max: "Very confident" },
+          validation: { required: true },
+          weight: 2
+        }
+      ]
+    },
+    {
+      id: "security-measures",
+      title: "Security Measures",
+      description: "Review your technical and organizational security measures",
+      order: 3,
+      questions: [
+        {
+          id: "q6",
+          type: "matrix",
+          text: "Rate your implementation of the following security measures:",
+          rows: [
+            { id: "encryption", label: "Data Encryption" },
+            { id: "access_control", label: "Access Control" },
+            { id: "monitoring", label: "Security Monitoring" },
+            { id: "incident_response", label: "Incident Response" }
+          ],
+          columns: [
+            { id: "not_implemented", label: "Not Implemented" },
+            { id: "planned", label: "Planned" },
+            { id: "partial", label: "Partially Implemented" },
+            { id: "full", label: "Fully Implemented" }
+          ],
+          validation: { required: true },
+          weight: 4
+        }
+      ]
     }
-  }
+  ]
+};
 
-  const handleBack = () => {
-    if (currentSectionIndex > 0) {
-      setCurrentSectionIndex(currentSectionIndex - 1)
+export default function AssessmentPage() {
+  const router = useRouter();
+  const params = useParams();
+  const { addNotification } = useAppStore();
+  const { user } = useAuthStore();
+  const [loading, setLoading] = useState(true);
+  const [assessment, setAssessment] = useState<any>(null);
+  const [framework, setFramework] = useState<AssessmentFramework | null>(null);
+
+  const assessmentId = params.id as string;
+
+  useEffect(() => {
+    loadAssessment();
+  }, [assessmentId]);
+
+  const loadAssessment = async () => {
+    try {
+      // Load assessment details
+      const assessmentData = await assessmentService.getAssessment(assessmentId);
+      setAssessment(assessmentData);
+
+      // Load framework questions - in production this would be from API
+      // For now, use mock data
+      setFramework(mockFramework);
+      setLoading(false);
+    } catch (error) {
+      addNotification({
+        type: "error",
+        title: "Error",
+        description: "Failed to load assessment. Please try again.",
+        duration: 5000
+      });
+      router.push('/assessments');
     }
+  };
+
+  const handleComplete = async (result: AssessmentResult) => {
+    try {
+      // Submit assessment results
+      await assessmentService.submitAssessment(assessmentId, {
+        responses: Object.fromEntries(result.gaps.map(gap => [gap.questionId, gap])),
+        score: result.overallScore,
+        status: 'completed'
+      });
+
+      addNotification({
+        type: "success",
+        title: "Assessment Complete!",
+        description: `You scored ${result.overallScore}%. View your detailed results and recommendations.`,
+        duration: 5000
+      });
+
+      // Navigate to results page
+      router.push(`/assessments/${assessmentId}/results`);
+    } catch (error) {
+      addNotification({
+        type: "error",
+        title: "Error",
+        description: "Failed to submit assessment. Your progress has been saved.",
+        duration: 5000
+      });
+    }
+  };
+
+  const handleSaveProgress = async (progress: AssessmentProgress) => {
+    try {
+      // Save progress to backend
+      await assessmentService.updateAssessment(assessmentId, {
+        status: 'in_progress',
+        responses: {} // Would include actual responses
+      });
+    } catch (error) {
+      console.error('Failed to save progress:', error);
+    }
+  };
+
+  const handleExit = () => {
+    router.push('/assessments');
+  };
+
+  if (loading || !framework) {
+    return (
+      <div className="flex items-center justify-center min-h-[600px]">
+        <div className="text-center">
+          <Loader2 className="h-12 w-12 animate-spin text-primary mx-auto mb-4" />
+          <p className="text-muted-foreground">Loading assessment...</p>
+        </div>
+      </div>
+    );
   }
 
   return (
-    <div
-      className="min-h-screen w-full"
-      style={{
-        backgroundColor: "#002147",
-        backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fillRule='evenodd'%3E%3Cg fill='%23F0EAD6' fillOpacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-      }}
-    >
-      {/* Header */}
-      <header className="sticky top-0 z-40 w-full border-b border-gold/20 bg-oxford-blue/80 backdrop-blur-lg">
-        <div className="container mx-auto flex h-16 max-w-screen-2xl items-center justify-between px-6">
-          <div className="flex-1">
-            <h1 className="text-lg font-semibold text-eggshell-white truncate">{title}</h1>
-            <p className="text-sm text-grey-600">Assessment ID: {params.id}</p>
-          </div>
-          <div className="flex-1 flex justify-end">
-            <AutoSaveIndicator />
-          </div>
-        </div>
-        {/* Overall Progress Bar */}
-        <div>
-          <ProgressBar value={totalProgress} color="warning" className="h-1 bg-gold/20" />
-        </div>
-      </header>
-
-      <div className="container mx-auto max-w-screen-2xl px-6 py-8">
-        <div className="grid grid-cols-1 gap-8 lg:grid-cols-12">
-          {/* Left Sidebar for Section Navigation */}
-          <aside className="lg:col-span-3 lg:sticky lg:top-24 self-start">
-            <nav className="space-y-1">
-              {sections.map((section, index) => (
-                <button
-                  key={section.id}
-                  onClick={() => setCurrentSectionIndex(index)}
-                  className={cn(
-                    "w-full text-left px-4 py-3 rounded-lg transition-colors duration-200 flex items-center justify-between",
-                    currentSectionIndex === index ? "bg-gold/10 text-gold" : "text-eggshell-white hover:bg-white/10",
-                  )}
-                >
-                  <div className="flex-1">
-                    <p className="font-medium">{section.title}</p>
-                    <div className="flex items-center gap-2 mt-1">
-                      <ProgressBar value={section.progress} className="h-1 bg-white/20" color="warning" />
-                      <span className="text-xs text-grey-600">{section.progress}%</span>
-                    </div>
-                  </div>
-                  {currentSectionIndex === index && <ChevronRight className="h-5 w-5 text-gold" />}
-                </button>
-              ))}
-            </nav>
-          </aside>
-
-          {/* Main Content Area for Questions */}
-          <main className="lg:col-span-9">
-            <div className="space-y-6">
-              <h2 className="text-2xl font-bold text-eggshell-white">{currentSection.title}</h2>
-              {currentSection.questions.map((question, index) => (
-                <QuestionCard key={question.id} question={question} questionNumber={index + 1} />
-              ))}
-
-              {/* Bottom Navigation */}
-              <div className="flex items-center justify-between pt-6">
-                <Button
-                  variant="outline"
-                  size="medium"
-                  className="bg-transparent border-gold/30 text-eggshell-white hover:bg-gold/10 hover:text-gold"
-                  onClick={handleBack}
-                  disabled={currentSectionIndex === 0}
-                >
-                  <ChevronLeft className="mr-2 h-4 w-4" />
-                  Previous
-                </Button>
-                <Link href="/assessments" passHref>
-                  <Button variant="ghost" className="text-eggshell-white hover:bg-white/10 hover:text-eggshell-white">
-                    <Save className="mr-2 h-4 w-4" />
-                    Save & Exit
-                  </Button>
-                </Link>
-                <Button
-                  variant="accent"
-                  size="medium"
-                  onClick={handleNext}
-                  disabled={currentSectionIndex === sections.length - 1}
-                >
-                  Next
-                  <ChevronRight className="ml-2 h-4 w-4" />
-                </Button>
-              </div>
-            </div>
-          </main>
-        </div>
-      </div>
+    <div className="container max-w-5xl mx-auto p-6">
+      <AssessmentWizard
+        framework={framework}
+        assessmentId={assessmentId}
+        businessProfileId={user?.companyId || 'default'}
+        onComplete={handleComplete}
+        onSave={handleSaveProgress}
+        onExit={handleExit}
+      />
     </div>
-  )
+  );
 }
