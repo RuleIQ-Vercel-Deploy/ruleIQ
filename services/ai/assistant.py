@@ -3,7 +3,7 @@ The primary AI service that orchestrates the conversational flow, classifies use
 and generates intelligent responses asynchronously.
 """
 
-from typing import Dict, List, Any, Tuple, Optional
+from typing import Dict, List, Any, Tuple, Optional, AsyncIterator
 from uuid import UUID, uuid4
 from datetime import datetime
 
@@ -16,14 +16,18 @@ from .response_cache import get_ai_cache, ContentType
 from .performance_optimizer import get_performance_optimizer
 from .analytics_monitor import get_analytics_monitor, MetricType
 from .quality_monitor import get_quality_monitor
-from config.ai_config import get_ai_model
+from .circuit_breaker import AICircuitBreaker
+from .instruction_integration import get_instruction_manager
+from config.ai_config import get_ai_model, ModelType
 from database.models import User
+from .tools import tool_registry, tool_executor, get_tool_schemas
 from core.exceptions import (
     IntegrationException, BusinessLogicException, NotFoundException, DatabaseException
 )
 from .exceptions import (
     AIServiceException, AITimeoutException, AIQuotaExceededException,
     AIModelException, AIContentFilterException, AIParsingException,
+    ModelUnavailableException, ModelTimeoutException, CircuitBreakerException,
     handle_ai_error, map_gemini_error
 )
 from config.logging_config import get_logger
@@ -36,13 +40,15 @@ class ComplianceAssistant:
 
     def __init__(self, db: AsyncSession):
         self.db = db
-        self.model = get_ai_model()
+        self.model = None  # Will be selected dynamically based on task
         self.context_manager = ContextManager(db)
         self.prompt_templates = PromptTemplates()
+        self.instruction_manager = get_instruction_manager()  # System instruction integration
         self.ai_cache = None  # Will be initialized on first use
         self.performance_optimizer = None  # Will be initialized on first use
         self.analytics_monitor = None  # Will be initialized on first use
         self.quality_monitor = None  # Will be initialized on first use
+        self.circuit_breaker = AICircuitBreaker()  # Initialize circuit breaker
 
         self.safety_settings = {
             HarmCategory.HARM_CATEGORY_HARASSMENT: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
@@ -50,6 +56,257 @@ class ComplianceAssistant:
             HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
             HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
         }
+
+    def _get_task_appropriate_model(self, task_type: str, context: Optional[Dict[str, Any]] = None, tools: Optional[List[Dict[str, Any]]] = None) -> Tuple[Any, str]:
+        """
+        Get the most appropriate model for the given task type with system instructions and circuit breaker protection
+
+        Args:
+            task_type: Type of task (help, analysis, recommendations, etc.)
+            context: Additional context for model selection
+            tools: List of tool schemas for function calling
+
+        Returns:
+            Tuple of (configured AI model instance, instruction_id)
+
+        Raises:
+            ModelUnavailableException: If no models are available
+        """
+        # Build task context for model selection
+        task_context = {
+            'task_type': task_type,
+            'prompt_length': context.get('prompt_length', 0) if context else 0,
+            'framework': context.get('framework') if context else None,
+            'business_context': context.get('business_context', {}) if context else {}
+        }
+
+        # Determine task complexity and speed preference
+        if task_type in ['help', 'guidance']:
+            complexity = "simple"
+            prefer_speed = True
+        elif task_type in ['analysis', 'assessment', 'gap_analysis']:
+            complexity = "complex"
+            prefer_speed = False
+        elif task_type in ['recommendations', 'followup']:
+            complexity = "medium"
+            prefer_speed = False
+        else:
+            complexity = "auto"  # Let the system decide
+            prefer_speed = False
+
+        try:
+            # Get model with system instruction using instruction manager
+            model, instruction_id = self.instruction_manager.get_model_with_instruction(
+                instruction_type=task_type,
+                framework=context.get('framework') if context else None,
+                business_profile=context.get('business_context', {}) if context else None,
+                task_complexity=complexity,
+                tools=tools,
+                prefer_speed=prefer_speed
+            )
+
+            # Check if model is available via circuit breaker
+            model_name = getattr(model, 'model_name', 'unknown')
+            if not self.circuit_breaker.is_model_available(model_name):
+                logger.warning(f"Model {model_name} unavailable, trying fallback")
+                # Try fallback model with basic instruction
+                fallback_model = get_ai_model()  # Get default/fallback model
+                fallback_model_name = getattr(fallback_model, 'model_name', 'unknown')
+                if not self.circuit_breaker.is_model_available(fallback_model_name):
+                    raise ModelUnavailableException(
+                        model_name=fallback_model_name,
+                        reason="All models unavailable due to circuit breaker"
+                    )
+                # Return fallback model with default instruction
+                return fallback_model, "fallback_default"
+
+            return model, instruction_id
+
+        except Exception as e:
+            logger.error(f"Failed to get model for {task_type}: {e}")
+            raise ModelUnavailableException(
+                model_name="unknown",
+                reason=f"Model selection failed: {str(e)}"
+            )
+
+    async def _handle_function_calls(self, response, context: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+        """
+        Handle function calls from AI model responses
+        
+        Args:
+            response: AI model response that may contain function calls
+            context: Additional context for function execution
+            
+        Returns:
+            Dictionary containing function call results and next steps
+        """
+        function_results = []
+        
+        try:
+            # Check if response contains function calls
+            if hasattr(response, 'candidates') and response.candidates:
+                candidate = response.candidates[0]
+                
+                if hasattr(candidate.content, 'parts'):
+                    for part in candidate.content.parts:
+                        if hasattr(part, 'function_call'):
+                            function_call = part.function_call
+                            
+                            # Extract function name and parameters
+                            function_name = function_call.name
+                            function_args = dict(function_call.args) if function_call.args else {}
+                            
+                            logger.info(f"Executing function call: {function_name} with args: {function_args}")
+                            
+                            # Execute the function using tool executor
+                            result = await tool_executor.execute_tool(
+                                tool_name=function_name,
+                                parameters=function_args,
+                                context=context
+                            )
+                            
+                            function_results.append({
+                                "function_name": function_name,
+                                "parameters": function_args,
+                                "result": result.to_dict(),
+                                "execution_time": result.execution_time
+                            })
+                            
+                            # Log successful execution
+                            if result.success:
+                                logger.info(f"Function {function_name} executed successfully in {result.execution_time:.2f}s")
+                            else:
+                                logger.error(f"Function {function_name} failed: {result.error}")
+            
+            return {
+                "has_function_calls": len(function_results) > 0,
+                "function_results": function_results,
+                "execution_count": len(function_results)
+            }
+            
+        except Exception as e:
+            logger.error(f"Error handling function calls: {e}")
+            return {
+                "has_function_calls": False,
+                "function_results": [],
+                "execution_count": 0,
+                "error": str(e)
+            }
+
+    async def _generate_response_with_tools(
+        self, 
+        prompt: str, 
+        task_type: str = "analysis",
+        tool_names: Optional[List[str]] = None,
+        context: Optional[Dict[str, Any]] = None
+    ) -> Dict[str, Any]:
+        """
+        Generate AI response with function calling support
+        
+        Args:
+            prompt: Input prompt for the AI model
+            task_type: Type of task for model selection
+            tool_names: Specific tools to include (if None, includes all relevant tools)
+            context: Additional context for execution
+            
+        Returns:
+            Dictionary containing response text, function call results, and metadata
+        """
+        try:
+            # Get appropriate tools for the task
+            if tool_names:
+                tools = get_tool_schemas(tool_names)
+            else:
+                tools = self._get_tools_for_task(task_type)
+            
+            # Get model with tools and instruction ID
+            model, instruction_id = self._get_task_appropriate_model(task_type, context, tools)
+            
+            logger.info(f"Generating response with {len(tools)} tools for task: {task_type}")
+            
+            # Generate response
+            response = model.generate_content(prompt)
+            
+            # Handle function calls if present
+            function_call_results = await self._handle_function_calls(response, context)
+            
+            # Extract text response
+            response_text = ""
+            if hasattr(response, 'text') and response.text:
+                response_text = response.text
+            elif hasattr(response, 'candidates') and response.candidates:
+                # Extract text from parts that are not function calls
+                for part in response.candidates[0].content.parts:
+                    if hasattr(part, 'text') and part.text:
+                        response_text += part.text
+            
+            # Record instruction usage for monitoring
+            try:
+                from .instruction_monitor import InstructionMetricType
+                
+                # Basic performance metrics
+                self.instruction_manager.record_instruction_usage(
+                    instruction_id,
+                    metric_type=InstructionMetricType.RESPONSE_QUALITY,
+                    value=0.8,  # Default quality score, could be enhanced with actual quality assessment
+                    context={
+                        'task_type': task_type,
+                        'tools_used': len(tools),
+                        'function_calls': function_call_results.get('has_function_calls', False)
+                    }
+                )
+            except Exception as e:
+                logger.warning(f"Failed to record instruction usage: {e}")
+
+            return {
+                "response_text": response_text,
+                "function_calls": function_call_results,
+                "tools_used": [tool["name"] for tool in tools],
+                "model_used": getattr(model, 'model_name', 'unknown'),
+                "instruction_id": instruction_id,
+                "success": True
+            }
+            
+        except Exception as e:
+            logger.error(f"Error generating response with tools: {e}")
+            return {
+                "response_text": f"I apologize, but I encountered an error while processing your request: {str(e)}",
+                "function_calls": {"has_function_calls": False, "function_results": []},
+                "tools_used": [],
+                "model_used": "unknown",
+                "success": False,
+                "error": str(e)
+            }
+
+    def _get_tools_for_task(self, task_type: str) -> List[Dict[str, Any]]:
+        """
+        Get appropriate tools based on task type
+        
+        Args:
+            task_type: Type of task being performed
+            
+        Returns:
+            List of tool schemas appropriate for the task
+        """
+        # Map task types to relevant tool types
+        task_tool_mapping = {
+            "gap_analysis": ["extract_compliance_gaps"],
+            "recommendations": ["generate_compliance_recommendations"],
+            "regulation_lookup": ["lookup_industry_regulations", "check_compliance_requirements"],
+            "assessment": ["extract_compliance_gaps", "generate_compliance_recommendations"],
+            "analysis": ["extract_compliance_gaps", "lookup_industry_regulations"],
+            "help": ["lookup_industry_regulations", "check_compliance_requirements"],
+            "guidance": ["check_compliance_requirements"]
+        }
+        
+        # Get tools for specific task type or default to common tools
+        tool_names = task_tool_mapping.get(task_type, [
+            "extract_compliance_gaps",
+            "generate_compliance_recommendations",
+            "lookup_industry_regulations"
+        ])
+        
+        return get_tool_schemas(tool_names)
 
     async def process_message(
         self,
@@ -160,12 +417,19 @@ class ComplianceAssistant:
             await self.performance_optimizer.apply_rate_limiting()
 
             try:
+                # Get appropriate model for this task
+                model, instruction_id = self._get_task_appropriate_model(
+                    task_type="general",
+                    context=safe_context
+                )
+
                 # Generate new response
                 start_time = datetime.utcnow()
-                response = await self.model.generate_content_async(optimized_prompt, safety_settings=self.safety_settings)
+                response = model.generate_content(optimized_prompt, safety_settings=self.safety_settings)
                 end_time = datetime.utcnow()
 
-                response_text = response.text
+                # Handle different response scenarios safely
+                response_text = self._extract_response_text(response)
                 response_time = (end_time - start_time).total_seconds()
 
                 # Update performance metrics
@@ -467,9 +731,12 @@ class ComplianceAssistant:
         """Generate intelligent recommendations based on comprehensive context analysis."""
         try:
             # Build context-aware prompt
-            prompt = self._build_contextual_recommendation_prompt(
+            prompt_dict = self._build_contextual_recommendation_prompt(
                 business_context, existing_evidence, maturity_analysis, gaps_analysis, framework
             )
+
+            # Combine system and user prompts into a single string
+            combined_prompt = f"System: {prompt_dict['system']}\n\nUser: {prompt_dict['user']}"
 
             # Prepare cache context
             cache_context = {
@@ -480,7 +747,7 @@ class ComplianceAssistant:
             }
 
             # Generate AI recommendations with caching
-            response = await self._generate_gemini_response(prompt, cache_context)
+            response = await self._generate_gemini_response(combined_prompt, cache_context)
 
             # Parse and structure recommendations
             recommendations = self._parse_ai_recommendations(response, framework)
@@ -2646,6 +2913,15 @@ class ComplianceAssistant:
             # Parse and structure the response
             structured_response = self._parse_assessment_recommendations_response(response)
 
+            # Debug logging
+            logger.info(f"Structured response type: {type(structured_response)}")
+            logger.info(f"Structured response keys: {structured_response.keys() if isinstance(structured_response, dict) else 'Not a dict'}")
+            if isinstance(structured_response, dict) and 'recommendations' in structured_response:
+                logger.info(f"Recommendations count: {len(structured_response['recommendations'])}")
+                if structured_response['recommendations']:
+                    logger.info(f"First recommendation type: {type(structured_response['recommendations'][0])}")
+                    logger.info(f"First recommendation: {structured_response['recommendations'][0]}")
+
             # Add metadata
             structured_response.update({
                 'request_id': f"recommendations_{framework_id}_{uuid4().hex[:8]}",
@@ -2670,13 +2946,311 @@ class ComplianceAssistant:
     async def _generate_ai_response(self, system_prompt: str, user_prompt: str) -> str:
         """Generate AI response using the configured model."""
         try:
-            # Use the existing _generate_response method but with specific prompts
+            # Get appropriate model for this task
+            model, instruction_id = self._get_task_appropriate_model(
+                task_type="general",
+                context={"priority": 1}
+            )
+
+            # Combine system and user prompts
             full_prompt = f"System: {system_prompt}\n\nUser: {user_prompt}"
-            response = await self.model.generate_content_async(full_prompt)
-            return response.text if hasattr(response, 'text') else str(response)
+
+            # Generate response using the model
+            response = model.generate_content(full_prompt)
+
+            # Handle different response scenarios
+            if hasattr(response, 'text') and response.text:
+                return response.text
+            elif hasattr(response, 'candidates') and response.candidates:
+                candidate = response.candidates[0]
+                if hasattr(candidate, 'finish_reason'):
+                    if candidate.finish_reason == 2:  # SAFETY
+                        logger.warning("AI response blocked by safety filters")
+                        return "I apologize, but I cannot provide a response to this request due to safety guidelines. Please rephrase your question."
+                    elif candidate.finish_reason == 3:  # RECITATION
+                        logger.warning("AI response blocked due to recitation concerns")
+                        return "I apologize, but I cannot provide this specific response. Please try rephrasing your question."
+                    else:
+                        logger.warning(f"AI response incomplete, finish_reason: {candidate.finish_reason}")
+                        return "I apologize, but I was unable to complete the response. Please try again."
+
+            return "I apologize, but I'm unable to provide a response at this time. Please try again later."
         except Exception as e:
             logger.error(f"Error generating AI response: {e}")
             return "I apologize, but I'm unable to provide a response at this time. Please try again later."
+
+    def _extract_response_text(self, response) -> str:
+        """Safely extract text from Google AI response, handling safety filtering and other issues."""
+        try:
+            # First try the quick accessor
+            if hasattr(response, 'text') and response.text:
+                return response.text
+        except Exception as e:
+            # If quick accessor fails, handle manually
+            logger.debug(f"Quick accessor failed: {e}")
+
+        try:
+            # Handle response with candidates
+            if hasattr(response, 'candidates') and response.candidates:
+                candidate = response.candidates[0]
+
+                # Check finish reason
+                if hasattr(candidate, 'finish_reason'):
+                    if candidate.finish_reason == 2:  # SAFETY
+                        logger.warning("AI response blocked by safety filters")
+                        return "I apologize, but I cannot provide a response to this request due to safety guidelines. Please rephrase your question to focus on compliance requirements."
+                    elif candidate.finish_reason == 3:  # RECITATION
+                        logger.warning("AI response blocked due to recitation concerns")
+                        return "I apologize, but I cannot provide this specific response. Please try rephrasing your question."
+                    elif candidate.finish_reason == 4:  # OTHER
+                        logger.warning("AI response blocked for other reasons")
+                        return "I apologize, but I was unable to complete the response. Please try again with a different approach."
+
+                # Try to extract text from content parts
+                if hasattr(candidate, 'content') and candidate.content:
+                    if hasattr(candidate.content, 'parts') and candidate.content.parts:
+                        text_parts = []
+                        for part in candidate.content.parts:
+                            if hasattr(part, 'text') and part.text:
+                                text_parts.append(part.text)
+                        if text_parts:
+                            return ''.join(text_parts)
+
+            # Fallback response
+            logger.warning("No valid response text found")
+            return "I apologize, but I'm unable to provide a response at this time. Please try rephrasing your question."
+
+        except Exception as e:
+            logger.error(f"Error extracting response text: {e}")
+            return "I apologize, but I'm unable to provide a response at this time. Please try again later."
+
+    async def _stream_response(
+        self,
+        system_prompt: str,
+        user_prompt: str,
+        task_type: str = "general",
+        context: Optional[Dict[str, Any]] = None
+    ) -> AsyncIterator[str]:
+        """Generate streaming AI response using task-appropriate model with circuit breaker protection."""
+        model = None
+        model_name = "unknown"
+
+        try:
+            # Get appropriate tools for streaming task
+            tools = self._get_tools_for_task(task_type) if task_type in ['analysis', 'recommendations'] else []
+
+            # Get task-appropriate model with circuit breaker protection
+            model, instruction_id = self._get_task_appropriate_model(task_type, context, tools)
+            model_name = getattr(model, 'model_name', 'unknown')
+
+            # Construct full prompt
+            full_prompt = f"System: {system_prompt}\n\nUser: {user_prompt}"
+
+            # Check circuit breaker before proceeding
+            if not self.circuit_breaker.is_model_available(model_name):
+                raise ModelUnavailableException(
+                    model_name=model_name,
+                    reason="Circuit breaker is open"
+                )
+
+            # Use streaming generation with circuit breaker monitoring
+            response_stream = model.generate_content_stream(full_prompt)
+
+            # CRITICAL FIX: Google's generate_content_stream returns a sync generator, not async
+            # We need to iterate synchronously but yield asynchronously
+            for chunk in response_stream:
+                if hasattr(chunk, 'text') and chunk.text:
+                    # Record success for circuit breaker
+                    self.circuit_breaker.record_success(model_name)
+                    yield chunk.text
+                elif hasattr(chunk, 'candidates') and chunk.candidates:
+                    for candidate in chunk.candidates:
+                        if hasattr(candidate, 'content') and candidate.content:
+                            for part in candidate.content.parts:
+                                if hasattr(part, 'text') and part.text:
+                                    # Record success for circuit breaker
+                                    self.circuit_breaker.record_success(model_name)
+                                    yield part.text
+
+        except (ModelUnavailableException, CircuitBreakerException) as e:
+            logger.error(f"Model {model_name} unavailable for streaming: {e}")
+            yield f"I apologize, but the AI service is temporarily unavailable. Please try again in a few moments."
+        except Exception as e:
+            logger.error(f"Error generating streaming AI response with model {model_name}: {e}")
+            # Record failure for circuit breaker
+            if model:
+                self.circuit_breaker.record_failure(model_name, e)
+            yield "I apologize, but I'm unable to provide a response at this time. Please try again later."
+
+    async def analyze_assessment_results_stream(
+        self,
+        assessment_responses: List[Dict[str, Any]],
+        framework_id: str,
+        business_profile_id: UUID,
+        user_context: Optional[Dict[str, Any]] = None
+    ) -> AsyncIterator[str]:
+        """
+        Stream AI-powered analysis of assessment responses with real-time updates.
+        
+        Args:
+            assessment_responses: List of question responses
+            framework_id: The compliance framework
+            business_profile_id: User's business profile for context
+            user_context: Additional context from the user
+            
+        Yields:
+            String chunks of the analysis as they're generated
+        """
+        try:
+            # Get comprehensive business context
+            context = await self.context_manager.get_conversation_context(
+                conversation_id=uuid4(),
+                business_profile_id=business_profile_id
+            )
+            
+            # Use prompt template for analysis
+            prompt_dict = self.prompt_templates.get_assessment_analysis_prompt(
+                assessment_results={'responses': assessment_responses, 'framework_id': framework_id},
+                framework_id=framework_id,
+                business_context=context.get('business_profile', {})
+            )
+            prompt = prompt_dict.get('user', '')
+            
+            # Stream AI analysis with task-appropriate model
+            stream_context = {
+                'framework': framework_id,
+                'business_context': context.get('business_profile', {}),
+                'prompt_length': len(prompt) if isinstance(prompt, str) else 1000
+            }
+
+            async for chunk in self._stream_response(
+                "You are ComplianceGPT, providing comprehensive assessment analysis.",
+                prompt,
+                task_type="analysis",
+                context=stream_context
+            ):
+                yield chunk
+                
+        except Exception as e:
+            logger.error(f"Error streaming assessment analysis: {e}")
+            yield f"Unable to analyze assessment results for {framework_id} at this time."
+
+    async def get_assessment_recommendations_stream(
+        self,
+        assessment_gaps: List[Dict[str, Any]],
+        framework_id: str,
+        business_profile_id: UUID,
+        priority_level: str = "high",
+        user_context: Optional[Dict[str, Any]] = None
+    ) -> AsyncIterator[str]:
+        """
+        Stream personalized recommendations based on assessment gaps.
+        
+        Args:
+            assessment_gaps: List of identified compliance gaps
+            framework_id: The compliance framework
+            business_profile_id: User's business profile for context
+            priority_level: Priority filter for recommendations
+            user_context: Additional context from the user
+            
+        Yields:
+            String chunks of recommendations as they're generated
+        """
+        try:
+            # Get business context
+            context = await self.context_manager.get_conversation_context(
+                conversation_id=uuid4(),
+                business_profile_id=business_profile_id
+            )
+            
+            # Build recommendations prompt
+            prompt_dict = self.prompt_templates.get_assessment_recommendations_prompt(
+                gaps=assessment_gaps,
+                business_profile=context.get('business_profile', {}),
+                framework_id=framework_id
+            )
+            prompt = prompt_dict.get('user', '')
+
+            # Stream AI recommendations with task-appropriate model
+            stream_context = {
+                'framework': framework_id,
+                'business_context': context.get('business_profile', {}),
+                'prompt_length': len(prompt),
+                'priority_level': priority_level
+            }
+
+            async for chunk in self._stream_response(
+                "You are ComplianceGPT, providing practical implementation recommendations.",
+                prompt,
+                task_type="recommendations",
+                context=stream_context
+            ):
+                yield chunk
+                
+        except Exception as e:
+            logger.error(f"Error streaming assessment recommendations: {e}")
+            yield f"Unable to generate recommendations for {framework_id} at this time."
+
+    async def get_assessment_help_stream(
+        self,
+        question_id: str,
+        question_text: str,
+        framework_id: str,
+        business_profile_id: UUID,
+        section_id: Optional[str] = None,
+        user_context: Optional[Dict[str, Any]] = None
+    ) -> AsyncIterator[str]:
+        """
+        Stream contextual guidance for specific assessment questions.
+        
+        Args:
+            question_id: Unique identifier for the question
+            question_text: The actual question text
+            framework_id: The compliance framework
+            business_profile_id: User's business profile for context
+            section_id: Optional section identifier
+            user_context: Additional context from the user
+            
+        Yields:
+            String chunks of guidance as they're generated
+        """
+        try:
+            # Get business context
+            context = await self.context_manager.get_conversation_context(
+                conversation_id=uuid4(),
+                business_profile_id=business_profile_id
+            )
+            
+            # Build help prompt
+            prompt_dict = self.prompt_templates.get_assessment_help_prompt(
+                question_id=question_id,
+                question_text=question_text,
+                framework_id=framework_id,
+                section_id=section_id,
+                business_context=context.get('business_profile', {}),
+                user_context=user_context or {}
+            )
+            prompt = prompt_dict.get('user', '')
+
+            # Stream AI guidance with task-appropriate model
+            stream_context = {
+                'framework': framework_id,
+                'business_context': context.get('business_profile', {}),
+                'prompt_length': len(prompt),
+                'question_type': 'help'
+            }
+
+            async for chunk in self._stream_response(
+                "You are ComplianceGPT, providing contextual assessment guidance.",
+                prompt,
+                task_type="help",
+                context=stream_context
+            ):
+                yield chunk
+                
+        except Exception as e:
+            logger.error(f"Error streaming assessment help: {e}")
+            yield f"Unable to provide guidance for question {question_id} at this time."
 
     def _parse_assessment_help_response(self, response: str) -> Dict[str, Any]:
         """Parse AI response for assessment help into structured format."""
@@ -2733,19 +3307,117 @@ class ComplianceAssistant:
         """Parse AI response for assessment recommendations into structured format."""
         try:
             import json
+            import re
+
+            # Try to parse as JSON first
             if response.strip().startswith('{'):
                 return json.loads(response)
+
+            # Try to extract JSON from response (handle markdown code blocks)
+            json_match = re.search(r'```json\s*(\{.*?\})\s*```', response, re.DOTALL)
+            if json_match:
+                return json.loads(json_match.group(1))
+
+            # Try to extract JSON without markdown
+            json_match = re.search(r'\{.*\}', response, re.DOTALL)
+            if json_match:
+                return json.loads(json_match.group())
+
         except json.JSONDecodeError:
             pass
 
+        # Fallback: Parse text response into structured format
+        logger.info(f"Parsing text response for recommendations: {response[:200]}...")
+
+        # Check if response contains JSON that we missed
+        if '```json' in response and '"recommendations"' in response:
+            logger.info("Found JSON in response, attempting to extract...")
+            try:
+                # Extract JSON more aggressively
+                start = response.find('```json') + 7
+                end = response.find('```', start)
+                if end > start:
+                    json_str = response[start:end].strip()
+                    parsed = json.loads(json_str)
+                    if 'recommendations' in parsed:
+                        logger.info(f"Successfully extracted {len(parsed['recommendations'])} recommendations from JSON")
+                        return parsed
+            except Exception as e:
+                logger.warning(f"Failed to extract JSON: {e}")
+
+        recommendations = []
+        lines = response.split('\n')
+
+        current_rec = None
+        for line in lines:
+            line = line.strip()
+            if line.startswith('- ') or line.startswith('* ') or line.startswith('1.') or line.startswith('2.') or line.startswith('3.'):
+                # Save previous recommendation
+                if current_rec:
+                    recommendations.append(current_rec)
+
+                # Start new recommendation
+                title = re.sub(r'^[-*\d\.]\s*', '', line)
+                current_rec = {
+                    'id': f'rec_{len(recommendations) + 1}',
+                    'title': title,
+                    'description': title,
+                    'priority': 'medium',
+                    'effort_estimate': '2-4 weeks',
+                    'impact_score': 0.7,
+                    'implementation_steps': [title]
+                }
+            elif current_rec and line and not line.startswith('#'):
+                # Add to description
+                current_rec['description'] += f' {line}'
+
+        # Add last recommendation
+        if current_rec:
+            recommendations.append(current_rec)
+
+        # If no recommendations found, create a default one from the response
+        if not recommendations and response.strip():
+            recommendations.append({
+                'id': 'rec_1',
+                'title': 'Review Compliance Requirements',
+                'description': 'Please review the compliance requirements for your organization.',
+                'priority': 'medium',
+                'effort_estimate': '1-2 weeks',
+                'impact_score': 0.6,
+                'resources': ['Compliance team'],
+                'implementation_steps': ['Review the provided guidance']
+            })
+
         return {
-            'recommendations': [],
+            'recommendations': recommendations[:5],  # Limit to 5 recommendations
             'implementation_plan': {
-                'phases': [],
-                'total_timeline_weeks': 12,
-                'resource_requirements': []
+                'phases': [
+                    {
+                        'phase_number': 1,
+                        'phase_name': 'Planning',
+                        'duration_weeks': 2,
+                        'tasks': ['Review requirements', 'Plan implementation'],
+                        'dependencies': []
+                    },
+                    {
+                        'phase_number': 2,
+                        'phase_name': 'Implementation',
+                        'duration_weeks': max(len(recommendations) * 2, 4),
+                        'tasks': ['Implement recommendations', 'Monitor progress'],
+                        'dependencies': ['Planning']
+                    },
+                    {
+                        'phase_number': 3,
+                        'phase_name': 'Review',
+                        'duration_weeks': 2,
+                        'tasks': ['Review implementation', 'Document results'],
+                        'dependencies': ['Implementation']
+                    }
+                ],
+                'total_timeline_weeks': max(len(recommendations) * 2 + 4, 8),
+                'resource_requirements': ['Compliance team', 'Technical team']
             },
-            'success_metrics': []
+            'success_metrics': ['Compliance score improvement', 'Risk reduction']
         }
 
     def _get_fallback_assessment_help(self, question_text: str, framework_id: str) -> Dict[str, Any]:

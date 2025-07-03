@@ -12,7 +12,7 @@ os.environ["ENV"] = "testing"
 # The db_setup.py will handle the conversion to asyncpg format properly
 os.environ["DATABASE_URL"] = "postgresql://neondb_owner:npg_s0JhnfGNy3Ze@ep-wild-grass-a8o37wq8-pooler.eastus2.azure.neon.tech/neondb?sslmode=require"
 os.environ["SECRET_KEY"] = "test_secret_key_for_pytest_sessions"
-os.environ["GOOGLE_API_KEY"] = "test_google_api_key"
+os.environ["GOOGLE_API_KEY"] = "AIzaSyDi-R-_h_IZcjtmq0Qu37_-ZIk0Non7vEM"
 os.environ["SENTRY_DSN"] = ""
 os.environ['FERNET_KEY'] = Fernet.generate_key().decode()
 

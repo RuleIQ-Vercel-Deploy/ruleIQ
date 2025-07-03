@@ -90,18 +90,31 @@ class ApiClient {
    * Handle API errors with enhanced error handling
    */
   private handleError(error: AxiosError<ApiErrorType>): ApiError {
-    const enhancedError = handleApiError(error);
-    
-    // Log error for monitoring
-    logError(enhancedError, {
-      endpoint: error.config?.url,
-      method: error.config?.method,
-    });
-    
-    // Return ApiError for backward compatibility
+    try {
+      const enhancedError = handleApiError(error);
+
+      // Ensure we have a valid error object before logging
+      if (enhancedError) {
+        logError(enhancedError, {
+          endpoint: error.config?.url,
+          method: error.config?.method,
+        });
+
+        // Return ApiError for backward compatibility
+        return new ApiError(
+          enhancedError.status || 500,
+          enhancedError.userMessage || 'An unexpected error occurred',
+          error
+        );
+      }
+    } catch (handlingError) {
+      console.error('[ruleIQ] Error in error handling:', handlingError);
+    }
+
+    // Fallback error handling
     return new ApiError(
-      enhancedError.status,
-      enhancedError.userMessage,
+      error.response?.status || 500,
+      'An unexpected error occurred',
       error
     );
   }

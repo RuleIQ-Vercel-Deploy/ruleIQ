@@ -14,6 +14,7 @@ from typing import Dict, Any, List, Optional
 from uuid import UUID
 
 from fastapi import APIRouter, Depends, HTTPException, status, Query
+from fastapi.responses import StreamingResponse
 from pydantic import BaseModel, Field
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
@@ -154,6 +155,22 @@ class AIMetricsResponse(BaseModel):
     total_interactions: int
     quota_usage: Dict[str, Any]
 
+# Streaming Response Models
+class StreamingChunk(BaseModel):
+    """Individual chunk of streaming data."""
+    chunk_id: str = Field(..., description="Unique identifier for this chunk")
+    content: str = Field(..., description="Text content of this chunk")
+    chunk_type: str = Field(default="content", description="Type of chunk: content, metadata, complete")
+    timestamp: str = Field(default_factory=lambda: datetime.utcnow().isoformat())
+
+class StreamingMetadata(BaseModel):
+    """Metadata for streaming response."""
+    request_id: str
+    framework_id: str
+    business_profile_id: str
+    started_at: str
+    stream_type: str  # "analysis", "recommendations", "help"
+
 # Helper function to get business profile
 async def get_user_business_profile(
     user: User,
@@ -178,7 +195,7 @@ async def get_user_business_profile(
         profile = result.scalars().first()
     
     if not profile:
-        raise NotFoundException("Business profile not found")
+        raise NotFoundException("Business profile", business_profile_id or str(user.id))
     
     return profile
 
@@ -228,6 +245,12 @@ async def get_question_help(
             generated_at=guidance_response.get("generated_at", "")
         )
         
+    except NotFoundException as e:
+        logger.warning(f"Business profile not found in question help: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=str(e)
+        )
     except AIServiceException as e:
         logger.error(f"AI service error in question help: {e}")
         raise HTTPException(
@@ -373,6 +396,12 @@ async def analyze_assessment_results(
             generated_at=analysis_response.get("generated_at", "")
         )
 
+    except NotFoundException as e:
+        logger.warning(f"Business profile not found in assessment analysis: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=str(e)
+        )
     except AIServiceException as e:
         logger.error(f"AI service error in assessment analysis: {e}")
         raise HTTPException(
@@ -385,6 +414,98 @@ async def analyze_assessment_results(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Unable to analyze assessment results at this time"
         )
+
+@router.post("/analysis/stream")
+async def analyze_assessment_results_stream(
+    request: AIAnalysisRequest,
+    current_user: User = Depends(get_current_active_user),
+    db: AsyncSession = Depends(get_async_db),
+    _: None = Depends(ai_analysis_rate_limit)
+):
+    """
+    Stream comprehensive AI analysis of assessment results.
+
+    Provides real-time streaming analysis of completed assessment to identify 
+    gaps, risks, and provide detailed compliance insights with evidence requirements.
+    Returns Server-Sent Events (SSE) for real-time updates.
+    """
+    
+    async def generate_analysis_stream():
+        try:
+            # Get business profile
+            profile = await get_user_business_profile(
+                current_user, db, request.business_profile_id
+            )
+
+            # Initialize AI assistant
+            assistant = ComplianceAssistant(db)
+
+            # Create metadata chunk
+            metadata = StreamingMetadata(
+                request_id=f"analysis_{request.framework_id}_{datetime.utcnow().timestamp()}",
+                framework_id=request.framework_id,
+                business_profile_id=str(profile.id),
+                started_at=datetime.utcnow().isoformat(),
+                stream_type="analysis"
+            )
+            
+            # Send metadata chunk
+            metadata_chunk = StreamingChunk(
+                chunk_id="metadata",
+                content=metadata.model_dump_json(),
+                chunk_type="metadata"
+            )
+            yield f"data: {metadata_chunk.model_dump_json()}\n\n"
+
+            # Stream AI analysis using the new streaming method
+            chunk_counter = 0
+            async for chunk_content in assistant.analyze_assessment_results_stream(
+                assessment_responses=request.assessment_results,
+                framework_id=request.framework_id,
+                business_profile_id=UUID(str(profile.id))
+            ):
+                chunk_counter += 1
+                chunk = StreamingChunk(
+                    chunk_id=f"analysis_chunk_{chunk_counter}",
+                    content=chunk_content,
+                    chunk_type="content"
+                )
+                yield f"data: {chunk.model_dump_json()}\n\n"
+
+            # Send completion chunk
+            completion_chunk = StreamingChunk(
+                chunk_id="complete",
+                content="Analysis complete",
+                chunk_type="complete"
+            )
+            yield f"data: {completion_chunk.model_dump_json()}\n\n"
+
+        except AIServiceException as e:
+            logger.error(f"AI service error in streaming assessment analysis: {e}")
+            error_chunk = StreamingChunk(
+                chunk_id="error",
+                content=f"Unable to analyze assessment: {e.message}",
+                chunk_type="error"
+            )
+            yield f"data: {error_chunk.model_dump_json()}\n\n"
+        except Exception as e:
+            logger.error(f"Unexpected error in streaming assessment analysis: {e}")
+            error_chunk = StreamingChunk(
+                chunk_id="error",
+                content="Unable to analyze assessment results at this time",
+                chunk_type="error"
+            )
+            yield f"data: {error_chunk.model_dump_json()}\n\n"
+
+    return StreamingResponse(
+        generate_analysis_stream(),
+        media_type="text/event-stream",
+        headers={
+            "Cache-Control": "no-cache",
+            "Connection": "keep-alive",
+            "X-Accel-Buffering": "no"  # Disable nginx buffering
+        }
+    )
 
 @router.post("/recommendations", response_model=AIRecommendationResponse)
 async def generate_personalized_recommendations(
@@ -466,6 +587,99 @@ async def generate_personalized_recommendations(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Unable to generate recommendations at this time"
         )
+
+@router.post("/recommendations/stream")
+async def generate_personalized_recommendations_stream(
+    request: AIRecommendationRequest,
+    current_user: User = Depends(get_current_active_user),
+    db: AsyncSession = Depends(get_async_db),
+    _: None = Depends(ai_recommendations_rate_limit)
+):
+    """
+    Stream personalized AI recommendations based on assessment gaps.
+
+    Provides real-time streaming recommendations based on identified compliance gaps.
+    Returns Server-Sent Events (SSE) for real-time updates including implementation 
+    steps and prioritized action items.
+    """
+    
+    async def generate_recommendations_stream():
+        try:
+            # Get business profile
+            profile = await get_user_business_profile(
+                current_user, db, getattr(request, 'business_profile_id', None)
+            )
+
+            # Initialize AI assistant
+            assistant = ComplianceAssistant(db)
+
+            # Create metadata chunk
+            metadata = StreamingMetadata(
+                request_id=f"recommendations_{datetime.utcnow().timestamp()}",
+                framework_id=getattr(request, 'framework_id', 'unknown'),
+                business_profile_id=str(profile.id),
+                started_at=datetime.utcnow().isoformat(),
+                stream_type="recommendations"
+            )
+            
+            # Send metadata chunk
+            metadata_chunk = StreamingChunk(
+                chunk_id="metadata",
+                content=metadata.model_dump_json(),
+                chunk_type="metadata"
+            )
+            yield f"data: {metadata_chunk.model_dump_json()}\n\n"
+
+            # Stream AI recommendations using the new streaming method
+            chunk_counter = 0
+            async for chunk_content in assistant.get_assessment_recommendations_stream(
+                assessment_gaps=request.gaps,
+                framework_id=getattr(request, 'framework_id', 'unknown'),
+                business_profile_id=UUID(str(profile.id)),
+                priority_level="high"
+            ):
+                chunk_counter += 1
+                chunk = StreamingChunk(
+                    chunk_id=f"recommendations_chunk_{chunk_counter}",
+                    content=chunk_content,
+                    chunk_type="content"
+                )
+                yield f"data: {chunk.model_dump_json()}\n\n"
+
+            # Send completion chunk
+            completion_chunk = StreamingChunk(
+                chunk_id="complete",
+                content="Recommendations complete",
+                chunk_type="complete"
+            )
+            yield f"data: {completion_chunk.model_dump_json()}\n\n"
+
+        except AIServiceException as e:
+            logger.error(f"AI service error in streaming recommendations: {e}")
+            error_chunk = StreamingChunk(
+                chunk_id="error",
+                content=f"Unable to generate recommendations: {e.message}",
+                chunk_type="error"
+            )
+            yield f"data: {error_chunk.model_dump_json()}\n\n"
+        except Exception as e:
+            logger.error(f"Unexpected error in streaming recommendations: {e}")
+            error_chunk = StreamingChunk(
+                chunk_id="error",
+                content="Unable to generate recommendations at this time",
+                chunk_type="error"
+            )
+            yield f"data: {error_chunk.model_dump_json()}\n\n"
+
+    return StreamingResponse(
+        generate_recommendations_stream(),
+        media_type="text/event-stream",
+        headers={
+            "Cache-Control": "no-cache",
+            "Connection": "keep-alive",
+            "X-Accel-Buffering": "no"  # Disable nginx buffering
+        }
+    )
 
 @router.post("/feedback")
 async def submit_ai_feedback(
@@ -619,6 +833,133 @@ async def _get_mock_followup_response(framework: str, answers: Dict[str, Any]) -
         "request_id": f"followup_{framework}_{hash(str(answers)) % 10000}",
         "generated_at": datetime.utcnow().isoformat()
     }
+
+
+# AI Health and Circuit Breaker Endpoints
+
+@router.get("/health")
+async def get_ai_service_health(
+    current_user: User = Depends(get_current_active_user),
+    db: AsyncSession = Depends(get_async_db)
+) -> Dict[str, Any]:
+    """
+    Get comprehensive AI service health status including circuit breaker states.
+    """
+    try:
+        assistant = ComplianceAssistant(db)
+
+        # Get circuit breaker status
+        circuit_status = assistant.circuit_breaker.get_health_status()
+
+        # Get overall health
+        health_status = {
+            "service_status": "healthy" if circuit_status["overall_state"] == "CLOSED" else "degraded",
+            "circuit_breaker": circuit_status,
+            "timestamp": datetime.utcnow().isoformat(),
+            "uptime_percentage": 99.5,  # Mock - calculate from actual metrics
+            "last_incident": None
+        }
+
+        return {
+            "status": "success",
+            "data": health_status
+        }
+
+    except Exception as e:
+        logger.error(f"Error getting AI service health: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to retrieve AI service health"
+        )
+
+
+@router.get("/circuit-breaker/status")
+async def get_circuit_breaker_status(
+    current_user: User = Depends(get_current_active_user),
+    db: AsyncSession = Depends(get_async_db)
+) -> Dict[str, Any]:
+    """
+    Get detailed circuit breaker status for all AI models.
+    """
+    try:
+        assistant = ComplianceAssistant(db)
+        circuit_status = assistant.circuit_breaker.get_health_status()
+
+        return {
+            "status": "success",
+            "data": circuit_status,
+            "timestamp": datetime.utcnow().isoformat()
+        }
+
+    except Exception as e:
+        logger.error(f"Error getting circuit breaker status: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to retrieve circuit breaker status"
+        )
+
+
+@router.post("/circuit-breaker/reset")
+async def reset_circuit_breaker(
+    model_name: str = Query(..., description="Model name to reset circuit breaker for"),
+    current_user: User = Depends(get_current_active_user),
+    db: AsyncSession = Depends(get_async_db)
+) -> Dict[str, Any]:
+    """
+    Manually reset circuit breaker for a specific model.
+    """
+    try:
+        assistant = ComplianceAssistant(db)
+        assistant.circuit_breaker.reset_circuit(model_name)
+
+        return {
+            "status": "success",
+            "message": f"Circuit breaker reset for model: {model_name}",
+            "timestamp": datetime.utcnow().isoformat()
+        }
+
+    except Exception as e:
+        logger.error(f"Error resetting circuit breaker: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to reset circuit breaker"
+        )
+
+
+@router.get("/models/{model_name}/health")
+async def get_model_health(
+    model_name: str,
+    current_user: User = Depends(get_current_active_user),
+    db: AsyncSession = Depends(get_async_db)
+) -> Dict[str, Any]:
+    """
+    Get health status for a specific AI model.
+    """
+    try:
+        assistant = ComplianceAssistant(db)
+
+        # Check if model is available
+        is_available = assistant.circuit_breaker.is_model_available(model_name)
+        model_state = assistant.circuit_breaker.get_model_state(model_name)
+
+        health_data = {
+            "model_name": model_name,
+            "healthy": is_available,
+            "circuit_state": model_state.value if model_state else "UNKNOWN",
+            "last_check": datetime.utcnow().isoformat()
+        }
+
+        return {
+            "status": "success",
+            "data": health_data
+        }
+
+    except Exception as e:
+        logger.error(f"Error getting model health: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to retrieve model health"
+        )
 
 async def _get_mock_analysis_response(framework: str, assessment_results: Dict[str, Any]) -> Dict[str, Any]:
     """Mock analysis response - replace with actual AI service call"""

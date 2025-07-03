@@ -3,8 +3,9 @@ FastAPI router for chat functionality with the AI assistant.
 """
 
 from fastapi import APIRouter, Depends, HTTPException, Query, WebSocket, WebSocketDisconnect
+from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import Session
-from sqlalchemy import desc, func
+from sqlalchemy import desc, func, select
 from typing import List, Optional
 from uuid import UUID, uuid4
 import json
@@ -12,12 +13,12 @@ import logging
 import asyncio
 from datetime import datetime
 
-from database.db_setup import get_db
+from database.db_setup import get_db, get_async_db
 from database.user import User
 from database.business_profile import BusinessProfile
 from database.chat_conversation import ChatConversation, ConversationStatus
 from database.chat_message import ChatMessage
-from api.dependencies.auth import get_current_user
+from api.dependencies.auth import get_current_user, get_current_active_user
 from api.schemas.chat import (
     SendMessageRequest, MessageResponse, ConversationResponse,
     CreateConversationRequest, ConversationListResponse, ConversationSummary,
@@ -34,32 +35,39 @@ router = APIRouter(prefix="/chat", tags=["Chat Assistant"])
 @router.post("/conversations", response_model=ConversationResponse)
 async def create_conversation(
     request: CreateConversationRequest,
-    db: Session = Depends(get_db),
+    db: AsyncSession = Depends(get_async_db),
     current_user: User = Depends(get_current_user)
 ):
     """Create a new chat conversation."""
     try:
+        from sqlalchemy import select, func
+
         # Get the user's business profile
-        business_profile = db.query(BusinessProfile).filter(
-            BusinessProfile.user_id == str(current_user.id)
-        ).first()
-        
+        stmt = select(BusinessProfile).where(BusinessProfile.user_id == str(current_user.id))
+        result = await db.execute(stmt)
+        business_profile = result.scalars().first()
+
         if not business_profile:
             raise HTTPException(
-                status_code=400, 
+                status_code=400,
                 detail="No business profile found. Please complete your profile setup first."
             )
-        
+
+        # Get conversation count for title
+        count_stmt = select(func.count(ChatConversation.id)).where(ChatConversation.user_id == current_user.id)
+        count_result = await db.execute(count_stmt)
+        conversation_count = count_result.scalar() or 0
+
         # Create new conversation
         conversation = ChatConversation(
             user_id=current_user.id,
             business_profile_id=business_profile.id,
-            title=request.title or f"Chat {db.query(ChatConversation).filter(ChatConversation.user_id == current_user.id).count() + 1}",
+            title=request.title or f"Chat {conversation_count + 1}",
             status=ConversationStatus.ACTIVE
         )
-        
+
         db.add(conversation)
-        db.flush()  # Get the conversation ID
+        await db.flush()  # Get the conversation ID
         
         messages = []
         
@@ -79,7 +87,7 @@ async def create_conversation(
             # Generate assistant response
             response_text, metadata = await assistant.process_message(
                 conversation_id=conversation.id,
-                user_id=current_user.id,
+                user=current_user,
                 message=request.initial_message,
                 business_profile_id=business_profile.id
             )
@@ -96,7 +104,7 @@ async def create_conversation(
             
             messages = [user_message, assistant_message]
         
-        db.commit()
+        await db.commit()
         
         return ConversationResponse(
             id=conversation.id,
@@ -205,33 +213,39 @@ async def get_conversation(
 async def send_message(
     conversation_id: UUID,
     request: SendMessageRequest,
-    db: Session = Depends(get_db),
+    db: AsyncSession = Depends(get_async_db),
     current_user: User = Depends(get_current_user)
 ):
     """Send a message in a conversation."""
     try:
+        from sqlalchemy import select, desc
+
         # Verify conversation exists and belongs to user
-        conversation = db.query(ChatConversation).filter(
+        conv_stmt = select(ChatConversation).where(
             ChatConversation.id == conversation_id,
             ChatConversation.user_id == current_user.id,
             ChatConversation.status == ConversationStatus.ACTIVE
-        ).first()
-        
+        )
+        conv_result = await db.execute(conv_stmt)
+        conversation = conv_result.scalars().first()
+
         if not conversation:
             raise HTTPException(status_code=404, detail="Conversation not found or inactive")
-        
+
         # Get business profile
-        business_profile = db.query(BusinessProfile).filter(
-            BusinessProfile.user_id == str(current_user.id)
-        ).first()
-        
+        bp_stmt = select(BusinessProfile).where(BusinessProfile.user_id == str(current_user.id))
+        bp_result = await db.execute(bp_stmt)
+        business_profile = bp_result.scalars().first()
+
         if not business_profile:
             raise HTTPException(status_code=400, detail="Business profile not found")
-        
+
         # Get next sequence number
-        last_message = db.query(ChatMessage).filter(
+        msg_stmt = select(ChatMessage).where(
             ChatMessage.conversation_id == conversation_id
-        ).order_by(desc(ChatMessage.sequence_number)).first()
+        ).order_by(desc(ChatMessage.sequence_number))
+        msg_result = await db.execute(msg_stmt)
+        last_message = msg_result.scalars().first()
         
         next_sequence = (last_message.sequence_number + 1) if last_message else 1
         
@@ -243,17 +257,17 @@ async def send_message(
             sequence_number=next_sequence
         )
         db.add(user_message)
-        db.flush()
-        
+        await db.flush()
+
         # Generate assistant response
         assistant = ComplianceAssistant(db)
         response_text, metadata = await assistant.process_message(
             conversation_id=conversation_id,
-            user_id=current_user.id,
+            user=current_user,
             message=request.message,
             business_profile_id=business_profile.id
         )
-        
+
         # Add assistant message
         assistant_message = ChatMessage(
             conversation_id=conversation_id,
@@ -263,11 +277,12 @@ async def send_message(
             sequence_number=next_sequence + 1
         )
         db.add(assistant_message)
-        
+
         # Update conversation timestamp
-        conversation.updated_at = func.now()
-        
-        db.commit()
+        from datetime import datetime
+        conversation.updated_at = datetime.utcnow()
+
+        await db.commit()
         
         return MessageResponse.from_orm(assistant_message)
         
@@ -309,24 +324,26 @@ async def delete_conversation(
 @router.post("/evidence-recommendations", response_model=List[EvidenceRecommendationResponse])
 async def get_evidence_recommendations(
     request: EvidenceRecommendationRequest,
-    db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user)
+    db: AsyncSession = Depends(get_async_db),
+    current_user: User = Depends(get_current_active_user)
 ):
     """Get AI-powered evidence collection recommendations."""
     try:
-        business_profile = db.query(BusinessProfile).filter(
-            BusinessProfile.user_id == str(current_user.id)
-        ).first()
-        
+        # Use async query for business profile
+        stmt = select(BusinessProfile).where(BusinessProfile.user_id == str(current_user.id))
+        result = await db.execute(stmt)
+        business_profile = result.scalars().first()
+
         if not business_profile:
             raise HTTPException(status_code=400, detail="Business profile not found")
-        
+
         assistant = ComplianceAssistant(db)
         recommendations = await assistant.get_evidence_recommendations(
-            business_profile_id=business_profile.id,
-            framework=request.framework
+            user=current_user,
+            business_profile_id=UUID(str(business_profile.id)),
+            target_framework=request.framework or "unknown"
         )
-        
+
         return [EvidenceRecommendationResponse(**rec) for rec in recommendations]
         
     except HTTPException:
@@ -338,24 +355,27 @@ async def get_evidence_recommendations(
 @router.post("/compliance-analysis", response_model=ComplianceAnalysisResponse)
 async def analyze_compliance_gap(
     request: ComplianceAnalysisRequest,
-    db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user)
+    db: AsyncSession = Depends(get_async_db),
+    current_user: User = Depends(get_current_active_user)
 ):
     """Analyze compliance gaps for a specific framework."""
     try:
-        business_profile = db.query(BusinessProfile).filter(
-            BusinessProfile.user_id == str(current_user.id)
-        ).first()
-        
+        from sqlalchemy import select
+
+        # Use async query for business profile
+        stmt = select(BusinessProfile).where(BusinessProfile.user_id == str(current_user.id))
+        result = await db.execute(stmt)
+        business_profile = result.scalars().first()
+
         if not business_profile:
             raise HTTPException(status_code=400, detail="Business profile not found")
-        
+
         assistant = ComplianceAssistant(db)
         analysis = await assistant.analyze_evidence_gap(
-            business_profile_id=business_profile.id,
+            business_profile_id=UUID(str(business_profile.id)),
             framework=request.framework
         )
-        
+
         return ComplianceAnalysisResponse(**analysis)
         
     except HTTPException:
@@ -369,8 +389,8 @@ async def analyze_compliance_gap(
 async def get_context_aware_recommendations(
     framework: str = Query(..., description="Framework to get recommendations for"),
     context_type: str = Query(default="comprehensive", description="Type of context analysis"),
-    db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user)
+    db: AsyncSession = Depends(get_async_db),
+    current_user: User = Depends(get_current_active_user)
 ):
     """
     Get enhanced context-aware evidence recommendations that consider:
@@ -381,9 +401,10 @@ async def get_context_aware_recommendations(
     - Risk assessment
     """
     try:
-        business_profile = db.query(BusinessProfile).filter(
-            BusinessProfile.user_id == str(current_user.id)
-        ).first()
+        # Use async query for business profile
+        stmt = select(BusinessProfile).where(BusinessProfile.user_id == str(current_user.id))
+        result = await db.execute(stmt)
+        business_profile = result.scalars().first()
 
         if not business_profile:
             raise HTTPException(status_code=400, detail="Business profile not found")
@@ -391,7 +412,7 @@ async def get_context_aware_recommendations(
         assistant = ComplianceAssistant(db)
         recommendations = await assistant.get_context_aware_recommendations(
             user=current_user,
-            business_profile_id=business_profile.id,
+            business_profile_id=UUID(str(business_profile.id)),
             framework=framework,
             context_type=context_type
         )
@@ -410,17 +431,18 @@ async def generate_evidence_collection_workflow(
     framework: str = Query(..., description="Framework for workflow generation"),
     control_id: Optional[str] = Query(None, description="Specific control ID (optional)"),
     workflow_type: str = Query(default="comprehensive", description="Type of workflow"),
-    db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user)
+    db: AsyncSession = Depends(get_async_db),
+    current_user: User = Depends(get_current_active_user)
 ):
     """
     Generate intelligent, step-by-step evidence collection workflows
     tailored to specific frameworks, controls, and business contexts.
     """
     try:
-        business_profile = db.query(BusinessProfile).filter(
-            BusinessProfile.user_id == str(current_user.id)
-        ).first()
+        # Use async query for business profile
+        stmt = select(BusinessProfile).where(BusinessProfile.user_id == str(current_user.id))
+        result = await db.execute(stmt)
+        business_profile = result.scalars().first()
 
         if not business_profile:
             raise HTTPException(status_code=400, detail="Business profile not found")
@@ -428,9 +450,9 @@ async def generate_evidence_collection_workflow(
         assistant = ComplianceAssistant(db)
         workflow = await assistant.generate_evidence_collection_workflow(
             user=current_user,
-            business_profile_id=business_profile.id,
+            business_profile_id=UUID(str(business_profile.id)),
             framework=framework,
-            control_id=control_id,
+            control_id=control_id or "general",
             workflow_type=workflow_type
         )
 
@@ -500,7 +522,7 @@ async def generate_customized_policy(
 async def get_smart_compliance_guidance(
     framework: str,
     guidance_type: str = Query(default="getting_started", description="Type of guidance needed"),
-    db: Session = Depends(get_db),
+    db: AsyncSession = Depends(get_async_db),
     current_user: User = Depends(get_current_user)
 ):
     """
@@ -511,9 +533,10 @@ async def get_smart_compliance_guidance(
     - Best practices
     """
     try:
-        business_profile = db.query(BusinessProfile).filter(
-            BusinessProfile.user_id == str(current_user.id)
-        ).first()
+        # Use async query for business profile
+        stmt = select(BusinessProfile).where(BusinessProfile.user_id == str(current_user.id))
+        result = await db.execute(stmt)
+        business_profile = result.scalars().first()
 
         if not business_profile:
             raise HTTPException(status_code=400, detail="Business profile not found")

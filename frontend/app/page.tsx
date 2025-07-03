@@ -1,22 +1,7 @@
-"use client";
-
-import { motion } from "framer-motion";
-import {
-  Shield,
-  FileCheck,
-  Users,
-  WandSparkles,
-  Gauge,
-  Mail,
-  MapPin,
-  MousePointerClick,
-  TrendingUpIcon,
-  CheckCircle2,
-  Star,
-} from "lucide-react";
+import React from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { Shield, FileCheck, Users } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 import { Button } from "@/components/ui/button";
 import { useAuthStore } from "@/lib/stores/auth.store";

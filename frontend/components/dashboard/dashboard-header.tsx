@@ -104,6 +104,11 @@ export function DashboardHeader() {
           </div>
         </div>
 
+        {/* AI Status Indicator - Temporarily disabled */}
+        {/* <div className="flex items-center">
+          <AIStatusIndicator className="mr-4" />
+        </div> */}
+
         {/* Alerts Indicator */}
         <div className="flex-1 flex justify-end">
           <DropdownMenu>

@@ -62,13 +62,22 @@ class AuthService {
    */
   async logout(): Promise<void> {
     try {
-      await apiClient.post('/auth/logout');
+      // Only attempt API logout if we have a token
+      const token = this.getAccessToken();
+      if (token) {
+        await apiClient.post('/auth/logout');
+      }
     } catch (error) {
       // Continue with local logout even if API call fails
-      console.error('Logout API call failed:', error);
+      console.warn('Logout API call failed, continuing with local logout:', error);
     } finally {
+      // Always clear local auth data
       this.clearAuthData();
-      window.location.href = '/auth/login';
+
+      // Redirect to login page
+      if (typeof window !== 'undefined') {
+        window.location.href = '/auth/login';
+      }
     }
   }
 

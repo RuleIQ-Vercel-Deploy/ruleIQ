@@ -67,6 +67,42 @@ class EvidenceItem(Base):
     business_profile = relationship("BusinessProfile", back_populates="evidence_items")
     framework = relationship("ComplianceFramework", back_populates="evidence_items")
 
+    def to_dict(self):
+        """Convert EvidenceItem to dictionary for serialization."""
+        return {
+            "id": str(self.id),
+            "user_id": str(self.user_id),
+            "business_profile_id": str(self.business_profile_id),
+            "framework_id": str(self.framework_id),
+            "evidence_name": self.evidence_name,
+            "evidence_type": self.evidence_type,
+            "control_reference": self.control_reference,
+            "description": self.description,
+            "required_for_audit": self.required_for_audit,
+            "collection_frequency": self.collection_frequency,
+            "collection_method": self.collection_method,
+            "automation_source": self.automation_source,
+            "automation_guidance": self.automation_guidance,
+            "file_path": self.file_path,
+            "file_type": self.file_type,
+            "file_size_bytes": self.file_size_bytes,
+            "status": self.status,
+            "collection_notes": self.collection_notes,
+            "review_notes": self.review_notes,
+            "collected_by": self.collected_by,
+            "collected_at": self.collected_at.isoformat() if self.collected_at else None,
+            "reviewed_by": self.reviewed_by,
+            "reviewed_at": self.reviewed_at.isoformat() if self.reviewed_at else None,
+            "approved_by": self.approved_by,
+            "approved_at": self.approved_at.isoformat() if self.approved_at else None,
+            "priority": self.priority,
+            "effort_estimate": self.effort_estimate,
+            "audit_section": self.audit_section,
+            "compliance_score_impact": self.compliance_score_impact,
+            "created_at": self.created_at.isoformat() if self.created_at else None,
+            "updated_at": self.updated_at.isoformat() if self.updated_at else None,
+        }
+
     @property
     def title(self):
         """Property to map 'title' field from API to 'evidence_name' in database."""

@@ -69,7 +69,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={cn("h-full", inter.variable)} suppressHydrationWarning>
-      <body className="h-full antialiased">
+      <body className="h-full antialiased" suppressHydrationWarning>
         <ThemeProvider defaultTheme="dark" storageKey="ruleiq-ui-theme">
           <QueryProvider>
             <ErrorBoundary>

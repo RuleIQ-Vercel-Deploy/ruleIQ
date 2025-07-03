@@ -1,49 +1,141 @@
 """
 Central repository for all prompt templates used by the AI assistant.
+
+Updated to work with system instructions rather than system prompts for better
+AI model performance and consistency.
 """
 
-from typing import Dict, List, Any
+from typing import Dict, List, Any, Optional
 import json
+from .instruction_templates import get_system_instruction, InstructionType, FrameworkType
 
 class PromptTemplates:
     """Manages and formats prompts for different AI tasks."""
+    
+    def __init__(self):
+        """Initialize prompt templates with system instruction support"""
+        self._instruction_cache = {}
+    
+    def get_system_instruction_for_task(
+        self,
+        task_type: str,
+        framework: Optional[str] = None,
+        business_profile: Optional[Dict[str, Any]] = None,
+        user_persona: Optional[str] = None,
+        task_complexity: str = "medium",
+        **kwargs
+    ) -> str:
+        """
+        Get system instruction for a specific task with caching
+        
+        Args:
+            task_type: Type of task ("assessment", "evidence", "chat", etc.)
+            framework: Framework name
+            business_profile: Business context
+            user_persona: User persona
+            task_complexity: Task complexity level
+            **kwargs: Additional context
+            
+        Returns:
+            System instruction string
+        """
+        # Create cache key
+        cache_key = (
+            task_type,
+            framework,
+            json.dumps(business_profile, sort_keys=True) if business_profile else None,
+            user_persona,
+            task_complexity,
+            json.dumps(kwargs, sort_keys=True) if kwargs else None
+        )
+        
+        # Check cache first
+        if cache_key in self._instruction_cache:
+            return self._instruction_cache[cache_key]
+        
+        # Generate instruction
+        instruction = get_system_instruction(
+            task_type,
+            framework=framework,
+            business_profile=business_profile,
+            user_persona=user_persona,
+            task_complexity=task_complexity,
+            **kwargs
+        )
+        
+        # Cache and return
+        self._instruction_cache[cache_key] = instruction
+        return instruction
+    
+    def get_user_prompt_only(self, message: str, context: Dict[str, Any]) -> str:
+        """
+        Helper method to create user prompts that work with system instructions
+        
+        Args:
+            message: User message
+            context: Context information
+            
+        Returns:
+            User prompt string for use with system instructions
+        """
+        business_info = context.get('business_profile', {})
+        
+        prompt_parts = [f'User message: "{message}"']
+        
+        if business_info:
+            prompt_parts.append(f"Business context: {json.dumps(business_info, indent=2)}")
+        
+        if context.get('recent_evidence'):
+            prompt_parts.append(f"Recent evidence: {json.dumps(context.get('recent_evidence', []), indent=2)}")
+        
+        return "\n\n".join(prompt_parts)
 
     def get_intent_classification_prompt(self, message: str, context: Dict[str, Any]) -> Dict[str, str]:
         """Creates the prompt for classifying the user's intent."""
-        system_prompt = """
-        You are an expert at classifying user intent in a compliance context.
-        Classify the message into one of: 'evidence_query', 'compliance_check', 'guidance_request', 'general_query'.
-        Extract relevant entities like frameworks, evidence types, or specific requirements.
         
-        Return a JSON object with this exact format:
-        {"type": "evidence_query|compliance_check|guidance_request|general_query", "confidence": 0.9, "entities": {"frameworks": ["ISO27001"], "evidence_types": ["policies"]}}
-        """
+        # Use system instruction instead of system prompt
+        system_instruction = get_system_instruction(
+            "general",  # Use general instruction for intent classification
+            business_profile=context.get('business_profile'),
+            additional_context={
+                "intent_classification": True,
+                "expected_output": "JSON"
+            }
+        )
         
         user_prompt = f"""
+        Please classify this user message and extract relevant entities.
+        
         User message: "{message}"
         
         Business context: {json.dumps(context.get('business_profile', {}), indent=2)}
         
         Recent evidence: {json.dumps(context.get('recent_evidence', []), indent=2)}
         
-        Please classify this message and extract relevant entities.
+        Classification options: 'evidence_query', 'compliance_check', 'guidance_request', 'general_query'
+        
+        Return a JSON object with this exact format:
+        {{"type": "evidence_query|compliance_check|guidance_request|general_query", "confidence": 0.9, "entities": {{"frameworks": ["ISO27001"], "evidence_types": ["policies"]}}}}
         """
         
-        return {'system': system_prompt, 'user': user_prompt}
+        return {
+            'system': system_instruction,  # Backwards compatibility
+            'system_instruction': system_instruction,  # New format
+            'user': user_prompt
+        }
 
     def get_evidence_query_prompt(self, message: str, evidence_items: List[Any], context: Dict[str, Any]) -> Dict[str, str]:
         """Creates the prompt for answering evidence-related questions."""
-        system_prompt = """
-        You are ComplianceGPT, an expert compliance assistant. Analyze the user's evidence query and provide helpful insights based on their collected evidence.
         
-        Guidelines:
-        - Summarize relevant evidence found
-        - Identify gaps in evidence collection
-        - Suggest specific next steps
-        - Reference compliance frameworks when relevant
-        - Be concise but thorough
-        - Use a helpful, professional tone
-        """
+        # Use evidence-specific system instruction
+        system_instruction = get_system_instruction(
+            "evidence",
+            business_profile=context.get('business_profile'),
+            additional_context={
+                "evidence_analysis": True,
+                "task_type": "evidence_query"
+            }
+        )
         
         evidence_summary = json.dumps([
             {
@@ -72,7 +164,11 @@ class PromptTemplates:
         Please provide a helpful response addressing their question about this evidence.
         """
         
-        return {'system': system_prompt, 'user': user_prompt}
+        return {
+            'system': system_instruction,  # Backwards compatibility
+            'system_instruction': system_instruction,  # New format
+            'user': user_prompt
+        }
 
     def get_compliance_check_prompt(self, message: str, context: Dict[str, Any]) -> Dict[str, str]:
         """Creates the prompt for compliance status checks."""
@@ -311,27 +407,24 @@ class PromptTemplates:
     ) -> Dict[str, str]:
         """Creates prompts for comprehensive assessment analysis."""
 
-        system_prompt = f"""You are an expert compliance analyst specializing in {framework_id}.
-        Analyze the completed assessment results to identify gaps, risks, and provide detailed insights.
-
-        Your analysis should include:
-        - Specific compliance gaps with severity levels
-        - Risk assessment based on current state
-        - Evidence requirements for each gap
-        - Prioritized recommendations
-        - Implementation insights
-
-        Format your response as JSON with these keys:
-        - gaps: Array of gap objects with id, title, description, severity, category
-        - recommendations: Array of recommendation objects with id, title, description, priority, effort_estimate, impact_score
-        - risk_assessment: Object with level and description
-        - compliance_insights: Object with summary and key_findings
-        - evidence_requirements: Array of evidence requirement objects
-        """
+        # Use assessment-specific system instruction with framework context
+        system_instruction = get_system_instruction(
+            "analysis",
+            framework=framework_id.lower() if framework_id else None,
+            business_profile=business_context,
+            task_complexity="complex",
+            additional_context={
+                "assessment_analysis": True,
+                "structured_output": True,
+                "output_format": "JSON"
+            }
+        )
 
         business_info = business_context or {}
 
         user_prompt = f"""
+        Please provide a comprehensive analysis of these assessment results, identifying gaps and providing actionable recommendations.
+
         Assessment Results:
         {assessment_results}
 
@@ -343,10 +436,19 @@ class PromptTemplates:
         - Size: {business_info.get('employee_count', 'Unknown')} employees
         - Current Frameworks: {', '.join(business_info.get('frameworks', []))}
 
-        Please provide a comprehensive analysis of these assessment results, identifying gaps and providing actionable recommendations.
+        Format your response as JSON with these keys:
+        - gaps: Array of gap objects with id, title, description, severity, category
+        - recommendations: Array of recommendation objects with id, title, description, priority, effort_estimate, impact_score
+        - risk_assessment: Object with level and description
+        - compliance_insights: Object with summary and key_findings
+        - evidence_requirements: Array of evidence requirement objects
         """
 
-        return {'system': system_prompt, 'user': user_prompt}
+        return {
+            'system': system_instruction,  # Backwards compatibility
+            'system_instruction': system_instruction,  # New format
+            'user': user_prompt
+        }
 
     def get_assessment_recommendations_prompt(
         self,
@@ -359,23 +461,23 @@ class PromptTemplates:
     ) -> Dict[str, str]:
         """Creates prompts for generating personalized implementation recommendations."""
 
-        system_prompt = f"""You are an expert compliance implementation consultant for {framework_id}.
-        Based on identified gaps and business context, create a detailed implementation plan with personalized recommendations.
-
-        Your recommendations should:
-        - Address specific gaps identified
-        - Consider business size, industry, and resources
-        - Provide realistic timelines and effort estimates
-        - Include specific implementation steps
-        - Prioritize based on risk and impact
-
-        Format your response as JSON with these keys:
-        - recommendations: Array of detailed recommendation objects
-        - implementation_plan: Object with phases, timeline, and resource requirements
-        - success_metrics: Array of measurable success criteria
-        """
+        # Use recommendations-specific system instruction with framework context
+        system_instruction = get_system_instruction(
+            "recommendations",
+            framework=framework_id.lower() if framework_id else None,
+            business_profile=business_profile,
+            task_complexity="complex",
+            additional_context={
+                "implementation_planning": True,
+                "structured_output": True,
+                "output_format": "JSON",
+                "timeline_preferences": timeline_preferences
+            }
+        )
 
         user_prompt = f"""
+        Please provide detailed, personalized recommendations with a practical implementation plan.
+
         Identified Gaps:
         {gaps}
 
@@ -391,10 +493,17 @@ class PromptTemplates:
         Industry Context: {industry_context or 'General'}
         Timeline Preference: {timeline_preferences}
 
-        Please provide detailed, personalized recommendations with a practical implementation plan.
+        Format your response as JSON with these keys:
+        - recommendations: Array of detailed recommendation objects
+        - implementation_plan: Object with phases, timeline, and resource requirements
+        - success_metrics: Array of measurable success criteria
         """
 
-        return {'system': system_prompt, 'user': user_prompt}
+        return {
+            'system': system_instruction,  # Backwards compatibility
+            'system_instruction': system_instruction,  # New format
+            'user': user_prompt
+        }
     
     def get_main_prompt(self, message: str, context: Dict[str, Any]) -> str:
         """Creates the main prompt for general AI responses."""
@@ -420,6 +529,48 @@ Please provide a comprehensive, helpful response that:
 5. Maintains a professional, consultative tone
 
 If you need clarification on any aspect of their request, feel free to ask follow-up questions."""
+
+    def get_main_prompt_with_system_instruction(self, message: str, context: Dict[str, Any]) -> Dict[str, str]:
+        """Creates main prompt with system instruction for general AI responses."""
+        
+        # Use general system instruction
+        system_instruction = get_system_instruction(
+            "general",
+            business_profile=context.get('business_profile'),
+            additional_context={
+                "conversation_mode": True,
+                "comprehensive_response": True
+            }
+        )
+        
+        business_info = context.get('business_profile', {})
+        recent_evidence = context.get('recent_evidence', [])
+        
+        user_prompt = f"""
+        User Message: "{message}"
+
+        Business Context:
+        - Company: {business_info.get('company_name', 'Unknown')}
+        - Industry: {business_info.get('industry', 'Unknown')}
+        - Employee Count: {business_info.get('employee_count', 'Unknown')}
+        - Current Frameworks: {', '.join(business_info.get('existing_framew', []))}
+        - Evidence Collected: {len(recent_evidence)} items
+
+        Please provide a comprehensive, helpful response that:
+        1. Addresses the user's specific question or need
+        2. Considers their business context and industry
+        3. Provides actionable guidance and next steps
+        4. References relevant compliance frameworks when appropriate
+        5. Maintains a professional, consultative tone
+
+        If you need clarification on any aspect of their request, feel free to ask follow-up questions.
+        """
+        
+        return {
+            'system': system_instruction,  # Backwards compatibility
+            'system_instruction': system_instruction,  # New format
+            'user': user_prompt
+        }
 
     def get_context_aware_recommendation_prompt(
         self,

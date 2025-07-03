@@ -3,11 +3,12 @@
  * Displays user-friendly rate limiting messages for AI endpoints
  */
 
-import React from 'react';
 import { AlertTriangle, Clock, Info } from 'lucide-react';
+import React from 'react';
+
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 
 interface RateLimitNoticeProps {
   operation: string;

@@ -113,6 +113,29 @@ export interface AIRecommendationResponse {
   success_metrics: string[];
 }
 
+// Streaming Interfaces
+export interface StreamingChunk {
+  chunk_id: string;
+  content: string;
+  chunk_type: 'content' | 'metadata' | 'complete' | 'error';
+  timestamp: string;
+}
+
+export interface StreamingMetadata {
+  request_id: string;
+  framework_id: string;
+  business_profile_id: string;
+  started_at: string;
+  stream_type: 'analysis' | 'recommendations' | 'help';
+}
+
+export interface StreamingOptions {
+  onChunk?: (chunk: StreamingChunk) => void;
+  onComplete?: () => void;
+  onError?: (error: string) => void;
+  onMetadata?: (metadata: StreamingMetadata) => void;
+}
+
 // Mock responses for development
 const mockAIResponses = {
   help: {
@@ -837,6 +860,179 @@ Can you provide guidance on how to answer this question correctly?`;
         fallback: true
       };
     }
+  }
+
+  // Streaming Methods
+  async analyzeAssessmentWithStreaming(
+    request: AIAnalysisRequest,
+    options: StreamingOptions
+  ): Promise<void> {
+    try {
+      const eventSource = new EventSource(
+        '/api/ai/assessments/analysis/stream',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${await this.getAuthToken()}`,
+          },
+          body: JSON.stringify(request),
+        } as any
+      );
+
+      eventSource.onmessage = (event) => {
+        try {
+          const chunk: StreamingChunk = JSON.parse(event.data);
+          
+          switch (chunk.chunk_type) {
+            case 'metadata':
+              const metadata: StreamingMetadata = JSON.parse(chunk.content);
+              options.onMetadata?.(metadata);
+              break;
+            case 'content':
+              options.onChunk?.(chunk);
+              break;
+            case 'complete':
+              options.onComplete?.();
+              eventSource.close();
+              break;
+            case 'error':
+              options.onError?.(chunk.content);
+              eventSource.close();
+              break;
+          }
+        } catch (e) {
+          console.error('Error parsing streaming chunk:', e);
+          options.onError?.('Error parsing response data');
+        }
+      };
+
+      eventSource.onerror = () => {
+        options.onError?.('Connection error occurred');
+        eventSource.close();
+      };
+
+    } catch (error) {
+      console.error('Error starting assessment analysis stream:', error);
+      options.onError?.('Failed to start analysis stream');
+    }
+  }
+
+  async getRecommendationsWithStreaming(
+    request: AIRecommendationRequest,
+    options: StreamingOptions
+  ): Promise<void> {
+    try {
+      const eventSource = new EventSource(
+        '/api/ai/assessments/recommendations/stream',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${await this.getAuthToken()}`,
+          },
+          body: JSON.stringify(request),
+        } as any
+      );
+
+      eventSource.onmessage = (event) => {
+        try {
+          const chunk: StreamingChunk = JSON.parse(event.data);
+          
+          switch (chunk.chunk_type) {
+            case 'metadata':
+              const metadata: StreamingMetadata = JSON.parse(chunk.content);
+              options.onMetadata?.(metadata);
+              break;
+            case 'content':
+              options.onChunk?.(chunk);
+              break;
+            case 'complete':
+              options.onComplete?.();
+              eventSource.close();
+              break;
+            case 'error':
+              options.onError?.(chunk.content);
+              eventSource.close();
+              break;
+          }
+        } catch (e) {
+          console.error('Error parsing streaming chunk:', e);
+          options.onError?.('Error parsing response data');
+        }
+      };
+
+      eventSource.onerror = () => {
+        options.onError?.('Connection error occurred');
+        eventSource.close();
+      };
+
+    } catch (error) {
+      console.error('Error starting recommendations stream:', error);
+      options.onError?.('Failed to start recommendations stream');
+    }
+  }
+
+  async getQuestionHelpWithStreaming(
+    frameworkId: string,
+    request: AIHelpRequest,
+    options: StreamingOptions
+  ): Promise<void> {
+    try {
+      const eventSource = new EventSource(
+        `/api/ai/assessments/${frameworkId}/help/stream`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${await this.getAuthToken()}`,
+          },
+          body: JSON.stringify(request),
+        } as any
+      );
+
+      eventSource.onmessage = (event) => {
+        try {
+          const chunk: StreamingChunk = JSON.parse(event.data);
+          
+          switch (chunk.chunk_type) {
+            case 'metadata':
+              const metadata: StreamingMetadata = JSON.parse(chunk.content);
+              options.onMetadata?.(metadata);
+              break;
+            case 'content':
+              options.onChunk?.(chunk);
+              break;
+            case 'complete':
+              options.onComplete?.();
+              eventSource.close();
+              break;
+            case 'error':
+              options.onError?.(chunk.content);
+              eventSource.close();
+              break;
+          }
+        } catch (e) {
+          console.error('Error parsing streaming chunk:', e);
+          options.onError?.('Error parsing response data');
+        }
+      };
+
+      eventSource.onerror = () => {
+        options.onError?.('Connection error occurred');
+        eventSource.close();
+      };
+
+    } catch (error) {
+      console.error('Error starting help stream:', error);
+      options.onError?.('Failed to start help stream');
+    }
+  }
+
+  private async getAuthToken(): Promise<string> {
+    // Implementation would depend on your auth system
+    // This is a placeholder for the actual token retrieval
+    return localStorage.getItem('auth_token') || '';
   }
 }
 

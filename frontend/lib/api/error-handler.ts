@@ -321,18 +321,24 @@ export function getContextualErrorMessage(
 
 // Error logging for monitoring
 export function logError(error: EnhancedApiError, additionalContext?: any): void {
+  // Handle cases where error might be undefined or empty
+  if (!error) {
+    console.warn('[ruleIQ] Attempted to log undefined error');
+    return;
+  }
+
   const errorLog = {
     timestamp: new Date().toISOString(),
-    type: error.type,
-    severity: error.severity,
-    status: error.status,
-    message: error.detail,
-    url: error.technicalDetails?.url,
-    method: error.technicalDetails?.method,
+    type: error.type || 'UNKNOWN',
+    severity: error.severity || 'ERROR',
+    status: error.status || 'N/A',
+    message: error.detail || error.message || 'Unknown error occurred',
+    url: error.technicalDetails?.url || 'N/A',
+    method: error.technicalDetails?.method || 'N/A',
     context: additionalContext,
     stack: error.stack,
   };
-  
+
   // In production, send to error monitoring service
   if (process.env.NODE_ENV === 'production') {
     // TODO: Send to Sentry or similar service

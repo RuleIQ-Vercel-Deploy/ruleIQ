@@ -27,7 +27,7 @@ from services.ai.smart_evidence_collector import (
     CollectionStatus,
     EvidencePriority,
 )
-from services.business_profile_service import BusinessProfileService
+from services.business_service import get_business_profile
 from config.logging_config import get_logger
 
 logger = get_logger(__name__)
@@ -49,7 +49,7 @@ async def create_collection_plan(
     """
     try:
         # Get user's business profile
-        profile = await BusinessProfileService.get_profile_by_user_id(db, current_user.id)
+        profile = await get_business_profile(db, current_user)
         if not profile:
             raise HTTPException(
                 status_code=400,
@@ -135,7 +135,7 @@ async def get_collection_plan(
         raise HTTPException(status_code=404, detail="Collection plan not found")
     
     # Verify user owns this plan
-    profile = await BusinessProfileService.get_profile_by_user_id(db, current_user.id)
+    profile = await get_business_profile(db, current_user)
     if not profile or str(profile.id) != plan.business_profile_id:
         raise HTTPException(status_code=403, detail="Access denied")
     
@@ -181,7 +181,7 @@ async def list_collection_plans(
 ):
     """List all collection plans for the current user."""
     # Get user's business profile
-    profile = await BusinessProfileService.get_profile_by_user_id(db, current_user.id)
+    profile = await get_business_profile(db, current_user)
     if not profile:
         return []
     
@@ -234,7 +234,7 @@ async def get_priority_tasks(
     if not plan:
         raise HTTPException(status_code=404, detail="Collection plan not found")
     
-    profile = await BusinessProfileService.get_profile_by_user_id(db, current_user.id)
+    profile = await get_business_profile(db, current_user)
     if not profile or str(profile.id) != plan.business_profile_id:
         raise HTTPException(status_code=403, detail="Access denied")
     
@@ -278,7 +278,7 @@ async def update_task_status(
     if not plan:
         raise HTTPException(status_code=404, detail="Collection plan not found")
     
-    profile = await BusinessProfileService.get_profile_by_user_id(db, current_user.id)
+    profile = await get_business_profile(db, current_user)
     if not profile or str(profile.id) != plan.business_profile_id:
         raise HTTPException(status_code=403, detail="Access denied")
     
@@ -325,7 +325,7 @@ async def get_automation_recommendations(
 ):
     """Get automation recommendations for a specific framework."""
     # Get user's business profile
-    profile = await BusinessProfileService.get_profile_by_user_id(db, current_user.id)
+    profile = await get_business_profile(db, current_user)
     if not profile:
         raise HTTPException(
             status_code=400,

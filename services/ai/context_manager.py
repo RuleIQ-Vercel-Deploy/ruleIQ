@@ -22,10 +22,10 @@ class ContextManager:
         profile_stmt = select(BusinessProfile).where(BusinessProfile.id == business_profile_id)
         profile_res = await self.db.execute(profile_stmt)
         profile = profile_res.scalars().first()
-        
+
         if not profile:
             return self._get_default_context(conversation_id, business_profile_id)
-        
+
         # Get recent evidence (last 30 days)
         recent_evidence_stmt = select(EvidenceItem).where(
             and_(
@@ -45,7 +45,7 @@ class ContextManager:
             'business_profile': {
                 'name': profile.company_name,
                 'industry': profile.industry,
-                'frameworks': profile.existing_frameworks + profile.planned_frameworks,
+                'frameworks': (profile.existing_framew or []) + (profile.planned_framewo or []),
             },
             'recent_evidence': [item.to_dict() for item in recent_evidence],
             'compliance_status': compliance_status,

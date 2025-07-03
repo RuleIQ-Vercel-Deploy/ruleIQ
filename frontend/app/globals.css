@@ -2,9 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Dashboard grid styles */
-@import '../styles/dashboard-grid.css';
-
 @layer base {
   :root {
     /* Dark theme colors - aligned with ruleIQ brand */

@@ -872,9 +872,9 @@ export default function AIGuidedSignupPage() {
                           <div className="mt-3 space-y-2">
                             {currentQuestion.type === "multi-choice" ? (
                               <div className="space-y-2">
-                                {message.options.map((option) => (
+                                {message.options.map((option, optionIndex) => (
                                   <label
-                                    key={option}
+                                    key={`option-${optionIndex}`}
                                     className="flex items-center space-x-2 cursor-pointer"
                                   >
                                     <Checkbox
@@ -950,9 +950,9 @@ export default function AIGuidedSignupPage() {
                                 </Button>
                               </div>
                             ) : (
-                              message.options.map((option) => (
+                              message.options.map((option, optionIndex) => (
                                 <Button
-                                  key={option}
+                                  key={`button-option-${optionIndex}`}
                                   variant="outline"
                                   size="sm"
                                   onClick={() => handleChoice(option)}

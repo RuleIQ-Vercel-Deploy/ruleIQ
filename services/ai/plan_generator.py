@@ -2,7 +2,7 @@
 
 async def generate_plan_with_ai(db_session, business_profile, framework_id, user_id):
     """Placeholder function for AI plan generation."""
-    print(f"AI Plan Generation called for user {user_id}, framework {framework_id}, business profile {business_profile.id}")
+    # AI Plan Generation implementation placeholder
     # In a real implementation, this would interact with an AI service
     # and potentially save data to the database via db_session.
     return {
