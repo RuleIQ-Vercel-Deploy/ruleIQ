@@ -93,7 +93,7 @@ export default function TraditionalSignupPage() {
       });
 
       router.push("/business-profile");
-    } catch (err) {
+    } catch {
       setError("An error occurred. Please try again.");
     } finally {
       setIsLoading(false);

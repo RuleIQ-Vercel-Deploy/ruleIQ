@@ -82,8 +82,8 @@ export default function RegisterPage() {
       });
 
       router.push("/business-profile");
-    } catch (err: any) {
-      const errorMessage = err.response?.data?.detail || err.message || "Registration failed. Please try again.";
+    } catch (err: unknown) {
+      const errorMessage = (err as { response?: { data?: { detail?: string } }; message?: string }).response?.data?.detail || (err as { response?: { data?: { detail?: string } }; message?: string }).message || "Registration failed. Please try again.";
       setError(errorMessage);
     } finally {
       setIsLoading(false);

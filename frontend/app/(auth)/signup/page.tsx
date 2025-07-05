@@ -39,15 +39,15 @@ type QuestionType = "greeting" | "input" | "choice" | "multi-choice" | "confirm"
 interface Question {
   id: string;
   type: QuestionType;
-  question: string | ((data: any) => string);
+  question: string | ((_data: Record<string, unknown>) => string);
   field?: string;
   validation?: string;
   inputType?: string;
-  options?: string[] | ((data: any) => string[]);
+  options?: string[] | ((_data: Record<string, unknown>) => string[]);
   multiple?: boolean;
   confirmText?: string;
-  skipIf?: (data: any) => boolean;
-  nextQuestion?: (data: any, answer: any) => string;
+  skipIf?: (_data: Record<string, unknown>) => boolean;
+  nextQuestion?: (_data: Record<string, unknown>, _answer: unknown) => string;
   icon?: React.ReactNode;
   priority?: "high" | "medium" | "low";
 }
@@ -395,7 +395,7 @@ const getQuestionFlow = (): string[] => {
   ];
 };
 
-const getNextQuestion = (currentId: string, data: any, answer?: any): string | null => {
+const getNextQuestion = (currentId: string, data: Record<string, unknown>, answer?: unknown): string | null => {
   const current = questionBank[currentId];
 
   // Check if current question exists and has custom next logic
@@ -447,7 +447,7 @@ export default function AIGuidedSignupPage() {
   const [messages, setMessages] = React.useState<Message[]>([]);
   const [userInput, setUserInput] = React.useState("");
   const [isTyping, setIsTyping] = React.useState(false);
-  const [formData, setFormData] = React.useState<any>({});
+  const [formData, setFormData] = React.useState<Record<string, unknown>>({});
   const [isLoading, setIsLoading] = React.useState(false);
   const [questionsAnswered, setQuestionsAnswered] = React.useState(0);
   const messagesEndRef = React.useRef<HTMLDivElement>(null);
@@ -474,14 +474,14 @@ export default function AIGuidedSignupPage() {
     }
   }, []);
 
-  const processQuestion = (question: Question, data: any): string => {
+  const processQuestion = (question: Question, data: Record<string, unknown>): string => {
     if (typeof question.question === "function") {
       return question.question(data);
     }
     return question.question;
   };
 
-  const getOptions = (question: Question, data: any): string[] | undefined => {
+  const getOptions = (question: Question, data: Record<string, unknown>): string[] | undefined => {
     if (!question.options) return undefined;
     if (typeof question.options === "function") {
       return question.options(data);
@@ -553,7 +553,7 @@ export default function AIGuidedSignupPage() {
     }
   };
 
-  const handleNext = async (answer?: any) => {
+  const handleNext = async (answer?: unknown) => {
     const currentQuestion = questionBank[currentQuestionId];
     if (!currentQuestion) return;
 
@@ -713,14 +713,14 @@ export default function AIGuidedSignupPage() {
       });
       
       router.push("/dashboard");
-    } catch (error: any) {
-      const errorMessage = error.detail || error.message || "There was an error creating your account. Please try again.";
+    } catch (error: unknown) {
+      const errorMessage = (error as { detail?: string; message?: string }).detail || (error as { detail?: string; message?: string }).message || "There was an error creating your account. Please try again.";
       addBotMessage(errorMessage);
       setIsLoading(false);
     }
   };
 
-  const generateComplianceProfile = (data: any) => {
+  const generateComplianceProfile = (data: Record<string, unknown>) => {
     const priorities = [];
     const risks = [];
     const recommendations = [];
@@ -755,7 +755,7 @@ export default function AIGuidedSignupPage() {
     };
   };
 
-  const getTimeEstimate = (data: any): string => {
+  const getTimeEstimate = (data: Record<string, unknown>): string => {
     if (data.currentFrameworks?.includes("None yet")) {
       return "3-6 months";
     }
@@ -765,7 +765,7 @@ export default function AIGuidedSignupPage() {
     return "2-4 months";
   };
 
-  const getSuggestedFrameworks = (data: any): string[] => {
+  const getSuggestedFrameworks = (data: Record<string, unknown>): string[] => {
     const frameworks = [];
     
     if (data.regions?.includes("UK") || data.regions?.includes("EU")) {
