@@ -1,5 +1,7 @@
 "use client"
 
+import type React from "react"
+
 import {
   Brain,
   Lightbulb,
@@ -11,7 +13,7 @@ import {
   ChevronRight,
   Sparkles
 } from "lucide-react"
-import React, { useState } from "react"
+import { useState } from "react"
 
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -29,10 +31,10 @@ interface AIInsightsWidgetProps {
   isLoading?: boolean
   error?: string | null
   onRefresh?: () => void
-  onDismiss?: (insightId: string) => void
-  onBookmark?: (insightId: string) => void
-  complianceProfile?: any
-  onboardingData?: any
+  onDismiss?: (_insightId: string) => void
+  onBookmark?: (_insightId: string) => void
+  complianceProfile?: Record<string, unknown>
+  onboardingData?: Record<string, unknown>
 }
 
 export function AIInsightsWidget({

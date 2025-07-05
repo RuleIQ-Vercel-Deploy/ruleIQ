@@ -24,7 +24,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Progress } from "@/components/ui/progress"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Stepper } from "@/components/ui/stepper"
+// import { Stepper } from "@/components/ui/stepper"
 import { Textarea } from "@/components/ui/textarea"
 import { H2, H3, Body, Caption } from "@/components/ui/typography"
 import { useAppStore } from "@/lib/stores/app.store"
@@ -221,7 +221,7 @@ export function ProfileWizard({ onComplete, initialData }: ProfileWizardProps) {
       if (profile) {
         await updateProfile(profileData)
       } else {
-        await createProfile(profileData as any)
+        await createProfile(profileData as BusinessProfileFormData)
       }
 
       addNotification({
@@ -236,7 +236,7 @@ export function ProfileWizard({ onComplete, initialData }: ProfileWizardProps) {
       } else {
         router.push("/dashboard")
       }
-    } catch (error) {
+    } catch {
       // Error is handled by the store
     }
   }

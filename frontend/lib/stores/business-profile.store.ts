@@ -17,10 +17,10 @@ import {
   validateCompleteProfile,
   formatValidationErrors 
 } from '@/lib/validations/business-profile';
-import { 
-  type BusinessProfile, 
+import {
+  type BusinessProfile,
   type BusinessProfileFormData,
-  WizardStepData,
+  // WizardStepData,
   WIZARD_STEPS,
   type FrameworkRecommendation
 } from '@/types/business-profile';
@@ -52,21 +52,21 @@ export interface BusinessProfileState {
   
   // Actions - Profile Management
   loadProfile: () => Promise<void>;
-  saveProfile: (data: BusinessProfileFormData) => Promise<void>;
-  updateProfile: (updates: Partial<BusinessProfileFormData>) => Promise<void>;
+  saveProfile: (_data: BusinessProfileFormData) => Promise<void>;
+  updateProfile: (_updates: Partial<BusinessProfileFormData>) => Promise<void>;
   deleteProfile: () => Promise<void>;
-  
+
   // Actions - Draft Management
-  saveDraft: (stepData: Partial<BusinessProfileFormData>) => void;
+  saveDraft: (_stepData: Partial<BusinessProfileFormData>) => void;
   loadDraft: () => Partial<BusinessProfileFormData> | null;
   clearDraft: () => void;
   
   // Actions - Wizard Navigation
-  setCurrentStep: (step: number) => void;
+  setCurrentStep: (_step: number) => void;
   nextStep: () => void;
   previousStep: () => void;
-  goToStep: (step: number) => void;
-  markStepComplete: (step: number) => void;
+  goToStep: (_step: number) => void;
+  markStepComplete: (_step: number) => void;
   
   // Actions - Validation
   validateCurrentStep: () => Promise<boolean>;

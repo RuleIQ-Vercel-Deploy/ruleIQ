@@ -1,6 +1,7 @@
 import { apiClient } from './client';
 
 import type { Assessment, AssessmentQuestion, AssessmentResponse } from '@/types/api';
+import type { UnknownRecord } from '@/types/common';
 
 export interface CreateAssessmentRequest {
   business_profile_id: string;
@@ -10,13 +11,13 @@ export interface CreateAssessmentRequest {
 
 export interface UpdateAssessmentRequest {
   status?: string;
-  responses?: Record<string, any>;
+  responses?: UnknownRecord;
 }
 
 export interface SubmitAssessmentAnswerRequest {
   question_id: string;
-  answer: any;
-  metadata?: Record<string, any>;
+  answer: unknown;
+  metadata?: UnknownRecord;
 }
 
 class AssessmentService {
@@ -98,16 +99,16 @@ class AssessmentService {
   /**
    * Get assessment results
    */
-  async getAssessmentResults(id: string): Promise<any> {
-    const response = await apiClient.get<any>(`/assessments/${id}/results`);
+  async getAssessmentResults(id: string): Promise<UnknownRecord> {
+    const response = await apiClient.get<UnknownRecord>(`/assessments/${id}/results`);
     return response.data;
   }
 
   /**
    * Get quick assessment for a framework
    */
-  async getQuickAssessment(businessProfileId: string, frameworkId: string): Promise<any> {
-    const response = await apiClient.post<any>('/assessments/quick', {
+  async getQuickAssessment(businessProfileId: string, frameworkId: string): Promise<UnknownRecord> {
+    const response = await apiClient.post<UnknownRecord>('/assessments/quick', {
       business_profile_id: businessProfileId,
       framework_id: frameworkId,
     });

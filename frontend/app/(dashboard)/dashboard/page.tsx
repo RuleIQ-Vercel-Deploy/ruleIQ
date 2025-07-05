@@ -1,6 +1,6 @@
 "use client"
 
-import { Shield, AlertTriangle, Brain, TrendingUp, FileCheck, RefreshCw , AlertCircle } from "lucide-react"
+import { Shield, AlertTriangle, Brain, FileCheck, RefreshCw , AlertCircle } from "lucide-react"
 import * as React from "react"
 
 import { AIInsightsWidget } from "@/components/dashboard/ai-insights-widget"
@@ -22,7 +22,6 @@ import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
-
 // Import TanStack Query hooks
 import { useDashboard } from "@/lib/tanstack-query/hooks"
 
@@ -97,8 +96,8 @@ export default function Dashboard() {
   })
 
   // Get compliance profile from localStorage (set during AI-guided signup)
-  const [complianceProfile, setComplianceProfile] = React.useState<any>(null)
-  const [onboardingData, setOnboardingData] = React.useState<any>(null)
+  const [complianceProfile, setComplianceProfile] = React.useState<Record<string, unknown> | null>(null)
+  const [onboardingData, setOnboardingData] = React.useState<Record<string, unknown> | null>(null)
   
   React.useEffect(() => {
     try {
@@ -115,7 +114,7 @@ export default function Dashboard() {
   }, [])
 
   // Default chart data for when API doesn't provide historical data
-  const complianceData = dashboardData?.compliance_trends?.slice(-7).map((t: any) => t.score) || [85, 87, 89, 92, 88, 95, 98]
+  const complianceData = dashboardData?.compliance_trends?.slice(-7).map((t: { score: number }) => t.score) || [85, 87, 89, 92, 88, 95, 98]
   const alertsData = [12, 8, 15, 6, 9, 4, 3]
   const insightsData = [3, 5, 2, 8, 6, 9, 7]
   const tasksData = [120, 135, 128, 142, 138, 145, 142]

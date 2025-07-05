@@ -11,8 +11,8 @@ interface EvidenceState {
   // Data
   evidence: EvidenceItem[]
   currentEvidence: EvidenceItem | null
-  evidenceRequirements: any | null
-  evidenceDashboard: any | null
+  evidenceRequirements: Record<string, unknown> | null
+  evidenceDashboard: Record<string, unknown> | null
   selectedItems: string[]
   
   // UI State
@@ -32,11 +32,11 @@ interface EvidenceState {
   searchQuery: string
   
   // Actions - Evidence Management
-  loadEvidence: (params?: EvidenceSearchParams) => Promise<void>
-  loadEvidenceItem: (id: string) => Promise<void>
-  createEvidence: (data: CreateEvidenceRequest) => Promise<EvidenceItem>
-  updateEvidence: (id: string, data: UpdateEvidenceRequest) => Promise<void>
-  deleteEvidence: (id: string) => Promise<void>
+  loadEvidence: (_params?: EvidenceSearchParams) => Promise<void>
+  loadEvidenceItem: (_id: string) => Promise<void>
+  createEvidence: (_data: CreateEvidenceRequest) => Promise<EvidenceItem>
+  updateEvidence: (_id: string, _data: UpdateEvidenceRequest) => Promise<void>
+  deleteEvidence: (_id: string) => Promise<void>
   bulkUpdateEvidence: (data: BulkUpdateEvidenceRequest) => Promise<void>
   
   // Actions - File Upload

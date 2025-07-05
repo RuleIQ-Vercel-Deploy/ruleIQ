@@ -1,6 +1,7 @@
 import { apiClient } from './client';
 
 import type { ComplianceFramework } from '@/types/api';
+import type { UnknownRecord } from '@/types/common';
 
 export interface FrameworkRecommendation {
   framework: ComplianceFramework;
@@ -52,7 +53,7 @@ class FrameworkService {
       evidence_required: string[];
     }>;
   }> {
-    const response = await apiClient.get<any>(`/frameworks/${frameworkId}/controls`);
+    const response = await apiClient.get<UnknownRecord>(`/frameworks/${frameworkId}/controls`);
     return response.data;
   }
 
@@ -72,7 +73,7 @@ class FrameworkService {
     resources_required: string[];
     key_milestones: string[];
   }> {
-    const response = await apiClient.get<any>(`/frameworks/${frameworkId}/implementation-guide`);
+    const response = await apiClient.get<UnknownRecord>(`/frameworks/${frameworkId}/implementation-guide`);
     return response.data;
   }
 
@@ -95,7 +96,7 @@ class FrameworkService {
     last_assessment_date?: string;
     next_review_date?: string;
   }> {
-    const response = await apiClient.get<any>(`/frameworks/${frameworkId}/compliance-status`, {
+    const response = await apiClient.get<UnknownRecord>(`/frameworks/${frameworkId}/compliance-status`, {
       params: { business_profile_id: businessProfileId },
     });
     return response.data;
@@ -120,7 +121,7 @@ class FrameworkService {
     };
     recommendation: string;
   }> {
-    const response = await apiClient.post<any>('/frameworks/compare', {
+    const response = await apiClient.post<UnknownRecord>('/frameworks/compare', {
       framework_ids: frameworkIds,
     });
     return response.data;
@@ -145,7 +146,7 @@ class FrameworkService {
       recommendations: string[];
     }>;
   }> {
-    const response = await apiClient.get<any>(`/frameworks/${frameworkId}/maturity-assessment`, {
+    const response = await apiClient.get<UnknownRecord>(`/frameworks/${frameworkId}/maturity-assessment`, {
       params: { business_profile_id: businessProfileId },
     });
     return response.data;

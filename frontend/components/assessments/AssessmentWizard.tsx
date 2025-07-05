@@ -1,10 +1,12 @@
 "use client";
 
+import type React from "react"
+
 import { motion, AnimatePresence } from "framer-motion";
-import { 
-  ChevronLeft, 
-  ChevronRight, 
-  Save, 
+import {
+  ChevronLeft,
+  ChevronRight,
+  Save,
   AlertCircle,
   CheckCircle,
   Clock
@@ -35,8 +37,8 @@ interface AssessmentWizardProps {
   framework: AssessmentFramework;
   assessmentId: string;
   businessProfileId: string;
-  onComplete: (result: AssessmentResult) => void;
-  onSave?: (progress: AssessmentProgress) => void;
+  onComplete: (_result: AssessmentResult) => void;
+  onSave?: (_progress: AssessmentProgress) => void;
   onExit?: () => void;
 }
 
@@ -108,7 +110,7 @@ export function AssessmentWizard({
     };
   }, [framework, assessmentId, businessProfileId, onSave, toast]);
 
-  const handleAnswer = useCallback((value: any) => {
+  const handleAnswer = useCallback((value: unknown) => {
     if (!engine || !currentQuestion) return;
 
     setValidationError(null);
@@ -157,7 +159,7 @@ export function AssessmentWizard({
         title: "Progress Saved",
         description: "Your assessment progress has been saved.",
       });
-    } catch (error) {
+    } catch {
       toast({
         title: "Save Failed",
         description: "Failed to save progress. Please try again.",

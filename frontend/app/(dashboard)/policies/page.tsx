@@ -34,9 +34,9 @@ export default function PoliciesPage() {
         page_size: 50
       })
       setPolicies(response.policies)
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Error fetching policies:', err)
-      setError(err.message || 'Failed to load policies')
+      setError((err as { message?: string }).message || 'Failed to load policies')
     } finally {
       setLoading(false)
     }
@@ -88,7 +88,7 @@ export default function PoliciesPage() {
       } else {
         await policyService.exportPolicyAsWord(policyId)
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Error exporting policy:', err)
     }
   }

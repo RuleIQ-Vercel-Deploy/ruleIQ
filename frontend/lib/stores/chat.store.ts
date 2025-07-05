@@ -33,14 +33,14 @@ interface ChatState {
   
   // Actions
   loadConversations: () => Promise<void>;
-  loadConversation: (conversationId: string) => Promise<void>;
-  createConversation: (title?: string, initialMessage?: string) => Promise<void>;
-  setActiveConversation: (conversationId: string | null) => void;
-  sendMessage: (message: string) => Promise<void>;
-  deleteConversation: (conversationId: string) => Promise<void>;
-  
+  loadConversation: (_conversationId: string) => Promise<void>;
+  createConversation: (_title?: string, _initialMessage?: string) => Promise<void>;
+  setActiveConversation: (_conversationId: string | null) => void;
+  sendMessage: (_message: string) => Promise<void>;
+  deleteConversation: (_conversationId: string) => Promise<void>;
+
   // WebSocket actions
-  connectWebSocket: (conversationId: string) => void;
+  connectWebSocket: (_conversationId: string) => void;
   disconnectWebSocket: () => void;
   
   // Utility actions
@@ -72,9 +72,9 @@ export const useChatStore = create<ChatState>()(
         try {
           const response = await chatService.getConversations();
           set({ conversations: response.items, isLoadingConversations: false });
-        } catch (error: any) {
+        } catch (error: unknown) {
           set({ 
-            error: error.message || 'Failed to load conversations',
+            error: (error as { message?: string }).message || 'Failed to load conversations',
             isLoadingConversations: false 
           });
         }

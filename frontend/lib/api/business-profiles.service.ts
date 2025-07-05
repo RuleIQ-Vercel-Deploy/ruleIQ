@@ -3,6 +3,7 @@ import { apiClient } from './client';
 
 import type { BusinessProfile } from '@/types/api';
 import type { BusinessProfileFormData, FrameworkRecommendation } from '@/types/business-profile';
+import type { UnknownRecord } from '@/types/common';
 
 export interface CreateBusinessProfileRequest {
   company_name: string;
@@ -22,7 +23,7 @@ class BusinessProfileService {
    * Get all business profiles for the current user
    */
   async getBusinessProfiles(): Promise<BusinessProfile[]> {
-    const response = await apiClient.get<any[]>('/business-profiles');
+    const response = await apiClient.get<UnknownRecord[]>('/business-profiles');
     // Transform each profile from API format to frontend format
     return response.data.map(profile => 
       BusinessProfileFieldMapper.transformAPIResponseForFrontend(profile)
@@ -33,7 +34,7 @@ class BusinessProfileService {
    * Get a specific business profile by ID
    */
   async getBusinessProfile(id: string): Promise<BusinessProfile> {
-    const response = await apiClient.get<any>(`/business-profiles/${id}`);
+    const response = await apiClient.get<UnknownRecord>(`/business-profiles/${id}`);
     const transformed = BusinessProfileFieldMapper.transformAPIResponseForFrontend(response.data);
     if (!transformed) {
       throw new Error('Failed to transform business profile data');
@@ -47,7 +48,7 @@ class BusinessProfileService {
   async createBusinessProfile(data: CreateBusinessProfileRequest): Promise<BusinessProfile> {
     // Transform data to API format before sending
     const apiData = BusinessProfileFieldMapper.transformFormDataForAPI(data);
-    const response = await apiClient.post<any>('/business-profiles', apiData);
+    const response = await apiClient.post<UnknownRecord>('/business-profiles', apiData);
     
     // Transform response back to frontend format
     const transformed = BusinessProfileFieldMapper.transformAPIResponseForFrontend(response.data);
@@ -63,7 +64,7 @@ class BusinessProfileService {
   async updateBusinessProfile(id: string, data: UpdateBusinessProfileRequest): Promise<BusinessProfile> {
     // Transform data to API format before sending
     const apiData = BusinessProfileFieldMapper.transformFormDataForAPI(data);
-    const response = await apiClient.put<any>(`/business-profiles/${id}`, apiData);
+    const response = await apiClient.put<UnknownRecord>(`/business-profiles/${id}`, apiData);
     
     // Transform response back to frontend format
     const transformed = BusinessProfileFieldMapper.transformAPIResponseForFrontend(response.data);
@@ -83,8 +84,8 @@ class BusinessProfileService {
   /**
    * Get business profile compliance status
    */
-  async getBusinessProfileCompliance(id: string): Promise<any> {
-    const response = await apiClient.get<any>(`/business-profiles/${id}/compliance`);
+  async getBusinessProfileCompliance(id: string): Promise<UnknownRecord> {
+    const response = await apiClient.get<UnknownRecord>(`/business-profiles/${id}/compliance`);
     return response.data;
   }
 
@@ -111,10 +112,10 @@ class BusinessProfileService {
       
       if (existingProfile) {
         // Update existing profile
-        return await this.updateProfile(existingProfile.id, data as any);
+        return await this.updateProfile(existingProfile.id, data as BusinessProfileFormData);
       } else {
         // Create new profile
-        return await this.createBusinessProfile(data as any);
+        return await this.createBusinessProfile(data as BusinessProfileFormData);
       }
     } catch (error) {
       console.error('Failed to save profile:', error);

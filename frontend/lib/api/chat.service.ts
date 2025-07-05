@@ -3,6 +3,7 @@ import { env } from '@/src/config/env';
 import { apiClient } from './client';
 
 import type { ChatConversation, ChatMessage } from '@/types/api';
+import type { UnknownRecord } from '@/types/common';
 
 export interface CreateConversationRequest {
   title?: string;
@@ -23,13 +24,13 @@ export interface ComplianceAnalysisRequest {
 
 export type ChatWebSocketMessage = {
   type: 'message' | 'typing' | 'error' | 'connection';
-  data: any;
+  data: unknown;
 };
 
 class ChatService {
   private ws: WebSocket | null = null;
-  private reconnectTimeout: NodeJS.Timeout | null = null;
-  private messageHandlers: ((message: ChatWebSocketMessage) => void)[] = [];
+  private reconnectTimeout: number | null = null;
+  private messageHandlers: ((_message: ChatWebSocketMessage) => void)[] = [];
 
   /**
    * Get all chat conversations
@@ -105,7 +106,7 @@ class ChatService {
     }>;
     total_recommendations: number;
   }> {
-    const response = await apiClient.post<any>('/chat/evidence-recommendations', data);
+    const response = await apiClient.post<UnknownRecord>('/chat/evidence-recommendations', data);
     return response.data;
   }
 
@@ -119,7 +120,7 @@ class ChatService {
     recommendations: string[];
     estimated_effort_hours: number;
   }> {
-    const response = await apiClient.post<any>('/chat/compliance-gap-analysis', data);
+    const response = await apiClient.post<UnknownRecord>('/chat/compliance-gap-analysis', data);
     return response.data;
   }
 
@@ -129,8 +130,8 @@ class ChatService {
   async getContextAwareRecommendations(
     framework: string,
     contextType: 'comprehensive' | 'guidance' = 'comprehensive'
-  ): Promise<any> {
-    const response = await apiClient.post<any>('/chat/context-aware-recommendations', null, {
+  ): Promise<UnknownRecord> {
+    const response = await apiClient.post<UnknownRecord>('/chat/context-aware-recommendations', null, {
       params: { framework, context_type: contextType },
     });
     return response.data;
@@ -143,8 +144,8 @@ class ChatService {
     framework: string,
     controlId?: string,
     workflowType: 'comprehensive' | 'quick' = 'comprehensive'
-  ): Promise<any> {
-    const response = await apiClient.post<any>('/chat/evidence-collection-workflow', null, {
+  ): Promise<UnknownRecord> {
+    const response = await apiClient.post<UnknownRecord>('/chat/evidence-collection-workflow', null, {
       params: {
         framework,
         control_id: controlId,
