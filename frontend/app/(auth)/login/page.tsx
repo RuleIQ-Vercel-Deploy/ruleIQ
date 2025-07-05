@@ -90,8 +90,8 @@ export default function LoginPage() {
         // If error checking profile, go to dashboard anyway
         router.push("/dashboard")
       }
-    } catch (error: any) {
-      const errorMessage = error.response?.data?.detail || error.message || 'Login failed. Please check your credentials.'
+    } catch (error: unknown) {
+      const errorMessage = (error as { response?: { data?: { detail?: string } }; message?: string }).response?.data?.detail || (error as { response?: { data?: { detail?: string } }; message?: string }).message || 'Login failed. Please check your credentials.'
       setFormError('root', { message: errorMessage })
     } finally {
       setIsSubmitting(false)
@@ -255,7 +255,7 @@ export default function LoginPage() {
 
                 {/* Sign Up Link */}
                 <div className="text-center text-sm">
-                  <span className="text-muted-foreground">Don't have an account? </span>
+                  <span className="text-muted-foreground">Don&apos;t have an account? </span>
                   <Link 
                     href="/register" 
                     className="text-gold hover:text-gold-dark hover:underline font-medium"

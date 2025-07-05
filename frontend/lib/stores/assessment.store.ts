@@ -5,14 +5,14 @@ import { persist, createJSONStorage , devtools } from 'zustand/middleware'
 
 import { assessmentService, type CreateAssessmentRequest, type UpdateAssessmentRequest, type SubmitAssessmentAnswerRequest } from '@/lib/api/assessments.service'
 
-import type { Assessment, AssessmentQuestion, AssessmentResponse } from '@/types/api'
+import type { Assessment, AssessmentQuestion } from '@/types/api'
 
 interface AssessmentState {
   // Data
   assessments: Assessment[]
   currentAssessment: Assessment | null
   assessmentQuestions: AssessmentQuestion[]
-  assessmentResults: any | null
+  assessmentResults: Record<string, unknown> | null
   
   // UI State
   isLoading: boolean
@@ -34,26 +34,26 @@ interface AssessmentState {
   }
   
   // Actions - Assessment Management
-  loadAssessments: (params?: { business_profile_id?: string; framework_id?: string; status?: string; page?: number; page_size?: number }) => Promise<void>
-  loadAssessment: (id: string) => Promise<void>
-  createAssessment: (data: CreateAssessmentRequest) => Promise<Assessment>
-  updateAssessment: (id: string, data: UpdateAssessmentRequest) => Promise<void>
-  deleteAssessment: (id: string) => Promise<void>
-  completeAssessment: (id: string) => Promise<void>
-  
+  loadAssessments: (_params?: { business_profile_id?: string; framework_id?: string; status?: string; page?: number; page_size?: number }) => Promise<void>
+  loadAssessment: (_id: string) => Promise<void>
+  createAssessment: (_data: CreateAssessmentRequest) => Promise<Assessment>
+  updateAssessment: (_id: string, _data: UpdateAssessmentRequest) => Promise<void>
+  deleteAssessment: (_id: string) => Promise<void>
+  completeAssessment: (_id: string) => Promise<void>
+
   // Actions - Questions & Answers
-  loadAssessmentQuestions: (assessmentId: string) => Promise<void>
-  submitAnswer: (assessmentId: string, data: SubmitAssessmentAnswerRequest) => Promise<void>
-  
+  loadAssessmentQuestions: (_assessmentId: string) => Promise<void>
+  submitAnswer: (_assessmentId: string, _data: SubmitAssessmentAnswerRequest) => Promise<void>
+
   // Actions - Results
-  loadAssessmentResults: (id: string) => Promise<void>
-  
+  loadAssessmentResults: (_id: string) => Promise<void>
+
   // Actions - Quick Assessment
-  startQuickAssessment: (businessProfileId: string, frameworkId: string) => Promise<any>
-  
+  startQuickAssessment: (_businessProfileId: string, _frameworkId: string) => Promise<Record<string, unknown>>
+
   // Actions - Filters & UI
-  setFilters: (filters: AssessmentState['filters']) => void
-  setPage: (page: number) => void
+  setFilters: (_filters: AssessmentState['filters']) => void
+  setPage: (_page: number) => void
   clearError: () => void
   reset: () => void
 }

@@ -9,8 +9,8 @@ import { assessmentService } from "@/lib/api/assessments.service";
 import { 
   type AssessmentFramework, 
   type AssessmentResult,
-  type AssessmentProgress,
-  Question
+  type AssessmentProgress
+  // Question
 } from "@/lib/assessment-engine";
 import { useAppStore } from "@/lib/stores/app.store";
 import { useAuthStore } from "@/lib/stores/auth.store";
@@ -136,7 +136,7 @@ export default function AssessmentPage() {
   const { addNotification } = useAppStore();
   const { user } = useAuthStore();
   const [loading, setLoading] = useState(true);
-  const [assessment, setAssessment] = useState<any>(null);
+  const [_assessment, setAssessment] = useState<Record<string, unknown> | null>(null);
   const [framework, setFramework] = useState<AssessmentFramework | null>(null);
 
   const assessmentId = params.id as string;

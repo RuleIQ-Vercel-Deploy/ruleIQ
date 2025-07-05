@@ -12,9 +12,9 @@ import {
   RiskMatrix, 
   TaskProgressChart 
 } from "@/components/dashboard/charts"
-import { AdvancedMetricsChart } from "@/components/dashboard/charts/advanced-metrics-chart"
-import { ComplianceDistributionChart } from "@/components/dashboard/charts/compliance-distribution-chart"
-import { TimeSeriesAnalysisChart } from "@/components/dashboard/charts/time-series-analysis-chart"
+// import { AdvancedMetricsChart } from "@/components/dashboard/charts/advanced-metrics-chart"
+// import { ComplianceDistributionChart } from "@/components/dashboard/charts/compliance-distribution-chart"
+// import { TimeSeriesAnalysisChart } from "@/components/dashboard/charts/time-series-analysis-chart"
 import { DashboardHeader } from "@/components/dashboard/dashboard-header"
 import { AppSidebar } from "@/components/navigation/app-sidebar"
 import { Button } from "@/components/ui/button"
@@ -103,7 +103,7 @@ export default function AnalyticsPage() {
 
   const handleExport = (format: string) => {
     // In a real app, this would generate and download the report
-    console.log(`Exporting analytics in ${format} format`)
+    console.warn(`Exporting analytics in ${format} format`)
   }
 
   const handleRefresh = () => {
@@ -363,7 +363,7 @@ export default function AnalyticsPage() {
                       ]}
                     />
                     <ActivityHeatmap
-                      data={analyticsData.activity_data.slice(0, 84).map((item: any) => ({
+                      data={analyticsData.activity_data.slice(0, 84).map((item: { week: number; day: number; value: number }) => ({
                         date: `${item.week}-${item.day}`,
                         count: item.value
                       }))}

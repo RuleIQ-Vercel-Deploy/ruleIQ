@@ -1,3 +1,5 @@
+import type React from "react"
+
 import { CommandPalette } from "@/components/dashboard/command-palette"
 import { KeyboardShortcutsDialog } from "@/components/dashboard/keyboard-shortcuts-dialog"
 import { QuickActionsPanel } from "@/components/dashboard/quick-actions"

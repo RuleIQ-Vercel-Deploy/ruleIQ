@@ -1,5 +1,7 @@
 "use client";
 
+import type React from "react"
+
 import { motion } from "framer-motion";
 import {
   Shield,
@@ -61,7 +63,7 @@ const TestimonialCard = ({ quote, author, title, company, rating }: TestimonialC
           <Star key={i} className="w-4 h-4 fill-gold text-gold" />
         ))}
       </div>
-      <p className="text-muted-foreground text-sm leading-relaxed mb-6 italic">"{quote}"</p>
+      <p className="text-muted-foreground text-sm leading-relaxed mb-6 italic">&quot;{quote}&quot;</p>
       <div className="border-t border-border pt-4">
         <p className="text-foreground font-semibold">{author}</p>
         <p className="text-gold text-sm">{title}</p>

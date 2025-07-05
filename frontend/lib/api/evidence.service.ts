@@ -1,6 +1,7 @@
 import { apiClient } from './client';
 
 import type { EvidenceItem } from '@/types/api';
+import type { UnknownRecord } from '@/types/common';
 
 export interface CreateEvidenceRequest {
   framework_id: string;
@@ -8,7 +9,7 @@ export interface CreateEvidenceRequest {
   evidence_type: string;
   title: string;
   description?: string;
-  metadata?: Record<string, any>;
+  metadata?: UnknownRecord;
 }
 
 export interface UpdateEvidenceRequest extends Partial<CreateEvidenceRequest> {
@@ -25,7 +26,7 @@ export interface EvidenceAutomationConfig {
   enabled: boolean;
   schedule?: string;
   integration_id?: string;
-  settings?: Record<string, any>;
+  settings?: UnknownRecord;
 }
 
 export interface EvidenceClassificationRequest {
@@ -101,7 +102,7 @@ class EvidenceService {
   /**
    * Upload file for evidence
    */
-  async uploadEvidenceFile(id: string, file: File, onProgress?: (progress: number) => void): Promise<EvidenceItem> {
+  async uploadEvidenceFile(id: string, file: File, _onProgress?: (progress: number) => void): Promise<EvidenceItem> {
     const response = await apiClient.upload<EvidenceItem>(`/evidence/${id}/upload`, file, onProgress);
     return response.data;
   }
