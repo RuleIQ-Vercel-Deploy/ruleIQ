@@ -2,20 +2,23 @@
 PDF generation service using ReportLab for ComplianceGPT
 """
 
-from typing import Dict, Any, List
-from io import BytesIO
 import base64
 from datetime import datetime
+from io import BytesIO
+from typing import Any, Dict, List
+
 from reportlab.lib import colors
-from reportlab.lib.pagesizes import letter, A4
-from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
-from reportlab.lib.units import inch, cm
+from reportlab.lib.enums import TA_CENTER, TA_JUSTIFY
+from reportlab.lib.pagesizes import letter
+from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
+from reportlab.lib.units import inch
 from reportlab.platypus import (
-    SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, PageBreak,
-    KeepTogether, Frame, PageTemplate, NextPageTemplate
+    Paragraph,
+    SimpleDocTemplate,
+    Spacer,
+    Table,
+    TableStyle,
 )
-from reportlab.lib.enums import TA_CENTER, TA_LEFT, TA_RIGHT, TA_JUSTIFY
-from reportlab.pdfgen import canvas
 
 
 class PDFGenerator:
@@ -495,7 +498,7 @@ class PDFGenerator:
             story.append(Paragraph("Critical Items Requiring Immediate Attention", self.styles['SubsectionHeader']))
             
             for item in critical_items[:8]:  # Show top 8 critical items
-                severity_color = self._get_severity_color(item.get('severity', 'medium'))
+                self._get_severity_color(item.get('severity', 'medium'))
                 item_text = f"""
                 <b>{item.get('title', 'Critical Item')}</b> ({item.get('framework', 'Unknown').upper()})<br/>
                 {item.get('description', 'No description available')}<br/>

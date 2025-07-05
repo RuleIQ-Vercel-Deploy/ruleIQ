@@ -296,8 +296,10 @@ class TestErrorStateHandling:
             # Error messages should be helpful
             if response.status_code == 422:
                 error_data = response.json()
-                assert "error" in error_data
-                assert "message" in error_data["error"]
+                # FastAPI returns validation errors in 'detail' field
+                assert "detail" in error_data
+                assert isinstance(error_data["detail"], list)
+                assert len(error_data["detail"]) > 0
 
     def test_concurrent_user_conflict_resolution(self, client, authenticated_headers):
         """Test handling of concurrent user modifications"""

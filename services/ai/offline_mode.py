@@ -7,15 +7,15 @@ synchronization when services return.
 """
 
 import json
-import sqlite3
 import logging
-from datetime import datetime, timedelta
-from typing import Dict, Any, Optional, List, Tuple
+import sqlite3
 from dataclasses import dataclass, field
+from datetime import datetime
 from enum import Enum
 from pathlib import Path
+from typing import Any, Dict, List, Optional, Tuple
 
-from services.ai.fallback_system import FallbackResponse, FallbackLevel
+from services.ai.fallback_system import FallbackResponse
 
 
 class OfflineMode(Enum):

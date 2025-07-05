@@ -7,10 +7,8 @@ structured output validation and type safety across the platform.
 Part of Phase 6: Response Schema Validation implementation.
 """
 
-from typing import TypedDict, List, Dict, Any, Optional, Union, Literal
-from datetime import datetime
 from enum import Enum
-
+from typing import Any, Dict, List, Literal, Optional, TypedDict, Union
 
 # =====================================================================
 # Core Response Types and Enums

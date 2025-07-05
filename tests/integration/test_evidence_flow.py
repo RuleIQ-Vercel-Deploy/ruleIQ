@@ -2,8 +2,9 @@
 Integration tests for the end-to-end evidence collection and reporting flow.
 """
 
+from unittest.mock import Mock, patch
+
 import pytest
-from unittest.mock import patch, Mock
 
 # from main import app  # Not needed for simplified tests
 import database.db_setup as db_setup

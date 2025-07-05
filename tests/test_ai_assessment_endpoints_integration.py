@@ -4,14 +4,12 @@ Integration tests for AI Assessment endpoints with ComplianceAssistant (Phase 2.
 Tests the integration between AI endpoints and ComplianceAssistant methods.
 """
 
+from unittest.mock import patch
+
 import pytest
-from unittest.mock import AsyncMock, patch
-from uuid import uuid4
 from fastapi.testclient import TestClient
 
 from main import app
-from database.user import User
-from database.business_profile import BusinessProfile
 from services.ai.assistant import ComplianceAssistant
 
 

@@ -5,24 +5,19 @@ This module provides integration between the instruction template system,
 performance monitoring, and the ComplianceAssistant.
 """
 
-from typing import Dict, List, Any, Optional, Tuple
-from datetime import datetime
-import json
+from typing import Any, Dict, List, Optional, Tuple
 
-from .instruction_templates import (
-    SystemInstructionTemplates, 
-    InstructionContext, 
-    InstructionType, 
-    FrameworkType,
-    get_system_instruction
-)
-from .instruction_monitor import (
-    InstructionPerformanceMonitor,
-    InstructionMetricType,
-    get_instruction_monitor
-)
 from config.ai_config import get_ai_model
 from config.logging_config import get_logger
+
+from .instruction_monitor import (
+    InstructionMetricType,
+    get_instruction_monitor,
+)
+from .instruction_templates import (
+    SystemInstructionTemplates,
+    get_system_instruction,
+)
 
 logger = get_logger(__name__)
 

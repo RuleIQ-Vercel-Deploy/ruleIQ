@@ -5,29 +5,19 @@ This script tests the core functionality of the system instructions upgrade
 without requiring external dependencies.
 """
 
-import sys
 import os
+import sys
 
 # Add the project root to Python path
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
+from services.ai.instruction_integration import InstructionManager
+from services.ai.instruction_monitor import InstructionMetricType, InstructionPerformanceMonitor
 from services.ai.instruction_templates import (
-    SystemInstructionTemplates,
-    InstructionType,
     FrameworkType,
-    InstructionContext,
-    get_system_instruction
-)
-
-from services.ai.instruction_monitor import (
-    InstructionPerformanceMonitor,
-    InstructionMetricType,
-    get_instruction_monitor
-)
-
-from services.ai.instruction_integration import (
-    InstructionManager,
-    get_instruction_manager
+    InstructionType,
+    SystemInstructionTemplates,
+    get_system_instruction,
 )
 
 

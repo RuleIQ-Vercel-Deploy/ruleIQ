@@ -4,10 +4,11 @@ Integration Tests for Evidence Classification API Endpoints
 Tests the AI-powered evidence classification API endpoints with real database interactions.
 """
 
-import pytest
 import json
-from unittest.mock import patch, AsyncMock
+from unittest.mock import patch
 from uuid import uuid4
+
+import pytest
 
 from tests.conftest import assert_api_response_security
 

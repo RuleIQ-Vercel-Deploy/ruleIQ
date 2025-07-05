@@ -5,10 +5,10 @@ Tests the evidence API endpoints with real database interactions
 and service integrations, ensuring proper data flow and validation.
 """
 
-import pytest
-import json
 from datetime import datetime, timedelta
 from uuid import uuid4
+
+import pytest
 
 from tests.conftest import assert_api_response_security
 
@@ -81,8 +81,9 @@ class TestEvidenceEndpoints:
 
     def test_create_evidence_item_unauthenticated(self, sample_compliance_framework, sample_business_profile):
         """Test creating evidence item without authentication"""
-        from main import app
         from fastapi.testclient import TestClient
+
+        from main import app
 
         # Create a client without auth overrides to test real authentication
         unauthenticated_client = TestClient(app)
@@ -125,7 +126,6 @@ class TestEvidenceEndpoints:
         """Test retrieving evidence items when user has none"""
         # Create a separate user for this test to ensure isolation
         from api.dependencies.auth import create_access_token
-        from datetime import timedelta
         from database.user import User
 
         # Create a unique user for this test
@@ -588,7 +588,6 @@ class TestEvidencePaginationAndSorting:
         """Test evidence list sorting"""
         # Create evidence items directly in database for speed
         from database.evidence_item import EvidenceItem
-        from datetime import datetime, timedelta
 
         evidence_items = []
         for i in range(5):

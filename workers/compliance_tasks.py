@@ -2,21 +2,21 @@
 Celery background tasks for compliance scoring and monitoring, with async support.
 """
 import asyncio
-from typing import List, Dict, Any
+from typing import Any, Dict
+
 from celery.utils.log import get_task_logger
-from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from sqlalchemy.exc import SQLAlchemyError
 
 from celery_app import celery_app
-from database.db_setup import get_async_db
-from database.models import BusinessProfile, EvidenceItem
-from services.readiness_service import calculate_readiness_score
 from core.exceptions import (
     ApplicationException,
     BusinessLogicException,
     DatabaseException,
 )
+from database.db_setup import get_async_db
+from database.business_profile import BusinessProfile
+from services.readiness_service import calculate_readiness_score
 
 logger = get_task_logger(__name__)
 
@@ -91,10 +91,10 @@ def update_all_compliance_scores(self):
     except BusinessLogicException as e:
         logger.error(f"Compliance score update failed with a business logic error. Not retrying. Error: {e}", exc_info=True)
     except DatabaseException as e:
-        logger.error(f"Compliance score update failed with a database error. Retrying...", exc_info=True)
+        logger.error("Compliance score update failed with a database error. Retrying...", exc_info=True)
         self.retry(exc=e)
     except Exception as e:
-        logger.critical(f"Unexpected error in compliance score update. Retrying...", exc_info=True)
+        logger.critical("Unexpected error in compliance score update. Retrying...", exc_info=True)
         self.retry(exc=e)
 
 @celery_app.task(bind=True, max_retries=3, default_retry_delay=300)
@@ -106,8 +106,8 @@ def check_compliance_alerts(self):
     except BusinessLogicException as e:
         logger.error(f"Compliance alert check failed with a business logic error. Not retrying. Error: {e}", exc_info=True)
     except DatabaseException as e:
-        logger.error(f"Compliance alert check failed with a database error. Retrying...", exc_info=True)
+        logger.error("Compliance alert check failed with a database error. Retrying...", exc_info=True)
         self.retry(exc=e)
     except Exception as e:
-        logger.critical(f"Unexpected error in compliance alert check. Retrying...", exc_info=True)
+        logger.critical("Unexpected error in compliance alert check. Retrying...", exc_info=True)
         self.retry(exc=e)

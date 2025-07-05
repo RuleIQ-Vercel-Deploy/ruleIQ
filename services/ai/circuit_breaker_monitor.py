@@ -6,13 +6,14 @@ for AI circuit breaker health and performance metrics.
 """
 
 import asyncio
+import contextlib
 import logging
-from datetime import datetime, timedelta
-from typing import Dict, Any, Optional, List, Callable
 from dataclasses import dataclass, field
+from datetime import datetime, timedelta
 from enum import Enum
+from typing import Any, Dict, List, Optional
 
-from services.ai.circuit_breaker import AICircuitBreaker, CircuitState
+from services.ai.circuit_breaker import AICircuitBreaker
 
 
 class AlertSeverity(Enum):
@@ -98,10 +99,8 @@ class CircuitBreakerMonitor:
         self.is_monitoring = False
         if self.monitoring_task:
             self.monitoring_task.cancel()
-            try:
+            with contextlib.suppress(asyncio.CancelledError):
                 await self.monitoring_task
-            except asyncio.CancelledError:
-                pass
         self.logger.info("Circuit breaker monitoring stopped")
         
     async def _monitoring_loop(self):
@@ -151,7 +150,7 @@ class CircuitBreakerMonitor:
             
     def _update_performance_trends(self, metrics: Dict[str, Any]):
         """Update performance trend analysis"""
-        timestamp = metrics["timestamp"]
+        metrics["timestamp"]
         
         # Track failure rate trend
         if "failure_rate" not in self.performance_trends:
@@ -300,16 +299,15 @@ class CircuitBreakerMonitor:
         }
         
         try:
-            async with aiohttp.ClientSession() as session:
-                async with session.post(
-                    self.config.webhook_url,
-                    json=payload,
-                    timeout=aiohttp.ClientTimeout(total=10)
-                ) as response:
-                    if response.status == 200:
-                        self.logger.debug(f"Webhook alert sent successfully for {alert.id}")
-                    else:
-                        self.logger.warning(f"Webhook alert failed with status {response.status}")
+            async with aiohttp.ClientSession() as session, session.post(
+                self.config.webhook_url,
+                json=payload,
+                timeout=aiohttp.ClientTimeout(total=10)
+            ) as response:
+                if response.status == 200:
+                    self.logger.debug(f"Webhook alert sent successfully for {alert.id}")
+                else:
+                    self.logger.warning(f"Webhook alert failed with status {response.status}")
         except Exception as e:
             self.logger.error(f"Error sending webhook alert: {e}")
             

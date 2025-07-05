@@ -9,24 +9,16 @@ Part of Phase 6: Response Schema Validation implementation.
 
 import json
 import traceback
-from typing import Dict, Any, Optional, Union, TypeVar, Type, Tuple, List
 from datetime import datetime
+from typing import Any, Dict, List, Optional, Tuple, TypeVar, Union
 from uuid import uuid4
 
 from config.logging_config import get_logger
-from .validation_models import (
-    validate_ai_response, create_validation_report,
-    GapAnalysisValidationModel, RecommendationResponseValidationModel,
-    AssessmentAnalysisValidationModel, GuidanceValidationModel,
-    FollowUpValidationModel, IntentClassificationValidationModel,
-    ResponseMetadataValidationModel, StructuredAIResponseValidationModel
-)
-from .response_schemas import (
-    GapAnalysisResponse, RecommendationResponse, AssessmentAnalysisResponse,
-    GuidanceResponse, FollowUpResponse, IntentClassification,
-    StructuredAIResponse, ResponseMetadata
-)
+
 from .exceptions import AIParsingException, SchemaValidationException
+from .validation_models import (
+    validate_ai_response,
+)
 
 logger = get_logger(__name__)
 
@@ -77,7 +69,7 @@ class AIResponseProcessor:
             try:
                 response_data = json.loads(raw_response)
             except json.JSONDecodeError as e:
-                errors.append(f"JSON parsing failed: {str(e)}")
+                errors.append(f"JSON parsing failed: {e!s}")
                 return self._handle_parsing_failure(
                     raw_response, response_type, model_used, 
                     processing_time_ms, fallback_data, errors
@@ -118,7 +110,7 @@ class AIResponseProcessor:
                 )
                 
         except Exception as e:
-            errors.append(f"Unexpected processing error: {str(e)}")
+            errors.append(f"Unexpected processing error: {e!s}")
             logger.error(f"Unexpected error processing {response_type} response", extra={
                 "error": str(e),
                 "response_type": response_type,
@@ -170,7 +162,7 @@ class AIResponseProcessor:
                     return True, structured_response, errors
                     
             except Exception as e:
-                errors.append(f"JSON extraction recovery failed: {str(e)}")
+                errors.append(f"JSON extraction recovery failed: {e!s}")
         
         # Use fallback data if available
         if fallback_data:
@@ -389,7 +381,7 @@ class AIResponseProcessor:
             # Add more response types as needed
             
         except Exception as e:
-            errors.append(f"Failed to create partial response: {str(e)}")
+            errors.append(f"Failed to create partial response: {e!s}")
             
         return None
     

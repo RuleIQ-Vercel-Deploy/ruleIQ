@@ -8,11 +8,10 @@ Tests the new assessment integration methods:
 - get_assessment_recommendations()
 """
 
+from unittest.mock import AsyncMock, patch
+from uuid import uuid4
+
 import pytest
-import asyncio
-from unittest.mock import AsyncMock, MagicMock, patch
-from uuid import uuid4, UUID
-from datetime import datetime
 
 from services.ai.assistant import ComplianceAssistant
 from services.ai.context_manager import ContextManager

@@ -19,7 +19,7 @@ load_dotenv()
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from config.logging_config import get_logger, setup_logging
-from database.db_setup import Base, get_async_db, _init_async_db
+from database.db_setup import Base, _init_async_db, get_async_db
 from services.framework_service import initialize_default_frameworks
 
 # Setup logging first

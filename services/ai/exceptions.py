@@ -2,8 +2,9 @@
 AI-specific exceptions for better error handling and debugging.
 """
 
-from typing import Optional, Dict, Any
-from core.exceptions import IntegrationException, BusinessLogicException
+from typing import Any, Dict, Optional
+
+from core.exceptions import BusinessLogicException, IntegrationException
 
 
 class AIServiceException(IntegrationException):

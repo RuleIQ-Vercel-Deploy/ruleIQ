@@ -6,15 +6,15 @@ including ComplianceAssistant, AI assessment endpoints, and external AI provider
 """
 
 import asyncio
-import json
 from datetime import datetime
-from typing import Dict, List, Any, Optional
-from unittest.mock import AsyncMock, Mock
+from typing import Any, Dict, List, Optional
 from uuid import uuid4
 
 from services.ai.exceptions import (
-    AIServiceException, AITimeoutException, AIQuotaExceededException,
-    AIContentFilterException, AIModelException, AIParsingException
+    AIContentFilterException,
+    AIQuotaExceededException,
+    AIServiceException,
+    AITimeoutException,
 )
 
 

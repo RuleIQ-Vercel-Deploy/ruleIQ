@@ -5,16 +5,17 @@ Provides shared fixtures, mocks, and configuration for testing
 the AI optimization implementation.
 """
 
-import pytest
 import asyncio
-from unittest.mock import Mock, AsyncMock, patch
-from typing import Dict, Any, List, AsyncIterator
+from typing import Any, AsyncIterator, List
+from unittest.mock import AsyncMock, Mock, patch
 from uuid import uuid4
 
+import pytest
+
+from config.ai_config import ModelType
 from services.ai.assistant import ComplianceAssistant
 from services.ai.circuit_breaker import AICircuitBreaker, CircuitBreakerConfig
 from services.ai.exceptions import AIServiceException
-from config.ai_config import ModelType, ModelMetadata
 
 
 @pytest.fixture(scope="session")
@@ -54,48 +55,16 @@ def mock_circuit_breaker(circuit_breaker_config):
 
 @pytest.fixture
 def mock_model_metadata():
-    """Mock model metadata for testing."""
-    return {
-        ModelType.GEMINI_25_PRO: ModelMetadata(
-            name="gemini-2.5-pro-001",
-            cost_score=8.0,
-            speed_score=6.0,
-            capability_score=10.0,
-            max_tokens=8192,
-            timeout_seconds=30.0
-        ),
-        ModelType.GEMINI_25_FLASH: ModelMetadata(
-            name="gemini-2.5-flash-001",
-            cost_score=5.0,
-            speed_score=9.0,
-            capability_score=8.0,
-            max_tokens=8192,
-            timeout_seconds=20.0
-        ),
-        ModelType.GEMINI_25_FLASH_LIGHT: ModelMetadata(
-            name="gemini-2.5-flash-8b",
-            cost_score=2.0,
-            speed_score=10.0,
-            capability_score=6.0,
-            max_tokens=8192,
-            timeout_seconds=15.0
-        ),
-        ModelType.GEMMA_3: ModelMetadata(
-            name="gemma-3-8b-it",
-            cost_score=1.0,
-            speed_score=8.0,
-            capability_score=5.0,
-            max_tokens=8192,
-            timeout_seconds=10.0
-        )
-    }
+    """Mock model metadata for testing - uses central config."""
+    from config.ai_config import MODEL_METADATA
+    return MODEL_METADATA
 
 
 @pytest.fixture
 def mock_ai_model():
     """Mock AI model for testing."""
     model = Mock()
-    model.model_name = "gemini-2.5-flash-001"
+    model.model_name = ModelType.GEMINI_25_FLASH.value
     model.generate_content.return_value = Mock(text="Mock AI response")
     model.generate_content_stream.return_value = iter([
         Mock(text="Mock "),
@@ -278,8 +247,9 @@ def mock_ai_dependencies():
          patch('services.ai.assistant.AICircuitBreaker') as mock_circuit_breaker_class:
         
         # Mock model
+        from config.ai_config import ModelType
         mock_model = Mock()
-        mock_model.model_name = "gemini-2.5-flash-001"
+        mock_model.model_name = ModelType.GEMINI_25_FLASH.value
         mock_model.generate_content.return_value = Mock(text="Mock response")
         mock_model.generate_content_stream.return_value = iter([
             Mock(text="Mock "),

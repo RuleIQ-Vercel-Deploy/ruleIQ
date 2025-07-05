@@ -5,37 +5,35 @@ Imports and registers all AI tools for function calling support.
 """
 
 # Import tool modules to trigger registration
-from . import assessment_tools
-from . import regulation_tools  
-from . import evidence_tools
-
-# Import core tools functionality
-from .tools import (
-    BaseTool,
-    ToolResult, 
-    ToolType,
-    ToolRegistry,
-    ToolExecutor,
-    tool_registry,
-    tool_executor,
-    register_tool,
-    get_tool_schemas,
-    execute_tool
-)
+from . import assessment_tools, evidence_tools, regulation_tools
 
 # Import assistant
 from .assistant import ComplianceAssistant
 
+# Import core tools functionality
+from .tools import (
+    BaseTool,
+    ToolExecutor,
+    ToolRegistry,
+    ToolResult,
+    ToolType,
+    execute_tool,
+    get_tool_schemas,
+    register_tool,
+    tool_executor,
+    tool_registry,
+)
+
 __all__ = [
-    "ComplianceAssistant",
     "BaseTool",
-    "ToolResult",
-    "ToolType", 
-    "ToolRegistry",
+    "ComplianceAssistant",
     "ToolExecutor",
-    "tool_registry",
-    "tool_executor",
-    "register_tool",
+    "ToolRegistry",
+    "ToolResult",
+    "ToolType",
+    "execute_tool",
     "get_tool_schemas",
-    "execute_tool"
+    "register_tool",
+    "tool_executor",
+    "tool_registry"
 ]

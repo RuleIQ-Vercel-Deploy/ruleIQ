@@ -17,6 +17,7 @@ from pythonjsonlogger import jsonlogger
 from api.context import request_id_var, user_id_var
 from config.settings import settings
 
+
 class CustomJsonFormatter(jsonlogger.JsonFormatter):
     def add_fields(self, log_record, record, message_dict):
         super().add_fields(log_record, record, message_dict)

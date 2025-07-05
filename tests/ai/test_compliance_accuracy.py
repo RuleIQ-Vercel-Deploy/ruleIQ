@@ -5,12 +5,12 @@ Tests the AI assistant's accuracy on compliance questions using golden datasets
 and validates response quality, factual correctness, and regulatory alignment.
 """
 
-import pytest
 import json
-import os
 from pathlib import Path
-from typing import List, Dict, Any
+from typing import Any, Dict, List
 from unittest.mock import patch
+
+import pytest
 
 from services.ai.assistant import ComplianceAssistant
 
@@ -25,7 +25,7 @@ class TestComplianceAccuracy:
     def gdpr_golden_dataset(self):
         """Load GDPR golden dataset"""
         dataset_path = Path(__file__).parent / "golden_datasets" / "gdpr_questions.json"
-        with open(dataset_path, 'r') as f:
+        with open(dataset_path) as f:
             return json.load(f)
 
     async def test_gdpr_basic_questions_accuracy(self, db_session, mock_ai_client, gdpr_golden_dataset):

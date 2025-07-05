@@ -1,11 +1,12 @@
 import uuid
 from datetime import datetime
 
-from sqlalchemy import Column, DateTime, Float, ForeignKey, String, JSON
+from sqlalchemy import JSON, Column, DateTime, Float, ForeignKey, String
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 
 from database.db_setup import Base
+
 
 class ReadinessAssessment(Base):
     __tablename__ = "readiness_assessments"

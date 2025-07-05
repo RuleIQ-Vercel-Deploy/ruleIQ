@@ -4,11 +4,13 @@ ORM model for storing report schedule configurations.
 
 import uuid
 from datetime import datetime
-from sqlalchemy import Column, String, DateTime, Boolean, JSON, ForeignKey
+
+from sqlalchemy import JSON, Boolean, Column, DateTime, ForeignKey, String
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 
 from .db_setup import Base
+
 
 class ReportSchedule(Base):
     __tablename__ = "report_schedules"

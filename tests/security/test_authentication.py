@@ -5,12 +5,12 @@ Tests authentication security including token validation, session management,
 password security, and protection against common auth vulnerabilities.
 """
 
-import pytest
 import time
-from datetime import datetime, timedelta
 from uuid import uuid4
 
-from tests.conftest import assert_api_response_security, assert_no_sensitive_data_in_logs
+import pytest
+
+from tests.conftest import assert_api_response_security
 
 
 @pytest.mark.security
@@ -585,12 +585,10 @@ class TestAuthorizationSecurity:
         headers = {"Authorization": f"Bearer {login_response.json()['access_token']}"}
 
         # Make many rapid requests
-        rate_limit_reached = False
-        for i in range(50):  # Try many requests
+        for _i in range(50):  # Try many requests
             response = client.get("/api/users/me", headers=headers)
             
             if response.status_code == 429:  # Too Many Requests
-                rate_limit_reached = True
                 assert "rate limit" in response.json()["detail"].lower() or \
                        "too many requests" in response.json()["detail"].lower()
                 break

@@ -5,6 +5,8 @@ This module provides a structured way to handle application-specific errors,
 ensuring that exceptions are meaningful and can be handled gracefully by the
 application's error handlers.
 """
+from typing import Optional
+
 
 class ApplicationException(Exception):
     """Base class for all custom exceptions in this application."""
@@ -78,7 +80,7 @@ class APIError(ApplicationException):
 
 class ValidationAPIError(APIError):
     """Raised for API input validation errors."""
-    def __init__(self, message: str = "Invalid input provided to API.", details: any = None):
+    def __init__(self, message: str = "Invalid input provided to API.", details: Optional[any] = None):
         super().__init__(message, status_code=422)
         self.details = details
 

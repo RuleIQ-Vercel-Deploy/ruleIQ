@@ -2,8 +2,9 @@
 Pydantic schemas for quality analysis and duplicate detection API endpoints.
 """
 
-from typing import List, Dict, Any, Optional
+from typing import Any, Dict, List, Optional
 from uuid import UUID
+
 from pydantic import BaseModel, Field
 
 

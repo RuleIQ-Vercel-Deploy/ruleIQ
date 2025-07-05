@@ -7,14 +7,15 @@ health metrics and recovery procedures.
 """
 
 import asyncio
-import time
 import logging
-from datetime import datetime, timedelta
-from typing import Dict, Any, Optional, List, Callable
+import time
 from dataclasses import dataclass, field
+from datetime import datetime, timedelta
 from enum import Enum
+from typing import Any, Callable, Dict, List, Optional
 
 import aiohttp
+
 from config.ai_config import ModelType, ai_config
 
 
@@ -195,7 +196,7 @@ class ServiceHealthMonitor:
     
     async def _perform_health_check(self, service_name: str, health_check: HealthCheck):
         """Perform a single health check"""
-        metrics = self.services[service_name]
+        self.services[service_name]
         start_time = time.time()
         
         try:

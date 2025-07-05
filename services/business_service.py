@@ -10,7 +10,8 @@ from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from core.exceptions import DatabaseException, NotFoundException
-from database.models import BusinessProfile, User
+from database.business_profile import BusinessProfile
+from database.user import User
 
 
 async def create_or_update_business_profile(

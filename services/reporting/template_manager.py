@@ -2,8 +2,7 @@
 Template manager for report customization
 """
 
-from typing import Dict, Any, List, Optional
-from datetime import datetime
+from typing import Any, Dict, List, Optional
 
 
 class TemplateManager:

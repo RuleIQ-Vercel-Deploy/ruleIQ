@@ -6,20 +6,20 @@ and model fallback capabilities for resilient AI service operations.
 """
 
 import asyncio
+import logging
 import random
 import time
-import logging
-from typing import Any, Callable, Optional, Dict, List, Union
 from dataclasses import dataclass
 from enum import Enum
+from typing import Any, Callable, Dict, List, Optional
 
 from services.ai.exceptions import (
     AIServiceException,
-    ModelTimeoutException,
-    ModelOverloadedException,
-    ModelUnavailableException,
     CircuitBreakerException,
-    ModelRetryExhaustedException
+    ModelOverloadedException,
+    ModelRetryExhaustedException,
+    ModelTimeoutException,
+    ModelUnavailableException,
 )
 
 

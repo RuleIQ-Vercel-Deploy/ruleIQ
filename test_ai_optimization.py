@@ -95,9 +95,9 @@ def check_test_setup():
     
     # Check if AI modules can be imported
     try:
+        from config.ai_config import get_ai_model
         from services.ai.assistant import ComplianceAssistant
         from services.ai.circuit_breaker import AICircuitBreaker
-        from config.ai_config import get_ai_model
         print("✅ AI modules can be imported")
     except ImportError as e:
         print(f"❌ Cannot import AI modules: {e}")

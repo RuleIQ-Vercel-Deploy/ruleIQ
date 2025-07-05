@@ -5,14 +5,15 @@ Tests the AI response caching, performance optimization, and analytics
 monitoring systems for the intelligent compliance platform.
 """
 
-import pytest
 import asyncio
-from unittest.mock import AsyncMock, MagicMock, patch
 from datetime import datetime, timedelta
+from unittest.mock import AsyncMock
 
-from services.ai.response_cache import AIResponseCache, ContentType
+import pytest
+
+from services.ai.analytics_monitor import AIAnalyticsMonitor, AlertLevel, MetricType
 from services.ai.performance_optimizer import AIPerformanceOptimizer, OptimizationStrategy
-from services.ai.analytics_monitor import AIAnalyticsMonitor, MetricType, AlertLevel
+from services.ai.response_cache import AIResponseCache, ContentType
 
 
 @pytest.mark.unit
@@ -271,7 +272,7 @@ class TestAIAnalyticsMonitor:
         """Test real-time metrics calculation"""
         
         # Add some test metrics
-        now = datetime.utcnow()
+        datetime.utcnow()
         for i in range(10):
             await monitor_instance.record_metric(
                 MetricType.PERFORMANCE, 'response_time_ms', 1000.0 + i * 100
@@ -290,7 +291,7 @@ class TestAIAnalyticsMonitor:
         # Add some test usage data
         frameworks = ['ISO27001', 'GDPR', 'SOC2']
         for framework in frameworks:
-            for i in range(5):
+            for _i in range(5):
                 await monitor_instance.record_metric(
                     MetricType.USAGE, 'request', 1,
                     metadata={'framework': framework}
@@ -571,7 +572,12 @@ class TestQualityMonitor:
     def test_user_feedback_incorporation(self, monitor_instance):
         """Test incorporation of user feedback into quality scores"""
 
-        from services.ai.quality_monitor import QualityScore, QualityDimension, ResponseFeedback, FeedbackType
+        from services.ai.quality_monitor import (
+            FeedbackType,
+            QualityDimension,
+            QualityScore,
+            ResponseFeedback,
+        )
 
         # Create initial dimension scores
         dimension_scores = {
@@ -615,7 +621,7 @@ class TestQualityMonitor:
     def test_improvement_suggestions_generation(self, monitor_instance):
         """Test generation of improvement suggestions"""
 
-        from services.ai.quality_monitor import QualityScore, QualityDimension
+        from services.ai.quality_monitor import QualityDimension, QualityScore
 
         # Create low scores for testing
         low_dimension_scores = {
@@ -636,8 +642,9 @@ class TestQualityMonitor:
         """Test quality trends calculation over time"""
 
         # Add some mock assessments
+        from datetime import datetime
+
         from services.ai.quality_monitor import QualityAssessment, QualityLevel
-        from datetime import datetime, timedelta
 
         # Create assessments over different days
         for i in range(5):

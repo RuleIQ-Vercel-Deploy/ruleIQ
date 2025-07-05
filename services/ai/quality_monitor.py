@@ -5,13 +5,11 @@ Implements AI response quality tracking, feedback loops, and continuous
 improvement mechanisms for the intelligent compliance platform.
 """
 
-import asyncio
-from typing import Dict, Any, List, Optional, Tuple
+import statistics
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta
 from enum import Enum
-import json
-import statistics
+from typing import Any, Dict, List, Optional
 
 from config.logging_config import get_logger
 
@@ -124,7 +122,7 @@ class AIQualityMonitor:
         response_id: str,
         response_text: str,
         prompt: str,
-        context: Dict[str, Any] = None,
+        context: Optional[Dict[str, Any]] = None,
         user_feedback: ResponseFeedback = None
     ) -> QualityAssessment:
         """
@@ -197,7 +195,7 @@ class AIQualityMonitor:
         self,
         response_text: str,
         prompt: str,
-        context: Dict[str, Any] = None
+        context: Optional[Dict[str, Any]] = None
     ) -> Dict[QualityDimension, QualityScore]:
         """Perform automated quality scoring across all dimensions."""
         
@@ -259,7 +257,7 @@ class AIQualityMonitor:
         
         return scores
 
-    def _score_accuracy(self, response_text: str, prompt: str, context: Dict[str, Any] = None) -> float:
+    def _score_accuracy(self, response_text: str, prompt: str, context: Optional[Dict[str, Any]] = None) -> float:
         """Score response accuracy."""
         score = 7.0  # Base score
         
@@ -289,7 +287,7 @@ class AIQualityMonitor:
         
         return min(10.0, score)
 
-    def _score_relevance(self, response_text: str, prompt: str, context: Dict[str, Any] = None) -> float:
+    def _score_relevance(self, response_text: str, prompt: str, context: Optional[Dict[str, Any]] = None) -> float:
         """Score response relevance to the prompt."""
         score = 7.0  # Base score
         
@@ -314,7 +312,7 @@ class AIQualityMonitor:
         
         return min(10.0, score)
 
-    def _score_completeness(self, response_text: str, prompt: str, context: Dict[str, Any] = None) -> float:
+    def _score_completeness(self, response_text: str, prompt: str, context: Optional[Dict[str, Any]] = None) -> float:
         """Score response completeness."""
         score = 6.0  # Base score
         
@@ -365,7 +363,7 @@ class AIQualityMonitor:
         
         return min(10.0, score)
 
-    def _score_actionability(self, response_text: str, context: Dict[str, Any] = None) -> float:
+    def _score_actionability(self, response_text: str, context: Optional[Dict[str, Any]] = None) -> float:
         """Score response actionability."""
         score = 6.0  # Base score
         
@@ -388,7 +386,7 @@ class AIQualityMonitor:
         
         return min(10.0, score)
 
-    def _score_compliance_alignment(self, response_text: str, context: Dict[str, Any] = None) -> float:
+    def _score_compliance_alignment(self, response_text: str, context: Optional[Dict[str, Any]] = None) -> float:
         """Score compliance framework alignment."""
         score = 7.0  # Base score
         
@@ -427,8 +425,8 @@ class AIQualityMonitor:
             user_score = (feedback.rating - 1) * 2.5
             
             # Adjust all dimension scores based on user rating
-            adjustment_factor = user_score / 10.0
-            for dimension, score in dimension_scores.items():
+            user_score / 10.0
+            for _dimension, score in dimension_scores.items():
                 # Weighted average: 70% automated, 30% user feedback
                 adjusted_score = (score.score * 0.7) + (user_score * 0.3)
                 score.score = min(10.0, max(0.0, adjusted_score))
@@ -481,7 +479,7 @@ class AIQualityMonitor:
         self,
         dimension_scores: Dict[QualityDimension, QualityScore],
         response_text: str,
-        context: Dict[str, Any] = None
+        context: Optional[Dict[str, Any]] = None
     ) -> List[str]:
         """Generate specific improvement suggestions based on quality scores."""
         

@@ -5,10 +5,10 @@ Tests the chat API endpoints with real database interactions
 and AI assistant integrations, ensuring proper data flow and validation.
 """
 
-import pytest
-import json
-from unittest.mock import patch, AsyncMock
+from unittest.mock import patch
 from uuid import uuid4
+
+import pytest
 
 from tests.conftest import assert_api_response_security
 
@@ -197,15 +197,15 @@ class TestChatEndpoints:
 
         assert response.status_code == 404
 
-    def test_compliance_analysis_missing_business_profile(self, client, authenticated_headers):
+    def test_compliance_analysis_missing_business_profile(self, client, another_authenticated_headers):
         """Test compliance analysis without business profile"""
         request_data = {"framework": "ISO27001"}
 
-        # This test will naturally fail with 400 if no business profile exists
+        # Use another_authenticated_headers which doesn't have a business profile
         response = client.post(
             "/api/chat/compliance-analysis",
             json=request_data,
-            headers=authenticated_headers
+            headers=another_authenticated_headers
         )
 
         # Should return 400 when business profile is missing

@@ -1,16 +1,20 @@
 from datetime import datetime
-from typing import Dict, List, Optional, Any, Union
+from typing import Any, Dict, List, Optional, Union
 from uuid import UUID
 
-from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.orm import Session, joinedload, selectinload
 from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import Session, joinedload
 
-from database.models import BusinessProfile, ComplianceFramework, GeneratedPolicy, User
+from config.cache import get_cache_manager
 from database.evidence_item import EvidenceItem
+from database.business_profile import BusinessProfile
+from database.compliance_framework import ComplianceFramework
+from database.generated_policy import GeneratedPolicy
+from database.user import User
+
 # Assuming the AI function is awaitable or wrapped to be non-blocking
 from services.ai.evidence_generator import generate_checklist_with_ai
-from config.cache import get_cache_manager
 
 
 class EvidenceService:

@@ -2,16 +2,16 @@
 Service for calculating a quality score for each piece of evidence.
 """
 
-from datetime import datetime, timedelta
-from typing import Dict, Any, Optional, List
+import asyncio
 import json
 import re
-import asyncio
+from datetime import datetime, timedelta
+from typing import Any, Dict, List, Optional
 
-from database.evidence_item import EvidenceItem
+from config.ai_config import get_ai_model
 from config.logging_config import get_logger
 from core.exceptions import BusinessLogicException
-from config.ai_config import get_ai_model
+from database.evidence_item import EvidenceItem
 
 logger = get_logger(__name__)
 
@@ -212,12 +212,21 @@ class QualityScorer:
             # Combine scores with weighted approach
             final_score = self._combine_traditional_and_ai_scores(traditional_scores, ai_analysis)
 
+            # Determine scoring method based on whether AI analysis succeeded
+            scoring_method = 'traditional_fallback' if 'error' in ai_analysis else 'enhanced_ai'
+
+            # Set confidence based on scoring method
+            if scoring_method == 'traditional_fallback':
+                confidence = 30  # Higher confidence for traditional fallback
+            else:
+                confidence = ai_analysis.get('ai_confidence', 50)
+
             return {
                 'overall_score': final_score,
                 'traditional_scores': traditional_scores,
                 'ai_analysis': ai_analysis,
-                'scoring_method': 'enhanced_ai',
-                'confidence': ai_analysis.get('ai_confidence', 50),
+                'scoring_method': scoring_method,
+                'confidence': confidence,
                 'analysis_timestamp': datetime.utcnow().isoformat()
             }
 
@@ -283,7 +292,10 @@ RECOMMENDATIONS: [list recommendations]"""
 
         except Exception as e:
             logger.warning(f"AI quality analysis failed for evidence {evidence.id}: {e}")
-            return self._fallback_quality_analysis(evidence)
+            fallback_result = self._fallback_quality_analysis(evidence)
+            # Add error indicator to mark this as a fallback result
+            fallback_result['error'] = 'AI analysis unavailable'
+            return fallback_result
 
     def _prepare_content_for_analysis(self, evidence: EvidenceItem) -> str:
         """Prepare evidence content for AI analysis."""
@@ -310,7 +322,7 @@ RECOMMENDATIONS: [list recommendations]"""
                 raw_data = json.loads(evidence.raw_data) if isinstance(evidence.raw_data, str) else evidence.raw_data
                 if isinstance(raw_data, dict):
                     for key, value in raw_data.items():
-                        if isinstance(value, str) and len(value) > 10:
+                        if isinstance(value, str) and len(value) > 2:  # Include short values like 'pdf'
                             content_parts.append(f"{key}: {value[:200]}...")
             except (json.JSONDecodeError, TypeError):
                 pass
@@ -373,6 +385,10 @@ RECOMMENDATIONS: [list recommendations]"""
             # Calculate overall score if not provided
             if result['overall_score'] == 0 and result['scores']:
                 result['overall_score'] = sum(result['scores'].values()) / len(result['scores'])
+
+            # If no scores were parsed, return fallback result
+            if not result['scores']:
+                return self._fallback_quality_analysis(None)
 
             # Set confidence based on completeness of analysis
             if len(result['scores']) >= 4 and result['strengths'] and result['weaknesses']:
@@ -571,7 +587,7 @@ RECOMMENDATIONS: [list recommendations]"""
                     model, target_content, candidate_content, evidence, candidate
                 )
 
-                if similarity_result['similarity_score'] >= similarity_threshold:
+                if similarity_result['similarity_score'] >= similarity_threshold * 100:
                     duplicates.append({
                         'candidate_id': candidate.id,
                         'candidate_name': candidate.evidence_name,
@@ -759,5 +775,5 @@ RECOMMENDATION: [action]"""
                 'total_items': len(evidence_items),
                 'duplicate_groups': [],
                 'potential_duplicates': 0,
-                'analysis_summary': f'Analysis failed: {str(e)}'
+                'analysis_summary': f'Analysis failed: {e!s}'
             }

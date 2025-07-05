@@ -6,13 +6,13 @@ Runs comprehensive test suite for the AI optimization implementation
 including unit tests, integration tests, and performance tests.
 """
 
-import os
-import sys
-import subprocess
 import argparse
+import os
+import subprocess
+import sys
 import time
 from pathlib import Path
-from typing import List, Dict, Any
+from typing import Any, Dict, List
 
 
 class AIOptimizationTestRunner:

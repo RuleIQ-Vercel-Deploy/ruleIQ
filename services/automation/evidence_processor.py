@@ -2,23 +2,23 @@
 Asynchronous service for processing and enriching collected evidence.
 """
 
-from datetime import datetime, timedelta
 import hashlib
 import json
-import re
-from typing import List, Dict, Any, Optional
+from datetime import datetime, timedelta
+from typing import Any, Dict
 from uuid import UUID
 
-from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select, and_
-from sqlalchemy.orm.attributes import flag_modified
+from sqlalchemy import and_, select
 from sqlalchemy.exc import SQLAlchemyError
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm.attributes import flag_modified
 
-from database.evidence_item import EvidenceItem
-from .quality_scorer import QualityScorer
-from core.exceptions import DatabaseException, BusinessLogicException
-from config.logging_config import get_logger
 from config.ai_config import get_ai_model
+from config.logging_config import get_logger
+from core.exceptions import BusinessLogicException, DatabaseException
+from database.evidence_item import EvidenceItem
+
+from .quality_scorer import QualityScorer
 
 logger = get_logger(__name__)
 
@@ -78,7 +78,7 @@ class EvidenceProcessor:
                 and_(
                     EvidenceItem.user_id == user_id,
                     EvidenceItem.created_at > cutoff_date,
-                    EvidenceItem.metadata['processed'].as_boolean() == True
+                    EvidenceItem.metadata['processed'].as_boolean()
                 )
             )
             result = await self.db.execute(stmt)
@@ -206,6 +206,8 @@ REASONING: [brief explanation]"""
             }
 
             lines = response_text.strip().split('\n')
+            valid_fields_found = False
+
             for line in lines:
                 line = line.strip()
 
@@ -213,6 +215,7 @@ REASONING: [brief explanation]"""
                     suggested_type = line.replace('TYPE:', '').strip()
                     if suggested_type:
                         result['suggested_type'] = suggested_type
+                        valid_fields_found = True
 
                 elif line.startswith('CONTROLS:'):
                     controls_text = line.replace('CONTROLS:', '').strip()
@@ -220,16 +223,23 @@ REASONING: [brief explanation]"""
                         # Split by comma and clean up
                         controls = [c.strip() for c in controls_text.split(',') if c.strip()]
                         result['suggested_controls'] = controls[:3]  # Limit to 3
+                        valid_fields_found = True
 
                 elif line.startswith('CONFIDENCE:'):
                     try:
                         confidence = int(line.replace('CONFIDENCE:', '').strip())
                         result['confidence'] = max(0, min(100, confidence))  # Clamp to 0-100
+                        valid_fields_found = True
                     except ValueError:
                         result['confidence'] = 0
 
                 elif line.startswith('REASONING:'):
                     result['reasoning'] = line.replace('REASONING:', '').strip()
+                    valid_fields_found = True
+
+            # If no valid fields were found, use fallback classification
+            if not valid_fields_found:
+                return self._fallback_classification(evidence)
 
             return result
 

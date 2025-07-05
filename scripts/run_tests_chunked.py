@@ -19,14 +19,12 @@ Usage:
 
 import argparse
 import asyncio
-import subprocess
 import sys
 import time
-from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
-from typing import List, Dict, Tuple
+from typing import Dict, List, Tuple
+
 import psutil
-import os
 
 # Test execution configurations
 TEST_CONFIGS = {
@@ -298,8 +296,8 @@ async def run_test_chunk(chunk: Dict, system_info: Dict) -> Tuple[str, bool, str
         return chunk_name, False, f"Test chunk timed out after {duration:.1f}s", duration
     except Exception as e:
         duration = time.time() - start_time
-        print(f"💥 ERROR: {chunk_name} - {str(e)}")
-        return chunk_name, False, f"Error: {str(e)}", duration
+        print(f"💥 ERROR: {chunk_name} - {e!s}")
+        return chunk_name, False, f"Error: {e!s}", duration
 
 
 async def run_chunks_parallel(chunks: List[Dict], max_concurrent: int = 3) -> List[Tuple]:
@@ -357,7 +355,7 @@ def print_summary(results: List[Tuple], total_time: float):
     print(f"Efficiency: {(total_test_time/total_time):.1f}x")
     
     if failed > 0:
-        print(f"\n❌ FAILED CHUNKS:")
+        print("\n❌ FAILED CHUNKS:")
         for name, success, output, duration in results:
             if not success:
                 print(f"  • {name} ({duration:.1f}s)")

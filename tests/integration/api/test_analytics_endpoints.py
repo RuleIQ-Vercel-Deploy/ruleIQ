@@ -5,9 +5,9 @@ Tests the new analytics, caching, and performance monitoring endpoints
 with real API interactions and response validation.
 """
 
+from unittest.mock import AsyncMock, patch
+
 import pytest
-from unittest.mock import patch, AsyncMock
-from datetime import datetime
 
 from tests.conftest import assert_api_response_security
 

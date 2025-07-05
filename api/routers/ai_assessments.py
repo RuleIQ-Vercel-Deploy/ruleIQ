@@ -10,34 +10,32 @@ Dedicated endpoints for AI-powered assessment features including:
 """
 
 import logging
-from typing import Dict, Any, List, Optional
+from datetime import datetime
+from typing import Any, Dict, List, Optional
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, HTTPException, status, Query
+from fastapi import APIRouter, Depends, HTTPException, Query, status
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel, Field
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
-from datetime import datetime
 
 from api.dependencies.auth import get_current_active_user
 from api.dependencies.database import get_async_db
-from database.user import User
-from database.business_profile import BusinessProfile
-from services.ai import ComplianceAssistant
-from services.ai.exceptions import (
-    AIServiceException, AITimeoutException, AIQuotaExceededException,
-    handle_ai_error
+from api.middleware.ai_rate_limiter import (
+    ai_analysis_rate_limit,
+    ai_followup_rate_limit,
+    ai_help_rate_limit,
+    ai_rate_limit_stats,
+    ai_recommendations_rate_limit,
+    get_ai_rate_limit_stats,
 )
 from core.exceptions import NotFoundException
-from api.middleware.ai_rate_limiter import (
-    ai_help_rate_limit,
-    ai_followup_rate_limit,
-    ai_analysis_rate_limit,
-    ai_recommendations_rate_limit,
-    add_rate_limit_headers,
-    ai_rate_limit_stats,
-    get_ai_rate_limit_stats
+from database.business_profile import BusinessProfile
+from database.user import User
+from services.ai import ComplianceAssistant
+from services.ai.exceptions import (
+    AIServiceException,
 )
 
 # Set up logging

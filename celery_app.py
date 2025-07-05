@@ -3,9 +3,10 @@ Celery application configuration for running background tasks such as
 evidence collection, processing, and compliance monitoring.
 """
 
+import os
+
 from celery import Celery
 from celery.schedules import crontab
-import os
 from dotenv import load_dotenv
 
 # Load environment variables from .env file

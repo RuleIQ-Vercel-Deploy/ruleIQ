@@ -4,23 +4,22 @@ Celery background tasks for evidence collection and lifecycle management, with a
 
 import asyncio
 from datetime import datetime, timedelta
-from typing import Dict, Any, Optional
-from celery.utils.log import get_task_logger
-from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select, update
-from sqlalchemy.exc import SQLAlchemyError
+from typing import Any, Dict
 from uuid import UUID
 
+from celery.utils.log import get_task_logger
+from sqlalchemy import update
+from sqlalchemy.exc import SQLAlchemyError
+
 from celery_app import celery_app
-from database.db_setup import get_async_db
-from database.models import EvidenceItem
-from services.automation.duplicate_detector import DuplicateDetector
-from services.automation.evidence_processor import EvidenceProcessor
 from core.exceptions import (
-    ApplicationException,
     BusinessLogicException,
     DatabaseException,
 )
+from database.db_setup import get_async_db
+from database.evidence_item import EvidenceItem
+from services.automation.duplicate_detector import DuplicateDetector
+from services.automation.evidence_processor import EvidenceProcessor
 
 logger = get_task_logger(__name__)
 

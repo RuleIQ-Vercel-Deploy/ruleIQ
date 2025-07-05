@@ -6,10 +6,9 @@ leveraging Google Gemini's system instruction capability for better performance
 and consistency across AI interactions.
 """
 
-from typing import Dict, List, Any, Optional
-from enum import Enum
 from dataclasses import dataclass
-import json
+from enum import Enum
+from typing import Any, Dict, Optional
 
 
 class InstructionType(Enum):
@@ -648,7 +647,7 @@ def get_system_instruction(
             task_complexity=task_complexity,
             **kwargs
         )
-    except ValueError as e:
+    except ValueError:
         # Fallback to general instruction if enum conversion fails
         return system_instructions.get_instruction_for_task(
             InstructionType.GENERAL,

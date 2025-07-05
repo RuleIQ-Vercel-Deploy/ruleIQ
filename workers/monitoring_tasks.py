@@ -2,15 +2,13 @@
 Background tasks for database and system monitoring.
 """
 
-import asyncio
 from datetime import datetime
-from typing import Dict, Any
+from typing import Any, Dict
 
-from celery import Celery
 from celery.schedules import crontab
 
-from services.monitoring.database_monitor import database_monitor
 from config.logging_config import get_logger
+from services.monitoring.database_monitor import database_monitor
 
 logger = get_logger(__name__)
 

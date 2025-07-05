@@ -5,19 +5,16 @@ Tests AI service performance, response times, caching mechanisms,
 and rate limiting validation for the AI assessment endpoints.
 """
 
-import pytest
 import asyncio
+import statistics
 import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from unittest.mock import patch, AsyncMock
-import statistics
-from typing import List, Dict, Any
+from unittest.mock import AsyncMock, patch
 
-from fastapi.testclient import TestClient
-from httpx import AsyncClient
+import pytest
 
 from services.ai.assistant import ComplianceAssistant
-from services.ai.exceptions import AITimeoutException, AIQuotaExceededException
+from services.ai.exceptions import AITimeoutException
 
 
 @pytest.mark.performance
@@ -244,7 +241,7 @@ class TestAIRateLimiting:
         responses = []
         
         # Make 6 requests rapidly (exceeding 3/min limit)
-        for i in range(6):
+        for _i in range(6):
             response = client.post(
                 "/api/ai/assessments/analysis",
                 json=request_data,
@@ -266,7 +263,7 @@ class TestAIRateLimiting:
         responses = []
         
         # Make 20 requests to regular endpoint
-        for i in range(20):
+        for _i in range(20):
             response = client.get(
                 "/api/assessments",
                 headers=authenticated_headers
@@ -393,7 +390,7 @@ class TestAILoadTesting:
             # Analyze results
             success_count = sum(1 for r in responses if r.status_code == 200)
             error_count = sum(1 for r in responses if r.status_code >= 500)
-            rate_limited_count = sum(1 for r in responses if r.status_code == 429)
+            sum(1 for r in responses if r.status_code == 429)
 
             total_requests = len(responses)
             success_rate = success_count / total_requests if total_requests > 0 else 0
@@ -405,8 +402,9 @@ class TestAILoadTesting:
 
     def test_ai_memory_usage_under_load(self, client, authenticated_headers):
         """Test that AI endpoints don't have memory leaks under load"""
-        import psutil
         import os
+
+        import psutil
 
         process = psutil.Process(os.getpid())
         initial_memory = process.memory_info().rss
@@ -425,7 +423,7 @@ class TestAILoadTesting:
 
             # Make many requests
             for i in range(50):
-                response = client.post(
+                client.post(
                     "/api/ai/assessments/gdpr/help",
                     json={**request_data, "question_id": f"memory-test-{i}"},
                     headers=authenticated_headers

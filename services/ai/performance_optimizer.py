@@ -6,12 +6,12 @@ prompt optimization to enhance system performance and reduce costs.
 """
 
 import asyncio
-import time
-from typing import Dict, Any, List, Optional, Tuple
-from dataclasses import dataclass
-from datetime import datetime, timedelta
-from enum import Enum
 import re
+import time
+from dataclasses import dataclass
+from datetime import datetime
+from enum import Enum
+from typing import Any, Dict, List, Optional, Tuple
 
 from config.logging_config import get_logger
 
@@ -86,7 +86,7 @@ class AIPerformanceOptimizer:
     async def optimize_ai_request(
         self, 
         prompt: str, 
-        context: Dict[str, Any] = None,
+        context: Optional[Dict[str, Any]] = None,
         priority: int = 1
     ) -> Tuple[str, Dict[str, Any]]:
         """
@@ -131,7 +131,7 @@ class AIPerformanceOptimizer:
             logger.warning(f"Optimization failed, using original prompt: {e}")
             return prompt, {'optimization_strategy': 'none', 'error': str(e)}
 
-    async def _optimize_prompt(self, prompt: str, context: Dict[str, Any] = None) -> str:
+    async def _optimize_prompt(self, prompt: str, context: Optional[Dict[str, Any]] = None) -> str:
         """Apply intelligent prompt optimization."""
         
         # Remove redundant whitespace
@@ -166,7 +166,7 @@ class AIPerformanceOptimizer:
             # Intelligent truncation - keep beginning and end, compress middle
             keep_start = self.max_prompt_length // 3
             keep_end = self.max_prompt_length // 3
-            middle_compressed = f"...[content compressed]..."
+            middle_compressed = "...[content compressed]..."
             
             optimized = (
                 optimized[:keep_start] + 
@@ -179,7 +179,7 @@ class AIPerformanceOptimizer:
     def _select_optimization_strategy(
         self, 
         prompt: str, 
-        context: Dict[str, Any] = None, 
+        context: Optional[Dict[str, Any]] = None, 
         priority: int = 1
     ) -> OptimizationStrategy:
         """Select the best optimization strategy for the request."""
@@ -199,7 +199,7 @@ class AIPerformanceOptimizer:
         # Default to parallel execution for better responsiveness
         return OptimizationStrategy.PARALLEL_EXECUTION
 
-    def _can_batch_request(self, prompt: str, context: Dict[str, Any] = None) -> bool:
+    def _can_batch_request(self, prompt: str, context: Optional[Dict[str, Any]] = None) -> bool:
         """Determine if request can be batched with others."""
         
         # Don't batch high-priority or time-sensitive requests

@@ -4,31 +4,28 @@ Evidence Collection Plan API Router
 Endpoints for AI-driven evidence collection planning and task management.
 """
 
-from typing import List, Optional, Dict, Any
-from datetime import datetime
-from uuid import UUID
+from typing import List, Optional
 
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from api.dependencies.auth import get_current_active_user
 from api.schemas.evidence_collection import (
+    AutomationOpportunities,
     CollectionPlanCreate,
     CollectionPlanResponse,
+    CollectionPlanSummary,
     EvidenceTaskResponse,
     TaskStatusUpdate,
-    CollectionPlanSummary,
-    AutomationOpportunities,
 )
+from config.logging_config import get_logger
 from database.db_setup import get_async_db
 from database.user import User
 from services.ai.smart_evidence_collector import (
-    smart_evidence_collector,
     CollectionStatus,
-    EvidencePriority,
+    smart_evidence_collector,
 )
 from services.business_service import get_business_profile
-from config.logging_config import get_logger
 
 logger = get_logger(__name__)
 
@@ -187,7 +184,7 @@ async def list_collection_plans(
     
     # Filter plans by business profile
     user_plans = []
-    for plan_id, plan in smart_evidence_collector.active_plans.items():
+    for _plan_id, plan in smart_evidence_collector.active_plans.items():
         if plan.business_profile_id == str(profile.id):
             # Apply filters
             if framework and plan.framework != framework:

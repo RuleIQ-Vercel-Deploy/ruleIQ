@@ -18,9 +18,9 @@ class User(Base):
 
   # Relationships to other models
   business_profiles = relationship("BusinessProfile", back_populates="owner")
-  evidences = relationship("Evidence", back_populates="owner")
+  evidences = relationship("EvidenceItem", back_populates="user")
   evidence_items = relationship("EvidenceItem", back_populates="user")
-  assessments = relationship("AssessmentSession", back_populates="owner")
-  implementation_plans = relationship("ImplementationPlan", back_populates="owner")
-  readiness_assessments = relationship("ReadinessAssessment", back_populates="owner")
-  report_schedules = relationship("ReportSchedule", back_populates="owner")
+  assessments = relationship("AssessmentSession")
+  implementation_plans = relationship("ImplementationPlan")
+  readiness_assessments = relationship("ReadinessAssessment")
+  report_schedules = relationship("ReportSchedule")

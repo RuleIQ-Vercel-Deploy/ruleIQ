@@ -5,13 +5,13 @@ Implements tools for evidence requirement mapping and compliance scoring
 to support comprehensive assessment analysis.
 """
 
-import json
-from typing import Dict, Any, List, Optional
-from datetime import datetime
 from dataclasses import dataclass
+from datetime import datetime
+from typing import Any, Dict, List, Optional
+
+from config.logging_config import get_logger
 
 from .tools import BaseTool, ToolResult, ToolType, register_tool
-from config.logging_config import get_logger
 
 logger = get_logger(__name__)
 
@@ -247,7 +247,7 @@ class EvidenceMapperTool(BaseTool):
                 metadata={
                     "tool_type": "evidence_mapping",
                     "evidence_count": len(processed_evidence),
-                    "frameworks": list(set(e["framework"] for e in processed_evidence))
+                    "frameworks": list({e["framework"] for e in processed_evidence})
                 }
             )
             
@@ -255,7 +255,7 @@ class EvidenceMapperTool(BaseTool):
             logger.error(f"Evidence mapping failed: {e}")
             return ToolResult(
                 success=False,
-                error=f"Evidence mapping execution failed: {str(e)}"
+                error=f"Evidence mapping execution failed: {e!s}"
             )
     
     def _analyze_evidence_requirements(self, evidence_list: List[Dict[str, Any]]) -> Dict[str, Any]:
@@ -516,7 +516,7 @@ class ComplianceScoringTool(BaseTool):
             logger.error(f"Compliance scoring failed: {e}")
             return ToolResult(
                 success=False,
-                error=f"Compliance scoring execution failed: {str(e)}"
+                error=f"Compliance scoring execution failed: {e!s}"
             )
     
     def _calculate_base_score(self, assessment_results: Dict[str, Any]) -> float:

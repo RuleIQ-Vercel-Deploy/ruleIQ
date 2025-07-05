@@ -6,7 +6,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from api.dependencies.auth import get_current_active_user
 from api.dependencies.database import get_async_db
-from api.schemas.models import FrameworkRecommendation, ComplianceFrameworkResponse, ComplianceFrameworkResponse
+from api.schemas.models import ComplianceFrameworkResponse, FrameworkRecommendation
 from database.user import User
 from services.framework_service import get_framework_by_id, get_relevant_frameworks
 

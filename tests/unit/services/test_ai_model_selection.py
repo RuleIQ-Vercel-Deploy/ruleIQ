@@ -5,15 +5,18 @@ Tests the intelligent model selection logic, model metadata,
 and task-complexity based model assignment.
 """
 
+from unittest.mock import Mock, patch
+
 import pytest
-from unittest.mock import Mock, patch, MagicMock
-from typing import Dict, Any
 
 from config.ai_config import (
-    ModelType, ModelMetadata, AIConfig, get_ai_model,
-    MODEL_FALLBACK_CHAIN, MODEL_METADATA
+    MODEL_FALLBACK_CHAIN,
+    MODEL_METADATA,
+    AIConfig,
+    ModelMetadata,
+    ModelType,
+    get_ai_model,
 )
-from services.ai.exceptions import ModelUnavailableException
 
 
 class TestModelMetadata:
@@ -79,8 +82,8 @@ class TestModelType:
 
     def test_model_type_values(self):
         """Test ModelType enum values."""
-        assert ModelType.GEMINI_25_PRO.value == "gemini-2.5-pro-001"
-        assert ModelType.GEMINI_25_FLASH.value == "gemini-2.5-flash-001"
+        assert ModelType.GEMINI_25_PRO.value == "gemini-2.5-pro"
+        assert ModelType.GEMINI_25_FLASH.value == "gemini-2.5-flash"
         assert ModelType.GEMINI_25_FLASH_LIGHT.value == "gemini-2.5-flash-8b"
         assert ModelType.GEMMA_3.value == "gemma-3-8b-it"
 
@@ -127,7 +130,7 @@ class TestAIConfig:
         )
         
         # Simple tasks should prefer faster, cheaper models
-        metadata = ai_config.get_model_metadata(model_type)
+        ai_config.get_model_metadata(model_type)
         assert model_type in [ModelType.GEMINI_25_FLASH_LIGHT, ModelType.GEMMA_3, ModelType.GEMINI_25_FLASH]
 
     def test_get_optimal_model_complex_task(self, ai_config):
@@ -245,9 +248,9 @@ class TestGetAIModel:
         mock_ai_config.get_model.return_value = mock_model
         
         result = get_ai_model(model_type=ModelType.GEMINI_25_PRO)
-        
+
         assert result == mock_model
-        mock_ai_config.get_model.assert_called_once_with(ModelType.GEMINI_25_PRO)
+        mock_ai_config.get_model.assert_called_once_with(ModelType.GEMINI_25_PRO, system_instruction=None, tools=None)
         mock_ai_config.get_optimal_model.assert_not_called()
 
     @patch('config.ai_config.ai_config')
@@ -285,7 +288,7 @@ class TestGetAIModel:
         
         assert result == mock_model
         # Should fall back to default model
-        mock_ai_config.get_model.assert_called_with(ModelType.GEMINI_25_FLASH)
+        mock_ai_config.get_model.assert_called_with(ModelType.GEMINI_25_FLASH, system_instruction=None, tools=None)
 
 
 class TestModelMetadataIntegration:

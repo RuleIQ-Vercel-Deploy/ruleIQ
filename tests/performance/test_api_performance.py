@@ -5,14 +5,12 @@ Benchmarks critical API endpoints for response time and throughput
 performance under various load conditions.
 """
 
-import pytest
-import time
-import asyncio
 import concurrent.futures
+import time
+from typing import List
 from uuid import uuid4
-from typing import List, Dict, Any
 
-import requests
+import pytest
 from pytest_benchmark.fixture import BenchmarkFixture
 
 
@@ -239,8 +237,10 @@ class TestMemoryPerformance:
     def test_large_dataset_handling(self, client, authenticated_headers,
                                    sample_business_profile, sample_compliance_framework, db_session):
         """Test performance with large datasets - optimized version"""
-        import psutil
         import os
+
+        import psutil
+
         from database.evidence_item import EvidenceItem
 
         process = psutil.Process(os.getpid())
@@ -287,9 +287,10 @@ class TestMemoryPerformance:
     def test_concurrent_memory_usage(self, client, authenticated_headers,
                                     sample_business_profile, sample_compliance_framework):
         """Test memory usage under concurrent load"""
-        import psutil
         import os
         import threading
+
+        import psutil
 
         process = psutil.Process(os.getpid())
         initial_memory = process.memory_info().rss / 1024 / 1024  # MB
@@ -350,8 +351,6 @@ class TestDatabasePerformance:
         """Benchmark complex database queries"""
 
         # Create test data for complex queries
-        frameworks = ["GDPR", "ISO27001", "SOC2"]
-        statuses = ["valid", "expired", "under_review"]
 
         # Create test data directly in database for speed
         from database.evidence_item import EvidenceItem

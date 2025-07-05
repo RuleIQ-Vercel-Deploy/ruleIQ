@@ -11,7 +11,9 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from config.logging_config import get_logger
 from core.exceptions import DatabaseException, NotFoundException
-from database.models import BusinessProfile, ComplianceFramework, User
+from database.business_profile import BusinessProfile
+from database.compliance_framework import ComplianceFramework
+from database.user import User
 
 logger = get_logger(__name__)
 

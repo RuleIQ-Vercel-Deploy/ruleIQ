@@ -1,14 +1,15 @@
+from typing import Any, Dict
+
 from fastapi import APIRouter, Depends
-from sqlalchemy.orm import Session
 from sqlalchemy.ext.asyncio import AsyncSession
-from typing import Dict, Any
+from sqlalchemy.orm import Session
 
 from api.dependencies.auth import get_current_active_user
 from api.dependencies.database import get_async_db
 from api.schemas.models import UserResponse
+from database.business_profile import BusinessProfile
 from database.db_setup import get_db
 from database.user import User
-from database.business_profile import BusinessProfile
 
 router = APIRouter()
 

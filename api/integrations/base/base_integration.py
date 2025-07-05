@@ -6,14 +6,15 @@ integration implementations (like Google, AWS, etc.) must follow.
 
 import json
 from abc import ABC, abstractmethod
-from typing import Dict, List, Any, Optional
+from dataclasses import dataclass
 from datetime import datetime
 from enum import Enum
-from dataclasses import dataclass, field
+from typing import Any, Dict, List, Optional
 from uuid import UUID
 
-from cryptography.fernet import Fernet, InvalidToken
-from config.app_config import get_cipher_suite # Import the cipher
+from cryptography.fernet import InvalidToken
+
+from config.app_config import get_cipher_suite  # Import the cipher
 from config.logging_config import get_logger
 
 logger = get_logger(__name__)

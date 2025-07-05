@@ -3,6 +3,7 @@ from uuid import UUID, uuid4
 
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
+from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
 from api.dependencies.auth import (
@@ -11,13 +12,12 @@ from api.dependencies.auth import (
     create_refresh_token,
     get_password_hash,
     oauth2_scheme,
-    validate_password,
     verify_password,
 )
-from services.auth_service import auth_service
 from api.middleware.rate_limiter import auth_rate_limit
 from api.schemas.models import Token, UserCreate, UserResponse
-from pydantic import BaseModel
+from services.auth_service import auth_service
+
 
 class LoginRequest(BaseModel):
     email: str
@@ -77,7 +77,7 @@ async def login_for_access_token(
     )
 
     # Create session for tracking
-    session_id = await auth_service.create_user_session(
+    await auth_service.create_user_session(
         user,
         access_token,
         metadata={"login_method": "form_data"}
@@ -113,7 +113,7 @@ async def login(
     refresh_token = create_refresh_token(data={"sub": str(user.id)})
 
     # Create session for tracking
-    session_id = await auth_service.create_user_session(
+    await auth_service.create_user_session(
         user,
         access_token,
         metadata={"login_method": "json"}

@@ -5,17 +5,20 @@ Tests comprehensive AI service failure scenarios, graceful degradation,
 fallback mechanisms, and error boundary behavior.
 """
 
-import pytest
 import asyncio
-from unittest.mock import patch, AsyncMock, MagicMock
-from uuid import uuid4
+from unittest.mock import AsyncMock, patch
 
-from fastapi.testclient import TestClient
-from services.ai.exceptions import (
-    AIServiceException, AITimeoutException, AIQuotaExceededException,
-    AIContentFilterException, AIModelException, AIParsingException
-)
+import pytest
+
 from services.ai.assistant import ComplianceAssistant
+from services.ai.exceptions import (
+    AIContentFilterException,
+    AIModelException,
+    AIParsingException,
+    AIQuotaExceededException,
+    AIServiceException,
+    AITimeoutException,
+)
 
 
 @pytest.mark.integration
@@ -24,18 +27,19 @@ from services.ai.assistant import ComplianceAssistant
 class TestAIErrorHandling:
     """Test AI service error handling and fallback mechanisms"""
 
-    def test_ai_service_timeout_fallback(self, client, authenticated_headers):
+    def test_ai_service_timeout_fallback(self, client, authenticated_headers, sample_business_profile):
         """Test fallback when AI service times out"""
         request_data = {
             "question_id": "timeout-test",
             "question_text": "What is GDPR compliance?",
-            "framework_id": "gdpr"
+            "framework_id": "gdpr",
+            "user_context": {
+                "business_profile_id": str(sample_business_profile.id)
+            }
         }
 
-        with patch('services.ai.assistant.ComplianceAssistant') as mock_assistant:
-            mock_assistant.return_value.get_question_help = AsyncMock(
-                side_effect=AITimeoutException(timeout_seconds=30.0)
-            )
+        with patch.object(ComplianceAssistant, 'get_assessment_help') as mock_help:
+            mock_help.side_effect = AITimeoutException(timeout_seconds=30.0)
 
             response = client.post(
                 "/api/ai/assessments/gdpr/help",
@@ -50,18 +54,19 @@ class TestAIErrorHandling:
                 response_data = response.json()
                 assert "timeout" in response_data.get("detail", "").lower()
 
-    def test_ai_quota_exceeded_fallback(self, client, authenticated_headers):
+    def test_ai_quota_exceeded_fallback(self, client, authenticated_headers, sample_business_profile):
         """Test fallback when AI quota is exceeded"""
         request_data = {
             "question_id": "quota-test",
             "question_text": "What is GDPR compliance?",
-            "framework_id": "gdpr"
+            "framework_id": "gdpr",
+            "user_context": {
+                "business_profile_id": str(sample_business_profile.id)
+            }
         }
 
-        with patch('services.ai.assistant.ComplianceAssistant') as mock_assistant:
-            mock_assistant.return_value.get_question_help = AsyncMock(
-                side_effect=AIQuotaExceededException(quota_type="API requests")
-            )
+        with patch.object(ComplianceAssistant, 'get_assessment_help') as mock_help:
+            mock_help.side_effect = AIQuotaExceededException(quota_type="API requests")
 
             response = client.post(
                 "/api/ai/assessments/gdpr/help",
@@ -72,18 +77,19 @@ class TestAIErrorHandling:
             # Should handle quota exceeded gracefully
             assert response.status_code in [429, 503]
 
-    def test_ai_content_filter_handling(self, client, authenticated_headers):
+    def test_ai_content_filter_handling(self, client, authenticated_headers, sample_business_profile):
         """Test handling of AI content filtering"""
         request_data = {
             "question_id": "filter-test",
             "question_text": "How to bypass GDPR requirements?",
-            "framework_id": "gdpr"
+            "framework_id": "gdpr",
+            "user_context": {
+                "business_profile_id": str(sample_business_profile.id)
+            }
         }
 
-        with patch('services.ai.assistant.ComplianceAssistant') as mock_assistant:
-            mock_assistant.return_value.get_question_help = AsyncMock(
-                side_effect=AIContentFilterException(filter_reason="Inappropriate content detected")
-            )
+        with patch.object(ComplianceAssistant, 'get_assessment_help') as mock_help:
+            mock_help.side_effect = AIContentFilterException(filter_reason="Inappropriate content detected")
 
             response = client.post(
                 "/api/ai/assessments/gdpr/help",
@@ -94,18 +100,19 @@ class TestAIErrorHandling:
             # Should handle content filtering appropriately
             assert response.status_code in [400, 422]
 
-    def test_ai_model_error_fallback(self, client, authenticated_headers):
+    def test_ai_model_error_fallback(self, client, authenticated_headers, sample_business_profile):
         """Test fallback when AI model encounters errors"""
         request_data = {
             "question_id": "model-error-test",
             "question_text": "What is GDPR compliance?",
-            "framework_id": "gdpr"
+            "framework_id": "gdpr",
+            "user_context": {
+                "business_profile_id": str(sample_business_profile.id)
+            }
         }
 
-        with patch('services.ai.assistant.ComplianceAssistant') as mock_assistant:
-            mock_assistant.return_value.get_question_help = AsyncMock(
-                side_effect=AIModelException("Model inference failed", model_name="gemini-pro")
-            )
+        with patch.object(ComplianceAssistant, 'get_assessment_help') as mock_help:
+            mock_help.side_effect = AIModelException(model_name="gemini-pro", model_error="Model inference failed")
 
             response = client.post(
                 "/api/ai/assessments/gdpr/help",
@@ -116,17 +123,22 @@ class TestAIErrorHandling:
             # Should handle model errors gracefully
             assert response.status_code in [500, 502, 503]
 
-    def test_ai_parsing_error_handling(self, client, authenticated_headers):
+    def test_ai_parsing_error_handling(self, client, authenticated_headers, sample_business_profile):
         """Test handling of AI response parsing errors"""
         request_data = {
             "question_id": "parsing-test",
             "question_text": "What is GDPR compliance?",
-            "framework_id": "gdpr"
+            "framework_id": "gdpr",
+            "user_context": {
+                "business_profile_id": str(sample_business_profile.id)
+            }
         }
 
-        with patch('services.ai.assistant.ComplianceAssistant') as mock_assistant:
-            mock_assistant.return_value.get_question_help = AsyncMock(
-                side_effect=AIParsingException("Failed to parse AI response", raw_response="Invalid JSON")
+        with patch.object(ComplianceAssistant, 'get_assessment_help') as mock_help:
+            mock_help.side_effect = AIParsingException(
+                response_text="Invalid JSON",
+                expected_format="JSON",
+                parsing_error="Failed to parse AI response"
             )
 
             response = client.post(
@@ -138,18 +150,19 @@ class TestAIErrorHandling:
             # Should handle parsing errors gracefully
             assert response.status_code in [500, 502]
 
-    def test_network_error_fallback(self, client, authenticated_headers):
+    def test_network_error_fallback(self, client, authenticated_headers, sample_business_profile):
         """Test fallback when network errors occur"""
         request_data = {
             "question_id": "network-test",
             "question_text": "What is GDPR compliance?",
-            "framework_id": "gdpr"
+            "framework_id": "gdpr",
+            "user_context": {
+                "business_profile_id": str(sample_business_profile.id)
+            }
         }
 
-        with patch('services.ai.assistant.ComplianceAssistant') as mock_assistant:
-            mock_assistant.return_value.get_question_help = AsyncMock(
-                side_effect=ConnectionError("Network connection failed")
-            )
+        with patch.object(ComplianceAssistant, 'get_assessment_help') as mock_help:
+            mock_help.side_effect = ConnectionError("Network connection failed")
 
             response = client.post(
                 "/api/ai/assessments/gdpr/help",
@@ -165,7 +178,10 @@ class TestAIErrorHandling:
         help_request = {
             "question_id": "multi-fail-test",
             "question_text": "What is GDPR compliance?",
-            "framework_id": "gdpr"
+            "framework_id": "gdpr",
+            "user_context": {
+                "business_profile_id": str(sample_business_profile.id)
+            }
         }
 
         followup_request = {
@@ -187,14 +203,11 @@ class TestAIErrorHandling:
             }
         }
 
-        with patch('services.ai.assistant.ComplianceAssistant') as mock_assistant:
+        with patch.object(ComplianceAssistant, 'get_assessment_help') as mock_help, \
+             patch.object(ComplianceAssistant, 'generate_followup_questions') as mock_followup:
             # All AI services fail
-            mock_assistant.return_value.get_question_help = AsyncMock(
-                side_effect=AIServiceException("Service unavailable")
-            )
-            mock_assistant.return_value.generate_followup_questions = AsyncMock(
-                side_effect=AIServiceException("Service unavailable")
-            )
+            mock_help.side_effect = AIServiceException("Service unavailable")
+            mock_followup.side_effect = AIServiceException("Service unavailable")
 
             # Test help endpoint
             help_response = client.post(
@@ -317,7 +330,7 @@ class TestAIErrorHandling:
                 side_effect=AIServiceException("Test error for logging")
             )
 
-            response = client.post(
+            client.post(
                 "/api/ai/assessments/gdpr/help",
                 json=request_data,
                 headers=authenticated_headers

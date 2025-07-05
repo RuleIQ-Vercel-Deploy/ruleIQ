@@ -5,14 +5,14 @@ Tests the AI-powered compliance assistant business logic
 including message processing, context management, and response generation.
 """
 
-import pytest
 import json
 from datetime import datetime
-from unittest.mock import Mock, patch, AsyncMock
+from unittest.mock import AsyncMock, Mock, patch
 from uuid import uuid4
 
+import pytest
+
 from services.ai.assistant import ComplianceAssistant
-from core.exceptions import ValidationAPIError
 
 
 @pytest.mark.unit
@@ -23,19 +23,16 @@ class TestComplianceAssistant:
     @pytest.mark.asyncio
     async def test_process_message_compliance_question(self, db_session, mock_ai_client):
         """Test processing compliance-related message"""
-        from database.user import User
-
         conversation_id = uuid4()
         business_profile_id = uuid4()
         message = "What are the key requirements for GDPR compliance?"
 
         # Create a mock user
-        user = User(
-            id=uuid4(),
-            email="test@example.com",
-            hashed_password="hashed_password",
-            is_active=True
-        )
+        user = Mock()
+        user.id = uuid4()
+        user.email = "test@example.com"
+        user.hashed_password = "hashed_password"
+        user.is_active = True
 
         # Mock AI response
         mock_ai_response = """
@@ -61,6 +58,13 @@ class TestComplianceAssistant:
             assistant.prompt_templates = Mock()
             assistant.prompt_templates.get_main_prompt = Mock(return_value="test prompt")
             assistant.safety_settings = {}
+            assistant.ai_cache = None
+            assistant.circuit_breaker = Mock()
+            assistant.performance_optimizer = None
+            assistant.analytics_monitor = None
+            assistant.quality_monitor = None
+            assistant.instruction_manager = Mock()
+            assistant.instruction_manager.get_model_with_instruction = Mock(return_value=(mock_ai_client, "test_instruction"))
 
             response, metadata = await assistant.process_message(
                 conversation_id, user, message, business_profile_id
@@ -74,19 +78,16 @@ class TestComplianceAssistant:
     @pytest.mark.asyncio
     async def test_process_message_out_of_scope(self, db_session, mock_ai_client):
         """Test processing out-of-scope message"""
-        from database.user import User
-
         conversation_id = uuid4()
         business_profile_id = uuid4()
         message = "What's the weather like today?"
 
         # Create a mock user
-        user = User(
-            id=uuid4(),
-            email="test@example.com",
-            hashed_password="hashed_password",
-            is_active=True
-        )
+        user = Mock()
+        user.id = uuid4()
+        user.email = "test@example.com"
+        user.hashed_password = "hashed_password"
+        user.is_active = True
 
         # Mock AI response for out-of-scope
         mock_ai_response = """
@@ -113,6 +114,13 @@ class TestComplianceAssistant:
             assistant.prompt_templates = Mock()
             assistant.prompt_templates.get_main_prompt = Mock(return_value="test prompt")
             assistant.safety_settings = {}
+            assistant.ai_cache = None
+            assistant.circuit_breaker = Mock()
+            assistant.performance_optimizer = None
+            assistant.analytics_monitor = None
+            assistant.quality_monitor = None
+            assistant.instruction_manager = Mock()
+            assistant.instruction_manager.get_model_with_instruction = Mock(return_value=(mock_ai_client, "test_instruction"))
 
             response, metadata = await assistant.process_message(
                 conversation_id, user, message, business_profile_id
@@ -126,18 +134,15 @@ class TestComplianceAssistant:
     @pytest.mark.asyncio
     async def test_get_evidence_recommendations(self, db_session, mock_ai_client):
         """Test getting evidence recommendations"""
-        from database.user import User
-
         business_profile_id = uuid4()
         target_framework = "ISO 27001"
 
         # Create a mock user
-        user = User(
-            id=uuid4(),
-            email="test@example.com",
-            hashed_password="hashed_password",
-            is_active=True
-        )
+        user = Mock()
+        user.id = uuid4()
+        user.email = "test@example.com"
+        user.hashed_password = "hashed_password"
+        user.is_active = True
 
         # Mock AI response for evidence recommendations
         mock_ai_response = """
@@ -161,6 +166,13 @@ class TestComplianceAssistant:
             assistant.prompt_templates = Mock()
             assistant.prompt_templates.get_evidence_recommendation_prompt = Mock(return_value="test prompt")
             assistant.safety_settings = {}
+            assistant.ai_cache = None  # Initialize missing attribute
+            assistant.circuit_breaker = Mock()  # Mock circuit breaker
+            assistant.performance_optimizer = None  # Initialize missing attribute
+            assistant.analytics_monitor = None  # Initialize missing attribute
+            assistant.quality_monitor = None  # Initialize missing attribute
+            assistant.instruction_manager = Mock()
+            assistant.instruction_manager.get_model_with_instruction = Mock(return_value=(mock_ai_client, "test_instruction"))
 
             recommendations = await assistant.get_evidence_recommendations(
                 user, business_profile_id, target_framework
@@ -338,7 +350,6 @@ class TestComplianceAssistant:
     @pytest.mark.asyncio
     async def test_async_message_processing(self, db_session, mock_ai_client):
         """Test asynchronous message processing"""
-        from database.user import User
 
         conversation_id = uuid4()
         user_id = uuid4()
@@ -346,7 +357,7 @@ class TestComplianceAssistant:
         message = "Help me understand SOC 2 Type II requirements"
 
         # Create a mock user object
-        mock_user = Mock(spec=User)
+        mock_user = Mock()
         mock_user.id = user_id
 
         mock_ai_client.generate_content_async = AsyncMock(return_value=Mock(
@@ -376,10 +387,9 @@ class TestComplianceAssistant:
 
     def test_rate_limit_handling(self, db_session, mock_ai_client):
         """Test handling AI service rate limits"""
-        conversation_id = uuid4()
+        uuid4()
         user_id = uuid4()
-        business_profile_id = uuid4()
-        message = "What is GDPR?"
+        uuid4()
 
         with patch.object(ComplianceAssistant, '_handle_rate_limit') as mock_rate_limit:
             mock_rate_limit.return_value = {
@@ -541,7 +551,14 @@ class TestAIEnhancements:
                     {'evidence_type': 'procedure', 'created_at': '2024-01-15T00:00:00Z'}
                 ]
             })
-            assistant._generate_gemini_response = AsyncMock(return_value=mock_ai_response)
+            assistant._generate_ai_response = AsyncMock(return_value=mock_ai_response)
+            assistant.ai_cache = None
+            assistant.circuit_breaker = Mock()
+            assistant.performance_optimizer = None
+            assistant.analytics_monitor = None
+            assistant.quality_monitor = None
+            assistant.instruction_manager = Mock()
+            assistant.instruction_manager.get_model_with_instruction = Mock(return_value=(mock_ai_client, "test_instruction"))
 
             result = await assistant.analyze_evidence_gap(business_profile_id, framework)
 
@@ -576,7 +593,14 @@ class TestAIEnhancements:
                 },
                 'recent_evidence': []
             })
-            assistant._generate_gemini_response = AsyncMock(return_value=mock_ai_response)
+            assistant._generate_ai_response = AsyncMock(return_value=mock_ai_response)
+            assistant.ai_cache = None
+            assistant.circuit_breaker = Mock()
+            assistant.performance_optimizer = None
+            assistant.analytics_monitor = None
+            assistant.quality_monitor = None
+            assistant.instruction_manager = Mock()
+            assistant.instruction_manager.get_model_with_instruction = Mock(return_value=(mock_ai_client, "test_instruction"))
 
             result = await assistant.analyze_evidence_gap(business_profile_id, framework)
 
@@ -608,7 +632,7 @@ class TestAIEnhancements:
 
     def test_is_recent_activity(self, db_session):
         """Test recent activity detection helper method"""
-        from datetime import datetime, timedelta, timezone
+        from datetime import timedelta, timezone
 
         # Use timezone-aware datetime to match the implementation
         now = datetime.now(timezone.utc)

@@ -5,13 +5,14 @@ Tests the evidence collection, validation, and processing business logic
 in complete isolation with mocked dependencies.
 """
 
-import pytest
 from datetime import datetime, timedelta
-from unittest.mock import Mock, patch, MagicMock
+from unittest.mock import patch
 from uuid import uuid4
 
+import pytest
+
+from core.exceptions import NotFoundAPIError, ValidationAPIError
 from services.evidence_service import EvidenceService
-from core.exceptions import ValidationAPIError, NotFoundAPIError
 
 
 @pytest.mark.unit

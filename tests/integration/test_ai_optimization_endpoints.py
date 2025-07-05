@@ -5,17 +5,16 @@ Tests the complete AI optimization implementation including
 streaming endpoints, circuit breaker integration, and model selection.
 """
 
-import pytest
 import asyncio
-import json
-from unittest.mock import patch, Mock, AsyncMock
+from unittest.mock import AsyncMock, Mock, patch
+
+import pytest
 from fastapi.testclient import TestClient
 from httpx import AsyncClient
 
 from main import app
 from services.ai.assistant import ComplianceAssistant
-from services.ai.circuit_breaker import AICircuitBreaker, CircuitState
-from config.ai_config import ModelType
+from services.ai.circuit_breaker import AICircuitBreaker
 from services.ai.exceptions import ModelUnavailableException
 
 

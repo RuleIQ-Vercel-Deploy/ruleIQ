@@ -1,11 +1,12 @@
 from contextlib import asynccontextmanager
 
 import uvicorn
-from fastapi import FastAPI, Depends, Request
+from fastapi import Depends, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.exceptions import RequestValidationError
-from fastapi.responses import JSONResponse
+from sqlalchemy.ext.asyncio import AsyncSession
 
+from api.dependencies.auth import get_current_active_user
+from api.dependencies.database import get_async_db
 from api.middleware.error_handler import error_handler_middleware
 from api.request_id_middleware import RequestIDMiddleware
 from api.routers import (
@@ -31,9 +32,6 @@ from config.logging_config import get_logger, setup_logging
 from config.settings import settings
 from database.db_setup import create_db_and_tables
 from database.user import User
-from api.dependencies.auth import get_current_active_user
-from api.dependencies.database import get_async_db
-from sqlalchemy.ext.asyncio import AsyncSession
 
 # Setup logging
 setup_logging()
@@ -59,7 +57,7 @@ async def lifespan(app: FastAPI):
 
     # Initialize cache manager
     from config.cache import get_cache_manager
-    cache_manager = await get_cache_manager()
+    await get_cache_manager()
     logger.info("Cache manager initialized.")
 
     logger.info(f"Environment: {settings.env.value}")
@@ -143,8 +141,8 @@ async def root():
 async def health_check():
     """Check API health status with database monitoring"""
     try:
-        from services.monitoring.database_monitor import database_monitor
         from database.db_setup import get_engine_info
+        from services.monitoring.database_monitor import database_monitor
 
         # Get basic database engine info
         engine_info = get_engine_info()
@@ -188,7 +186,7 @@ async def health_check():
         logger.error(f"Health check failed: {e}")
         return HealthCheckResponse(
             status="error",
-            message=f"Health check failed: {str(e)}"
+            message=f"Health check failed: {e!s}"
         )
 
 if __name__ == "__main__":

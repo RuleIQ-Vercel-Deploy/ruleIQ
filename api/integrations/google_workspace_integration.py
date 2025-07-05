@@ -3,13 +3,13 @@ Google Workspace integration for collecting compliance evidence.
 """
 
 import asyncio
-from typing import Dict, List, Any, Optional
 import logging
+from typing import Any, Dict, List, Optional
 
 # Mock Google API imports for now - will be replaced when dependencies are installed
 try:
-    from google.oauth2.credentials import Credentials
     from google.auth.transport.requests import Request
+    from google.oauth2.credentials import Credentials
     from googleapiclient.discovery import build
     from googleapiclient.errors import HttpError
     GOOGLE_AVAILABLE = True
@@ -50,13 +50,7 @@ except ImportError:
         def execute(self):
             return {'items': []}
 
-from .base.base_integration import (
-    BaseIntegration, 
-    IntegrationConfig, 
-    AuthenticationError, 
-    ConnectionError, 
-    EvidenceCollectionError
-)
+from .base.base_integration import AuthenticationError, BaseIntegration, EvidenceCollectionError
 
 logger = logging.getLogger(__name__)
 

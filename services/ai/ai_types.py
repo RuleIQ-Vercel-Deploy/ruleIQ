@@ -5,10 +5,10 @@ This module contains common types, enums, and data structures used across
 AI service modules to prevent circular import dependencies.
 """
 
-from enum import Enum
-from typing import Dict, Any, Optional, List
 from dataclasses import dataclass
 from datetime import datetime
+from enum import Enum
+from typing import Any, Dict, Optional
 
 
 class CircuitState(Enum):

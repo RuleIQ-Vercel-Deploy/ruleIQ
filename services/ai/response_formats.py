@@ -7,8 +7,7 @@ response_schema parameter to ensure structured AI responses.
 Part of Phase 6: Response Schema Validation implementation.
 """
 
-from typing import Dict, Any
-
+from typing import Any, Dict
 
 # =====================================================================
 # Gap Analysis Response Format
@@ -247,7 +246,7 @@ RECOMMENDATION_SCHEMA = {
         },
         "resource_summary": {
             "type": "object",
-            "additionalProperties": true
+            "additionalProperties": True
         },
         "timeline_overview": {"type": "string"},
         "success_metrics": {

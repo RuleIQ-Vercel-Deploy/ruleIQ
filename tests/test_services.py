@@ -7,13 +7,17 @@ and compliance framework recommendations.
 """
 
 from datetime import datetime, timedelta
-from unittest.mock import Mock, MagicMock, patch
+from unittest.mock import Mock, patch
 from uuid import uuid4
 
 import pytest
 
 from core.exceptions import ValidationAPIError
-from database.models import AssessmentSession, User, BusinessProfile, ComplianceFramework, ImplementationPlan
+from database.assessment_session import AssessmentSession
+from database.business_profile import BusinessProfile
+from database.compliance_framework import ComplianceFramework
+from database.implementation_plan import ImplementationPlan
+from database.user import User
 from services.assessment_service import AssessmentService
 from services.business_service import (
     create_or_update_business_profile,
@@ -24,18 +28,17 @@ from services.business_service import (
     update_assessment_status,
 )
 from services.evidence_service import EvidenceService
-from services.implementation_service import generate_implementation_plan, update_task_status
 from services.framework_service import (
-    get_relevant_frameworks,
     calculate_framework_relevance,
-    get_framework_by_id
+    get_framework_by_id,
+    get_relevant_frameworks,
 )
-
+from services.implementation_service import generate_implementation_plan, update_task_status
 from services.policy_service import generate_compliance_policy
 from services.readiness_service import (
+    generate_compliance_report,
     generate_readiness_assessment,
     get_readiness_dashboard,
-    generate_compliance_report
 )
 
 

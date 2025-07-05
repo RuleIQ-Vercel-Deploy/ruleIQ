@@ -6,12 +6,11 @@ are unavailable or experiencing issues. Includes static templates and
 cached response management.
 """
 
-import json
 import logging
-from datetime import datetime, timedelta
-from typing import Dict, Any, Optional, List, Union
 from dataclasses import dataclass, field
+from datetime import datetime, timedelta
 from enum import Enum
+from typing import Any, Dict, Optional
 
 from services.ai.exceptions import AIServiceException
 
@@ -381,11 +380,8 @@ class FallbackSystem:
             return True
         
         # Use fallback for timeout and overload exceptions
-        from services.ai.exceptions import ModelTimeoutException, ModelOverloadedException
-        if isinstance(exception, (ModelTimeoutException, ModelOverloadedException)):
-            return True
-        
-        return False
+        from services.ai.exceptions import ModelOverloadedException, ModelTimeoutException
+        return bool(isinstance(exception, (ModelTimeoutException, ModelOverloadedException)))
     
     def get_fallback_response(
         self, 
@@ -449,7 +445,7 @@ class FallbackSystem:
     def _get_basic_response(self, operation: str, exception: Optional[Exception]) -> FallbackResponse:
         """Get basic fallback response"""
         if exception:
-            content = f"The {operation} service is temporarily unavailable due to: {str(exception)}. Please try again later or contact support."
+            content = f"The {operation} service is temporarily unavailable due to: {exception!s}. Please try again later or contact support."
         else:
             content = f"The {operation} service is temporarily unavailable. Please try again later."
         

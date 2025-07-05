@@ -5,15 +5,15 @@ Tests the new context-aware recommendations, workflow generation,
 and policy generation capabilities of the ComplianceAssistant.
 """
 
-import pytest
 import json
-from unittest.mock import AsyncMock, MagicMock, patch
+from unittest.mock import MagicMock, patch
 from uuid import uuid4
-from datetime import datetime
 
-from services.ai.assistant import ComplianceAssistant
-from database.models import User
+import pytest
+
 from core.exceptions import BusinessLogicException
+from database.user import User
+from services.ai.assistant import ComplianceAssistant
 
 
 @pytest.mark.unit

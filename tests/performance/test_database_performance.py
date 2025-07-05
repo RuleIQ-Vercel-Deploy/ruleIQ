@@ -5,14 +5,13 @@ Tests database query performance, connection handling, and data operations
 under various load conditions and data volumes.
 """
 
-import pytest
 import time
-import threading
 from concurrent.futures import ThreadPoolExecutor, as_completed
+from typing import Any, Dict
 from uuid import uuid4
-from typing import List, Dict, Any
 
-from sqlalchemy import text, func
+import pytest
+from sqlalchemy import func, text
 from sqlalchemy.orm import Session
 
 
@@ -353,8 +352,6 @@ class TestDatabaseConnectionPerformance:
 
         def bulk_insert_operation():
             """Perform bulk insert operation"""
-            from uuid import uuid4
-            import time
 
             # Use unique identifier for this test run
             test_id = str(uuid4())[:8]
@@ -656,7 +653,7 @@ class TestDatabaseConcurrencyPerformance:
         
         # Analyze results
         successful = [r for r in results if r["success"]]
-        failed = [r for r in results if not r["success"]]
+        [r for r in results if not r["success"]]
         
         avg_duration = sum(r["duration"] for r in successful) / len(successful) if successful else 0
         max_duration = max(r["duration"] for r in successful) if successful else 0
@@ -684,8 +681,9 @@ class TestDatabaseResourceUsage:
     
     def test_memory_usage_optimization(self, db_session: Session, sample_user, sample_business_profile, sample_compliance_framework):
         """Test memory usage during large result set processing"""
-        import psutil
         import os
+
+        import psutil
 
         # Clean up any existing evidence items for this user to ensure clean test
         from database.evidence_item import EvidenceItem
@@ -749,7 +747,7 @@ class TestDatabaseResourceUsage:
             from database.db_setup import get_db_session
             
             sessions = []
-            for i in range(10):
+            for _i in range(10):
                 session = next(get_db_session())
                 sessions.append(session)
                 

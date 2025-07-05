@@ -224,10 +224,10 @@ class TestAssessmentEndpoints:
             headers=authenticated_headers,
             json={"business_profile_id": business_profile_id, "session_type": "compliance_scoping"}
         )
-        session_id = session_response.json()["id"]
+        session_response.json()["id"]
 
         # Get questions (using stage-based endpoint)
-        response = client.get(f"/api/assessments/questions/1", headers=authenticated_headers)
+        response = client.get("/api/assessments/questions/1", headers=authenticated_headers)
         assert response.status_code == 200
 
         response_data = response.json()

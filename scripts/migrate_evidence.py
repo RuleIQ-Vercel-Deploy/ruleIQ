@@ -9,21 +9,19 @@ features like automated evidence collection and AI assistant functionality.
 import asyncio
 import os
 import sys
-from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
+from datetime import datetime
+
+from sqlalchemy.ext.asyncio import AsyncInspector, AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.sql import text
-from sqlalchemy.ext.asyncio import AsyncInspector
-from datetime import datetime
-import json
 
 # Add the project root to the Python path
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from config.logging_config import get_logger, setup_logging
-from database.db_setup import Base # Assuming Base is correctly defined for all models
-from database.evidence_item import EvidenceItem
 from database.chat_conversation import ChatConversation
 from database.chat_message import ChatMessage
+from database.db_setup import Base  # Assuming Base is correctly defined for all models
 
 # Setup logging first
 setup_logging()
@@ -237,7 +235,7 @@ def downgrade():
             f.write(template_content)
         logger.info("Alembic migration template created successfully.")
         return True
-    except IOError as e:
+    except OSError as e:
         logger.error(f"Failed to write Alembic template: {e}", exc_info=True)
         return False
 

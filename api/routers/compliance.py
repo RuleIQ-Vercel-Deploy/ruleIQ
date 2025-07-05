@@ -1,18 +1,18 @@
-from typing import Dict, Any
-from uuid import UUID
 from datetime import datetime, timedelta
+from typing import Any, Dict
 
 from fastapi import APIRouter, Depends, HTTPException
-from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from api.dependencies.auth import get_current_active_user
 from api.dependencies.database import get_async_db
 from api.schemas.models import ComplianceStatusResponse
-from database.user import User
 from database.business_profile import BusinessProfile
 from database.evidence_item import EvidenceItem
-from database.models import ComplianceFramework, ReadinessAssessment
+from database.compliance_framework import ComplianceFramework
+from database.readiness_assessment import ReadinessAssessment
+from database.user import User
 from services.evidence_service import EvidenceService
 
 router = APIRouter()
@@ -180,7 +180,7 @@ async def get_compliance_status(
         # Log the error in a real application
         raise HTTPException(
             status_code=500,
-            detail=f"Failed to retrieve compliance status: {str(e)}"
+            detail=f"Failed to retrieve compliance status: {e!s}"
         )
 
 
@@ -273,5 +273,5 @@ async def query_compliance(
     except Exception as e:
         raise HTTPException(
             status_code=500,
-            detail=f"Failed to process compliance query: {str(e)}"
+            detail=f"Failed to process compliance query: {e!s}"
         )

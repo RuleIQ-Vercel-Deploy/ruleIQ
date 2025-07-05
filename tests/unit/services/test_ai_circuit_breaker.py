@@ -5,19 +5,18 @@ Tests the circuit breaker pattern implementation for AI services,
 including failure tracking, state transitions, and model fallback logic.
 """
 
-import pytest
-import asyncio
-from unittest.mock import Mock, AsyncMock, patch
 from datetime import datetime, timedelta
-from typing import Dict, Any
+from unittest.mock import patch
+
+import pytest
 
 from services.ai.circuit_breaker import (
-    AICircuitBreaker, CircuitState, CircuitBreakerConfig,
-    FailureRecord, CircuitBreakerMetrics
+    AICircuitBreaker,
+    CircuitBreakerConfig,
+    CircuitState,
 )
 from services.ai.exceptions import (
-    AIServiceException, ModelUnavailableException, ModelTimeoutException,
-    CircuitBreakerException
+    AIServiceException,
 )
 
 

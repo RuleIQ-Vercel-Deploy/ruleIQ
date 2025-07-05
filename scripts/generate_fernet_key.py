@@ -10,6 +10,7 @@ Example:
 
 from cryptography.fernet import Fernet
 
+
 def generate_key():
     """Generates a new Fernet key."""
     key = Fernet.generate_key()

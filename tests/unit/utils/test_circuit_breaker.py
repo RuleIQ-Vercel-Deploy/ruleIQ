@@ -7,15 +7,14 @@ from cascading failures and managing service resilience.
 
 import asyncio
 import time
+
 import pytest
-from unittest.mock import Mock, patch, AsyncMock
-from datetime import datetime, timedelta
 
 from api.utils.circuit_breaker import (
-    CircuitBreaker, 
-    CircuitBreakerState, 
+    CircuitBreaker,
     CircuitBreakerConfig,
-    CircuitBreakerOpenException
+    CircuitBreakerOpenException,
+    CircuitBreakerState,
 )
 
 

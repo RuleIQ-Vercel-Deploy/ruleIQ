@@ -5,11 +5,12 @@ ORM model for storing third-party integration configurations.
 import uuid
 from datetime import datetime
 
-from sqlalchemy import Column, DateTime, ForeignKey, String, Text, JSON, Boolean
+from sqlalchemy import JSON, Boolean, Column, DateTime, ForeignKey, String, Text
 from sqlalchemy.dialects.postgresql import UUID as PG_UUID
 from sqlalchemy.orm import relationship
 
 from .db_setup import Base
+
 
 class IntegrationConfiguration(Base):
     __tablename__ = "integration_configurations"

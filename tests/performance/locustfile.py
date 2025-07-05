@@ -10,7 +10,7 @@ import random
 import time
 from uuid import uuid4
 
-from locust import HttpUser, task, between, SequentialTaskSet, events
+from locust import HttpUser, SequentialTaskSet, between, events, task
 from locust.runners import MasterRunner
 
 # Test data pools

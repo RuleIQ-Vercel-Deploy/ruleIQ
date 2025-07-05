@@ -5,13 +5,11 @@ Provides base tool interface, tool registry system, and validation for
 Google Generative AI function calling capabilities.
 """
 
-import json
-import logging
 from abc import ABC, abstractmethod
-from typing import Dict, Any, List, Optional, Callable, Union
 from dataclasses import dataclass, field
-from enum import Enum
 from datetime import datetime
+from enum import Enum
+from typing import Any, Dict, List, Optional
 
 from config.logging_config import get_logger
 
@@ -174,7 +172,7 @@ class ToolRegistry:
             tool = self._tools.pop(name)
             
             # Remove from type mapping
-            for tool_type, tools in self._tool_by_type.items():
+            for _tool_type, tools in self._tool_by_type.items():
                 if tool in tools:
                     tools.remove(tool)
                     break
@@ -215,9 +213,9 @@ class ToolValidator:
         required_fields = ["name", "description", "parameters"]
         
         # Check required top-level fields
-        for field in required_fields:
-            if field not in schema:
-                logger.error(f"Missing required field '{field}' in function schema")
+        for field_name in required_fields:
+            if field_name not in schema:
+                logger.error(f"Missing required field '{field_name}' in function schema")
                 return False
         
         # Validate parameters structure
@@ -321,7 +319,7 @@ class ToolExecutor:
             execution_time = (datetime.now() - start_time).total_seconds()
             error_result = ToolResult(
                 success=False,
-                error=f"Tool execution failed: {str(e)}",
+                error=f"Tool execution failed: {e!s}",
                 execution_time=execution_time
             )
             

@@ -298,16 +298,18 @@ Comprehensive Step-by-Step Task List: 0% → 100% Production Readiness
                                                                                                                 
  Priority: MEDIUM | Owner: Frontend Developer                                                                   
                                                                                                                 
- Day 18: Chart Types & Visualizations (8 hours)                                                                 
-                                                                                                                
- - Add 10+ new chart types (bar, line, pie, scatter, etc.)                                                      
- - Implement interactive chart features                                                                         
- - Add chart customization options                                                                              
- - Create chart export functionality                                                                            
- - Implement responsive chart design                                                                            
- - Add chart accessibility features                                                                             
- - Test chart performance with large datasets                                                                   
- - Create chart component library                                                                               
+ Day 18: Chart Types & Visualizations (8 hours)
+
+ - Review and evaluate VChart library (@https://www.visactor.io/vchart/) for advanced visualizations
+ - Compare VChart capabilities vs current Recharts implementation
+ - Add 10+ new chart types (bar, line, pie, scatter, etc.)
+ - Implement interactive chart features
+ - Add chart customization options
+ - Create chart export functionality
+ - Implement responsive chart design
+ - Add chart accessibility features
+ - Test chart performance with large datasets
+ - Create chart component library
                                                                                                                 
  Day 19: Insights Engine (8 hours)                                                                              
                                                                                                                 
@@ -471,21 +473,157 @@ Comprehensive Step-by-Step Task List: 0% → 100% Production Readiness
  - Execute marketing launch plan                                                                                
  - Begin post-launch optimization planning                                                                      
                                                                                                                 
- ---                                                                                                            
- 📋 ONGOING: Post-Launch Optimization                                                                           
-                                                                                                                
- Priority: ONGOING | Owner: Frontend Developer                                                                  
-                                                                                                                
- Continuous Tasks                                                                                               
-                                                                                                                
- - User feedback collection and integration                                                                     
- - Performance tuning based on real data                                                                        
- - Bug fixes and minor enhancements                                                                             
- - Feature usage analytics analysis                                                                             
- - Security monitoring and updates                                                                              
- - Performance optimization                                                                                     
- - User experience improvements                                                                                 
- - New feature development planning                                                                             
+ ---
+ 🛡️ CRITICAL: ISO/IEC 42001 AI Compliance Implementation
+
+ Priority: CRITICAL | Owner: Backend Developer + Compliance Specialist
+ Estimated Time: 40-50 hours | Deadline: Before Production Launch
+
+ STEP 1: Governance Spine (4 hours)
+
+ - Create governance directory structure (docs/aims/)
+ - Create POLICY_AI.md with mission, scope, risk appetite, AIMS Owner
+ - Set up CODEOWNERS file mapping /models/<name>/ to @omar
+ - Create resources.yaml for datasets, models, external APIs
+ - Add /artefacts/ to .gitignore
+ - Create CI guard: .github/workflows/aims_spine.yml
+ - Test CI fails if any governance file missing
+
+ STEP 2: Data Provenance & Quality (6 hours)
+
+ - Initialize DVC (Data Version Control) system
+ - Set up remote storage: dvc remote add -d s3 s3://aims-datasets
+ - Create dataset_meta.json contract for every dataset
+ - Implement data quality tests under tests/data_quality/
+ - Add quality checks: nulls, class balance, leakage detection
+ - Create CI gate: pytest tests/data_quality
+ - Document data lineage and provenance tracking
+
+ STEP 3: Model Lifecycle Capture (5 hours)
+
+ - Integrate MLflow for experiment tracking
+ - Track every AI model run with mlflow.start_run()
+ - Log artifacts, parameters, and dataset hashes
+ - Generate model_card.yaml post-training
+ - Upload model cards to /artefacts/model_cards/
+ - Set up immutable storage: S3 bucket with object-lock
+ - Test model versioning and artifact tracking
+
+ STEP 4: Risk & Bias Unit Tests (4 hours)
+
+ - Create tests/risk/ directory structure
+ - Implement fairness testing with demographic parity checks
+ - Add adversarial prompt testing (OWASP-LLM compliance)
+ - Create explainability artifact existence tests
+ - Implement performance threshold validation
+ - Add bias detection for protected characteristics
+ - Block merge on risk test failures
+
+ STEP 5: Secure Inference Surface (3 hours)
+
+ - Create @safety_guard decorator for Google GenAI calls
+ - Implement OAuth2 scope enforcement
+ - Add default fail-safe (read-only) on guardrail reject
+ - Create input validation and sanitization
+ - Implement rate limiting for AI endpoints
+ - Add request/response logging for audit trail
+ - Test security controls and fail-safe mechanisms
+
+ STEP 6: Structured Audit Logging (4 hours)
+
+ - Implement JsonLogger for structured audit logs
+ - Log model, version, dataset_hash, input_sha256, decision_id
+ - Ship logs to S3 (WORM) + Elasticsearch
+ - Create /audit/{decision_id} REST endpoint
+ - Implement log retention and archival policies
+ - Add audit log search and filtering capabilities
+ - Test audit trail completeness and integrity
+
+ STEP 7: Statement of Applicability Auto-Build (3 hours)
+
+ - Create scripts/create_soa.py automation script
+ - Parse resources.yaml to derive Annex A controls in scope
+ - Generate docs/aims/SoA.md with control mappings
+ - Run SoA generation in CI before deploy
+ - Fail pipeline if SoA not regenerated
+ - Version control SoA documents
+ - Test SoA generation and validation
+
+ STEP 8: AI Impact Assessments (AIIA) (4 hours)
+
+ - Create /aiia/<model>.md template structure
+ - Implement AIIA as mandatory code review process
+ - Set up GitHub branch protection requiring @compliance reviewer
+ - Create AIIA checklist and review criteria
+ - Document impact assessment methodology
+ - Train team on AIIA completion process
+ - Test AIIA enforcement in development workflow
+
+ STEP 9: Threat Modeling & Post-Mortems (3 hours)
+
+ - Create /threat_models/<service>.md templates
+ - Set up quarterly threat model refresh calendar job
+ - Create /postmortems/pm_<YYYYMMDD>.md template
+ - Require post-mortem for every Sev-1 incident
+ - Add CI check for post-mortem completion
+ - Document threat modeling methodology
+ - Test threat model and post-mortem processes
+
+ STEP 10: Monitoring & Drift Alerts (5 hours)
+
+ - Set up Prometheus exporter for AI metrics
+ - Track latency, accuracy, fairness metrics
+ - Create alert_rules.yml for threshold breaches
+ - Integrate PagerDuty for critical alerts
+ - Implement nightly bias/performance tests on fresh data
+ - Create Grafana dashboard for AI monitoring
+ - Test alerting and escalation procedures
+
+ STEP 11: Continual Improvement Cadence (3 hours)
+
+ - Create scripts/aims_healthcheck.sh for monthly reviews
+ - Generate PDF summary reports automatically
+ - Schedule quarterly penetration testing
+ - Create security/runtest.sh for automated security testing
+ - Implement improvement tracking and metrics
+ - Document review and improvement processes
+ - Test automated review and reporting systems
+
+ STEP 12: Certification-Ready Evidence Package (4 hours)
+
+ - Create scripts/build_evidence.sh bundling script
+ - Package all compliance artifacts into aims_evidence_${DATE}.zip
+ - Include: POLICY_AI.md, SoA.md, resources.yaml, AIIA docs
+ - Include: threat_models, postmortems, model_cards, audit logs
+ - Implement evidence package validation
+ - Create auditor-ready documentation index
+ - Test evidence package completeness and accessibility
+
+ COMPLIANCE VALIDATION CHECKLIST:
+
+ ✅ Governance spine - All files present & version-controlled
+ ✅ Data provenance - DVC hashes + dataset_meta.json linkage
+ ✅ Fairness testing - Δparity < 0.10 in automated tests
+ ✅ Security testing - No critical OWASP-LLM findings
+ ✅ Explainability - SHAP artifacts <30 days old
+ ✅ Auditability - /audit/{decision_id} API returns 200 + JSON
+ ✅ Continual improvement - Health-check PDF ≤30 days old
+
+ ---
+ 📋 ONGOING: Post-Launch Optimization
+
+ Priority: ONGOING | Owner: Frontend Developer
+
+ Continuous Tasks
+
+ - User feedback collection and integration
+ - Performance tuning based on real data
+ - Bug fixes and minor enhancements
+ - Feature usage analytics analysis
+ - Security monitoring and updates
+ - Performance optimization
+ - User experience improvements
+ - New feature development planning
                                                                                                                 
  ---                                                                                                            
  🎯 SUCCESS METRICS & CHECKPOINTS                                                                               

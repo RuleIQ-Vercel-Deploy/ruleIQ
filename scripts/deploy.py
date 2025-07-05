@@ -5,16 +5,17 @@ This script helps ensure all components are properly configured and
 ready for production deployment.
 """
 
-import os
-import sys
-import subprocess
-import requests
-import time
 import json
-from typing import Dict, List, Tuple
+import os
+import subprocess
+import sys
+import time
 from datetime import datetime
-import psycopg2 # Keep for direct DB check if needed, or remove if fully ORM-based
-import redis # Keep for direct Redis check
+from typing import Dict
+
+import psycopg2  # Keep for direct DB check if needed, or remove if fully ORM-based
+import redis  # Keep for direct Redis check
+import requests
 
 # Add the project root to Python path for sibling imports
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -263,7 +264,7 @@ LOG_LEVEL=INFO # DEBUG, INFO, WARNING, ERROR, CRITICAL
             f.write(env_template)
         logger.info(f"✅ Created {env_file}")
         logger.info("   Copy this to .env and update with your actual values")
-    except IOError as e:
+    except OSError as e:
         logger.error(f"Failed to create {env_file}: {e}", exc_info_flag=True)
 
 def main():
@@ -295,7 +296,7 @@ def main():
             with open(args.output, 'w') as f:
                 json.dump(report, f, indent=2)
             logger.info(f"\n📄 Report saved to {args.output}")
-        except IOError as e:
+        except OSError as e:
             logger.error(f"Failed to save report to {args.output}: {e}", exc_info_flag=True)
     
     # Exit with appropriate code

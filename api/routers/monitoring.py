@@ -2,17 +2,16 @@
 Monitoring endpoints for database and system health.
 """
 
-from typing import Dict, Any, List
 from datetime import datetime, timedelta
+from typing import Any, Dict
 
 from fastapi import APIRouter, Depends, HTTPException, Query
-from fastapi.responses import JSONResponse
 
 from api.dependencies.auth import get_current_active_user
-from database.models import User
-from services.monitoring.database_monitor import database_monitor
-from database.db_setup import get_engine_info
 from config.logging_config import get_logger
+from database.db_setup import get_engine_info
+from database.user import User
+from services.monitoring.database_monitor import database_monitor
 
 logger = get_logger(__name__)
 

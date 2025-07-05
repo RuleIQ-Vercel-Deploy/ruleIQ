@@ -1,14 +1,25 @@
-# NexCompli Test Execution Makefile
+# ruleIQ Test Execution Makefile
 # Provides convenient shortcuts for running tests in different modes
 
-.PHONY: help test-fast test-integration test-performance test-full test-ci test-ai test-security test-e2e test-parallel test-sequential install-test-deps
+.PHONY: help test-fast test-integration test-performance test-full test-ci test-ai test-security test-e2e test-parallel test-sequential install-test-deps test-groups test-groups-parallel test-groups-list test-group-unit test-group-ai test-group-api test-group-endpoints test-group-advanced test-group-e2e
 
 # Default target
 help:
-	@echo "NexCompli Test Execution Commands"
-	@echo "=================================="
+	@echo "ruleIQ Test Execution Commands"
+	@echo "==============================="
 	@echo ""
-	@echo "Quick Test Modes:"
+	@echo "🎯 NEW: Independent Test Groups (100% Functionality):"
+	@echo "  make test-groups         - Run all 6 groups sequentially"
+	@echo "  make test-groups-parallel- Run all 6 groups in parallel (fastest)"
+	@echo "  make test-groups-list    - List all test groups"
+	@echo "  make test-group-unit     - Unit tests (2-3 min)"
+	@echo "  make test-group-ai       - AI core tests (3-4 min)"
+	@echo "  make test-group-api      - Basic API tests (4-5 min)"
+	@echo "  make test-group-endpoints- AI endpoints (5-6 min)"
+	@echo "  make test-group-advanced - Advanced features (3-4 min)"
+	@echo "  make test-group-e2e      - End-to-end tests (6-8 min)"
+	@echo ""
+	@echo "Legacy Test Modes:"
 	@echo "  make test-fast        - Fast unit tests only (high parallelism)"
 	@echo "  make test-integration - Integration tests (medium parallelism)"
 	@echo "  make test-performance - Performance tests (sequential)"
@@ -179,3 +190,49 @@ test-continuous:
 		echo "Waiting 30 seconds..."; \
 		sleep 30; \
 	done
+
+# NEW: Independent Test Groups (100% Functionality)
+test-groups:
+	@echo "🎯 Running all test groups sequentially..."
+	python test_groups.py all
+
+test-groups-parallel:
+	@echo "⚡ Running all test groups in parallel..."
+	python test_groups.py parallel
+
+test-groups-list:
+	@echo "📋 Listing all test groups..."
+	python test_groups.py list
+
+test-group-unit:
+	@echo "🔧 Running unit tests..."
+	python test_groups.py group1_unit
+
+test-group-ai:
+	@echo "🤖 Running AI core tests..."
+	python test_groups.py group2_ai_core
+
+test-group-api:
+	@echo "🌐 Running basic API tests..."
+	python test_groups.py group3_api_basic
+
+test-group-endpoints:
+	@echo "🚀 Running AI endpoints tests..."
+	python test_groups.py group4_ai_endpoints
+
+test-group-advanced:
+	@echo "⚙️ Running advanced features tests..."
+	python test_groups.py group5_advanced
+
+test-group-e2e:
+	@echo "🎯 Running end-to-end tests..."
+	python test_groups.py group6_e2e
+
+# Quick combinations for development
+test-quick-groups:
+	@echo "⚡ Running quick test groups (Unit + AI)..."
+	python test_groups.py group1_unit && python test_groups.py group2_ai_core
+
+test-core-groups:
+	@echo "🎯 Running core test groups (Unit + AI + API)..."
+	python test_groups.py group1_unit && python test_groups.py group2_ai_core && python test_groups.py group3_api_basic

@@ -11,11 +11,11 @@ For headless mode:
     locust -f tests/load/locustfile.py --host=http://localhost:8000 --headless -u 10 -r 2 -t 300
 """
 
-from locust import HttpUser, task, between, events
-import json
 import random
 from uuid import uuid4
-import time
+
+from locust import HttpUser, between, events, task
+
 
 class ComplianceGPTUser(HttpUser):
     """Simulates a typical ComplianceGPT user workflow."""

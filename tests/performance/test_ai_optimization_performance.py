@@ -5,16 +5,14 @@ Tests performance characteristics of the optimized AI system including
 response times, throughput, memory usage, and cost efficiency.
 """
 
-import pytest
 import asyncio
-import time
 import statistics
-from unittest.mock import patch, Mock, AsyncMock
-from typing import List, Dict, Any
+import time
+from unittest.mock import Mock, patch
+
+import pytest
 
 from services.ai.assistant import ComplianceAssistant
-from services.ai.circuit_breaker import AICircuitBreaker
-from config.ai_config import get_ai_model, ModelType
 from services.ai.exceptions import ModelUnavailableException
 
 
@@ -94,7 +92,7 @@ class TestAIOptimizationPerformance:
             mock_model.generate_content_stream.return_value = iter([
                 Mock(text=chunk) for chunk in mock_chunks
             ])
-            mock_get_model.return_value = mock_model
+            mock_get_model.return_value = (mock_model, "test_instruction_id")
             
             with patch.object(compliance_assistant.circuit_breaker, 'is_model_available', return_value=True):
                 start_time = time.time()
@@ -125,7 +123,7 @@ class TestAIOptimizationPerformance:
                 mock_model.generate_content_stream.return_value = iter([
                     Mock(text=chunk) for chunk in mock_chunks
                 ])
-                mock_get_model.return_value = mock_model
+                mock_get_model.return_value = (mock_model, "test_instruction_id")
                 
                 with patch.object(compliance_assistant.circuit_breaker, 'is_model_available', return_value=True):
                     start_time = time.time()
@@ -152,7 +150,7 @@ class TestAIOptimizationPerformance:
             assert len(results) == concurrent_users
             
             # Calculate performance metrics
-            total_chunks = sum(result[0] for result in results)
+            sum(result[0] for result in results)
             avg_response_time = statistics.mean(result[1] for result in results)
             throughput = concurrent_users / total_time
             
@@ -181,7 +179,7 @@ class TestAIOptimizationPerformance:
                 start_time = time.time()
                 
                 try:
-                    model = compliance_assistant._get_task_appropriate_model("analysis")
+                    compliance_assistant._get_task_appropriate_model("analysis")
                     fallback_time = time.time() - start_time
                     fallback_times.append(fallback_time)
                 except Exception:
@@ -196,8 +194,9 @@ class TestAIOptimizationPerformance:
     @pytest.mark.asyncio
     async def test_memory_usage_streaming(self, compliance_assistant, performance_config):
         """Test memory usage during streaming operations."""
-        import psutil
         import os
+
+        import psutil
         
         process = psutil.Process(os.getpid())
         initial_memory = process.memory_info().rss / 1024 / 1024  # MB
@@ -214,7 +213,7 @@ class TestAIOptimizationPerformance:
             
             with patch.object(compliance_assistant.circuit_breaker, 'is_model_available', return_value=True):
                 chunk_count = 0
-                async for chunk in compliance_assistant._stream_response(
+                async for _chunk in compliance_assistant._stream_response(
                     "System prompt", "User prompt", "test"
                 ):
                     chunk_count += 1

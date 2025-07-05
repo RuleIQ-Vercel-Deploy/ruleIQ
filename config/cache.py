@@ -6,12 +6,11 @@ frequently accessed data like evidence statistics, framework information, and
 user dashboard data.
 """
 
+import hashlib
 import json
 import os
-from typing import Any, Dict, List, Optional, Union
 from datetime import datetime, timedelta
-import asyncio
-import hashlib
+from typing import Any, Dict, Optional
 
 try:
     import redis.asyncio as redis
@@ -147,7 +146,7 @@ class CacheManager:
                 return len(keys)
             else:
                 # Memory cache pattern matching
-                keys_to_delete = [k for k in self.memory_cache.keys() if pattern.replace("*", "") in k]
+                keys_to_delete = [k for k in self.memory_cache if pattern.replace("*", "") in k]
                 for key in keys_to_delete:
                     del self.memory_cache[key]
                 return len(keys_to_delete)

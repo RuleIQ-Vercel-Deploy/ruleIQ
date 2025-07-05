@@ -2,14 +2,16 @@
 Manages the retrieval of contextual information to inform the AI assistant's responses.
 """
 
-from typing import Dict, List, Any, Optional
-from uuid import UUID
 from datetime import datetime, timedelta
+from typing import Any, Dict
+from uuid import UUID
+
+from sqlalchemy import and_, desc, select
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select, desc, and_
 
 from database.business_profile import BusinessProfile
 from database.evidence_item import EvidenceItem
+
 
 class ContextManager:
     """Gathers relevant data to build a context for AI conversations asynchronously."""

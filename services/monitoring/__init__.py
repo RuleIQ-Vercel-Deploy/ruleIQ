@@ -2,6 +2,6 @@
 Monitoring services for NexCompli platform.
 """
 
-from .database_monitor import database_monitor, DatabaseMonitor, SessionTracker
+from .database_monitor import DatabaseMonitor, SessionTracker, database_monitor
 
-__all__ = ['database_monitor', 'DatabaseMonitor', 'SessionTracker']
+__all__ = ['DatabaseMonitor', 'SessionTracker', 'database_monitor']

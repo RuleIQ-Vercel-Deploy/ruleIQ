@@ -5,12 +5,10 @@ AI-driven evidence collection prioritization and automation with intelligent
 task scheduling for optimal compliance workflow management.
 """
 
-import asyncio
-from typing import Dict, Any, List, Optional, Tuple
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta
 from enum import Enum
-import json
+from typing import Any, Dict, List, Optional
 
 from config.logging_config import get_logger
 
@@ -152,7 +150,7 @@ class SmartEvidenceCollector:
         business_profile_id: str,
         framework: str,
         business_context: Dict[str, Any],
-        existing_evidence: List[Dict[str, Any]] = None,
+        existing_evidence: Optional[List[Dict[str, Any]]] = None,
         target_completion_weeks: int = 12
     ) -> CollectionPlan:
         """
@@ -430,7 +428,7 @@ class SmartEvidenceCollector:
         
         # Calculate weekly capacity (assuming 40 hours per week)
         weekly_capacity = 40.0
-        total_capacity = weekly_capacity * target_weeks
+        weekly_capacity * target_weeks
         
         # Sort tasks by priority and dependencies
         optimized_tasks = []
@@ -499,7 +497,7 @@ class SmartEvidenceCollector:
         plan_id: str, 
         task_id: str, 
         status: CollectionStatus,
-        completion_notes: str = None
+        completion_notes: Optional[str] = None
     ) -> bool:
         """Update the status of a specific task."""
         

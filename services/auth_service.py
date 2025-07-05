@@ -2,9 +2,9 @@
 Authentication service for session management and security.
 """
 
+import contextlib
 import json
-import time
-from datetime import datetime, timedelta
+from datetime import datetime
 from typing import Dict, List, Optional
 from uuid import UUID, uuid4
 
@@ -13,7 +13,6 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 
 from config.settings import settings
-from core.exceptions import NotAuthenticatedException
 from database.user import User
 
 
@@ -169,10 +168,8 @@ class SessionManager:
         
         redis_client = await self.get_redis_client()
         if redis_client:
-            try:
+            with contextlib.suppress(Exception):
                 await redis_client.delete(f"user_sessions:{user_id}")
-            except Exception:
-                pass
                 
         return count
 

@@ -5,17 +5,16 @@ Provides comprehensive fixtures for AI testing including service mocks,
 realistic data, and test environment configuration.
 """
 
+from typing import Any, Dict
+from unittest.mock import AsyncMock, Mock, patch
+
 import pytest
-import asyncio
-from unittest.mock import patch, AsyncMock, Mock
-from typing import Dict, Any, Optional
 
 from tests.mocks.ai_service_mocks import (
-    MockComplianceAssistant, 
-    default_mock_assistant,
-    timeout_mock_assistant,
+    MockComplianceAssistant,
+    filter_mock_assistant,
     quota_mock_assistant,
-    filter_mock_assistant
+    timeout_mock_assistant,
 )
 
 

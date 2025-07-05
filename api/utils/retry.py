@@ -9,7 +9,7 @@ import inspect
 import logging
 import random
 import time
-from typing import Any, Awaitable, Callable, List, Optional, Type, TypeVar, Union
+from typing import Awaitable, Callable, Optional, TypeVar
 
 logger = logging.getLogger(__name__)
 

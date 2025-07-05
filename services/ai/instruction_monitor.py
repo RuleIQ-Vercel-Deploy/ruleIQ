@@ -5,20 +5,18 @@ This module provides comprehensive monitoring, analytics, and A/B testing capabi
 for system instructions to optimize AI response quality and effectiveness.
 """
 
-from typing import Dict, List, Any, Optional, Tuple
-from dataclasses import dataclass, asdict
+import abc
+import os
+import pickle
+import statistics
+from collections import deque
+from dataclasses import asdict, dataclass
 from datetime import datetime, timedelta
 from enum import Enum
-import json
-import asyncio
-from uuid import uuid4, UUID
-import statistics
-from collections import defaultdict, deque
+from typing import Any, Dict, List, Optional
+from uuid import uuid4
 
 from config.logging_config import get_logger
-import abc
-import pickle
-import os
 
 logger = get_logger(__name__)
 
@@ -744,7 +742,7 @@ class InstructionPerformanceMonitor:
         
         return {
             "total_interactions": len(recent_metrics),
-            "unique_instructions": len(set(m.instruction_id for m in recent_metrics)),
+            "unique_instructions": len({m.instruction_id for m in recent_metrics}),
             "avg_response_quality": statistics.mean([
                 m.value for m in recent_metrics
                 if m.metric_type == InstructionMetricType.RESPONSE_QUALITY
@@ -763,7 +761,7 @@ class InstructionPerformanceMonitor:
         """Get top performing instructions"""
         performers = []
         
-        for instruction_id in self.instruction_registry.keys():
+        for instruction_id in self.instruction_registry:
             perf = self._calculate_performance_for_window(instruction_id, time_window)
             if perf and perf.sample_size >= 5:  # Minimum sample size
                 performers.append({
@@ -780,7 +778,7 @@ class InstructionPerformanceMonitor:
         """Get underperforming instructions"""
         performers = []
         
-        for instruction_id in self.instruction_registry.keys():
+        for instruction_id in self.instruction_registry:
             perf = self._calculate_performance_for_window(instruction_id, time_window)
             if perf and perf.sample_size >= 5:  # Minimum sample size
                 performers.append({

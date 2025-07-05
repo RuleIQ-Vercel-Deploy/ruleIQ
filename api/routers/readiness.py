@@ -4,16 +4,15 @@ from uuid import UUID
 
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi.responses import StreamingResponse
-
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from api.dependencies.auth import get_current_active_user
 from api.dependencies.database import get_async_db
-from api.schemas.models import ComplianceReport, ReadinessAssessmentResponse
+from api.schemas.models import ComplianceReport
 from database.user import User
 from services.readiness_service import (
-    generate_readiness_assessment,
     generate_compliance_report,
+    generate_readiness_assessment,
     get_historical_assessments,
 )
 
@@ -27,6 +26,7 @@ async def get_readiness_assessment(
     db: AsyncSession = Depends(get_async_db),
 ):
     from sqlalchemy import select
+
     from database.models import ComplianceFramework
 
     # If no framework_id provided, use the first available framework

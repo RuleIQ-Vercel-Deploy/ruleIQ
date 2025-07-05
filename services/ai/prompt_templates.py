@@ -5,9 +5,11 @@ Updated to work with system instructions rather than system prompts for better
 AI model performance and consistency.
 """
 
-from typing import Dict, List, Any, Optional
 import json
-from .instruction_templates import get_system_instruction, InstructionType, FrameworkType
+from typing import Any, Dict, List, Optional
+
+from .instruction_templates import get_system_instruction
+
 
 class PromptTemplates:
     """Manages and formats prompts for different AI tasks."""
@@ -305,9 +307,9 @@ class PromptTemplates:
         self,
         question_text: str,
         framework_id: str,
-        section_id: str = None,
-        business_context: Dict[str, Any] = None,
-        user_context: Dict[str, Any] = None
+        section_id: Optional[str] = None,
+        business_context: Optional[Dict[str, Any]] = None,
+        user_context: Optional[Dict[str, Any]] = None
     ) -> Dict[str, str]:
         """Creates prompts for assessment question help."""
 
@@ -355,8 +357,8 @@ class PromptTemplates:
         self,
         current_answers: Dict[str, Any],
         framework_id: str,
-        business_context: Dict[str, Any] = None,
-        assessment_context: Dict[str, Any] = None
+        business_context: Optional[Dict[str, Any]] = None,
+        assessment_context: Optional[Dict[str, Any]] = None
     ) -> Dict[str, str]:
         """Creates prompts for generating assessment follow-up questions."""
 
@@ -403,7 +405,7 @@ class PromptTemplates:
         self,
         assessment_results: Dict[str, Any],
         framework_id: str,
-        business_context: Dict[str, Any] = None
+        business_context: Optional[Dict[str, Any]] = None
     ) -> Dict[str, str]:
         """Creates prompts for comprehensive assessment analysis."""
 
@@ -455,8 +457,8 @@ class PromptTemplates:
         gaps: List[Dict[str, Any]],
         business_profile: Dict[str, Any],
         framework_id: str,
-        existing_policies: List[str] = None,
-        industry_context: str = None,
+        existing_policies: Optional[List[str]] = None,
+        industry_context: Optional[str] = None,
         timeline_preferences: str = "standard"
     ) -> Dict[str, str]:
         """Creates prompts for generating personalized implementation recommendations."""

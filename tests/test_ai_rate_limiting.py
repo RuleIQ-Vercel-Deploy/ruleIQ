@@ -3,18 +3,19 @@ Test AI Rate Limiting Implementation
 Tests for Phase 2.1: Backend AI Endpoints - Rate Limiting
 """
 
-import pytest
 import asyncio
 import time
-from unittest.mock import AsyncMock, patch
+from unittest.mock import patch
+
+import pytest
 
 from api.middleware.ai_rate_limiter import (
     AIRateLimiter,
-    ai_help_limiter,
-    ai_followup_limiter,
     ai_analysis_limiter,
+    ai_followup_limiter,
+    ai_help_limiter,
     ai_recommendations_limiter,
-    get_ai_rate_limit_stats
+    get_ai_rate_limit_stats,
 )
 
 
@@ -32,7 +33,7 @@ class TestAIRateLimiter:
         user_id = "test_user_1"
         
         # First 3 requests should be allowed
-        for i in range(3):
+        for _i in range(3):
             allowed, retry_after = await rate_limiter.check_rate_limit(user_id)
             assert allowed is True
             assert retry_after == 0
@@ -43,7 +44,7 @@ class TestAIRateLimiter:
         user_id = "test_user_2"
         
         # Use up the normal limit (3 requests)
-        for i in range(3):
+        for _i in range(3):
             allowed, retry_after = await rate_limiter.check_rate_limit(user_id)
             assert allowed is True
         
@@ -62,7 +63,7 @@ class TestAIRateLimiter:
         user_id = "test_user_3"
         
         # Use up normal limit
-        for i in range(3):
+        for _i in range(3):
             allowed, retry_after = await rate_limiter.check_rate_limit(user_id)
             assert allowed is True
         
@@ -78,24 +79,25 @@ class TestAIRateLimiter:
     async def test_rate_limiter_window_reset(self, rate_limiter):
         """Test that rate limit window resets correctly."""
         user_id = "test_user_4"
-        
+
         # Use up the limit
-        for i in range(4):  # 3 normal + 1 burst
+        for _i in range(4):  # 3 normal + 1 burst
             allowed, retry_after = await rate_limiter.check_rate_limit(user_id)
             assert allowed is True
-        
+
         # Should be blocked now
         allowed, retry_after = await rate_limiter.check_rate_limit(user_id)
         assert allowed is False
-        
-        # Simulate time passing (mock the time)
-        with patch('time.time') as mock_time:
-            # Set time to 61 seconds later (past the window)
-            mock_time.return_value = time.time() + 61
-            
-            # Should be allowed again
-            allowed, retry_after = await rate_limiter.check_rate_limit(user_id)
-            assert allowed is True
+
+        # Simulate time passing by patching both time.time and the rate limiter's time usage
+        current_time = time.time()
+        future_time = current_time + 61  # 61 seconds later (past the window)
+
+        with patch('time.time', return_value=future_time):
+            with patch('api.middleware.ai_rate_limiter.time.time', return_value=future_time):
+                # Should be allowed again
+                allowed, retry_after = await rate_limiter.check_rate_limit(user_id)
+                assert allowed is True
 
     @pytest.mark.asyncio
     async def test_rate_limiter_different_users(self, rate_limiter):
@@ -104,7 +106,7 @@ class TestAIRateLimiter:
         user2 = "test_user_6"
         
         # User 1 uses up their limit
-        for i in range(4):  # 3 normal + 1 burst
+        for _i in range(4):  # 3 normal + 1 burst
             allowed, retry_after = await rate_limiter.check_rate_limit(user1)
             assert allowed is True
         
@@ -187,35 +189,44 @@ class TestRateLimitingIntegration:
     @pytest.mark.asyncio
     async def test_rate_limiting_with_mock_endpoint(self):
         """Test rate limiting behavior with a mock endpoint."""
+        from unittest.mock import MagicMock, patch
+
+        from fastapi import HTTPException
+
         from api.middleware.ai_rate_limiter import create_ai_rate_limit_dependency
         from database.user import User
-        from unittest.mock import MagicMock
-        
-        # Create a test rate limiter
-        test_limiter = AIRateLimiter(requests_per_minute=2, burst_allowance=0)
-        rate_limit_check = create_ai_rate_limit_dependency(test_limiter, "test")
-        
-        # Mock user and request
-        mock_user = MagicMock(spec=User)
-        mock_user.id = "test_user_integration"
-        
-        mock_request = MagicMock()
-        mock_request.state = MagicMock()
-        
-        # First two requests should pass
-        for i in range(2):
+
+        # Mock settings to disable testing mode
+        with patch('api.middleware.ai_rate_limiter.settings') as mock_settings:
+            mock_settings.is_testing = False
+
+            # Create a test rate limiter with very low limits
+            test_limiter = AIRateLimiter(requests_per_minute=1, burst_allowance=0)
+            rate_limit_check = create_ai_rate_limit_dependency(test_limiter, "test")
+
+            # Mock user and request
+            mock_user = MagicMock(spec=User)
+            mock_user.id = "test_user_integration"
+
+            mock_request = MagicMock()
+            mock_request.state = MagicMock()
+
+            # First request should pass
             try:
                 await rate_limit_check(mock_request, mock_user)
                 # Should not raise exception
             except Exception as e:
-                pytest.fail(f"Request {i+1} should have been allowed: {e}")
-        
-        # Third request should be rate limited
-        with pytest.raises(Exception) as exc_info:
-            await rate_limit_check(mock_request, mock_user)
-        
-        # Should be an HTTP 429 exception
-        assert "429" in str(exc_info.value) or "rate limit" in str(exc_info.value).lower()
+                pytest.fail(f"First request should have been allowed: {e}")
+
+            # Second request should be rate limited
+            try:
+                await rate_limit_check(mock_request, mock_user)
+                pytest.fail("Second request should have been rate limited but wasn't")
+            except HTTPException as exc_info:
+                # Should be an HTTP 429 exception
+                assert exc_info.status_code == 429
+            except Exception as e:
+                pytest.fail(f"Unexpected exception type: {type(e).__name__}: {e}")
 
     @pytest.mark.asyncio
     async def test_concurrent_rate_limiting(self):

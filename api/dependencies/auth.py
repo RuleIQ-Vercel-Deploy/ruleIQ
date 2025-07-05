@@ -21,7 +21,6 @@ from config.settings import settings
 from core.exceptions import NotAuthenticatedException
 from database.db_setup import get_async_db
 from database.user import User
-from services.auth_service import auth_service
 
 # Security configuration
 SECRET_KEY = os.getenv("SECRET_KEY", secrets.token_urlsafe(32))
@@ -174,7 +173,7 @@ def decode_token(token: str) -> Optional[Dict]:
     except jwt.ExpiredSignatureError:
         raise NotAuthenticatedException("Token has expired. Please log in again.")
     except JWTError as e:
-        raise NotAuthenticatedException(f"Token validation failed: {str(e)}")
+        raise NotAuthenticatedException(f"Token validation failed: {e!s}")
 
 async def get_current_user(token: Optional[str] = Depends(oauth2_scheme), db: AsyncSession = Depends(get_async_db)) -> Optional[User]:
     if token is None:

@@ -2,13 +2,12 @@ import uuid
 from datetime import datetime
 
 from sqlalchemy import (
-    Boolean,
+    JSON,
     Column,
     DateTime,
     Float,
     ForeignKey,
     Integer,
-    JSON,
     String,
     Text,
 )
@@ -17,15 +16,9 @@ from sqlalchemy.orm import relationship
 
 # Import the shared Base from db_setup to ensure all models use the same Base
 from .db_setup import Base
+
 # Import existing models from their dedicated files to avoid duplication
-from .user import User
-from .business_profile import BusinessProfile
-from .compliance_framework import ComplianceFramework
-from .evidence_item import EvidenceItem
-from .generated_policy import GeneratedPolicy
-from .implementation_plan import ImplementationPlan
-from .integration_configuration import IntegrationConfiguration
-from .report_schedule import ReportSchedule
+
 
 class Policy(Base):
     __tablename__ = "policies"
@@ -71,27 +64,7 @@ class Evidence(Base):
 
     owner = relationship("User", back_populates="evidences")
 
-class AssessmentSession(Base):
-    __tablename__ = "assessment_sessions"
-    id = Column(PG_UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    user_id = Column(PG_UUID(as_uuid=True), ForeignKey("users.id"), nullable=False)
-    business_profile_id = Column(PG_UUID(as_uuid=True), ForeignKey("business_profiles.id"), nullable=True)
-    framework_id = Column(PG_UUID(as_uuid=True), ForeignKey("compliance_frameworks.id"), nullable=True)
-    session_type = Column(String(50), default="compliance_scoping")
-    status = Column(String(20), default="in_progress")  # e.g., in_progress, completed, abandoned
-    current_stage = Column(Integer, default=1)
-    total_stages = Column(Integer, default=5)
-    responses = Column(JSON, nullable=True)  # Stores answers to questions
-    recommendations = Column(JSON, default=[])
-    started_at = Column(DateTime, default=datetime.utcnow)
-    completed_at = Column(DateTime, nullable=True)
-    overall_progress = Column(Float, default=0.0)
-    estimated_time_remaining_minutes = Column(Integer, nullable=True)
-    created_at = Column(DateTime, default=datetime.utcnow)
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
-
-    owner = relationship("User", back_populates="assessments")
-    questions = relationship("AssessmentQuestion", back_populates="session", cascade="all, delete-orphan")
+# AssessmentSession is imported from assessment_session.py
 
 # ImplementationPlan is imported from implementation_plan.py
 

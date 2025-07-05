@@ -2,16 +2,18 @@
 Asynchronous service to manage report schedule configurations in the database.
 """
 
-from typing import Dict, List, Any, Optional
 from datetime import datetime
+from typing import Any, Dict, List
 from uuid import UUID
+
+from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from sqlalchemy.orm import selectinload
-from sqlalchemy.exc import SQLAlchemyError
 
+from core.exceptions import DatabaseException, NotFoundException
 from database.report_schedule import ReportSchedule
-from core.exceptions import NotFoundException, DatabaseException, BusinessLogicException
+
 
 class ReportScheduler:
     """Service to create, manage, and delete report schedules from the database."""
@@ -68,7 +70,7 @@ class ReportScheduler:
         try:
             res = await self.db.execute(
                 select(ReportSchedule)
-                .where(ReportSchedule.active == True)
+                .where(ReportSchedule.active)
                 .options(selectinload(ReportSchedule.user))
             )
             return res.scalars().all()

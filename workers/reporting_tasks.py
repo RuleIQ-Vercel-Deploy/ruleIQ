@@ -3,32 +3,24 @@ Celery background tasks for report generation and distribution, with async suppo
 """
 
 import asyncio
-import smtplib
-from email.mime.multipart import MIMEMultipart
-from email.mime.base import MIMEBase
-from email.mime.text import MIMEText
-from email import encoders
-from typing import Dict, List, Any, Optional
-from celery.utils.log import get_task_logger
-from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select, delete
-from datetime import datetime, timedelta
+from datetime import datetime
+from typing import Any, Dict, List, Optional
 from uuid import UUID
-import os
+
+from celery.utils.log import get_task_logger
 
 from celery_app import celery_app
-from database.db_setup import get_async_db
-from database.user import User
-from services.reporting.report_generator import ReportGenerator
-from services.reporting.pdf_generator import PDFGenerator
-from services.reporting.report_scheduler import ReportScheduler
 from core.exceptions import (
     ApplicationException,
-    NotFoundException,
+    BusinessLogicException,
     DatabaseException,
     IntegrationException,
-    BusinessLogicException,
+    NotFoundException,
 )
+from database.db_setup import get_async_db
+from services.reporting.pdf_generator import PDFGenerator
+from services.reporting.report_generator import ReportGenerator
+from services.reporting.report_scheduler import ReportScheduler
 
 logger = get_task_logger(__name__)
 

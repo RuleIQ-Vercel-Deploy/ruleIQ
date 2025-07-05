@@ -5,10 +5,9 @@ Tests the new context-aware recommendations, workflow generation,
 and policy generation endpoints with real database interactions.
 """
 
+from unittest.mock import patch
+
 import pytest
-import json
-from unittest.mock import patch, AsyncMock
-from uuid import uuid4
 
 from tests.conftest import assert_api_response_security
 

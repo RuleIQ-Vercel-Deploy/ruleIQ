@@ -2,19 +2,13 @@
 Database monitoring service for connection pool and session lifecycle tracking.
 """
 
-import asyncio
-import time
+from dataclasses import asdict, dataclass
 from datetime import datetime, timedelta
-from typing import Dict, List, Optional, Any
-from dataclasses import dataclass, asdict
 from enum import Enum
+from typing import Any, Dict, List, Optional
 
-from sqlalchemy.pool import Pool
-from sqlalchemy.ext.asyncio import AsyncEngine
-from sqlalchemy.engine import Engine
-
-from database.db_setup import get_engine_info, _engine, _async_engine
 from config.logging_config import get_logger
+from database.db_setup import get_engine_info
 
 logger = get_logger(__name__)
 
@@ -169,7 +163,7 @@ class DatabaseMonitor:
     
     def _check_pool_alerts(self, metrics: PoolMetrics):
         """Check pool metrics against thresholds and generate alerts."""
-        now = datetime.utcnow()
+        datetime.utcnow()
         
         # Pool utilization alerts
         if metrics.utilization_percent >= self.thresholds['pool_utilization_critical']:

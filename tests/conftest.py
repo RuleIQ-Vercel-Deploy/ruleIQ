@@ -3,6 +3,7 @@ Pytest configuration and shared fixtures for ComplianceGPT tests.
 """
 
 import os
+
 from cryptography.fernet import Fernet
 
 # Set environment variables for testing BEFORE any application modules are imported.
@@ -18,15 +19,15 @@ os.environ['FERNET_KEY'] = Fernet.generate_key().decode()
 
 import asyncio
 import sys
-from pathlib import Path
-from uuid import uuid4
 from datetime import datetime
+from pathlib import Path
 from typing import Optional
+from uuid import uuid4
 
 import pytest
-from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import text
 from fastapi import Depends
+from sqlalchemy import text
+from sqlalchemy.ext.asyncio import AsyncSession
 
 # Add project root to the Python path to resolve import errors
 project_root = Path(__file__).parent.parent
@@ -34,21 +35,16 @@ sys.path.insert(0, str(project_root))
 
 # Assuming these are the correct paths from your project structure
 import database.db_setup as db_setup
-from database.db_setup import get_async_db, Base
+from database.business_profile import BusinessProfile
+from database.compliance_framework import ComplianceFramework
+from database.db_setup import Base, get_async_db
+from database.evidence_item import EvidenceItem
+from database.generated_policy import GeneratedPolicy
 
+# Import additional models from models.py (these don't conflict with individual files)
 # Import ALL database models to ensure they're registered with Base metadata
 # Import from individual files first
 from database.user import User
-from database.business_profile import BusinessProfile
-from database.evidence_item import EvidenceItem
-from database.compliance_framework import ComplianceFramework
-from database.generated_policy import GeneratedPolicy
-from database.implementation_plan import ImplementationPlan
-from database.integration_configuration import IntegrationConfiguration
-from database.report_schedule import ReportSchedule
-
-# Import additional models from models.py (these don't conflict with individual files)
-from database.models import Evidence, Policy, AssessmentQuestion, AssessmentSession, ReadinessAssessment
 
 # Import remaining models from individual files if they exist
 try:
@@ -107,9 +103,10 @@ async def manage_test_database_schema_unit(): # Renamed to avoid conflict if int
 @pytest.fixture
 def db_session():
     """Create an isolated test database session for unit tests."""
+    import os
+
     from sqlalchemy import create_engine
     from sqlalchemy.orm import sessionmaker
-    import os
 
     # Create test-specific database engine - use sync to avoid async issues
     test_db_url = os.getenv("DATABASE_URL")
@@ -136,6 +133,7 @@ def db_session():
 def sample_user(db_session):
     """Create a sample user for tests with unique email."""
     from uuid import UUID
+
     from sqlalchemy import select
     # Use the same fixed UUID as the auth override for consistency
     test_user_id = UUID("12345678-1234-5678-9012-123456789012")
@@ -304,13 +302,15 @@ def sample_policy_document(db_session, sample_business_profile):
 @pytest.fixture
 def client():
     """Create a FastAPI test client for API tests with isolated database."""
-    from main import app
-    from database.db_setup import get_db, get_async_db
-    from api.dependencies.auth import get_current_user, get_current_active_user
-    from database.user import User
+    import os
+
     from sqlalchemy import create_engine, select
     from sqlalchemy.orm import sessionmaker
-    import os
+
+    from api.dependencies.auth import get_current_active_user, get_current_user
+    from database.db_setup import get_async_db, get_db
+    from database.user import User
+    from main import app
 
     # Create test-specific database engines - use sync for both to avoid async issues
     test_db_url = os.getenv("DATABASE_URL")
@@ -324,7 +324,6 @@ def client():
     TestSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=test_engine)
 
     # Create a global test user that will be used for all authenticated requests
-    global_test_user = None
 
     def override_get_db():
         """Override sync database dependency for tests."""
@@ -337,7 +336,7 @@ def client():
     async def override_get_async_db():
         """Override async database dependency for tests - use proper async session."""
         # Import here to avoid circular imports
-        from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
+        from sqlalchemy.ext.asyncio import create_async_engine
         from sqlalchemy.orm import sessionmaker
 
         # Create async test engine
@@ -388,9 +387,10 @@ def client():
             raise NotAuthenticatedException("Token has been invalidated.")
 
         # Use manual JWT decoding to avoid the new exception-raising behavior
-        from jose import jwt
-        from sqlalchemy import select
         from uuid import UUID
+
+        from jose import jwt
+
         from config.settings import settings
 
         try:
@@ -517,8 +517,9 @@ def sample_user_data():
 @pytest.fixture
 def auth_token(sample_user):
     """Provide a valid auth token for tests."""
-    from api.dependencies.auth import create_access_token
     from datetime import timedelta
+
+    from api.dependencies.auth import create_access_token
 
     # Create a test token for the actual sample user
     token_data = {"sub": str(sample_user.id)}
@@ -528,8 +529,9 @@ def auth_token(sample_user):
 @pytest.fixture
 def expired_token():
     """Provide an expired auth token for tests."""
-    from api.dependencies.auth import create_access_token
     from datetime import timedelta
+
+    from api.dependencies.auth import create_access_token
 
     # Create an expired token (negative expiry)
     token_data = {"sub": str(uuid4())}
@@ -559,8 +561,9 @@ def another_user(db_session):
 @pytest.fixture
 def another_authenticated_headers(another_user):
     """Provide authenticated headers for a different user for testing access control."""
-    from api.dependencies.auth import create_access_token
     from datetime import timedelta
+
+    from api.dependencies.auth import create_access_token
 
     # Create a token for this real user
     token_data = {"sub": str(another_user.id)}
@@ -626,7 +629,7 @@ def evidence_item_instance(sample_evidence_item):
 @pytest.fixture
 def mock_ai_client():
     """Provide a mock AI client for testing AI-related functionality."""
-    from unittest.mock import Mock, AsyncMock, patch
+    from unittest.mock import AsyncMock, Mock, patch
 
     # Create a mock AI client that mimics Google Generative AI
     mock_client = Mock()

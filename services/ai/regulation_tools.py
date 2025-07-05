@@ -5,13 +5,13 @@ Implements tools for looking up industry regulations, compliance requirements,
 framework specifics, and risk calculations based on business context.
 """
 
-import json
-from typing import Dict, Any, List, Optional
-from datetime import datetime
 from dataclasses import dataclass
+from datetime import datetime
+from typing import Any, Dict, List, Optional
+
+from config.logging_config import get_logger
 
 from .tools import BaseTool, ToolResult, ToolType, register_tool
-from config.logging_config import get_logger
 
 logger = get_logger(__name__)
 
@@ -311,7 +311,7 @@ class IndustryRegulationLookupTool(BaseTool):
             logger.error(f"Regulation lookup failed: {e}")
             return ToolResult(
                 success=False,
-                error=f"Regulation lookup execution failed: {str(e)}"
+                error=f"Regulation lookup execution failed: {e!s}"
             )
     
     def _filter_by_business_size(self, regulations: List[Dict[str, Any]], business_size: str) -> List[Dict[str, Any]]:
@@ -501,7 +501,7 @@ class ComplianceRequirementsTool(BaseTool):
             logger.error(f"Compliance requirements check failed: {e}")
             return ToolResult(
                 success=False,
-                error=f"Compliance requirements check execution failed: {str(e)}"
+                error=f"Compliance requirements check execution failed: {e!s}"
             )
     
     def _get_framework_requirements(self, framework: str, business_context: Dict[str, Any], specific_areas: List[str]) -> List[Dict[str, Any]]:
@@ -584,9 +584,9 @@ class ComplianceRequirementsTool(BaseTool):
                 "status": "pending",
                 "actions": [
                     f"Review {req['section']} requirements",
-                    f"Assess current implementation status",
-                    f"Document implementation approach",
-                    f"Collect required evidence"
+                    "Assess current implementation status",
+                    "Document implementation approach",
+                    "Collect required evidence"
                 ],
                 "evidence_needed": req["evidence_required"],
                 "priority": "high" if req["mandatory"] else "medium"

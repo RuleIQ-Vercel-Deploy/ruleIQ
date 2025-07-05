@@ -3,23 +3,23 @@ Celery background tasks for sending notifications and alerts, with async support
 """
 
 import asyncio
-from typing import Dict, Any
+import smtplib
+from typing import Any, Dict
+from uuid import UUID
+
 from celery.utils.log import get_task_logger
-from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from sqlalchemy.exc import SQLAlchemyError
-from uuid import UUID
-import smtplib
 
 from celery_app import celery_app
-from database.db_setup import get_async_db
-from database.models import User
 from core.exceptions import (
-    NotFoundException,
+    BusinessLogicException,
     DatabaseException,
     IntegrationException,
-    BusinessLogicException,
+    NotFoundException,
 )
+from database.db_setup import get_async_db
+from database.user import User
 
 logger = get_task_logger(__name__)
 
@@ -98,7 +98,7 @@ async def _broadcast_notification_async(subject: str, message: str) -> int:
     """Async helper to broadcast a notification to all active users."""
     async for db in get_async_db():
         try:
-            users_res = await db.execute(select(User).where(User.is_active == True))
+            users_res = await db.execute(select(User).where(User.is_active))
             users = users_res.scalars().all()
             for user in users:
                 _send_email_notification(user.email, subject, message)

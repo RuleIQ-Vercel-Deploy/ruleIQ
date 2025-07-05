@@ -8,20 +8,17 @@ Implements tiered rate limiting for different AI operations:
 - AI Recommendations: 3 requests/minute per user
 """
 
-import time
 import asyncio
-from typing import Dict, List, Optional, Tuple
+import time
 from collections import defaultdict, deque
-from datetime import datetime, timedelta
-from uuid import UUID
+from typing import Dict, Tuple
 
-from fastapi import HTTPException, Request, Depends
-from fastapi.responses import JSONResponse
+from fastapi import Depends, HTTPException, Request
 from starlette import status
 
 from api.dependencies.auth import get_current_active_user
-from database.user import User
 from config.settings import get_settings
+from database.user import User
 
 settings = get_settings()
 

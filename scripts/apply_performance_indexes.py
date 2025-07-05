@@ -9,7 +9,6 @@ identified in the test suite, particularly for evidence queries and pagination.
 import asyncio
 import os
 import sys
-from typing import List
 
 # Add the project root to Python path
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -22,7 +21,7 @@ from sqlalchemy.exc import ProgrammingError
 load_dotenv()
 
 from config.logging_config import get_logger, setup_logging
-from database.db_setup import get_async_db, _init_async_db
+from database.db_setup import _init_async_db
 
 # Setup logging
 setup_logging()

@@ -2,19 +2,19 @@
 Asynchronous service for detecting and handling duplicate evidence items.
 """
 
-from typing import Dict, Any, Optional
-from datetime import datetime, timedelta
 import hashlib
 import json
+from datetime import datetime, timedelta
+from typing import Any, Dict
 from uuid import UUID
 
-from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select, and_, func
+from sqlalchemy import and_, func, select
 from sqlalchemy.exc import SQLAlchemyError
+from sqlalchemy.ext.asyncio import AsyncSession
 
-from database.evidence_item import EvidenceItem
-from core.exceptions import DatabaseException, BusinessLogicException
 from config.logging_config import get_logger
+from core.exceptions import BusinessLogicException, DatabaseException
+from database.evidence_item import EvidenceItem
 
 logger = get_logger(__name__)
 

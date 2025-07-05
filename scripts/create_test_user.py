@@ -15,6 +15,7 @@ The test user will have:
 
 import os
 import sys
+
 import requests
 
 # Add the project root to Python path

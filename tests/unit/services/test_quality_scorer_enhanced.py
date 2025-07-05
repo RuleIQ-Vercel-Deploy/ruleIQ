@@ -4,14 +4,15 @@ Unit Tests for Enhanced Quality Scorer
 Tests the AI-enhanced quality analysis and semantic duplicate detection functionality.
 """
 
-import pytest
 import json
-from unittest.mock import Mock, patch, AsyncMock
-from uuid import uuid4
 from datetime import datetime, timedelta
+from unittest.mock import Mock
+from uuid import uuid4
 
-from services.automation.quality_scorer import QualityScorer
+import pytest
+
 from database.evidence_item import EvidenceItem
+from services.automation.quality_scorer import QualityScorer
 
 
 @pytest.mark.unit

@@ -7,7 +7,9 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 
 from core.exceptions import DatabaseException, NotFoundException
-from database.models import AssessmentSession, BusinessProfile, User
+from database.assessment_session import AssessmentSession
+from database.business_profile import BusinessProfile
+from database.user import User
 from services.framework_service import get_relevant_frameworks
 
 
@@ -134,7 +136,7 @@ class AssessmentService:
             raise DatabaseException(f"Error updating assessment response for session {session_id}: {e}")
         except NotFoundException:  # Re-raise if we want it to propagate
             raise
-        except ValueError as e:  # Catch specific domain errors
+        except ValueError:  # Catch specific domain errors
             # Log error appropriately
             raise  # Or wrap in a custom API error
 
@@ -183,7 +185,7 @@ class AssessmentService:
             raise DatabaseException(f"Error completing assessment session {session_id}: {e}")
         except NotFoundException:  # Re-raise
             raise
-        except ValueError as e:  # Re-raise specific domain error
+        except ValueError:  # Re-raise specific domain error
             # Log error appropriately
             raise
 

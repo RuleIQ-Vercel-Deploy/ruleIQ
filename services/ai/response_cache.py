@@ -8,9 +8,9 @@ Implements smart TTL management, content-type classification, and cache optimiza
 import hashlib
 import json
 import re
-from typing import Dict, Any, Optional, List, Tuple
-from datetime import datetime, timedelta
+from datetime import datetime
 from enum import Enum
+from typing import Any, Dict, Optional
 
 from config.cache import get_cache_manager
 from config.logging_config import get_logger
@@ -80,7 +80,7 @@ class AIResponseCache:
     async def get_cached_response(
         self, 
         prompt: str, 
-        context: Dict[str, Any] = None,
+        context: Optional[Dict[str, Any]] = None,
         similarity_threshold: float = 0.85
     ) -> Optional[Dict[str, Any]]:
         """
@@ -115,7 +115,7 @@ class AIResponseCache:
                 )
                 if similar_response:
                     self._record_cache_hit()
-                    logger.debug(f"Similarity cache hit for prompt")
+                    logger.debug("Similarity cache hit for prompt")
                     return similar_response
             
             self._record_cache_miss()
@@ -130,8 +130,8 @@ class AIResponseCache:
         self, 
         prompt: str, 
         response: str, 
-        context: Dict[str, Any] = None,
-        metadata: Dict[str, Any] = None
+        context: Optional[Dict[str, Any]] = None,
+        metadata: Optional[Dict[str, Any]] = None
     ) -> bool:
         """
         Cache AI response with intelligent TTL based on content type.
@@ -183,7 +183,7 @@ class AIResponseCache:
             logger.warning(f"Cache storage error: {e}")
             return False
 
-    def _generate_cache_key(self, prompt: str, context: Dict[str, Any] = None) -> str:
+    def _generate_cache_key(self, prompt: str, context: Optional[Dict[str, Any]] = None) -> str:
         """Generate a unique cache key for the prompt and context."""
         # Normalize prompt (remove extra whitespace, lowercase)
         normalized_prompt = re.sub(r'\s+', ' ', prompt.strip().lower())
@@ -204,7 +204,7 @@ class AIResponseCache:
         combined_input = f"{normalized_prompt}|{context_key}"
         return f"ai_response:{hashlib.sha256(combined_input.encode()).hexdigest()[:16]}"
 
-    def _classify_content_type(self, response: str, context: Dict[str, Any] = None) -> ContentType:
+    def _classify_content_type(self, response: str, context: Optional[Dict[str, Any]] = None) -> ContentType:
         """Classify the content type of the AI response for optimal caching."""
         response_lower = response.lower()
         
@@ -233,7 +233,7 @@ class AIResponseCache:
         self, 
         content_type: ContentType, 
         response: str, 
-        context: Dict[str, Any] = None
+        context: Optional[Dict[str, Any]] = None
     ) -> int:
         """Calculate intelligent TTL based on content type and characteristics."""
         base_ttl = self.ttl_config[content_type]
@@ -273,11 +273,10 @@ class AIResponseCache:
             # In production, you might use embedding-based similarity
             
             # For now, check for similar prompts based on keywords
-            prompt_keywords = set(re.findall(r'\b\w+\b', prompt.lower()))
+            set(re.findall(r'\b\w+\b', prompt.lower()))
             
             # Get recent cache keys for the same content type
-            content_type = context.get('content_type', 'general')
-            pattern = f"ai_response:*"
+            context.get('content_type', 'general')
             
             # This would need to be implemented with Redis SCAN in production
             # For now, return None to indicate no similar responses found
@@ -287,7 +286,7 @@ class AIResponseCache:
             logger.warning(f"Similarity search error: {e}")
             return None
 
-    def _summarize_context(self, context: Dict[str, Any] = None) -> Dict[str, Any]:
+    def _summarize_context(self, context: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
         """Create a summary of context for cache metadata."""
         if not context:
             return {}

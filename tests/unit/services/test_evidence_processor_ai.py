@@ -4,15 +4,14 @@ Unit Tests for AI-Enhanced Evidence Processor
 Tests the AI classification functionality added to the evidence processor.
 """
 
-import pytest
 import json
-from unittest.mock import Mock, patch, AsyncMock
+from unittest.mock import AsyncMock, Mock, patch
 from uuid import uuid4
-from datetime import datetime
 
-from services.automation.evidence_processor import EvidenceProcessor
+import pytest
+
 from database.evidence_item import EvidenceItem
-from core.exceptions import BusinessLogicException
+from services.automation.evidence_processor import EvidenceProcessor
 
 
 @pytest.mark.unit
@@ -95,8 +94,8 @@ REASONING: Contains training completion certificates and attendance records"""
 
         result = mock_processor._parse_classification_response(response_text, mock_evidence_item)
 
-        # Should fall back to existing evidence type
-        assert result['suggested_type'] == mock_evidence_item.evidence_type
+        # Should fall back to rule-based classification (detects "policy" in description)
+        assert result['suggested_type'] == 'policy_document'  # Rule-based classification result
         assert result['confidence'] == 40  # Fallback confidence
         assert 'Rule-based classification' in result['reasoning']
 
@@ -176,7 +175,8 @@ REASONING: Contains training completion certificates and attendance records"""
         assert 'ai_classification' in result.metadata
         assert result.metadata['ai_classification']['confidence'] == 45
 
-    def test_process_evidence_with_ai_preparation(self, mock_processor, mock_evidence_item):
+    @patch('services.automation.evidence_processor.flag_modified')
+    def test_process_evidence_with_ai_preparation(self, mock_flag_modified, mock_processor, mock_evidence_item):
         """Test that AI processing preparation is added to metadata."""
         # Mock the original process_evidence method
         mock_processor.process_evidence = Mock()
@@ -185,9 +185,12 @@ REASONING: Contains training completion certificates and attendance records"""
 
         # Should call original processing
         mock_processor.process_evidence.assert_called_once_with(mock_evidence_item)
-        
+
         # Should add AI classification pending flag
         assert mock_evidence_item.metadata['ai_classification_pending'] is True
+
+        # Should call flag_modified to mark metadata as changed
+        mock_flag_modified.assert_called_once_with(mock_evidence_item, "metadata")
 
     @pytest.mark.asyncio
     async def test_generate_ai_response_success(self, mock_processor):

@@ -2,11 +2,13 @@
 Pydantic schemas for reporting API endpoints, with strong typing for complex inputs.
 """
 
-from pydantic import BaseModel, Field, validator
-from typing import Optional, List, Dict, Any, Union
-from uuid import UUID
-from datetime import datetime, date
+from datetime import date, datetime
 from enum import Enum
+from typing import Any, Dict, List, Optional, Union
+from uuid import UUID
+
+from pydantic import BaseModel, Field, validator
+
 
 class ReportFormat(str, Enum):
     PDF = "pdf"
@@ -41,7 +43,7 @@ class ReportParameters(BaseModel):
     extra_params: Optional[Dict[str, Any]] = Field(default_factory=dict, description="Additional key-value parameters for custom reports.")
 
     @validator('end_date', always=True)
-    def validate_date_range(cls, v, values):
+    def validate_date_range(self, v, values):
         if 'start_date' in values and v and values['start_date'] and v < values['start_date']:
             raise ValueError('End date cannot be before start date.')
         return v
@@ -54,7 +56,7 @@ class ScheduleConfig(BaseModel):
     cron_expression: Optional[str] = Field(None, description="A cron expression for custom scheduling.")
 
     @validator('cron_expression', always=True)
-    def validate_cron(cls, v, values):
+    def validate_cron(self, v, values):
         if v and values.get('frequency') != ReportFrequency.CUSTOM:
             raise ValueError('cron_expression can only be set for custom frequency.')
         # A basic cron validation could be added here
@@ -87,7 +89,7 @@ class CreateScheduleRequest(BaseModel):
     schedule_config: ScheduleConfig = Field(default_factory=ScheduleConfig)
 
     @validator('recipients')
-    def validate_recipients(cls, v):
+    def validate_recipients(self, v):
         import re
         email_pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
         for email in v:
@@ -121,7 +123,7 @@ class UpdateScheduleRequest(BaseModel):
     schedule_config: Optional[ScheduleConfig] = None
 
     @validator('recipients')
-    def validate_recipients(cls, v):
+    def validate_recipients(self, v):
         if v is not None:
             import re
             email_pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'

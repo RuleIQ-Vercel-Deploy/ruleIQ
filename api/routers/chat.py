@@ -2,29 +2,35 @@
 FastAPI router for chat functionality with the AI assistant.
 """
 
-from fastapi import APIRouter, Depends, HTTPException, Query, WebSocket, WebSocketDisconnect
+import asyncio
+import logging
+from datetime import datetime
+from typing import List, Optional
+from uuid import UUID
+
+from fastapi import APIRouter, Depends, HTTPException, Query
+from sqlalchemy import desc, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import Session
-from sqlalchemy import desc, func, select
-from typing import List, Optional
-from uuid import UUID, uuid4
-import json
-import logging
-import asyncio
-from datetime import datetime
 
-from database.db_setup import get_db, get_async_db
-from database.user import User
+from api.dependencies.auth import get_current_active_user, get_current_user
+from api.schemas.chat import (
+    ComplianceAnalysisRequest,
+    ComplianceAnalysisResponse,
+    ConversationListResponse,
+    ConversationResponse,
+    ConversationSummary,
+    CreateConversationRequest,
+    EvidenceRecommendationRequest,
+    EvidenceRecommendationResponse,
+    MessageResponse,
+    SendMessageRequest,
+)
 from database.business_profile import BusinessProfile
 from database.chat_conversation import ChatConversation, ConversationStatus
 from database.chat_message import ChatMessage
-from api.dependencies.auth import get_current_user, get_current_active_user
-from api.schemas.chat import (
-    SendMessageRequest, MessageResponse, ConversationResponse,
-    CreateConversationRequest, ConversationListResponse, ConversationSummary,
-    EvidenceRecommendationRequest, EvidenceRecommendationResponse,
-    ComplianceAnalysisRequest, ComplianceAnalysisResponse
-)
+from database.db_setup import get_async_db, get_db
+from database.user import User
 from services.ai import ComplianceAssistant
 
 # Set up logging
@@ -40,7 +46,7 @@ async def create_conversation(
 ):
     """Create a new chat conversation."""
     try:
-        from sqlalchemy import select, func
+        from sqlalchemy import func, select
 
         # Get the user's business profile
         stmt = select(BusinessProfile).where(BusinessProfile.user_id == str(current_user.id))
@@ -218,7 +224,7 @@ async def send_message(
 ):
     """Send a message in a conversation."""
     try:
-        from sqlalchemy import select, desc
+        from sqlalchemy import desc, select
 
         # Verify conversation exists and belongs to user
         conv_stmt = select(ChatConversation).where(
@@ -387,7 +393,7 @@ async def analyze_compliance_gap(
 
 @router.post("/context-aware-recommendations")
 async def get_context_aware_recommendations(
-    framework: str = Query(..., description="Framework to get recommendations for"),
+    framework: str = Query(..., min_length=1, description="Framework to get recommendations for"),
     context_type: str = Query(default="comprehensive", description="Type of context analysis"),
     db: AsyncSession = Depends(get_async_db),
     current_user: User = Depends(get_current_active_user)
@@ -428,7 +434,7 @@ async def get_context_aware_recommendations(
 
 @router.post("/evidence-collection-workflow")
 async def generate_evidence_collection_workflow(
-    framework: str = Query(..., description="Framework for workflow generation"),
+    framework: str = Query(..., min_length=1, description="Framework for workflow generation"),
     control_id: Optional[str] = Query(None, description="Specific control ID (optional)"),
     workflow_type: str = Query(default="comprehensive", description="Type of workflow"),
     db: AsyncSession = Depends(get_async_db),
@@ -1023,7 +1029,10 @@ async def update_evidence_task_status(
     Update the status of an evidence collection task.
     """
     try:
-        from services.ai.smart_evidence_collector import get_smart_evidence_collector, CollectionStatus
+        from services.ai.smart_evidence_collector import (
+            CollectionStatus,
+            get_smart_evidence_collector,
+        )
 
         # Validate status
         try:
@@ -1100,7 +1109,7 @@ async def submit_quality_feedback(
     - improvement_suggestion: Specific improvement suggestions
     """
     try:
-        from services.ai.quality_monitor import get_quality_monitor, ResponseFeedback, FeedbackType
+        from services.ai.quality_monitor import FeedbackType, ResponseFeedback, get_quality_monitor
 
         # Validate feedback type
         try:

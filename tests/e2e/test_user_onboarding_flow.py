@@ -5,9 +5,9 @@ Tests the complete user onboarding process from registration
 through framework recommendation and initial compliance setup.
 """
 
-import pytest
-import time
 from uuid import uuid4
+
+import pytest
 
 from tests.conftest import assert_api_response_security
 
@@ -120,7 +120,7 @@ class TestUserOnboardingFlow:
         # Step 6: Verify Dashboard Shows Basic Setup
         dashboard_response = client.get("/api/users/dashboard", headers=auth_headers)
         if dashboard_response.status_code == 200:
-            dashboard_data = dashboard_response.json()
+            dashboard_response.json()
             # Basic verification that dashboard is accessible
             # The exact structure may vary based on implementation
         
@@ -393,7 +393,7 @@ class TestOnboardingIntegration:
         # Check that background tasks were scheduled (if endpoint exists)
         tasks_response = client.get("/api/tasks/status", headers=auth_headers)
         if tasks_response.status_code == 200:
-            tasks_data = tasks_response.json()
+            tasks_response.json()
             # Basic verification - exact structure may vary
         elif tasks_response.status_code == 404:
             # Tasks endpoint may not be implemented yet - test passes
@@ -403,7 +403,7 @@ class TestOnboardingIntegration:
         """Test that onboarding creates proper audit trail"""
         
         # Complete onboarding
-        register_response = client.post("/api/auth/register", json=sample_user_data)
+        client.post("/api/auth/register", json=sample_user_data)
         login_response = client.post("/api/auth/login", json={
             "email": sample_user_data["email"],
             "password": sample_user_data["password"]
@@ -424,7 +424,7 @@ class TestOnboardingIntegration:
             "operates_critic": sample_business_profile.operates_critic,
             "has_internation": sample_business_profile.has_internation
         }
-        profile_response = client.post(
+        client.post(
             "/api/business-profiles",
             json=business_profile_data,
             headers=auth_headers
@@ -486,7 +486,7 @@ class TestOnboardingIntegration:
         # Check that preferences were saved (if endpoint exists)
         preferences_response = client.get("/api/users/preferences", headers=auth_headers)
         if preferences_response.status_code == 200:
-            preferences_data = preferences_response.json()
+            preferences_response.json()
             # Basic verification - exact structure may vary
         elif preferences_response.status_code == 404:
             # Preferences endpoint may not be implemented yet - test passes

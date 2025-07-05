@@ -2,25 +2,20 @@
 Asynchronous report generation service for ComplianceGPT.
 """
 
-from typing import Dict, List, Any, Optional
 from datetime import datetime
+from typing import Any, Dict, List, Optional
 from uuid import UUID
-from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select, func, and_
-from sqlalchemy.orm import selectinload
-from sqlalchemy.exc import SQLAlchemyError
 
-from database.models import (
-    User, 
-    BusinessProfile, 
-    Evidence, 
-    ComplianceFramework, 
-    Policy,
-    ReadinessAssessment,
-    AssessmentSession
-)
-from core.exceptions import NotFoundException, DatabaseException, BusinessLogicException
+from sqlalchemy import and_, func, select
+from sqlalchemy.exc import SQLAlchemyError
+from sqlalchemy.ext.asyncio import AsyncSession
+
 from config.logging_config import get_logger
+from core.exceptions import BusinessLogicException, DatabaseException, NotFoundException
+from database.business_profile import BusinessProfile
+from database.compliance_framework import ComplianceFramework
+from database.evidence_item import EvidenceItem
+from database.generated_policy import GeneratedPolicy
 
 logger = get_logger(__name__)
 
@@ -137,11 +132,11 @@ class ReportGenerator:
             logger.error(f"Failed to get controls for framework {framework_id}: {e}", exc_info=True)
             raise DatabaseException("Failed to retrieve framework controls.") from e
 
-    async def _get_linked_evidence(self, profile_id: UUID) -> List[Evidence]:
+    async def _get_linked_evidence(self, profile_id: UUID) -> List[EvidenceItem]:
         """Helper to get all evidence linked to a business profile."""
         try:
             evidence_res = await self.db.execute(
-                select(Evidence).where(Evidence.business_profile_id == profile_id)
+                select(EvidenceItem).where(EvidenceItem.business_profile_id == profile_id)
             )
             return evidence_res.scalars().all()
         except SQLAlchemyError as e:

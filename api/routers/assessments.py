@@ -208,6 +208,7 @@ async def get_assessment_recommendations(
 ):
     """Get recommendations for an assessment session."""
     from sqlalchemy import select
+
     from database.compliance_framework import ComplianceFramework
 
     assessment_service = AssessmentService()
@@ -220,7 +221,7 @@ async def get_assessment_recommendations(
 
     # Get actual frameworks from database
     frameworks_result = await db.execute(
-        select(ComplianceFramework).where(ComplianceFramework.is_active == True)
+        select(ComplianceFramework).where(ComplianceFramework.is_active)
     )
     frameworks = frameworks_result.scalars().all()
 
@@ -239,7 +240,7 @@ async def get_assessment_recommendations(
                         "description": framework.description
                     },
                     "priority": priority,
-                    "description": f"Recommended based on your business profile"
+                    "description": "Recommended based on your business profile"
                 })
 
     return {"recommendations": recommendations}

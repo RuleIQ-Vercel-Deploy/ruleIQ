@@ -5,13 +5,13 @@ Tests for monitoring test execution metrics, performance tracking,
 and observability of the testing infrastructure itself.
 """
 
-import pytest
-import time
 import json
-import psutil
-from datetime import datetime, timedelta
-from typing import Dict, List, Any
+import time
 from pathlib import Path
+from typing import Any, Dict
+
+import psutil
+import pytest
 
 
 class TestMetricsCollector:
@@ -143,7 +143,7 @@ def test_session_metrics():
     
     # Print summary
     stats = metrics_collector.calculate_test_statistics()
-    print(f"\n📊 Test Session Metrics Summary:")
+    print("\n📊 Test Session Metrics Summary:")
     print(f"   Total Tests: {stats.get('total_tests', 0)}")
     print(f"   Pass Rate: {stats.get('pass_rate', 0):.1%}")
     print(f"   Avg Duration: {stats.get('avg_duration', 0):.2f}s")
@@ -191,7 +191,7 @@ def pytest_runtest_makereport(item, call):
     
     # Record error metrics
     if rep.failed:
-        test_path = str(item.fspath)
+        str(item.fspath)
         error_category = "unknown"
         
         if "assertion" in str(rep.longrepr).lower():
@@ -327,7 +327,7 @@ class TestObservability:
     
     def test_error_rate_tracking(self):
         """Test error rate tracking functionality"""
-        initial_errors = metrics_collector.metrics["error_rates"].copy()
+        metrics_collector.metrics["error_rates"].copy()
         
         # Simulate different types of errors
         # This would normally be captured by the pytest hook
@@ -475,7 +475,7 @@ class TestMetricsReporting:
             # Simulate time progression
             timestamp = base_time + (i * 60)  # 1 minute intervals
             
-            collector.record_test_execution(f"trend_test", duration, "passed", "unit")
+            collector.record_test_execution("trend_test", duration, "passed", "unit")
             # Manually set timestamp for trend analysis
             collector.metrics["test_executions"][-1]["timestamp"] = timestamp
         

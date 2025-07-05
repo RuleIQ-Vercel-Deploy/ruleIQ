@@ -5,13 +5,11 @@ Comprehensive monitoring for AI usage, performance metrics, cost tracking,
 and detailed analytics dashboard for intelligent compliance system.
 """
 
-import asyncio
-from typing import Dict, Any, List, Optional
+from collections import defaultdict, deque
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta
 from enum import Enum
-import json
-from collections import defaultdict, deque
+from typing import Any, Dict, List, Optional
 
 from config.logging_config import get_logger
 
@@ -117,9 +115,9 @@ class AIAnalyticsMonitor:
         metric_type: MetricType, 
         name: str, 
         value: float,
-        metadata: Dict[str, Any] = None,
-        user_id: str = None,
-        session_id: str = None
+        metadata: Optional[Dict[str, Any]] = None,
+        user_id: Optional[str] = None,
+        session_id: Optional[str] = None
     ):
         """Record a new metric event."""
         
@@ -179,7 +177,7 @@ class AIAnalyticsMonitor:
                 {'metric_value': event.value, 'threshold': self.alert_thresholds['cost_per_hour']}
             )
 
-    async def _create_alert(self, level: AlertLevel, title: str, description: str, metadata: Dict[str, Any] = None):
+    async def _create_alert(self, level: AlertLevel, title: str, description: str, metadata: Optional[Dict[str, Any]] = None):
         """Create a new alert."""
         
         alert = Alert(
@@ -395,7 +393,7 @@ class AIAnalyticsMonitor:
             ]
         }
 
-    async def get_alerts(self, resolved: bool = None) -> List[Dict[str, Any]]:
+    async def get_alerts(self, resolved: Optional[bool] = None) -> List[Dict[str, Any]]:
         """Get system alerts, optionally filtered by resolution status."""
         
         alerts = self.alerts

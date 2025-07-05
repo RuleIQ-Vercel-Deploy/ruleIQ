@@ -2,20 +2,25 @@
 API endpoints for managing third-party integrations (Asynchronous & Secure).
 """
 
+from datetime import datetime
+from typing import Any, Dict, List, Optional
+
 from fastapi import APIRouter, Depends, HTTPException, status
-from typing import List, Dict, Any, Optional
+from pydantic import BaseModel
+from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
-from sqlalchemy.exc import SQLAlchemyError
-from pydantic import BaseModel
-from datetime import datetime
 
-from database.db_setup import get_async_db
-from database.user import User
-from database.integration_configuration import IntegrationConfiguration
 from api.dependencies.auth import get_current_active_user
-from api.integrations.base.base_integration import BaseIntegration, IntegrationConfig, IntegrationStatus
+from api.integrations.base.base_integration import (
+    BaseIntegration,
+    IntegrationConfig,
+    IntegrationStatus,
+)
 from config.logging_config import get_logger
+from database.db_setup import get_async_db
+from database.integration_configuration import IntegrationConfiguration
+from database.user import User
 
 logger = get_logger(__name__)
 router = APIRouter()

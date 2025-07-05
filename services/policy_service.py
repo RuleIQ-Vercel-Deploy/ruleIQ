@@ -20,7 +20,9 @@ from core.exceptions import (
     IntegrationException,
     NotFoundException,
 )
-from database.models import BusinessProfile, ComplianceFramework, GeneratedPolicy
+from database.business_profile import BusinessProfile
+from database.compliance_framework import ComplianceFramework
+from database.generated_policy import GeneratedPolicy
 
 
 @api_retry

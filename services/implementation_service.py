@@ -1,13 +1,17 @@
-import json
 from datetime import datetime, timedelta
-from typing import Dict, List, Optional, Any
+from typing import Any, Dict, List, Optional
 from uuid import UUID
 
-from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm.attributes import flag_modified
 
-from database.models import BusinessProfile, ComplianceFramework, GeneratedPolicy, ImplementationPlan, User
+from database.business_profile import BusinessProfile
+from database.compliance_framework import ComplianceFramework
+from database.generated_policy import GeneratedPolicy
+from database.implementation_plan import ImplementationPlan
+from database.user import User
+
 # Assuming the AI function is awaitable or wrapped to be non-blocking
 from services.ai.plan_generator import generate_plan_with_ai
 
@@ -37,13 +41,12 @@ async def generate_implementation_plan(
         raise ValueError("Compliance framework not found")
 
     # Get policy if provided
-    policy = None
     if policy_id:
         policy_stmt = select(GeneratedPolicy).where(
             GeneratedPolicy.id == policy_id, GeneratedPolicy.user_id == user.id
         )
         policy_result = await db.execute(policy_stmt)
-        policy = policy_result.scalars().first()
+        policy_result.scalars().first()
 
     # Generate implementation plan using AI
     plan_data = await generate_plan_with_ai(

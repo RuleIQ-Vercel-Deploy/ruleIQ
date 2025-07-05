@@ -6,7 +6,9 @@ and initializes services like the Fernet cipher for encryption.
 """
 
 import os
+
 from cryptography.fernet import Fernet
+
 from config.logging_config import get_logger
 
 logger = get_logger(__name__)

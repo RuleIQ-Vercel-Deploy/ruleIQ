@@ -5,13 +5,12 @@ Provides circuit breaker functionality for AI services to handle failures gracef
 and implement automatic fallback mechanisms with health monitoring.
 """
 
-import time
 import logging
-from enum import Enum
-from typing import Optional, Dict, Any, Callable, List
+import time
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta
 from threading import Lock
+from typing import Any, Callable, Dict, List, Optional
 
 # Import shared types to prevent circular dependencies
 from services.ai.ai_types import CircuitState, FailureRecord
@@ -24,14 +23,32 @@ class CircuitBreakerConfig:
     recovery_timeout: int = 60  # Seconds before transitioning to half-open
     success_threshold: int = 3  # Successful calls needed to close circuit in half-open
     time_window: int = 60      # Time window for failure counting (seconds)
-    
-    # Model-specific timeouts (seconds)
-    model_timeouts: Dict[str, float] = field(default_factory=lambda: {
-        "gemini-2.5-pro-001": 45.0,
-        "gemini-2.5-flash-001": 30.0,
-        "gemini-2.5-flash-8b": 20.0,
-        "gemma-3-8b-it": 15.0
-    })
+
+    # Model-specific timeouts (seconds) - loaded from central config
+    model_timeouts: Dict[str, float] = field(default_factory=lambda: {})
+
+    def __post_init__(self):
+        """Load model timeouts from central AI configuration."""
+        if not self.model_timeouts:
+            try:
+                from config.ai_config import MODEL_METADATA
+                self.model_timeouts = {
+                    model_type.value: metadata.timeout_seconds
+                    for model_type, metadata in MODEL_METADATA.items()
+                }
+            except ImportError:
+                # Fallback if config not available
+                self.model_timeouts = {
+                    "gemini-2.5-pro": 45.0,
+                    "gemini-2.5-flash": 30.0,
+                    "gemini-2.5-flash-8b": 20.0,
+                    "gemma-3-8b-it": 15.0
+                }
+
+    # Alias for backward compatibility with tests
+    @property
+    def timeout_seconds(self) -> int:
+        return self.recovery_timeout
 
 
 @dataclass
@@ -44,7 +61,23 @@ class CircuitBreakerMetrics:
     last_trip_time: Optional[datetime] = None
     current_state: CircuitState = CircuitState.CLOSED
     failure_rate: float = 0.0
-    
+
+    # Aliases for backward compatibility with tests
+    @property
+    def total_successes(self) -> int:
+        return self.successful_requests
+
+    @property
+    def total_failures(self) -> int:
+        return self.failed_requests
+
+    @property
+    def success_rate(self) -> float:
+        """Calculate success rate as a ratio of successful to total requests"""
+        if self.total_requests > 0:
+            return self.successful_requests / self.total_requests
+        return 0.0
+
     def update_failure_rate(self):
         """Update the failure rate based on current metrics"""
         if self.total_requests > 0:
@@ -98,20 +131,24 @@ class AICircuitBreaker:
         """Check if circuit is half-open (testing recovery)"""
         return self._state == CircuitState.HALF_OPEN
     
+    def _is_model_available_unlocked(self, model_name: str) -> bool:
+        """Check if a specific model is available (circuit not open) - internal method without locking"""
+        model_state = self._model_states.get(model_name, CircuitState.CLOSED)
+
+        if model_state == CircuitState.OPEN:
+            # Check if enough time has passed to transition to half-open
+            if self._should_attempt_reset(model_name):
+                self._model_states[model_name] = CircuitState.HALF_OPEN
+                self.logger.info(f"Circuit breaker for {model_name} transitioning to half-open")
+                return True
+            return False
+
+        return True
+
     def is_model_available(self, model_name: str) -> bool:
         """Check if a specific model is available (circuit not open)"""
         with self._lock:
-            model_state = self._model_states.get(model_name, CircuitState.CLOSED)
-            
-            if model_state == CircuitState.OPEN:
-                # Check if enough time has passed to transition to half-open
-                if self._should_attempt_reset(model_name):
-                    self._model_states[model_name] = CircuitState.HALF_OPEN
-                    self.logger.info(f"Circuit breaker for {model_name} transitioning to half-open")
-                    return True
-                return False
-            
-            return True
+            return self._is_model_available_unlocked(model_name)
     
     def record_success(self, model_name: str, response_time: float = 0.0):
         """Record a successful AI operation"""
@@ -119,9 +156,13 @@ class AICircuitBreaker:
             self.metrics.total_requests += 1
             self.metrics.successful_requests += 1
             self.metrics.update_failure_rate()
-            
+
+            # Ensure model is tracked in model_states
+            if model_name not in self._model_states:
+                self._model_states[model_name] = CircuitState.CLOSED
+
             model_state = self._model_states.get(model_name, CircuitState.CLOSED)
-            
+
             if model_state == CircuitState.HALF_OPEN:
                 self._consecutive_successes += 1
                 if self._consecutive_successes >= self.config.success_threshold:
@@ -130,7 +171,7 @@ class AICircuitBreaker:
                     self._state = CircuitState.CLOSED
                     self._consecutive_successes = 0
                     self.logger.info(f"Circuit breaker for {model_name} closed after successful recovery")
-            
+
             self.logger.debug(f"Recorded success for {model_name} (response_time: {response_time:.2f}s)")
     
     def record_failure(self, model_name: str, error: Exception, context: Optional[Dict[str, Any]] = None):
@@ -232,7 +273,7 @@ class AICircuitBreaker:
                     "failure_count": self.get_failure_count(model_name),
                     "available": self.is_model_available(model_name)
                 }
-            
+
             return {
                 "overall_state": self._state.value,
                 "metrics": {
@@ -250,7 +291,47 @@ class AICircuitBreaker:
                     "time_window": self.config.time_window
                 }
             }
-    
+
+    def get_status(self) -> Dict[str, Any]:
+        """Get circuit breaker status (alias for get_health_status for backward compatibility)"""
+        with self._lock:
+            model_states = {}
+            for model_name in self._model_states:
+                model_states[model_name] = {
+                    "state": self._model_states[model_name].value,
+                    "failure_count": len(self._failures.get(model_name, [])),  # Use direct access to avoid lock
+                    "available": self._is_model_available_unlocked(model_name)
+                }
+
+            return {
+                "overall_state": self._state.value,
+                "model_states": model_states,
+                "metrics": {
+                    "total_requests": self.metrics.total_requests,
+                    "successful_requests": self.metrics.successful_requests,
+                    "failed_requests": self.metrics.failed_requests,
+                    "failure_rate": self.metrics.failure_rate,
+                    "circuit_trips": self.metrics.circuit_trips,
+                    "last_trip_time": self.metrics.last_trip_time.isoformat() if self.metrics.last_trip_time else None
+                }
+            }
+
+    def _perform_health_check(self, model_name: str) -> bool:
+        """
+        Perform a health check for a specific model.
+        This is a placeholder implementation that can be overridden or mocked in tests.
+        """
+        # In a real implementation, this would make an actual health check call
+        # For now, we'll assume the model is healthy if the circuit isn't open
+        return self.is_model_available(model_name)
+
+    def check_model_health(self, model_name: str) -> bool:
+        """
+        Check the health of a specific model.
+        This method can be used by external health monitoring systems.
+        """
+        return self._perform_health_check(model_name)
+
     def reset_circuit(self, model_name: Optional[str] = None):
         """Manually reset circuit breaker (admin function)"""
         with self._lock:

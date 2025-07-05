@@ -2,25 +2,24 @@
 Reporting API endpoints for ComplianceGPT
 """
 
-from typing import Dict, Any, List, Optional
+import io
+import logging
+from typing import Any, Dict, List, Optional
 from uuid import UUID
-from fastapi import APIRouter, Depends, HTTPException, Response, Query, BackgroundTasks
+
+from fastapi import APIRouter, Depends, HTTPException
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel, Field
 from sqlalchemy.orm import Session
-import io
-import base64
-import logging
 
 from api.dependencies.auth import get_current_user
 from database.db_setup import get_db
-from database.models import BusinessProfile, User
-from services.reporting.report_generator import ReportGenerator
+from database.business_profile import BusinessProfile
+from database.user import User
 from services.reporting.pdf_generator import PDFGenerator
-from services.reporting.template_manager import TemplateManager
+from services.reporting.report_generator import ReportGenerator
 from services.reporting.report_scheduler import ReportScheduler
-from workers.reporting_tasks import generate_report_on_demand
-
+from services.reporting.template_manager import TemplateManager
 
 # Set up logging
 logger = logging.getLogger(__name__)
@@ -115,8 +114,8 @@ async def generate_report(
         )
         
         # Generate unique report ID
-        from datetime import datetime
         import uuid
+        from datetime import datetime
         report_id = str(uuid.uuid4())
         
         response_data = {
@@ -128,7 +127,7 @@ async def generate_report(
         if request.output_format.lower() == "pdf":
             # Generate PDF
             pdf_generator = PDFGenerator()
-            pdf_bytes = await pdf_generator.generate_pdf(report_data)
+            await pdf_generator.generate_pdf(report_data)
             
             # In a production system, you would save this to cloud storage
             # For now, we'll return a placeholder URL
@@ -146,7 +145,7 @@ async def generate_report(
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Report generation failed: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Report generation failed: {e!s}")
 
 
 @router.post("/generate/pdf")
@@ -173,7 +172,7 @@ async def generate_pdf_report(
         pdf_bytes = await pdf_generator.generate_pdf(report_data)
         
         # Create response with PDF
-        pdf_io = io.BytesIO(pdf_bytes)
+        io.BytesIO(pdf_bytes)
         
         # Set appropriate headers
         headers = {
@@ -190,7 +189,7 @@ async def generate_pdf_report(
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"PDF generation failed: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"PDF generation failed: {e!s}")
 
 
 @router.get("/preview/{report_type}")
@@ -232,7 +231,7 @@ async def customize_report_template(
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Template customization failed: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Template customization failed: {e!s}")
 
 
 def _get_supported_parameters(report_type: str) -> Dict[str, Any]:

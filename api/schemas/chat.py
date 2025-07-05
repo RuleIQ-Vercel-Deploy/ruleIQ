@@ -2,10 +2,12 @@
 Pydantic schemas for chat API endpoints.
 """
 
-from pydantic import BaseModel, Field
-from typing import List, Optional, Dict, Any
-from uuid import UUID
 from datetime import datetime
+from typing import Any, Dict, List, Optional
+from uuid import UUID
+
+from pydantic import BaseModel, Field
+
 
 class SendMessageRequest(BaseModel):
     """Request schema for sending a chat message."""
@@ -71,7 +73,7 @@ class EvidenceRecommendationResponse(BaseModel):
 
 class ComplianceAnalysisRequest(BaseModel):
     """Request schema for compliance gap analysis."""
-    framework: str = Field(..., description="Framework to analyze")
+    framework: str = Field(..., min_length=1, description="Framework to analyze")
 
 class ComplianceAnalysisResponse(BaseModel):
     """Response schema for compliance analysis."""

@@ -5,18 +5,17 @@ Tests the streaming functionality including async generators,
 model selection integration, and error handling in streaming operations.
 """
 
-import pytest
 import asyncio
-from unittest.mock import Mock, AsyncMock, patch, MagicMock
-from typing import AsyncIterator, Dict, Any
+from typing import Optional
+from unittest.mock import Mock, patch
 from uuid import uuid4
+
+import pytest
 
 from services.ai.assistant import ComplianceAssistant
 from services.ai.exceptions import (
-    ModelUnavailableException, ModelTimeoutException, 
-    CircuitBreakerException, AIServiceException
+    ModelUnavailableException,
 )
-from config.ai_config import ModelType
 
 
 class MockStreamingResponse:
@@ -45,7 +44,7 @@ class MockStreamingResponse:
 class MockChunk:
     """Mock chunk object for streaming responses."""
     
-    def __init__(self, text: str = None, candidates: list = None):
+    def __init__(self, text: Optional[str] = None, candidates: Optional[list] = None):
         self.text = text
         self.candidates = candidates or []
 
@@ -71,29 +70,26 @@ class MockPart:
         self.text = text
 
 
-class TestAIStreaming:
-    """Test suite for AI streaming functionality."""
+@pytest.fixture
+async def compliance_assistant():
+    """Compliance assistant instance for testing."""
+    from sqlalchemy.ext.asyncio import AsyncSession
+    mock_db = Mock(spec=AsyncSession)
+    assistant = ComplianceAssistant(mock_db)
+    return assistant
 
-    @pytest.fixture
-    async def compliance_assistant(self):
-        """Compliance assistant instance for testing."""
-        from sqlalchemy.ext.asyncio import AsyncSession
-        mock_db = Mock(spec=AsyncSession)
-        assistant = ComplianceAssistant(mock_db)
-        return assistant
+@pytest.fixture
+def mock_streaming_chunks():
+    """Mock streaming chunks for testing."""
+    return [
+        MockChunk(text="This is "),
+        MockChunk(text="a streaming "),
+        MockChunk(text="response "),
+        MockChunk(text="for testing.")
+    ]
 
-    @pytest.fixture
-    def mock_streaming_chunks(self):
-        """Mock streaming chunks for testing."""
-        return [
-            MockChunk(text="This is "),
-            MockChunk(text="a streaming "),
-            MockChunk(text="response "),
-            MockChunk(text="for testing.")
-        ]
-
-    @pytest.fixture
-    def mock_complex_chunks(self):
+@pytest.fixture
+def mock_complex_chunks():
         """Mock complex streaming chunks with candidates structure."""
         return [
             MockChunk(candidates=[
@@ -108,6 +104,10 @@ class TestAIStreaming:
             ]),
             MockChunk(text="response.")
         ]
+
+
+class TestAIStreaming:
+    """Test suite for AI streaming functionality."""
 
     @pytest.mark.asyncio
     async def test_stream_response_basic(self, compliance_assistant, mock_streaming_chunks):
@@ -401,7 +401,7 @@ class TestStreamingPerformance:
 
             with patch.object(compliance_assistant.circuit_breaker, 'is_model_available', return_value=True):
                 chunk_count = 0
-                async for chunk in compliance_assistant._stream_response(
+                async for _chunk in compliance_assistant._stream_response(
                     "System prompt", "User prompt", "test"
                 ):
                     chunk_count += 1

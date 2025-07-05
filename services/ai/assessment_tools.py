@@ -5,14 +5,13 @@ Implements specialized tools for compliance assessment analysis including
 gap analysis, recommendation generation, evidence mapping, and compliance scoring.
 """
 
-import json
-import asyncio
-from typing import Dict, Any, List, Optional
-from datetime import datetime
 from dataclasses import dataclass
+from datetime import datetime
+from typing import Any, Dict, List, Optional
+
+from config.logging_config import get_logger
 
 from .tools import BaseTool, ToolResult, ToolType, register_tool
-from config.logging_config import get_logger
 
 logger = get_logger(__name__)
 
@@ -193,7 +192,7 @@ class GapAnalysisTool(BaseTool):
             logger.error(f"Gap analysis failed: {e}")
             return ToolResult(
                 success=False,
-                error=f"Gap analysis execution failed: {str(e)}"
+                error=f"Gap analysis execution failed: {e!s}"
             )
     
     def _calculate_priority(self, severity: str, index: int) -> int:
@@ -394,7 +393,7 @@ class RecommendationGenerationTool(BaseTool):
             logger.error(f"Recommendation generation failed: {e}")
             return ToolResult(
                 success=False,
-                error=f"Recommendation generation execution failed: {str(e)}"
+                error=f"Recommendation generation execution failed: {e!s}"
             )
     
     def _analyze_priority_breakdown(self, recommendations: List[Dict[str, Any]]) -> Dict[str, int]:

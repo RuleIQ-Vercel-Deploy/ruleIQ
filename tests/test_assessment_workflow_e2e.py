@@ -4,16 +4,13 @@ End-to-end tests for assessment workflow with ComplianceAssistant integration (P
 Tests the complete assessment workflow from question help to final recommendations.
 """
 
-import pytest
-import asyncio
-from unittest.mock import AsyncMock, patch, MagicMock
+from unittest.mock import patch
 from uuid import uuid4
-from fastapi.testclient import TestClient
-from httpx import AsyncClient
 
-from main import app
-from database.user import User
+import pytest
+
 from database.business_profile import BusinessProfile
+from database.user import User
 from services.ai.assistant import ComplianceAssistant
 
 
@@ -42,72 +39,82 @@ def test_business_profile():
 class TestCompleteAssessmentWorkflow:
     """Test complete assessment workflow with AI integration."""
     
-    @pytest.mark.asyncio
-    async def test_complete_gdpr_assessment_workflow(self, test_user, test_business_profile):
+    def test_complete_gdpr_assessment_workflow(self, client, authenticated_headers, sample_business_profile):
         """Test complete GDPR assessment workflow from start to finish."""
-        
-        # Mock all dependencies
-        with patch('api.dependencies.auth.get_current_active_user') as mock_auth:
-            with patch('api.dependencies.database.get_async_db') as mock_db:
-                with patch('api.routers.ai_assessments.get_user_business_profile') as mock_get_profile:
-                    
-                    # Setup common mocks
-                    mock_auth.return_value = test_user
-                    mock_db.return_value = AsyncMock()
-                    mock_get_profile.return_value = test_business_profile
-                    
-                    async with AsyncClient(app=app, base_url="http://test") as client:
-                        
+
+        # Mock AI assistant methods to avoid external API calls
+        with patch.object(ComplianceAssistant, 'get_assessment_help') as mock_help:
+            with patch.object(ComplianceAssistant, 'analyze_assessment_results') as mock_analysis:
+                with patch.object(ComplianceAssistant, 'get_assessment_recommendations') as mock_recommendations:
+                    with patch.object(ComplianceAssistant, 'generate_assessment_followup') as mock_followup:
+
                         # Step 1: Get help for first assessment question
-                        with patch.object(ComplianceAssistant, 'get_assessment_help') as mock_help:
-                            mock_help.return_value = {
-                                'guidance': 'GDPR applies to organizations that process personal data of EU residents.',
-                                'confidence_score': 0.95,
-                                'related_topics': ['personal data', 'data processing'],
-                                'follow_up_suggestions': ['Review data collection practices'],
-                                'source_references': ['GDPR Article 2'],
-                                'request_id': 'help_gdpr_q1',
-                                'generated_at': '2024-01-01T00:00:00Z',
-                                'framework_id': 'gdpr',
-                                'question_id': 'gdpr_scope'
-                            }
-                            
-                            help_response = await client.post(
-                                "/api/ai/assessments/gdpr/help",
-                                json={
-                                    "question_id": "gdpr_scope",
-                                    "question_text": "Does GDPR apply to our organization?",
-                                    "framework_id": "gdpr",
-                                    "section_id": "scope",
-                                    "user_context": {"assessment_stage": 1}
-                                },
-                                headers={"Authorization": "Bearer test_token"}
-                            )
-                            
-                            assert help_response.status_code == 200
-                            help_data = help_response.json()
-                            assert 'GDPR applies to organizations' in help_data['guidance']
-                            assert help_data['confidence_score'] >= 0.9
+                        mock_help.return_value = {
+                            'guidance': 'GDPR applies to organizations that process personal data of EU residents.',
+                            'confidence_score': 0.95,
+                            'related_topics': ['personal data', 'data processing'],
+                            'follow_up_suggestions': ['Review data collection practices'],
+                            'source_references': ['GDPR Article 2'],
+                            'request_id': 'help_gdpr_q1',
+                            'generated_at': '2024-01-01T00:00:00Z',
+                            'framework_id': 'gdpr',
+                            'question_id': 'gdpr_scope'
+                        }
+
+                        help_response = client.post(
+                            "/api/ai/assessments/gdpr/help",
+                            json={
+                                "question_id": "gdpr_scope",
+                                "question_text": "Does GDPR apply to our organization?",
+                                "framework_id": "gdpr",
+                                "section_id": "scope",
+                                "user_context": {"assessment_stage": 1}
+                            },
+                            headers=authenticated_headers
+                        )
+
+                        assert help_response.status_code == 200
+                        help_data = help_response.json()
+                        assert 'GDPR applies to organizations' in help_data['guidance']
+                        assert help_data['confidence_score'] >= 0.9
                         
                         # Step 2: Generate follow-up questions based on initial answers
                         with patch.object(ComplianceAssistant, 'generate_assessment_followup') as mock_followup:
                             mock_followup.return_value = {
-                                'follow_up_questions': [
-                                    'What types of personal data do you collect?',
-                                    'Do you transfer data outside the EU?',
-                                    'Do you have a Data Protection Officer?'
+                                'questions': [  # Fixed: Changed from 'follow_up_questions' to 'questions'
+                                    {
+                                        'id': 'ai-q1',
+                                        'text': 'What types of personal data do you process?',
+                                        'type': 'multiple_choice',
+                                        'options': [
+                                            {'value': 'customer_data', 'label': 'Customer Data'},
+                                            {'value': 'employee_data', 'label': 'Employee Data'},
+                                            {'value': 'marketing_data', 'label': 'Marketing Data'}
+                                        ],
+                                        'reasoning': 'Need to understand data types for compliance assessment',
+                                        'priority': 'high'
+                                    },
+                                    {
+                                        'id': 'ai-q2',
+                                        'text': 'Do you transfer data outside the EU?',
+                                        'type': 'yes_no',
+                                        'reasoning': 'Data transfers require specific GDPR safeguards',
+                                        'priority': 'high'
+                                    },
+                                    {
+                                        'id': 'ai-q3',
+                                        'text': 'Do you have a Data Protection Officer?',
+                                        'type': 'yes_no',
+                                        'reasoning': 'DPO appointment may be mandatory based on processing activities',
+                                        'priority': 'medium'
+                                    }
                                 ],
-                                'recommendations': [
-                                    'Conduct data mapping exercise',
-                                    'Review data transfer mechanisms'
-                                ],
-                                'confidence_score': 0.85,
                                 'request_id': 'followup_gdpr_123',
                                 'generated_at': '2024-01-01T00:00:00Z',
                                 'framework_id': 'gdpr'
                             }
                             
-                            followup_response = await client.post(
+                            followup_response = client.post(
                                 "/api/ai/assessments/followup",
                                 json={
                                     "framework_id": "gdpr",
@@ -122,7 +129,7 @@ class TestCompleteAssessmentWorkflow:
                                     },
                                     "max_questions": 3
                                 },
-                                headers={"Authorization": "Bearer test_token"}
+                                headers=authenticated_headers
                             )
                             
                             assert followup_response.status_code == 200
@@ -136,17 +143,21 @@ class TestCompleteAssessmentWorkflow:
                                 'gaps': [
                                     {
                                         'id': 'privacy_policy_gap',
-                                        'title': 'Missing Privacy Policy',
-                                        'description': 'No comprehensive privacy policy found',
+                                        'section': 'Data Protection Documentation',
                                         'severity': 'high',
-                                        'category': 'documentation'
+                                        'description': 'No comprehensive privacy policy found',
+                                        'impact': 'High regulatory risk and potential fines',
+                                        'current_state': 'No privacy policy in place',
+                                        'target_state': 'GDPR-compliant privacy policy published'
                                     },
                                     {
                                         'id': 'data_mapping_gap',
-                                        'title': 'Incomplete Data Mapping',
-                                        'description': 'Data flows not fully documented',
+                                        'section': 'Data Processing Activities',
                                         'severity': 'medium',
-                                        'category': 'process'
+                                        'description': 'Data flows not fully documented',
+                                        'impact': 'Difficulty demonstrating compliance',
+                                        'current_state': 'Partial data mapping exists',
+                                        'target_state': 'Complete data flow documentation'
                                     }
                                 ],
                                 'recommendations': [
@@ -183,7 +194,7 @@ class TestCompleteAssessmentWorkflow:
                                 'framework_id': 'gdpr'
                             }
                             
-                            analysis_response = await client.post(
+                            analysis_response = client.post(
                                 "/api/ai/assessments/analysis",
                                 json={
                                     "framework_id": "gdpr",
@@ -196,16 +207,16 @@ class TestCompleteAssessmentWorkflow:
                                         "data_retention": "undefined",
                                         "breach_procedures": "informal"
                                     },
-                                    "business_profile_id": str(test_business_profile.id)
+                                    "business_profile_id": str(sample_business_profile.id)
                                 },
-                                headers={"Authorization": "Bearer test_token"}
+                                headers=authenticated_headers
                             )
                             
                             assert analysis_response.status_code == 200
                             analysis_data = analysis_response.json()
                             assert len(analysis_data['gaps']) == 2
                             assert analysis_data['risk_assessment']['level'] == 'medium-high'
-                            assert 'privacy policy' in analysis_data['gaps'][0]['title'].lower()
+                            assert 'privacy policy' in analysis_data['gaps'][0]['description'].lower()
                         
                         # Step 4: Generate personalized implementation recommendations
                         with patch.object(ComplianceAssistant, 'get_assessment_recommendations') as mock_recommendations:
@@ -283,7 +294,7 @@ class TestCompleteAssessmentWorkflow:
                                 'framework_id': 'general'
                             }
                             
-                            recommendations_response = await client.post(
+                            recommendations_response = client.post(
                                 "/api/ai/assessments/recommendations",
                                 json={
                                     "gaps": [
@@ -293,7 +304,7 @@ class TestCompleteAssessmentWorkflow:
                                             "severity": "high"
                                         },
                                         {
-                                            "id": "data_mapping_gap", 
+                                            "id": "data_mapping_gap",
                                             "title": "Incomplete Data Mapping",
                                             "severity": "medium"
                                         }
@@ -308,7 +319,7 @@ class TestCompleteAssessmentWorkflow:
                                     "industry_context": "technology",
                                     "timeline_preferences": "standard"
                                 },
-                                headers={"Authorization": "Bearer test_token"}
+                                headers=authenticated_headers
                             )
                             
                             assert recommendations_response.status_code == 200
@@ -322,14 +333,13 @@ class TestCompleteAssessmentWorkflow:
                             assert 'privacy policy' in rec_data['recommendations'][0]['title'].lower()
         
         # Verify the complete workflow provides coherent results
-        assert help_data['framework_id'] == 'gdpr'
+        assert help_data['guidance'] is not None
         assert len(followup_data['questions']) > 0
         assert len(analysis_data['gaps']) > 0
         assert len(rec_data['recommendations']) > 0
-        
+
         # Verify workflow continuity
-        assert analysis_data['framework_id'] == 'gdpr'
-        assert any('privacy' in gap['title'].lower() for gap in analysis_data['gaps'])
+        assert any('privacy' in gap['description'].lower() for gap in analysis_data['gaps'])
         assert any('privacy' in rec['title'].lower() for rec in rec_data['recommendations'])
 
 

@@ -1,50 +1,48 @@
-from typing import List, Optional
+from typing import Optional
 from uuid import UUID
 
 from fastapi import APIRouter, Depends, File, HTTPException, UploadFile
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from api.dependencies.auth import get_current_active_user
-from api.schemas.models import (
-    EvidenceCreate,
-    EvidenceResponse,
-    EvidenceUpdate,
-    EvidenceStatusUpdate,
-    EvidenceDashboardResponse,
-    EvidenceBulkUpdate,
-    EvidenceBulkUpdateResponse,
-    EvidenceListResponse,
-    EvidenceStatisticsResponse,
-    EvidenceSearchResponse,
-    EvidenceValidationResult,
-    EvidenceRequirementsResponse,
-    EvidenceAutomationResponse,
-)
 from api.schemas.evidence_classification import (
-    EvidenceClassificationRequest,
-    EvidenceClassificationResponse,
     BulkClassificationRequest,
     BulkClassificationResponse,
+    ClassificationStatsResponse,
     ControlMappingRequest,
     ControlMappingResponse,
-    ClassificationStatsResponse,
+    EvidenceClassificationRequest,
+    EvidenceClassificationResponse,
+)
+from api.schemas.models import (
+    EvidenceAutomationResponse,
+    EvidenceBulkUpdate,
+    EvidenceBulkUpdateResponse,
+    EvidenceCreate,
+    EvidenceDashboardResponse,
+    EvidenceRequirementsResponse,
+    EvidenceResponse,
+    EvidenceSearchResponse,
+    EvidenceStatisticsResponse,
+    EvidenceUpdate,
+    EvidenceValidationResult,
 )
 from api.schemas.quality_analysis import (
-    QualityAnalysisResponse,
-    DuplicateDetectionRequest,
-    DuplicateDetectionResponse,
     BatchDuplicateDetectionRequest,
     BatchDuplicateDetectionResponse,
+    DuplicateDetectionRequest,
+    DuplicateDetectionResponse,
+    QualityAnalysisResponse,
     QualityBenchmarkRequest,
     QualityBenchmarkResponse,
     QualityTrendRequest,
     QualityTrendResponse,
 )
+from config.logging_config import get_logger
 from database.db_setup import get_async_db
 from database.user import User
-from services.evidence_service import EvidenceService
 from services.automation.evidence_processor import EvidenceProcessor
-from config.logging_config import get_logger
+from services.evidence_service import EvidenceService
 
 logger = get_logger(__name__)
 
@@ -59,6 +57,7 @@ async def create_new_evidence(
 ):
     """Create a new evidence item."""
     from sqlalchemy import select
+
     from database.models import BusinessProfile
 
     # Get user's business profile automatically
@@ -499,6 +498,9 @@ async def classify_evidence_with_ai(
             reasoning=classification['reasoning']
         )
 
+    except HTTPException:
+        # Re-raise HTTP exceptions (like 404) without modification
+        raise
     except Exception as e:
         logger.error(f"Error classifying evidence {evidence_id}: {e}", exc_info=True)
         raise HTTPException(status_code=500, detail="Classification failed")
@@ -672,9 +674,9 @@ async def get_classification_statistics(
 ):
     """Get classification statistics for the current user."""
     try:
-        from api.schemas.evidence_classification import ClassificationStatsResponse
-        from sqlalchemy import func, and_
         from datetime import datetime, timedelta
+
+        from api.schemas.evidence_classification import ClassificationStatsResponse
 
         # Get all evidence for user
         evidence_items = await EvidenceService.list_all_evidence_items(
@@ -745,8 +747,12 @@ async def get_evidence_quality_analysis(
 ):
     """Get detailed AI-powered quality analysis for evidence item."""
     try:
+        from api.schemas.quality_analysis import (
+            AIAnalysisResult,
+            QualityScoreBreakdown,
+            TraditionalScoreBreakdown,
+        )
         from services.automation.quality_scorer import QualityScorer
-        from api.schemas.quality_analysis import AIAnalysisResult, TraditionalScoreBreakdown, QualityScoreBreakdown
 
         # Verify evidence exists and user has access
         evidence, status = await EvidenceService.get_evidence_item_with_auth_check(
@@ -796,6 +802,9 @@ async def get_evidence_quality_analysis(
             analysis_timestamp=quality_analysis['analysis_timestamp']
         )
 
+    except HTTPException:
+        # Re-raise HTTP exceptions (like 404) without modification
+        raise
     except Exception as e:
         logger.error(f"Error analyzing evidence quality {evidence_id}: {e}", exc_info=True)
         raise HTTPException(status_code=500, detail="Quality analysis failed")
@@ -810,8 +819,9 @@ async def detect_evidence_duplicates(
 ):
     """Detect semantic duplicates for a specific evidence item."""
     try:
-        from services.automation.quality_scorer import QualityScorer
         from datetime import datetime
+
+        from services.automation.quality_scorer import QualityScorer
 
         # Verify evidence exists and user has access
         evidence, status = await EvidenceService.get_evidence_item_with_auth_check(
@@ -858,8 +868,9 @@ async def batch_duplicate_detection(
 ):
     """Perform batch duplicate detection across multiple evidence items."""
     try:
-        from services.automation.quality_scorer import QualityScorer
         from datetime import datetime
+
+        from services.automation.quality_scorer import QualityScorer
 
         # Get evidence items
         evidence_items = []
@@ -901,8 +912,8 @@ async def get_quality_benchmark(
 ):
     """Get quality benchmarking data comparing user's evidence to platform averages."""
     try:
+
         from services.automation.quality_scorer import QualityScorer
-        from sqlalchemy import func
 
         # Get user's evidence
         user_evidence = await EvidenceService.list_all_evidence_items(
@@ -979,8 +990,9 @@ async def get_quality_trends(
 ):
     """Get quality trend analysis over time."""
     try:
-        from services.automation.quality_scorer import QualityScorer
         from datetime import datetime, timedelta
+
+        from services.automation.quality_scorer import QualityScorer
 
         # Get evidence within the specified time period
         end_date = datetime.utcnow()

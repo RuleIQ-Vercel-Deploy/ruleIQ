@@ -9,12 +9,13 @@ and load levels.
 
 import argparse
 import json
-import time
-import sys
 import os
-from pathlib import Path
-from typing import Dict, List, Any, Optional
 import subprocess
+import sys
+import time
+from pathlib import Path
+from typing import Any, Dict, List, Optional
+
 import psutil
 
 # Add project root to path
@@ -55,7 +56,7 @@ class PerformanceTestRunner:
                     self.results[suite_name] = suite_results
                     print(f"✅ {suite_name} completed successfully")
                 except Exception as e:
-                    print(f"❌ {suite_name} failed: {str(e)}")
+                    print(f"❌ {suite_name} failed: {e!s}")
                     self.results[suite_name] = {"error": str(e)}
         
         self.system_monitor.stop_monitoring()
@@ -90,7 +91,7 @@ class PerformanceTestRunner:
         # Parse benchmark results
         benchmark_file = project_root / "performance_api_results.json"
         if benchmark_file.exists():
-            with open(benchmark_file, 'r') as f:
+            with open(benchmark_file) as f:
                 benchmark_data = json.load(f)
             return self.parse_benchmark_results(benchmark_data)
         
@@ -111,7 +112,7 @@ class PerformanceTestRunner:
         # Parse results
         benchmark_file = project_root / "performance_db_results.json"
         if benchmark_file.exists():
-            with open(benchmark_file, 'r') as f:
+            with open(benchmark_file) as f:
                 benchmark_data = json.load(f)
             return self.parse_benchmark_results(benchmark_data)
         
@@ -141,7 +142,7 @@ class PerformanceTestRunner:
         ]
         
         print(f"Running Locust with {users} users, spawn rate {spawn_rate}/s for {duration}")
-        result = subprocess.run(cmd, capture_output=True, text=True, cwd=project_root)
+        subprocess.run(cmd, capture_output=True, text=True, cwd=project_root)
         
         # Parse Locust results
         return self.parse_locust_results()
@@ -468,7 +469,7 @@ def load_config(config_file: Optional[str] = None) -> Dict[str, Any]:
     }
     
     if config_file and os.path.exists(config_file):
-        with open(config_file, 'r') as f:
+        with open(config_file) as f:
             file_config = json.load(f)
         default_config.update(file_config)
     
