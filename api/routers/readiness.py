@@ -27,7 +27,7 @@ async def get_readiness_assessment(
 ):
     from sqlalchemy import select
 
-    from database.models import ComplianceFramework
+    from database.compliance_framework import ComplianceFramework
 
     # If no framework_id provided, use the first available framework
     if not framework_id:

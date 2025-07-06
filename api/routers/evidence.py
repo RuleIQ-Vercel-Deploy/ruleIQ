@@ -58,7 +58,7 @@ async def create_new_evidence(
     """Create a new evidence item."""
     from sqlalchemy import select
 
-    from database.models import BusinessProfile
+    from database.business_profile import BusinessProfile
 
     # Get user's business profile automatically
     profile_stmt = select(BusinessProfile).where(BusinessProfile.user_id == current_user.id)

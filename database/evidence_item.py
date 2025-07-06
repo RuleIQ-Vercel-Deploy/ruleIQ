@@ -2,7 +2,7 @@ import uuid
 from datetime import datetime
 
 from sqlalchemy import Boolean, Column, DateTime, Float, ForeignKey, Integer, String, Text
-from sqlalchemy.dialects.postgresql import UUID as PG_UUID
+from sqlalchemy.dialects.postgresql import JSONB as PG_JSONB, UUID as PG_UUID
 from sqlalchemy.orm import relationship
 
 from .db_setup import Base
@@ -58,6 +58,9 @@ class EvidenceItem(Base):
     # Compliance mapping
     audit_section = Column(String, default="")
     compliance_score_impact = Column(Float, default=0.0)
+
+    # AI and automation metadata
+    ai_metadata = Column(PG_JSONB, default=dict)
 
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)

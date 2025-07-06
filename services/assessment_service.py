@@ -43,7 +43,7 @@ class AssessmentService:
             # Create new session
             new_session = AssessmentSession(
                 user_id=user.id,
-                business_profile_id=business_profile_id,
+                business_profil=business_profile_id,  # Note: column name is truncated in model
                 session_type=session_type,
                 status="in_progress",  # Ensure status is set
                 total_stages=5,  # Basic info, Industry, Data handling, Tech stack, Compliance goals

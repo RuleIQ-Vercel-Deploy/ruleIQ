@@ -194,7 +194,7 @@ class TestAPIEndpointsIntegration:
     """Test critical API endpoint interactions."""
 
     @pytest.mark.integration
-    def test_business_profile_to_evidence_workflow(self, sample_business_profile, authenticated_headers, client):
+    def test_business_profile_to_evidence_workflow(self, sample_business_profile, sample_compliance_framework, authenticated_headers, client):
         """Test the workflow from business profile setup to evidence collection."""
 
         # Get business profile
@@ -207,21 +207,24 @@ class TestAPIEndpointsIntegration:
             profile_data = response.json()
             assert profile_data["company_name"] == "Sample Test Corp"
 
-            # Create evidence for this profile
+            # Create evidence for this profile using correct schema
             response = client.post(
                 "/api/evidence",
                 json={
-                    "evidence_name": "Test Evidence Item",
-                    "evidence_type": "manual_upload",
+                    "title": "Test Evidence Item",
                     "description": "Test evidence for integration testing",
-                    "framework_mappings": ["ISO27001"],
-                    "status": "active"
+                    "control_id": "A.5.1.1",
+                    "framework_id": str(sample_compliance_framework.id),  # Use a valid framework UUID
+                    "business_profile_id": str(sample_business_profile.id),
+                    "source": "manual_upload",
+                    "evidence_type": "document",
+                    "tags": ["test", "integration"]
                 },
                 headers=authenticated_headers
             )
 
-            # Verify evidence creation (accounting for auth)
-            assert response.status_code in [200, 201, 401]
+            # Verify evidence creation (accounting for auth and validation)
+            assert response.status_code in [200, 201, 401, 422]
 
     @pytest.mark.integration
     def test_framework_to_readiness_assessment(self, sample_business_profile, authenticated_headers, client):

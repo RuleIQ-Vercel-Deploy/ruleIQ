@@ -13,9 +13,11 @@ os.environ["ENV"] = "testing"
 # The db_setup.py will handle the conversion to asyncpg format properly
 os.environ["DATABASE_URL"] = "postgresql://neondb_owner:npg_s0JhnfGNy3Ze@ep-wild-grass-a8o37wq8-pooler.eastus2.azure.neon.tech/neondb?sslmode=require"
 os.environ["SECRET_KEY"] = "test_secret_key_for_pytest_sessions"
-os.environ["GOOGLE_API_KEY"] = "AIzaSyDi-R-_h_IZcjtmq0Qu37_-ZIk0Non7vEM"
+os.environ["GOOGLE_API_KEY"] = "test_key_for_mocking"  # Use fake key to prevent real API calls
 os.environ["SENTRY_DSN"] = ""
 os.environ['FERNET_KEY'] = Fernet.generate_key().decode()
+# Force AI mocking in tests
+os.environ["USE_MOCK_AI"] = "true"
 
 import asyncio
 import sys
@@ -35,11 +37,14 @@ sys.path.insert(0, str(project_root))
 
 # Assuming these are the correct paths from your project structure
 import database.db_setup as db_setup
+from database.assessment_session import AssessmentSession
 from database.business_profile import BusinessProfile
 from database.compliance_framework import ComplianceFramework
 from database.db_setup import Base, get_async_db
 from database.evidence_item import EvidenceItem
 from database.generated_policy import GeneratedPolicy
+from database.implementation_plan import ImplementationPlan
+from database.readiness_assessment import ReadinessAssessment
 
 # Import additional models from models.py (these don't conflict with individual files)
 # Import ALL database models to ensure they're registered with Base metadata
@@ -803,3 +808,34 @@ def security_test_payloads():
             "....\\\\....\\\\....\\\\windows\\\\system32\\\\drivers\\\\etc\\\\hosts"
         ]
     }
+
+
+# Global AI mocking to ensure tests don't hit real API
+@pytest.fixture(autouse=True)
+def ensure_ai_mocking():
+    """Ensure all tests use mocked AI instead of real API calls."""
+    from unittest.mock import Mock, patch
+
+    # Create a comprehensive mock for AI models
+    mock_model = Mock()
+    mock_model.model_name = "gemini-2.5-flash"
+
+    # Mock response object
+    mock_response = Mock()
+    mock_response.text = "Mock AI response for testing compliance guidance."
+    mock_response.candidates = []
+
+    # Mock the model methods
+    mock_model.generate_content.return_value = mock_response
+    mock_model.generate_content_stream.return_value = iter([
+        Mock(text="Mock "),
+        Mock(text="streaming "),
+        Mock(text="response")
+    ])
+
+    # Patch all AI model creation functions
+    with patch('config.ai_config.get_ai_model', return_value=mock_model), \
+         patch('config.ai_config.ai_config.get_model', return_value=mock_model), \
+         patch('google.generativeai.GenerativeModel', return_value=mock_model), \
+         patch('services.ai.assistant.get_ai_model', return_value=mock_model):
+        yield mock_model

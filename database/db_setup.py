@@ -58,14 +58,22 @@ def _init_sync_db():
     if _engine is None:
         _, sync_db_url, _ = _get_configured_database_urls()
 
-        # Connection pool configuration for sync engine
+        # Connection pool configuration for sync engine - optimized for performance
         engine_kwargs = {
             "echo": os.getenv("SQLALCHEMY_ECHO", "False").lower() == "true",
-            "pool_size": 20,  # Number of connections to maintain in the pool
-            "max_overflow": 30,  # Additional connections beyond pool_size
+            "pool_size": 10,  # Reduced pool size for better resource management
+            "max_overflow": 20,  # Reduced overflow for stability
             "pool_pre_ping": True,  # Validate connections before use
-            "pool_recycle": 3600,  # Recycle connections after 1 hour
-            "pool_timeout": 30,  # Timeout when getting connection from pool
+            "pool_recycle": 1800,  # Recycle connections after 30 minutes (faster than 1 hour)
+            "pool_timeout": 10,  # Reduced timeout for faster failure detection
+            # Add connection arguments for better performance
+            "connect_args": {
+                "keepalives": 1,
+                "keepalives_idle": 30,
+                "keepalives_interval": 10,
+                "keepalives_count": 5,
+                "connect_timeout": 10
+            }
         }
 
         _engine = create_engine(sync_db_url, **engine_kwargs)
@@ -77,15 +85,15 @@ def _init_async_db():
     if _async_engine is None:
         _, _, async_db_url = _get_configured_database_urls()
 
-        # Handle SSL configuration for asyncpg
+        # Handle SSL configuration for asyncpg - optimized for performance
         engine_kwargs = {
             "echo": os.getenv("SQLALCHEMY_ECHO", "False").lower() == "true",
-            # Connection pool configuration to prevent "another operation is in progress" errors
-            "pool_size": 20,  # Number of connections to maintain in the pool
-            "max_overflow": 30,  # Additional connections beyond pool_size
+            # Connection pool configuration optimized for performance and stability
+            "pool_size": 10,  # Reduced pool size for better resource management
+            "max_overflow": 15,  # Reduced overflow for stability
             "pool_pre_ping": True,  # Validate connections before use
-            "pool_recycle": 3600,  # Recycle connections after 1 hour
-            "pool_timeout": 30,  # Timeout when getting connection from pool
+            "pool_recycle": 1800,  # Recycle connections after 30 minutes
+            "pool_timeout": 10,  # Reduced timeout for faster failure detection
             # Async-specific pool settings
             "pool_reset_on_return": "commit",  # Reset connection state on return
         }
@@ -96,6 +104,11 @@ def _init_async_db():
             if "connect_args" not in engine_kwargs:
                 engine_kwargs["connect_args"] = {}
             engine_kwargs["connect_args"]["ssl"] = True
+            # Add performance optimizations for SSL connections
+            engine_kwargs["connect_args"]["server_settings"] = {
+                "jit": "off",  # Disable JIT for faster query planning
+                "application_name": "ruleIQ_backend"
+            }
 
         _async_engine = create_async_engine(async_db_url, **engine_kwargs)
         _AsyncSessionLocal = sessionmaker(

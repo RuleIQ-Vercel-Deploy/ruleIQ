@@ -57,13 +57,16 @@ from config.settings import get_settings
 
 settings = get_settings()
 
-# Use more relaxed limits for testing environment
+# Use more relaxed limits for testing environment, but still enforce some limits
 if settings.is_testing:
-    general_limiter = RateLimiter(requests_per_minute=1000)  # Very relaxed for tests
-    auth_limiter = RateLimiter(requests_per_minute=500)     # Relaxed for auth tests
+    general_limiter = RateLimiter(requests_per_minute=100)  # Relaxed but still enforced for tests
+    auth_limiter = RateLimiter(requests_per_minute=50)      # Relaxed for auth tests
 else:
     general_limiter = RateLimiter(requests_per_minute=settings.rate_limit_requests)
     auth_limiter = RateLimiter(requests_per_minute=10)  # Stricter for auth endpoints
+
+# Create a strict rate limiter for testing rate limiting functionality
+strict_test_limiter = RateLimiter(requests_per_minute=4)  # Very strict for testing
 
 async def rate_limit_middleware(request: Request, call_next):
     """General rate limiting middleware"""
@@ -124,3 +127,25 @@ def auth_rate_limit():
             )
 
     return check_limit
+
+def rate_limit(requests_per_minute: int = 60):
+    """Create a custom rate limit dependency with specified limit."""
+    custom_limiter = RateLimiter(requests_per_minute=requests_per_minute)
+
+    async def check_custom_limit(request: Request):
+        # Skip rate limiting in testing environment for most tests
+        # But still enforce for specific rate limit tests
+        if settings.is_testing and requests_per_minute > 10:
+            return
+
+        client_ip = request.client.host if request.client else "unknown"
+        allowed, retry_after = await custom_limiter.check_rate_limit(client_ip)
+
+        if not allowed:
+            raise HTTPException(
+                status_code=status.HTTP_429_TOO_MANY_REQUESTS,
+                detail=f"Rate limit exceeded: {requests_per_minute} requests per minute. Try again in {retry_after} seconds",
+                headers={"Retry-After": str(retry_after)}
+            )
+
+    return check_custom_limit

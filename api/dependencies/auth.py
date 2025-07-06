@@ -60,44 +60,51 @@ async def get_redis_client() -> Optional[redis.Redis]:
 
 async def blacklist_token(token: str) -> None:
     """Add a token to the blacklist with TTL."""
-    redis_client = await get_redis_client()
+    import time
 
+    # Always add to in-memory blacklist first for immediate effect
+    expiry_time = time.time() + (ACCESS_TOKEN_EXPIRE_MINUTES * 60)
+    _fallback_blacklist[token] = expiry_time
+
+    # Also try to add to Redis if available
+    redis_client = await get_redis_client()
     if redis_client:
         try:
             # Set TTL to match token expiration (30 minutes for access tokens)
             await redis_client.setex(f"blacklist:{token}", ACCESS_TOKEN_EXPIRE_MINUTES * 60, "1")
-            return
         except Exception:
-            # Redis failed, fall back to in-memory
+            # Redis failed, but we already have in-memory fallback
             pass
-
-    # Fallback to in-memory blacklist
-    import time
-    expiry_time = time.time() + (ACCESS_TOKEN_EXPIRE_MINUTES * 60)
-    _fallback_blacklist[token] = expiry_time
 
 async def is_token_blacklisted(token: str) -> bool:
     """Check if a token is blacklisted."""
-    redis_client = await get_redis_client()
-
-    if redis_client:
-        try:
-            result = await redis_client.get(f"blacklist:{token}")
-            return result is not None
-        except Exception:
-            # Redis failed, fall back to in-memory
-            pass
-
-    # Fallback to in-memory blacklist
     import time
     current_time = time.time()
 
-    # Clean up expired tokens
+    # First check in-memory blacklist (faster and always available)
+    # Clean up expired tokens first
     expired_tokens = [t for t, exp in _fallback_blacklist.items() if exp < current_time]
     for token_to_remove in expired_tokens:
         _fallback_blacklist.pop(token_to_remove, None)
 
-    return token in _fallback_blacklist
+    # Check if token is in in-memory blacklist
+    if token in _fallback_blacklist:
+        return True
+
+    # Also check Redis if available (for distributed systems)
+    redis_client = await get_redis_client()
+    if redis_client:
+        try:
+            result = await redis_client.get(f"blacklist:{token}")
+            if result is not None:
+                # Add to in-memory cache for faster future lookups
+                _fallback_blacklist[token] = current_time + (ACCESS_TOKEN_EXPIRE_MINUTES * 60)
+                return True
+        except Exception:
+            # Redis failed, but we already checked in-memory
+            pass
+
+    return False
 
 def validate_password(password: str) -> tuple[bool, str]:
     """Validate password strength."""

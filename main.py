@@ -11,6 +11,7 @@ from api.middleware.error_handler import error_handler_middleware
 from api.request_id_middleware import RequestIDMiddleware
 from api.routers import (
     ai_assessments,
+    ai_optimization,
     assessments,
     auth,
     business_profiles,
@@ -25,13 +26,14 @@ from api.routers import (
     policies,
     readiness,
     reporting,
+    security,
     users,
 )
 from api.schemas import APIInfoResponse, HealthCheckResponse
 from config.logging_config import get_logger, setup_logging
 from config.settings import settings
 from database.db_setup import create_db_and_tables
-from database.user import User
+from database import User  # Import all models through the database package
 
 # Setup logging
 setup_logging()
@@ -107,6 +109,7 @@ app.include_router(users.router, prefix="/api/users", tags=["Users"])
 app.include_router(business_profiles.router, prefix="/api/business-profiles", tags=["Business Profiles"])
 app.include_router(assessments.router, prefix="/api/assessments", tags=["Assessments"])
 app.include_router(ai_assessments.router, prefix="/api", tags=["AI Assessment Assistant"])
+app.include_router(ai_optimization.router, prefix="/api/ai", tags=["AI Optimization"])
 app.include_router(frameworks.router, prefix="/api/frameworks", tags=["Compliance Frameworks"])
 app.include_router(policies.router, prefix="/api/policies", tags=["Policies"])
 app.include_router(implementation.router, prefix="/api/implementation", tags=["Implementation Plans"])
@@ -117,6 +120,7 @@ app.include_router(readiness.router, prefix="/api/readiness", tags=["Readiness A
 app.include_router(reporting.router, prefix="/api/reports", tags=["Reports"])
 app.include_router(integrations.router, prefix="/api/integrations", tags=["Integrations"])
 app.include_router(monitoring.router, prefix="/api/monitoring", tags=["Monitoring"])
+app.include_router(security.router, prefix="/api/security", tags=["Security"])
 app.include_router(chat.router, prefix="/api", tags=["AI Assistant"])
 
 @app.get("/api/dashboard")

@@ -105,7 +105,20 @@ class AIPerformanceOptimizer:
         try:
             # Apply prompt optimization
             optimized_prompt = await self._optimize_prompt(prompt, context)
-            
+
+            # Log optimized prompt for debugging (remove in production)
+            logger.debug(f"Original prompt length: {len(prompt)}")
+            logger.debug(f"Optimized prompt length: {len(optimized_prompt)}")
+            logger.debug(f"Optimized prompt content: {optimized_prompt[:200]}...")  # First 200 chars
+
+            # Print to console for immediate visibility (remove in production)
+            print(f"\n=== OPTIMIZED PROMPT ===")
+            print(f"Original length: {len(prompt)}")
+            print(f"Optimized length: {len(optimized_prompt)}")
+            print(f"Compression ratio: {len(optimized_prompt) / len(prompt) if len(prompt) > 0 else 1.0:.2f}")
+            print(f"Content preview: {optimized_prompt[:300]}...")
+            print(f"========================\n")
+
             # Determine optimization strategy
             strategy = self._select_optimization_strategy(optimized_prompt, context, priority)
             

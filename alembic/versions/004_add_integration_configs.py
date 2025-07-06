@@ -18,12 +18,12 @@ depends_on = None
 
 
 def upgrade():
-    # Create enum type for integration status
+    # Create enum type for integration status (if it doesn't exist)
     integration_status_enum = postgresql.ENUM(
         'connected', 'disconnected', 'error', 'refreshing', 'rate_limited',
         name='integrationstatus'
     )
-    integration_status_enum.create(op.get_bind())
+    integration_status_enum.create(op.get_bind(), checkfirst=True)
 
     # Create integration_configs table
     op.create_table('integration_configs',

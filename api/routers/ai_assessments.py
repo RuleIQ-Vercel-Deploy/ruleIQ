@@ -811,6 +811,18 @@ async def _get_mock_guidance_response(question_text: str, framework: str) -> Dic
         "generated_at": datetime.utcnow().isoformat()
     }
 
+async def _get_mock_help_response(question_text: str, framework: str) -> Dict[str, Any]:
+    """Mock AI help response for fallback scenarios"""
+    return {
+        "guidance": f"For the question '{question_text}' in {framework}, please refer to the official documentation or consult with a compliance expert. This question requires careful consideration of your business context.",
+        "confidence_score": 0.5,
+        "related_topics": [framework, "compliance guidance"],
+        "follow_up_suggestions": ["Review framework documentation", "Consult compliance expert"],
+        "source_references": [f"{framework} official documentation"],
+        "request_id": f"mock_help_{framework}_{hash(question_text) % 10000}",
+        "generated_at": datetime.utcnow().isoformat()
+    }
+
 async def _get_mock_followup_response(framework: str, answers: Dict[str, Any]) -> Dict[str, Any]:
     """Mock follow-up questions response - replace with actual AI service call"""
     return {

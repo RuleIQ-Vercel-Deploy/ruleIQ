@@ -389,7 +389,7 @@ class TestPolicyService:
             # Mock the return value of generate_compliance_policy
             # The real function returns a GeneratedPolicy ORM object.
             # Create a mock ORM object that behaves like GeneratedPolicy
-            from database.models import GeneratedPolicy
+            from database.generated_policy import GeneratedPolicy
             mock_policy_id = uuid4()
             mock_returned_policy = Mock(spec=GeneratedPolicy)
             mock_returned_policy.id = mock_policy_id

@@ -29,7 +29,8 @@ class TestAIOptimizationEndpoints:
     @pytest.fixture
     async def async_client(self):
         """Async test client for streaming endpoints."""
-        async with AsyncClient(app=app, base_url="http://test") as ac:
+        from httpx import ASGITransport
+        async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as ac:
             yield ac
 
     @pytest.fixture

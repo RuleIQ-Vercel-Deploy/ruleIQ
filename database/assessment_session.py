@@ -4,6 +4,7 @@ from datetime import datetime
 from sqlalchemy import Column, DateTime, ForeignKey, Integer, String
 from sqlalchemy.dialects.postgresql import JSONB as PG_JSONB
 from sqlalchemy.dialects.postgresql import UUID as PG_UUID
+from sqlalchemy.orm import relationship
 
 from .db_setup import Base
 
@@ -43,3 +44,11 @@ class AssessmentSession(Base):
 
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    # Relationships
+    questions = relationship("AssessmentQuestion", back_populates="session", cascade="all, delete-orphan")
+
+    @property
+    def business_profile_id(self):
+        """Alias for business_profil to match API schema expectations."""
+        return self.business_profil

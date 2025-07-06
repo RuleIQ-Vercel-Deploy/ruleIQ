@@ -113,7 +113,7 @@ class AIConfig:
             "temperature": 0.7,
             "top_p": 0.8,
             "top_k": 40,
-            "max_output_tokens": 2048,
+            "max_output_tokens": 4096,  # Increased from 2048 for compliance analysis
         }
         # More permissive safety settings for compliance content
         # Compliance discussions may involve sensitive topics that need to be addressed
