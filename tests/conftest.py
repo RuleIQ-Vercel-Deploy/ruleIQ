@@ -3,6 +3,16 @@ Pytest configuration and shared fixtures for ComplianceGPT tests.
 """
 
 import os
+import warnings
+import logging
+
+# Suppress bcrypt version warning that clutters test output
+warnings.filterwarnings("ignore", message=".*bcrypt.*", category=UserWarning)
+warnings.filterwarnings("ignore", message=".*bcrypt.*", category=DeprecationWarning)
+warnings.filterwarnings("ignore", message=".*bcrypt.*", category=RuntimeWarning)
+
+# Also suppress at the logging level for passlib
+logging.getLogger("passlib.handlers.bcrypt").setLevel(logging.ERROR)
 
 from cryptography.fernet import Fernet
 

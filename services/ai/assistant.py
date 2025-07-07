@@ -2824,9 +2824,41 @@ class ComplianceAssistant:
 
         except asyncio.TimeoutError:
             logger.warning(f"AI help request timed out for {question_id}, using fast fallback")
+
+            # Record timeout error for monitoring
+            if self.analytics_monitor:
+                try:
+                    await self.analytics_monitor.record_metric(
+                        MetricType.ERROR, 'ai_timeout_error', 1,
+                        metadata={
+                            'error_type': 'TimeoutError',
+                            'operation': 'get_assessment_help',
+                            'question_id': question_id,
+                            'framework_id': framework_id
+                        }
+                    )
+                except Exception:
+                    pass  # Don't let analytics errors break the flow
+
             return self._get_fast_fallback_help(question_text, framework_id, question_id)
         except Exception as e:
             logger.error(f"Error generating assessment help: {e}")
+
+            # Record general error for monitoring
+            if self.analytics_monitor:
+                try:
+                    await self.analytics_monitor.record_metric(
+                        MetricType.ERROR, 'ai_service_error', 1,
+                        metadata={
+                            'error_type': type(e).__name__,
+                            'operation': 'get_assessment_help',
+                            'question_id': question_id,
+                            'framework_id': framework_id
+                        }
+                    )
+                except Exception:
+                    pass  # Don't let analytics errors break the flow
+
             return self._get_fallback_assessment_help(question_text, framework_id)
 
     async def generate_assessment_followup(
@@ -3155,6 +3187,21 @@ class ComplianceAssistant:
             # Record failure for circuit breaker
             if model:
                 self.circuit_breaker.record_failure(model_name, e)
+
+            # Record error metric for monitoring
+            if self.analytics_monitor:
+                try:
+                    await self.analytics_monitor.record_metric(
+                        MetricType.ERROR, 'ai_service_error', 1,
+                        metadata={
+                            'error_type': type(e).__name__,
+                            'model_name': model_name,
+                            'operation': 'streaming_response'
+                        }
+                    )
+                except Exception as analytics_error:
+                    logger.warning(f"Failed to record error metric: {analytics_error}")
+
             yield "I apologize, but I'm unable to provide a response at this time. Please try again later."
 
     async def analyze_assessment_results_stream(
@@ -3718,6 +3765,18 @@ class ComplianceAssistant:
         }
 
     # Method aliases for backward compatibility with tests
+    async def _generate_response(self, *args, **kwargs) -> Dict[str, Any]:
+        """
+        Internal method for generating AI responses with cancellation support.
+        Used for graceful shutdown testing and cancellation handling.
+        """
+        # This method can be mocked for testing graceful shutdown
+        # In real implementation, it delegates to the appropriate method
+        if 'question_text' in kwargs:
+            return await self.get_assessment_help(*args, **kwargs)
+        else:
+            raise ValueError("Invalid arguments for _generate_response")
+
     async def get_question_help(
         self,
         question_id: str,
@@ -3735,7 +3794,7 @@ class ComplianceAssistant:
         if business_profile_id is None:
             business_profile_id = uuid4()
 
-        return await self.get_assessment_help(
+        return await self._generate_response(
             question_id=question_id,
             question_text=question_text,
             framework_id=framework_id,

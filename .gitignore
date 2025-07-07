@@ -79,6 +79,9 @@ credentials.json
 *.userosscache
 *.sln.docstates
 
+# Augment local settings
+.augment-guidelines/settings.local.json
+
 7. OS‑specific cruft
 
 .DS_Store
