@@ -9,7 +9,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { assessmentResults } from "@/lib/data/results"
 
 
-export default function AssessmentResultsPage({ params }: { params: { id: string } }) {
+export default async function AssessmentResultsPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
   const { title, overallScore, summary, requirements, gapAnalysis, recommendations } = assessmentResults
 
   return (
@@ -25,7 +26,7 @@ export default function AssessmentResultsPage({ params }: { params: { id: string
         <div className="flex flex-col sm:flex-row items-start justify-between gap-4">
           <div>
             <h1 className="text-3xl font-bold text-eggshell-white">{title} - Results</h1>
-            <p className="text-lg text-grey-600 mt-1">Assessment ID: {params.id}</p>
+            <p className="text-lg text-grey-600 mt-1">Assessment ID: {id}</p>
           </div>
           <div className="flex items-center gap-3">
             <Button variant="secondary">

@@ -55,6 +55,7 @@ export interface BusinessProfileState {
   saveProfile: (data: BusinessProfileFormData) => Promise<void>;
   updateProfile: (updates: Partial<BusinessProfileFormData>) => Promise<void>;
   deleteProfile: () => Promise<void>;
+  clearProfile: () => void;
   
   // Actions - Draft Management
   saveDraft: (stepData: Partial<BusinessProfileFormData>) => void;
@@ -214,6 +215,20 @@ export const useBusinessProfileStore = create<BusinessProfileState>()(
             }, false, 'deleteProfile/error');
             throw error;
           }
+        },
+
+        clearProfile: () => {
+          set({ 
+            profile: null,
+            draftProfile: null,
+            currentStep: 0,
+            completedSteps: new Set<number>(),
+            stepValidation: {},
+            validationErrors: [],
+            error: null,
+            errorType: null,
+            retryCount: 0
+          }, false, 'clearProfile');
         },
 
         // Draft Management Actions

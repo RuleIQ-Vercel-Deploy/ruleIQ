@@ -41,7 +41,7 @@ export default function CheckoutPage() {
 
   const handleSuccess = (sessionId: string) => {
     // Redirect to success page or dashboard
-    window.location.href = '/dashboard?payment=success'
+    window.location.href = `/dashboard?payment=success&session_id=${sessionId}`
   }
 
   const handleError = (error: string) => {
@@ -140,7 +140,7 @@ export default function CheckoutPage() {
           <div>
             <CheckoutForm
               planId={planId}
-              customerEmail={user?.email}
+              customerEmail={user?.email || undefined}
               onSuccess={handleSuccess}
               onError={handleError}
             />

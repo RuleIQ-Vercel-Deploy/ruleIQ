@@ -9,8 +9,7 @@ import { assessmentService } from "@/lib/api/assessments.service";
 import { 
   type AssessmentFramework, 
   type AssessmentResult,
-  type AssessmentProgress,
-  Question
+  type AssessmentProgress
 } from "@/lib/assessment-engine";
 import { useAppStore } from "@/lib/stores/app.store";
 import { useAuthStore } from "@/lib/stores/auth.store";
@@ -136,10 +135,10 @@ export default function AssessmentPage() {
   const { addNotification } = useAppStore();
   const { user } = useAuthStore();
   const [loading, setLoading] = useState(true);
-  const [assessment, setAssessment] = useState<any>(null);
+  const [assessment, setAssessment] = useState<AssessmentResult | null>(null);
   const [framework, setFramework] = useState<AssessmentFramework | null>(null);
 
-  const assessmentId = params.id as string;
+  const assessmentId = params['id'] as string;
 
   useEffect(() => {
     loadAssessment();
@@ -159,7 +158,7 @@ export default function AssessmentPage() {
       addNotification({
         type: "error",
         title: "Error",
-        description: "Failed to load assessment. Please try again.",
+        message: "Failed to load assessment. Please try again.",
         duration: 5000
       });
       router.push('/assessments');
@@ -168,17 +167,13 @@ export default function AssessmentPage() {
 
   const handleComplete = async (result: AssessmentResult) => {
     try {
-      // Submit assessment results
-      await assessmentService.submitAssessment(assessmentId, {
-        responses: Object.fromEntries(result.gaps.map(gap => [gap.questionId, gap])),
-        score: result.overallScore,
-        status: 'completed'
-      });
+      // Complete assessment
+      await assessmentService.completeAssessment(assessmentId);
 
       addNotification({
         type: "success",
         title: "Assessment Complete!",
-        description: `You scored ${result.overallScore}%. View your detailed results and recommendations.`,
+        message: `You scored ${result.overallScore}%. View your detailed results and recommendations.`,
         duration: 5000
       });
 
@@ -188,7 +183,7 @@ export default function AssessmentPage() {
       addNotification({
         type: "error",
         title: "Error",
-        description: "Failed to submit assessment. Your progress has been saved.",
+        message: "Failed to submit assessment. Your progress has been saved.",
         duration: 5000
       });
     }
@@ -199,7 +194,7 @@ export default function AssessmentPage() {
       // Save progress to backend
       await assessmentService.updateAssessment(assessmentId, {
         status: 'in_progress',
-        responses: {} // Would include actual responses
+        responses: progress.responses || {} // Use actual responses from progress
       });
     } catch (error) {
       console.error('Failed to save progress:', error);

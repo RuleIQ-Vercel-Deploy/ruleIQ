@@ -1,6 +1,7 @@
 import '@testing-library/jest-dom'
 import { cleanup } from '@testing-library/react'
 import { afterEach, beforeAll, vi } from 'vitest'
+import React from 'react'
 
 // Cleanup after each test case (e.g. clearing jsdom)
 afterEach(() => {
@@ -27,23 +28,35 @@ vi.mock('next/navigation', () => ({
 vi.mock('next/image', () => ({
   default: (props: any) => {
     const { src, alt, ...rest } = props
-    return { type: 'img', props: { src, alt, ...rest } }
+    return React.createElement('img', { src, alt, ...rest })
   },
 }))
 
 // Mock Framer Motion
 vi.mock('framer-motion', () => ({
   motion: {
-    div: ({ children, ...props }: any) => ({ type: 'div', props: { ...props, children } }),
-    span: ({ children, ...props }: any) => ({ type: 'span', props: { ...props, children } }),
-    button: ({ children, ...props }: any) => ({ type: 'button', props: { ...props, children } }),
-    form: ({ children, ...props }: any) => ({ type: 'form', props: { ...props, children } }),
+    div: ({ children, ...props }: any) => React.createElement('div', props, children),
+    span: ({ children, ...props }: any) => React.createElement('span', props, children),
+    button: ({ children, ...props }: any) => React.createElement('button', props, children),
+    form: ({ children, ...props }: any) => React.createElement('form', props, children),
   },
   AnimatePresence: ({ children }: any) => children,
 }))
 
 // Mock environment variables
 beforeAll(() => {
+  // Set up environment variables for testing
+  process.env.NEXT_PUBLIC_API_URL = 'http://localhost:8000/api'
+  process.env.NEXT_PUBLIC_WEBSOCKET_URL = 'ws://localhost:8000/api/chat/ws'
+  process.env.NEXT_PUBLIC_AUTH_DOMAIN = 'localhost'
+  process.env.NEXT_PUBLIC_JWT_EXPIRES_IN = '86400'
+  process.env.NEXT_PUBLIC_ENABLE_ANALYTICS = 'false'
+  process.env.NEXT_PUBLIC_ENABLE_SENTRY = 'false'
+  process.env.NEXT_PUBLIC_ENABLE_MOCK_DATA = 'true'
+  process.env.NEXT_PUBLIC_ENV = 'test'
+  process.env.NODE_ENV = 'test'
+  process.env.SKIP_ENV_VALIDATION = 'true'
+
   Object.defineProperty(window, 'matchMedia', {
     writable: true,
     value: vi.fn().mockImplementation(query => ({

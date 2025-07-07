@@ -67,12 +67,13 @@ describe('Input Component', () => {
   })
 
   it('supports controlled and uncontrolled modes', () => {
-    // Uncontrolled
-    const { rerender } = render(<Input defaultValue="default" data-testid="input" />)
-    expect(screen.getByTestId('input')).toHaveValue('default')
+    // Test uncontrolled mode separately
+    const { unmount } = render(<Input defaultValue="default" data-testid="uncontrolled-input" />)
+    expect(screen.getByTestId('uncontrolled-input')).toHaveValue('default')
+    unmount()
 
-    // Controlled
-    rerender(<Input value="controlled" onChange={vi.fn()} data-testid="input" />)
-    expect(screen.getByTestId('input')).toHaveValue('controlled')
+    // Test controlled mode separately
+    render(<Input value="controlled" onChange={vi.fn()} data-testid="controlled-input" />)
+    expect(screen.getByTestId('controlled-input')).toHaveValue('controlled')
   })
 })

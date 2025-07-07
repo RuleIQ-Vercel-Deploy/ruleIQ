@@ -363,6 +363,124 @@ export const SchemaValidationResultSchema = z.object({
 // Schema Registry
 // =====================================================================
 
+// =====================================================================
+// Self-Review Validators
+// =====================================================================
+
+export const SelfReviewIssueSchema = z.object({
+  issue_id: z.string().min(1),
+  severity: z.enum(["low", "medium", "high", "critical"]),
+  category: z.enum(["factual_accuracy", "logical_consistency", "completeness", "clarity", "relevance", "bias", "assumption"]),
+  description: z.string().min(10),
+  location: z.string().min(1),
+  suggested_fix: z.string().min(10),
+  confidence_in_identification: z.number().min(1).max(10)
+});
+
+export const ConfidenceFactorSchema = z.object({
+  factor: z.string().min(1),
+  impact: z.enum(["increases", "decreases", "neutral"]),
+  explanation: z.string().min(10)
+});
+
+export const ConfidenceAssessmentSchema = z.object({
+  original_confidence: ScoreSchema,
+  reviewed_confidence: ScoreSchema,
+  confidence_factors: z.array(ConfidenceFactorSchema),
+  uncertainty_areas: z.array(z.string())
+});
+
+export const FactualClaimSchema = z.object({
+  claim: z.string().min(1),
+  verification_status: z.enum(["verified", "uncertain", "requires_check", "potentially_incorrect"]),
+  confidence_level: z.number().min(1).max(10)
+});
+
+export const RegulatoryReferenceSchema = z.object({
+  reference: z.string().min(1),
+  accuracy_status: z.enum(["correct", "outdated", "uncertain", "incorrect"]),
+  notes: z.string().optional()
+});
+
+export const AccuracyCheckSchema = z.object({
+  factual_claims: z.array(FactualClaimSchema),
+  regulatory_references: z.array(RegulatoryReferenceSchema),
+  overall_accuracy_score: z.number().min(0).max(10)
+});
+
+export const CompletenessReviewSchema = z.object({
+  missing_aspects: z.array(z.string()),
+  incomplete_explanations: z.array(z.string()),
+  areas_needing_expansion: z.array(z.string()),
+  completeness_score: z.number().min(0).max(10)
+});
+
+export const ReadabilityAssessmentSchema = z.object({
+  complexity_level: z.enum(["basic", "intermediate", "advanced", "expert"]),
+  target_audience_match: z.boolean(),
+  improvement_suggestions: z.array(z.string())
+});
+
+export const ClarityEvaluationSchema = z.object({
+  unclear_explanations: z.array(z.string()),
+  jargon_without_explanation: z.array(z.string()),
+  logical_flow_issues: z.array(z.string()),
+  clarity_score: z.number().min(0).max(10),
+  readability_assessment: ReadabilityAssessmentSchema
+});
+
+export const SelfCritiqueSchema = z.object({
+  identified_issues: z.array(SelfReviewIssueSchema),
+  confidence_assessment: ConfidenceAssessmentSchema,
+  accuracy_check: AccuracyCheckSchema,
+  completeness_review: CompletenessReviewSchema,
+  clarity_evaluation: ClarityEvaluationSchema
+});
+
+export const ReviewQualitySchema = z.object({
+  overall_confidence: z.number().min(1).max(10),
+  reliability_score: z.number().min(1).max(10),
+  revision_significance: z.enum(["none", "minor", "moderate", "major"]),
+  areas_needing_verification: z.array(z.string())
+});
+
+export const UserGuidanceSchema = z.object({
+  how_to_use: z.string().min(10),
+  confidence_interpretation: z.string().min(10),
+  when_to_seek_additional_help: z.string().min(10)
+});
+
+export const SelfReviewResponseSchema = z.object({
+  review_id: z.string().min(1),
+  timestamp: z.string().min(1),
+  original_response: GuidanceResponseSchema,
+  self_critique: SelfCritiqueSchema,
+  revised_response: GuidanceResponseSchema,
+  review_quality: ReviewQualitySchema,
+  user_guidance: UserGuidanceSchema
+});
+
+export const QuickConfidenceCheckSchema = z.object({
+  confidence_score: z.number().min(0).max(10),
+  confidence_factors: z.array(z.string()),
+  quick_issues: z.array(z.string()),
+  recommendation: z.enum(["use_as_is", "review_recommended", "seek_expert_help"])
+});
+
+export const SelfReviewMetricsSchema = z.object({
+  total_reviews: z.number().int().min(0),
+  average_confidence_change: z.number(),
+  common_issue_categories: z.array(z.object({
+    category: z.string(),
+    frequency: z.number().int().min(0)
+  })),
+  revision_frequency: z.array(z.object({
+    level: z.string(),
+    count: z.number().int().min(0)
+  })),
+  user_satisfaction_with_reviews: z.number().min(0).max(10)
+});
+
 export const AI_RESPONSE_SCHEMAS = {
   gap_analysis: GapAnalysisResponseSchema,
   recommendations: RecommendationResponseSchema,
@@ -372,7 +490,10 @@ export const AI_RESPONSE_SCHEMAS = {
   intent_classification: IntentClassificationSchema,
   chat: ChatResponseSchema,
   policy: PolicyDocumentSchema,
-  workflow: EvidenceWorkflowSchema
+  workflow: EvidenceWorkflowSchema,
+  self_review: SelfReviewResponseSchema,
+  quick_confidence_check: QuickConfidenceCheckSchema,
+  self_review_metrics: SelfReviewMetricsSchema
 } as const;
 
 export type AIResponseSchemaType = keyof typeof AI_RESPONSE_SCHEMAS;

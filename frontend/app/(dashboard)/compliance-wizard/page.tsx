@@ -13,8 +13,6 @@ import {
   Globe,
   FileCheck,
   Lock,
-  CreditCard,
-  Heart,
   TrendingUp,
   Sparkles,
   Check,
@@ -192,7 +190,7 @@ export default function ComplianceWizardPage() {
   const [isLoading, setIsLoading] = React.useState(false);
   
   const currentCategory = questionCategories[currentCategoryIndex];
-  const categoryQuestions = questions.filter(q => q.category === currentCategory.id);
+  const categoryQuestions = currentCategory ? questions.filter(q => q.category === currentCategory.id) : [];
   
   // Calculate overall progress
   const totalQuestions = questions.length;
@@ -267,28 +265,28 @@ export default function ComplianceWizardPage() {
     const risks: string[] = [];
     
     // Calculate score based on answers
-    if (answers.security_measures && !answers.security_measures.includes("None")) {
-      score += answers.security_measures.length * 5;
+    if (answers['security_measures'] && !answers['security_measures'].includes("None")) {
+      score += answers['security_measures'].length * 5;
     }
     maxScore += 30;
     
-    if (answers.current_frameworks && !answers.current_frameworks.includes("None")) {
-      score += answers.current_frameworks.length * 10;
+    if (answers['current_frameworks'] && !answers['current_frameworks'].includes("None")) {
+      score += answers['current_frameworks'].length * 10;
     }
     maxScore += 70;
     
-    if (answers.security_incidents === "No incidents") {
+    if (answers['security_incidents'] === "No incidents") {
       score += 20;
     }
     maxScore += 20;
     
     // Generate recommendations
-    if (!answers.current_frameworks?.includes("GDPR") && answers.locations?.includes("EU")) {
+    if (!answers['current_frameworks']?.includes("GDPR") && answers['locations']?.includes("EU")) {
       recommendations.push("Implement GDPR compliance as you operate in the EU");
       risks.push("Non-compliance with GDPR regulations");
     }
     
-    if (answers.personal_data === "Yes" && !answers.security_measures?.includes("Encryption")) {
+    if (answers['personal_data'] === "Yes" && !answers['security_measures']?.includes("Encryption")) {
       recommendations.push("Implement encryption for personal data protection");
       risks.push("Unencrypted personal data");
     }
@@ -457,11 +455,11 @@ export default function ComplianceWizardPage() {
           <Card>
             <CardHeader>
               <div className="flex items-center gap-2">
-                {currentCategory.icon}
-                <CardTitle>{currentCategory.name}</CardTitle>
+                {currentCategory?.icon}
+                <CardTitle>{currentCategory?.name}</CardTitle>
               </div>
               <CardDescription>
-                Answer these questions to help us understand your {currentCategory.name.toLowerCase()} requirements
+                Answer these questions to help us understand your {currentCategory?.name.toLowerCase()} requirements
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
