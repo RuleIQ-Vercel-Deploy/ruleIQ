@@ -12,6 +12,7 @@ from database.business_profile import BusinessProfile
 from database.compliance_framework import ComplianceFramework
 from database.generated_policy import GeneratedPolicy
 from database.user import User
+from utils.input_validation import validate_evidence_update, ValidationError
 
 # Assuming the AI function is awaitable or wrapped to be non-blocking
 from services.ai.evidence_generator import generate_checklist_with_ai
@@ -333,24 +334,39 @@ class EvidenceService:
         update_data: Dict[str, Any]
     ) -> tuple[Optional[EvidenceItem], str]:
         """
-        Update an evidence item with provided data.
+        Update an evidence item with provided data using secure validation.
         Returns (evidence_item, status) where status is:
         - 'updated': Evidence updated successfully
         - 'not_found': Evidence doesn't exist
         - 'unauthorized': Evidence exists but user doesn't have access
+        - 'validation_error': Input validation failed
         """
+        # Validate input data against whitelist and security patterns
+        try:
+            validated_data = validate_evidence_update(update_data)
+        except ValidationError as e:
+            return None, f'validation_error: {str(e)}'
+        
         item, status = await EvidenceService.get_evidence_item_with_auth_check(db, evidence_id, user.id)
         if status != 'found':
             return None, status
 
-        # Update fields that are provided
-        for field, value in update_data.items():
-            if field == "title":
-                item.evidence_name = value
-            elif field == "control_id":
-                item.control_reference = value
+        # Securely update only validated and whitelisted fields
+        field_mapping = {
+            "title": "evidence_name",
+            "control_id": "control_reference"
+        }
+        
+        for field, value in validated_data.items():
+            # Use explicit field mapping for legacy compatibility
+            if field in field_mapping:
+                setattr(item, field_mapping[field], value)
+            # Only set attributes that exist on the model and are in our whitelist
             elif hasattr(item, field):
                 setattr(item, field, value)
+        
+        # Always update the timestamp
+        item.updated_at = datetime.utcnow()
 
         await EvidenceService._commit_session(db)
         await EvidenceService._refresh_object(db, item)

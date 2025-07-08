@@ -342,19 +342,19 @@ class TestAccessibilityAndInclusion:
             "country": "FR",
             "existing_framew": ["GDPR"],
             "planned_framewo": [],
-            # Required boolean fields (using truncated names to match database)
-            "handles_persona": True,
-            "processes_payme": False,
-            "stores_health_d": False,
-            "provides_financ": False,
-            "operates_critic": False,
-            "has_internation": True,
+            # Required boolean fields (using full names after migration)
+            "handles_personal_data": True,
+            "processes_payments": False,
+            "stores_health_data": False,
+            "provides_financial_services": False,
+            "operates_critical_infrastructure": False,
+            "has_international_operations": True,
             # Optional fields with defaults
             "cloud_providers": ["AWS"],
             "saas_tools": ["Office365"],
-            "development_too": ["GitHub"],
-            "compliance_budg": "10000-50000",
-            "compliance_time": "3-6 months"
+            "development_tools": ["GitHub"],
+            "compliance_budget": "10000-50000",
+            "compliance_timeline": "3-6 months"
         }
 
         response = client.post(

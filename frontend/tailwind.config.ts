@@ -19,33 +19,58 @@ const config = {
     },
     extend: {
       colors: {
-        // ruleIQ Brand Colors (from CLAUDE.md)
-        navy: {
-          DEFAULT: "#17255A", // Deep navy blue - primary brand color
-          dark: "#0F1938",    // Darker variant for headers
-          light: "#2B3A6A",   // Lighter variant for hover states
+        // ruleIQ Brand Colors - Dark Mode Rebrand
+        midnight: {
+          DEFAULT: "#0F172A", // Midnight blue - primary brand color (dark mode first)
+          dark: "#020617",    // Darker variant for deep backgrounds
+          light: "#1E293B",   // Lighter variant for elevated surfaces
         },
-        gold: {
-          DEFAULT: "#CB963E", // Gold - accent color for CTAs and highlights
-          dark: "#A67A2E",    // Darker gold for hover states
-          light: "#E0B567",   // Lighter gold for backgrounds
+        turquoise: {
+          DEFAULT: "#00BCD4", // Turquoise - secondary accent (from logo)
+          dark: "#00838F",    // Darker turquoise for hover states
+          light: "#4DD0E1",   // Lighter turquoise for backgrounds
         },
-        cyan: {
-          DEFAULT: "#34FEF7", // Bright cyan - energetic accent
-          dark: "#1FD4E5",    // Darker cyan variant
-          light: "#6FFEFB",   // Lighter cyan variant
+        electric: {
+          DEFAULT: "#1E40AF", // Electric blue - supporting accent
+          dark: "#1E3A8A",    // Darker blue variant
+          light: "#3B82F6",   // Lighter blue variant
         },
-        // Neutral colors
+        // Neutral colors (Dark Theme Optimized)
         neutral: {
-          light: "#D0D5E3",   // Light gray - backgrounds, borders
-          medium: "#C2C2C2",  // Medium gray - secondary text, dividers
-          dark: "#6B7280",    // Dark gray - tertiary text
+          light: "#334155",   // Dark gray - elevated surfaces
+          medium: "#475569",  // Medium gray - borders, dividers
+          dark: "#64748B",    // Light gray - secondary text on dark
         },
         // Semantic colors
-        success: "#28A745",
-        warning: "#CB963E",   // Use gold for warnings
-        error: "#DC3545",
-        info: "#34FEF7",      // Use cyan for info states
+        success: "#10B981",   // Emerald green for dark theme
+        warning: "#F59E0B",   // Amber for warnings
+        error: "#EF4444",     // Red for errors
+        info: "#00BCD4",      // Use turquoise for info states
+        
+        // Surface colors (Dark Mode First)
+        surface: {
+          primary: "#0F172A",     // Dark theme primary surface (midnight)
+          secondary: "#1E293B",   // Dark theme secondary surface
+          tertiary: "#334155",    // Dark theme tertiary surface
+          "primary-light": "#FFFFFF",  // Light theme primary surface
+          "secondary-light": "#F8FAFC", // Light theme secondary surface
+          "tertiary-light": "#E2E8F0", // Light theme tertiary surface
+        },
+        
+        // Text colors (Dark Mode Optimized)
+        "text-on-dark": "#F1F5F9",       // Light text on dark surfaces (primary)
+        "text-on-light": "#0F172A",      // Dark text on light surfaces
+        "text-on-turquoise": "#FFFFFF",  // White text on turquoise
+        "text-on-midnight": "#F1F5F9",   // Light text on midnight blue
+        "text-secondary": "#CBD5E1",     // Secondary text color (light on dark)
+        "text-muted": "#94A3B8",        // Muted text color (dark theme)
+        
+        // Outline colors for focus and borders
+        outline: {
+          primary: "#00BCD4",     // Turquoise outline
+          secondary: "#1E40AF",   // Electric blue outline
+          muted: "#475569",      // Dark gray outline
+        },
         
         // shadcn/ui CSS variables (keep for compatibility)
         border: "hsl(var(--border))",

@@ -47,7 +47,7 @@ class ContextManager:
             'business_profile': {
                 'name': profile.company_name,
                 'industry': profile.industry,
-                'frameworks': (profile.existing_framew or []) + (profile.planned_framewo or []),
+                'frameworks': (profile.existing_frameworks or []) + (profile.planned_frameworks or []),
             },
             'recent_evidence': [item.to_dict() for item in recent_evidence],
             'compliance_status': compliance_status,

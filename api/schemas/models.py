@@ -62,21 +62,21 @@ class BusinessProfileBase(BaseModel):
     data_sensitivity: str = Field(default='Low', pattern=r'^(Low|Moderate|High|Confidential)$')  # Re-added for framework relevance
 
     # Required boolean fields (matching database model)
-    handles_persona: bool = Field(..., description="Handles personal data")
-    processes_payme: bool = Field(..., description="Processes payments")
-    stores_health_d: bool = Field(..., description="Stores health data")
-    provides_financ: bool = Field(..., description="Provides financial services")
-    operates_critic: bool = Field(..., description="Operates critical infrastructure")
-    has_internation: bool = Field(..., description="Has international operations")
+    handles_personal_data: bool = Field(..., description="Handles personal data")
+    processes_payments: bool = Field(..., description="Processes payments")
+    stores_health_data: bool = Field(..., description="Stores health data")
+    provides_financial_services: bool = Field(..., description="Provides financial services")
+    operates_critical_infrastructure: bool = Field(..., description="Operates critical infrastructure")
+    has_international_operations: bool = Field(..., description="Has international operations")
 
     # Optional JSONB fields with defaults
     existing_framew: Optional[List[str]] = Field(default_factory=list)
     planned_framewo: Optional[List[str]] = Field(default_factory=list)
     cloud_providers: Optional[List[str]] = Field(default_factory=list)
     saas_tools: Optional[List[str]] = Field(default_factory=list)
-    development_too: Optional[List[str]] = Field(default_factory=list)
-    compliance_budg: Optional[str] = Field(None)
-    compliance_time: Optional[str] = Field(None)
+    development_tools: Optional[List[str]] = Field(default_factory=list)
+    compliance_budget: Optional[str] = Field(None)
+    compliance_timeline: Optional[str] = Field(None)
 
 class BusinessProfileCreate(BaseModel):
     company_name: str = Field(..., min_length=2, max_length=100)
@@ -87,21 +87,21 @@ class BusinessProfileCreate(BaseModel):
     data_sensitivity: str = Field(default='Low', pattern=r'^(Low|Moderate|High|Confidential)$')  # Re-added for framework relevance
 
     # Optional boolean fields with defaults (for minimal profile creation)
-    handles_persona: bool = Field(default=False, description="Handles personal data")
-    processes_payme: bool = Field(default=False, description="Processes payments")
-    stores_health_d: bool = Field(default=False, description="Stores health data")
-    provides_financ: bool = Field(default=False, description="Provides financial services")
-    operates_critic: bool = Field(default=False, description="Operates critical infrastructure")
-    has_internation: bool = Field(default=False, description="Has international operations")
+    handles_personal_data: bool = Field(default=False, description="Handles personal data")
+    processes_payments: bool = Field(default=False, description="Processes payments")
+    stores_health_data: bool = Field(default=False, description="Stores health data")
+    provides_financial_services: bool = Field(default=False, description="Provides financial services")
+    operates_critical_infrastructure: bool = Field(default=False, description="Operates critical infrastructure")
+    has_international_operations: bool = Field(default=False, description="Has international operations")
 
     # Optional JSONB fields with defaults
     existing_framew: Optional[List[str]] = Field(default_factory=list)
     planned_framewo: Optional[List[str]] = Field(default_factory=list)
     cloud_providers: Optional[List[str]] = Field(default_factory=list)
     saas_tools: Optional[List[str]] = Field(default_factory=list)
-    development_too: Optional[List[str]] = Field(default_factory=list)
-    compliance_budg: Optional[str] = Field(None)
-    compliance_time: Optional[str] = Field(None)
+    development_tools: Optional[List[str]] = Field(default_factory=list)
+    compliance_budget: Optional[str] = Field(None)
+    compliance_timeline: Optional[str] = Field(None)
 
 class BusinessProfileUpdate(BaseModel):
     company_name: Optional[str] = Field(None, min_length=2, max_length=100)
@@ -112,21 +112,21 @@ class BusinessProfileUpdate(BaseModel):
     # data_sensitivity: Optional[str] = Field(None, pattern=r'^(Low|Moderate|High|Confidential)$')  # Temporarily removed
 
     # Optional boolean fields
-    handles_persona: Optional[bool] = Field(None)
-    processes_payme: Optional[bool] = Field(None)
-    stores_health_d: Optional[bool] = Field(None)
-    provides_financ: Optional[bool] = Field(None)
-    operates_critic: Optional[bool] = Field(None)
-    has_internation: Optional[bool] = Field(None)
+    handles_personal_data: Optional[bool] = Field(None)
+    processes_payments: Optional[bool] = Field(None)
+    stores_health_data: Optional[bool] = Field(None)
+    provides_financial_services: Optional[bool] = Field(None)
+    operates_critical_infrastructure: Optional[bool] = Field(None)
+    has_international_operations: Optional[bool] = Field(None)
 
     # Optional JSONB fields
     existing_framew: Optional[List[str]] = Field(None)
     planned_framewo: Optional[List[str]] = Field(None)
     cloud_providers: Optional[List[str]] = Field(None)
     saas_tools: Optional[List[str]] = Field(None)
-    development_too: Optional[List[str]] = Field(None)
-    compliance_budg: Optional[str] = Field(None)
-    compliance_time: Optional[str] = Field(None)
+    development_tools: Optional[List[str]] = Field(None)
+    compliance_budget: Optional[str] = Field(None)
+    compliance_timeline: Optional[str] = Field(None)
 
 
 class BusinessProfileResponse(BusinessProfileBase):

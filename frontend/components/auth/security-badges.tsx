@@ -38,7 +38,7 @@ export function SecurityBadges({ className, variant = 'default' }: SecurityBadge
         {badges.map((badge, index) => {
           const Icon = badge.icon
           return (
-            <Badge key={index} variant="secondary" className="flex items-center gap-1.5 text-xs px-3 py-1.5 bg-navy/5 text-navy border-navy/20">
+            <Badge key={index} variant="secondary" className="flex items-center gap-1.5 text-xs px-3 py-1.5 bg-turquoise/5 text-turquoise border-turquoise/20">
               <Icon className="h-3 w-3" />
               {badge.text}
             </Badge>
@@ -54,7 +54,7 @@ export function SecurityBadges({ className, variant = 'default' }: SecurityBadge
         const Icon = badge.icon
         return (
           <div key={index} className="flex items-center gap-3 text-sm">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-navy/10 border border-navy/20">
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-turquoise/10 border border-turquoise/20">
               <Icon className="h-5 w-5 text-navy" />
             </div>
             <div>

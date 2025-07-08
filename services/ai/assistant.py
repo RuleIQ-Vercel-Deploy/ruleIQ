@@ -22,6 +22,7 @@ from core.exceptions import (
 from database.user import User
 
 from .analytics_monitor import MetricType, get_analytics_monitor
+from .cached_content import get_cached_content_manager, CacheContentType
 from .circuit_breaker import AICircuitBreaker
 from .context_manager import ContextManager
 from .exceptions import (
@@ -48,6 +49,7 @@ class ComplianceAssistant:
         self.prompt_templates = PromptTemplates()
         self.instruction_manager = get_instruction_manager()  # System instruction integration
         self.ai_cache = None  # Will be initialized on first use
+        self.cached_content_manager = None  # Google cached content manager
         self.performance_optimizer = None  # Will be initialized on first use
         self.analytics_monitor = None  # Will be initialized on first use
         self.quality_monitor = None  # Will be initialized on first use
@@ -62,7 +64,7 @@ class ComplianceAssistant:
             HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT: HarmBlockThreshold.BLOCK_ONLY_HIGH,
         }
 
-    def _get_task_appropriate_model(self, task_type: str, context: Optional[Dict[str, Any]] = None, tools: Optional[List[Dict[str, Any]]] = None) -> Tuple[Any, str]:
+    def _get_task_appropriate_model(self, task_type: str, context: Optional[Dict[str, Any]] = None, tools: Optional[List[Dict[str, Any]]] = None, cached_content=None) -> Tuple[Any, str]:
         """
         Get the most appropriate model for the given task type with system instructions and circuit breaker protection
 
@@ -70,6 +72,7 @@ class ComplianceAssistant:
             task_type: Type of task (help, analysis, recommendations, etc.)
             context: Additional context for model selection
             tools: List of tool schemas for function calling
+            cached_content: Optional Google CachedContent for improved performance
 
         Returns:
             Tuple of (configured AI model instance, instruction_id)
@@ -101,6 +104,7 @@ class ComplianceAssistant:
 
         try:
             # Get model with system instruction using instruction manager
+            # Note: cached_content will be used during model.generate_content() call
             model, instruction_id = self.instruction_manager.get_model_with_instruction(
                 instruction_type=task_type,
                 framework=context.get('framework') if context else None,
@@ -109,6 +113,11 @@ class ComplianceAssistant:
                 tools=tools,
                 prefer_speed=prefer_speed
             )
+
+            # Store cached content for use in generation calls
+            if cached_content:
+                setattr(model, '_cached_content', cached_content)
+                logger.debug(f"Attached cached content to model for {task_type}")
 
             # Check if model is available via circuit breaker
             model_name = getattr(model, 'model_name', 'unknown')
@@ -133,6 +142,50 @@ class ComplianceAssistant:
                 model_name="unknown",
                 reason=f"Model selection failed: {e!s}"
             )
+
+    async def _get_cached_content_manager(self):
+        """Initialize and return the cached content manager."""
+        if self.cached_content_manager is None:
+            self.cached_content_manager = await get_cached_content_manager()
+        return self.cached_content_manager
+
+    async def _get_or_create_assessment_cache(
+        self,
+        framework_id: str,
+        business_profile: Dict[str, Any],
+        assessment_context: Optional[Dict[str, Any]] = None
+    ):
+        """
+        Get or create cached content for assessment context.
+        
+        Args:
+            framework_id: Compliance framework ID
+            business_profile: Business profile data
+            assessment_context: Additional assessment context
+            
+        Returns:
+            CachedContent instance or None if caching fails
+        """
+        try:
+            cached_content_manager = await self._get_cached_content_manager()
+            
+            # Try to create assessment cache
+            cached_content = await cached_content_manager.create_assessment_cache(
+                framework_id=framework_id,
+                business_profile=business_profile,
+                assessment_context=assessment_context
+            )
+            
+            if cached_content:
+                logger.info(f"Using cached content for assessment: {framework_id}")
+                return cached_content
+            else:
+                logger.warning(f"Failed to create cached content for assessment: {framework_id}")
+                return None
+                
+        except Exception as e:
+            logger.warning(f"Error with cached content for assessment: {e}")
+            return None
 
     async def _handle_function_calls(self, response, context: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
         """
@@ -2941,17 +2994,32 @@ class ComplianceAssistant:
                 business_profile_id=business_profile_id
             )
 
+            business_profile = context.get('business_profile', {})
+
+            # Create or get cached content for assessment context
+            cached_content = await self._get_or_create_assessment_cache(
+                framework_id=framework_id,
+                business_profile=business_profile,
+                assessment_context={
+                    'assessment_type': 'analysis',
+                    'results_summary': assessment_results
+                }
+            )
+
             # Build analysis prompt
             prompt_data = self.prompt_templates.get_assessment_analysis_prompt(
                 assessment_results=assessment_results,
                 framework_id=framework_id,
-                business_context=context.get('business_profile', {})
+                business_context=business_profile
             )
 
-            # Generate AI response
-            response = await self._generate_ai_response(
+            # Generate AI response with cached content for improved performance
+            response = await self._generate_ai_response_with_cache(
                 prompt_data['system'],
-                prompt_data['user']
+                prompt_data['user'],
+                task_type="analysis",
+                context=context,
+                cached_content=cached_content
             )
 
             # Parse and structure the response
@@ -3042,6 +3110,91 @@ class ComplianceAssistant:
             evidence_type = item.get('evidence_type', 'unknown')
             type_counts[evidence_type] = type_counts.get(evidence_type, 0) + 1
         return type_counts
+
+    async def _generate_ai_response_with_cache(
+        self,
+        system_prompt: str,
+        user_prompt: str,
+        task_type: str = "general",
+        context: Optional[Dict[str, Any]] = None,
+        cached_content=None
+    ) -> str:
+        """
+        Generate AI response using cached content for improved performance.
+        
+        Args:
+            system_prompt: System prompt
+            user_prompt: User prompt  
+            task_type: Type of task for model selection
+            context: Additional context
+            cached_content: Google CachedContent for performance optimization
+            
+        Returns:
+            AI generated response text
+        """
+        # Start performance timing
+        start_time = datetime.now()
+        cache_hit = cached_content is not None
+        
+        try:
+            # Get appropriate model for this task with cached content
+            model, instruction_id = self._get_task_appropriate_model(
+                task_type=task_type,
+                context=context,
+                cached_content=cached_content
+            )
+
+            # Prepare the conversation with system prompt and user message
+            conversation_parts = [
+                system_prompt,
+                user_prompt
+            ]
+
+            # Use cached content if available for better performance
+            if cached_content:
+                logger.debug(f"Using cached content for {task_type} task")
+                # With cached content, the model.generate_content() will be more efficient
+                response = model.generate_content(
+                    conversation_parts,
+                    cached_content=cached_content
+                )
+            else:
+                # Fallback to regular generation
+                logger.debug(f"No cached content available for {task_type} task")
+                response = model.generate_content(conversation_parts)
+
+            # Calculate response time
+            response_time_ms = int((datetime.now() - start_time).total_seconds() * 1000)
+            
+            # Record cache performance for optimization
+            if self.cached_content_manager and context:
+                cache_key = self._generate_cache_key_for_context(context, task_type)
+                self.cached_content_manager.record_cache_performance(
+                    cache_key, response_time_ms, cache_hit
+                )
+                
+                # Add to warming queue if this was a cache miss but performed well
+                if not cache_hit and response_time_ms < 1000:  # Fast response
+                    await self._add_to_cache_warming_queue(context, task_type)
+
+            # Record circuit breaker success
+            model_name = getattr(model, 'model_name', 'unknown')
+            self.circuit_breaker.record_success(model_name)
+
+            # Extract and return response text
+            return self._extract_response_text(response)
+
+        except Exception as e:
+            # Record circuit breaker failure
+            try:
+                model_name = getattr(model, 'model_name', 'unknown') if 'model' in locals() else 'unknown'
+                self.circuit_breaker.record_failure(model_name)
+            except:
+                pass
+
+            logger.error(f"Error generating AI response with cache: {e}")
+            # Fallback to regular generation without cache
+            return await self._generate_ai_response(system_prompt, user_prompt)
 
     async def _generate_ai_response(self, system_prompt: str, user_prompt: str) -> str:
         """Generate AI response using the configured model."""
@@ -3869,4 +4022,71 @@ class ComplianceAssistant:
                 'success_rates': {"gemini-2.5-flash": 0.95},
                 'token_usage': {"total": 5000},
                 'cost_metrics': {"total_cost": 2.5}
+            }
+    
+    # ==============================
+    # Cache Strategy Optimization Helpers
+    # ==============================
+    
+    def _generate_cache_key_for_context(self, context: Dict[str, Any], task_type: str) -> str:
+        """Generate cache key for performance tracking."""
+        business_profile_id = context.get('business_profile', {}).get('id', 'unknown')
+        framework_id = context.get('framework_id', 'unknown')
+        return f"cache_perf:{task_type}:{framework_id}:{business_profile_id}"
+    
+    async def _add_to_cache_warming_queue(self, context: Dict[str, Any], task_type: str):
+        """Add context to cache warming queue for proactive caching."""
+        if not self.cached_content_manager:
+            return
+            
+        # Determine content type and priority based on task type
+        if task_type in ['analysis', 'assessment']:
+            content_type = CacheContentType.ASSESSMENT_CONTEXT
+            priority = 2  # High priority for assessments
+        elif 'business_profile' in context:
+            content_type = CacheContentType.BUSINESS_PROFILE
+            priority = 3  # Medium priority for business profiles
+        else:
+            content_type = CacheContentType.FRAMEWORK_CONTEXT
+            priority = 4  # Lower priority for general framework content
+        
+        warming_context = {
+            'framework_id': context.get('framework_id'),
+            'business_profile_id': context.get('business_profile', {}).get('id'),
+            'business_profile': context.get('business_profile'),
+            'assessment_context': context.get('assessment_context'),
+            'industry_context': context.get('business_profile', {}).get('industry', 'General')
+        }
+        
+        self.cached_content_manager.add_to_warming_queue(
+            content_type, warming_context, priority
+        )
+        
+        logger.debug(f"Added {task_type} context to cache warming queue")
+    
+    async def trigger_cache_invalidation(self, trigger_type: str, context: Dict[str, Any]):
+        """Trigger intelligent cache invalidation."""
+        if not self.cached_content_manager:
+            return
+            
+        self.cached_content_manager.trigger_intelligent_invalidation(trigger_type, context)
+        
+    async def process_cache_warming_queue(self) -> int:
+        """Process pending cache warming requests."""
+        if not self.cached_content_manager:
+            return 0
+            
+        return await self.cached_content_manager.process_warming_queue()
+    
+    async def get_cache_strategy_metrics(self) -> Dict[str, Any]:
+        """Get cache strategy optimization metrics."""
+        if not self.cached_content_manager:
+            return {'cache_strategy': 'not_available'}
+            
+        base_metrics = self.cached_content_manager.get_cache_metrics()
+        strategy_metrics = self.cached_content_manager.get_cache_strategy_metrics()
+        
+        return {
+            **base_metrics,
+            'strategy_optimization': strategy_metrics
             }

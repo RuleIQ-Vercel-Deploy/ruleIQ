@@ -36,6 +36,11 @@ from database.user import User
 from services.ai import ComplianceAssistant
 from services.ai.exceptions import (
     AIServiceException,
+    AIContentFilterException,
+    AIModelException,
+    AIParsingException,
+    AIQuotaExceededException,
+    AITimeoutException,
 )
 
 # Set up logging
@@ -249,6 +254,30 @@ async def get_question_help(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=str(e)
         )
+    except AIContentFilterException as e:
+        logger.warning(f"AI content filter triggered in question help: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Content not appropriate for AI assistance: {e.filter_reason}"
+        )
+    except AIQuotaExceededException as e:
+        logger.warning(f"AI quota exceeded in question help: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_429_TOO_MANY_REQUESTS,
+            detail=f"AI service quota exceeded: {e.quota_type}"
+        )
+    except (AIModelException, AIParsingException) as e:
+        logger.error(f"AI model/parsing error in question help: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_502_BAD_GATEWAY,
+            detail="AI service experiencing technical difficulties"
+        )
+    except AITimeoutException as e:
+        logger.warning(f"AI timeout in question help: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="AI service timeout - please try again"
+        )
     except AIServiceException as e:
         logger.error(f"AI service error in question help: {e}")
         raise HTTPException(
@@ -313,11 +342,47 @@ async def generate_followup_questions(
             generated_at=followup_response.get("generated_at", "")
         )
         
+    except NotFoundException as e:
+        logger.warning(f"Business profile not found in followup generation: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=str(e)
+        )
+    except AIContentFilterException as e:
+        logger.warning(f"AI content filter triggered in followup generation: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Content not appropriate for AI assistance: {e.filter_reason}"
+        )
+    except AIQuotaExceededException as e:
+        logger.warning(f"AI quota exceeded in followup generation: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_429_TOO_MANY_REQUESTS,
+            detail=f"AI service quota exceeded: {e.quota_type}"
+        )
+    except (AIModelException, AIParsingException) as e:
+        logger.error(f"AI model/parsing error in followup generation: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_502_BAD_GATEWAY,
+            detail="AI service experiencing technical difficulties"
+        )
+    except AITimeoutException as e:
+        logger.warning(f"AI timeout in followup generation: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="AI service timeout - please try again"
+        )
     except AIServiceException as e:
         logger.error(f"AI service error in follow-up generation: {e}")
         raise HTTPException(
             status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
             detail=f"Unable to generate follow-up questions: {e.message}"
+        )
+    except Exception as e:
+        logger.error(f"Unexpected error in follow-up generation: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Unable to generate follow-up questions at this time"
         )
     except Exception as e:
         logger.error(f"Unexpected error in follow-up generation: {e}")
@@ -1062,3 +1127,83 @@ async def _get_mock_recommendations_response(gaps: List[Dict[str, Any]]) -> Dict
         "request_id": f"recommendations_{hash(str(gaps)) % 10000}",
         "generated_at": datetime.utcnow().isoformat()
     }
+
+
+@router.get("/cache/metrics")
+async def get_ai_cache_metrics(
+    current_user: User = Depends(get_current_active_user),
+    db: AsyncSession = Depends(get_async_db)
+) -> Dict[str, Any]:
+    """
+    Get AI caching performance metrics and status.
+    
+    Returns:
+        Cache performance metrics including hit rates, cost savings, and status
+    """
+    try:
+        # Initialize AI assistant to access cache managers
+        assistant = ComplianceAssistant(db)
+        
+        # Get both legacy cache and Google cached content metrics
+        metrics = {}
+        
+        # Google Cached Content metrics with strategy optimization
+        try:
+            cached_content_manager = await assistant._get_cached_content_manager()
+            google_cache_metrics = cached_content_manager.get_cache_metrics()
+            
+            # Add cache strategy optimization metrics
+            strategy_metrics = cached_content_manager.get_cache_strategy_metrics()
+            google_cache_metrics['strategy_optimization'] = strategy_metrics
+            
+            metrics['google_cached_content'] = google_cache_metrics
+        except Exception as e:
+            logger.warning(f"Failed to get Google cached content metrics: {e}")
+            metrics['google_cached_content'] = {"error": "Metrics unavailable"}
+        
+        # Legacy AI cache metrics (if still in use)
+        try:
+            from services.ai.response_cache import get_ai_cache
+            ai_cache = await get_ai_cache()
+            legacy_cache_metrics = await ai_cache.get_cache_metrics()
+            metrics['legacy_cache'] = legacy_cache_metrics
+        except Exception as e:
+            logger.warning(f"Failed to get legacy cache metrics: {e}")
+            metrics['legacy_cache'] = {"error": "Metrics unavailable"}
+        
+        # Overall cache status
+        metrics['cache_status'] = {
+            'google_cached_content_enabled': 'google_cached_content' in metrics and 'error' not in metrics['google_cached_content'],
+            'legacy_cache_enabled': 'legacy_cache' in metrics and 'error' not in metrics['legacy_cache'],
+            'timestamp': datetime.utcnow().isoformat()
+        }
+        
+        # Calculate combined hit rate if both caches are available
+        if (metrics['cache_status']['google_cached_content_enabled'] and 
+            metrics['cache_status']['legacy_cache_enabled']):
+            
+            google_hits = metrics['google_cached_content'].get('cache_hits', 0)
+            google_total = metrics['google_cached_content'].get('total_requests', 0)
+            legacy_hits = metrics['legacy_cache'].get('total_hits', 0)
+            legacy_total = metrics['legacy_cache'].get('total_requests', 0)
+            
+            total_hits = google_hits + legacy_hits
+            total_requests = google_total + legacy_total
+            
+            if total_requests > 0:
+                metrics['combined_hit_rate'] = round(total_hits / total_requests * 100, 2)
+            else:
+                metrics['combined_hit_rate'] = 0.0
+        
+        return {
+            "cache_metrics": metrics,
+            "request_id": f"cache_metrics_{datetime.utcnow().strftime('%Y%m%d_%H%M%S')}",
+            "generated_at": datetime.utcnow().isoformat()
+        }
+        
+    except Exception as e:
+        logger.error(f"Error retrieving cache metrics: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Unable to retrieve cache metrics"
+        )

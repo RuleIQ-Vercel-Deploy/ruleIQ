@@ -1,0 +1,35 @@
+project:
+  name: "ruleIQ"
+  type: "full-stack-web-application"
+  languages:
+    - python
+    - typescript
+    - javascript
+  
+context:
+  mode: "ide-assistant"
+  focus_areas:
+    - "backend/api"
+    - "backend/services"
+    - "frontend/components"
+    - "database/models"
+  
+semantic_analysis:
+  python:
+    language_server: "pyright"
+    include_patterns:
+      - "api/**/*.py"
+      - "services/**/*.py"
+      - "database/**/*.py"
+    exclude_patterns:
+      - "__pycache__/**"
+      - "venv/**"
+  
+  typescript:
+    language_server: "typescript-language-server"
+    include_patterns:
+      - "frontend/**/*.ts"
+      - "frontend/**/*.tsx"
+    exclude_patterns:
+      - "node_modules/**"
+      - ".next/**"

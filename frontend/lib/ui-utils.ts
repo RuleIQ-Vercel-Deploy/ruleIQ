@@ -14,35 +14,52 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-// Professional Button Variants (ruleIQ specific)
+// Standardized Button Variants (ruleIQ design system)
 export const buttonVariants = {
-  base: "inline-flex items-center justify-center rounded-md font-medium transition-all duration-200 ease-in-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary disabled:pointer-events-none disabled:opacity-50",
+  base: "inline-flex items-center justify-center rounded-md font-medium transition-all duration-200 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-outline-primary focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
   
   variants: {
-    primary: "bg-primary text-white hover:bg-primary-dark active:bg-primary-dark shadow-sm hover:shadow-md",
-    secondary: "bg-white text-primary border-2 border-primary hover:bg-primary hover:text-white active:bg-primary-dark",
-    accent: "bg-gold text-primary hover:bg-gold-dark active:bg-gold-dark shadow-sm", // Gold accent
-    outline: "border-2 border-primary text-primary bg-transparent hover:bg-primary/5",
-    ghost: "text-primary hover:bg-primary/10 hover:text-primary",
-    destructive: "bg-destructive text-destructive-foreground hover:bg-destructive/90",
-    trust: "bg-primary/5 text-primary border border-primary/20 hover:bg-primary/10", // Trust indicator variant
+    // Primary actions - most important
+    primary: "bg-midnight text-text-on-midnight hover:bg-midnight-dark active:bg-midnight-dark shadow-sm hover:shadow-md",
+    
+    // Secondary actions - less emphasis
+    secondary: "bg-surface-secondary text-text-on-dark border-2 border-turquoise hover:bg-turquoise hover:text-text-on-turquoise active:bg-turquoise-dark",
+    
+    // Accent actions - turquoise brand accent  
+    accent: "bg-turquoise text-text-on-turquoise hover:bg-turquoise-dark active:bg-turquoise-dark shadow-sm hover:shadow-md",
+    
+    // Outlined - minimal emphasis
+    outline: "border-2 border-outline-primary text-turquoise bg-transparent hover:bg-turquoise/10 active:bg-turquoise/20",
+    
+    // Ghost - subtle actions
+    ghost: "text-turquoise hover:bg-turquoise/10 active:bg-turquoise/15",
+    
+    // Destructive - dangerous actions
+    destructive: "bg-error text-white hover:bg-error/90 active:bg-error/80 shadow-sm",
+    
+    // Success - positive actions
+    success: "bg-success text-white hover:bg-success/90 active:bg-success/80 shadow-sm",
+    
+    // Link - text-only actions
+    link: "text-turquoise underline-offset-4 hover:underline focus-visible:ring-1",
   },
   
   sizes: {
-    sm: "h-8 px-3 text-xs rounded-md",
-    md: "h-10 px-4 py-2 text-sm",
+    sm: "h-8 px-3 text-xs",
+    default: "h-10 px-4 py-2 text-sm", 
     lg: "h-12 px-6 text-base",
     xl: "h-14 px-8 text-lg",
+    icon: "h-10 w-10", // Square icon buttons
   }
 }
 
-// Professional Card Styles
+// Professional Card Styles (Dark Theme)
 export const cardStyles = {
-  base: "bg-white rounded-lg border border-neutral-light shadow-sm hover:shadow-md transition-shadow duration-200",
-  header: "px-6 py-4 border-b border-neutral-light",
+  base: "bg-surface-secondary rounded-lg border border-neutral-medium shadow-sm hover:shadow-md transition-shadow duration-200",
+  header: "px-6 py-4 border-b border-neutral-medium",
   content: "p-6",
-  footer: "px-6 py-4 border-t border-neutral-light bg-neutral-light/20",
-  trust: "border-primary/20 shadow-[0_0_20px_rgba(23,37,90,0.05)]", // Trust shadow
+  footer: "px-6 py-4 border-t border-neutral-medium bg-neutral-light/20",
+  trust: "border-turquoise/20 shadow-[0_0_20px_rgba(0,188,212,0.15)]", // Turquoise trust shadow
 }
 
 // Form Styles
@@ -90,8 +107,8 @@ export const widgetStyles = {
 
 // Navigation Styles
 export const navStyles = {
-  item: "flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors hover:bg-gold/10 hover:text-primary",
-  itemActive: "bg-gold/20 text-primary font-semibold", // Gold accent for active
+  item: "flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors hover:bg-turquoise/10 hover:text-turquoise",
+  itemActive: "bg-turquoise/20 text-turquoise font-semibold", // Turquoise accent for active
   group: "space-y-1",
   groupLabel: "px-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider",
 }
@@ -100,10 +117,10 @@ export const navStyles = {
 export const tableStyles = {
   wrapper: "relative w-full overflow-auto",
   table: "w-full caption-bottom text-sm",
-  header: "border-b bg-neutral-light/50",
+  header: "border-b bg-neutral-light/30",
   headerCell: "h-12 px-4 text-left align-middle font-medium text-muted-foreground",
   body: "border-b",
-  row: "border-b transition-colors hover:bg-neutral-light/30 data-[state=selected]:bg-gold/10",
+  row: "border-b transition-colors hover:bg-neutral-light/20 data-[state=selected]:bg-turquoise/10",
   cell: "p-4 align-middle",
 }
 

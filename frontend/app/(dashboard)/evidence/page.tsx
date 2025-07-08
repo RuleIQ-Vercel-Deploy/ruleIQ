@@ -291,7 +291,7 @@ export default function EvidencePage() {
                   <Badge 
                     key={fw} 
                     variant="outline" 
-                    className="text-xs border-gold/20 text-gold"
+                    className="text-xs border-turquoise/20 text-turquoise"
                   >
                     {frameworks.find(f => f.value === fw)?.label}
                   </Badge>

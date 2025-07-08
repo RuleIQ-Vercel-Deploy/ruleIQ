@@ -12,9 +12,6 @@ import {
   RiskMatrix, 
   TaskProgressChart 
 } from "@/components/dashboard/charts"
-import { AdvancedMetricsChart } from "@/components/dashboard/charts/advanced-metrics-chart"
-import { ComplianceDistributionChart } from "@/components/dashboard/charts/compliance-distribution-chart"
-import { TimeSeriesAnalysisChart } from "@/components/dashboard/charts/time-series-analysis-chart"
 import { DashboardHeader } from "@/components/dashboard/dashboard-header"
 import { AppSidebar } from "@/components/navigation/app-sidebar"
 import { Button } from "@/components/ui/button"
@@ -175,7 +172,7 @@ export default function AnalyticsPage() {
           </div>
 
           {/* Filters Section */}
-          <Card className="border-gold/20">
+          <Card className="border-turquoise/20">
             <CardHeader className="pb-3">
               <div className="flex items-center justify-between">
                 <CardTitle className="text-lg">Filters</CardTitle>

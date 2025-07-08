@@ -20,7 +20,6 @@ export default function AssessmentsPage() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [assessments, setAssessments] = useState<Assessment[]>([])
-  const [totalCount, setTotalCount] = useState(0)
   
   useEffect(() => {
     fetchAssessments()
@@ -35,7 +34,6 @@ export default function AssessmentsPage() {
         page_size: 50
       })
       setAssessments(response.items)
-      setTotalCount(response.total)
     } catch (err: any) {
       console.error('Error fetching assessments:', err)
       setError(err.message || 'Failed to load assessments')

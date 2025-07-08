@@ -135,7 +135,6 @@ export default function AssessmentPage() {
   const { addNotification } = useAppStore();
   const { user } = useAuthStore();
   const [loading, setLoading] = useState(true);
-  const [assessment, setAssessment] = useState<AssessmentResult | null>(null);
   const [framework, setFramework] = useState<AssessmentFramework | null>(null);
 
   const assessmentId = params['id'] as string;
@@ -147,8 +146,7 @@ export default function AssessmentPage() {
   const loadAssessment = async () => {
     try {
       // Load assessment details
-      const assessmentData = await assessmentService.getAssessment(assessmentId);
-      setAssessment(assessmentData);
+      await assessmentService.getAssessment(assessmentId);
 
       // Load framework questions - in production this would be from API
       // For now, use mock data
@@ -194,7 +192,7 @@ export default function AssessmentPage() {
       // Save progress to backend
       await assessmentService.updateAssessment(assessmentId, {
         status: 'in_progress',
-        responses: progress.responses || {} // Use actual responses from progress
+        responses: (progress as any).responses || {} // Safe access to responses
       });
     } catch (error) {
       console.error('Failed to save progress:', error);

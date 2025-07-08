@@ -301,6 +301,8 @@ async def update_evidence_item(
         raise HTTPException(status_code=404, detail="Evidence not found")
     elif status == 'unauthorized':
         raise HTTPException(status_code=403, detail="Access denied")
+    elif status.startswith('validation_error'):
+        raise HTTPException(status_code=400, detail=status.replace('validation_error: ', ''))
 
     # Convert EvidenceItem to expected response format
     return EvidenceService._convert_evidence_item_to_response(evidence)
@@ -325,6 +327,8 @@ async def update_evidence_status(
         raise HTTPException(status_code=404, detail="Evidence not found")
     elif status == 'unauthorized':
         raise HTTPException(status_code=403, detail="Access denied")
+    elif status.startswith('validation_error'):
+        raise HTTPException(status_code=400, detail=status.replace('validation_error: ', ''))
 
     # Convert EvidenceItem to expected response format
     return EvidenceService._convert_evidence_item_to_response(evidence)

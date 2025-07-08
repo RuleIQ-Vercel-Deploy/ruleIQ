@@ -4,6 +4,7 @@ import { create } from 'zustand'
 import { persist, createJSONStorage , devtools } from 'zustand/middleware'
 
 import type { User } from '@/types/api'
+import SecureStorage from '@/lib/utils/secure-storage'
 
 // Enhanced User interface for auth
 export interface AuthUser extends User {
@@ -124,17 +125,12 @@ export const useAuthStore = create<AuthState>()(
             const { tokens, user } = response
             const expiryTime = Date.now() + (8 * 60 * 60 * 1000) // 8 hours
 
-            // Store tokens securely
+            // Store tokens securely using Web Crypto API
             if (typeof window !== 'undefined') {
-              if (credentials.rememberMe) {
-                localStorage.setItem("ruleiq_auth_token", tokens.access_token)
-                localStorage.setItem("ruleiq_refresh_token", tokens.refresh_token)
-                localStorage.setItem("ruleiq_session_expiry", expiryTime.toString())
-              } else {
-                sessionStorage.setItem("ruleiq_auth_token", tokens.access_token)
-                sessionStorage.setItem("ruleiq_refresh_token", tokens.refresh_token)
-                sessionStorage.setItem("ruleiq_session_expiry", expiryTime.toString())
-              }
+              await SecureStorage.setAccessToken(tokens.access_token, {
+                expiry: expiryTime
+              })
+              SecureStorage.setRefreshToken(tokens.refresh_token, expiryTime)
             }
 
             set({
@@ -188,11 +184,12 @@ export const useAuthStore = create<AuthState>()(
             const { tokens, user } = response
             const expiryTime = Date.now() + (8 * 60 * 60 * 1000) // 8 hours
 
-            // Store tokens
+            // Store tokens securely using Web Crypto API
             if (typeof window !== 'undefined') {
-              localStorage.setItem("ruleiq_auth_token", tokens.access_token)
-              localStorage.setItem("ruleiq_refresh_token", tokens.refresh_token)
-              localStorage.setItem("ruleiq_session_expiry", expiryTime.toString())
+              await SecureStorage.setAccessToken(tokens.access_token, {
+                expiry: expiryTime
+              })
+              SecureStorage.setRefreshToken(tokens.refresh_token, expiryTime)
             }
 
             set({
@@ -232,14 +229,9 @@ export const useAuthStore = create<AuthState>()(
             console.error('Logout API call failed:', error)
           }
 
-          // Clear all storage
+          // Clear all secure storage
           if (typeof window !== 'undefined') {
-            localStorage.removeItem("ruleiq_auth_token")
-            localStorage.removeItem("ruleiq_refresh_token")
-            localStorage.removeItem("ruleiq_session_expiry")
-            sessionStorage.removeItem("ruleiq_auth_token")
-            sessionStorage.removeItem("ruleiq_refresh_token")
-            sessionStorage.removeItem("ruleiq_session_expiry")
+            SecureStorage.clearAll()
           }
 
           set({
@@ -262,26 +254,31 @@ export const useAuthStore = create<AuthState>()(
 
         // Token refresh action
         refreshTokens: async () => {
-          const { tokens } = get()
-          if (!tokens.refresh) {
+          let refreshToken: string | null = null
+          
+          if (typeof window !== 'undefined') {
+            refreshToken = SecureStorage.getRefreshToken()
+          }
+          
+          if (!refreshToken) {
             throw new Error('No refresh token available')
           }
 
           try {
             const { authService } = await import('@/lib/api/auth.service')
             const formData = new FormData()
-            formData.append('refresh_token', tokens.refresh)
+            formData.append('refresh_token', refreshToken)
             
             const response = await authService.post('/auth/refresh', formData)
 
             const expiryTime = Date.now() + (8 * 60 * 60 * 1000) // 8 hours
 
-            // Update stored tokens
+            // Update stored tokens securely
             if (typeof window !== 'undefined') {
-              const storage = localStorage.getItem("ruleiq_auth_token") ? localStorage : sessionStorage
-              storage.setItem("ruleiq_auth_token", response.data.access_token)
-              storage.setItem("ruleiq_refresh_token", response.data.refresh_token)
-              storage.setItem("ruleiq_session_expiry", expiryTime.toString())
+              await SecureStorage.setAccessToken(response.data.access_token, {
+                expiry: expiryTime
+              })
+              SecureStorage.setRefreshToken(response.data.refresh_token, expiryTime)
             }
 
             set({
@@ -306,16 +303,20 @@ export const useAuthStore = create<AuthState>()(
           set({ isLoading: true }, false, 'checkAuth/start')
 
           try {
-            // Check for stored tokens
+            // Migrate legacy tokens if they exist
+            if (typeof window !== 'undefined') {
+              await SecureStorage.migrateLegacyTokens()
+            }
+
+            // Check for stored tokens using secure storage
             let accessToken: string | null = null
             let refreshToken: string | null = null
             let sessionExpiry: number | null = null
 
             if (typeof window !== 'undefined') {
-              accessToken = localStorage.getItem("ruleiq_auth_token") || sessionStorage.getItem("ruleiq_auth_token")
-              refreshToken = localStorage.getItem("ruleiq_refresh_token") || sessionStorage.getItem("ruleiq_refresh_token")
-              const expiryStr = localStorage.getItem("ruleiq_session_expiry") || sessionStorage.getItem("ruleiq_session_expiry")
-              sessionExpiry = expiryStr ? parseInt(expiryStr) : null
+              accessToken = await SecureStorage.getAccessToken()
+              refreshToken = SecureStorage.getRefreshToken()
+              sessionExpiry = SecureStorage.getSessionExpiry()
             }
 
             if (!accessToken || !refreshToken) {
@@ -324,7 +325,7 @@ export const useAuthStore = create<AuthState>()(
             }
 
             // Check if session is expired
-            if (sessionExpiry && Date.now() > sessionExpiry) {
+            if (SecureStorage.isSessionExpired()) {
               get().logout()
               return
             }

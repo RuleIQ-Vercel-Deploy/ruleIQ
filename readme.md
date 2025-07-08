@@ -66,8 +66,38 @@ ruleIQ is a comprehensive AI-powered compliance automation platform designed spe
 - **PostgreSQL** 14+
 - **Redis** 6+
 - **Docker** (optional)
+- **Serena MCP Server** (optional, for enhanced IDE assistance)
 
 ### Development Setup
+
+#### Quick Start with Initialization Script
+
+For a complete development environment setup including all services and Serena MCP integration:
+
+```bash
+# Clone the repository
+git clone https://github.com/OmarA1-Bakri/Experiment.git
+cd ruleIQ
+
+# Run the initialization script
+./scripts/init_dev_environment.sh
+```
+
+This script will:
+- ✅ Check prerequisites
+- ✅ Set up Python virtual environment
+- ✅ Install all dependencies
+- ✅ Start Docker services (PostgreSQL, Redis)
+- ✅ Run database migrations
+- ✅ Initialize Serena MCP Server for IDE assistance
+- ✅ Run context change detection
+
+To stop all services:
+```bash
+./scripts/stop_dev_environment.sh
+```
+
+#### Manual Setup
 
 1. **Clone the repository**
    ```bash

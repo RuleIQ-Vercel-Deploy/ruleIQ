@@ -1,4 +1,5 @@
 import { AUTH_TOKEN_KEY, REFRESH_TOKEN_KEY, USER_KEY } from '@/config/constants';
+import SecureStorage from '@/lib/utils/secure-storage';
 
 import { apiClient } from './client';
 
@@ -40,7 +41,7 @@ class AuthService {
     });
     
     // Store tokens and user data
-    this.setAuthData(response.data);
+    await this.setAuthData(response.data);
     
     return response.data;
   }
@@ -52,7 +53,7 @@ class AuthService {
     const response = await apiClient.post<AuthResponse>('/auth/register', data);
     
     // Store tokens and user data
-    this.setAuthData(response.data);
+    await this.setAuthData(response.data);
     
     return response.data;
   }
@@ -63,7 +64,7 @@ class AuthService {
   async logout(): Promise<void> {
     try {
       // Only attempt API logout if we have a token
-      const token = this.getAccessToken();
+      const token = await apiClient.getToken();
       if (token) {
         await apiClient.post('/auth/logout');
       }
@@ -139,7 +140,7 @@ class AuthService {
    * Refresh access token
    */
   async refreshToken(): Promise<AuthTokens> {
-    const refreshToken = localStorage.getItem(REFRESH_TOKEN_KEY);
+    const refreshToken = SecureStorage.getRefreshToken();
     if (!refreshToken) {
       throw new Error('No refresh token available');
     }
@@ -148,25 +149,27 @@ class AuthService {
       refresh_token: refreshToken
     });
     
-    // Update stored tokens
+    // Update stored tokens securely
+    const expiry = Date.now() + (8 * 60 * 60 * 1000); // 8 hours
     if (response.data.access_token) {
-      localStorage.setItem(AUTH_TOKEN_KEY, response.data.access_token);
+      await SecureStorage.setAccessToken(response.data.access_token, { expiry });
     }
     if (response.data.refresh_token) {
-      localStorage.setItem(REFRESH_TOKEN_KEY, response.data.refresh_token);
+      SecureStorage.setRefreshToken(response.data.refresh_token, expiry);
     }
     
     return response.data;
   }
 
   /**
-   * Store auth data
+   * Store auth data securely
    */
-  private setAuthData(data: AuthResponse): void {
+  private async setAuthData(data: AuthResponse): Promise<void> {
     if (typeof window === 'undefined') return;
     
-    localStorage.setItem(AUTH_TOKEN_KEY, data.tokens.access_token);
-    localStorage.setItem(REFRESH_TOKEN_KEY, data.tokens.refresh_token);
+    const expiry = Date.now() + (8 * 60 * 60 * 1000); // 8 hours
+    await SecureStorage.setAccessToken(data.tokens.access_token, { expiry });
+    SecureStorage.setRefreshToken(data.tokens.refresh_token, expiry);
     localStorage.setItem(USER_KEY, JSON.stringify(data.user));
   }
 
@@ -179,13 +182,12 @@ class AuthService {
   }
 
   /**
-   * Clear auth data
+   * Clear auth data from secure storage
    */
   private clearAuthData(): void {
     if (typeof window === 'undefined') return;
     
-    localStorage.removeItem(AUTH_TOKEN_KEY);
-    localStorage.removeItem(REFRESH_TOKEN_KEY);
+    SecureStorage.clearAll();
     localStorage.removeItem(USER_KEY);
   }
 
@@ -208,9 +210,25 @@ class AuthService {
   /**
    * Check if user is authenticated
    */
-  isAuthenticated(): boolean {
+  async isAuthenticated(): Promise<boolean> {
     if (typeof window === 'undefined') return false;
-    return !!localStorage.getItem(AUTH_TOKEN_KEY);
+    try {
+      const token = await SecureStorage.getAccessToken();
+      return !!token && !SecureStorage.isSessionExpired();
+    } catch (error) {
+      return false;
+    }
+  }
+
+  /**
+   * Get access token from secure storage
+   */
+  async getAccessToken(): Promise<string | null> {
+    try {
+      return await SecureStorage.getAccessToken();
+    } catch (error) {
+      return null;
+    }
   }
 }
 

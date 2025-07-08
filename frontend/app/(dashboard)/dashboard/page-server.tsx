@@ -3,10 +3,8 @@ import {
   Shield, 
   AlertTriangle, 
   Brain, 
-  TrendingUp, 
   FileCheck, 
-  RefreshCw,
-  AlertCircle 
+  RefreshCw
 } from "lucide-react"
 
 import { 
@@ -16,7 +14,6 @@ import {
   RiskMatrix, 
   TaskProgressChart 
 } from "@/components/dashboard/charts"
-import { ComplianceScoreWidget } from "@/components/dashboard/compliance-score-widget"
 import { DashboardHeader } from "@/components/dashboard/dashboard-header"
 import { EnhancedStatsCard } from "@/components/dashboard/enhanced-stats-card"
 import { PendingTasksWidget } from "@/components/dashboard/pending-tasks-widget"

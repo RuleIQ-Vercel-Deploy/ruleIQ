@@ -59,22 +59,22 @@ export const assessmentResults = {
     {
       id: "rec-1",
       text: "Develop and document a formal data breach notification procedure, including internal escalation paths and timelines for reporting to the ICO.",
-      priority: "High",
+      priority: "High" as const,
     },
     {
       id: "rec-2",
       text: "Implement a more robust due diligence process for third-party vendors, including mandatory Data Processing Agreements (DPAs) and periodic security reviews.",
-      priority: "High",
+      priority: "High" as const,
     },
     {
       id: "rec-3",
       text: "Enhance data-at-rest encryption standards for non-production environments to align with production systems.",
-      priority: "Medium",
+      priority: "Medium" as const,
     },
     {
       id: "rec-4",
       text: "Conduct regular refresher training for staff on handling Data Subject Access Requests (DSARs).",
-      priority: "Low",
+      priority: "Low" as const,
     },
   ],
 }

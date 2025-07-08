@@ -185,11 +185,13 @@ class TestAIErrorHandling:
         }
 
         followup_request = {
-            "question_id": "multi-fail-test",
-            "question_text": "Do you process personal data?",
-            "user_answer": "yes",
-            "assessment_context": {
-                "framework_id": "gdpr",
+            "framework_id": "gdpr",
+            "current_answers": {
+                "question_id": "multi-fail-test",
+                "question_text": "Do you process personal data?",
+                "user_answer": "yes"
+            },
+            "business_context": {
                 "business_profile_id": str(sample_business_profile.id)
             }
         }
@@ -204,7 +206,7 @@ class TestAIErrorHandling:
         }
 
         with patch.object(ComplianceAssistant, 'get_assessment_help') as mock_help, \
-             patch.object(ComplianceAssistant, 'generate_followup_questions') as mock_followup:
+             patch.object(ComplianceAssistant, 'generate_assessment_followup') as mock_followup:
             # All AI services fail
             mock_help.side_effect = AIServiceException("Service unavailable")
             mock_followup.side_effect = AIServiceException("Service unavailable")
@@ -245,7 +247,7 @@ class TestAIErrorHandling:
             })
             
             # Follow-up service fails
-            mock_assistant.return_value.generate_followup_questions = AsyncMock(
+            mock_assistant.return_value.generate_assessment_followup = AsyncMock(
                 side_effect=AIServiceException("Follow-up service unavailable")
             )
 
@@ -264,11 +266,13 @@ class TestAIErrorHandling:
             followup_response = client.post(
                 "/api/ai/assessments/followup",
                 json={
-                    "question_id": "partial-test",
-                    "question_text": "Do you process personal data?",
-                    "user_answer": "yes",
-                    "assessment_context": {
-                        "framework_id": "gdpr",
+                    "framework_id": "gdpr",
+                    "current_answers": {
+                        "question_id": "partial-test",
+                        "question_text": "Do you process personal data?",
+                        "user_answer": "yes"
+                    },
+                    "business_context": {
                         "business_profile_id": str(sample_business_profile.id)
                     }
                 },

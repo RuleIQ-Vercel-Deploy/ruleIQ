@@ -180,21 +180,21 @@ def sample_business_profile_data():
         "employee_count": 75,
         "country": "USA",
         # "data_sensitivity": "Moderate",  # Temporarily removed until migration is run
-        "existing_framew": ["ISO27001", "SOC2"],
-        "planned_framewo": [],
+        "existing_frameworks": ["ISO27001", "SOC2"],
+        "planned_frameworks": [],
         # Required boolean fields
-        "handles_persona": True,
-        "processes_payme": False,
-        "stores_health_d": False,
-        "provides_financ": False,
-        "operates_critic": False,
-        "has_internation": True,
+        "handles_personal_data": True,
+        "processes_payments": False,
+        "stores_health_data": False,
+        "provides_financial_services": False,
+        "operates_critical_infrastructure": False,
+        "has_international_operations": True,
         # Optional fields with defaults
         "cloud_providers": ["AWS", "Azure"],
         "saas_tools": ["Office365", "Salesforce"],
-        "development_too": ["GitHub"],
-        "compliance_budg": "50000-100000",
-        "compliance_time": "6-12 months"
+        "development_tools": ["GitHub"],
+        "compliance_budget": "50000-100000",
+        "compliance_timeline": "6-12 months"
     }
 
 @pytest.fixture
@@ -214,21 +214,21 @@ def sample_business_profile(db_session, sample_user):
         "employee_count": 75,
         "country": "USA",
         # "data_sensitivity": "Moderate",  # Temporarily removed until migration is run
-        "existing_framew": ["ISO27001", "SOC2"],
-        "planned_framewo": [],
+        "existing_frameworks": ["ISO27001", "SOC2"],
+        "planned_frameworks": [],
         # Required boolean fields
-        "handles_persona": True,
-        "processes_payme": False,
-        "stores_health_d": False,
-        "provides_financ": False,
-        "operates_critic": False,
-        "has_internation": True,
+        "handles_personal_data": True,
+        "processes_payments": False,
+        "stores_health_data": False,
+        "provides_financial_services": False,
+        "operates_critical_infrastructure": False,
+        "has_international_operations": True,
         # Optional fields with defaults
         "cloud_providers": ["AWS", "Azure"],
         "saas_tools": ["Office365", "Salesforce"],
-        "development_too": ["GitHub"],
-        "compliance_budg": "50000-100000",
-        "compliance_time": "6-12 months"
+        "development_tools": ["GitHub"],
+        "compliance_budget": "50000-100000",
+        "compliance_timeline": "6-12 months"
     }
     profile = BusinessProfile(
         id=uuid4(),

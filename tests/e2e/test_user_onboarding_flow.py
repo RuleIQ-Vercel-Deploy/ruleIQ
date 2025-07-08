@@ -62,12 +62,12 @@ class TestUserOnboardingFlow:
             "country": sample_business_profile.country,
             "existing_framew": sample_business_profile.existing_framew,
             "planned_framewo": sample_business_profile.planned_framewo,
-            "handles_persona": sample_business_profile.handles_persona,
-            "processes_payme": sample_business_profile.processes_payme,
-            "stores_health_d": sample_business_profile.stores_health_d,
-            "provides_financ": sample_business_profile.provides_financ,
-            "operates_critic": sample_business_profile.operates_critic,
-            "has_internation": sample_business_profile.has_internation
+            "handles_personal_data": sample_business_profile.handles_personal_data,
+            "processes_payments": sample_business_profile.processes_payments,
+            "stores_health_data": sample_business_profile.stores_health_data,
+            "provides_financial_services": sample_business_profile.provides_financial_services,
+            "operates_critical_infrastructure": sample_business_profile.operates_critical_infrastructure,
+            "has_international_operations": sample_business_profile.has_international_operations
         }
         
         profile_response = client.post(
@@ -156,12 +156,12 @@ class TestUserOnboardingFlow:
             "country": "Canada",
             "existing_framew": ["HIPAA"],
             "planned_framewo": ["ISO27001"],
-            "handles_persona": True,
-            "processes_payme": True,
-            "stores_health_d": True,
-            "provides_financ": False,
-            "operates_critic": True,
-            "has_internation": False
+            "handles_personal_data": True,
+            "processes_payments": True,
+            "stores_health_data": True,
+            "provides_financial_services": False,
+            "operates_critical_infrastructure": True,
+            "has_international_operations": False
         }
         profile_response = client.post(
             "/api/business-profiles",
@@ -360,12 +360,12 @@ class TestOnboardingIntegration:
             "country": "USA",
             "existing_framew": ["ISO27001"],
             "planned_framewo": ["SOC2"],
-            "handles_persona": True,
-            "processes_payme": False,
-            "stores_health_d": False,
-            "provides_financ": False,
-            "operates_critic": False,
-            "has_internation": True
+            "handles_personal_data": True,
+            "processes_payments": False,
+            "stores_health_data": False,
+            "provides_financial_services": False,
+            "operates_critical_infrastructure": False,
+            "has_international_operations": True
         }
 
         profile_response = client.post(
@@ -417,12 +417,12 @@ class TestOnboardingIntegration:
             "country": sample_business_profile.country,
             "existing_framew": sample_business_profile.existing_framew,
             "planned_framewo": sample_business_profile.planned_framewo,
-            "handles_persona": sample_business_profile.handles_persona,
-            "processes_payme": sample_business_profile.processes_payme,
-            "stores_health_d": sample_business_profile.stores_health_d,
-            "provides_financ": sample_business_profile.provides_financ,
-            "operates_critic": sample_business_profile.operates_critic,
-            "has_internation": sample_business_profile.has_internation
+            "handles_personal_data": sample_business_profile.handles_personal_data,
+            "processes_payments": sample_business_profile.processes_payments,
+            "stores_health_data": sample_business_profile.stores_health_data,
+            "provides_financial_services": sample_business_profile.provides_financial_services,
+            "operates_critical_infrastructure": sample_business_profile.operates_critical_infrastructure,
+            "has_international_operations": sample_business_profile.has_international_operations
         }
         client.post(
             "/api/business-profiles",

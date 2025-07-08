@@ -24,27 +24,27 @@ class BusinessProfile(Base):
     country = Column(String, default="UK")
     data_sensitivity = Column(String, default="Low", nullable=False)  # Re-added for framework relevance calculation
 
-    # Business characteristics (truncated column names to match database)
-    handles_persona = Column(Boolean, nullable=False)  # handles_personal_data truncated
-    processes_payme = Column(Boolean, nullable=False)  # processes_payments truncated
-    stores_health_d = Column(Boolean, nullable=False)  # stores_health_data truncated
-    provides_financ = Column(Boolean, nullable=False)  # provides_financial_services truncated
-    operates_critic = Column(Boolean, nullable=False)  # operates_critical_infrastructure truncated
-    has_internation = Column(Boolean, nullable=False)  # has_international_operations truncated
+    # Business characteristics (full column names after migration)
+    handles_personal_data = Column(Boolean, nullable=False)
+    processes_payments = Column(Boolean, nullable=False)
+    stores_health_data = Column(Boolean, nullable=False)
+    provides_financial_services = Column(Boolean, nullable=False)
+    operates_critical_infrastructure = Column(Boolean, nullable=False)
+    has_international_operations = Column(Boolean, nullable=False)
 
-    # Technology stack (truncated column names to match database)
+    # Technology stack (full column names after migration)
     cloud_providers = Column(PG_JSONB, default=list)  # AWS, Azure, GCP, etc.
     saas_tools = Column(PG_JSONB, default=list)  # Office 365, Salesforce, etc.
-    development_too = Column(PG_JSONB, default=list)  # GitHub, GitLab, etc. (truncated)
+    development_tools = Column(PG_JSONB, default=list)  # GitHub, GitLab, etc.
 
-    # Current compliance state (truncated column names to match database)
-    existing_framew = Column(PG_JSONB, default=list)  # Currently compliant with (truncated)
-    planned_framewo = Column(PG_JSONB, default=list)  # Planning to achieve (truncated)
-    compliance_budg = Column(String, nullable=True) # Consider Numeric/Decimal (truncated)
-    compliance_time = Column(String, nullable=True)  # compliance_timeline truncated
+    # Current compliance state (full column names after migration)
+    existing_frameworks = Column(PG_JSONB, default=list)  # Currently compliant with
+    planned_frameworks = Column(PG_JSONB, default=list)  # Planning to achieve
+    compliance_budget = Column(String, nullable=True)  # Consider Numeric/Decimal
+    compliance_timeline = Column(String, nullable=True)
 
-    # Assessment status (truncated column names to match database)
-    assessment_comp = Column(Boolean, default=False)  # assessment_completed truncated
+    # Assessment status (full column names after migration)
+    assessment_completed = Column(Boolean, default=False)
     assessment_data = Column(PG_JSONB, default=dict)  # Store questionnaire responses
 
     created_at = Column(DateTime, default=datetime.utcnow)

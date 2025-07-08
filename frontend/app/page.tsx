@@ -210,7 +210,7 @@ export default function HomePage() {
                 </Button>
                 <Button
                   variant="outline"
-                  className="border-navy text-navy hover:bg-navy hover:text-white"
+                  className="border-turquoise text-turquoise hover:bg-turquoise hover:text-white"
                   onClick={() => {
                     useAuthStore.getState().logout();
                     router.push("/");
@@ -321,7 +321,7 @@ export default function HomePage() {
               <Button
                 size="lg"
                 variant="outline"
-                className="border-navy text-navy hover:bg-navy hover:text-white"
+                className="border-turquoise text-turquoise hover:bg-turquoise hover:text-white"
                 onClick={() => router.push("/login")}
               >
                 Sign In
@@ -555,7 +555,7 @@ export default function HomePage() {
             <Button
               size="lg"
               variant="outline"
-              className="border-navy text-navy hover:bg-navy hover:text-white"
+              className="border-turquoise text-turquoise hover:bg-turquoise hover:text-white"
               onClick={() => router.push("/login")}
             >
               Get Started

@@ -140,7 +140,7 @@ export default function CheckoutPage() {
           <div>
             <CheckoutForm
               planId={planId}
-              customerEmail={user?.email || undefined}
+              {...(user?.email && { customerEmail: user.email })}
               onSuccess={handleSuccess}
               onError={handleError}
             />

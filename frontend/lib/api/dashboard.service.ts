@@ -205,6 +205,113 @@ class DashboardService {
     const response = await apiClient.get<any>('/dashboard/recommendations');
     return response.data;
   }
+
+  /**
+   * Mock dashboard data for development
+   */
+  private getMockDashboardData() {
+    return {
+      stats: {
+        compliance_score: 87,
+        frameworks_active: 3,
+        policies_approved: 12,
+        evidence_collected: 45,
+        assessments_completed: 8,
+        tasks_pending: 6,
+        upcoming_deadlines: 2,
+        risk_items: 1
+      },
+      recent_activity: [
+        {
+          id: '1',
+          timestamp: new Date().toISOString(),
+          type: 'assessment' as const,
+          action: 'completed',
+          description: 'GDPR assessment completed with 92% compliance score',
+          user: 'Demo User'
+        },
+        {
+          id: '2',
+          timestamp: new Date(Date.now() - 3600000).toISOString(),
+          type: 'evidence' as const,
+          action: 'uploaded',
+          description: 'Privacy policy documentation uploaded',
+          user: 'Demo User'
+        }
+      ],
+      pending_tasks: [
+        {
+          id: '1',
+          title: 'Review GDPR compliance gaps',
+          type: 'compliance' as const,
+          priority: 'high' as const,
+          due_date: new Date(Date.now() + 86400000 * 3).toISOString(),
+          status: 'pending' as const
+        }
+      ],
+      ai_insights: [
+        {
+          id: '1',
+          type: 'recommendation' as const,
+          title: 'Strengthen Data Protection',
+          description: 'Consider implementing additional encryption measures for sensitive data',
+          priority: 1,
+          dismissible: true,
+          created_at: new Date().toISOString()
+        }
+      ],
+      framework_progress: [
+        {
+          framework_id: 'gdpr',
+          framework_name: 'GDPR',
+          compliance_percentage: 87,
+          controls_total: 23,
+          controls_compliant: 20,
+          controls_in_progress: 3,
+          trend: 'improving' as const
+        }
+      ],
+      upcoming_deadlines: [
+        {
+          date: new Date(Date.now() + 86400000 * 7).toISOString(),
+          title: 'Annual GDPR review',
+          type: 'assessment',
+          days_remaining: 7
+        }
+      ],
+      compliance_trends: [
+        { date: '2024-01-01', score: 75 },
+        { date: '2024-02-01', score: 82 },
+        { date: '2024-03-01', score: 87 }
+      ]
+    };
+  }
+
+  /**
+   * Mock widgets data for development
+   */
+  private getMockWidgetsData() {
+    return {
+      widgets: [
+        {
+          id: 'compliance-score',
+          type: 'metric',
+          title: 'Compliance Score',
+          position: { x: 0, y: 0, w: 3, h: 2 },
+          config: { metric: 'compliance_score' },
+          visible: true
+        },
+        {
+          id: 'pending-tasks',
+          type: 'list',
+          title: 'Pending Tasks',
+          position: { x: 3, y: 0, w: 6, h: 4 },
+          config: { source: 'pending_tasks' },
+          visible: true
+        }
+      ]
+    };
+  }
 }
 
 export const dashboardService = new DashboardService();

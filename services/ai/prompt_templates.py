@@ -518,7 +518,7 @@ Business Context:
 - Company: {business_info.get('company_name', 'Unknown')}
 - Industry: {business_info.get('industry', 'Unknown')}
 - Employee Count: {business_info.get('employee_count', 'Unknown')}
-- Current Frameworks: {', '.join(business_info.get('existing_framew', []))}
+- Current Frameworks: {', '.join(business_info.get('existing_frameworks', []))}
 - Evidence Collected: {len(recent_evidence)} items
 
 User Message: "{message}"
@@ -555,7 +555,7 @@ If you need clarification on any aspect of their request, feel free to ask follo
         - Company: {business_info.get('company_name', 'Unknown')}
         - Industry: {business_info.get('industry', 'Unknown')}
         - Employee Count: {business_info.get('employee_count', 'Unknown')}
-        - Current Frameworks: {', '.join(business_info.get('existing_framew', []))}
+        - Current Frameworks: {', '.join(business_info.get('existing_frameworks', []))}
         - Evidence Collected: {len(recent_evidence)} items
 
         Please provide a comprehensive, helpful response that:

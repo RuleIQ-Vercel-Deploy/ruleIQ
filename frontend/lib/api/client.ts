@@ -2,6 +2,7 @@ import axios, { type AxiosInstance, type AxiosRequestConfig, AxiosResponse, type
 
 import { API_TIMEOUT, API_RETRY_ATTEMPTS, API_RETRY_DELAY, AUTH_TOKEN_KEY, REFRESH_TOKEN_KEY } from '@/config/constants';
 import { env } from '@/config/env';
+import SecureStorage from '@/lib/utils/secure-storage';
 
 import { handleApiError, retryWithBackoff, ErrorType, logError } from './error-handler';
 
@@ -47,8 +48,8 @@ class ApiClient {
   private setupInterceptors() {
     // Request interceptor
     this.client.interceptors.request.use(
-      (config) => {
-        const token = this.getAccessToken();
+      async (config) => {
+        const token = await this.getAccessToken();
         if (token) {
           config.headers.Authorization = `Bearer ${token}`;
         }
@@ -71,7 +72,7 @@ class ApiClient {
 
           try {
             await this.refreshAccessToken();
-            const token = this.getAccessToken();
+            const token = await this.getAccessToken();
             originalRequest.headers.Authorization = `Bearer ${token}`;
             return this.client(originalRequest);
           } catch (refreshError) {
@@ -120,37 +121,45 @@ class ApiClient {
   }
 
   /**
-   * Get access token from storage
+   * Get access token from secure storage
    */
-  private getAccessToken(): string | null {
+  private async getAccessToken(): Promise<string | null> {
     if (typeof window === 'undefined') return null;
-    return localStorage.getItem(AUTH_TOKEN_KEY);
+    try {
+      return await SecureStorage.getAccessToken();
+    } catch (error) {
+      console.error('Failed to get access token:', error);
+      return null;
+    }
   }
 
   /**
-   * Get refresh token from storage
+   * Get refresh token from secure storage
    */
   private getRefreshToken(): string | null {
     if (typeof window === 'undefined') return null;
-    return localStorage.getItem(REFRESH_TOKEN_KEY);
+    return SecureStorage.getRefreshToken();
   }
 
   /**
-   * Store tokens
+   * Store tokens securely
    */
-  private setTokens(accessToken: string, refreshToken: string) {
+  private async setTokens(accessToken: string, refreshToken: string, expiry?: number) {
     if (typeof window === 'undefined') return;
-    localStorage.setItem(AUTH_TOKEN_KEY, accessToken);
-    localStorage.setItem(REFRESH_TOKEN_KEY, refreshToken);
+    try {
+      await SecureStorage.setAccessToken(accessToken, { expiry });
+      SecureStorage.setRefreshToken(refreshToken, expiry);
+    } catch (error) {
+      console.error('Failed to store tokens:', error);
+    }
   }
 
   /**
-   * Clear tokens
+   * Clear tokens from secure storage
    */
   private clearTokens() {
     if (typeof window === 'undefined') return;
-    localStorage.removeItem(AUTH_TOKEN_KEY);
-    localStorage.removeItem(REFRESH_TOKEN_KEY);
+    SecureStorage.clearAll();
   }
 
   /**
@@ -171,9 +180,10 @@ class ApiClient {
       '/auth/refresh',
       { refresh_token: refreshToken },
       { _skipAuthRefresh: true } as any
-    ).then((response) => {
+    ).then(async (response) => {
       const { access_token, refresh_token } = response.data;
-      this.setTokens(access_token, refresh_token);
+      const expiry = Date.now() + (8 * 60 * 60 * 1000); // 8 hours
+      await this.setTokens(access_token, refresh_token, expiry);
       this.refreshPromise = null;
       return access_token;
     }).catch((error) => {
@@ -315,6 +325,13 @@ class ApiClient {
     link.click();
     document.body.removeChild(link);
     window.URL.revokeObjectURL(downloadUrl);
+  }
+
+  /**
+   * Public method to get access token for backward compatibility
+   */
+  async getToken(): Promise<string | null> {
+    return this.getAccessToken();
   }
 }
 
