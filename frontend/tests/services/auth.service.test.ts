@@ -9,6 +9,7 @@ vi.mock('@/lib/api/client', () => ({
     post: vi.fn(),
     get: vi.fn(),
     delete: vi.fn(),
+    getToken: vi.fn(),
   },
 }));
 
@@ -136,6 +137,7 @@ describe('AuthService', () => {
     it('should logout successfully', async () => {
       const mockResponse = { data: { message: 'Logged out successfully' } };
       vi.mocked(apiClient.post).mockResolvedValue(mockResponse);
+      vi.mocked(apiClient.getToken).mockResolvedValue('mock-token');
 
       await authService.logout();
 

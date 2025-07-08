@@ -126,14 +126,14 @@
   
   /* Universal focus states using CSS variables */
   *:focus-visible {
-    @apply outline-none ring-2 ring-[--focus-ring] ring-offset-[--focus-offset] ring-offset-background transition-shadow duration-200;
+    @apply outline-none ring-2 ring-[var(--focus-ring)] ring-offset-[var(--focus-offset)] ring-offset-background transition-shadow duration-200;
   }
   
   /* Input-specific focus states */
   input:focus-visible,
   textarea:focus-visible,
   select:focus-visible {
-    @apply ring-offset-0 border-[--focus-ring];
+    @apply ring-offset-0 border-[var(--focus-ring)];
   }
   
   /* Interactive elements focus */
@@ -146,7 +146,7 @@
   /* Card/Interactive element focus */
   [role="button"]:focus-visible,
   [tabindex="0"]:focus-visible {
-    @apply outline-none ring-2 ring-turquoise ring-offset-2 ring-offset-background;
+    @apply outline-none ring-2 ring-primary ring-offset-2 ring-offset-background;
   }
   
   /* Smooth transitions for interactive elements */
@@ -205,7 +205,7 @@
   .gradient-border {
     @apply relative overflow-hidden;
     background: linear-gradient(to right, hsl(var(--card)), hsl(var(--card))) padding-box,
-                linear-gradient(135deg, hsl(var(--gold)), hsl(var(--primary))) border-box;
+                linear-gradient(135deg, hsl(var(--primary)), hsl(var(--accent))) border-box;
     border: 1px solid transparent;
   }
   
@@ -215,7 +215,7 @@
   }
   
   .glow-hover:hover {
-    box-shadow: 0 0 20px rgba(203, 150, 62, 0.3);
+    box-shadow: 0 0 20px rgba(0, 188, 212, 0.3);
   }
   
   /* Skip to main content link (accessibility) */
@@ -252,7 +252,7 @@
   .ProseMirror h4,
   .ProseMirror h5,
   .ProseMirror h6 {
-    @apply text-turquoise; /* Turquoise color for headings */
+    @apply text-primary; /* Primary color for headings */
   }
   .ProseMirror h1 {
     @apply text-4xl font-bold my-4;
@@ -292,6 +292,6 @@
     @apply line-through;
   }
   .ProseMirror a {
-    @apply text-turquoise underline hover:text-turquoise-light;
+    @apply text-primary underline hover:text-primary/80;
   }
 }

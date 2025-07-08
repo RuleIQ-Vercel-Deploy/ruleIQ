@@ -25,7 +25,8 @@
         "alembic/versions/*.py"
       ],
       "context_files": [
-        "DATABASE_CONTEXT.md"
+        "DATABASE_CONTEXT.md",
+        "PROJECT_STATUS.md"
       ],
       "impact": "high"
     },
@@ -45,7 +46,8 @@
         "services/ai/*.py"
       ],
       "context_files": [
-        "AI_SERVICES_CONTEXT.md"
+        "AI_SERVICES_CONTEXT.md",
+        "PROJECT_STATUS.md"
       ],
       "impact": "high"
     },
@@ -66,7 +68,8 @@
         "frontend/tests/**/*.ts*"
       ],
       "context_files": [
-        "TESTING_CONTEXT.md"
+        "TESTING_CONTEXT.md",
+        "PROJECT_STATUS.md"
       ],
       "impact": "low"
     },
@@ -77,9 +80,20 @@
         "main.py"
       ],
       "context_files": [
-        "ARCHITECTURE_CONTEXT.md"
+        "ARCHITECTURE_CONTEXT.md",
+        "PROJECT_STATUS.md"
       ],
       "impact": "high"
+    },
+    "development_tools": {
+      "patterns": [
+        "scripts/*.sh",
+        ".serena/*.yml"
+      ],
+      "context_files": [
+        "SERENA_INTEGRATION_CONTEXT.md"
+      ],
+      "impact": "low"
     }
   },
   "excluded_patterns": [

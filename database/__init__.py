@@ -11,6 +11,7 @@ from .business_profile import *
 from .compliance_framework import *
 from .evidence_item import *
 from .assessment_session import *
+from .assessment_question import *
 from .implementation_plan import *
 from .readiness_assessment import *
 from .generated_policy import *

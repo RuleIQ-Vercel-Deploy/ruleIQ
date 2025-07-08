@@ -4,6 +4,7 @@ import { create } from 'zustand'
 import { persist, createJSONStorage , devtools } from 'zustand/middleware'
 
 import { dashboardService } from '@/lib/api/dashboard.service'
+import { WidgetsArraySchema, MetricsSchema, LoadingStateSchema, safeValidate } from './schemas'
 
 // Widget Configuration Types
 export interface WidgetConfig {
@@ -115,6 +116,7 @@ interface DashboardState {
   frameworks: Framework[]
   deadlines: Deadline[]
   aiInsights: AIInsight[]
+  metrics: any // For test compatibility
 
   // UI State
   isLoading: boolean
@@ -153,6 +155,11 @@ interface DashboardState {
   removeWidget: (widgetId: string) => void
   toggleWidgetVisibility: (widgetId: string) => void
   resetWidgets: () => void
+  
+  // Test Compatibility Methods
+  setWidgets: (widgets: WidgetConfig[]) => void
+  setMetrics: (metrics: any) => void
+  setLoading: (loading: boolean) => void
 }
 
 // Default Widget Configuration
@@ -219,6 +226,7 @@ export const useDashboardStore = create<DashboardState>()(
         frameworks: [],
         deadlines: [],
         aiInsights: [],
+        metrics: {},
         isLoading: false,
         error: null,
         lastUpdated: null,
@@ -414,6 +422,22 @@ export const useDashboardStore = create<DashboardState>()(
 
         resetWidgets: () => {
           set({ widgets: defaultWidgets }, false, 'resetWidgets')
+        },
+
+        // Test Compatibility Methods
+        setWidgets: (widgets) => {
+          const validatedWidgets = safeValidate(WidgetsArraySchema, widgets, 'setWidgets')
+          set({ widgets: validatedWidgets }, false, 'setWidgets')
+        },
+
+        setMetrics: (metrics) => {
+          const validatedMetrics = safeValidate(MetricsSchema, metrics, 'setMetrics')
+          set({ metrics: validatedMetrics }, false, 'setMetrics')
+        },
+
+        setLoading: (loading) => {
+          const validatedLoading = safeValidate(LoadingStateSchema, loading, 'setLoading')
+          set({ isLoading: validatedLoading }, false, 'setLoading')
         },
 
         // Widget-specific loading actions

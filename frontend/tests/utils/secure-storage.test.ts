@@ -9,11 +9,21 @@ import SecureStorage from '@/lib/utils/secure-storage';
 Object.defineProperty(global, 'crypto', {
   value: {
     subtle: {
-      generateKey: vi.fn().mockResolvedValue({} as CryptoKey),
+      generateKey: vi.fn().mockResolvedValue({
+        type: 'secret',
+        extractable: true,
+        algorithm: { name: 'AES-GCM', length: 256 },
+        usages: ['encrypt', 'decrypt']
+      } as CryptoKey),
       exportKey: vi.fn().mockResolvedValue(new ArrayBuffer(32)),
-      importKey: vi.fn().mockResolvedValue({} as CryptoKey),
-      encrypt: vi.fn().mockResolvedValue(new ArrayBuffer(16)),
-      decrypt: vi.fn().mockResolvedValue(new ArrayBuffer(16)),
+      importKey: vi.fn().mockResolvedValue({
+        type: 'secret',
+        extractable: true,
+        algorithm: { name: 'AES-GCM', length: 256 },
+        usages: ['encrypt', 'decrypt']
+      } as CryptoKey),
+      encrypt: vi.fn().mockResolvedValue(new ArrayBuffer(32)), // Make this longer to include IV
+      decrypt: vi.fn().mockResolvedValue(new TextEncoder().encode('decrypted-token')),
     },
     getRandomValues: vi.fn().mockImplementation((arr: Uint8Array) => {
       for (let i = 0; i < arr.length; i++) {

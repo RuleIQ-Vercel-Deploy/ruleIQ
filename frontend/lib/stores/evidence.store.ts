@@ -4,6 +4,7 @@ import { create } from 'zustand'
 import { persist, createJSONStorage , devtools } from 'zustand/middleware'
 
 import { evidenceService, type CreateEvidenceRequest, type UpdateEvidenceRequest, type BulkUpdateEvidenceRequest, type EvidenceSearchParams, type EvidenceAutomationConfig } from '@/lib/api/evidence.service'
+import { EvidenceArraySchema, LoadingStateSchema, safeValidate } from './schemas'
 
 import type { EvidenceItem } from '@/types/api'
 
@@ -61,6 +62,10 @@ interface EvidenceState {
   deselectItem: (id: string) => void
   selectAll: () => void
   clearSelection: () => void
+  
+  // Actions - Data Management
+  setEvidence: (evidence: EvidenceItem[]) => void
+  setLoading: (loading: boolean) => void
   
   // Actions - Filters & UI
   setFilters: (filters: EvidenceSearchParams) => void
@@ -397,6 +402,17 @@ export const useEvidenceStore = create<EvidenceState>()(
 
         setSearchQuery: (query) => {
           set({ searchQuery: query }, false, 'setSearchQuery')
+        },
+
+        // Data Management
+        setEvidence: (evidence) => {
+          const validatedEvidence = safeValidate(EvidenceArraySchema, evidence, 'setEvidence')
+          set({ evidence: validatedEvidence }, false, 'setEvidence')
+        },
+
+        setLoading: (loading) => {
+          const validatedLoading = safeValidate(LoadingStateSchema, loading, 'setLoading')
+          set({ isLoading: validatedLoading }, false, 'setLoading')
         },
 
         clearError: () => {

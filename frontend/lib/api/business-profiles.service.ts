@@ -22,9 +22,11 @@ class BusinessProfileService {
    * Get all business profiles for the current user
    */
   async getBusinessProfiles(): Promise<BusinessProfile[]> {
-    const response = await apiClient.get<any[]>('/business-profiles');
+    const response = await apiClient.get<any>('/business-profiles');
+    // Handle both direct array and wrapped array responses
+    const profileData = Array.isArray(response.data) ? response.data : response.data.data || [];
     // Transform each profile from API format to frontend format
-    return response.data.map(profile => 
+    return profileData.map(profile => 
       BusinessProfileFieldMapper.transformAPIResponseForFrontend(profile)
     ).filter(Boolean) as BusinessProfile[];
   }

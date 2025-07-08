@@ -9,7 +9,7 @@ Tests the enhanced cache strategy features including:
 """
 
 import pytest
-from unittest.mock import AsyncMock, Mock, patch
+from unittest.mock import Mock, patch
 from uuid import uuid4
 from datetime import datetime, timedelta
 

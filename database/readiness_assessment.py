@@ -26,7 +26,7 @@ class ReadinessAssessment(Base):
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
 
-    user = relationship("User")
+    user = relationship("User", back_populates="readiness_assessments", overlaps="readiness_assessments")
     framework = relationship("ComplianceFramework")
     business_profile = relationship("BusinessProfile")
 

@@ -1,5 +1,6 @@
 import { chatService } from './chat.service';
 import { apiClient } from './client';
+import { withRetry, createAppError } from '../utils/error-handling';
 
 import type {
   Gap,
@@ -231,44 +232,50 @@ class AssessmentAIService {
    * Get AI help for a specific assessment question
    */
   async getQuestionHelp(request: AIHelpRequest): Promise<AIHelpResponse> {
-    try {
-      if (this.useProductionEndpoints) {
-        const aiRequest = apiClient.post<AIHelpResponse>(`/ai/assessments/${request.framework_id}/help`, request);
-        const response = await this.executeWithTimeout(aiRequest, 15000, 'Question help AI request');
-        return response.data;
-      }
+    return withRetry(async () => {
+      try {
+        if (this.useProductionEndpoints) {
+          const aiRequest = apiClient.post<AIHelpResponse>(`/ai/assessments/${request.framework_id}/help`, request);
+          const response = await this.executeWithTimeout(aiRequest, 15000, 'Question help AI request');
+          return response.data;
+        }
 
-      // Development fallback with no artificial delay
-      return mockAIResponses.help;
-    } catch (error: any) {
-      console.error('Failed to get AI help:', error);
-
-      // Handle rate limiting specifically
-      if (error.response?.status === 429) {
-        const rateLimitError = error.response.data as AIRateLimitError;
-        const retryAfter = rateLimitError.error.retry_after;
-
-        return {
-          guidance: `Rate limit exceeded for AI help requests. ${rateLimitError.suggestion}`,
-          confidence_score: 0.1,
-          related_topics: ['Rate Limiting'],
-          follow_up_suggestions: [
-            `Wait ${retryAfter} seconds before trying again`,
-            'Consider reviewing existing guidance while waiting',
-            'Contact support if you need immediate assistance'
-          ],
-          source_references: [`Rate limit: ${rateLimitError.error.limit} requests per ${rateLimitError.error.window}`]
-        };
-      }
-
-      // Enhanced error handling with fallback to mock data
-      if (this.useProductionEndpoints && error instanceof Error) {
-        console.warn('Production AI endpoint failed, falling back to mock data');
+        // Development fallback with no artificial delay
         return mockAIResponses.help;
-      }
+      } catch (error: any) {
+        console.error('Failed to get AI help:', error);
 
-      throw new Error('Unable to get AI assistance at this time. Please try again later.');
-    }
+        // Handle rate limiting specifically - don't retry immediately
+        if (error.response?.status === 429) {
+          const rateLimitError = error.response.data as AIRateLimitError;
+          const retryAfter = rateLimitError.error.retry_after;
+
+          return {
+            guidance: `Rate limit exceeded for AI help requests. ${rateLimitError.suggestion}`,
+            confidence_score: 0.1,
+            related_topics: ['Rate Limiting'],
+            follow_up_suggestions: [
+              `Wait ${retryAfter} seconds before trying again`,
+              'Consider reviewing existing guidance while waiting',
+              'Contact support if you need immediate assistance'
+            ],
+            source_references: [`Rate limit: ${rateLimitError.error.limit} requests per ${rateLimitError.error.window}`]
+          };
+        }
+
+        // Enhanced error handling with fallback to mock data
+        if (this.useProductionEndpoints && error instanceof Error) {
+          console.warn('Production AI endpoint failed, falling back to mock data');
+          return mockAIResponses.help;
+        }
+
+        throw createAppError(error, 'AI help request');
+      }
+    }, {
+      maxAttempts: 2,
+      initialDelay: 1000,
+      retryCondition: (error) => error.type === 'network' || error.type === 'server'
+    });
   }
 
   /**

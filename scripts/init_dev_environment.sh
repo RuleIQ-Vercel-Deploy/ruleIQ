@@ -135,34 +135,21 @@ echo -e "  ✅ Database migrations complete"
 # Step 6: Initialize Serena MCP Server
 echo -e "\n${YELLOW}🤖 Starting Serena MCP Server...${NC}"
 
-# Check if serena-mcp-server is installed
-if command_exists serena-mcp-server; then
-    # Check if it's already running
-    if is_running "serena-mcp-server"; then
-        echo -e "  ℹ️  Serena MCP Server is already running"
+# Check if Serena is available at the expected location
+SERENA_PATH="/home/omar/serena"
+if [ -d "$SERENA_PATH" ] && [ -f "$SERENA_PATH/src/serena/mcp.py" ]; then
+    # Use our custom Serena startup script
+    if [ -f "$PROJECT_ROOT/scripts/start_serena_mcp.sh" ]; then
+        echo "  Starting Serena MCP Server with ruleIQ configuration..."
+        "$PROJECT_ROOT/scripts/start_serena_mcp.sh" start
     else
-        echo "  Starting Serena MCP Server..."
-        # Start in background with logs
-        nohup serena-mcp-server \
-            --context ide-assistant \
-            --project "$PROJECT_ROOT" \
-            > "$PROJECT_ROOT/logs/serena-mcp.log" 2>&1 &
-        
-        SERENA_PID=$!
-        sleep 2
-        
-        # Check if it started successfully
-        if kill -0 $SERENA_PID 2>/dev/null; then
-            echo -e "  ✅ Serena MCP Server started (PID: $SERENA_PID)"
-            echo $SERENA_PID > "$PROJECT_ROOT/.serena-mcp.pid"
-        else
-            echo -e "  ${RED}❌ Failed to start Serena MCP Server${NC}"
-            echo "  Check logs at: $PROJECT_ROOT/logs/serena-mcp.log"
-        fi
+        echo -e "  ${YELLOW}⚠️  Serena startup script not found${NC}"
+        echo "  Expected: $PROJECT_ROOT/scripts/start_serena_mcp.sh"
     fi
 else
-    echo -e "  ${YELLOW}⚠️  Serena MCP Server not installed${NC}"
-    echo "  To install: npm install -g serena-mcp-server"
+    echo -e "  ${YELLOW}⚠️  Serena MCP Server not found at $SERENA_PATH${NC}"
+    echo "  Please install Serena MCP Server for enhanced development assistance"
+    echo "  Repository: https://github.com/serena-ai/serena-mcp-server"
 fi
 
 # Step 7: Run context monitoring
@@ -207,13 +194,18 @@ PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 echo "🛑 Stopping development environment..."
 
 # Stop Serena MCP Server
-if [ -f "$PROJECT_ROOT/.serena-mcp.pid" ]; then
-    PID=$(cat "$PROJECT_ROOT/.serena-mcp.pid")
-    if kill -0 $PID 2>/dev/null; then
-        kill $PID
-        echo "  ✅ Stopped Serena MCP Server"
+if [ -f "$PROJECT_ROOT/scripts/stop_serena_mcp.sh" ]; then
+    "$PROJECT_ROOT/scripts/stop_serena_mcp.sh" stop
+else
+    # Fallback to manual cleanup
+    if [ -f "$PROJECT_ROOT/.serena_mcp.pid" ]; then
+        PID=$(cat "$PROJECT_ROOT/.serena_mcp.pid")
+        if kill -0 $PID 2>/dev/null; then
+            kill $PID
+            echo "  ✅ Stopped Serena MCP Server"
+        fi
+        rm "$PROJECT_ROOT/.serena_mcp.pid"
     fi
-    rm "$PROJECT_ROOT/.serena-mcp.pid"
 fi
 
 # Stop Docker services

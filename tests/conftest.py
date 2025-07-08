@@ -47,14 +47,11 @@ sys.path.insert(0, str(project_root))
 
 # Assuming these are the correct paths from your project structure
 import database.db_setup as db_setup
-from database.assessment_session import AssessmentSession
 from database.business_profile import BusinessProfile
 from database.compliance_framework import ComplianceFramework
 from database.db_setup import Base, get_async_db
 from database.evidence_item import EvidenceItem
 from database.generated_policy import GeneratedPolicy
-from database.implementation_plan import ImplementationPlan
-from database.readiness_assessment import ReadinessAssessment
 
 # Import additional models from models.py (these don't conflict with individual files)
 # Import ALL database models to ensure they're registered with Base metadata

@@ -5,12 +5,17 @@ line-length = 100
 [lint]
 select = [
     "F",   # Pyflakes (critical errors only)
+    "E",   # pycodestyle errors (will be ignored in tests)
+    "W",   # pycodestyle warnings (will be ignored in tests)
+    "ANN", # Type annotations (will be ignored in tests)
+    "ARG", # Unused arguments (will be ignored in tests)
+    "PLR", # Pylint refactor (will be ignored in tests)
+    "S",   # Security (will be ignored in tests for asserts)
+    "PT",  # pytest-specific rules (will be ignored in tests)
 ]
 
 ignore = [
-    # Disable all style and formatting rules
-    "E",    # All pycodestyle errors
-    "W",    # All pycodestyle warnings
+    # Disable style and formatting rules for non-test files
     "N",    # pep8-naming
     "UP",   # pyupgrade
     "B",    # flake8-bugbear
@@ -39,7 +44,20 @@ exclude = [
 ]
 
 [lint.per-file-ignores]
-"tests/*" = ["SIM117", "B011"]
+"tests/*" = [
+    "SIM117", "B011",  # Existing ignores
+    "ANN",     # Type annotations not required in tests
+    "ARG",     # Unused arguments (common in pytest fixtures)
+    "PLR0913", # Too many arguments (common in test methods)
+    "PLR0915", # Too many statements (common in test methods)
+    "PLR2004", # Magic value used in comparison (common in tests)
+    "S101",    # Use of assert (required in tests)
+    "PT",      # pytest-specific rules
+    "E501",    # Line too long (common in test data)
+    "W291",    # Trailing whitespace
+    "F401",    # Unused imports (common in test fixtures)
+    "F841",    # Unused variables (common in test setup)
+]
 "*/__init__.py" = ["F401"]  # Allow unused imports in __init__.py
 
 [lint.isort]

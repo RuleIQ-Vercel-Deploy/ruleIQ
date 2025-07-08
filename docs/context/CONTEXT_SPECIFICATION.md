@@ -18,6 +18,8 @@ This document defines the context management system for the ruleIQ compliance au
 
 ### 3. **Accessibility**
 - Context documentation uses standardized formats
+- Streamlined file structure with 13 essential files
+- Clear navigation and single sources of truth
 - Visual representations supplement textual descriptions
 - Context is discoverable through clear navigation
 
@@ -42,6 +44,34 @@ This document defines the context management system for the ruleIQ compliance au
 - Domain logic and business rules
 - Compliance requirements and regulations
 - User personas and workflow patterns
+
+## Context File Structure
+
+### **Essential Context Files** (13 files)
+
+#### **Core Documentation**
+1. **README.md** - Context overview and navigation
+2. **PROJECT_STATUS.md** - Current project status and deployment readiness
+3. **CONTEXT_SPECIFICATION.md** - This document (context management standards)
+4. **CHANGE_LOG.md** - Context change history and tracking
+
+#### **Component-Specific Context**
+5. **ARCHITECTURE_CONTEXT.md** - System architecture and infrastructure
+6. **AI_SERVICES_CONTEXT.md** - AI integration and optimization
+7. **DATABASE_CONTEXT.md** - Database schema and migrations
+8. **FRONTEND_CONTEXT.md** - Frontend architecture and components
+9. **API_CONTEXT.md** - REST API documentation and security
+10. **TESTING_CONTEXT.md** - Testing infrastructure and strategies
+11. **SERENA_INTEGRATION_CONTEXT.md** - Development tools integration
+
+#### **Configuration**
+12. **monitor_config.json** - Automated monitoring configuration
+
+### **Removed Files** (Previously 20 files)
+- Outdated change reports and temporary files
+- Redundant status documents
+- Completed feature checklists
+- Obsolete recommendations
 
 ## Context Documentation Standards
 

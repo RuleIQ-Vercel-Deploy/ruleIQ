@@ -321,6 +321,82 @@ class WhitelistValidator:
                     "type": FieldType.ENUM,
                     "allowed_values": ["Low", "Medium", "High", "Critical"],
                     "required": False
+                },
+                # Business characteristics
+                "handles_personal_data": {
+                    "type": FieldType.BOOLEAN,
+                    "required": False
+                },
+                "processes_payments": {
+                    "type": FieldType.BOOLEAN,
+                    "required": False
+                },
+                "stores_health_data": {
+                    "type": FieldType.BOOLEAN,
+                    "required": False
+                },
+                "provides_financial_services": {
+                    "type": FieldType.BOOLEAN,
+                    "required": False
+                },
+                "operates_critical_infrastructure": {
+                    "type": FieldType.BOOLEAN,
+                    "required": False
+                },
+                "has_international_operations": {
+                    "type": FieldType.BOOLEAN,
+                    "required": False
+                },
+                # Technology stack
+                "cloud_providers": {
+                    "type": FieldType.LIST,
+                    "max_items": 20,
+                    "required": False
+                },
+                "saas_tools": {
+                    "type": FieldType.LIST,
+                    "max_items": 50,
+                    "required": False
+                },
+                "development_tools": {
+                    "type": FieldType.LIST,
+                    "max_items": 30,
+                    "required": False
+                },
+                # Current compliance state
+                "existing_frameworks": {
+                    "type": FieldType.LIST,
+                    "max_items": 20,
+                    "required": False
+                },
+                "planned_frameworks": {
+                    "type": FieldType.LIST,
+                    "max_items": 20,
+                    "required": False
+                },
+                "compliance_budget": {
+                    "type": FieldType.STRING,
+                    "max_length": 50,
+                    "min_length": 0,
+                    "required": False,
+                    "allow_empty": True
+                },
+                "compliance_timeline": {
+                    "type": FieldType.STRING,
+                    "max_length": 50,
+                    "min_length": 0,
+                    "required": False,
+                    "allow_empty": True
+                },
+                # Assessment status
+                "assessment_completed": {
+                    "type": FieldType.BOOLEAN,
+                    "required": False
+                },
+                "assessment_data": {
+                    "type": FieldType.DICT,
+                    "max_keys": 100,
+                    "required": False
                 }
             },
             "User": {

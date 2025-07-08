@@ -19,6 +19,7 @@ from api.routers import (
     compliance,
     evidence,
     evidence_collection,
+    foundation_evidence,
     frameworks,
     implementation,
     integrations,
@@ -119,6 +120,7 @@ app.include_router(compliance.router, prefix="/api/compliance", tags=["Complianc
 app.include_router(readiness.router, prefix="/api/readiness", tags=["Readiness Assessment"])
 app.include_router(reporting.router, prefix="/api/reports", tags=["Reports"])
 app.include_router(integrations.router, prefix="/api/integrations", tags=["Integrations"])
+app.include_router(foundation_evidence.router, prefix="/api", tags=["Foundation Evidence Collection"])
 app.include_router(monitoring.router, prefix="/api/monitoring", tags=["Monitoring"])
 app.include_router(security.router, prefix="/api/security", tags=["Security"])
 app.include_router(chat.router, prefix="/api", tags=["AI Assistant"])

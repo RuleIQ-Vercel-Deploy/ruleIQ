@@ -5,7 +5,6 @@ Tests the cached content metrics endpoint and integration with AI services.
 """
 
 import pytest
-from uuid import uuid4
 
 
 @pytest.mark.integration

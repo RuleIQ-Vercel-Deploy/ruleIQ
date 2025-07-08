@@ -66,13 +66,15 @@ export const handlers = [
     const pageSize = url.searchParams.get('page_size') || '20'
     
     return HttpResponse.json({
-      items: [
-        { id: 'assess-1', name: 'Test Assessment 1', status: 'completed' },
-        { id: 'assess-2', name: 'Test Assessment 2', status: 'in_progress' },
-      ],
-      total: 2,
-      page: parseInt(page),
-      size: parseInt(pageSize),
+      data: {
+        items: [
+          { id: 'assess-1', name: 'Test Assessment 1', status: 'completed' },
+          { id: 'assess-2', name: 'Test Assessment 2', status: 'in_progress' },
+        ],
+        total: 2,
+        page: parseInt(page),
+        size: parseInt(pageSize),
+      },
     })
   }),
 
@@ -112,6 +114,17 @@ export const handlers = [
     })
   }),
 
+  http.patch(`${baseURL}/assessments/:id`, async ({ params, request }) => {
+    const body = await request.json() as any
+    return HttpResponse.json({
+      data: {
+        id: params.id,
+        ...body,
+        updated_at: new Date().toISOString(),
+      },
+    })
+  }),
+
   http.post(`${baseURL}/assessments/:id/complete`, ({ params }) => {
     return HttpResponse.json({
       data: {
@@ -129,24 +142,40 @@ export const handlers = [
     const status = url.searchParams.get('status')
     
     return HttpResponse.json({
-      items: [
-        {
-          id: 'ev-1',
-          name: 'Evidence 1',
-          framework: framework || 'GDPR',
-          status: status || 'collected',
-          uploaded_at: new Date().toISOString(),
-        },
-        {
-          id: 'ev-2',
-          name: 'Evidence 2',
-          framework: 'ISO 27001',
-          status: 'pending',
-          uploaded_at: new Date().toISOString(),
-        },
-      ],
-      total: 2,
+      data: {
+        items: [
+          {
+            id: 'ev-1',
+            title: 'Evidence 1',
+            framework_id: framework || 'gdpr',
+            status: status || 'collected',
+            created_at: new Date().toISOString(),
+            evidence_type: 'document',
+          },
+          {
+            id: 'ev-2',
+            title: 'Evidence 2',
+            framework_id: 'iso27001',
+            status: 'pending',
+            created_at: new Date().toISOString(),
+            evidence_type: 'document',
+          },
+        ],
+        total: 2,
+      }
     })
+  }),
+
+  http.post(`${baseURL}/evidence`, async ({ request }) => {
+    const body = await request.json() as any
+    return HttpResponse.json({
+      data: {
+        id: 'ev-new',
+        ...body,
+        status: 'pending',
+        created_at: new Date().toISOString(),
+      },
+    }, { status: 201 })
   }),
 
   http.post(`${baseURL}/evidence/upload`, () => {
@@ -161,6 +190,17 @@ export const handlers = [
   }),
 
   http.put(`${baseURL}/evidence/:id`, async ({ params, request }) => {
+    const body = await request.json() as any
+    return HttpResponse.json({
+      data: {
+        id: params.id,
+        ...body,
+        updated_at: new Date().toISOString(),
+      },
+    })
+  }),
+
+  http.patch(`${baseURL}/evidence/:id`, async ({ params, request }) => {
     const body = await request.json() as any
     return HttpResponse.json({
       data: {
@@ -226,6 +266,17 @@ export const handlers = [
     })
   }),
 
+  http.put(`${baseURL}/business-profiles/:id`, async ({ params, request }) => {
+    const body = await request.json() as any
+    return HttpResponse.json({
+      data: {
+        id: params.id,
+        ...body,
+        updated_at: new Date().toISOString(),
+      },
+    })
+  }),
+
   // Framework endpoints
   http.get(`${baseURL}/frameworks`, () => {
     return HttpResponse.json({
@@ -243,6 +294,89 @@ export const handlers = [
           sections: [],
         },
       ],
+    })
+  }),
+
+  // AI endpoints
+  http.post(`${baseURL}/ai/assessments/follow-up-questions`, async ({ request }) => {
+    const body = await request.json() as any
+    return HttpResponse.json({
+      data: {
+        follow_up_questions: [
+          {
+            id: 'ai-q1',
+            text: 'Can you provide more details about your data processing activities?',
+            type: 'textarea',
+            validation: { required: false },
+            metadata: {
+              source: 'ai',
+              reasoning: 'Based on your previous answer, we need more details',
+              isAIGenerated: true
+            }
+          }
+        ],
+        reasoning: 'Follow-up needed for compliance assessment'
+      }
+    })
+  }),
+
+  http.post(`${baseURL}/ai/assessments/personalized-recommendations`, async ({ request }) => {
+    const body = await request.json() as any
+    return HttpResponse.json({
+      data: {
+        recommendations: [
+          {
+            id: 'rec-1',
+            title: 'Implement Data Protection Policy',
+            description: 'Based on your assessment, you need a comprehensive data protection policy.',
+            priority: 'high',
+            category: 'Data Protection',
+            estimatedEffort: 'Medium',
+            timeline: '2-4 weeks'
+          }
+        ],
+        implementation_plan: {
+          phases: [],
+          total_timeline_weeks: 8,
+          resource_requirements: []
+        },
+        success_metrics: []
+      }
+    })
+  }),
+
+  http.post(`${baseURL}/ai/assessments/enhanced-analysis`, async ({ request }) => {
+    const body = await request.json() as any
+    return HttpResponse.json({
+      data: {
+        analysis: 'Enhanced AI analysis based on your business profile and assessment context.',
+        recommendations: [
+          {
+            id: 'enhanced-rec-1',
+            title: 'Enhanced Data Protection Recommendation',
+            description: 'AI-generated recommendation based on comprehensive analysis.',
+            priority: 'high',
+            category: 'Data Protection'
+          }
+        ],
+        confidence: 0.85,
+        sources: ['business_profile', 'assessment_context', 'industry_standards']
+      }
+    })
+  }),
+
+  http.post(`${baseURL}/ai/assessments/question-help`, async ({ request }) => {
+    const body = await request.json() as any
+    return HttpResponse.json({
+      data: {
+        explanation: 'This question is asking about your data processing activities to ensure GDPR compliance.',
+        examples: [
+          'Customer data processing for order fulfillment',
+          'Employee data processing for payroll',
+          'Marketing data processing for communications'
+        ],
+        guidance: 'Please provide specific details about what types of data you process and for what purposes.'
+      }
     })
   }),
 

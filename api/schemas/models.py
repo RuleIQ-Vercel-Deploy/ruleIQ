@@ -70,8 +70,8 @@ class BusinessProfileBase(BaseModel):
     has_international_operations: bool = Field(..., description="Has international operations")
 
     # Optional JSONB fields with defaults
-    existing_framew: Optional[List[str]] = Field(default_factory=list)
-    planned_framewo: Optional[List[str]] = Field(default_factory=list)
+    existing_frameworks: Optional[List[str]] = Field(default_factory=list)
+    planned_frameworks: Optional[List[str]] = Field(default_factory=list)
     cloud_providers: Optional[List[str]] = Field(default_factory=list)
     saas_tools: Optional[List[str]] = Field(default_factory=list)
     development_tools: Optional[List[str]] = Field(default_factory=list)
@@ -95,8 +95,8 @@ class BusinessProfileCreate(BaseModel):
     has_international_operations: bool = Field(default=False, description="Has international operations")
 
     # Optional JSONB fields with defaults
-    existing_framew: Optional[List[str]] = Field(default_factory=list)
-    planned_framewo: Optional[List[str]] = Field(default_factory=list)
+    existing_frameworks: Optional[List[str]] = Field(default_factory=list)
+    planned_frameworks: Optional[List[str]] = Field(default_factory=list)
     cloud_providers: Optional[List[str]] = Field(default_factory=list)
     saas_tools: Optional[List[str]] = Field(default_factory=list)
     development_tools: Optional[List[str]] = Field(default_factory=list)
@@ -120,8 +120,8 @@ class BusinessProfileUpdate(BaseModel):
     has_international_operations: Optional[bool] = Field(None)
 
     # Optional JSONB fields
-    existing_framew: Optional[List[str]] = Field(None)
-    planned_framewo: Optional[List[str]] = Field(None)
+    existing_frameworks: Optional[List[str]] = Field(None)
+    planned_frameworks: Optional[List[str]] = Field(None)
     cloud_providers: Optional[List[str]] = Field(None)
     saas_tools: Optional[List[str]] = Field(None)
     development_tools: Optional[List[str]] = Field(None)
@@ -134,6 +134,8 @@ class BusinessProfileResponse(BusinessProfileBase):
     user_id: UUID
     created_at: datetime
     updated_at: datetime
+    # Override annual_revenue to allow empty strings in response
+    annual_revenue: Optional[str] = Field(None)
 
     class Config:
         from_attributes = True

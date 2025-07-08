@@ -1,38 +1,40 @@
-# Serena MCP Server Integration
+# Serena MCP Server Integration for ruleIQ
 
-**Date**: 2025-01-07  
-**Status**: ✅ Complete
+**Date**: 2025-01-08  
+**Status**: ✅ Production Ready
 
 ## Overview
 
-The Serena MCP Server has been successfully integrated into the ruleIQ project to provide enhanced IDE assistance and context-aware development support through the Claude MCP (Model Context Protocol).
+Serena MCP Server provides semantic code understanding through Language Server Protocol (LSP) integration, offering intelligent development assistance for the ruleIQ compliance automation platform.
 
 ## Integration Components
 
-### 1. Claude Configuration
-**File**: `.claude/settings.local.json`
+### 1. Project Configuration
+**File**: `.serena/project.yml`
+- Comprehensive ruleIQ-specific configuration
+- Language server settings for Python and TypeScript
+- Domain knowledge for compliance frameworks
+- Development workflow optimization
+- Performance and resource management
+
+### 2. Development Scripts
+**Files**: 
+- `scripts/start_serena_mcp.sh` - Start Serena with ruleIQ configuration
+- `scripts/stop_serena_mcp.sh` - Stop Serena gracefully
+- `scripts/init_dev_environment.sh` - Integrated startup with development environment
+
+### 3. Claude Desktop MCP Configuration
 ```json
-"serena-mcp-server": {
-  "command": "serena-mcp-server",
+{
+  "command": "python",
   "args": [
-    "--context", "ide-assistant",
+    "-m", "serena.mcp",
+    "--context", "ide-assistant", 
     "--project", "/home/omar/Documents/ruleIQ"
-  ]
+  ],
+  "cwd": "/home/omar/serena"
 }
 ```
-
-### 2. Development Environment Script
-**File**: `scripts/init_dev_environment.sh`
-- Automatically starts Serena MCP Server during environment initialization
-- Logs output to `logs/serena-mcp.log`
-- Tracks process ID in `.serena-mcp.pid`
-- Provides clean shutdown via `scripts/stop_dev_environment.sh`
-
-### 3. Context Documentation Updates
-Updated the following documentation files:
-- **`docs/context/ARCHITECTURE_CONTEXT.md`** - Added Development Tools Integration section
-- **`docs/context/README.md`** - Added Serena MCP Server documentation
-- **`readme.md`** - Updated prerequisites and setup instructions
 
 ## Features Provided
 
@@ -50,26 +52,37 @@ Updated the following documentation files:
 
 ## Usage
 
-### Automatic Initialization
+### Automatic Initialization (Recommended)
 ```bash
 # Start entire development environment including Serena MCP
 ./scripts/init_dev_environment.sh
 
-# Stop all services including Serena MCP
+# Stop all services including Serena MCP  
 ./scripts/stop_dev_environment.sh
 ```
 
 ### Manual Control
 ```bash
 # Start Serena MCP Server manually
-serena-mcp-server --context ide-assistant --project /path/to/ruleIQ
+./scripts/start_serena_mcp.sh start
 
-# Check if running
-pgrep -f "serena-mcp-server"
+# Check server status
+./scripts/start_serena_mcp.sh status
 
 # View logs
-tail -f logs/serena-mcp.log
+./scripts/start_serena_mcp.sh logs
+
+# Stop Serena MCP Server
+./scripts/stop_serena_mcp.sh stop
 ```
+
+### Available Tools
+When connected through Claude Desktop:
+- `find_symbol(symbol_name)` - Locate functions, classes, variables
+- `replace_symbol_body(symbol_name, new_body)` - Modify function implementations  
+- `search_for_pattern(pattern)` - Semantic pattern matching
+- `get_symbol_references(symbol_name)` - Find all symbol usages
+- `analyze_code_context(file_path, line_number)` - Contextual code analysis
 
 ### Verification
 To verify Serena MCP is running:

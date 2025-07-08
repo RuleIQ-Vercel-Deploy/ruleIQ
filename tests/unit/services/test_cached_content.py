@@ -11,7 +11,6 @@ Tests the new cached content manager functionality including:
 import pytest
 from unittest.mock import AsyncMock, Mock, patch
 from uuid import uuid4
-from datetime import datetime, timedelta
 
 from services.ai.cached_content import (
     GoogleCachedContentManager,
@@ -19,7 +18,6 @@ from services.ai.cached_content import (
     CacheLifecycleConfig,
     get_cached_content_manager
 )
-from config.ai_config import ModelType
 
 
 @pytest.mark.unit

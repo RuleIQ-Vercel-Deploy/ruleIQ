@@ -5,6 +5,7 @@ Tests the new /ai/assessments/* endpoints including authentication,
 rate limiting, error handling, and response validation.
 """
 
+import time
 from unittest.mock import patch
 from uuid import uuid4
 
@@ -33,11 +34,11 @@ class TestAIAssessmentEndpoints:
             "section_id": "data_protection",
             "user_context": {
                 "business_profile_id": str(sample_business_profile.id),
-                "industry": "technology"
-            }
+                "industry": "technology",
+            },
         }
 
-        with patch.object(ComplianceAssistant, 'get_assessment_help') as mock_help:
+        with patch.object(ComplianceAssistant, "get_assessment_help") as mock_help:
             # Mock successful AI response
             mock_help.return_value = {
                 "guidance": "GDPR requires organizations to protect personal data...",
@@ -46,18 +47,16 @@ class TestAIAssessmentEndpoints:
                 "follow_up_suggestions": ["What are the key GDPR principles?"],
                 "source_references": ["GDPR Article 5"],
                 "request_id": "test-request-id",
-                "generated_at": "2024-01-01T00:00:00Z"
+                "generated_at": "2024-01-01T00:00:00Z",
             }
 
             response = client.post(
-                "/api/ai/assessments/gdpr/help",
-                json=request_data,
-                headers=authenticated_headers
+                "/api/ai/assessments/gdpr/help", json=request_data, headers=authenticated_headers
             )
 
             assert response.status_code == 200
             response_data = response.json()
-            
+
             assert "guidance" in response_data
             assert "confidence_score" in response_data
             assert "request_id" in response_data
@@ -70,7 +69,7 @@ class TestAIAssessmentEndpoints:
         request_data = {
             "question_id": "q1",
             "question_text": "What is GDPR compliance?",
-            "framework_id": "gdpr"
+            "framework_id": "gdpr",
         }
 
         response = client.post("/api/ai/assessments/gdpr/help", json=request_data)
@@ -81,15 +80,15 @@ class TestAIAssessmentEndpoints:
         request_data = {
             "question_id": "q1",
             "question_text": "What is compliance?",
-            "framework_id": "invalid_framework"
+            "framework_id": "invalid_framework",
         }
 
         response = client.post(
             "/api/ai/assessments/invalid_framework/help",
             json=request_data,
-            headers=authenticated_headers
+            headers=authenticated_headers,
         )
-        
+
         # Should handle gracefully - may provide fallback response or error
         # In production, invalid frameworks might get fallback responses
         assert response.status_code in [200, 400, 404]
@@ -99,20 +98,20 @@ class TestAIAssessmentEndpoints:
             data = response.json()
             assert "guidance" in data or "error" in data
 
-    def test_followup_questions_endpoint_success(self, client, authenticated_headers, sample_business_profile):
+    def test_followup_questions_endpoint_success(
+        self, client, authenticated_headers, sample_business_profile
+    ):
         """Test successful follow-up questions generation"""
         request_data = {
             "framework_id": "gdpr",
-            "current_answers": {
-                "q1": {"value": "yes", "source": "framework"}
-            },
+            "current_answers": {"q1": {"value": "yes", "source": "framework"}},
             "business_context": {
                 "section_id": "data_processing",
-                "business_profile_id": str(sample_business_profile.id)
-            }
+                "business_profile_id": str(sample_business_profile.id),
+            },
         }
 
-        with patch.object(ComplianceAssistant, 'generate_assessment_followup') as mock_followup:
+        with patch.object(ComplianceAssistant, "generate_assessment_followup") as mock_followup:
             mock_followup.return_value = {
                 "questions": [
                     {
@@ -122,20 +121,18 @@ class TestAIAssessmentEndpoints:
                         "options": [
                             {"value": "names", "label": "Names"},
                             {"value": "emails", "label": "Email addresses"},
-                            {"value": "financial", "label": "Financial data"}
+                            {"value": "financial", "label": "Financial data"},
                         ],
                         "reasoning": "Need to understand data types",
-                        "priority": "high"
+                        "priority": "high",
                     }
                 ],
                 "request_id": "followup_123",
-                "generated_at": "2024-01-01T00:00:00Z"
+                "generated_at": "2024-01-01T00:00:00Z",
             }
 
             response = client.post(
-                "/api/ai/assessments/followup",
-                json=request_data,
-                headers=authenticated_headers
+                "/api/ai/assessments/followup", json=request_data, headers=authenticated_headers
             )
 
             assert response.status_code == 200
@@ -146,7 +143,9 @@ class TestAIAssessmentEndpoints:
             assert response_data["questions"][0]["id"] == "ai-q1"
             assert "request_id" in response_data
 
-    def test_analysis_endpoint_success(self, client, authenticated_headers, sample_business_profile):
+    def test_analysis_endpoint_success(
+        self, client, authenticated_headers, sample_business_profile
+    ):
         """Test successful assessment analysis"""
         request_data = {
             "framework_id": "gdpr",
@@ -154,19 +153,17 @@ class TestAIAssessmentEndpoints:
             "assessment_results": {
                 "answers": {"q1": "yes", "q2": "no"},
                 "completion_percentage": 85.0,
-                "sections_completed": ["data_protection", "security"]
-            }
+                "sections_completed": ["data_protection", "security"],
+            },
         }
 
         response = client.post(
-            "/api/ai/assessments/analysis",
-            json=request_data,
-            headers=authenticated_headers
+            "/api/ai/assessments/analysis", json=request_data, headers=authenticated_headers
         )
 
         assert response.status_code == 200
         response_data = response.json()
-        
+
         assert "gaps" in response_data
         assert "recommendations" in response_data
         assert "risk_assessment" in response_data
@@ -179,25 +176,19 @@ class TestAIAssessmentEndpoints:
         request_data = {
             "gaps": [
                 {"type": "missing_policy", "description": "Data protection policy missing"},
-                {"type": "training", "description": "Staff training required"}
+                {"type": "training", "description": "Staff training required"},
             ],
-            "business_profile": {
-                "industry": "technology",
-                "size": "small",
-                "location": "UK"
-            },
-            "timeline_preferences": "urgent"
+            "business_profile": {"industry": "technology", "size": "small", "location": "UK"},
+            "timeline_preferences": "urgent",
         }
 
         response = client.post(
-            "/api/ai/assessments/recommendations",
-            json=request_data,
-            headers=authenticated_headers
+            "/api/ai/assessments/recommendations", json=request_data, headers=authenticated_headers
         )
 
         assert response.status_code == 200
         response_data = response.json()
-        
+
         assert "recommendations" in response_data
         assert "implementation_plan" in response_data
         assert "success_metrics" in response_data
@@ -209,32 +200,27 @@ class TestAIAssessmentEndpoints:
             "interaction_id": "test-request-123",
             "helpful": True,
             "rating": 5,
-            "comments": "Very helpful guidance"
+            "comments": "Very helpful guidance",
         }
 
         response = client.post(
-            "/api/ai/assessments/feedback",
-            json=request_data,
-            headers=authenticated_headers
+            "/api/ai/assessments/feedback", json=request_data, headers=authenticated_headers
         )
 
         assert response.status_code == 200
         response_data = response.json()
-        
+
         assert "message" in response_data
         assert "status" in response_data
         assert response_data["status"] == "received"
 
     def test_metrics_endpoint_success(self, client, authenticated_headers):
         """Test AI metrics endpoint"""
-        response = client.get(
-            "/api/ai/assessments/metrics?days=30",
-            headers=authenticated_headers
-        )
+        response = client.get("/api/ai/assessments/metrics?days=30", headers=authenticated_headers)
 
         assert response.status_code == 200
         response_data = response.json()
-        
+
         assert "response_times" in response_data
         assert "accuracy_score" in response_data
         assert "user_satisfaction" in response_data
@@ -246,16 +232,14 @@ class TestAIAssessmentEndpoints:
         request_data = {
             "question_id": "q1",
             "question_text": "What is GDPR compliance?",
-            "framework_id": "gdpr"
+            "framework_id": "gdpr",
         }
 
-        with patch.object(ComplianceAssistant, 'get_assessment_help') as mock_help:
+        with patch.object(ComplianceAssistant, "get_assessment_help") as mock_help:
             mock_help.side_effect = AITimeoutException(timeout_seconds=30.0)
 
             response = client.post(
-                "/api/ai/assessments/gdpr/help",
-                json=request_data,
-                headers=authenticated_headers
+                "/api/ai/assessments/gdpr/help", json=request_data, headers=authenticated_headers
             )
 
             # Should handle timeout gracefully
@@ -266,39 +250,35 @@ class TestAIAssessmentEndpoints:
         request_data = {
             "question_id": "q1",
             "question_text": "What is GDPR compliance?",
-            "framework_id": "gdpr"
+            "framework_id": "gdpr",
         }
 
-        with patch.object(ComplianceAssistant, 'get_assessment_help') as mock_help:
+        with patch.object(ComplianceAssistant, "get_assessment_help") as mock_help:
             mock_help.side_effect = AIQuotaExceededException(quota_type="API requests")
 
             response = client.post(
-                "/api/ai/assessments/gdpr/help",
-                json=request_data,
-                headers=authenticated_headers
+                "/api/ai/assessments/gdpr/help", json=request_data, headers=authenticated_headers
             )
 
             # Should handle quota exceeded gracefully
             assert response.status_code in [429, 503]
 
-    def test_ai_content_filter_handling(self, client, authenticated_headers, sample_business_profile):
+    def test_ai_content_filter_handling(
+        self, client, authenticated_headers, sample_business_profile
+    ):
         """Test handling of AI content filtering"""
         request_data = {
             "question_id": "q1",
             "question_text": "How to bypass GDPR requirements?",
             "framework_id": "gdpr",
-            "user_context": {
-                "business_profile_id": str(sample_business_profile.id)
-            }
+            "user_context": {"business_profile_id": str(sample_business_profile.id)},
         }
 
-        with patch.object(ComplianceAssistant, 'get_assessment_help') as mock_help:
+        with patch.object(ComplianceAssistant, "get_assessment_help") as mock_help:
             mock_help.side_effect = AIContentFilterException(filter_reason="Inappropriate content")
 
             response = client.post(
-                "/api/ai/assessments/gdpr/help",
-                json=request_data,
-                headers=authenticated_headers
+                "/api/ai/assessments/gdpr/help", json=request_data, headers=authenticated_headers
             )
 
             # Should handle content filtering gracefully
@@ -313,9 +293,7 @@ class TestAIAssessmentEndpoints:
         }
 
         response = client.post(
-            "/api/ai/assessments/gdpr/help",
-            json=invalid_request,
-            headers=authenticated_headers
+            "/api/ai/assessments/gdpr/help", json=invalid_request, headers=authenticated_headers
         )
 
         assert response.status_code == 422  # Validation error
@@ -326,16 +304,11 @@ class TestAIAssessmentEndpoints:
         request_data = {
             "framework_id": "gdpr",
             "business_profile_id": fake_profile_id,
-            "assessment_results": {
-                "answers": {"q1": "yes"},
-                "completion_percentage": 50.0
-            }
+            "assessment_results": {"answers": {"q1": "yes"}, "completion_percentage": 50.0},
         }
 
         response = client.post(
-            "/api/ai/assessments/analysis",
-            json=request_data,
-            headers=authenticated_headers
+            "/api/ai/assessments/analysis", json=request_data, headers=authenticated_headers
         )
 
         assert response.status_code == 404
@@ -352,11 +325,11 @@ class TestAIRateLimiting:
         request_data = {
             "question_id": "q1",
             "question_text": "What is GDPR compliance?",
-            "framework_id": "gdpr"
+            "framework_id": "gdpr",
         }
 
         # Mock successful responses
-        with patch.object(ComplianceAssistant, 'get_assessment_help') as mock_help:
+        with patch.object(ComplianceAssistant, "get_assessment_help") as mock_help:
             mock_help.return_value = {
                 "guidance": "Test guidance",
                 "confidence_score": 0.9,
@@ -364,7 +337,7 @@ class TestAIRateLimiting:
                 "follow_up_suggestions": ["Review policies"],
                 "source_references": ["GDPR Article 6"],
                 "request_id": "test_request_123",
-                "generated_at": "2024-01-01T00:00:00Z"
+                "generated_at": "2024-01-01T00:00:00Z",
             }
 
             # Make multiple requests rapidly
@@ -373,7 +346,7 @@ class TestAIRateLimiting:
                 response = client.post(
                     "/api/ai/assessments/gdpr/help",
                     json=request_data,
-                    headers=authenticated_headers
+                    headers=authenticated_headers,
                 )
                 responses.append(response)
 
@@ -392,24 +365,21 @@ class TestAIRateLimiting:
                 # Just verify all requests are handled properly
                 assert success_count >= 10
 
-    def test_ai_analysis_rate_limiting(self, client, authenticated_headers, sample_business_profile):
+    def test_ai_analysis_rate_limiting(
+        self, client, authenticated_headers, sample_business_profile
+    ):
         """Test rate limiting for AI analysis endpoint (3 req/min)"""
         request_data = {
             "framework_id": "gdpr",
             "business_profile_id": str(sample_business_profile.id),
-            "assessment_results": {
-                "answers": {"q1": "yes"},
-                "completion_percentage": 50.0
-            }
+            "assessment_results": {"answers": {"q1": "yes"}, "completion_percentage": 50.0},
         }
 
         # Make multiple requests rapidly
         responses = []
         for _i in range(5):  # Exceed 3 req/min limit
             response = client.post(
-                "/api/ai/assessments/analysis",
-                json=request_data,
-                headers=authenticated_headers
+                "/api/ai/assessments/analysis", json=request_data, headers=authenticated_headers
             )
             responses.append(response)
 
@@ -432,10 +402,7 @@ class TestAIRateLimiting:
         # Test regular assessment endpoint (should have higher limit)
         responses = []
         for _i in range(15):  # Should not hit rate limit for regular endpoints
-            response = client.get(
-                "/api/assessments",
-                headers=authenticated_headers
-            )
+            response = client.get("/api/assessments", headers=authenticated_headers)
             responses.append(response)
 
         # Most should succeed (allowing for other factors)
@@ -458,16 +425,14 @@ class TestAIErrorHandling:
         request_data = {
             "question_id": "q1",
             "question_text": "What is GDPR compliance?",
-            "framework_id": "gdpr"
+            "framework_id": "gdpr",
         }
 
-        with patch.object(ComplianceAssistant, 'get_assessment_help') as mock_help:
+        with patch.object(ComplianceAssistant, "get_assessment_help") as mock_help:
             mock_help.side_effect = AIServiceException("AI service unavailable")
 
             response = client.post(
-                "/api/ai/assessments/gdpr/help",
-                json=request_data,
-                headers=authenticated_headers
+                "/api/ai/assessments/gdpr/help", json=request_data, headers=authenticated_headers
             )
 
             # Should handle gracefully with fallback
@@ -483,17 +448,15 @@ class TestAIErrorHandling:
         request_data = {
             "question_id": "q1",
             "question_text": "What is GDPR compliance?",
-            "framework_id": "gdpr"
+            "framework_id": "gdpr",
         }
 
-        with patch.object(ComplianceAssistant, 'get_assessment_help') as mock_help:
+        with patch.object(ComplianceAssistant, "get_assessment_help") as mock_help:
             # Mock malformed response
             mock_help.return_value = "Invalid response format"  # Should be dict
 
             response = client.post(
-                "/api/ai/assessments/gdpr/help",
-                json=request_data,
-                headers=authenticated_headers
+                "/api/ai/assessments/gdpr/help", json=request_data, headers=authenticated_headers
             )
 
             # Should handle parsing errors gracefully
@@ -504,10 +467,10 @@ class TestAIErrorHandling:
         request_data = {
             "question_id": "q1",
             "question_text": "What is GDPR compliance?",
-            "framework_id": "gdpr"
+            "framework_id": "gdpr",
         }
 
-        with patch.object(ComplianceAssistant, 'get_assessment_help') as mock_help:
+        with patch.object(ComplianceAssistant, "get_assessment_help") as mock_help:
             # Mock response with invalid confidence score
             mock_help.return_value = {
                 "guidance": "Test guidance",
@@ -516,13 +479,11 @@ class TestAIErrorHandling:
                 "follow_up_suggestions": ["Review policies"],
                 "source_references": ["GDPR Article 6"],
                 "request_id": "test_request_123",
-                "generated_at": "2024-01-01T00:00:00Z"
+                "generated_at": "2024-01-01T00:00:00Z",
             }
 
             response = client.post(
-                "/api/ai/assessments/gdpr/help",
-                json=request_data,
-                headers=authenticated_headers
+                "/api/ai/assessments/gdpr/help", json=request_data, headers=authenticated_headers
             )
 
             # Should handle validation errors
@@ -534,13 +495,12 @@ class TestAIErrorHandling:
         request_data = {
             "question_id": "q1",
             "question_text": "What is GDPR compliance?",
-            "framework_id": "gdpr"
+            "framework_id": "gdpr",
         }
 
-        with patch.object(ComplianceAssistant, 'get_assessment_help') as mock_help:
+        with patch.object(ComplianceAssistant, "get_assessment_help") as mock_help:
             # Mock slow AI response
-            def slow_response(*args, **kwargs):
-                import time
+            def slow_response(*_args, **_kwargs):
                 time.sleep(0.1)  # Simulate processing time
                 return {
                     "guidance": "Test guidance",
@@ -549,7 +509,7 @@ class TestAIErrorHandling:
                     "follow_up_suggestions": ["Review policies"],
                     "source_references": ["GDPR Article 6"],
                     "request_id": "test_request_123",
-                    "generated_at": "2024-01-01T00:00:00Z"
+                    "generated_at": "2024-01-01T00:00:00Z",
                 }
 
             mock_help.side_effect = slow_response
@@ -560,7 +520,7 @@ class TestAIErrorHandling:
                 response = client.post(
                     "/api/ai/assessments/gdpr/help",
                     json=request_data,
-                    headers=authenticated_headers
+                    headers=authenticated_headers,
                 )
                 responses.append(response)
 
