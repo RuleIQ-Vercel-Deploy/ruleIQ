@@ -354,7 +354,8 @@ class EvidenceService:
         # Securely update only validated and whitelisted fields
         field_mapping = {
             "title": "evidence_name",
-            "control_id": "control_reference"
+            "control_id": "control_reference",
+            "notes": "collection_notes"
         }
         
         for field, value in validated_data.items():

@@ -3918,7 +3918,7 @@ class ComplianceAssistant:
         }
 
     # Method aliases for backward compatibility with tests
-    async def _generate_response(self, *args, **kwargs) -> Dict[str, Any]:
+    async def _generate_response_legacy(self, *args, **kwargs) -> Dict[str, Any]:
         """
         Internal method for generating AI responses with cancellation support.
         Used for graceful shutdown testing and cancellation handling.
@@ -3928,7 +3928,7 @@ class ComplianceAssistant:
         if 'question_text' in kwargs:
             return await self.get_assessment_help(*args, **kwargs)
         else:
-            raise ValueError("Invalid arguments for _generate_response")
+            raise ValueError("Invalid arguments for _generate_response_legacy")
 
     async def get_question_help(
         self,

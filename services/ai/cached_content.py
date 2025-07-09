@@ -61,6 +61,10 @@ class GoogleCachedContentManager:
         self.active_caches: Dict[str, genai.caching.CachedContent] = {}
         self.cache_metadata: Dict[str, Dict[str, Any]] = {}
         
+        # Check if we're in test mode
+        import os
+        self.use_mock = os.getenv("USE_MOCK_AI", "false").lower() == "true"
+        
         # Cache performance metrics
         self.metrics = {
             'cache_hits': 0,
@@ -95,6 +99,16 @@ class GoogleCachedContentManager:
         Returns:
             CachedContent instance or None if creation failed
         """
+        # Return mock cache in test environment
+        if self.use_mock:
+            from unittest.mock import MagicMock
+            mock_cache = MagicMock()
+            mock_cache.name = f"mock-cache-{framework_id}"
+            mock_cache.model = model_type.value
+            # Update metrics for testing
+            self.metrics['cache_creates'] += 1
+            return mock_cache
+            
         try:
             # Generate cache key
             cache_key = self._generate_cache_key(

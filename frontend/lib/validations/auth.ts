@@ -21,7 +21,7 @@ const passwordSchema = z.string()
   .regex(/^(?=.*[a-z])/, "Password must contain at least one lowercase letter")
   .regex(/^(?=.*[A-Z])/, "Password must contain at least one uppercase letter")
   .regex(/^(?=.*\d)/, "Password must contain at least one number")
-  .regex(/^(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?])/, "Password must contain at least one special character")
+  .regex(/^(?=.*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?])/, "Password must contain at least one special character")
   .regex(/^[^\s]*$/, "Password cannot contain spaces");
 
 // Multi-step registration schema
@@ -199,7 +199,7 @@ export function calculatePasswordStrength(password: string): {
   }
 
   // Special character check
-  if (/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)) {
+  if (/[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/.test(password)) {
     score += 20;
   } else {
     feedback.push("Add special characters");

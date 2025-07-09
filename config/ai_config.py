@@ -196,6 +196,10 @@ class AIConfig:
 
     def _initialize_google_ai(self):
         """Initialize Google Generative AI with API key"""
+        # Skip actual API initialization if using mock AI in tests
+        if os.getenv("USE_MOCK_AI", "false").lower() == "true":
+            return
+            
         if not self.google_api_key:
             raise ValueError("GOOGLE_API_KEY environment variable is required")
 
@@ -203,6 +207,13 @@ class AIConfig:
 
     def get_model(self, model_type: Optional[ModelType] = None, system_instruction: Optional[str] = None, tools: Optional[List[Dict[str, Any]]] = None) -> genai.GenerativeModel:
         """Get configured AI model instance with optional system instruction and tools"""
+        # Return mock model in test environment
+        if os.getenv("USE_MOCK_AI", "false").lower() == "true":
+            from unittest.mock import MagicMock
+            mock_model = MagicMock()
+            mock_model.generate_content.return_value.text = "Mock AI response"
+            return mock_model
+            
         model_name = model_type.value if model_type else self.default_model
 
         # Build model initialization parameters

@@ -240,6 +240,12 @@ class WhitelistValidator:
                     "min_length": 1,
                     "required": False
                 },
+                "title": {  # Alias for evidence_name for API compatibility
+                    "type": FieldType.STRING,
+                    "max_length": 200,
+                    "min_length": 1,
+                    "required": False
+                },
                 "description": {
                     "type": FieldType.STRING,
                     "max_length": 1000,
@@ -254,8 +260,31 @@ class WhitelistValidator:
                 },
                 "status": {
                     "type": FieldType.ENUM,
-                    "allowed_values": ["pending", "collected", "in_review", "approved", "rejected", "pending_review"],
+                    "allowed_values": ["pending", "collected", "in_review", "approved", "rejected", "pending_review", "reviewed", "expired", "not_started", "in_progress"],
                     "required": False
+                },
+                "tags": {
+                    "type": FieldType.LIST,
+                    "required": False,
+                    "allow_empty": True
+                },
+                "notes": {  # Alias for collection_notes
+                    "type": FieldType.STRING,
+                    "max_length": 2000,
+                    "required": False,
+                    "allow_empty": True
+                },
+                "collection_notes": {
+                    "type": FieldType.STRING,
+                    "max_length": 2000,
+                    "required": False,
+                    "allow_empty": True
+                },
+                "review_notes": {
+                    "type": FieldType.STRING,
+                    "max_length": 2000,
+                    "required": False,
+                    "allow_empty": True
                 },
                 "control_reference": {
                     "type": FieldType.STRING,

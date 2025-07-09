@@ -1,6 +1,7 @@
+import { withRetry, createAppError } from '../utils/error-handling';
+
 import { chatService } from './chat.service';
 import { apiClient } from './client';
-import { withRetry, createAppError } from '../utils/error-handling';
 
 import type {
   Gap,

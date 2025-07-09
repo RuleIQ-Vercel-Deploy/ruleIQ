@@ -56,13 +56,13 @@ const processEnv = {
 // --------------------------
 
 const merged = serverSchema.merge(clientSchema);
-type MergedInput = z.input<typeof merged>;
+type _MergedInput = z.input<typeof merged>;
 type MergedOutput = z.output<typeof merged>;
 
 let env = {} as MergedOutput;
 const combinedSchema = merged;
 
-if (!!process.env.SKIP_ENV_VALIDATION == false) {
+if (!!process.env.SKIP_ENV_VALIDATION === false) {
   const isServer = typeof window === 'undefined';
 
   const parsed = isServer

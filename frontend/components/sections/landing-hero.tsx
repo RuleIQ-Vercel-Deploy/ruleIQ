@@ -1,12 +1,13 @@
 // Landing Page Hero Section with Spinning Logo
 // Usage in app/page.tsx
 
+import { motion, useScroll, useTransform } from "framer-motion"
+import { ArrowRight, Shield, Sparkles } from "lucide-react"
 import Link from "next/link"
+
 import { AnimatedLogo } from "@/components/ui/animated-logo"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { ArrowRight, Shield, Sparkles } from "lucide-react"
-import { motion, useScroll, useTransform } from "framer-motion"
 
 export function LandingHero() {
   const { scrollY } = useScroll()

@@ -285,7 +285,7 @@ class TestAIErrorHandling:
             # Failing service should handle gracefully
             assert followup_response.status_code in [500, 503]
 
-    def test_ai_service_recovery_after_failure(self, client, authenticated_headers):
+    def test_ai_service_recovery_after_failure(self, client, authenticated_headers, sample_business_profile):
         """Test that AI services can recover after temporary failures"""
         request_data = {
             "question_id": "recovery-test",
@@ -295,7 +295,7 @@ class TestAIErrorHandling:
 
         with patch('services.ai.assistant.ComplianceAssistant') as mock_assistant:
             # First call fails, second succeeds
-            mock_assistant.return_value.get_question_help = AsyncMock(
+            mock_assistant.return_value.get_assessment_help = AsyncMock(
                 side_effect=[
                     AIServiceException("Temporary failure"),
                     {
@@ -321,7 +321,7 @@ class TestAIErrorHandling:
             )
             assert response2.status_code == 200
 
-    def test_ai_error_logging_and_monitoring(self, client, authenticated_headers, caplog):
+    def test_ai_error_logging_and_monitoring(self, client, authenticated_headers, sample_business_profile, caplog):
         """Test that AI errors are properly logged for monitoring"""
         request_data = {
             "question_id": "logging-test",
@@ -330,7 +330,7 @@ class TestAIErrorHandling:
         }
 
         with patch('services.ai.assistant.ComplianceAssistant') as mock_assistant:
-            mock_assistant.return_value.get_question_help = AsyncMock(
+            mock_assistant.return_value.get_assessment_help = AsyncMock(
                 side_effect=AIServiceException("Test error for logging")
             )
 
@@ -378,7 +378,7 @@ class TestAIErrorHandling:
                     assert "guidance" in response_data
                     assert response_data["confidence_score"] <= 1.0
 
-    def test_ai_error_context_preservation(self, client, authenticated_headers):
+    def test_ai_error_context_preservation(self, client, authenticated_headers, sample_business_profile):
         """Test that error context is preserved for debugging"""
         request_data = {
             "question_id": "context-test",
@@ -394,7 +394,7 @@ class TestAIErrorHandling:
                 "timestamp": "2024-01-01T00:00:00Z"
             }
             
-            mock_assistant.return_value.get_question_help = AsyncMock(
+            mock_assistant.return_value.get_assessment_help = AsyncMock(
                 side_effect=AIServiceException(
                     "Service error with context",
                     context=error_context
@@ -410,7 +410,7 @@ class TestAIErrorHandling:
             # Error should be handled gracefully
             assert response.status_code in [500, 503]
 
-    def test_ai_circuit_breaker_pattern(self, client, authenticated_headers):
+    def test_ai_circuit_breaker_pattern(self, client, authenticated_headers, sample_business_profile):
         """Test circuit breaker pattern for AI service failures"""
         request_data = {
             "question_id": "circuit-breaker-test",
@@ -420,7 +420,7 @@ class TestAIErrorHandling:
 
         with patch('services.ai.assistant.ComplianceAssistant') as mock_assistant:
             # Simulate multiple failures to trigger circuit breaker
-            mock_assistant.return_value.get_question_help = AsyncMock(
+            mock_assistant.return_value.get_assessment_help = AsyncMock(
                 side_effect=AIServiceException("Repeated failures")
             )
 
@@ -459,7 +459,7 @@ class TestAIErrorHandling:
                     framework_id="gdpr"
                 )
 
-    def test_ai_error_rate_monitoring(self, client, authenticated_headers):
+    def test_ai_error_rate_monitoring(self, client, authenticated_headers, sample_business_profile):
         """Test monitoring of AI error rates"""
         request_data = {
             "question_id": "error-rate-test",
@@ -477,7 +477,7 @@ class TestAIErrorHandling:
                 {"guidance": "Success 3", "confidence_score": 0.9}
             ]
             
-            mock_assistant.return_value.get_question_help = AsyncMock(
+            mock_assistant.return_value.get_assessment_help = AsyncMock(
                 side_effect=responses_sequence
             )
 

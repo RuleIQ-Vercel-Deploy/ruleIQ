@@ -1,6 +1,7 @@
 "use client"
 
 import { motion, useReducedMotion } from "framer-motion"
+
 import { cn } from "@/lib/utils"
 
 interface AnimatedLogoProps {
@@ -38,7 +39,7 @@ export function AnimatedLogo({
       opacity: 1,
       transition: {
         rotate: {
-          duration: duration,
+          duration,
           ease: "easeInOut"
         },
         scale: {
@@ -54,7 +55,7 @@ export function AnimatedLogo({
       rotate: 360,
       transition: {
         rotate: {
-          duration: duration,
+          duration,
           ease: "linear",
           repeat: Infinity
         }

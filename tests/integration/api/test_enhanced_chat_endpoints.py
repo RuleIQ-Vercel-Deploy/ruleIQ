@@ -328,14 +328,43 @@ class TestEnhancedChatEndpoints:
                 else:
                     assert response.status_code == 400
 
-    def test_missing_business_profile_error(self, client, authenticated_headers):
+    def test_missing_business_profile_error(self, client, db_session):
         """Test error handling when business profile is missing"""
-        
+        from uuid import uuid4
+        from api.dependencies.auth import create_access_token
+        from datetime import timedelta
+        from database.user import User
+        from database.business_profile import BusinessProfile
+        from sqlalchemy import select
+
+        # Create a new user specifically for this test (without business profile)
+        test_user = User(
+            id=uuid4(),
+            email=f"no-profile-user-{uuid4()}@example.com",
+            hashed_password="fake_password_hash",
+            is_active=True
+        )
+        db_session.add(test_user)
+        db_session.commit()
+        db_session.refresh(test_user)
+
+        # Ensure no business profile exists for this user
+        stmt = select(BusinessProfile).where(BusinessProfile.user_id == test_user.id)
+        existing_profile = db_session.execute(stmt).scalars().first()
+        if existing_profile:
+            db_session.delete(existing_profile)
+            db_session.commit()
+
+        # Create auth token for this user
+        token_data = {"sub": str(test_user.id)}
+        token = create_access_token(data=token_data, expires_delta=timedelta(minutes=30))
+        headers = {"Authorization": f"Bearer {token}"}
+
         response = client.post(
             "/api/chat/context-aware-recommendations?framework=ISO27001",
-            headers=authenticated_headers
+            headers=headers
         )
-        
+
         # Should return 400 when business profile is missing
         assert response.status_code == 400
         data = response.json()

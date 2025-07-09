@@ -36,6 +36,56 @@ from pathlib import Path
 from typing import Optional
 from uuid import uuid4
 
+# Set up comprehensive AI mocking before any imports
+if True:  # Always enable in tests
+    import unittest.mock
+    
+    # Mock the entire google.generativeai module
+    mock_genai = unittest.mock.MagicMock()
+    
+    # Mock model response
+    mock_response = unittest.mock.MagicMock()
+    mock_response.text = "Mock AI response for testing"
+    mock_response.parts = [unittest.mock.MagicMock()]
+    mock_response.parts[0].text = "Mock AI response for testing"
+    
+    # Mock model
+    mock_model = unittest.mock.MagicMock()
+    mock_model.generate_content.return_value = mock_response
+    
+    # Mock streaming response - return a generator with multiple chunks
+    def mock_stream_generator():
+        for i in range(5):  # Return 5 chunks for streaming tests
+            chunk = unittest.mock.MagicMock()
+            chunk.text = f"Stream chunk {i}"
+            chunk.parts = [unittest.mock.MagicMock()]
+            chunk.parts[0].text = f"Stream chunk {i}"
+            yield chunk
+    
+    # Set up the mock to return a new generator each time it's called
+    mock_model.generate_content_stream.side_effect = lambda *args, **kwargs: mock_stream_generator()
+    
+    # Set up genai module mock
+    mock_genai.GenerativeModel.return_value = mock_model
+    mock_genai.configure.return_value = None
+    
+    # Mock caching module
+    mock_cached_content = unittest.mock.MagicMock()
+    mock_cached_content.name = "mock-cache"
+    mock_genai.caching.CachedContent.create.return_value = mock_cached_content
+    
+    # Mock types module
+    mock_types = unittest.mock.MagicMock()
+    mock_types.HarmBlockThreshold = unittest.mock.MagicMock()
+    mock_types.HarmCategory = unittest.mock.MagicMock()
+    mock_genai.types = mock_types
+    
+    # Apply the mock to all the submodules
+    sys.modules['google'] = unittest.mock.MagicMock()
+    sys.modules['google.generativeai'] = mock_genai
+    sys.modules['google.generativeai.caching'] = mock_genai.caching
+    sys.modules['google.generativeai.types'] = mock_types
+
 import pytest
 from fastapi import Depends
 from sqlalchemy import text

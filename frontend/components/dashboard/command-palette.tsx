@@ -1,7 +1,5 @@
 "use client"
 
-import { useCallback, useEffect, useState } from "react"
-import { useRouter } from "next/navigation"
 import {
   Calculator,
   Calendar,
@@ -17,6 +15,8 @@ import {
   Smile,
   User,
 } from "lucide-react"
+import { useRouter } from "next/navigation"
+import { useCallback, useEffect, useState } from "react"
 
 import {
   CommandDialog,

@@ -294,13 +294,7 @@ def test_task_contexts():
     }
 
 
-@pytest.fixture
-def authenticated_headers():
-    """Headers with authentication for API testing."""
-    return {
-        "Authorization": "Bearer test-token",
-        "Content-Type": "application/json"
-    }
+
 
 
 @pytest.fixture

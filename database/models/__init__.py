@@ -2,6 +2,7 @@
 Database models package
 """
 
+from database.user import User
 from .integrations import (
     Integration,
     EvidenceCollection,
@@ -11,8 +12,9 @@ from .integrations import (
 )
 
 __all__ = [
+    "User",
     "Integration",
-    "EvidenceCollection", 
+    "EvidenceCollection",
     "IntegrationEvidenceItem",
     "IntegrationHealthLog",
     "EvidenceAuditLog"

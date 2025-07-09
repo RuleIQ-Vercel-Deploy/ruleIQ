@@ -54,9 +54,8 @@ export class DataExporter {
       const address = `${XLSX.utils.encode_col(C)  }1`
       if (!ws[address]) continue
       ws[address].s = {
-        font: { bold: true },
-        fill: { fgColor: { rgb: "17255A" } },
-        font: { color: { rgb: "FFFFFF" } }
+        font: { bold: true, color: { rgb: "FFFFFF" } },
+        fill: { fgColor: { rgb: "17255A" } }
       }
     }
     

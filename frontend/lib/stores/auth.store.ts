@@ -3,8 +3,9 @@
 import { create } from 'zustand'
 import { persist, createJSONStorage , devtools } from 'zustand/middleware'
 
-import type { User } from '@/types/api'
 import SecureStorage from '@/lib/utils/secure-storage'
+
+import type { User } from '@/types/api'
 
 // Enhanced User interface for auth
 export interface AuthUser extends User {

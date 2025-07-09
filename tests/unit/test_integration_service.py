@@ -19,6 +19,12 @@ class TestIntegrationService:
     def mock_db(self):
         """Mock database session"""
         db = AsyncMock()
+        # Mock the begin() method to return a proper async context manager
+        async_context_manager = AsyncMock()
+        async_context_manager.__aenter__ = AsyncMock(return_value=async_context_manager)
+        async_context_manager.__aexit__ = AsyncMock(return_value=None)
+        # Make sure begin() is a regular method, not a coroutine
+        db.begin = MagicMock(return_value=async_context_manager)
         return db
     
     @pytest.fixture
@@ -87,9 +93,9 @@ class TestIntegrationService:
         )
         
         # Verify database operations
-        integration_service.db.add.assert_called_once()
-        integration_service.db.commit.assert_called_once()
+        assert integration_service.db.add.call_count == 3  # Integration, HealthLog, and AuditLog
         integration_service.db.refresh.assert_called_once()
+        # No manual commit assertion - using transaction context manager
         
         # Verify the result
         assert result is not None
@@ -132,8 +138,7 @@ class TestIntegrationService:
         assert existing_integration.is_active == True
         assert existing_integration.encrypted_credentials == "encrypted_credentials"
         
-        # Verify database operations
-        integration_service.db.commit.assert_called_once()
+        # Verify database operations (no manual commit with transaction context manager)
         integration_service.db.refresh.assert_called_once()
     
     @pytest.mark.asyncio
@@ -277,6 +282,12 @@ class TestEvidenceCollectionService:
     def mock_db(self):
         """Mock database session"""
         db = AsyncMock()
+        # Mock the begin() method to return a proper async context manager
+        async_context_manager = AsyncMock()
+        async_context_manager.__aenter__ = AsyncMock(return_value=async_context_manager)
+        async_context_manager.__aexit__ = AsyncMock(return_value=None)
+        # Make sure begin() is a regular method, not a coroutine
+        db.begin = MagicMock(return_value=async_context_manager)
         return db
     
     @pytest.fixture

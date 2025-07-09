@@ -22,7 +22,7 @@ import {
 
 // Base validation schemas for reuse
 const nonEmptyString = z.string().min(1, 'This field is required').trim();
-const optionalString = z.string().optional();
+const _optionalString = z.string().optional();
 const positiveInteger = z.number().int().positive('Must be a positive number');
 
 // Company Information Schema

@@ -1,4 +1,3 @@
-import { Suspense } from "react"
 import { 
   Shield, 
   AlertTriangle, 
@@ -6,7 +5,9 @@ import {
   FileCheck, 
   RefreshCw
 } from "lucide-react"
+import { Suspense } from "react"
 
+import { AIInsightsWidget } from "@/components/dashboard/ai-insights-widget"
 import { 
   ComplianceTrendChart, 
   FrameworkBreakdownChart, 
@@ -17,7 +18,6 @@ import {
 import { DashboardHeader } from "@/components/dashboard/dashboard-header"
 import { EnhancedStatsCard } from "@/components/dashboard/enhanced-stats-card"
 import { PendingTasksWidget } from "@/components/dashboard/pending-tasks-widget"
-import { AIInsightsWidget } from "@/components/dashboard/ai-insights-widget"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { 
   StatsCardSkeleton, 

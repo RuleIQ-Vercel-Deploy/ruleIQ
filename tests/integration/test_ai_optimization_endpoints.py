@@ -46,10 +46,7 @@ class TestAIOptimizationEndpoints:
         }
         return assistant
 
-    @pytest.fixture
-    def authenticated_headers(self):
-        """Headers with authentication token."""
-        return {"Authorization": "Bearer test-token"}
+
 
     @pytest.mark.asyncio
     async def test_streaming_analysis_endpoint(self, async_client, authenticated_headers, mock_ai_assistant):

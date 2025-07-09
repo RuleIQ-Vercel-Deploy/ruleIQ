@@ -1,11 +1,10 @@
 "use client"
 
-import * as React from "react"
 import {
-  ColumnDef,
-  ColumnFiltersState,
-  SortingState,
-  VisibilityState,
+  type ColumnDef,
+  type ColumnFiltersState,
+  type SortingState,
+  type VisibilityState,
   flexRender,
   getCoreRowModel,
   getFacetedRowModel,
@@ -16,6 +15,7 @@ import {
   useReactTable,
 } from "@tanstack/react-table"
 import { Download, Trash2, Archive, Send, CheckCircle } from "lucide-react"
+import * as React from "react"
 
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
