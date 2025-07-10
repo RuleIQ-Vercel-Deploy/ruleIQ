@@ -293,7 +293,7 @@ class TestAIErrorHandling:
             "framework_id": "gdpr"
         }
 
-        with patch('services.ai.assistant.ComplianceAssistant') as mock_assistant:
+        with patch('api.routers.ai_assessments.ComplianceAssistant') as mock_assistant:
             # First call fails, second succeeds
             mock_assistant.return_value.get_assessment_help = AsyncMock(
                 side_effect=[
@@ -329,7 +329,7 @@ class TestAIErrorHandling:
             "framework_id": "gdpr"
         }
 
-        with patch('services.ai.assistant.ComplianceAssistant') as mock_assistant:
+        with patch('api.routers.ai_assessments.ComplianceAssistant') as mock_assistant:
             mock_assistant.return_value.get_assessment_help = AsyncMock(
                 side_effect=AIServiceException("Test error for logging")
             )
@@ -386,7 +386,7 @@ class TestAIErrorHandling:
             "framework_id": "gdpr"
         }
 
-        with patch('services.ai.assistant.ComplianceAssistant') as mock_assistant:
+        with patch('api.routers.ai_assessments.ComplianceAssistant') as mock_assistant:
             # Create error with context
             error_context = {
                 "user_id": "test-user",
@@ -418,7 +418,7 @@ class TestAIErrorHandling:
             "framework_id": "gdpr"
         }
 
-        with patch('services.ai.assistant.ComplianceAssistant') as mock_assistant:
+        with patch('api.routers.ai_assessments.ComplianceAssistant') as mock_assistant:
             # Simulate multiple failures to trigger circuit breaker
             mock_assistant.return_value.get_assessment_help = AsyncMock(
                 side_effect=AIServiceException("Repeated failures")
@@ -467,7 +467,7 @@ class TestAIErrorHandling:
             "framework_id": "gdpr"
         }
 
-        with patch('services.ai.assistant.ComplianceAssistant') as mock_assistant:
+        with patch('api.routers.ai_assessments.ComplianceAssistant') as mock_assistant:
             # Mix of successful and failed responses
             responses_sequence = [
                 {"guidance": "Success 1", "confidence_score": 0.9},

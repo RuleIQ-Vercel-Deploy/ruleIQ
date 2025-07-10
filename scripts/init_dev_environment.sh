@@ -1,4 +1,4 @@
-#!/bin/bash
+1#!/bin/bash
 
 # ruleIQ Development Environment Initialization Script
 # This script sets up the development environment and starts necessary services

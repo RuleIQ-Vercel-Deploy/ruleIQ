@@ -1,0 +1,202 @@
+{
+  "total_tests": 35,
+  "passed": 13,
+  "failed": 0,
+  "errors": 22,
+  "skipped": 0,
+  "execution_time": 161.27583861351013,
+  "test_groups": [
+    {
+      "name": "Unit Tests - Pure Logic",
+      "patterns": [
+        "tests/unit/models/",
+        "tests/unit/utils/",
+        "tests/unit/services/test_ai_model_selection.py",
+        "tests/unit/services/test_cached_content.py"
+      ],
+      "passed": 0,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "execution_time": 1.6297872066497803,
+      "retry_count": 0
+    },
+    {
+      "name": "AI/ML Tests",
+      "patterns": [
+        "tests/ai/test_compliance_accuracy.py",
+        "tests/unit/services/test_enhanced_ai_assistant.py"
+      ],
+      "passed": 0,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "execution_time": 1.6423673629760742,
+      "retry_count": 0
+    },
+    {
+      "name": "Service Layer Tests",
+      "patterns": [
+        "tests/unit/services/test_ai_assistant.py",
+        "tests/unit/test_integration_service.py",
+        "tests/test_services.py"
+      ],
+      "passed": 0,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "execution_time": 1.994931936264038,
+      "retry_count": 0
+    },
+    {
+      "name": "Database Integration Tests",
+      "patterns": [
+        "tests/integration/database/",
+        "tests/test_fixture_isolation.py",
+        "tests/test_hybrid_approach.py"
+      ],
+      "passed": 0,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "execution_time": 12.901357889175415,
+      "retry_count": 0
+    },
+    {
+      "name": "API Integration Tests - Batch 1",
+      "patterns": [
+        "tests/integration/api/test_ai_assessments.py",
+        "tests/integration/api/test_analytics_endpoints.py"
+      ],
+      "passed": 0,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "execution_time": 1.7034060955047607,
+      "retry_count": 0
+    },
+    {
+      "name": "API Integration Tests - Batch 2",
+      "patterns": [
+        "tests/integration/api/test_assessment_endpoints.py",
+        "tests/integration/api/test_auth_endpoints.py"
+      ],
+      "passed": 0,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "execution_time": 1.371227502822876,
+      "retry_count": 0
+    },
+    {
+      "name": "API Integration Tests - Batch 3",
+      "patterns": [
+        "tests/integration/api/test_business_profile_endpoints.py",
+        "tests/integration/api/test_evidence_endpoints.py"
+      ],
+      "passed": 0,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "execution_time": 1.3493468761444092,
+      "retry_count": 0
+    },
+    {
+      "name": "API Integration Tests - Batch 4",
+      "patterns": [
+        "tests/integration/api/test_policy_endpoints.py",
+        "tests/integration/api/test_user_endpoints.py"
+      ],
+      "passed": 0,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "execution_time": 1.3313231468200684,
+      "retry_count": 0
+    },
+    {
+      "name": "Advanced Integration Tests",
+      "patterns": [
+        "tests/integration/test_ai_error_handling.py",
+        "tests/integration/test_ai_optimization_endpoints.py"
+      ],
+      "passed": 0,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "execution_time": 1.9902031421661377,
+      "retry_count": 0
+    },
+    {
+      "name": "End-to-End Tests",
+      "patterns": [
+        "tests/e2e/test_user_onboarding_flow.py",
+        "tests/test_e2e_workflows.py",
+        "tests/test_assessment_workflow_e2e.py"
+      ],
+      "passed": 0,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "execution_time": 1.9781959056854248,
+      "retry_count": 0
+    },
+    {
+      "name": "Performance Tests",
+      "patterns": [
+        "tests/performance/test_ai_optimization_performance.py",
+        "tests/performance/test_ai_performance.py",
+        "tests/performance/test_api_performance.py",
+        "tests/performance/test_database_performance.py"
+      ],
+      "passed": 0,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "execution_time": 1.743872880935669,
+      "retry_count": 0
+    },
+    {
+      "name": "Security & Monitoring Tests",
+      "patterns": [
+        "tests/security/",
+        "tests/monitoring/"
+      ],
+      "passed": 13,
+      "failed": 0,
+      "errors": 22,
+      "skipped": 0,
+      "execution_time": 23.928471326828003,
+      "retry_count": 2
+    },
+    {
+      "name": "Remaining Integration Tests",
+      "patterns": [
+        "tests/integration/workers/",
+        "tests/test_ai_assessment_endpoints_integration.py",
+        "tests/test_ai_rate_limiting.py"
+      ],
+      "passed": 0,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "execution_time": 1.877946376800537,
+      "retry_count": 0
+    },
+    {
+      "name": "Miscellaneous Tests",
+      "patterns": [
+        "tests/test_auth_fix.py",
+        "tests/test_ai_ethics.py",
+        "tests/test_usability.py",
+        "tests/load/"
+      ],
+      "passed": 0,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "execution_time": 35.69086194038391,
+      "retry_count": 0
+    }
+  ]
+}

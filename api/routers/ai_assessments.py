@@ -291,6 +291,100 @@ async def get_question_help(
             detail="Unable to provide AI assistance at this time"
         )
 
+@router.post("/{framework_id}/help/stream")
+async def get_question_help_stream(
+    framework_id: str,
+    request: AIHelpRequest,
+    current_user: User = Depends(get_current_active_user),
+    db: AsyncSession = Depends(get_async_db),
+    _: None = Depends(ai_help_rate_limit)
+):
+    """
+    Stream AI-powered help for a specific assessment question.
+
+    Provides real-time streaming contextual guidance, related topics, and follow-up suggestions
+    based on the question, framework, and user's business context.
+    Returns Server-Sent Events (SSE) for real-time updates.
+    """
+
+    async def generate_help_stream():
+        try:
+            # Get business profile for context
+            profile = await get_user_business_profile(current_user, db)
+
+            # Initialize AI assistant
+            assistant = ComplianceAssistant(db)
+
+            # Create metadata chunk
+            metadata = StreamingMetadata(
+                request_id=f"help_{framework_id}_{request.question_id}_{datetime.utcnow().timestamp()}",
+                framework_id=framework_id,
+                business_profile_id=str(profile.id),
+                started_at=datetime.utcnow().isoformat(),
+                stream_type="help"
+            )
+
+            # Send metadata chunk
+            metadata_chunk = StreamingChunk(
+                chunk_id="metadata",
+                content=metadata.model_dump_json(),
+                chunk_type="metadata"
+            )
+            yield f"data: {metadata_chunk.model_dump_json()}\n\n"
+
+            # Stream AI help using the streaming method
+            chunk_counter = 0
+            async for chunk_content in assistant.get_assessment_help_stream(
+                question_id=request.question_id,
+                question_text=request.question_text,
+                framework_id=framework_id,
+                business_profile_id=UUID(str(profile.id)),
+                section_id=request.section_id or "",
+                user_context=request.user_context or {}
+            ):
+                chunk_counter += 1
+                chunk = StreamingChunk(
+                    chunk_id=f"help_chunk_{chunk_counter}",
+                    content=chunk_content,
+                    chunk_type="content"
+                )
+                yield f"data: {chunk.model_dump_json()}\n\n"
+
+            # Send completion chunk
+            completion_chunk = StreamingChunk(
+                chunk_id="complete",
+                content="Help guidance complete",
+                chunk_type="complete"
+            )
+            yield f"data: {completion_chunk.model_dump_json()}\n\n"
+
+        except AIServiceException as e:
+            logger.error(f"AI service error in streaming question help: {e}")
+            error_chunk = StreamingChunk(
+                chunk_id="error",
+                content=f"Unable to provide help: {e.message}",
+                chunk_type="error"
+            )
+            yield f"data: {error_chunk.model_dump_json()}\n\n"
+        except Exception as e:
+            logger.error(f"Unexpected error in streaming question help: {e}")
+            error_chunk = StreamingChunk(
+                chunk_id="error",
+                content="Unable to provide AI assistance at this time",
+                chunk_type="error"
+            )
+            yield f"data: {error_chunk.model_dump_json()}\n\n"
+
+    return StreamingResponse(
+        generate_help_stream(),
+        media_type="text/event-stream",
+        headers={
+            "Cache-Control": "no-cache",
+            "Connection": "keep-alive",
+            "X-Accel-Buffering": "no"  # Disable nginx buffering
+        }
+    )
+
 @router.post("/followup", response_model=AIFollowUpResponse)
 async def generate_followup_questions(
     request: AIFollowUpRequest,

@@ -5,10 +5,12 @@ Provides endpoints for AI model selection, health monitoring, and performance me
 """
 
 from typing import Any, Dict
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Query, status
 from pydantic import BaseModel
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from api.dependencies.auth import get_current_active_user
+from api.dependencies.database import get_async_db
 from database.user import User
 from services.ai.assistant import ComplianceAssistant
 from services.ai.circuit_breaker import AICircuitBreaker
@@ -130,3 +132,75 @@ async def model_fallback_chain(
         }
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Fallback chain failed: {str(e)}")
+
+@router.get("/circuit-breaker/status")
+async def get_circuit_breaker_status(
+    current_user: User = Depends(get_current_active_user),
+    db: AsyncSession = Depends(get_async_db)
+) -> Dict[str, Any]:
+    """
+    Get circuit breaker status for all AI models.
+
+    Returns the current state of circuit breakers, failure counts, and health metrics
+    for all AI models in the system.
+    """
+    try:
+        assistant = ComplianceAssistant(db)
+
+        # Get circuit breaker status from the assistant
+        circuit_status = assistant.circuit_breaker.get_health_status()
+
+        return {
+            "overall_state": circuit_status.get("overall_state", "UNKNOWN"),
+            "model_states": circuit_status.get("model_states", {}),
+            "metrics": {
+                "total_failures": circuit_status.get("total_failures", 0),
+                "success_rate": circuit_status.get("success_rate", 0.0),
+                "last_failure": circuit_status.get("last_failure"),
+                "uptime_percentage": circuit_status.get("uptime_percentage", 100.0)
+            },
+            "timestamp": circuit_status.get("timestamp", "2024-01-01T00:00:00Z")
+        }
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to retrieve circuit breaker status"
+        )
+
+@router.post("/circuit-breaker/reset")
+async def reset_circuit_breaker(
+    model_name: str = Query(..., description="Model name to reset circuit breaker for"),
+    current_user: User = Depends(get_current_active_user),
+    db: AsyncSession = Depends(get_async_db)
+) -> Dict[str, Any]:
+    """
+    Reset circuit breaker for a specific AI model.
+
+    Manually resets the circuit breaker state for the specified model,
+    allowing it to accept requests again.
+    """
+    try:
+        assistant = ComplianceAssistant(db)
+
+        # Reset the circuit breaker for the specified model
+        success = assistant.circuit_breaker.reset_model_circuit_breaker(model_name)
+
+        if success:
+            return {
+                "message": f"Circuit breaker reset successfully for model: {model_name}",
+                "model_name": model_name,
+                "new_state": "CLOSED",
+                "timestamp": "2024-01-01T00:00:00Z"
+            }
+        else:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"Model '{model_name}' not found or circuit breaker reset failed"
+            )
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to reset circuit breaker"
+        )

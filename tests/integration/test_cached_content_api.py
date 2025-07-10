@@ -36,9 +36,9 @@ class TestCachedContentAPI:
         assert "legacy_cache_enabled" in cache_status
         assert "timestamp" in cache_status
 
-    def test_cache_metrics_endpoint_authentication_required(self, client):
+    def test_cache_metrics_endpoint_authentication_required(self, unauthenticated_test_client):
         """Test cache metrics endpoint requires authentication."""
-        response = client.get("/api/ai/assessments/cache/metrics")
+        response = unauthenticated_test_client.get("/api/ai/assessments/cache/metrics")
         assert response.status_code == 401
 
     def test_cache_metrics_includes_performance_data(self, client, authenticated_headers):

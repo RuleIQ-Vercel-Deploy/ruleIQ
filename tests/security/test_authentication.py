@@ -18,7 +18,7 @@ from tests.conftest import assert_api_response_security
 class TestAuthenticationSecurity:
     """Test authentication security controls"""
 
-    def test_unauthenticated_access_denied(self, client):
+    def test_unauthenticated_access_denied(self, unauthenticated_test_client):
         """Test that protected endpoints deny unauthenticated access"""
         protected_endpoints = [
             ("/api/business-profiles", "GET"),
@@ -30,13 +30,13 @@ class TestAuthenticationSecurity:
 
         for endpoint, method in protected_endpoints:
             if method == "GET":
-                response = client.get(endpoint)
+                response = unauthenticated_test_client.get(endpoint)
             elif method == "POST":
-                response = client.post(endpoint, json={})
+                response = unauthenticated_test_client.post(endpoint, json={})
             elif method == "PUT":
-                response = client.put(endpoint, json={})
+                response = unauthenticated_test_client.put(endpoint, json={})
             elif method == "DELETE":
-                response = client.delete(endpoint)
+                response = unauthenticated_test_client.delete(endpoint)
 
             # Some endpoints might return 422 if they validate request body before auth
             assert response.status_code in [401, 422], f"Endpoint {method} {endpoint} should require authentication or validate input (got {response.status_code})"
@@ -50,7 +50,7 @@ class TestAuthenticationSecurity:
                     assert "authentication" in response_data["error"]["message"].lower() or \
                            "unauthorized" in response_data["error"]["message"].lower()
 
-    def test_invalid_token_rejected(self, client):
+    def test_invalid_token_rejected(self, unauthenticated_test_client):
         """Test that invalid tokens are properly rejected"""
         invalid_tokens = [
             "invalid_token",
@@ -65,7 +65,7 @@ class TestAuthenticationSecurity:
 
         for token in invalid_tokens:
             headers = {"Authorization": token} if token else {}
-            response = client.get("/api/business-profiles", headers=headers)
+            response = unauthenticated_test_client.get("/api/business-profiles", headers=headers)
             
             assert response.status_code == 401, f"Invalid token should be rejected: {token}"
             response_data = response.json()
@@ -75,10 +75,10 @@ class TestAuthenticationSecurity:
             assert "secret" not in response_data["detail"].lower()
             assert "key" not in response_data["detail"].lower()
 
-    def test_expired_token_handling(self, client, expired_token):
+    def test_expired_token_handling(self, unauthenticated_test_client, expired_token):
         """Test proper handling of expired tokens"""
         headers = {"Authorization": f"Bearer {expired_token}"}
-        response = client.get("/api/business-profiles", headers=headers)
+        response = unauthenticated_test_client.get("/api/business-profiles", headers=headers)
 
         assert response.status_code == 401
         response_data = response.json()
@@ -86,14 +86,14 @@ class TestAuthenticationSecurity:
                "expired" in response_data["detail"].lower() or \
                "invalid" in response_data["detail"].lower()
 
-    def test_token_without_bearer_prefix(self, client, auth_token):
+    def test_token_without_bearer_prefix(self, unauthenticated_test_client, auth_token):
         """Test that tokens without Bearer prefix are rejected"""
         headers = {"Authorization": auth_token}  # Missing "Bearer " prefix
-        response = client.get("/api/business-profiles", headers=headers)
+        response = unauthenticated_test_client.get("/api/business-profiles", headers=headers)
 
         assert response.status_code == 401
 
-    def test_malformed_authorization_header(self, client):
+    def test_malformed_authorization_header(self, unauthenticated_test_client):
         """Test handling of malformed authorization headers"""
         malformed_headers = [
             {"Authorization": "Basic dXNlcjpwYXNz"},  # Basic auth instead of Bearer
@@ -106,7 +106,7 @@ class TestAuthenticationSecurity:
         ]
 
         for headers in malformed_headers:
-            response = client.get("/api/business-profiles", headers=headers)
+            response = unauthenticated_test_client.get("/api/business-profiles", headers=headers)
             assert response.status_code == 401
 
     def test_password_strength_validation(self, client):
@@ -425,11 +425,11 @@ class TestTokenSecurity:
         immediate_response = client.get("/api/users/me", headers=headers)
         assert immediate_response.status_code == 200
 
-    def test_token_signature_validation(self, client, sample_user_data):
+    def test_token_signature_validation(self, unauthenticated_test_client, sample_user_data):
         """Test that tokens with invalid signatures are rejected"""
         # Get a valid token
-        client.post("/api/auth/register", json=sample_user_data)
-        login_response = client.post("/api/auth/login", json={
+        unauthenticated_test_client.post("/api/auth/register", json=sample_user_data)
+        login_response = unauthenticated_test_client.post("/api/auth/login", json={
             "email": sample_user_data["email"],
             "password": sample_user_data["password"]
         })
@@ -443,12 +443,12 @@ class TestTokenSecurity:
             modified_token = f"{parts[0]}.{parts[1]}.modified_signature"
             
             headers = {"Authorization": f"Bearer {modified_token}"}
-            response = client.get("/api/users/me", headers=headers)
+            response = unauthenticated_test_client.get("/api/users/me", headers=headers)
 
             # Should be rejected due to invalid signature
             assert response.status_code == 401
 
-    def test_token_algorithm_confusion(self, client, sample_user_data):
+    def test_token_algorithm_confusion(self, unauthenticated_test_client, sample_user_data):
         """Test protection against JWT algorithm confusion attacks"""
         # This is a complex test that would require crafting specific JWT tokens
         # For now, we test that only expected algorithms are accepted
@@ -463,7 +463,7 @@ class TestTokenSecurity:
         
         for malicious_token in malicious_tokens:
             headers = {"Authorization": f"Bearer {malicious_token}"}
-            response = client.get("/api/users/me", headers=headers)
+            response = unauthenticated_test_client.get("/api/users/me", headers=headers)
 
             # All malicious tokens should be rejected
             assert response.status_code == 401

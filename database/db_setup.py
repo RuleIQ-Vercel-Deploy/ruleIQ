@@ -65,7 +65,7 @@ def _init_sync_db():
             "max_overflow": 20,  # Reduced overflow for stability
             "pool_pre_ping": True,  # Validate connections before use
             "pool_recycle": 1800,  # Recycle connections after 30 minutes (faster than 1 hour)
-            "pool_timeout": 10,  # Reduced timeout for faster failure detection
+            "pool_timeout": 30,  # Increased for better stability under load
             # Add connection arguments for better performance
             "connect_args": {
                 "keepalives": 1,
@@ -93,7 +93,7 @@ def _init_async_db():
             "max_overflow": 15,  # Reduced overflow for stability
             "pool_pre_ping": True,  # Validate connections before use
             "pool_recycle": 1800,  # Recycle connections after 30 minutes
-            "pool_timeout": 10,  # Reduced timeout for faster failure detection
+            "pool_timeout": 30,  # Increased for better stability under load
             # Async-specific pool settings
             "pool_reset_on_return": "commit",  # Reset connection state on return
         }

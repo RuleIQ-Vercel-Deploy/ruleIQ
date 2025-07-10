@@ -64,7 +64,7 @@ class TestAIAssessmentEndpoints:
             assert response_data["confidence_score"] >= 0.0
             assert response_data["confidence_score"] <= 1.0
 
-    def test_ai_help_endpoint_authentication_required(self, client):
+    def test_ai_help_endpoint_authentication_required(self, unauthenticated_test_client):
         """Test AI help endpoint requires authentication"""
         request_data = {
             "question_id": "q1",
@@ -72,7 +72,7 @@ class TestAIAssessmentEndpoints:
             "framework_id": "gdpr",
         }
 
-        response = client.post("/api/ai/assessments/gdpr/help", json=request_data)
+        response = unauthenticated_test_client.post("/api/ai/assessments/gdpr/help", json=request_data)
         assert response.status_code == 401
 
     def test_ai_help_endpoint_invalid_framework(self, client, authenticated_headers):

@@ -1,10 +1,20 @@
 # Serena MCP Server Configuration for ruleIQ Compliance Platform
 # Optimized for intelligent development assistance across the full-stack codebase
 
+name: "ruleIQ"
+type: "full-stack-web-application"
+description: "AI-powered compliance automation platform for UK SMBs"
+language: "python"
+languages:
+  - python
+  - typescript
+  - javascript
+
 project:
   name: "ruleIQ"
   type: "full-stack-web-application"
   description: "AI-powered compliance automation platform for UK SMBs"
+  language: "python"
   languages:
     - python
     - typescript
