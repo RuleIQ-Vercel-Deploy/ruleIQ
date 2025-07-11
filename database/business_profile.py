@@ -11,18 +11,25 @@ from .db_setup import Base
 
 class BusinessProfile(Base):
     """Business profile information for compliance assessment"""
+
     __tablename__ = "business_profiles"
 
     id = Column(PG_UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    user_id = Column(PG_UUID(as_uuid=True), ForeignKey('users.id'), nullable=False, unique=True) # Assuming one profile per user
+    user_id = Column(
+        PG_UUID(as_uuid=True), ForeignKey("users.id"), nullable=False, unique=True
+    )  # Assuming one profile per user
 
     # Basic company information
     company_name = Column(String, nullable=False)
     industry = Column(String, nullable=False)
     employee_count = Column(Integer, nullable=False)
-    annual_revenue = Column(String, nullable=True) # Consider Numeric/Decimal or specific range type
+    annual_revenue = Column(
+        String, nullable=True
+    )  # Consider Numeric/Decimal or specific range type
     country = Column(String, default="UK")
-    data_sensitivity = Column(String, default="Low", nullable=False)  # Re-added for framework relevance calculation
+    data_sensitivity = Column(
+        String, default="Low", nullable=False
+    )  # Re-added for framework relevance calculation
 
     # Business characteristics (full column names after migration)
     handles_personal_data = Column(Boolean, nullable=False)

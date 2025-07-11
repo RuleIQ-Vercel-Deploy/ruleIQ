@@ -12,9 +12,13 @@ class ImplementationPlan(Base):
     __tablename__ = "implementation_plans"
 
     id = Column(PG_UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    user_id = Column(PG_UUID(as_uuid=True), ForeignKey('users.id'), nullable=False)
-    business_profile_id = Column(PG_UUID(as_uuid=True), ForeignKey('business_profiles.id'), nullable=False)
-    framework_id = Column(PG_UUID(as_uuid=True), ForeignKey('compliance_frameworks.id'), nullable=False)
+    user_id = Column(PG_UUID(as_uuid=True), ForeignKey("users.id"), nullable=False)
+    business_profile_id = Column(
+        PG_UUID(as_uuid=True), ForeignKey("business_profiles.id"), nullable=False
+    )
+    framework_id = Column(
+        PG_UUID(as_uuid=True), ForeignKey("compliance_frameworks.id"), nullable=False
+    )
 
     title = Column(String, nullable=False)
     status = Column(String, default="not_started")  # e.g., not_started, in_progress, completed

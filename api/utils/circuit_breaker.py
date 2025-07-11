@@ -15,19 +15,21 @@ from core.exceptions import APIError
 
 logger = logging.getLogger(__name__)
 
-T = TypeVar('T')
+T = TypeVar("T")
 
 
 class CircuitBreakerState(Enum):
     """Circuit breaker states."""
-    CLOSED = "closed"      # Normal operation
-    OPEN = "open"          # Failing fast
+
+    CLOSED = "closed"  # Normal operation
+    OPEN = "open"  # Failing fast
     HALF_OPEN = "half_open"  # Testing recovery
 
 
 @dataclass
 class CircuitBreakerConfig:
     """Circuit breaker configuration."""
+
     failure_threshold: int = 5
     recovery_timeout: float = 60.0
     expected_exception: Tuple[Type[Exception], ...] = (
@@ -42,7 +44,9 @@ class CircuitBreakerConfig:
 class CircuitBreakerOpenException(APIError):
     """Exception when circuit breaker is open."""
 
-    def __init__(self, service_name: str, failure_count: int, recovery_time: Optional[float] = None):
+    def __init__(
+        self, service_name: str, failure_count: int, recovery_time: Optional[float] = None
+    ):
         message = f"Circuit breaker open for {service_name} (failures: {failure_count})"
         if recovery_time:
             message += f", recovery in {recovery_time:.1f}s"
@@ -53,7 +57,7 @@ class CircuitBreakerOpenException(APIError):
         self.details = {
             "service_name": service_name,
             "failure_count": failure_count,
-            "recovery_time": recovery_time
+            "recovery_time": recovery_time,
         }
 
 
@@ -84,15 +88,16 @@ class CircuitBreaker:
         """Execute function with circuit breaker protection."""
         async with self._lock:
             if self.state == CircuitBreakerState.OPEN:
-                recovery_time = self.config.recovery_timeout - (time.time() - self._last_failure_time)
+                recovery_time = self.config.recovery_timeout - (
+                    time.time() - self._last_failure_time
+                )
                 raise CircuitBreakerOpenException(self.name, self._failure_count, recovery_time)
 
         try:
             # Apply timeout if configured
             if self.config.timeout_seconds:
                 result = await asyncio.wait_for(
-                    func(*args, **kwargs),
-                    timeout=self.config.timeout_seconds
+                    func(*args, **kwargs), timeout=self.config.timeout_seconds
                 )
             else:
                 result = await func(*args, **kwargs)
@@ -125,31 +130,29 @@ class CircuitBreaker:
             if self._failure_count >= self.config.failure_threshold:
                 if self._state != CircuitBreakerState.OPEN:
                     self._state = CircuitBreakerState.OPEN
-                    logger.error(f"Circuit breaker {self.name} opened after {self._failure_count} failures")
+                    logger.error(
+                        f"Circuit breaker {self.name} opened after {self._failure_count} failures"
+                    )
 
     def __call__(self, func: Callable[..., Awaitable[T]]) -> Callable[..., Awaitable[T]]:
         """Decorator usage."""
+
         @wraps(func)
         async def wrapper(*args, **kwargs):
             return await self.call(func, *args, **kwargs)
+
         return wrapper
 
 
 # Pre-configured circuit breakers for common services
-openai_breaker = CircuitBreaker("OpenAI", CircuitBreakerConfig(
-    failure_threshold=3,
-    recovery_timeout=30.0,
-    timeout_seconds=60.0
-))
+openai_breaker = CircuitBreaker(
+    "OpenAI", CircuitBreakerConfig(failure_threshold=3, recovery_timeout=30.0, timeout_seconds=60.0)
+)
 
-google_breaker = CircuitBreaker("Google", CircuitBreakerConfig(
-    failure_threshold=5,
-    recovery_timeout=60.0,
-    timeout_seconds=30.0
-))
+google_breaker = CircuitBreaker(
+    "Google", CircuitBreakerConfig(failure_threshold=5, recovery_timeout=60.0, timeout_seconds=30.0)
+)
 
-aws_breaker = CircuitBreaker("AWS", CircuitBreakerConfig(
-    failure_threshold=5,
-    recovery_timeout=45.0,
-    timeout_seconds=30.0
-))
+aws_breaker = CircuitBreaker(
+    "AWS", CircuitBreakerConfig(failure_threshold=5, recovery_timeout=45.0, timeout_seconds=30.0)
+)

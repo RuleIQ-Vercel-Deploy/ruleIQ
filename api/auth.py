@@ -3,6 +3,7 @@ Authentication module for NexCompli.
 
 Provides JWT token-based authentication, password hashing, and user verification.
 """
+
 import os
 from datetime import datetime, timedelta, timezone
 from typing import Any, Dict, Optional
@@ -28,13 +29,16 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 # OAuth2 scheme
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/token")
 
+
 def verify_password(plain_password: str, hashed_password: str) -> bool:
     """Verify a password against its hash."""
     return pwd_context.verify(plain_password, hashed_password)
 
+
 def get_password_hash(password: str) -> str:
     """Hash a password."""
     return pwd_context.hash(password)
+
 
 def create_access_token(data: Dict[str, Any], expires_delta: Optional[timedelta] = None) -> str:
     """Create a JWT access token."""
@@ -47,6 +51,7 @@ def create_access_token(data: Dict[str, Any], expires_delta: Optional[timedelta]
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
 
+
 def create_refresh_token(data: Dict[str, Any]) -> str:
     """Create a JWT refresh token."""
     to_encode = data.copy()
@@ -54,6 +59,7 @@ def create_refresh_token(data: Dict[str, Any]) -> str:
     to_encode.update({"exp": expire, "type": "refresh"})
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
+
 
 async def get_current_user(
     token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)
@@ -79,8 +85,9 @@ async def get_current_user(
 
     return user
 
+
 async def get_current_active_user(current_user: User = Depends(get_current_user)) -> User:
     """Ensure the current user is active."""
-    if hasattr(current_user, 'is_active') and getattr(current_user, 'is_active', True) is False:
+    if hasattr(current_user, "is_active") and getattr(current_user, "is_active", True) is False:
         raise HTTPException(status_code=400, detail="Inactive user")
     return current_user

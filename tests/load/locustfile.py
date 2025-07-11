@@ -3,10 +3,10 @@ Load testing configuration for ComplianceGPT using Locust.
 
 Usage:
     locust -f tests/load/locustfile.py --host=http://localhost:8000
-    
+
 For web UI:
     locust -f tests/load/locustfile.py --host=http://localhost:8000 --web-host=0.0.0.0
-    
+
 For headless mode:
     locust -f tests/load/locustfile.py --host=http://localhost:8000 --headless -u 10 -r 2 -t 300
 """
@@ -19,24 +19,24 @@ from locust import HttpUser, between, events, task
 
 class ComplianceGPTUser(HttpUser):
     """Simulates a typical ComplianceGPT user workflow."""
-    
+
     wait_time = between(1, 5)  # Simulate user think time between requests
-    
+
     def on_start(self):
         """Called when a simulated user starts. Set up test data."""
         # In a real load test, you'd authenticate and get a valid token
         self.headers = {
             "Authorization": f"Bearer load_test_token_{uuid4()}",
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
         }
-        
+
         # Mock IDs for testing (in real tests, these would be valid UUIDs)
         self.business_profile_id = str(uuid4())
         self.framework_id = str(uuid4())
-        
+
         # Simulate login/authentication
         self.authenticate()
-    
+
     def authenticate(self):
         """Simulate user authentication."""
         try:
@@ -44,16 +44,16 @@ class ComplianceGPTUser(HttpUser):
                 "/api/auth/login",
                 json={
                     "username": f"loadtest_user_{random.randint(1, 1000)}@example.com",
-                    "password": "loadtest_password"
+                    "password": "loadtest_password",
                 },
-                catch_response=True
+                catch_response=True,
             )
-            
+
             if response.status_code in [200, 401]:  # 401 expected for mock users
                 response.success()
             else:
                 response.failure(f"Unexpected auth response: {response.status_code}")
-                
+
         except Exception as e:
             print(f"Auth failed: {e}")
 
@@ -61,9 +61,7 @@ class ComplianceGPTUser(HttpUser):
     def view_dashboard(self):
         """Simulates a user loading their main dashboard - most common action."""
         with self.client.get(
-            "/api/business-profiles",
-            headers=self.headers,
-            catch_response=True
+            "/api/business-profiles", headers=self.headers, catch_response=True
         ) as response:
             if response.status_code in [200, 401]:
                 response.success()
@@ -74,9 +72,7 @@ class ComplianceGPTUser(HttpUser):
     def view_evidence_items(self):
         """Simulates viewing evidence items."""
         with self.client.get(
-            "/api/evidence",
-            headers=self.headers,
-            catch_response=True
+            "/api/evidence", headers=self.headers, catch_response=True
         ) as response:
             if response.status_code in [200, 401]:
                 response.success()
@@ -87,9 +83,7 @@ class ComplianceGPTUser(HttpUser):
     def view_frameworks(self):
         """Simulates viewing compliance frameworks."""
         with self.client.get(
-            "/api/frameworks",
-            headers=self.headers,
-            catch_response=True
+            "/api/frameworks", headers=self.headers, catch_response=True
         ) as response:
             if response.status_code in [200, 401]:
                 response.success()
@@ -104,17 +98,17 @@ class ComplianceGPTUser(HttpUser):
             "Show me my evidence for ISO27001",
             "What gaps do I need to address?",
             "How can I improve my compliance score?",
-            "What evidence should I collect next?"
+            "What evidence should I collect next?",
         ]
-        
+
         with self.client.post(
             "/api/chat/conversations",
             json={
                 "title": f"Load Test Chat {random.randint(1, 1000)}",
-                "initial_message": random.choice(messages)
+                "initial_message": random.choice(messages),
             },
             headers=self.headers,
-            catch_response=True
+            catch_response=True,
         ) as response:
             if response.status_code in [200, 401]:
                 response.success()
@@ -132,11 +126,13 @@ class ComplianceGPTUser(HttpUser):
                 "policy_type": "information_security",
                 "customizations": {
                     "company_name": f"Load Test Company {random.randint(1, 100)}",
-                    "industry": random.choice(["Technology", "Healthcare", "Finance", "Manufacturing"])
-                }
+                    "industry": random.choice(
+                        ["Technology", "Healthcare", "Finance", "Manufacturing"]
+                    ),
+                },
             },
             headers=self.headers,
-            catch_response=True
+            catch_response=True,
         ) as response:
             if response.status_code in [200, 201, 401]:
                 response.success()
@@ -147,9 +143,7 @@ class ComplianceGPTUser(HttpUser):
     def check_readiness_score(self):
         """Simulates checking compliance readiness."""
         with self.client.get(
-            f"/api/readiness/{self.business_profile_id}",
-            headers=self.headers,
-            catch_response=True
+            f"/api/readiness/{self.business_profile_id}", headers=self.headers, catch_response=True
         ) as response:
             if response.status_code in [200, 401, 404]:
                 response.success()
@@ -165,13 +159,10 @@ class ComplianceGPTUser(HttpUser):
                 "business_profile_id": self.business_profile_id,
                 "report_type": "compliance_status",
                 "format": "json",
-                "parameters": {
-                    "frameworks": ["ISO27001"],
-                    "period_days": 30
-                }
+                "parameters": {"frameworks": ["ISO27001"], "period_days": 30},
             },
             headers=self.headers,
-            catch_response=True
+            catch_response=True,
         ) as response:
             if response.status_code in [200, 401]:
                 response.success()
@@ -190,11 +181,11 @@ class ComplianceGPTUser(HttpUser):
                 "parameters": {
                     "frameworks": ["ISO27001", "SOC2", "GDPR"],
                     "period_days": 90,
-                    "include_charts": True
-                }
+                    "include_charts": True,
+                },
             },
             headers=self.headers,
-            catch_response=True
+            catch_response=True,
         ) as response:
             if response.status_code in [200, 401]:
                 response.success()
@@ -208,9 +199,9 @@ class ComplianceGPTUser(HttpUser):
             ("GET", "/api/integrations", {}),
             ("POST", "/api/integrations/google_workspace/test", {"credentials": {"test": True}}),
         ]
-        
+
         method, endpoint, data = random.choice(operations)
-        
+
         if method == "GET":
             with self.client.get(endpoint, headers=self.headers, catch_response=True) as response:
                 if response.status_code in [200, 401]:
@@ -218,7 +209,9 @@ class ComplianceGPTUser(HttpUser):
                 else:
                     response.failure(f"Integration GET failed: {response.status_code}")
         else:
-            with self.client.post(endpoint, json=data, headers=self.headers, catch_response=True) as response:
+            with self.client.post(
+                endpoint, json=data, headers=self.headers, catch_response=True
+            ) as response:
                 if response.status_code in [200, 401, 400]:  # 400 expected for test credentials
                     response.success()
                 else:
@@ -227,22 +220,24 @@ class ComplianceGPTUser(HttpUser):
 
 class AdminUser(HttpUser):
     """Simulates an admin user with different usage patterns."""
-    
+
     wait_time = between(2, 8)  # Admins tend to spend more time on each operation
     weight = 1  # Fewer admin users compared to regular users
-    
+
     def on_start(self):
         """Admin user setup."""
         self.headers = {
             "Authorization": f"Bearer admin_token_{uuid4()}",
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
         }
 
     @task(5)
     def manage_report_schedules(self):
         """Admin manages report schedules."""
         # List schedules
-        with self.client.get("/api/reports/schedules", headers=self.headers, catch_response=True) as response:
+        with self.client.get(
+            "/api/reports/schedules", headers=self.headers, catch_response=True
+        ) as response:
             if response.status_code in [200, 401]:
                 response.success()
             else:
@@ -251,12 +246,8 @@ class AdminUser(HttpUser):
     @task(3)
     def view_system_stats(self):
         """Admin views system statistics."""
-        endpoints = [
-            "/api/reports/stats",
-            "/api/evidence/stats",
-            "/health"
-        ]
-        
+        endpoints = ["/api/reports/stats", "/api/evidence/stats", "/health"]
+
         for endpoint in random.sample(endpoints, k=random.randint(1, len(endpoints))):
             with self.client.get(endpoint, headers=self.headers, catch_response=True) as response:
                 if response.status_code in [200, 401, 404]:
@@ -272,7 +263,7 @@ class AdminUser(HttpUser):
             "/api/evidence/bulk-process",
             json={"evidence_ids": [str(uuid4()) for _ in range(10)]},
             headers=self.headers,
-            catch_response=True
+            catch_response=True,
         ) as response:
             if response.status_code in [200, 201, 401, 404]:
                 response.success()
@@ -282,14 +273,14 @@ class AdminUser(HttpUser):
 
 class HeavyReportUser(HttpUser):
     """Simulates users who primarily generate reports - tests report system load."""
-    
+
     wait_time = between(5, 15)  # Report generation takes time
     weight = 1  # Small percentage of users
-    
+
     def on_start(self):
         self.headers = {
             "Authorization": f"Bearer report_user_token_{uuid4()}",
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
         }
         self.business_profile_id = str(uuid4())
 
@@ -302,10 +293,10 @@ class HeavyReportUser(HttpUser):
                 "business_profile_id": self.business_profile_id,
                 "report_type": "executive_summary",
                 "format": "pdf",
-                "parameters": {"frameworks": ["ISO27001", "SOC2"]}
+                "parameters": {"frameworks": ["ISO27001", "SOC2"]},
             },
             headers=self.headers,
-            catch_response=True
+            catch_response=True,
         ) as response:
             if response.status_code in [200, 401]:
                 response.success()
@@ -324,11 +315,11 @@ class HeavyReportUser(HttpUser):
                 "parameters": {
                     "frameworks": ["ISO27001"],
                     "severity_filter": "high",
-                    "include_remediation_plan": True
-                }
+                    "include_remediation_plan": True,
+                },
             },
             headers=self.headers,
-            catch_response=True
+            catch_response=True,
         ) as response:
             if response.status_code in [200, 401]:
                 response.success()
@@ -339,15 +330,12 @@ class HeavyReportUser(HttpUser):
     def download_reports(self):
         """Download previously generated reports."""
         report_types = ["executive_summary", "evidence_report", "audit_readiness"]
-        
+
         with self.client.get(
             f"/api/reports/generate/{random.choice(report_types)}/download",
-            params={
-                "business_profile_id": self.business_profile_id,
-                "format": "pdf"
-            },
+            params={"business_profile_id": self.business_profile_id, "format": "pdf"},
             headers=self.headers,
-            catch_response=True
+            catch_response=True,
         ) as response:
             if response.status_code in [200, 401, 404]:
                 response.success()
@@ -357,12 +345,24 @@ class HeavyReportUser(HttpUser):
 
 # Event listeners for custom metrics
 @events.request.add_listener
-def my_request_handler(request_type, name, response_time, response_length, response, context, exception, start_time, url, **kwargs):
+def my_request_handler(
+    request_type,
+    name,
+    response_time,
+    response_length,
+    response,
+    context,
+    exception,
+    start_time,
+    url,
+    **kwargs,
+):
     """Custom request handler to log specific metrics."""
     if exception:
         print(f"Request failed: {name} - {exception}")
     elif response.status_code >= 400:
         print(f"HTTP error: {name} - {response.status_code}")
+
 
 @events.test_start.add_listener
 def on_test_start(environment, **kwargs):
@@ -370,11 +370,12 @@ def on_test_start(environment, **kwargs):
     print("ComplianceGPT load test starting...")
     print(f"Target host: {environment.host}")
 
+
 @events.test_stop.add_listener
 def on_test_stop(environment, **kwargs):
     """Called when the load test stops."""
     print("ComplianceGPT load test completed.")
-    
+
     # Print summary of results
     stats = environment.stats
     print(f"Total requests: {stats.total.num_requests}")

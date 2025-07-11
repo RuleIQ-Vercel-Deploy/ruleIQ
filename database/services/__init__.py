@@ -9,7 +9,7 @@ from .integration_service import (
     get_user_integrations,
     get_integration_by_id,
     decrypt_integration_credentials,
-    update_integration_health
+    update_integration_health,
 )
 
 __all__ = [
@@ -19,5 +19,5 @@ __all__ = [
     "get_user_integrations",
     "get_integration_by_id",
     "decrypt_integration_credentials",
-    "update_integration_health"
+    "update_integration_health",
 ]

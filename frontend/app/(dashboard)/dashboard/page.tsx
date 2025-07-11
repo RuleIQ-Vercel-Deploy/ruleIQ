@@ -1,6 +1,6 @@
 "use client"
 
-import { Shield, AlertTriangle, Brain, TrendingUp, FileCheck, RefreshCw , AlertCircle } from "lucide-react"
+import { Shield, AlertTriangle, Brain, FileCheck, RefreshCw, AlertCircle } from "lucide-react"
 import * as React from "react"
 
 import { AIInsightsWidget } from "@/components/dashboard/ai-insights-widget"
@@ -97,8 +97,14 @@ export default function Dashboard() {
   })
 
   // Get compliance profile from localStorage (set during AI-guided signup)
-  const [complianceProfile, setComplianceProfile] = React.useState<any>(null)
-  const [onboardingData, setOnboardingData] = React.useState<any>(null)
+  const [complianceProfile, setComplianceProfile] = React.useState<{
+    priorities?: string[];
+    maturityLevel?: string;
+  } | null>(null)
+  const [onboardingData, setOnboardingData] = React.useState<{
+    fullName?: string;
+    timeline?: string;
+  } | null>(null)
   
   React.useEffect(() => {
     try {
@@ -115,7 +121,7 @@ export default function Dashboard() {
   }, [])
 
   // Default chart data for when API doesn't provide historical data
-  const complianceData = dashboardData?.compliance_trends?.slice(-7).map((t: any) => t.score) || [85, 87, 89, 92, 88, 95, 98]
+  const complianceData = dashboardData?.compliance_trends?.slice(-7).map((t: { score: number }) => t.score) || [85, 87, 89, 92, 88, 95, 98]
   const alertsData = [12, 8, 15, 6, 9, 4, 3]
   const insightsData = [3, 5, 2, 8, 6, 9, 7]
   const tasksData = [120, 135, 128, 142, 138, 145, 142]
@@ -123,16 +129,16 @@ export default function Dashboard() {
   return (
     <div className="flex flex-1">
       <AppSidebar />
-      <div className="flex-1 overflow-auto">
+      <div className="flex-1 overflow-auto bg-surface-base">
         <DashboardHeader />
-        <div className="p-6 space-y-8">
+        <div className="p-6 space-y-8 bg-surface-base">
           {/* Page Header with Refresh */}
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold text-navy">
+              <h1 className="text-3xl font-bold gradient-text">
                 Welcome back{onboardingData?.fullName ? `, ${onboardingData.fullName.split(' ')[0]}` : ''}
               </h1>
-              <p className="text-muted-foreground">
+              <p className="text-text-secondary">
                 {complianceProfile?.priorities?.length > 0 
                   ? `Focusing on: ${complianceProfile.priorities[0]}` 
                   : "Here's what's happening with your compliance today"}
@@ -143,6 +149,7 @@ export default function Dashboard() {
               size="sm"
               onClick={() => refetch()}
               disabled={isLoading}
+              className="border-glass-border hover:border-glass-border-hover hover:bg-glass-white"
             >
               <RefreshCw className={`h-4 w-4 mr-2 ${isLoading ? 'animate-spin' : ''}`} />
               Refresh
@@ -173,44 +180,32 @@ export default function Dashboard() {
                   value={`${dashboardData?.compliance_score || 0}%`}
                   description="Overall compliance health"
                   icon={Shield}
-                  trend={dashboardData?.compliance_trend || "up"}
-                  trendValue={dashboardData?.compliance_trend_value || "+8%"}
-                  data={complianceData}
-                  color="text-success"
-                  chartColor="#22c55e"
+                  trend={{ value: 8, isPositive: true }}
+                  chartData={complianceData}
                 />
                 <EnhancedStatsCard
                   title="Active Alerts"
                   value={dashboardData?.active_alerts || "0"}
                   description="Requires immediate attention"
                   icon={AlertTriangle}
-                  trend={dashboardData?.alerts_trend || "down"}
-                  trendValue={dashboardData?.alerts_trend_value || "-23%"}
-                  data={alertsData}
-                  color="text-warning"
-                  chartColor="#f59e0b"
+                  trend={{ value: 23, isPositive: false }}
+                  chartData={alertsData}
                 />
                 <EnhancedStatsCard
                   title="AI Insights"
                   value={dashboardData?.ai_insights_count || "0"}
                   description="New recommendations this week"
                   icon={Brain}
-                  trend="up"
-                  trendValue="+15%"
-                  data={insightsData}
-                  color="text-primary"
-                  chartColor="#3b82f6"
+                  trend={{ value: 15, isPositive: true }}
+                  chartData={insightsData}
                 />
                 <EnhancedStatsCard
                   title="Tasks Completed"
                   value={`${dashboardData?.tasks_completed || 0}/${dashboardData?.total_tasks || 0}`}
                   description="This month's progress"
                   icon={FileCheck}
-                  trend="up"
-                  trendValue="+12%"
-                  data={tasksData}
-                  color="text-violet-600"
-                  chartColor="#8b5cf6"
+                  trend={{ value: 12, isPositive: true }}
+                  chartData={tasksData}
                 />
               </>
             )}
@@ -234,8 +229,12 @@ export default function Dashboard() {
               <Skeleton className="h-[400px]" />
             ) : (
               <ComplianceScoreWidget 
-                overallScore={dashboardData?.compliance_score || 0}
-                frameworks={dashboardData?.framework_scores || {}}
+                data={{
+                  overall_score: dashboardData?.compliance_score || 0,
+                  trend: 'up',
+                  last_updated: new Date().toISOString(),
+                  frameworks: dashboardData?.framework_scores || []
+                }}
               />
             )}
 
@@ -323,7 +322,7 @@ export default function Dashboard() {
               {isLoading ? (
                 <Skeleton className="h-[300px]" />
               ) : (
-                <DataTable data={dashboardData?.recent_activity || []} />
+                <DataTable assessments={dashboardData?.recent_activity || []} />
               )}
             </CardContent>
           </Card>

@@ -17,7 +17,13 @@ class AssessmentService:
     def __init__(self):
         pass  # db session will be passed to methods
 
-    async def start_assessment_session(self, db: AsyncSession, user: User, session_type: str = "compliance_scoping", business_profile_id: Optional[UUID] = None) -> AssessmentSession:
+    async def start_assessment_session(
+        self,
+        db: AsyncSession,
+        user: User,
+        session_type: str = "compliance_scoping",
+        business_profile_id: Optional[UUID] = None,
+    ) -> AssessmentSession:
         """Start a new assessment session for the user."""
         try:
             # Check if there's an active session
@@ -48,7 +54,7 @@ class AssessmentService:
                 status="in_progress",  # Ensure status is set
                 total_stages=5,  # Basic info, Industry, Data handling, Tech stack, Compliance goals
                 current_stage=1,  # Start at stage 1
-                responses={}
+                responses={},
             )
             db.add(new_session)
             await db.commit()
@@ -58,7 +64,9 @@ class AssessmentService:
             await db.rollback()
             raise DatabaseException(f"Error starting assessment session: {e}")
 
-    async def get_assessment_session(self, db: AsyncSession, user: User, session_id: UUID) -> Optional[AssessmentSession]:
+    async def get_assessment_session(
+        self, db: AsyncSession, user: User, session_id: UUID
+    ) -> Optional[AssessmentSession]:
         """Get a specific assessment session."""
         try:
             stmt = (
@@ -75,7 +83,9 @@ class AssessmentService:
             # Log error appropriately
             raise DatabaseException(f"Error retrieving assessment session {session_id}: {e}")
 
-    async def get_current_assessment_session(self, db: AsyncSession, user: User) -> Optional[AssessmentSession]:
+    async def get_current_assessment_session(
+        self, db: AsyncSession, user: User
+    ) -> Optional[AssessmentSession]:
         """Get the current active assessment session for the user."""
         try:
             stmt = (
@@ -89,9 +99,13 @@ class AssessmentService:
             return session  # Can be None if no active session, handled by caller
         except sa.exc.SQLAlchemyError as e:
             # Log error appropriately
-            raise DatabaseException(f"Error retrieving current assessment session for user {user.id}: {e}")
+            raise DatabaseException(
+                f"Error retrieving current assessment session for user {user.id}: {e}"
+            )
 
-    async def get_user_assessment_sessions(self, db: AsyncSession, user: User) -> List[AssessmentSession]:
+    async def get_user_assessment_sessions(
+        self, db: AsyncSession, user: User
+    ) -> List[AssessmentSession]:
         """Get all assessment sessions for the user."""
         try:
             stmt = (
@@ -106,16 +120,22 @@ class AssessmentService:
             # Log error appropriately
             raise DatabaseException(f"Error retrieving assessment sessions for user {user.id}: {e}")
 
-    async def update_assessment_response(self, db: AsyncSession, user: User, session_id: UUID, question_id: str, answer: Dict) -> AssessmentSession:
+    async def update_assessment_response(
+        self, db: AsyncSession, user: User, session_id: UUID, question_id: str, answer: Dict
+    ) -> AssessmentSession:
         """Update an assessment response."""
         try:
             session = await self.get_assessment_session(db, user, session_id)
             if not session:
                 # Consider using NotFoundException if get_assessment_session can return None and it's an error here
-                raise NotFoundException(f"Assessment session {session_id} not found for user {user.id} during update.")
+                raise NotFoundException(
+                    f"Assessment session {session_id} not found for user {user.id} during update."
+                )
 
             if session.status != "in_progress":
-                raise ValueError("Assessment session is not in progress and cannot be updated.")  # Or a custom domain exception
+                raise ValueError(
+                    "Assessment session is not in progress and cannot be updated."
+                )  # Or a custom domain exception
 
             # Ensure responses is initialized if it's None (though model default should handle this)
             if session.responses is None:
@@ -133,23 +153,31 @@ class AssessmentService:
         except sa.exc.SQLAlchemyError as e:
             await db.rollback()
             # Log error appropriately
-            raise DatabaseException(f"Error updating assessment response for session {session_id}: {e}")
+            raise DatabaseException(
+                f"Error updating assessment response for session {session_id}: {e}"
+            )
         except NotFoundException:  # Re-raise if we want it to propagate
             raise
         except ValueError:  # Catch specific domain errors
             # Log error appropriately
             raise  # Or wrap in a custom API error
 
-    async def complete_assessment_session(self, db: AsyncSession, user: User, session_id: UUID) -> AssessmentSession:
+    async def complete_assessment_session(
+        self, db: AsyncSession, user: User, session_id: UUID
+    ) -> AssessmentSession:
         """Complete an assessment session and generate recommendations."""
         try:
             session = await self.get_assessment_session(db, user, session_id)
             if not session:
-                raise NotFoundException(f"Assessment session {session_id} not found for user {user.id} to complete.")
+                raise NotFoundException(
+                    f"Assessment session {session_id} not found for user {user.id} to complete."
+                )
 
             if session.status != "in_progress":
                 # Consider a more specific exception, e.g., InvalidSessionStateError
-                raise ValueError(f"Assessment session {session_id} is not 'in_progress' (status: {session.status}). Cannot complete.")
+                raise ValueError(
+                    f"Assessment session {session_id} is not 'in_progress' (status: {session.status}). Cannot complete."
+                )
 
             # Perform any final validation or processing
             session.status = "completed"
@@ -165,15 +193,21 @@ class AssessmentService:
                     # Basic recommendation: suggest frameworks with high relevance
                     # Ensure framework_info structure is as expected by get_relevant_frameworks
                     # It returns a list of dicts like: {"framework": framework_object.to_dict(), "relevance_score": score}
-                    if framework_info.get("relevance_score", 0) > 50:  # Adjusted threshold based on calculate_framework_relevance logic
+                    if (
+                        framework_info.get("relevance_score", 0) > 50
+                    ):  # Adjusted threshold based on calculate_framework_relevance logic
                         framework_details = framework_info.get("framework", {})
-                        recommendations.append({
-                            "framework_id": str(framework_details.get("id")),
-                            "framework_name": framework_details.get("name"),
-                            "reason": f"High relevance score: {framework_info['relevance_score']}"
-                        })
+                        recommendations.append(
+                            {
+                                "framework_id": str(framework_details.get("id")),
+                                "framework_name": framework_details.get("name"),
+                                "reason": f"High relevance score: {framework_info['relevance_score']}",
+                            }
+                        )
 
-            session.recommendations = recommendations  # Ensure AssessmentSession model has this field as JSON or similar
+            session.recommendations = (
+                recommendations  # Ensure AssessmentSession model has this field as JSON or similar
+            )
 
             db.add(session)
             await db.commit()
@@ -198,7 +232,7 @@ class AssessmentService:
                     "question_id": "company_name",
                     "text": "What is your company's name?",
                     "question_type": "free_text",
-                    "required": True
+                    "required": True,
                 },
                 {
                     "question_id": "industry",
@@ -210,9 +244,9 @@ class AssessmentService:
                         {"value": "healthcare", "label": "Healthcare"},
                         {"value": "retail", "label": "Retail"},
                         {"value": "manufacturing", "label": "Manufacturing"},
-                        {"value": "other", "label": "Other"}
+                        {"value": "other", "label": "Other"},
                     ],
-                    "required": True
+                    "required": True,
                 },
                 {
                     "question_id": "company_size",
@@ -222,10 +256,10 @@ class AssessmentService:
                         {"value": "1-50", "label": "1-50"},
                         {"value": "51-200", "label": "51-200"},
                         {"value": "201-1000", "label": "201-1000"},
-                        {"value": "1000+", "label": "1000+"}
+                        {"value": "1000+", "label": "1000+"},
                     ],
-                    "required": True
-                }
+                    "required": True,
+                },
             ],
             2: [  # Data Handling
                 {
@@ -238,9 +272,9 @@ class AssessmentService:
                         "Protected Health Information (PHI)",
                         "Intellectual Property",
                         "Financial Data (non-PCI)",
-                        "None of the above"
+                        "None of the above",
                     ],
-                    "required": True
+                    "required": True,
                 },
                 {
                     "id": "data_storage_location",
@@ -250,10 +284,10 @@ class AssessmentService:
                         "Cloud (e.g., AWS, Azure, GCP)",
                         "On-premise servers",
                         "Hybrid (Cloud and On-premise)",
-                        "Third-party SaaS applications"
+                        "Third-party SaaS applications",
                     ],
-                    "required": True
-                }
+                    "required": True,
+                },
             ],
             3: [  # Technology Stack
                 {
@@ -261,23 +295,28 @@ class AssessmentService:
                     "question": "Which cloud providers do you use (if any)?",
                     "type": "checkbox",
                     "options": [
-                        "AWS", "Azure", "Google Cloud Platform (GCP)", "Oracle Cloud", "Other", "None"
+                        "AWS",
+                        "Azure",
+                        "Google Cloud Platform (GCP)",
+                        "Oracle Cloud",
+                        "Other",
+                        "None",
                     ],
-                    "required": False
+                    "required": False,
                 },
                 {
                     "id": "saas_tools",
                     "question": "List key SaaS tools critical to your operations (e.g., Salesforce, Office 365, Slack).",
                     "type": "textarea",
-                    "required": False
+                    "required": False,
                 },
                 {
                     "id": "development_practices",
                     "question": "Does your company follow secure software development practices (e.g., OWASP, DevSecOps)?",
                     "type": "radio",
                     "options": ["Yes", "No", "Partially", "Unsure"],
-                    "required": True
-                }
+                    "required": True,
+                },
             ],
             4: [  # Current Compliance Posture
                 {
@@ -285,60 +324,66 @@ class AssessmentService:
                     "question": "Does your company currently hold any compliance certifications?",
                     "type": "checkbox",
                     "options": [
-                        "ISO 27001", "SOC 2", "PCI DSS", "HIPAA Compliant", "GDPR Compliant", "None"
+                        "ISO 27001",
+                        "SOC 2",
+                        "PCI DSS",
+                        "HIPAA Compliant",
+                        "GDPR Compliant",
+                        "None",
                     ],
-                    "required": False
+                    "required": False,
                 },
                 {
                     "id": "planned_frameworks",
                     "question": "Which compliance frameworks is your company planning to achieve?",
                     "type": "checkbox",
-                    "options": [
-                        "GDPR", "ISO 27001", "Cyber Essentials", "FCA", "PCI DSS", "SOC 2"
-                    ],
-                    "required": False
+                    "options": ["GDPR", "ISO 27001", "Cyber Essentials", "FCA", "PCI DSS", "SOC 2"],
+                    "required": False,
                 },
                 {
                     "id": "compliance_budget",
                     "question": "What is your budget range for compliance initiatives?",
                     "type": "select",
-                    "options": [
-                        "Under £10K", "£10K-£25K", "£25K-£50K", "£50K-£100K", "Over £100K"
-                    ],
-                    "required": False
-                }
+                    "options": ["Under £10K", "£10K-£25K", "£25K-£50K", "£50K-£100K", "Over £100K"],
+                    "required": False,
+                },
             ],
             5: [  # Goals and Timeline
                 {
                     "id": "compliance_timeline",
                     "question": "What is your target timeline for achieving compliance?",
                     "type": "select",
-                    "options": [
-                        "3 months", "6 months", "12 months", "18+ months"
-                    ],
-                    "required": True
+                    "options": ["3 months", "6 months", "12 months", "18+ months"],
+                    "required": True,
                 },
                 {
                     "id": "primary_driver",
                     "question": "What is the primary driver for your compliance initiative?",
                     "type": "select",
                     "options": [
-                        "Customer requirements", "Regulatory requirement", "Business growth",
-                        "Risk management", "Competitive advantage"
+                        "Customer requirements",
+                        "Regulatory requirement",
+                        "Business growth",
+                        "Risk management",
+                        "Competitive advantage",
                     ],
-                    "required": True
+                    "required": True,
                 },
                 {
                     "id": "biggest_challenge",
                     "question": "What do you expect to be your biggest compliance challenge?",
                     "type": "select",
                     "options": [
-                        "Understanding requirements", "Resource allocation", "Technical implementation",
-                        "Policy development", "Evidence collection", "Ongoing maintenance"
+                        "Understanding requirements",
+                        "Resource allocation",
+                        "Technical implementation",
+                        "Policy development",
+                        "Evidence collection",
+                        "Ongoing maintenance",
                     ],
-                    "required": False
-                }
-            ]
+                    "required": False,
+                },
+            ],
         }
 
         return questions.get(stage, [])

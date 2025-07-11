@@ -19,6 +19,7 @@ logger = get_logger(__name__)
 @dataclass
 class RegulationInfo:
     """Information about a specific regulation"""
+
     name: str
     description: str
     applicability: str
@@ -26,7 +27,7 @@ class RegulationInfo:
     penalties: str
     enforcement_body: str
     last_updated: str
-    
+
     def to_dict(self) -> Dict[str, Any]:
         return {
             "name": self.name,
@@ -35,13 +36,14 @@ class RegulationInfo:
             "key_requirements": self.key_requirements,
             "penalties": self.penalties,
             "enforcement_body": self.enforcement_body,
-            "last_updated": self.last_updated
+            "last_updated": self.last_updated,
         }
 
 
 @dataclass
 class ComplianceRequirement:
     """Specific compliance requirement details"""
+
     requirement_id: str
     title: str
     description: str
@@ -50,7 +52,7 @@ class ComplianceRequirement:
     section: str
     implementation_guidance: str
     evidence_required: List[str]
-    
+
     def to_dict(self) -> Dict[str, Any]:
         return {
             "requirement_id": self.requirement_id,
@@ -60,19 +62,19 @@ class ComplianceRequirement:
             "framework": self.framework,
             "section": self.section,
             "implementation_guidance": self.implementation_guidance,
-            "evidence_required": self.evidence_required
+            "evidence_required": self.evidence_required,
         }
 
 
 class IndustryRegulationLookupTool(BaseTool):
     """Tool for looking up industry-specific regulations"""
-    
+
     def __init__(self):
         super().__init__(
             name="lookup_industry_regulations",
-            description="Look up regulations applicable to specific industries and business contexts"
+            description="Look up regulations applicable to specific industries and business contexts",
         )
-        
+
         # UK-focused regulation database
         self.regulation_database = {
             "technology": {
@@ -85,11 +87,11 @@ class IndustryRegulationLookupTool(BaseTool):
                         "Data subject rights implementation",
                         "Privacy by design and default",
                         "Data protection impact assessments",
-                        "Breach notification within 72 hours"
+                        "Breach notification within 72 hours",
                     ],
                     penalties="Up to £17.5 million or 4% of global turnover",
                     enforcement_body="Information Commissioner's Office (ICO)",
-                    last_updated="2021-01-01"
+                    last_updated="2021-01-01",
                 ),
                 "DPA2018": RegulationInfo(
                     name="Data Protection Act 2018",
@@ -99,12 +101,12 @@ class IndustryRegulationLookupTool(BaseTool):
                         "GDPR compliance",
                         "Law enforcement processing provisions",
                         "Intelligence services exemptions",
-                        "Direct marketing rules"
+                        "Direct marketing rules",
                     ],
                     penalties="Criminal offences and administrative fines",
                     enforcement_body="Information Commissioner's Office (ICO)",
-                    last_updated="2018-05-25"
-                )
+                    last_updated="2018-05-25",
+                ),
             },
             "financial": {
                 "FCA": RegulationInfo(
@@ -116,11 +118,11 @@ class IndustryRegulationLookupTool(BaseTool):
                         "Fair treatment of customers",
                         "Risk management frameworks",
                         "Operational resilience",
-                        "Financial crime prevention"
+                        "Financial crime prevention",
                     ],
                     penalties="Unlimited fines and regulatory action",
                     enforcement_body="Financial Conduct Authority",
-                    last_updated="2023-12-31"
+                    last_updated="2023-12-31",
                 ),
                 "PCI_DSS": RegulationInfo(
                     name="Payment Card Industry Data Security Standard",
@@ -131,12 +133,12 @@ class IndustryRegulationLookupTool(BaseTool):
                         "Cardholder data protection",
                         "Vulnerability management",
                         "Access control implementation",
-                        "Regular security testing"
+                        "Regular security testing",
                     ],
                     penalties="Fines from card brands and potential liability",
                     enforcement_body="Payment Card Industry Security Standards Council",
-                    last_updated="2024-03-31"
-                )
+                    last_updated="2024-03-31",
+                ),
             },
             "healthcare": {
                 "MHRA": RegulationInfo(
@@ -148,11 +150,11 @@ class IndustryRegulationLookupTool(BaseTool):
                         "Good Manufacturing Practice (GMP)",
                         "Pharmacovigilance",
                         "Medical device regulations",
-                        "Clinical trial authorizations"
+                        "Clinical trial authorizations",
                     ],
                     penalties="Criminal prosecution and product recalls",
                     enforcement_body="Medicines and Healthcare products Regulatory Agency",
-                    last_updated="2023-06-30"
+                    last_updated="2023-06-30",
                 )
             },
             "general": {
@@ -165,11 +167,11 @@ class IndustryRegulationLookupTool(BaseTool):
                         "Safe working procedures",
                         "Employee training",
                         "Incident reporting",
-                        "Emergency procedures"
+                        "Emergency procedures",
                     ],
                     penalties="Unlimited fines and imprisonment",
                     enforcement_body="Health and Safety Executive (HSE)",
-                    last_updated="1974-07-31"
+                    last_updated="1974-07-31",
                 ),
                 "EQUALITY_ACT": RegulationInfo(
                     name="Equality Act 2010",
@@ -180,15 +182,15 @@ class IndustryRegulationLookupTool(BaseTool):
                         "Reasonable adjustments",
                         "Equal pay provisions",
                         "Harassment prevention",
-                        "Positive action measures"
+                        "Positive action measures",
                     ],
                     penalties="Unlimited compensation awards",
                     enforcement_body="Equality and Human Rights Commission",
-                    last_updated="2010-10-01"
-                )
-            }
+                    last_updated="2010-10-01",
+                ),
+            },
         }
-    
+
     def get_function_schema(self) -> Dict[str, Any]:
         """Get the function schema for Google Generative AI function calling"""
         return {
@@ -199,33 +201,35 @@ class IndustryRegulationLookupTool(BaseTool):
                 "properties": {
                     "industry": {
                         "type": "string",
-                        "description": "Industry sector (e.g., 'technology', 'financial', 'healthcare')"
+                        "description": "Industry sector (e.g., 'technology', 'financial', 'healthcare')",
                     },
                     "business_size": {
                         "type": "string",
                         "enum": ["micro", "small", "medium", "large"],
-                        "description": "Size of the business for applicable regulations"
+                        "description": "Size of the business for applicable regulations",
                     },
                     "data_processing": {
                         "type": "boolean",
-                        "description": "Whether the business processes personal data"
+                        "description": "Whether the business processes personal data",
                     },
                     "geographic_scope": {
                         "type": "string",
                         "enum": ["uk_only", "eu", "international"],
-                        "description": "Geographic scope of business operations"
+                        "description": "Geographic scope of business operations",
                     },
                     "specific_activities": {
                         "type": "array",
                         "items": {"type": "string"},
-                        "description": "Specific business activities that may trigger additional regulations"
-                    }
+                        "description": "Specific business activities that may trigger additional regulations",
+                    },
                 },
-                "required": ["industry", "business_size", "data_processing"]
-            }
+                "required": ["industry", "business_size", "data_processing"],
+            },
         }
-    
-    async def execute(self, parameters: Dict[str, Any], context: Optional[Dict[str, Any]] = None) -> ToolResult:
+
+    async def execute(
+        self, parameters: Dict[str, Any], context: Optional[Dict[str, Any]] = None
+    ) -> ToolResult:
         """Execute industry regulation lookup"""
         try:
             industry = parameters.get("industry", "general").lower()
@@ -233,53 +237,60 @@ class IndustryRegulationLookupTool(BaseTool):
             processes_data = parameters.get("data_processing", True)
             geographic_scope = parameters.get("geographic_scope", "uk_only")
             activities = parameters.get("specific_activities", [])
-            
+
             # Get base regulations for industry
             applicable_regulations = []
-            
+
             # Industry-specific regulations
             if industry in self.regulation_database:
                 for reg_name, reg_info in self.regulation_database[industry].items():
-                    applicable_regulations.append({
-                        "regulation": reg_name,
-                        "priority": "high",
-                        "reason": f"Industry-specific regulation for {industry}",
-                        **reg_info.to_dict()
-                    })
-            
+                    applicable_regulations.append(
+                        {
+                            "regulation": reg_name,
+                            "priority": "high",
+                            "reason": f"Industry-specific regulation for {industry}",
+                            **reg_info.to_dict(),
+                        }
+                    )
+
             # General regulations that apply to all businesses
             for reg_name, reg_info in self.regulation_database["general"].items():
-                applicable_regulations.append({
-                    "regulation": reg_name,
-                    "priority": "medium",
-                    "reason": "General UK business regulation",
-                    **reg_info.to_dict()
-                })
-            
+                applicable_regulations.append(
+                    {
+                        "regulation": reg_name,
+                        "priority": "medium",
+                        "reason": "General UK business regulation",
+                        **reg_info.to_dict(),
+                    }
+                )
+
             # Add GDPR if processing personal data
             if processes_data and industry != "technology":
                 gdpr_info = self.regulation_database["technology"]["GDPR"]
-                applicable_regulations.append({
-                    "regulation": "GDPR",
-                    "priority": "critical",
-                    "reason": "Processing personal data",
-                    **gdpr_info.to_dict()
-                })
-            
+                applicable_regulations.append(
+                    {
+                        "regulation": "GDPR",
+                        "priority": "critical",
+                        "reason": "Processing personal data",
+                        **gdpr_info.to_dict(),
+                    }
+                )
+
             # Filter by business size and add size-specific guidance
-            filtered_regulations = self._filter_by_business_size(applicable_regulations, business_size)
-            
+            filtered_regulations = self._filter_by_business_size(
+                applicable_regulations, business_size
+            )
+
             # Add activity-specific regulations
             activity_regulations = self._get_activity_specific_regulations(activities)
             filtered_regulations.extend(activity_regulations)
-            
+
             # Sort by priority
             priority_order = {"critical": 4, "high": 3, "medium": 2, "low": 1}
             filtered_regulations.sort(
-                key=lambda x: priority_order.get(x["priority"], 2),
-                reverse=True
+                key=lambda x: priority_order.get(x["priority"], 2), reverse=True
             )
-            
+
             result_data = {
                 "applicable_regulations": filtered_regulations,
                 "regulation_count": len(filtered_regulations),
@@ -289,32 +300,33 @@ class IndustryRegulationLookupTool(BaseTool):
                     "industry": industry,
                     "business_size": business_size,
                     "data_processing": processes_data,
-                    "geographic_scope": geographic_scope
+                    "geographic_scope": geographic_scope,
                 },
                 "next_steps": self._generate_next_steps(filtered_regulations),
-                "analysis_timestamp": datetime.now().isoformat()
+                "analysis_timestamp": datetime.now().isoformat(),
             }
-            
-            logger.info(f"Regulation lookup completed: {len(filtered_regulations)} regulations found for {industry} industry")
-            
+
+            logger.info(
+                f"Regulation lookup completed: {len(filtered_regulations)} regulations found for {industry} industry"
+            )
+
             return ToolResult(
                 success=True,
                 data=result_data,
                 metadata={
                     "tool_type": "regulation_lookup",
                     "industry": industry,
-                    "regulation_count": len(filtered_regulations)
-                }
+                    "regulation_count": len(filtered_regulations),
+                },
             )
-            
+
         except Exception as e:
             logger.error(f"Regulation lookup failed: {e}")
-            return ToolResult(
-                success=False,
-                error=f"Regulation lookup execution failed: {e!s}"
-            )
-    
-    def _filter_by_business_size(self, regulations: List[Dict[str, Any]], business_size: str) -> List[Dict[str, Any]]:
+            return ToolResult(success=False, error=f"Regulation lookup execution failed: {e!s}")
+
+    def _filter_by_business_size(
+        self, regulations: List[Dict[str, Any]], business_size: str
+    ) -> List[Dict[str, Any]]:
         """Filter regulations based on business size"""
         # All regulations apply, but add size-specific guidance
         for regulation in regulations:
@@ -326,48 +338,52 @@ class IndustryRegulationLookupTool(BaseTool):
                 regulation["size_guidance"] = "Full compliance required with some flexibility"
             else:  # large
                 regulation["size_guidance"] = "Full regulatory scrutiny and compliance required"
-        
+
         return regulations
-    
+
     def _get_activity_specific_regulations(self, activities: List[str]) -> List[Dict[str, Any]]:
         """Get regulations specific to business activities"""
         activity_regs = []
-        
+
         for activity in activities:
             activity_lower = activity.lower()
-            
+
             if "payment" in activity_lower or "card" in activity_lower:
                 # Add PCI DSS
                 pci_info = self.regulation_database["financial"]["PCI_DSS"]
-                activity_regs.append({
-                    "regulation": "PCI_DSS",
-                    "priority": "high",
-                    "reason": f"Activity: {activity}",
-                    **pci_info.to_dict()
-                })
-            
+                activity_regs.append(
+                    {
+                        "regulation": "PCI_DSS",
+                        "priority": "high",
+                        "reason": f"Activity: {activity}",
+                        **pci_info.to_dict(),
+                    }
+                )
+
             if "marketing" in activity_lower or "advertising" in activity_lower:
                 # Add marketing-specific regulations
-                activity_regs.append({
-                    "regulation": "PECR",
-                    "priority": "medium",
-                    "reason": f"Activity: {activity}",
-                    "name": "Privacy and Electronic Communications Regulations",
-                    "description": "Regulations for electronic marketing and communications",
-                    "applicability": "Organizations conducting electronic marketing",
-                    "key_requirements": [
-                        "Consent for email marketing",
-                        "Opt-out mechanisms",
-                        "Cookie consent",
-                        "Silent calls prevention"
-                    ],
-                    "penalties": "Up to £500,000",
-                    "enforcement_body": "Information Commissioner's Office (ICO)",
-                    "last_updated": "2003-12-11"
-                })
-        
+                activity_regs.append(
+                    {
+                        "regulation": "PECR",
+                        "priority": "medium",
+                        "reason": f"Activity: {activity}",
+                        "name": "Privacy and Electronic Communications Regulations",
+                        "description": "Regulations for electronic marketing and communications",
+                        "applicability": "Organizations conducting electronic marketing",
+                        "key_requirements": [
+                            "Consent for email marketing",
+                            "Opt-out mechanisms",
+                            "Cookie consent",
+                            "Silent calls prevention",
+                        ],
+                        "penalties": "Up to £500,000",
+                        "enforcement_body": "Information Commissioner's Office (ICO)",
+                        "last_updated": "2003-12-11",
+                    }
+                )
+
         return activity_regs
-    
+
     def _analyze_priority_breakdown(self, regulations: List[Dict[str, Any]]) -> Dict[str, int]:
         """Analyze breakdown of regulation priorities"""
         breakdown = {"critical": 0, "high": 0, "medium": 0, "low": 0}
@@ -376,20 +392,22 @@ class IndustryRegulationLookupTool(BaseTool):
             if priority in breakdown:
                 breakdown[priority] += 1
         return breakdown
-    
-    def _generate_compliance_timeline(self, regulations: List[Dict[str, Any]]) -> Dict[str, List[str]]:
+
+    def _generate_compliance_timeline(
+        self, regulations: List[Dict[str, Any]]
+    ) -> Dict[str, List[str]]:
         """Generate recommended compliance timeline"""
         timeline = {
             "immediate": [],  # 0-30 days
             "short_term": [],  # 1-3 months
             "medium_term": [],  # 3-6 months
-            "long_term": []  # 6+ months
+            "long_term": [],  # 6+ months
         }
-        
+
         for reg in regulations:
             reg_name = reg.get("regulation", "Unknown")
             priority = reg.get("priority", "medium")
-            
+
             if priority == "critical":
                 timeline["immediate"].append(f"Begin {reg_name} compliance assessment")
             elif priority == "high":
@@ -398,35 +416,37 @@ class IndustryRegulationLookupTool(BaseTool):
                 timeline["medium_term"].append(f"Address {reg_name} compliance")
             else:
                 timeline["long_term"].append(f"Review {reg_name} applicability")
-        
+
         return timeline
-    
+
     def _generate_next_steps(self, regulations: List[Dict[str, Any]]) -> List[str]:
         """Generate recommended next steps"""
         next_steps = []
-        
+
         if any(reg.get("priority") == "critical" for reg in regulations):
             next_steps.append("Prioritize critical regulatory compliance immediately")
-        
-        next_steps.extend([
-            "Conduct detailed compliance gap analysis",
-            "Assign compliance responsibilities to team members",
-            "Establish compliance monitoring procedures",
-            "Consider professional compliance consultation"
-        ])
-        
+
+        next_steps.extend(
+            [
+                "Conduct detailed compliance gap analysis",
+                "Assign compliance responsibilities to team members",
+                "Establish compliance monitoring procedures",
+                "Consider professional compliance consultation",
+            ]
+        )
+
         return next_steps
 
 
 class ComplianceRequirementsTool(BaseTool):
     """Tool for checking specific compliance requirements"""
-    
+
     def __init__(self):
         super().__init__(
             name="check_compliance_requirements",
-            description="Check specific compliance requirements for given frameworks and business context"
+            description="Check specific compliance requirements for given frameworks and business context",
         )
-    
+
     def get_function_schema(self) -> Dict[str, Any]:
         """Get the function schema for Google Generative AI function calling"""
         return {
@@ -437,44 +457,42 @@ class ComplianceRequirementsTool(BaseTool):
                 "properties": {
                     "framework": {
                         "type": "string",
-                        "description": "Compliance framework (e.g., 'GDPR', 'ISO27001', 'SOC2')"
+                        "description": "Compliance framework (e.g., 'GDPR', 'ISO27001', 'SOC2')",
                     },
                     "business_context": {
                         "type": "object",
                         "properties": {
                             "industry": {"type": "string"},
                             "employee_count": {"type": "number"},
-                            "data_types": {
-                                "type": "array",
-                                "items": {"type": "string"}
-                            },
-                            "geographic_regions": {
-                                "type": "array",
-                                "items": {"type": "string"}
-                            }
+                            "data_types": {"type": "array", "items": {"type": "string"}},
+                            "geographic_regions": {"type": "array", "items": {"type": "string"}},
                         },
-                        "required": ["industry", "employee_count"]
+                        "required": ["industry", "employee_count"],
                     },
                     "specific_areas": {
                         "type": "array",
                         "items": {"type": "string"},
-                        "description": "Specific areas of compliance to focus on"
-                    }
+                        "description": "Specific areas of compliance to focus on",
+                    },
                 },
-                "required": ["framework", "business_context"]
-            }
+                "required": ["framework", "business_context"],
+            },
         }
-    
-    async def execute(self, parameters: Dict[str, Any], context: Optional[Dict[str, Any]] = None) -> ToolResult:
+
+    async def execute(
+        self, parameters: Dict[str, Any], context: Optional[Dict[str, Any]] = None
+    ) -> ToolResult:
         """Execute compliance requirements check"""
         try:
             framework = parameters.get("framework", "").upper()
             business_context = parameters.get("business_context", {})
             specific_areas = parameters.get("specific_areas", [])
-            
+
             # Get requirements based on framework
-            requirements = self._get_framework_requirements(framework, business_context, specific_areas)
-            
+            requirements = self._get_framework_requirements(
+                framework, business_context, specific_areas
+            )
+
             result_data = {
                 "framework": framework,
                 "applicable_requirements": requirements,
@@ -482,32 +500,35 @@ class ComplianceRequirementsTool(BaseTool):
                 "business_context": business_context,
                 "compliance_checklist": self._generate_compliance_checklist(requirements),
                 "implementation_priorities": self._prioritize_requirements(requirements),
-                "analysis_timestamp": datetime.now().isoformat()
+                "analysis_timestamp": datetime.now().isoformat(),
             }
-            
-            logger.info(f"Compliance requirements check completed: {len(requirements)} requirements found for {framework}")
-            
+
+            logger.info(
+                f"Compliance requirements check completed: {len(requirements)} requirements found for {framework}"
+            )
+
             return ToolResult(
                 success=True,
                 data=result_data,
                 metadata={
                     "tool_type": "compliance_requirements",
                     "framework": framework,
-                    "requirement_count": len(requirements)
-                }
+                    "requirement_count": len(requirements),
+                },
             )
-            
+
         except Exception as e:
             logger.error(f"Compliance requirements check failed: {e}")
             return ToolResult(
-                success=False,
-                error=f"Compliance requirements check execution failed: {e!s}"
+                success=False, error=f"Compliance requirements check execution failed: {e!s}"
             )
-    
-    def _get_framework_requirements(self, framework: str, business_context: Dict[str, Any], specific_areas: List[str]) -> List[Dict[str, Any]]:
+
+    def _get_framework_requirements(
+        self, framework: str, business_context: Dict[str, Any], specific_areas: List[str]
+    ) -> List[Dict[str, Any]]:
         """Get requirements for specific framework"""
         requirements = []
-        
+
         if framework == "GDPR":
             gdpr_requirements = [
                 ComplianceRequirement(
@@ -518,7 +539,11 @@ class ComplianceRequirementsTool(BaseTool):
                     framework="GDPR",
                     section="Article 6",
                     implementation_guidance="Document lawful basis, conduct legitimate interests assessments",
-                    evidence_required=["Privacy notices", "Legitimate interests assessments", "Consent records"]
+                    evidence_required=[
+                        "Privacy notices",
+                        "Legitimate interests assessments",
+                        "Consent records",
+                    ],
                 ),
                 ComplianceRequirement(
                     requirement_id="GDPR-25",
@@ -528,7 +553,11 @@ class ComplianceRequirementsTool(BaseTool):
                     framework="GDPR",
                     section="Article 25",
                     implementation_guidance="Build privacy into systems, implement privacy-enhancing technologies",
-                    evidence_required=["System design documents", "Privacy impact assessments", "Technical measures documentation"]
+                    evidence_required=[
+                        "System design documents",
+                        "Privacy impact assessments",
+                        "Technical measures documentation",
+                    ],
                 ),
                 ComplianceRequirement(
                     requirement_id="GDPR-33",
@@ -538,11 +567,15 @@ class ComplianceRequirementsTool(BaseTool):
                     framework="GDPR",
                     section="Article 33",
                     implementation_guidance="Implement breach detection and response procedures",
-                    evidence_required=["Breach response plan", "Incident logs", "Notification procedures"]
-                )
+                    evidence_required=[
+                        "Breach response plan",
+                        "Incident logs",
+                        "Notification procedures",
+                    ],
+                ),
             ]
             requirements.extend([req.to_dict() for req in gdpr_requirements])
-        
+
         elif framework == "ISO27001":
             iso_requirements = [
                 ComplianceRequirement(
@@ -553,7 +586,11 @@ class ComplianceRequirementsTool(BaseTool):
                     framework="ISO27001",
                     section="A.5.1",
                     implementation_guidance="Develop comprehensive information security policies",
-                    evidence_required=["Information security policy", "Topic-specific policies", "Policy approval records"]
+                    evidence_required=[
+                        "Information security policy",
+                        "Topic-specific policies",
+                        "Policy approval records",
+                    ],
                 ),
                 ComplianceRequirement(
                     requirement_id="ISO-A.8.1",
@@ -563,21 +600,35 @@ class ComplianceRequirementsTool(BaseTool):
                     framework="ISO27001",
                     section="A.8.1",
                     implementation_guidance="Create asset inventory and assign ownership",
-                    evidence_required=["Asset register", "Asset ownership assignments", "Asset handling procedures"]
-                )
+                    evidence_required=[
+                        "Asset register",
+                        "Asset ownership assignments",
+                        "Asset handling procedures",
+                    ],
+                ),
             ]
             requirements.extend([req.to_dict() for req in iso_requirements])
-        
+
         # Filter by specific areas if provided
         if specific_areas:
-            requirements = [req for req in requirements if any(area.lower() in req["title"].lower() or area.lower() in req["description"].lower() for area in specific_areas)]
-        
+            requirements = [
+                req
+                for req in requirements
+                if any(
+                    area.lower() in req["title"].lower()
+                    or area.lower() in req["description"].lower()
+                    for area in specific_areas
+                )
+            ]
+
         return requirements
-    
-    def _generate_compliance_checklist(self, requirements: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+
+    def _generate_compliance_checklist(
+        self, requirements: List[Dict[str, Any]]
+    ) -> List[Dict[str, Any]]:
         """Generate actionable compliance checklist"""
         checklist = []
-        
+
         for req in requirements:
             checklist_item = {
                 "requirement": req["title"],
@@ -586,37 +637,41 @@ class ComplianceRequirementsTool(BaseTool):
                     f"Review {req['section']} requirements",
                     "Assess current implementation status",
                     "Document implementation approach",
-                    "Collect required evidence"
+                    "Collect required evidence",
                 ],
                 "evidence_needed": req["evidence_required"],
-                "priority": "high" if req["mandatory"] else "medium"
+                "priority": "high" if req["mandatory"] else "medium",
             }
             checklist.append(checklist_item)
-        
+
         return checklist
-    
+
     def _prioritize_requirements(self, requirements: List[Dict[str, Any]]) -> List[Dict[str, str]]:
         """Prioritize requirements for implementation"""
         priorities = []
-        
+
         # Mandatory requirements first
         mandatory_reqs = [req for req in requirements if req["mandatory"]]
         for req in mandatory_reqs:
-            priorities.append({
-                "requirement": req["title"],
-                "priority": "critical",
-                "reason": "Mandatory compliance requirement"
-            })
-        
+            priorities.append(
+                {
+                    "requirement": req["title"],
+                    "priority": "critical",
+                    "reason": "Mandatory compliance requirement",
+                }
+            )
+
         # Optional requirements
         optional_reqs = [req for req in requirements if not req["mandatory"]]
         for req in optional_reqs:
-            priorities.append({
-                "requirement": req["title"],
-                "priority": "medium",
-                "reason": "Best practice recommendation"
-            })
-        
+            priorities.append(
+                {
+                    "requirement": req["title"],
+                    "priority": "medium",
+                    "reason": "Best practice recommendation",
+                }
+            )
+
         return priorities
 
 

@@ -36,18 +36,56 @@ import { cn } from "@/lib/utils";
 // Dynamic Question System
 type QuestionType = "greeting" | "input" | "choice" | "multi-choice" | "confirm" | "dynamic";
 
+// User data interface for form responses
+interface UserFormData {
+  fullName?: string;
+  email?: string;
+  password?: string;
+  confirmPassword?: string;
+  companyName?: string;
+  companySize?: string;
+  industry?: string;
+  businessModel?: string;
+  regions?: string[];
+  dataTypes?: string[];
+  currentFrameworks?: string[];
+  topPriority?: string;
+  timeline?: string;
+  challenge?: string;
+  agreeToTerms?: boolean;
+  // Industry-specific fields
+  healthcareData?: string[];
+  financialServices?: string[];
+  transactionVolume?: string;
+  // Compliance fields
+  gdprRelevant?: string;
+  usCompliance?: string[];
+  paymentHandling?: string;
+  hipaaStatus?: string;
+  // Business insights
+  mainConcerns?: string[];
+  hasComplianceTeam?: string;
+  maturity?: string;
+  customerBase?: string;
+  budget?: string;
+  [key: string]: unknown; // For dynamic fields
+}
+
+// Answer type for question responses
+type QuestionAnswer = string | string[] | boolean | undefined;
+
 interface Question {
   id: string;
   type: QuestionType;
-  question: string | ((data: any) => string);
+  question: string | ((data: UserFormData) => string);
   field?: string;
   validation?: string;
   inputType?: string;
-  options?: string[] | ((data: any) => string[]);
+  options?: string[] | ((data: UserFormData) => string[]);
   multiple?: boolean;
   confirmText?: string;
-  skipIf?: (data: any) => boolean;
-  nextQuestion?: (data: any, answer: any) => string;
+  skipIf?: (data: UserFormData) => boolean;
+  nextQuestion?: (data: UserFormData, answer: QuestionAnswer) => string;
   icon?: React.ReactNode;
   priority?: "high" | "medium" | "low";
 }
@@ -395,7 +433,7 @@ const getQuestionFlow = (): string[] => {
   ];
 };
 
-const getNextQuestion = (currentId: string, data: any, answer?: any): string | null => {
+const getNextQuestion = (currentId: string, data: UserFormData, answer?: QuestionAnswer): string | null => {
   const current = questionBank[currentId];
 
   // Check if current question exists and has custom next logic
@@ -447,7 +485,7 @@ export default function AIGuidedSignupPage() {
   const [messages, setMessages] = React.useState<Message[]>([]);
   const [userInput, setUserInput] = React.useState("");
   const [isTyping, setIsTyping] = React.useState(false);
-  const [formData, setFormData] = React.useState<any>({});
+  const [formData, setFormData] = React.useState<UserFormData>({});
   const [isLoading, setIsLoading] = React.useState(false);
   const [questionsAnswered, setQuestionsAnswered] = React.useState(0);
   const messagesEndRef = React.useRef<HTMLDivElement>(null);
@@ -474,14 +512,14 @@ export default function AIGuidedSignupPage() {
     }
   }, []);
 
-  const processQuestion = (question: Question, data: any): string => {
+  const processQuestion = (question: Question, data: UserFormData): string => {
     if (typeof question.question === "function") {
       return question.question(data);
     }
     return question.question;
   };
 
-  const getOptions = (question: Question, data: any): string[] | undefined => {
+  const getOptions = (question: Question, data: UserFormData): string[] | undefined => {
     if (!question.options) return undefined;
     if (typeof question.options === "function") {
       return question.options(data);
@@ -553,7 +591,7 @@ export default function AIGuidedSignupPage() {
     }
   };
 
-  const handleNext = async (answer?: any) => {
+  const handleNext = async (answer?: QuestionAnswer) => {
     const currentQuestion = questionBank[currentQuestionId];
     if (!currentQuestion) return;
 
@@ -713,14 +751,18 @@ export default function AIGuidedSignupPage() {
       });
       
       router.push("/dashboard");
-    } catch (error: any) {
-      const errorMessage = error.detail || error.message || "There was an error creating your account. Please try again.";
+    } catch (error: unknown) {
+      const errorMessage = error && typeof error === 'object' && 'detail' in error 
+        ? (error as { detail: string }).detail 
+        : error && typeof error === 'object' && 'message' in error 
+          ? (error as { message: string }).message 
+          : "There was an error creating your account. Please try again.";
       addBotMessage(errorMessage);
       setIsLoading(false);
     }
   };
 
-  const generateComplianceProfile = (data: any) => {
+  const generateComplianceProfile = (data: UserFormData) => {
     const priorities = [];
     const risks = [];
     const recommendations = [];
@@ -755,7 +797,7 @@ export default function AIGuidedSignupPage() {
     };
   };
 
-  const getTimeEstimate = (data: any): string => {
+  const getTimeEstimate = (data: UserFormData): string => {
     if (data.currentFrameworks?.includes("None yet")) {
       return "3-6 months";
     }
@@ -765,7 +807,7 @@ export default function AIGuidedSignupPage() {
     return "2-4 months";
   };
 
-  const getSuggestedFrameworks = (data: any): string[] => {
+  const getSuggestedFrameworks = (data: UserFormData): string[] => {
     const frameworks = [];
     
     if (data.regions?.includes("UK") || data.regions?.includes("EU")) {
@@ -788,29 +830,29 @@ export default function AIGuidedSignupPage() {
   const currentQuestion = questionBank[currentQuestionId];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-primary/5 flex items-center justify-center p-4">
-      <Card className="w-full max-w-3xl shadow-2xl border-2">
+    <div className="min-h-screen bg-surface-base flex items-center justify-center p-4">
+      <div className="absolute inset-0 mesh-gradient opacity-20"></div>
+      <Card className="relative w-full max-w-3xl glass-card border-0 bg-surface-primary/80 backdrop-blur-xl shadow-2xl">
         <CardHeader className="text-center space-y-4 pb-6">
           <div className="flex items-center justify-center gap-2">
-            <Shield className="h-8 w-8 text-primary" />
+            <Shield className="h-8 w-8 text-brand-primary" />
             <span className="text-3xl font-bold">
-              <span className="text-primary">rule</span>
-              <span className="text-gold">IQ</span>
+              <span className="gradient-text">ruleIQ</span>
             </span>
           </div>
           
           <div>
-            <CardTitle className="text-2xl font-bold">Smart Compliance Setup</CardTitle>
-            <CardDescription>AI-powered onboarding tailored to your business</CardDescription>
+            <CardTitle className="text-2xl font-bold gradient-text">Smart Compliance Setup</CardTitle>
+            <CardDescription className="text-text-secondary">AI-powered onboarding tailored to your business</CardDescription>
           </div>
           
           <div className="space-y-2">
             <div className="flex justify-between text-sm">
-              <span className="text-muted-foreground">Progress</span>
-              <span className="text-muted-foreground">{Math.round(progress)}%</span>
+              <span className="text-text-secondary">Progress</span>
+              <span className="text-text-secondary">{Math.round(progress)}%</span>
             </div>
-            <Progress value={progress} className="h-2" />
-            <p className="text-xs text-muted-foreground">
+            <Progress value={progress} className="h-2 bg-surface-secondary" />
+            <p className="text-xs text-text-tertiary">
               Estimated time: {Math.max(1, 5 - Math.floor(questionsAnswered / 3))} minutes remaining
             </p>
           </div>
@@ -818,20 +860,20 @@ export default function AIGuidedSignupPage() {
           {/* Dynamic badges based on progress */}
           <div className="flex justify-center gap-2 flex-wrap">
             {formData.industry && (
-              <Badge variant="secondary">{formData.industry}</Badge>
+              <Badge variant="secondary" className="bg-surface-secondary/50 border-glass-border text-text-primary">{formData.industry}</Badge>
             )}
             {formData.companySize && (
-              <Badge variant="secondary">{formData.companySize} employees</Badge>
+              <Badge variant="secondary" className="bg-surface-secondary/50 border-glass-border text-text-primary">{formData.companySize} employees</Badge>
             )}
             {formData.topPriority && (
-              <Badge variant="default">{formData.topPriority}</Badge>
+              <Badge className="bg-brand-primary/20 border-brand-primary/50 text-brand-light">{formData.topPriority}</Badge>
             )}
           </div>
         </CardHeader>
         
         <CardContent className="space-y-4">
           {/* Chat Messages */}
-          <div className="h-[400px] overflow-y-auto rounded-lg bg-muted/20 p-4 space-y-4">
+          <div className="h-[400px] overflow-y-auto rounded-lg bg-surface-secondary/30 p-4 space-y-4 border border-glass-border">
             <AnimatePresence>
               {messages.map((message) => (
                 <motion.div
@@ -846,8 +888,8 @@ export default function AIGuidedSignupPage() {
                 >
                   {message.type === "bot" && (
                     <div className="flex-shrink-0">
-                      <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
-                        {message.icon || <Bot className="h-5 w-5 text-primary" />}
+                      <div className="w-8 h-8 rounded-full bg-brand-primary/20 flex items-center justify-center">
+                        {message.icon || <Bot className="h-5 w-5 text-brand-primary" />}
                       </div>
                     </div>
                   )}
@@ -855,8 +897,8 @@ export default function AIGuidedSignupPage() {
                   <div className={cn(
                     "max-w-[80%] rounded-lg p-3",
                     message.type === "bot" 
-                      ? "bg-card border" 
-                      : "bg-primary text-primary-foreground"
+                      ? "glass-card" 
+                      : "bg-gradient-to-r from-brand-primary to-brand-secondary text-white"
                   )}>
                     {message.isTyping ? (
                       <div className="flex gap-1">
@@ -890,6 +932,7 @@ export default function AIGuidedSignupPage() {
                                           });
                                         }
                                       }}
+                                      className="border-glass-border data-[state=checked]:bg-brand-primary data-[state=checked]:border-brand-primary"
                                     />
                                     <span className="text-sm">{option}</span>
                                   </label>
@@ -899,7 +942,7 @@ export default function AIGuidedSignupPage() {
                                     <Button
                                       size="sm"
                                       onClick={() => handleNext(formData[currentQuestion.field!])}
-                                      className="flex-1"
+                                      className="flex-1 btn-gradient"
                                     >
                                       Continue ({formData[currentQuestion.field!].length} selected)
                                       <ChevronRight className="ml-1 h-3 w-3" />
@@ -909,7 +952,7 @@ export default function AIGuidedSignupPage() {
                                       size="sm"
                                       variant="outline"
                                       onClick={() => handleNext([])}
-                                      className="flex-1"
+                                      className="flex-1 bg-surface-secondary/50 border-glass-border hover:bg-surface-secondary/70 hover:border-glass-border-hover"
                                     >
                                       Skip this question
                                       <ChevronRight className="ml-1 h-3 w-3" />
@@ -925,8 +968,9 @@ export default function AIGuidedSignupPage() {
                                     onCheckedChange={(checked) => 
                                       setFormData({ ...formData, agreeToTerms: checked })
                                     }
+                                    className="border-glass-border data-[state=checked]:bg-brand-primary data-[state=checked]:border-brand-primary"
                                   />
-                                  <span className="text-sm text-muted-foreground">
+                                  <span className="text-sm text-text-secondary">
                                     {currentQuestion.confirmText}
                                   </span>
                                 </label>
@@ -934,7 +978,7 @@ export default function AIGuidedSignupPage() {
                                   size="sm"
                                   onClick={completeSignup}
                                   disabled={!formData.agreeToTerms || isLoading}
-                                  className="w-full"
+                                  className="w-full btn-gradient"
                                 >
                                   {isLoading ? (
                                     <>
@@ -956,7 +1000,7 @@ export default function AIGuidedSignupPage() {
                                   variant="outline"
                                   size="sm"
                                   onClick={() => handleChoice(option)}
-                                  className="block w-full text-left"
+                                  className="block w-full text-left bg-surface-secondary/50 border-glass-border hover:bg-surface-secondary/70 hover:border-glass-border-hover hover:text-brand-primary transition-colors"
                                   disabled={isTyping}
                                 >
                                   {option}
@@ -982,20 +1026,20 @@ export default function AIGuidedSignupPage() {
                 value={userInput}
                 onChange={(e) => setUserInput(e.target.value)}
                 placeholder="Type your answer..."
-                className="flex-1"
+                className="flex-1 bg-surface-secondary/50 border-glass-border focus:border-brand-primary"
                 disabled={isLoading}
               />
-              <Button type="submit" disabled={!userInput.trim() || isLoading}>
+              <Button type="submit" disabled={!userInput.trim() || isLoading} className="btn-gradient">
                 <Send className="h-4 w-4" />
               </Button>
             </form>
           )}
           
           {/* Alternative signup option */}
-          <div className="text-center pt-4 border-t">
+          <div className="text-center pt-4 border-t border-glass-border">
             <Link
               href="/signup-traditional"
-              className="text-sm text-muted-foreground hover:text-foreground inline-flex items-center gap-1"
+              className="text-sm text-text-secondary hover:text-brand-secondary inline-flex items-center gap-1 transition-colors"
             >
               <ArrowLeft className="h-3 w-3" />
               Prefer traditional signup?

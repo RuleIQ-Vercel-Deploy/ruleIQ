@@ -27,10 +27,7 @@ class TestAICircuitBreaker:
     def circuit_breaker_config(self):
         """Circuit breaker configuration for testing."""
         return CircuitBreakerConfig(
-            failure_threshold=3,
-            recovery_timeout=60,
-            success_threshold=2,
-            time_window=60
+            failure_threshold=3, recovery_timeout=60, success_threshold=2, time_window=60
         )
 
     @pytest.fixture
@@ -53,9 +50,9 @@ class TestAICircuitBreaker:
     def test_record_success(self, circuit_breaker):
         """Test recording successful operations."""
         model_name = "gemini-2.5-pro"
-        
+
         circuit_breaker.record_success(model_name)
-        
+
         assert circuit_breaker.metrics.total_successes == 1
         assert circuit_breaker.metrics.total_requests == 1
         assert circuit_breaker.get_model_state(model_name) == CircuitState.CLOSED
@@ -64,9 +61,9 @@ class TestAICircuitBreaker:
         """Test recording failed operations."""
         model_name = "gemini-2.5-pro"
         error = AIServiceException("Test error")
-        
+
         circuit_breaker.record_failure(model_name, error)
-        
+
         assert circuit_breaker.metrics.total_failures == 1
         assert circuit_breaker.metrics.total_requests == 1
         assert len(circuit_breaker._failures[model_name]) == 1
@@ -75,11 +72,11 @@ class TestAICircuitBreaker:
         """Test circuit opens after reaching failure threshold."""
         model_name = "gemini-2.5-pro"
         error = AIServiceException("Test error")
-        
+
         # Record failures up to threshold
         for _ in range(circuit_breaker.config.failure_threshold):
             circuit_breaker.record_failure(model_name, error)
-        
+
         assert circuit_breaker.get_model_state(model_name) == CircuitState.OPEN
         assert circuit_breaker.is_model_available(model_name) is False
 
@@ -87,16 +84,16 @@ class TestAICircuitBreaker:
         """Test circuit transitions to half-open after timeout."""
         model_name = "gemini-2.5-pro"
         error = AIServiceException("Test error")
-        
+
         # Open the circuit
         for _ in range(circuit_breaker.config.failure_threshold):
             circuit_breaker.record_failure(model_name, error)
-        
+
         # Simulate timeout passage
         circuit_breaker._last_failure_time = datetime.utcnow() - timedelta(
             seconds=circuit_breaker.config.timeout_seconds + 1
         )
-        
+
         # Check if circuit transitions to half-open
         assert circuit_breaker.is_model_available(model_name) is True
         assert circuit_breaker.get_model_state(model_name) == CircuitState.HALF_OPEN
@@ -105,34 +102,32 @@ class TestAICircuitBreaker:
         """Test circuit closes after successful operations in half-open state."""
         model_name = "gemini-2.5-pro"
         error = AIServiceException("Test error")
-        
+
         # Open the circuit
         for _ in range(circuit_breaker.config.failure_threshold):
             circuit_breaker.record_failure(model_name, error)
-        
+
         # Transition to half-open
         circuit_breaker._last_failure_time = datetime.utcnow() - timedelta(
             seconds=circuit_breaker.config.timeout_seconds + 1
         )
         circuit_breaker.is_model_available(model_name)  # Trigger half-open
-        
+
         # Record successful operations
         for _ in range(circuit_breaker.config.success_threshold):
             circuit_breaker.record_success(model_name)
-        
+
         assert circuit_breaker.get_model_state(model_name) == CircuitState.CLOSED
 
     def test_synchronous_call_with_circuit_breaker(self, circuit_breaker):
         """Test synchronous operation with circuit breaker protection."""
         model_name = "gemini-2.5-pro"
-        
+
         def mock_operation():
             return "success"
-        
-        result = circuit_breaker.call_with_circuit_breaker(
-            model_name, mock_operation
-        )
-        
+
+        result = circuit_breaker.call_with_circuit_breaker(model_name, mock_operation)
+
         assert result == "success"
         assert circuit_breaker.metrics.total_successes == 1
 
@@ -140,14 +135,14 @@ class TestAICircuitBreaker:
     async def test_asynchronous_call_with_circuit_breaker(self, circuit_breaker):
         """Test asynchronous operation with circuit breaker protection."""
         model_name = "gemini-2.5-pro"
-        
+
         async def mock_async_operation():
             return "async_success"
-        
+
         result = await circuit_breaker.async_call_with_circuit_breaker(
             model_name, mock_async_operation
         )
-        
+
         assert result == "async_success"
         assert circuit_breaker.metrics.total_successes == 1
 
@@ -155,17 +150,17 @@ class TestAICircuitBreaker:
         """Test circuit breaker blocks operations when open."""
         model_name = "gemini-2.5-pro"
         error = AIServiceException("Test error")
-        
+
         # Open the circuit
         for _ in range(circuit_breaker.config.failure_threshold):
             circuit_breaker.record_failure(model_name, error)
-        
+
         def mock_operation():
             return "should_not_execute"
-        
+
         with pytest.raises(AIServiceException) as exc_info:
             circuit_breaker.call_with_circuit_breaker(model_name, mock_operation)
-        
+
         assert "Circuit breaker is OPEN" in str(exc_info.value)
 
     @pytest.mark.asyncio
@@ -173,19 +168,17 @@ class TestAICircuitBreaker:
         """Test async circuit breaker blocks operations when open."""
         model_name = "gemini-2.5-pro"
         error = AIServiceException("Test error")
-        
+
         # Open the circuit
         for _ in range(circuit_breaker.config.failure_threshold):
             circuit_breaker.record_failure(model_name, error)
-        
+
         async def mock_async_operation():
             return "should_not_execute"
-        
+
         with pytest.raises(AIServiceException) as exc_info:
-            await circuit_breaker.async_call_with_circuit_breaker(
-                model_name, mock_async_operation
-            )
-        
+            await circuit_breaker.async_call_with_circuit_breaker(model_name, mock_async_operation)
+
         assert "Circuit breaker is OPEN" in str(exc_info.value)
 
     def test_multiple_models_independent_circuits(self, circuit_breaker):
@@ -193,11 +186,11 @@ class TestAICircuitBreaker:
         model1 = "gemini-2.5-pro"
         model2 = "gemini-2.5-flash"
         error = AIServiceException("Test error")
-        
+
         # Fail model1 to open its circuit
         for _ in range(circuit_breaker.config.failure_threshold):
             circuit_breaker.record_failure(model1, error)
-        
+
         # model1 should be unavailable, model2 should be available
         assert circuit_breaker.is_model_available(model1) is False
         assert circuit_breaker.is_model_available(model2) is True
@@ -208,18 +201,18 @@ class TestAICircuitBreaker:
         """Test that old failures are cleaned up."""
         model_name = "gemini-2.5-pro"
         error = AIServiceException("Test error")
-        
+
         # Record a failure
         circuit_breaker.record_failure(model_name, error)
-        
+
         # Manually set old timestamp
         circuit_breaker._failures[model_name][0].timestamp = datetime.utcnow() - timedelta(
             seconds=circuit_breaker.config.timeout_seconds + 1
         )
-        
+
         # Record another failure (should trigger cleanup)
         circuit_breaker.record_failure(model_name, error)
-        
+
         # Old failure should be cleaned up
         assert len(circuit_breaker._failures[model_name]) == 1
 
@@ -227,27 +220,27 @@ class TestAICircuitBreaker:
         """Test circuit breaker metrics tracking."""
         model_name = "gemini-2.5-pro"
         error = AIServiceException("Test error")
-        
+
         # Record some operations
         circuit_breaker.record_success(model_name)
         circuit_breaker.record_success(model_name)
         circuit_breaker.record_failure(model_name, error)
-        
+
         metrics = circuit_breaker.metrics
         assert metrics.total_requests == 3
         assert metrics.total_successes == 2
         assert metrics.total_failures == 1
-        assert metrics.success_rate == 2/3
+        assert metrics.success_rate == 2 / 3
 
     def test_get_circuit_breaker_status(self, circuit_breaker):
         """Test getting comprehensive circuit breaker status."""
         model_name = "gemini-2.5-pro"
-        
+
         # Record some operations
         circuit_breaker.record_success(model_name)
-        
+
         status = circuit_breaker.get_status()
-        
+
         assert "overall_state" in status
         assert "model_states" in status
         assert "metrics" in status
@@ -257,28 +250,28 @@ class TestAICircuitBreaker:
         """Test manual circuit breaker reset functionality."""
         model_name = "gemini-2.5-pro"
         error = AIServiceException("Test error")
-        
+
         # Open the circuit
         for _ in range(circuit_breaker.config.failure_threshold):
             circuit_breaker.record_failure(model_name, error)
-        
+
         assert circuit_breaker.get_model_state(model_name) == CircuitState.OPEN
-        
+
         # Reset the circuit
         circuit_breaker.reset_circuit(model_name)
-        
+
         assert circuit_breaker.get_model_state(model_name) == CircuitState.CLOSED
         assert circuit_breaker.is_model_available(model_name) is True
 
     def test_health_check_integration(self, circuit_breaker):
         """Test health check integration with circuit breaker."""
         model_name = "gemini-2.5-pro"
-        
+
         # Mock health check
-        with patch.object(circuit_breaker, '_perform_health_check', return_value=True):
+        with patch.object(circuit_breaker, "_perform_health_check", return_value=True):
             health_status = circuit_breaker.check_model_health(model_name)
             assert health_status is True
-        
-        with patch.object(circuit_breaker, '_perform_health_check', return_value=False):
+
+        with patch.object(circuit_breaker, "_perform_health_check", return_value=False):
             health_status = circuit_breaker.check_model_health(model_name)
             assert health_status is False

@@ -10,9 +10,10 @@ def test_sync_database_fixture_works(sync_db_session, sync_sample_user):
     """Test that sync database fixtures work."""
     assert sync_sample_user.email == "test@example.com"
     assert sync_sample_user.is_active == True
-    
+
     # Verify user is in database
     from database.user import User
+
     user = sync_db_session.query(User).filter(User.id == sync_sample_user.id).first()
     assert user is not None
     assert user.email == "test@example.com"
@@ -43,7 +44,7 @@ def test_ai_assessment_endpoint_authentication(test_client):
         "question_text": "What is GDPR compliance?",
         "framework_id": "gdpr",
     }
-    
+
     response = test_client.post("/api/ai/assessments/gdpr/help", json=request_data)
     # Should not get 401 error
     print(f"Response status: {response.status_code}")
@@ -61,7 +62,7 @@ def test_followup_questions_endpoint_basic(test_client):
             "business_profile_id": str(uuid4()),
         },
     }
-    
+
     response = test_client.post("/api/ai/assessments/followup", json=request_data)
     # Should not get 401 error
     print(f"Response status: {response.status_code}")

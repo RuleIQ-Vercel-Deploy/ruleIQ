@@ -152,7 +152,7 @@ export default function AssessmentPage() {
       // For now, use mock data
       setFramework(mockFramework);
       setLoading(false);
-    } catch (error) {
+    } catch {
       addNotification({
         type: "error",
         title: "Error",
@@ -177,7 +177,7 @@ export default function AssessmentPage() {
 
       // Navigate to results page
       router.push(`/assessments/${assessmentId}/results`);
-    } catch (error) {
+    } catch {
       addNotification({
         type: "error",
         title: "Error",

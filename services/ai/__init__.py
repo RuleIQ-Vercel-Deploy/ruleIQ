@@ -5,7 +5,7 @@ Imports and registers all AI tools for function calling support.
 """
 
 # Import tool modules to trigger registration
-from . import assessment_tools, evidence_tools, regulation_tools
+from . import assessment_tools, evidence_tools, regulation_tools  # noqa: F401
 
 # Import assistant
 from .assistant import ComplianceAssistant
@@ -35,5 +35,5 @@ __all__ = [
     "get_tool_schemas",
     "register_tool",
     "tool_executor",
-    "tool_registry"
+    "tool_registry",
 ]

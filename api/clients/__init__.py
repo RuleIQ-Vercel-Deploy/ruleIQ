@@ -8,9 +8,9 @@ from .okta_client import OktaAPIClient
 
 __all__ = [
     "BaseAPIClient",
-    "APICredentials", 
+    "APICredentials",
     "APIRequest",
     "APIResponse",
     "AWSAPIClient",
-    "OktaAPIClient"
+    "OktaAPIClient",
 ]

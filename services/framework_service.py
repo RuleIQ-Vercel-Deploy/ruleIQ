@@ -17,6 +17,7 @@ from database.user import User
 
 logger = get_logger(__name__)
 
+
 async def get_all_frameworks(db: AsyncSession) -> List[ComplianceFramework]:
     """Get all available compliance frameworks."""
     try:
@@ -30,7 +31,10 @@ async def get_all_frameworks(db: AsyncSession) -> List[ComplianceFramework]:
         logger.error(f"Database error while getting all frameworks: {e}", exc_info=True)
         raise DatabaseException("Failed to retrieve compliance frameworks.") from e
 
-async def get_framework_by_id(db: AsyncSession, user: User, framework_id: UUID) -> Optional[ComplianceFramework]:
+
+async def get_framework_by_id(
+    db: AsyncSession, user: User, framework_id: UUID
+) -> Optional[ComplianceFramework]:
     """Get a specific compliance framework by ID."""
     try:
         result = await db.execute(
@@ -44,6 +48,7 @@ async def get_framework_by_id(db: AsyncSession, user: User, framework_id: UUID) 
         logger.error(f"Database error while getting framework {framework_id}: {e}", exc_info=True)
         raise DatabaseException("Failed to retrieve framework by ID.") from e
 
+
 async def get_framework_by_name(db: AsyncSession, name: str) -> Optional[ComplianceFramework]:
     """Get a specific compliance framework by name."""
     try:
@@ -55,7 +60,10 @@ async def get_framework_by_name(db: AsyncSession, name: str) -> Optional[Complia
         logger.error(f"Database error while getting framework by name '{name}': {e}", exc_info=True)
         raise DatabaseException("Failed to retrieve framework by name.") from e
 
-def calculate_framework_relevance(profile: BusinessProfile, framework: ComplianceFramework) -> float:
+
+def calculate_framework_relevance(
+    profile: BusinessProfile, framework: ComplianceFramework
+) -> float:
     """Calculate a relevance score for a framework based on a business profile."""
     score = 0.0
     if profile.industry in framework.applicable_indu:
@@ -66,6 +74,7 @@ def calculate_framework_relevance(profile: BusinessProfile, framework: Complianc
         score += 25
     return score
 
+
 async def get_relevant_frameworks(db: AsyncSession, user: User) -> List[Dict]:
     """Get compliance frameworks relevant to the user's business profile with relevance scores."""
     try:
@@ -75,7 +84,9 @@ async def get_relevant_frameworks(db: AsyncSession, user: User) -> List[Dict]:
         profile = profile_res.scalars().first()
 
         if not profile:
-            logger.warning(f"No business profile found for user {user.id} to determine relevant frameworks.")
+            logger.warning(
+                f"No business profile found for user {user.id} to determine relevant frameworks."
+            )
             return []
 
         frameworks = await get_all_frameworks(db)
@@ -84,14 +95,20 @@ async def get_relevant_frameworks(db: AsyncSession, user: User) -> List[Dict]:
         for framework in frameworks:
             relevance_score = calculate_framework_relevance(profile, framework)
             if relevance_score > 0:
-                relevant_frameworks.append({
-                    "framework": framework.to_dict(),
-                    "relevance_score": relevance_score,
-                })
-        return sorted(relevant_frameworks, key=lambda x: x['relevance_score'], reverse=True)
+                relevant_frameworks.append(
+                    {
+                        "framework": framework.to_dict(),
+                        "relevance_score": relevance_score,
+                    }
+                )
+        return sorted(relevant_frameworks, key=lambda x: x["relevance_score"], reverse=True)
     except SQLAlchemyError as e:
-        logger.error(f"Database error while getting relevant frameworks for user {user.id}: {e}", exc_info=True)
+        logger.error(
+            f"Database error while getting relevant frameworks for user {user.id}: {e}",
+            exc_info=True,
+        )
         raise DatabaseException("Failed to retrieve relevant frameworks.") from e
+
 
 async def initialize_default_frameworks(db: AsyncSession):
     """Populate the database with a default set of compliance frameworks."""
@@ -109,18 +126,18 @@ async def initialize_default_frameworks(db: AsyncSession):
                 "Data subject rights",
                 "Privacy by design and default",
                 "Data protection impact assessments",
-                "Breach notification"
+                "Breach notification",
             ],
             "control_domains": [
                 "Data Processing",
                 "Consent Management",
                 "Data Subject Rights",
                 "Privacy Impact Assessment",
-                "Breach Management"
+                "Breach Management",
             ],
             "complexity_scor": 3,
             "implementation_": 16,  # implementation_time_weeks
-            "estimated_cost_": "£10,000-£50,000"
+            "estimated_cost_": "£10,000-£50,000",
         },
         {
             "name": "Cyber Essentials",
@@ -135,18 +152,18 @@ async def initialize_default_frameworks(db: AsyncSession):
                 "Secure configuration",
                 "Access control",
                 "Malware protection",
-                "Patch management"
+                "Patch management",
             ],
             "control_domains": [
                 "Network Security",
                 "System Configuration",
                 "Access Management",
                 "Malware Protection",
-                "Update Management"
+                "Update Management",
             ],
             "complexity_scor": 2,
             "implementation_": 8,  # implementation_time_weeks
-            "estimated_cost_": "£5,000-£15,000"
+            "estimated_cost_": "£5,000-£15,000",
         },
         {
             "name": "ISO 27001",
@@ -161,7 +178,7 @@ async def initialize_default_frameworks(db: AsyncSession):
                 "Risk Assessment and Treatment",
                 "Security Controls Implementation",
                 "Continuous Monitoring",
-                "Management Review"
+                "Management Review",
             ],
             "control_domains": [
                 "ISMS Framework",
@@ -170,12 +187,12 @@ async def initialize_default_frameworks(db: AsyncSession):
                 "Access Control",
                 "Cryptography",
                 "Physical Security",
-                "Incident Management"
+                "Incident Management",
             ],
             "complexity_scor": 4,
-            "implementation_": 20, # implementation_time_weeks
-            "estimated_cost_": "£20,000-£75,000"
-        }
+            "implementation_": 20,  # implementation_time_weeks
+            "estimated_cost_": "£20,000-£75,000",
+        },
     ]
 
     try:

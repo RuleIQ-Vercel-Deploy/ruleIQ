@@ -10,18 +10,18 @@ import type { ColumnDef } from "@tanstack/react-table"
 
 export const columns: ColumnDef<Assessment>[] = [
   {
-    accessorKey: "name",
+    accessorKey: "title",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Assessment" />,
-    cell: ({ row }) => <div className="w-[250px] font-medium truncate">{row.getValue("name")}</div>,
+    cell: ({ row }) => <div className="w-[250px] font-medium truncate">{row.getValue("title")}</div>,
     enableSorting: true,
     enableHiding: false,
   },
   {
-    accessorKey: "framework",
+    accessorKey: "framework_name",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Framework" />,
     cell: ({ row }) => {
-      const framework = frameworks.find((f) => f.value === row.original.framework)
-      return <div className="w-[120px] capitalize">{framework?.label || row.original.framework}</div>
+      const framework = frameworks.find((f) => f.value === row.original.framework_name)
+      return <div className="w-[120px] capitalize">{framework?.label || row.original.framework_name}</div>
     },
     filterFn: (row, id, value) => {
       return value.includes(row.getValue(id))
@@ -56,11 +56,11 @@ export const columns: ColumnDef<Assessment>[] = [
     },
   },
   {
-    accessorKey: "date",
+    accessorKey: "created_at",
     header: ({ column }) => <DataTableColumnHeader column={column} title="Date" />,
     cell: ({ row }) => (
       <div className="w-[100px]">
-        {new Date(row.getValue("date")).toLocaleDateString("en-GB", {
+        {new Date(row.getValue("created_at")).toLocaleDateString("en-GB", {
           day: "2-digit",
           month: "short",
           year: "numeric",

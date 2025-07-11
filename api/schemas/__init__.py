@@ -26,5 +26,5 @@ __all__ = [
     "IDMixin",
     "PaginatedResponse",
     "PaginationParams",
-    "TimestampMixin"
+    "TimestampMixin",
 ]

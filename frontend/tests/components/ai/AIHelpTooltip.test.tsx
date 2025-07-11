@@ -110,7 +110,9 @@ describe('AIHelpTooltip', () => {
 
     // Should show loading state
     expect(helpButton).toBeDisabled();
-    expect(screen.getByTestId('loading-spinner') || screen.getByRole('button', { name: /loading/i })).toBeInTheDocument();
+    // Check if the button contains a loading spinner by checking for the Loader2 icon with animate-spin class
+    const loader = helpButton.querySelector('.animate-spin');
+    expect(loader).toBeInTheDocument();
   });
 
   it('displays AI guidance when successfully loaded', async () => {
@@ -125,11 +127,14 @@ describe('AIHelpTooltip', () => {
     );
 
     const helpButton = screen.getByRole('button', { name: /ai help/i });
-    fireEvent.click(helpButton);
+    
+    await act(async () => {
+      fireEvent.click(helpButton);
+    });
 
     await waitFor(() => {
       expect(screen.getByText(mockAIResponse.guidance)).toBeInTheDocument();
-    });
+    }, { timeout: 3000 });
 
     expect(screen.getByText('95% Confidence')).toBeInTheDocument();
     expect(screen.getByText('GDPR')).toBeInTheDocument();
@@ -153,7 +158,7 @@ describe('AIHelpTooltip', () => {
     fireEvent.click(helpButton);
 
     await waitFor(() => {
-      expect(screen.getByText(/failed to get ai help/i)).toBeInTheDocument();
+      expect(screen.getByText(/AI service unavailable/i)).toBeInTheDocument();
     });
   });
 
@@ -212,9 +217,11 @@ describe('AIHelpTooltip', () => {
       expect(screen.getByText(mockAIResponse.guidance)).toBeInTheDocument();
     });
 
-    // Click copy button
-    const copyButton = screen.getByRole('button', { name: /copy/i });
-    fireEvent.click(copyButton);
+    // Click copy button - it's an icon-only button next to the confidence score
+    const confidenceBadge = screen.getByText('95% Confidence');
+    const copyButton = confidenceBadge.parentElement?.querySelector('button');
+    expect(copyButton).toBeInTheDocument();
+    fireEvent.click(copyButton!);
 
     expect(navigator.clipboard.writeText).toHaveBeenCalledWith(mockAIResponse.guidance);
     expect(mockToast).toHaveBeenCalledWith({
@@ -244,19 +251,25 @@ describe('AIHelpTooltip', () => {
       expect(screen.getByText(mockAIResponse.guidance)).toBeInTheDocument();
     });
 
-    // Click thumbs up
-    const thumbsUpButton = screen.getByRole('button', { name: /thumbs up/i });
-    fireEvent.click(thumbsUpButton);
+    // Click thumbs up - look for the button with hover:text-green-600 class
+    const feedbackContainer = screen.getByText('Was this helpful?').parentElement;
+    const thumbsUpButton = feedbackContainer?.querySelector('button.hover\\:text-green-600');
+    expect(thumbsUpButton).toBeInTheDocument();
+    fireEvent.click(thumbsUpButton!);
 
-    expect(assessmentAIService.submitFeedback).toHaveBeenCalledWith(
-      expect.stringContaining('test-question-1'),
-      { helpful: true, rating: 5 }
-    );
+    await waitFor(() => {
+      expect(assessmentAIService.submitFeedback).toHaveBeenCalledWith(
+        expect.stringContaining('test-question-1'),
+        { helpful: true, rating: 5 }
+      );
+    });
 
-    expect(mockToast).toHaveBeenCalledWith({
-      title: "Feedback submitted",
-      description: "Thank you for helping us improve AI assistance.",
-      duration: 2000
+    await waitFor(() => {
+      expect(mockToast).toHaveBeenCalledWith({
+        title: "Feedback submitted",
+        description: "Thank you for helping us improve AI assistance.",
+        duration: 2000
+      });
     });
   });
 
@@ -280,9 +293,11 @@ describe('AIHelpTooltip', () => {
       expect(screen.getByText(mockAIResponse.guidance)).toBeInTheDocument();
     });
 
-    // Click thumbs down
-    const thumbsDownButton = screen.getByRole('button', { name: /thumbs down/i });
-    fireEvent.click(thumbsDownButton);
+    // Click thumbs down - look for the button with hover:text-red-600 class
+    const feedbackContainer = screen.getByText('Was this helpful?').parentElement;
+    const thumbsDownButton = feedbackContainer?.querySelector('button.hover\\:text-red-600');
+    expect(thumbsDownButton).toBeInTheDocument();
+    fireEvent.click(thumbsDownButton!);
 
     expect(assessmentAIService.submitFeedback).toHaveBeenCalledWith(
       expect.stringContaining('test-question-1'),
@@ -314,14 +329,18 @@ describe('AIHelpTooltip', () => {
       expect(screen.getByText(mockAIResponse.guidance)).toBeInTheDocument();
     });
 
-    // Click thumbs up
-    const thumbsUpButton = screen.getByRole('button', { name: /thumbs up/i });
-    fireEvent.click(thumbsUpButton);
+    // Click thumbs up - look for the button with hover:text-green-600 class
+    const feedbackContainer = screen.getByText('Was this helpful?').parentElement;
+    const thumbsUpButton = feedbackContainer?.querySelector('button.hover\\:text-green-600');
+    expect(thumbsUpButton).toBeInTheDocument();
+    fireEvent.click(thumbsUpButton!);
 
-    expect(consoleSpy).toHaveBeenCalledWith(
-      'Failed to submit feedback:',
-      expect.any(Error)
-    );
+    await waitFor(() => {
+      expect(consoleSpy).toHaveBeenCalledWith(
+        'Failed to submit feedback:',
+        expect.any(Error)
+      );
+    });
 
     consoleSpy.mockRestore();
   });

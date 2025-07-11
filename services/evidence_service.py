@@ -24,7 +24,8 @@ class EvidenceService:
     @staticmethod
     def _is_async_session(db) -> bool:
         """Detect if the database session is async or sync."""
-        return isinstance(db, AsyncSession)
+        # Check for AsyncSession or AsyncSessionWrapper from tests
+        return isinstance(db, AsyncSession) or hasattr(db, '__aenter__')
 
     @staticmethod
     async def _execute_query(db, stmt):
@@ -71,7 +72,7 @@ class EvidenceService:
             "business_profile_id": evidence_item.business_profile_id,
             "source": evidence_item.automation_source or "manual_upload",
             "tags": [],  # EvidenceItem doesn't have tags field
-            "file_path": getattr(evidence_item, 'file_path', None),
+            "file_path": getattr(evidence_item, "file_path", None),
             "status": evidence_item.status,
             "created_at": evidence_item.created_at,
             "updated_at": evidence_item.updated_at,
@@ -103,7 +104,7 @@ class EvidenceService:
             description=evidence_data.get("description", ""),
             status="pending_review",
             created_at=datetime.utcnow(),
-            updated_at=datetime.utcnow()
+            updated_at=datetime.utcnow(),
         )
 
         db.add(evidence)
@@ -139,7 +140,9 @@ class EvidenceService:
         pass
 
     @staticmethod
-    def configure_automation(evidence_id: UUID, automation_config: Dict[str, Any]) -> Dict[str, Any]:
+    def configure_automation(
+        evidence_id: UUID, automation_config: Dict[str, Any]
+    ) -> Dict[str, Any]:
         """Placeholder for configuring automated evidence collection. Mocked in tests."""
         pass
 
@@ -149,7 +152,9 @@ class EvidenceService:
         pass
 
     @staticmethod
-    def search_by_framework(user_id: UUID, framework: str, search_filters: Dict[str, Any]) -> List[Dict[str, Any]]:
+    def search_by_framework(
+        user_id: UUID, framework: str, search_filters: Dict[str, Any]
+    ) -> List[Dict[str, Any]]:
         """Placeholder for searching evidence by framework. Mocked in tests."""
         pass
 
@@ -159,7 +164,9 @@ class EvidenceService:
         pass
 
     @staticmethod
-    def bulk_update_status(evidence_ids: List[str], new_status: str, reason: str, user_id: UUID) -> Dict[str, Any]:
+    def bulk_update_status(
+        evidence_ids: List[str], new_status: str, reason: str, user_id: UUID
+    ) -> Dict[str, Any]:
         """Placeholder for bulk updating evidence status. Mocked in tests."""
         pass
 
@@ -173,7 +180,7 @@ class EvidenceService:
         db: Union[AsyncSession, Session],
         user: User,
         framework_id: UUID,
-        policy_id: Optional[UUID] = None
+        policy_id: Optional[UUID] = None,
     ) -> List[EvidenceItem]:
         """Generate a comprehensive evidence checklist for a compliance framework asynchronously."""
         existing_items_stmt = select(EvidenceItem).where(
@@ -246,7 +253,7 @@ class EvidenceService:
             raise ValueError("Evidence item not found")
 
         item.file_path = file_path
-        item.file_type = file_name.split('.')[-1] if '.' in file_name else None
+        item.file_type = file_name.split(".")[-1] if "." in file_name else None
         item.status = "collected"
         item.updated_at = datetime.utcnow()
 
@@ -259,12 +266,14 @@ class EvidenceService:
         db: Union[AsyncSession, Session], evidence_id: UUID, user_id: UUID
     ) -> Optional[EvidenceItem]:
         """Retrieve a single evidence item by ID asynchronously with optimized loading."""
-        stmt = select(EvidenceItem).options(
-            joinedload(EvidenceItem.user),
-            joinedload(EvidenceItem.business_profile),
-            joinedload(EvidenceItem.framework)
-        ).where(
-            EvidenceItem.id == evidence_id, EvidenceItem.user_id == user_id
+        stmt = (
+            select(EvidenceItem)
+            .options(
+                joinedload(EvidenceItem.user),
+                joinedload(EvidenceItem.business_profile),
+                joinedload(EvidenceItem.framework),
+            )
+            .where(EvidenceItem.id == evidence_id, EvidenceItem.user_id == user_id)
         )
         result = await EvidenceService._execute_query(db, stmt)
         return result.scalars().first()
@@ -283,21 +292,22 @@ class EvidenceService:
         to prevent information leakage about the existence of evidence items.
         """
         # Query evidence with user_id filter to prevent information leakage
-        stmt = select(EvidenceItem).options(
-            joinedload(EvidenceItem.user),
-            joinedload(EvidenceItem.business_profile),
-            joinedload(EvidenceItem.framework)
-        ).where(
-            EvidenceItem.id == evidence_id,
-            EvidenceItem.user_id == user_id
+        stmt = (
+            select(EvidenceItem)
+            .options(
+                joinedload(EvidenceItem.user),
+                joinedload(EvidenceItem.business_profile),
+                joinedload(EvidenceItem.framework),
+            )
+            .where(EvidenceItem.id == evidence_id, EvidenceItem.user_id == user_id)
         )
         result = await EvidenceService._execute_query(db, stmt)
         evidence = result.scalars().first()
 
         if not evidence:
-            return None, 'not_found'
+            return None, "not_found"
 
-        return evidence, 'found'
+        return evidence, "found"
 
     @staticmethod
     async def update_evidence_status(
@@ -328,10 +338,7 @@ class EvidenceService:
 
     @staticmethod
     async def update_evidence_item(
-        db: Union[AsyncSession, Session],
-        user: User,
-        evidence_id: UUID,
-        update_data: Dict[str, Any]
+        db: Union[AsyncSession, Session], user: User, evidence_id: UUID, update_data: Dict[str, Any]
     ) -> tuple[Optional[EvidenceItem], str]:
         """
         Update an evidence item with provided data using secure validation.
@@ -345,19 +352,21 @@ class EvidenceService:
         try:
             validated_data = validate_evidence_update(update_data)
         except ValidationError as e:
-            return None, f'validation_error: {str(e)}'
-        
-        item, status = await EvidenceService.get_evidence_item_with_auth_check(db, evidence_id, user.id)
-        if status != 'found':
+            return None, f"validation_error: {str(e)}"
+
+        item, status = await EvidenceService.get_evidence_item_with_auth_check(
+            db, evidence_id, user.id
+        )
+        if status != "found":
             return None, status
 
         # Securely update only validated and whitelisted fields
         field_mapping = {
             "title": "evidence_name",
             "control_id": "control_reference",
-            "notes": "collection_notes"
+            "notes": "collection_notes",
         }
-        
+
         for field, value in validated_data.items():
             # Use explicit field mapping for legacy compatibility
             if field in field_mapping:
@@ -365,19 +374,17 @@ class EvidenceService:
             # Only set attributes that exist on the model and are in our whitelist
             elif hasattr(item, field):
                 setattr(item, field, value)
-        
+
         # Always update the timestamp
         item.updated_at = datetime.utcnow()
 
         await EvidenceService._commit_session(db)
         await EvidenceService._refresh_object(db, item)
-        return item, 'updated'
+        return item, "updated"
 
     @staticmethod
     async def delete_evidence_item(
-        db: Union[AsyncSession, Session],
-        user: User,
-        evidence_id: UUID
+        db: Union[AsyncSession, Session], user: User, evidence_id: UUID
     ) -> tuple[bool, str]:
         """
         Delete an evidence item asynchronously.
@@ -386,13 +393,15 @@ class EvidenceService:
         - 'not_found': Evidence doesn't exist
         - 'unauthorized': Evidence exists but user doesn't have access
         """
-        item, status = await EvidenceService.get_evidence_item_with_auth_check(db, evidence_id, user.id)
-        if status != 'found':
+        item, status = await EvidenceService.get_evidence_item_with_auth_check(
+            db, evidence_id, user.id
+        )
+        if status != "found":
             return False, status
 
         await EvidenceService._delete_object(db, item)
         await EvidenceService._commit_session(db)
-        return True, 'deleted'
+        return True, "deleted"
 
     @staticmethod
     async def get_evidence_summary(db: Union[AsyncSession, Session], user: User) -> Dict[str, Any]:
@@ -401,9 +410,7 @@ class EvidenceService:
         result = await EvidenceService._execute_query(db, stmt)
         items = result.scalars().all()
 
-        status_counts = {
-            "pending": 0, "collected": 0, "in_review": 0, "approved": 0, "rejected": 0
-        }
+        status_counts = {"pending": 0, "collected": 0, "in_review": 0, "approved": 0, "rejected": 0}
         for item in items:
             if item.status in status_counts:
                 status_counts[item.status] += 1
@@ -418,7 +425,12 @@ class EvidenceService:
             "status_counts": status_counts,
             "completion_percentage": round(completion_percentage, 2),
             "recently_updated": [
-                {"id": item.id, "title": item.evidence_name, "status": item.status, "updated_at": item.updated_at}
+                {
+                    "id": item.id,
+                    "title": item.evidence_name,
+                    "status": item.status,
+                    "updated_at": item.updated_at,
+                }
                 for item in sorted(items, key=lambda x: x.updated_at, reverse=True)[:5]
             ],
         }
@@ -438,19 +450,25 @@ class EvidenceService:
             "Google Cloud": {
                 "access_logs": "Cloud Audit Logs, Cloud Logging exports",
                 "security_config": "Security Command Center findings, policies",
-            }
+            },
         }
         return guidance_map.get(cloud_provider, {})
 
     @staticmethod
     async def bulk_update_evidence_status(
-        db: Union[AsyncSession, Session], user: User, evidence_ids: List[UUID], status: str, notes: str = ""
+        db: Union[AsyncSession, Session],
+        user: User,
+        evidence_ids: List[UUID],
+        status: str,
+        notes: str = "",
     ) -> List[EvidenceItem]:
         """Bulk update multiple evidence items asynchronously."""
         updated_items = []
         for evidence_id in evidence_ids:
             try:
-                item = await EvidenceService.update_evidence_status(db, user, evidence_id, status, notes)
+                item = await EvidenceService.update_evidence_status(
+                    db, user, evidence_id, status, notes
+                )
                 if item:
                     updated_items.append(item)
             except ValueError:
@@ -462,12 +480,14 @@ class EvidenceService:
         db: Union[AsyncSession, Session], user: User, framework_id: UUID
     ) -> List[EvidenceItem]:
         """List all evidence items for a user and framework with optimized loading."""
-        stmt = select(EvidenceItem).options(
-            joinedload(EvidenceItem.user),
-            joinedload(EvidenceItem.business_profile),
-            joinedload(EvidenceItem.framework)
-        ).where(
-            EvidenceItem.user_id == user.id, EvidenceItem.framework_id == framework_id
+        stmt = (
+            select(EvidenceItem)
+            .options(
+                joinedload(EvidenceItem.user),
+                joinedload(EvidenceItem.business_profile),
+                joinedload(EvidenceItem.framework),
+            )
+            .where(EvidenceItem.user_id == user.id, EvidenceItem.framework_id == framework_id)
         )
         result = await EvidenceService._execute_query(db, stmt)
         return result.scalars().all()
@@ -478,14 +498,18 @@ class EvidenceService:
         user: User,
         framework_id: Optional[UUID] = None,
         evidence_type: Optional[str] = None,
-        status: Optional[str] = None
+        status: Optional[str] = None,
     ) -> List[EvidenceItem]:
         """List all evidence items for a user with optional filtering and optimized loading."""
-        stmt = select(EvidenceItem).options(
-            joinedload(EvidenceItem.user),
-            joinedload(EvidenceItem.business_profile),
-            joinedload(EvidenceItem.framework)
-        ).where(EvidenceItem.user_id == user.id)
+        stmt = (
+            select(EvidenceItem)
+            .options(
+                joinedload(EvidenceItem.user),
+                joinedload(EvidenceItem.business_profile),
+                joinedload(EvidenceItem.framework),
+            )
+            .where(EvidenceItem.user_id == user.id)
+        )
 
         if framework_id:
             stmt = stmt.where(EvidenceItem.framework_id == framework_id)
@@ -507,15 +531,19 @@ class EvidenceService:
         page: int = 1,
         page_size: int = 20,
         sort_by: Optional[str] = None,
-        sort_order: str = "asc"
+        sort_order: str = "asc",
     ) -> tuple[List[EvidenceItem], int]:
         """List evidence items with database-level pagination and sorting for optimal performance."""
         # Build base query with optimized loading
-        stmt = select(EvidenceItem).options(
-            joinedload(EvidenceItem.user),
-            joinedload(EvidenceItem.business_profile),
-            joinedload(EvidenceItem.framework)
-        ).where(EvidenceItem.user_id == user.id)
+        stmt = (
+            select(EvidenceItem)
+            .options(
+                joinedload(EvidenceItem.user),
+                joinedload(EvidenceItem.business_profile),
+                joinedload(EvidenceItem.framework),
+            )
+            .where(EvidenceItem.user_id == user.id)
+        )
 
         # Apply filters
         if framework_id:
@@ -548,6 +576,7 @@ class EvidenceService:
 
         # Get total count for pagination info (optimized count query)
         from sqlalchemy import func
+
         count_stmt = select(func.count(EvidenceItem.id)).where(EvidenceItem.user_id == user.id)
         if framework_id:
             count_stmt = count_stmt.where(EvidenceItem.framework_id == framework_id)
@@ -584,12 +613,12 @@ class EvidenceService:
         if not items:
             dashboard_data = {"message": "No evidence items found for this framework."}
             # Cache empty result for shorter time
-            await cache.set_evidence_dashboard(str(user.id), str(framework_id), dashboard_data, ttl=60)
+            await cache.set_evidence_dashboard(
+                str(user.id), str(framework_id), dashboard_data, ttl=60
+            )
             return dashboard_data
 
-        status_counts = {
-            "pending": 0, "collected": 0, "in_review": 0, "approved": 0, "rejected": 0
-        }
+        status_counts = {"pending": 0, "collected": 0, "in_review": 0, "approved": 0, "rejected": 0}
         for item in items:
             if item.status in status_counts:
                 status_counts[item.status] += 1
@@ -604,7 +633,12 @@ class EvidenceService:
             "status_counts": status_counts,
             "completion_percentage": round(completion_percentage, 2),
             "recently_updated": [
-                {"id": str(item.id), "title": item.evidence_name, "status": item.status, "updated_at": item.updated_at.isoformat() if item.updated_at else None}
+                {
+                    "id": str(item.id),
+                    "title": item.evidence_name,
+                    "status": item.status,
+                    "updated_at": item.updated_at.isoformat() if item.updated_at else None,
+                }
                 for item in sorted(items, key=lambda x: x.updated_at, reverse=True)[:5]
             ],
         }
@@ -620,7 +654,7 @@ class EvidenceService:
         user: User,
         evidence_ids: List[UUID],
         status: str,
-        reason: Optional[str] = None
+        reason: Optional[str] = None,
     ) -> tuple[int, int, List[UUID]]:
         """
         Bulk update evidence status for multiple items.
@@ -636,7 +670,7 @@ class EvidenceService:
                     db, evidence_id, user.id
                 )
 
-                if auth_status == 'found':
+                if auth_status == "found":
                     item.status = status
                     # Note: Reason is provided but not stored since EvidenceItem doesn't have metadata field
                     # TODO: Add metadata field to EvidenceItem model if needed
@@ -658,7 +692,9 @@ class EvidenceService:
         return updated_count, failed_count, failed_ids
 
     @staticmethod
-    async def get_evidence_statistics(db: Union[AsyncSession, Session], user_id: UUID) -> Dict[str, Any]:
+    async def get_evidence_statistics(
+        db: Union[AsyncSession, Session], user_id: UUID
+    ) -> Dict[str, Any]:
         """Get evidence statistics for a user with caching."""
         # Try to get from cache first
         cache = await get_cache_manager()

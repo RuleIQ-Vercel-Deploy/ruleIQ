@@ -24,13 +24,12 @@ class TestEvidenceProcessorAI:
         """Create a mock evidence item for testing."""
         evidence = Mock(spec=EvidenceItem)
         evidence.id = uuid4()
-        evidence.evidence_type = 'unknown'
-        evidence.description = 'Security policy document outlining access controls'
-        evidence.evidence_name = 'access_control_policy.pdf'
-        evidence.raw_data = json.dumps({
-            'file_type': 'pdf',
-            'content': 'This policy defines access control procedures...'
-        })
+        evidence.evidence_type = "unknown"
+        evidence.description = "Security policy document outlining access controls"
+        evidence.evidence_name = "access_control_policy.pdf"
+        evidence.raw_data = json.dumps(
+            {"file_type": "pdf", "content": "This policy defines access control procedures..."}
+        )
         evidence.metadata = {}
         return evidence
 
@@ -55,11 +54,11 @@ REASONING: Document contains policy language and access control procedures"""
 
         result = await mock_processor._ai_classify_evidence(mock_evidence_item)
 
-        assert result['suggested_type'] == 'policy_document'
-        assert result['confidence'] == 85
-        assert len(result['suggested_controls']) == 3
-        assert 'A.5.1.1' in result['suggested_controls']
-        assert 'policy language' in result['reasoning']
+        assert result["suggested_type"] == "policy_document"
+        assert result["confidence"] == 85
+        assert len(result["suggested_controls"]) == 3
+        assert "A.5.1.1" in result["suggested_controls"]
+        assert "policy language" in result["reasoning"]
 
     @pytest.mark.asyncio
     async def test_ai_classify_evidence_fallback(self, mock_processor, mock_evidence_item):
@@ -70,9 +69,9 @@ REASONING: Document contains policy language and access control procedures"""
         result = await mock_processor._ai_classify_evidence(mock_evidence_item)
 
         # Should use rule-based fallback
-        assert result['suggested_type'] == 'policy_document'  # Based on description
-        assert result['confidence'] == 40  # Lower confidence for rule-based
-        assert result['reasoning'] == 'Rule-based classification (AI unavailable)'
+        assert result["suggested_type"] == "policy_document"  # Based on description
+        assert result["confidence"] == 40  # Lower confidence for rule-based
+        assert result["reasoning"] == "Rule-based classification (AI unavailable)"
 
     def test_parse_classification_response_valid(self, mock_processor, mock_evidence_item):
         """Test parsing valid AI classification response."""
@@ -83,10 +82,10 @@ REASONING: Contains training completion certificates and attendance records"""
 
         result = mock_processor._parse_classification_response(response_text, mock_evidence_item)
 
-        assert result['suggested_type'] == 'training_record'
-        assert result['confidence'] == 92
-        assert len(result['suggested_controls']) == 2
-        assert 'training completion' in result['reasoning']
+        assert result["suggested_type"] == "training_record"
+        assert result["confidence"] == 92
+        assert len(result["suggested_controls"]) == 2
+        assert "training completion" in result["reasoning"]
 
     def test_parse_classification_response_invalid(self, mock_processor, mock_evidence_item):
         """Test parsing invalid AI response falls back gracefully."""
@@ -95,88 +94,96 @@ REASONING: Contains training completion certificates and attendance records"""
         result = mock_processor._parse_classification_response(response_text, mock_evidence_item)
 
         # Should fall back to rule-based classification (detects "policy" in description)
-        assert result['suggested_type'] == 'policy_document'  # Rule-based classification result
-        assert result['confidence'] == 40  # Fallback confidence
-        assert 'Rule-based classification' in result['reasoning']
+        assert result["suggested_type"] == "policy_document"  # Rule-based classification result
+        assert result["confidence"] == 40  # Fallback confidence
+        assert "Rule-based classification" in result["reasoning"]
 
     def test_fallback_classification_policy(self, mock_processor):
         """Test rule-based classification for policy documents."""
         evidence = Mock(spec=EvidenceItem)
-        evidence.evidence_type = 'unknown'
-        evidence.description = 'Information security policy and procedures'
-        evidence.evidence_name = 'security_policy.pdf'
+        evidence.evidence_type = "unknown"
+        evidence.description = "Information security policy and procedures"
+        evidence.evidence_name = "security_policy.pdf"
 
         result = mock_processor._fallback_classification(evidence)
 
-        assert result['suggested_type'] == 'policy_document'
-        assert result['confidence'] == 40
-        assert len(result['suggested_controls']) > 0
+        assert result["suggested_type"] == "policy_document"
+        assert result["confidence"] == 40
+        assert len(result["suggested_controls"]) > 0
 
     def test_fallback_classification_training(self, mock_processor):
         """Test rule-based classification for training records."""
         evidence = Mock(spec=EvidenceItem)
-        evidence.evidence_type = 'unknown'
-        evidence.description = 'Security awareness training certificate'
-        evidence.evidence_name = 'training_cert.pdf'
+        evidence.evidence_type = "unknown"
+        evidence.description = "Security awareness training certificate"
+        evidence.evidence_name = "training_cert.pdf"
 
         result = mock_processor._fallback_classification(evidence)
 
-        assert result['suggested_type'] == 'training_record'
-        assert result['confidence'] == 40
-        assert 'A.7.2.2' in result['suggested_controls']
+        assert result["suggested_type"] == "training_record"
+        assert result["confidence"] == 40
+        assert "A.7.2.2" in result["suggested_controls"]
 
     def test_fallback_classification_unknown(self, mock_processor):
         """Test rule-based classification for unknown evidence."""
         evidence = Mock(spec=EvidenceItem)
-        evidence.evidence_type = 'document'
-        evidence.description = 'Some random document'
-        evidence.evidence_name = 'random.txt'
+        evidence.evidence_type = "document"
+        evidence.description = "Some random document"
+        evidence.evidence_name = "random.txt"
 
         result = mock_processor._fallback_classification(evidence)
 
-        assert result['suggested_type'] == 'document'  # Uses existing type
-        assert result['confidence'] == 40
+        assert result["suggested_type"] == "document"  # Uses existing type
+        assert result["confidence"] == 40
 
     @pytest.mark.asyncio
-    async def test_enrich_evidence_with_ai_high_confidence(self, mock_processor, mock_evidence_item):
+    async def test_enrich_evidence_with_ai_high_confidence(
+        self, mock_processor, mock_evidence_item
+    ):
         """Test evidence enrichment with high confidence AI classification."""
         # Mock high confidence classification
-        mock_processor._ai_classify_evidence = AsyncMock(return_value={
-            'suggested_type': 'policy_document',
-            'confidence': 85,
-            'suggested_controls': ['A.5.1.1', 'A.5.1.2'],
-            'reasoning': 'High confidence policy classification'
-        })
+        mock_processor._ai_classify_evidence = AsyncMock(
+            return_value={
+                "suggested_type": "policy_document",
+                "confidence": 85,
+                "suggested_controls": ["A.5.1.1", "A.5.1.2"],
+                "reasoning": "High confidence policy classification",
+            }
+        )
 
         result = await mock_processor.enrich_evidence_with_ai(mock_evidence_item)
 
         # Should update evidence type due to high confidence
-        assert result.evidence_type == 'policy_document'
-        assert 'ai_classification' in result.metadata
-        assert result.metadata['ai_classification']['confidence'] == 85
+        assert result.evidence_type == "policy_document"
+        assert "ai_classification" in result.metadata
+        assert result.metadata["ai_classification"]["confidence"] == 85
 
     @pytest.mark.asyncio
     async def test_enrich_evidence_with_ai_low_confidence(self, mock_processor, mock_evidence_item):
         """Test evidence enrichment with low confidence AI classification."""
         original_type = mock_evidence_item.evidence_type
-        
+
         # Mock low confidence classification
-        mock_processor._ai_classify_evidence = AsyncMock(return_value={
-            'suggested_type': 'policy_document',
-            'confidence': 45,
-            'suggested_controls': ['A.5.1.1'],
-            'reasoning': 'Low confidence classification'
-        })
+        mock_processor._ai_classify_evidence = AsyncMock(
+            return_value={
+                "suggested_type": "policy_document",
+                "confidence": 45,
+                "suggested_controls": ["A.5.1.1"],
+                "reasoning": "Low confidence classification",
+            }
+        )
 
         result = await mock_processor.enrich_evidence_with_ai(mock_evidence_item)
 
         # Should NOT update evidence type due to low confidence
         assert result.evidence_type == original_type
-        assert 'ai_classification' in result.metadata
-        assert result.metadata['ai_classification']['confidence'] == 45
+        assert "ai_classification" in result.metadata
+        assert result.metadata["ai_classification"]["confidence"] == 45
 
-    @patch('services.automation.evidence_processor.flag_modified')
-    def test_process_evidence_with_ai_preparation(self, mock_flag_modified, mock_processor, mock_evidence_item):
+    @patch("services.automation.evidence_processor.flag_modified")
+    def test_process_evidence_with_ai_preparation(
+        self, mock_flag_modified, mock_processor, mock_evidence_item
+    ):
         """Test that AI processing preparation is added to metadata."""
         # Mock the original process_evidence method
         mock_processor.process_evidence = Mock()
@@ -187,7 +194,7 @@ REASONING: Contains training completion certificates and attendance records"""
         mock_processor.process_evidence.assert_called_once_with(mock_evidence_item)
 
         # Should add AI classification pending flag
-        assert mock_evidence_item.metadata['ai_classification_pending'] is True
+        assert mock_evidence_item.metadata["ai_classification_pending"] is True
 
         # Should call flag_modified to mark metadata as changed
         mock_flag_modified.assert_called_once_with(mock_evidence_item, "metadata")
@@ -220,10 +227,10 @@ REASONING: Contains training completion certificates and attendance records"""
 
         result = mock_processor._parse_classification_response(response_text, mock_evidence_item)
 
-        assert result['confidence'] == 100  # Should be clamped to 100
+        assert result["confidence"] == 100  # Should be clamped to 100
 
         response_text = "TYPE: policy_document\nCONFIDENCE: -10\nREASONING: Test"
 
         result = mock_processor._parse_classification_response(response_text, mock_evidence_item)
 
-        assert result['confidence'] == 0  # Should be clamped to 0
+        assert result["confidence"] == 0  # Should be clamped to 0

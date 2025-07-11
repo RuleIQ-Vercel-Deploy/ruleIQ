@@ -16,48 +16,52 @@ class BaseSchema(BaseModel):
 
     class Config:
         from_attributes = True
-        json_encoders = {
-            datetime: lambda v: v.isoformat(),
-            UUID: lambda v: str(v)
-        }
+        json_encoders = {datetime: lambda v: v.isoformat(), UUID: lambda v: str(v)}
 
 
 class TimestampMixin(BaseModel):
     """Mixin for timestamp fields"""
+
     created_at: datetime = Field(..., description="Creation timestamp")
     updated_at: datetime = Field(..., description="Last update timestamp")
 
 
 class IDMixin(BaseModel):
     """Mixin for ID field"""
+
     id: UUID = Field(..., description="Unique identifier")
 
 
 class BaseResponse(BaseSchema):
     """Base response schema"""
+
     success: bool = Field(default=True, description="Operation success status")
     message: Optional[str] = Field(default=None, description="Response message")
 
 
 class ErrorResponse(BaseSchema):
     """Error response schema"""
+
     error: Dict[str, Any] = Field(..., description="Error details")
 
 
 class PaginationParams(BaseSchema):
     """Pagination parameters"""
+
     page: int = Field(default=1, ge=1, description="Page number (1-based)")
     size: int = Field(default=20, ge=1, le=100, description="Items per page")
 
 
 class PaginatedResponse(BaseResponse):
     """Paginated response schema"""
+
     data: list = Field(..., description="Response data")
     pagination: Dict[str, Any] = Field(..., description="Pagination metadata")
 
 
 class HealthCheckResponse(BaseSchema):
     """Health check response with database monitoring"""
+
     status: str = Field(..., description="Service status (healthy, warning, degraded, error)")
     message: Optional[str] = Field(default=None, description="Status message")
     timestamp: Optional[str] = Field(default=None, description="Check timestamp")
@@ -67,6 +71,7 @@ class HealthCheckResponse(BaseSchema):
 
 class APIInfoResponse(BaseSchema):
     """API information response"""
+
     message: str = Field(..., description="API name")
     version: str = Field(..., description="API version")
     status: str = Field(..., description="API status")

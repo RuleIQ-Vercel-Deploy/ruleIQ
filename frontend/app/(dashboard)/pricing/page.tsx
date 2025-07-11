@@ -6,14 +6,14 @@ import { useEffect, useState } from "react"
 import { PricingSection } from "@/components/payment/pricing-card"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { paymentService } from "@/lib/api/payment.service"
-import { useAuthStore } from "@/lib/stores/auth.store"
+
 
 import type { PricingPlan } from "@/lib/stripe/client"
 
 export default function PricingPage() {
   const [currentPlan, setCurrentPlan] = useState<PricingPlan | undefined>()
   const [loading, setLoading] = useState(true)
-  const user = useAuthStore(state => state.user)
+
 
   useEffect(() => {
     fetchCurrentSubscription()
@@ -106,7 +106,7 @@ export default function PricingPage() {
         {/* Pricing Cards */}
         <PricingSection 
           onSelectPlan={handleSelectPlan}
-          currentPlan={currentPlan}
+          {...(currentPlan && { currentPlan })}
           showHeader={false}
         />
 

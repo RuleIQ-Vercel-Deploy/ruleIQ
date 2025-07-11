@@ -23,6 +23,8 @@ describe('AI Integration Tests', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
+    // Clear localStorage before each test
+    localStorage.clear();
     
     mockFramework = {
       id: 'test-framework',
@@ -118,9 +120,14 @@ describe('AI Integration Tests', () => {
         useMockAIOnError: true
       });
 
+      // Answer the question - this triggers shouldTriggerAIFollowUp check
       engine.answerQuestion('q1', 'no');
       
+      // nextQuestion will trigger AI follow-up generation
       const hasMore = await engine.nextQuestion();
+      
+      // Wait a tick for the async operations to complete
+      await new Promise(resolve => setTimeout(resolve, 0));
       
       expect(hasMore).toBe(true);
       expect(engine.isInAIMode()).toBe(true);
@@ -258,6 +265,9 @@ describe('AI Integration Tests', () => {
       firstEngine.answerQuestion('q1', 'no');
       firstEngine.answerQuestion('ai-q1', 'AI answer');
       
+      // Force save progress before creating new engine
+      firstEngine.destroy(); // This calls saveProgress
+      
       // Create new engine and load progress
       const secondEngine = new QuestionnaireEngine(mockFramework, mockContext, {
         enableAI: true,
@@ -272,7 +282,6 @@ describe('AI Integration Tests', () => {
       expect(answers.get('ai-q1')?.value).toBe('AI answer');
       
       // Cleanup
-      firstEngine.destroy();
       secondEngine.destroy();
     });
   });

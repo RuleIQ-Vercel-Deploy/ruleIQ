@@ -13,11 +13,11 @@ from .instruction_templates import get_system_instruction
 
 class PromptTemplates:
     """Manages and formats prompts for different AI tasks."""
-    
+
     def __init__(self):
         """Initialize prompt templates with system instruction support"""
         self._instruction_cache = {}
-    
+
     def get_system_instruction_for_task(
         self,
         task_type: str,
@@ -25,11 +25,11 @@ class PromptTemplates:
         business_profile: Optional[Dict[str, Any]] = None,
         user_persona: Optional[str] = None,
         task_complexity: str = "medium",
-        **kwargs
+        **kwargs,
     ) -> str:
         """
         Get system instruction for a specific task with caching
-        
+
         Args:
             task_type: Type of task ("assessment", "evidence", "chat", etc.)
             framework: Framework name
@@ -37,7 +37,7 @@ class PromptTemplates:
             user_persona: User persona
             task_complexity: Task complexity level
             **kwargs: Additional context
-            
+
         Returns:
             System instruction string
         """
@@ -48,13 +48,13 @@ class PromptTemplates:
             json.dumps(business_profile, sort_keys=True) if business_profile else None,
             user_persona,
             task_complexity,
-            json.dumps(kwargs, sort_keys=True) if kwargs else None
+            json.dumps(kwargs, sort_keys=True) if kwargs else None,
         )
-        
+
         # Check cache first
         if cache_key in self._instruction_cache:
             return self._instruction_cache[cache_key]
-        
+
         # Generate instruction
         instruction = get_system_instruction(
             task_type,
@@ -62,114 +62,118 @@ class PromptTemplates:
             business_profile=business_profile,
             user_persona=user_persona,
             task_complexity=task_complexity,
-            **kwargs
+            **kwargs,
         )
-        
+
         # Cache and return
         self._instruction_cache[cache_key] = instruction
         return instruction
-    
+
     def get_user_prompt_only(self, message: str, context: Dict[str, Any]) -> str:
         """
         Helper method to create user prompts that work with system instructions
-        
+
         Args:
             message: User message
             context: Context information
-            
+
         Returns:
             User prompt string for use with system instructions
         """
-        business_info = context.get('business_profile', {})
-        
+        business_info = context.get("business_profile", {})
+
         prompt_parts = [f'User message: "{message}"']
-        
+
         if business_info:
             prompt_parts.append(f"Business context: {json.dumps(business_info, indent=2)}")
-        
-        if context.get('recent_evidence'):
-            prompt_parts.append(f"Recent evidence: {json.dumps(context.get('recent_evidence', []), indent=2)}")
-        
+
+        if context.get("recent_evidence"):
+            prompt_parts.append(
+                f"Recent evidence: {json.dumps(context.get('recent_evidence', []), indent=2)}"
+            )
+
         return "\n\n".join(prompt_parts)
 
-    def get_intent_classification_prompt(self, message: str, context: Dict[str, Any]) -> Dict[str, str]:
+    def get_intent_classification_prompt(
+        self, message: str, context: Dict[str, Any]
+    ) -> Dict[str, str]:
         """Creates the prompt for classifying the user's intent."""
-        
+
         # Use system instruction instead of system prompt
         system_instruction = get_system_instruction(
             "general",  # Use general instruction for intent classification
-            business_profile=context.get('business_profile'),
-            additional_context={
-                "intent_classification": True,
-                "expected_output": "JSON"
-            }
+            business_profile=context.get("business_profile"),
+            additional_context={"intent_classification": True, "expected_output": "JSON"},
         )
-        
+
         user_prompt = f"""
         Please classify this user message and extract relevant entities.
         
         User message: "{message}"
         
-        Business context: {json.dumps(context.get('business_profile', {}), indent=2)}
+        Business context: {json.dumps(context.get("business_profile", {}), indent=2)}
         
-        Recent evidence: {json.dumps(context.get('recent_evidence', []), indent=2)}
+        Recent evidence: {json.dumps(context.get("recent_evidence", []), indent=2)}
         
         Classification options: 'evidence_query', 'compliance_check', 'guidance_request', 'general_query'
         
         Return a JSON object with this exact format:
         {{"type": "evidence_query|compliance_check|guidance_request|general_query", "confidence": 0.9, "entities": {{"frameworks": ["ISO27001"], "evidence_types": ["policies"]}}}}
         """
-        
+
         return {
-            'system': system_instruction,  # Backwards compatibility
-            'system_instruction': system_instruction,  # New format
-            'user': user_prompt
+            "system": system_instruction,  # Backwards compatibility
+            "system_instruction": system_instruction,  # New format
+            "user": user_prompt,
         }
 
-    def get_evidence_query_prompt(self, message: str, evidence_items: List[Any], context: Dict[str, Any]) -> Dict[str, str]:
+    def get_evidence_query_prompt(
+        self, message: str, evidence_items: List[Any], context: Dict[str, Any]
+    ) -> Dict[str, str]:
         """Creates the prompt for answering evidence-related questions."""
-        
+
         # Use evidence-specific system instruction
         system_instruction = get_system_instruction(
             "evidence",
-            business_profile=context.get('business_profile'),
-            additional_context={
-                "evidence_analysis": True,
-                "task_type": "evidence_query"
-            }
+            business_profile=context.get("business_profile"),
+            additional_context={"evidence_analysis": True, "task_type": "evidence_query"},
         )
-        
-        evidence_summary = json.dumps([
-            {
-                'title': getattr(e, 'evidence_name', 'Unknown'),
-                'type': getattr(e, 'evidence_type', 'Unknown'),
-                'description': getattr(e, 'description', ''),
-                'status': getattr(e, 'status', 'active')
-            } for e in evidence_items
-        ], indent=2)
-        
-        business_info = context.get('business_profile', {})
-        
+
+        evidence_summary = json.dumps(
+            [
+                {
+                    "title": getattr(e, "evidence_name", "Unknown"),
+                    "type": getattr(e, "evidence_type", "Unknown"),
+                    "description": getattr(e, "description", ""),
+                    "status": getattr(e, "status", "active"),
+                }
+                for e in evidence_items
+            ],
+            indent=2,
+        )
+
+        business_info = context.get("business_profile", {})
+
         user_prompt = f"""
         User question: "{message}"
         
         Business context:
-        - Company: {business_info.get('name', 'Unknown')}
-        - Industry: {business_info.get('industry', 'Unknown')}
-        - Frameworks: {', '.join(business_info.get('frameworks', []))}
+        - Company: {business_info.get("name", "Unknown")}
+        - Industry: {business_info.get("industry", "Unknown")}
+        - Frameworks: {", ".join(business_info.get("frameworks", []))}
         
         Found evidence ({len(evidence_items)} items):
         {evidence_summary}
         
-        Compliance status: {json.dumps(context.get('compliance_status', {}), indent=2)}
+        Compliance status: {json.dumps(context.get("compliance_status", {}), indent=2)}
         
         Please provide a helpful response addressing their question about this evidence.
         """
-        
+
         return {
-            'system': system_instruction,  # Backwards compatibility
-            'system_instruction': system_instruction,  # New format
-            'user': user_prompt
+            "system": system_instruction,  # Backwards compatibility
+            "system_instruction": system_instruction,  # New format
+            "user": user_prompt,
         }
 
     def get_compliance_check_prompt(self, message: str, context: Dict[str, Any]) -> Dict[str, str]:
@@ -185,18 +189,18 @@ class PromptTemplates:
         - Include actionable next steps
         - Use clear, professional language
         """
-        
-        business_info = context.get('business_profile', {})
-        compliance_status = context.get('compliance_status', {})
-        recent_evidence = context.get('recent_evidence', [])
-        
+
+        business_info = context.get("business_profile", {})
+        compliance_status = context.get("compliance_status", {})
+        recent_evidence = context.get("recent_evidence", [])
+
         user_prompt = f"""
         User question: "{message}"
         
         Business profile:
-        - Company: {business_info.get('name', 'Unknown')}
-        - Industry: {business_info.get('industry', 'Unknown')}
-        - Target frameworks: {', '.join(business_info.get('frameworks', []))}
+        - Company: {business_info.get("name", "Unknown")}
+        - Industry: {business_info.get("industry", "Unknown")}
+        - Target frameworks: {", ".join(business_info.get("frameworks", []))}
         
         Current compliance scores:
         {json.dumps(compliance_status, indent=2)}
@@ -206,8 +210,8 @@ class PromptTemplates:
         
         Please provide a comprehensive compliance status assessment and recommendations.
         """
-        
-        return {'system': system_prompt, 'user': user_prompt}
+
+        return {"system": system_prompt, "user": user_prompt}
 
     def get_guidance_request_prompt(self, message: str, context: Dict[str, Any]) -> Dict[str, str]:
         """Creates the prompt for providing compliance guidance."""
@@ -222,25 +226,27 @@ class PromptTemplates:
         - Include relevant resources or references
         - Maintain a helpful, consultative tone
         """
-        
-        business_info = context.get('business_profile', {})
-        
+
+        business_info = context.get("business_profile", {})
+
         user_prompt = f"""
         User request: "{message}"
         
         Business context:
-        - Company: {business_info.get('name', 'Unknown')}
-        - Industry: {business_info.get('industry', 'Unknown')}
-        - Frameworks: {', '.join(business_info.get('frameworks', []))}
+        - Company: {business_info.get("name", "Unknown")}
+        - Industry: {business_info.get("industry", "Unknown")}
+        - Frameworks: {", ".join(business_info.get("frameworks", []))}
         
-        Current compliance status: {json.dumps(context.get('compliance_status', {}), indent=2)}
+        Current compliance status: {json.dumps(context.get("compliance_status", {}), indent=2)}
         
         Please provide expert guidance tailored to their specific situation and requirements.
         """
-        
-        return {'system': system_prompt, 'user': user_prompt}
 
-    def get_general_query_prompt(self, message: str, history: List[Dict], context: Dict[str, Any]) -> Dict[str, str]:
+        return {"system": system_prompt, "user": user_prompt}
+
+    def get_general_query_prompt(
+        self, message: str, history: List[Dict], context: Dict[str, Any]
+    ) -> Dict[str, str]:
         """Creates the prompt for handling general questions."""
         system_prompt = """
         You are ComplianceGPT, a friendly and knowledgeable compliance assistant. Answer the user's question considering the conversation history and their business context.
@@ -253,14 +259,16 @@ class PromptTemplates:
         - Maintain a professional but approachable tone
         - Keep responses focused and concise
         """
-        
-        history_str = "\n".join([
-            f"{msg['role'].title()}: {msg['content']}" 
-            for msg in history[-5:]  # Only include last 5 messages for context
-        ])
-        
-        business_info = context.get('business_profile', {})
-        
+
+        history_str = "\n".join(
+            [
+                f"{msg['role'].title()}: {msg['content']}"
+                for msg in history[-5:]  # Only include last 5 messages for context
+            ]
+        )
+
+        business_info = context.get("business_profile", {})
+
         user_prompt = f"""
         Recent conversation history:
         {history_str}
@@ -268,16 +276,18 @@ class PromptTemplates:
         User's new message: "{message}"
         
         Business context:
-        - Company: {business_info.get('name', 'Unknown')}
-        - Industry: {business_info.get('industry', 'Unknown')}
-        - Frameworks: {', '.join(business_info.get('frameworks', []))}
+        - Company: {business_info.get("name", "Unknown")}
+        - Industry: {business_info.get("industry", "Unknown")}
+        - Frameworks: {", ".join(business_info.get("frameworks", []))}
         
         Please provide a helpful response that considers the conversation context and their compliance needs.
         """
-        
-        return {'system': system_prompt, 'user': user_prompt}
 
-    def get_evidence_recommendation_prompt(self, framework: str, business_context: Dict[str, Any]) -> Dict[str, str]:
+        return {"system": system_prompt, "user": user_prompt}
+
+    def get_evidence_recommendation_prompt(
+        self, framework: str, business_context: Dict[str, Any]
+    ) -> Dict[str, str]:
         """Creates prompts for recommending evidence collection."""
         system_prompt = """
         You are ComplianceGPT, an expert in compliance frameworks. Recommend specific evidence items to collect based on the framework and business context.
@@ -289,7 +299,7 @@ class PromptTemplates:
         - Include automation opportunities where possible
         - Explain the compliance value of each item
         """
-        
+
         user_prompt = f"""
         Framework: {framework}
         
@@ -298,8 +308,8 @@ class PromptTemplates:
         
         Please recommend the top 10 most important evidence items to collect for this framework, prioritized by compliance impact and ease of collection.
         """
-        
-        return {'system': system_prompt, 'user': user_prompt}
+
+        return {"system": system_prompt, "user": user_prompt}
 
     # Assessment-specific prompt templates for Phase 2.2 integration
 
@@ -309,7 +319,7 @@ class PromptTemplates:
         framework_id: str,
         section_id: Optional[str] = None,
         business_context: Optional[Dict[str, Any]] = None,
-        user_context: Optional[Dict[str, Any]] = None
+        user_context: Optional[Dict[str, Any]] = None,
     ) -> Dict[str, str]:
         """Creates prompts for assessment question help."""
 
@@ -340,10 +350,10 @@ class PromptTemplates:
         {f"Section: {section_id}" if section_id else ""}
 
         Business Context:
-        - Company: {business_info.get('name', 'Unknown')}
-        - Industry: {business_info.get('industry', 'Unknown')}
-        - Size: {business_info.get('employee_count', 'Unknown')} employees
-        - Frameworks: {', '.join(business_info.get('frameworks', []))}
+        - Company: {business_info.get("name", "Unknown")}
+        - Industry: {business_info.get("industry", "Unknown")}
+        - Size: {business_info.get("employee_count", "Unknown")} employees
+        - Frameworks: {", ".join(business_info.get("frameworks", []))}
 
         User Context:
         {user_info}
@@ -351,14 +361,14 @@ class PromptTemplates:
         Please provide comprehensive guidance for answering this assessment question.
         """
 
-        return {'system': system_prompt, 'user': user_prompt}
+        return {"system": system_prompt, "user": user_prompt}
 
     def get_assessment_followup_prompt(
         self,
         current_answers: Dict[str, Any],
         framework_id: str,
         business_context: Optional[Dict[str, Any]] = None,
-        assessment_context: Optional[Dict[str, Any]] = None
+        assessment_context: Optional[Dict[str, Any]] = None,
     ) -> Dict[str, str]:
         """Creates prompts for generating assessment follow-up questions."""
 
@@ -388,24 +398,24 @@ class PromptTemplates:
         Framework: {framework_id}
 
         Business Context:
-        - Company: {business_info.get('name', 'Unknown')}
-        - Industry: {business_info.get('industry', 'Unknown')}
-        - Size: {business_info.get('employee_count', 'Unknown')} employees
+        - Company: {business_info.get("name", "Unknown")}
+        - Industry: {business_info.get("industry", "Unknown")}
+        - Size: {business_info.get("employee_count", "Unknown")} employees
 
         Assessment Context:
-        - Type: {assessment_info.get('assessment_type', 'general')}
-        - Progress: {assessment_info.get('progress', 'unknown')}
+        - Type: {assessment_info.get("assessment_type", "general")}
+        - Progress: {assessment_info.get("progress", "unknown")}
 
         Based on these responses, what follow-up questions should we ask to complete the assessment?
         """
 
-        return {'system': system_prompt, 'user': user_prompt}
+        return {"system": system_prompt, "user": user_prompt}
 
     def get_assessment_analysis_prompt(
         self,
         assessment_results: Dict[str, Any],
         framework_id: str,
-        business_context: Optional[Dict[str, Any]] = None
+        business_context: Optional[Dict[str, Any]] = None,
     ) -> Dict[str, str]:
         """Creates prompts for comprehensive assessment analysis."""
 
@@ -418,8 +428,8 @@ class PromptTemplates:
             additional_context={
                 "assessment_analysis": True,
                 "structured_output": True,
-                "output_format": "JSON"
-            }
+                "output_format": "JSON",
+            },
         )
 
         business_info = business_context or {}
@@ -433,10 +443,10 @@ class PromptTemplates:
         Framework: {framework_id}
 
         Business Context:
-        - Company: {business_info.get('name', 'Unknown')}
-        - Industry: {business_info.get('industry', 'Unknown')}
-        - Size: {business_info.get('employee_count', 'Unknown')} employees
-        - Current Frameworks: {', '.join(business_info.get('frameworks', []))}
+        - Company: {business_info.get("name", "Unknown")}
+        - Industry: {business_info.get("industry", "Unknown")}
+        - Size: {business_info.get("employee_count", "Unknown")} employees
+        - Current Frameworks: {", ".join(business_info.get("frameworks", []))}
 
         Format your response as JSON with these keys:
         - gaps: Array of gap objects with id, title, description, severity, category
@@ -447,9 +457,9 @@ class PromptTemplates:
         """
 
         return {
-            'system': system_instruction,  # Backwards compatibility
-            'system_instruction': system_instruction,  # New format
-            'user': user_prompt
+            "system": system_instruction,  # Backwards compatibility
+            "system_instruction": system_instruction,  # New format
+            "user": user_prompt,
         }
 
     def get_assessment_recommendations_prompt(
@@ -459,7 +469,7 @@ class PromptTemplates:
         framework_id: str,
         existing_policies: Optional[List[str]] = None,
         industry_context: Optional[str] = None,
-        timeline_preferences: str = "standard"
+        timeline_preferences: str = "standard",
     ) -> Dict[str, str]:
         """Creates prompts for generating personalized implementation recommendations."""
 
@@ -473,8 +483,8 @@ class PromptTemplates:
                 "implementation_planning": True,
                 "structured_output": True,
                 "output_format": "JSON",
-                "timeline_preferences": timeline_preferences
-            }
+                "timeline_preferences": timeline_preferences,
+            },
         )
 
         user_prompt = f"""
@@ -486,13 +496,13 @@ class PromptTemplates:
         Framework: {framework_id}
 
         Business Profile:
-        - Company: {business_profile.get('name', 'Unknown')}
-        - Industry: {business_profile.get('industry', 'Unknown')}
-        - Size: {business_profile.get('employee_count', 'Unknown')} employees
-        - Budget Range: {business_profile.get('budget_range', 'Unknown')}
+        - Company: {business_profile.get("name", "Unknown")}
+        - Industry: {business_profile.get("industry", "Unknown")}
+        - Size: {business_profile.get("employee_count", "Unknown")} employees
+        - Budget Range: {business_profile.get("budget_range", "Unknown")}
 
-        Existing Policies: {existing_policies or 'None specified'}
-        Industry Context: {industry_context or 'General'}
+        Existing Policies: {existing_policies or "None specified"}
+        Industry Context: {industry_context or "General"}
         Timeline Preference: {timeline_preferences}
 
         Format your response as JSON with these keys:
@@ -502,23 +512,23 @@ class PromptTemplates:
         """
 
         return {
-            'system': system_instruction,  # Backwards compatibility
-            'system_instruction': system_instruction,  # New format
-            'user': user_prompt
+            "system": system_instruction,  # Backwards compatibility
+            "system_instruction": system_instruction,  # New format
+            "user": user_prompt,
         }
-    
+
     def get_main_prompt(self, message: str, context: Dict[str, Any]) -> str:
         """Creates the main prompt for general AI responses."""
-        business_info = context.get('business_profile', {})
-        recent_evidence = context.get('recent_evidence', [])
-        
+        business_info = context.get("business_profile", {})
+        recent_evidence = context.get("recent_evidence", [])
+
         return f"""You are ComplianceGPT, an expert AI compliance assistant. You help organizations understand and implement compliance requirements across various frameworks.
 
 Business Context:
-- Company: {business_info.get('company_name', 'Unknown')}
-- Industry: {business_info.get('industry', 'Unknown')}
-- Employee Count: {business_info.get('employee_count', 'Unknown')}
-- Current Frameworks: {', '.join(business_info.get('existing_frameworks', []))}
+- Company: {business_info.get("company_name", "Unknown")}
+- Industry: {business_info.get("industry", "Unknown")}
+- Employee Count: {business_info.get("employee_count", "Unknown")}
+- Current Frameworks: {", ".join(business_info.get("existing_frameworks", []))}
 - Evidence Collected: {len(recent_evidence)} items
 
 User Message: "{message}"
@@ -532,30 +542,29 @@ Please provide a comprehensive, helpful response that:
 
 If you need clarification on any aspect of their request, feel free to ask follow-up questions."""
 
-    def get_main_prompt_with_system_instruction(self, message: str, context: Dict[str, Any]) -> Dict[str, str]:
+    def get_main_prompt_with_system_instruction(
+        self, message: str, context: Dict[str, Any]
+    ) -> Dict[str, str]:
         """Creates main prompt with system instruction for general AI responses."""
-        
+
         # Use general system instruction
         system_instruction = get_system_instruction(
             "general",
-            business_profile=context.get('business_profile'),
-            additional_context={
-                "conversation_mode": True,
-                "comprehensive_response": True
-            }
+            business_profile=context.get("business_profile"),
+            additional_context={"conversation_mode": True, "comprehensive_response": True},
         )
-        
-        business_info = context.get('business_profile', {})
-        recent_evidence = context.get('recent_evidence', [])
-        
+
+        business_info = context.get("business_profile", {})
+        recent_evidence = context.get("recent_evidence", [])
+
         user_prompt = f"""
         User Message: "{message}"
 
         Business Context:
-        - Company: {business_info.get('company_name', 'Unknown')}
-        - Industry: {business_info.get('industry', 'Unknown')}
-        - Employee Count: {business_info.get('employee_count', 'Unknown')}
-        - Current Frameworks: {', '.join(business_info.get('existing_frameworks', []))}
+        - Company: {business_info.get("company_name", "Unknown")}
+        - Industry: {business_info.get("industry", "Unknown")}
+        - Employee Count: {business_info.get("employee_count", "Unknown")}
+        - Current Frameworks: {", ".join(business_info.get("existing_frameworks", []))}
         - Evidence Collected: {len(recent_evidence)} items
 
         Please provide a comprehensive, helpful response that:
@@ -567,11 +576,11 @@ If you need clarification on any aspect of their request, feel free to ask follo
 
         If you need clarification on any aspect of their request, feel free to ask follow-up questions.
         """
-        
+
         return {
-            'system': system_instruction,  # Backwards compatibility
-            'system_instruction': system_instruction,  # New format
-            'user': user_prompt
+            "system": system_instruction,  # Backwards compatibility
+            "system_instruction": system_instruction,  # New format
+            "user": user_prompt,
         }
 
     def get_context_aware_recommendation_prompt(
@@ -579,7 +588,7 @@ If you need clarification on any aspect of their request, feel free to ask follo
         framework: str,
         business_context: Dict[str, Any],
         maturity_analysis: Dict[str, Any],
-        gaps_analysis: Dict[str, Any]
+        gaps_analysis: Dict[str, Any],
     ) -> Dict[str, str]:
         """Creates enhanced prompts for context-aware recommendations."""
 
@@ -612,30 +621,26 @@ If you need clarification on any aspect of their request, feel free to ask follo
         Generate context-aware recommendations for {framework} compliance.
 
         Business Profile:
-        - Company: {business_context.get('company_name', 'Unknown')}
-        - Industry: {business_context.get('industry', 'Unknown')}
-        - Size: {business_context.get('employee_count', 0)} employees
-        - Maturity Level: {maturity_analysis.get('maturity_level', 'Basic')}
-        - Maturity Score: {maturity_analysis.get('maturity_score', 40)}/100
+        - Company: {business_context.get("company_name", "Unknown")}
+        - Industry: {business_context.get("industry", "Unknown")}
+        - Size: {business_context.get("employee_count", 0)} employees
+        - Maturity Level: {maturity_analysis.get("maturity_level", "Basic")}
+        - Maturity Score: {maturity_analysis.get("maturity_score", 40)}/100
 
         Current Compliance Status:
-        - Completion: {gaps_analysis.get('completion_percentage', 0)}%
-        - Evidence Items: {gaps_analysis.get('evidence_collected', 0)}
-        - Critical Gaps: {len(gaps_analysis.get('critical_gaps', []))}
-        - Risk Level: {gaps_analysis.get('risk_level', 'Medium')}
+        - Completion: {gaps_analysis.get("completion_percentage", 0)}%
+        - Evidence Items: {gaps_analysis.get("evidence_collected", 0)}
+        - Critical Gaps: {len(gaps_analysis.get("critical_gaps", []))}
+        - Risk Level: {gaps_analysis.get("risk_level", "Medium")}
 
         Generate 8-12 prioritized recommendations that address critical gaps while
         considering organizational capacity and maturity level.
         """
 
-        return {'system': system_prompt, 'user': user_prompt}
+        return {"system": system_prompt, "user": user_prompt}
 
     def get_workflow_generation_prompt(
-        self,
-        framework: str,
-        control_id: str,
-        business_context: Dict[str, Any],
-        workflow_type: str
+        self, framework: str, control_id: str, business_context: Dict[str, Any], workflow_type: str
     ) -> Dict[str, str]:
         """Creates prompts for intelligent workflow generation."""
 
@@ -660,10 +665,10 @@ If you need clarification on any aspect of their request, feel free to ask follo
         Generate a {workflow_type} evidence collection workflow for {framework}{control_context}.
 
         Organization Context:
-        - Company: {business_context.get('company_name', 'Unknown')}
-        - Industry: {business_context.get('industry', 'Unknown')}
-        - Size: {business_context.get('employee_count', 0)} employees
-        - Organization Type: {self._categorize_org_size(business_context.get('employee_count', 0))}
+        - Company: {business_context.get("company_name", "Unknown")}
+        - Industry: {business_context.get("industry", "Unknown")}
+        - Size: {business_context.get("employee_count", 0)} employees
+        - Organization Type: {self._categorize_org_size(business_context.get("employee_count", 0))}
 
         Requirements:
         - Create 3-5 logical phases with 2-4 steps each
@@ -676,14 +681,14 @@ If you need clarification on any aspect of their request, feel free to ask follo
         Generate a comprehensive workflow that can be immediately implemented.
         """
 
-        return {'system': system_prompt, 'user': user_prompt}
+        return {"system": system_prompt, "user": user_prompt}
 
     def get_policy_generation_prompt(
         self,
         framework: str,
         policy_type: str,
         business_context: Dict[str, Any],
-        customization_options: Dict[str, Any]
+        customization_options: Dict[str, Any],
     ) -> Dict[str, str]:
         """Creates prompts for customized policy generation."""
 
@@ -702,21 +707,21 @@ If you need clarification on any aspect of their request, feel free to ask follo
         compliance requirements while being tailored to the organization's context.
         """
 
-        industry = business_context.get('industry', 'Unknown')
-        org_size = self._categorize_org_size(business_context.get('employee_count', 0))
+        industry = business_context.get("industry", "Unknown")
+        org_size = self._categorize_org_size(business_context.get("employee_count", 0))
 
         user_prompt = f"""
         Generate a comprehensive {policy_type} policy for {framework} compliance.
 
         Organization Profile:
-        - Company: {business_context.get('company_name', 'Organization')}
+        - Company: {business_context.get("company_name", "Organization")}
         - Industry: {industry}
-        - Size: {business_context.get('employee_count', 0)} employees ({org_size})
-        - Geographic Scope: {customization_options.get('geographic_scope', 'Single location')}
+        - Size: {business_context.get("employee_count", 0)} employees ({org_size})
+        - Geographic Scope: {customization_options.get("geographic_scope", "Single location")}
 
         Customization Requirements:
-        - Tone: {customization_options.get('tone', 'Professional')}
-        - Detail Level: {customization_options.get('detail_level', 'Standard')}
+        - Tone: {customization_options.get("tone", "Professional")}
+        - Detail Level: {customization_options.get("detail_level", "Standard")}
         - Industry Focus: {industry}
 
         Generate a policy with:
@@ -730,7 +735,7 @@ If you need clarification on any aspect of their request, feel free to ask follo
         Ensure the policy is immediately usable and addresses all {framework} requirements.
         """
 
-        return {'system': system_prompt, 'user': user_prompt}
+        return {"system": system_prompt, "user": user_prompt}
 
     def _categorize_org_size(self, employee_count: int) -> str:
         """Helper method to categorize organization size."""

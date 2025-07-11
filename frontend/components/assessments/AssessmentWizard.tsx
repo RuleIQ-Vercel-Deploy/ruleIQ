@@ -1,35 +1,28 @@
-"use client";
+'use client';
 
-import { motion, AnimatePresence } from "framer-motion";
-import { 
-  ChevronLeft, 
-  ChevronRight, 
-  Save, 
-  AlertCircle,
-  CheckCircle,
-  Clock
-} from "lucide-react";
-import { useState, useEffect, useCallback } from "react";
+import { motion, AnimatePresence } from 'framer-motion';
+import { ChevronLeft, ChevronRight, Save, AlertCircle, CheckCircle, Clock } from 'lucide-react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
-import { useToast } from "@/hooks/use-toast";
-import { 
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Progress } from '@/components/ui/progress';
+import { useToast } from '@/hooks/use-toast';
+import {
   QuestionnaireEngine,
   type AssessmentFramework,
   type AssessmentContext,
   type AssessmentProgress,
   type AssessmentResult,
-  type Question
-} from "@/lib/assessment-engine";
+  type Question,
+} from '@/lib/assessment-engine';
 
-import { AIErrorBoundary } from "./AIErrorBoundary";
-import { AssessmentNavigation } from "./AssessmentNavigation";
-import { FollowUpQuestion } from "./FollowUpQuestion";
-import { ProgressTracker } from "./ProgressTracker";
-import { QuestionRenderer } from "./QuestionRenderer";
+import { AIErrorBoundary } from './AIErrorBoundary';
+import { AssessmentNavigation } from './AssessmentNavigation';
+import { FollowUpQuestion } from './FollowUpQuestion';
+import { ProgressTracker } from './ProgressTracker';
+import { QuestionRenderer } from './QuestionRenderer';
 
 interface AssessmentWizardProps {
   framework: AssessmentFramework;
@@ -46,7 +39,7 @@ export function AssessmentWizard({
   businessProfileId,
   onComplete,
   onSave,
-  onExit
+  onExit,
 }: AssessmentWizardProps) {
   const { toast } = useToast();
   const [engine, setEngine] = useState<QuestionnaireEngine | null>(null);
@@ -56,6 +49,7 @@ export function AssessmentWizard({
   const [isSaving, setIsSaving] = useState(false);
   const [validationError, setValidationError] = useState<string | null>(null);
   const [isLoadingAI, setIsLoadingAI] = useState(false);
+  const [answersVersion, setAnswersVersion] = useState(0);
 
   // Initialize engine
   useEffect(() => {
@@ -64,7 +58,7 @@ export function AssessmentWizard({
       assessmentId,
       businessProfileId,
       answers: new Map(),
-      metadata: {}
+      metadata: {},
     };
 
     const newEngine = new QuestionnaireEngine(framework, context, {
@@ -83,19 +77,19 @@ export function AssessmentWizard({
       onError: (error) => {
         setError(error.message);
         toast({
-          title: "Error",
+          title: 'Error',
           description: error.message,
-          variant: "destructive"
+          variant: 'destructive',
         });
-      }
+      },
     });
 
     // Try to load saved progress
     const hasProgress = newEngine.loadProgress();
     if (hasProgress) {
       toast({
-        title: "Progress Restored",
-        description: "Your previous progress has been loaded.",
+        title: 'Progress Restored',
+        description: 'Your previous progress has been loaded.',
       });
     }
 
@@ -108,13 +102,17 @@ export function AssessmentWizard({
     };
   }, [framework, assessmentId, businessProfileId, onSave, toast]);
 
-  const handleAnswer = useCallback((value: any) => {
-    if (!engine || !currentQuestion) return;
+  const handleAnswer = useCallback(
+    (value: any) => {
+      if (!engine || !currentQuestion) return;
 
-    setValidationError(null);
-    engine.answerQuestion(currentQuestion.id, value);
-    setProgress(engine.getProgress());
-  }, [engine, currentQuestion]);
+      setValidationError(null);
+      engine.answerQuestion(currentQuestion.id, value);
+      setProgress(engine.getProgress());
+      setAnswersVersion((prev) => prev + 1); // Force re-render to update button state
+    },
+    [engine, currentQuestion],
+  );
 
   const handleNext = useCallback(async () => {
     if (!engine) return;
@@ -130,6 +128,9 @@ export function AssessmentWizard({
         const result = await engine.calculateResults();
         onComplete(result);
       }
+    } catch (error) {
+      // Handle validation errors
+      setValidationError(error instanceof Error ? error.message : 'An error occurred');
     } finally {
       setIsLoadingAI(false);
     }
@@ -151,38 +152,41 @@ export function AssessmentWizard({
     setIsSaving(true);
     try {
       // Save to backend (implement API call here)
-      await new Promise(resolve => setTimeout(resolve, 1000)); // Simulated API call
-      
+      await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulated API call
+
       toast({
-        title: "Progress Saved",
-        description: "Your assessment progress has been saved.",
+        title: 'Progress Saved',
+        description: 'Your assessment progress has been saved.',
       });
     } catch (error) {
       toast({
-        title: "Save Failed",
-        description: "Failed to save progress. Please try again.",
-        variant: "destructive"
+        title: 'Save Failed',
+        description: 'Failed to save progress. Please try again.',
+        variant: 'destructive',
       });
     } finally {
       setIsSaving(false);
     }
   }, [engine, progress, toast]);
 
-  const handleJumpToSection = useCallback((sectionIndex: number) => {
-    if (!engine) return;
+  const handleJumpToSection = useCallback(
+    (sectionIndex: number) => {
+      if (!engine) return;
 
-    const success = engine.jumpToSection(sectionIndex);
-    if (success) {
-      setCurrentQuestion(engine.getCurrentQuestion());
-      setValidationError(null);
-    }
-  }, [engine]);
+      const success = engine.jumpToSection(sectionIndex);
+      if (success) {
+        setCurrentQuestion(engine.getCurrentQuestion());
+        setValidationError(null);
+      }
+    },
+    [engine],
+  );
 
   if (!engine || !progress) {
     return (
-      <div className="flex items-center justify-center min-h-[400px]">
+      <div className="flex min-h-[400px] items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary mx-auto mb-4"></div>
+          <div className="mx-auto mb-4 h-12 w-12 animate-spin rounded-full border-b-2 border-t-2 border-primary"></div>
           <p className="text-muted-foreground">Loading assessment...</p>
         </div>
       </div>
@@ -194,8 +198,24 @@ export function AssessmentWizard({
   const isInAIMode = engine?.isInAIMode() || false;
   const currentAIQuestion = engine?.getCurrentAIQuestion();
 
+  // Check if current question is answered (using answersVersion to trigger re-evaluation)
+  const currentAnswer = useMemo(() => {
+    return currentQuestion && engine ? engine.getAnswers().get(currentQuestion.id)?.value : null;
+  }, [currentQuestion, engine, answersVersion]);
+
+  const isCurrentQuestionAnswered =
+    currentAnswer !== null && currentAnswer !== undefined && currentAnswer !== '';
+
+  // For checkbox questions, check if at least one option is selected
+  const isCheckboxAnswered =
+    currentQuestion?.type === 'checkbox' &&
+    Array.isArray(currentAnswer) &&
+    currentAnswer.length > 0;
+  const isQuestionAnswered =
+    currentQuestion?.type === 'checkbox' ? isCheckboxAnswered : isCurrentQuestionAnswered;
+
   return (
-    <div className="max-w-4xl mx-auto space-y-6">
+    <div className="mx-auto max-w-4xl space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
@@ -203,30 +223,21 @@ export function AssessmentWizard({
           <p className="text-muted-foreground">{framework.description}</p>
         </div>
         <div className="flex items-center gap-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={handleSaveProgress}
-            disabled={isSaving}
-          >
+          <Button variant="outline" size="sm" onClick={handleSaveProgress} disabled={isSaving}>
             {isSaving ? (
               <>
-                <Clock className="h-4 w-4 mr-2 animate-spin" />
+                <Clock className="mr-2 h-4 w-4 animate-spin" />
                 Saving...
               </>
             ) : (
               <>
-                <Save className="h-4 w-4 mr-2" />
+                <Save className="mr-2 h-4 w-4" />
                 Save Progress
               </>
             )}
           </Button>
           {onExit && (
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={onExit}
-            >
+            <Button variant="ghost" size="sm" onClick={onExit}>
               Exit
             </Button>
           )}
@@ -234,7 +245,7 @@ export function AssessmentWizard({
       </div>
 
       {/* Progress Overview */}
-      <ProgressTracker 
+      <ProgressTracker
         progress={progress}
         framework={framework}
         onSectionClick={handleJumpToSection}
@@ -274,14 +285,14 @@ export function AssessmentWizard({
                 className="flex flex-col items-center justify-center py-12"
               >
                 <div className="animate-pulse space-y-4 text-center">
-                  <div className="h-12 w-12 rounded-full bg-primary/20 animate-pulse mx-auto" />
+                  <div className="mx-auto h-12 w-12 animate-pulse rounded-full bg-primary/20" />
                   <p className="text-sm text-muted-foreground">
                     AI is analyzing your response and generating follow-up questions...
                   </p>
                 </div>
               </motion.div>
             )}
-            
+
             {!isLoadingAI && currentQuestion && (
               <motion.div
                 key={currentQuestion.id}
@@ -302,7 +313,7 @@ export function AssessmentWizard({
                       userContext={{
                         ...(businessProfileId && { business_profile: { id: businessProfileId } }),
                         current_answers: Object.fromEntries(engine.getAnswers()),
-                        assessment_progress: progress
+                        assessment_progress: progress,
                       }}
                       reasoning={currentAIQuestion.metadata?.['reasoning'] as string}
                     />
@@ -318,7 +329,7 @@ export function AssessmentWizard({
                     userContext={{
                       ...(businessProfileId && { business_profile: { id: businessProfileId } }),
                       current_answers: Object.fromEntries(engine.getAnswers()),
-                      assessment_progress: progress
+                      assessment_progress: progress,
                     }}
                   />
                 )}
@@ -327,69 +338,67 @@ export function AssessmentWizard({
           </AnimatePresence>
 
           {/* Navigation */}
-          <div className="flex items-center justify-between mt-8">
+          <div className="mt-8 flex items-center justify-between">
             <Button
               variant="outline"
               onClick={handlePrevious}
               disabled={isLoadingAI || (progress.answeredQuestions === 0 && !isInAIMode)}
             >
-              <ChevronLeft className="h-4 w-4 mr-2" />
+              <ChevronLeft className="mr-2 h-4 w-4" />
               Previous
             </Button>
 
             <div className="flex items-center gap-2">
               {/* AI Mode Indicator */}
               {isInAIMode && (
-                <div className="text-xs text-muted-foreground bg-primary/10 px-2 py-1 rounded">
-                  AI Follow-up {engine?.getAIQuestionProgress()?.current || 1} of {engine?.getAIQuestionProgress()?.total || 1}
+                <div className="rounded bg-primary/10 px-2 py-1 text-xs text-muted-foreground">
+                  AI Follow-up {engine?.getAIQuestionProgress()?.current || 1} of{' '}
+                  {engine?.getAIQuestionProgress()?.total || 1}
                 </div>
               )}
 
               {currentQuestion?.validation?.required === false && !isInAIMode && (
-                <Button
-                  variant="ghost"
-                  onClick={handleNext}
-                >
+                <Button variant="ghost" onClick={handleNext}>
                   Skip
                 </Button>
               )}
 
               {/* AI questions can always be skipped */}
               {isInAIMode && (
-                <Button
-                  variant="ghost"
-                  onClick={handleNext}
-                >
+                <Button variant="ghost" onClick={handleNext}>
                   Skip AI Question
                 </Button>
               )}
-              
+
               <Button
                 onClick={handleNext}
-                className="bg-gold hover:bg-gold-dark text-navy"
-                disabled={isLoadingAI}
+                className="bg-gold text-navy hover:bg-gold-dark"
+                disabled={
+                  isLoadingAI ||
+                  (!isQuestionAnswered && currentQuestion?.validation?.required !== false)
+                }
               >
                 {isInAIMode ? (
                   engine?.hasAIQuestionsRemaining() ? (
                     <>
                       Next AI Question
-                      <ChevronRight className="h-4 w-4 ml-2" />
+                      <ChevronRight className="ml-2 h-4 w-4" />
                     </>
                   ) : (
                     <>
                       Continue Assessment
-                      <ChevronRight className="h-4 w-4 ml-2" />
+                      <ChevronRight className="ml-2 h-4 w-4" />
                     </>
                   )
                 ) : isLastQuestion ? (
                   <>
                     Complete Assessment
-                    <CheckCircle className="h-4 w-4 ml-2" />
+                    <CheckCircle className="ml-2 h-4 w-4" />
                   </>
                 ) : (
                   <>
                     Next
-                    <ChevronRight className="h-4 w-4 ml-2" />
+                    <ChevronRight className="ml-2 h-4 w-4" />
                   </>
                 )}
               </Button>
@@ -401,7 +410,7 @@ export function AssessmentWizard({
       {/* Section Navigation */}
       <AssessmentNavigation
         framework={framework}
-        currentSectionIndex={framework.sections.findIndex(s => s.id === currentSection?.id)}
+        currentSectionIndex={framework.sections.findIndex((s) => s.id === currentSection?.id)}
         progress={progress}
         onSectionClick={handleJumpToSection}
       />

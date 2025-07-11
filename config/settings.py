@@ -14,6 +14,7 @@ from pydantic_settings import BaseSettings
 
 class Environment(str, Enum):
     """Environment types"""
+
     DEVELOPMENT = "development"
     STAGING = "staging"
     PRODUCTION = "production"
@@ -22,6 +23,7 @@ class Environment(str, Enum):
 
 class LogLevel(str, Enum):
     """Log levels"""
+
     DEBUG = "DEBUG"
     INFO = "INFO"
     WARNING = "WARNING"
@@ -36,12 +38,12 @@ class Settings(BaseSettings):
     env: Environment = Field(default=Environment.DEVELOPMENT, env="ENV")
     debug: bool = Field(default=False, env="DEBUG")
 
-    @field_validator('debug', mode='before')
+    @field_validator("debug", mode="before")
     @classmethod
     def validate_debug_bool(cls, v):
         """Coerce string 'truthy' values to boolean"""
         if isinstance(v, str):
-            return v.lower() in ('true', '1', 't', 'y', 'yes', 'on')
+            return v.lower() in ("true", "1", "t", "y", "yes", "on")
         return bool(v)
 
     # Server
@@ -52,11 +54,11 @@ class Settings(BaseSettings):
     database_url: str = Field(..., env="DATABASE_URL")
     database_echo: bool = Field(default=False, env="DATABASE_ECHO")
 
-    @field_validator('database_url')
+    @field_validator("database_url")
     @classmethod
     def validate_database_url(cls, v):
         """Validate database URL format"""
-        if not v.startswith(('postgresql://', 'postgresql+psycopg2://', 'postgresql+asyncpg://')):
+        if not v.startswith(("postgresql://", "postgresql+psycopg2://", "postgresql+asyncpg://")):
             raise ValueError("Database URL must be a valid PostgreSQL connection string")
         return v
 
@@ -67,16 +69,15 @@ class Settings(BaseSettings):
 
     # CORS
     allowed_origins: List[str] = Field(
-        default=["http://localhost:3000", "http://localhost:3001"],
-        env="ALLOWED_ORIGINS"
+        default=["http://localhost:3000", "http://localhost:3001"], env="ALLOWED_ORIGINS"
     )
 
-    @field_validator('allowed_origins', mode='before')
+    @field_validator("allowed_origins", mode="before")
     @classmethod
     def parse_cors_origins(cls, v):
         """Parse CORS origins from comma-separated string"""
         if isinstance(v, str):
-            return [origin.strip() for origin in v.split(',')]
+            return [origin.strip() for origin in v.split(",")]
         return v
 
     # AI Configuration
@@ -89,8 +90,7 @@ class Settings(BaseSettings):
     # Logging
     log_level: LogLevel = Field(default=LogLevel.INFO, env="LOG_LEVEL")
     log_format: str = Field(
-        default="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-        env="LOG_FORMAT"
+        default="%(asctime)s - %(name)s - %(levelname)s - %(message)s", env="LOG_FORMAT"
     )
 
     # File Uploads
@@ -124,7 +124,7 @@ class Settings(BaseSettings):
         "env_file": ".env",
         "env_file_encoding": "utf-8",
         "case_sensitive": False,
-        "extra": "ignore"
+        "extra": "ignore",
     }
 
 

@@ -5,7 +5,6 @@ This module tests user experience, interface usability, and workflow
 intuitiveness for the compliance automation platform.
 """
 
-
 import pytest
 
 
@@ -19,7 +18,7 @@ class TestUserOnboardingFlow:
         simple_registration = {
             "email": "simple@example.com",
             "password": "SimplePassword123!",
-            "full_name": "Simple User"
+            "full_name": "Simple User",
         }
 
         response = client.post("/api/auth/register", json=simple_registration)
@@ -54,14 +53,13 @@ class TestUserOnboardingFlow:
         session_response = client.post(
             "/api/assessments",
             headers=authenticated_headers,
-            json={"session_type": "compliance_scoping"}
+            json={"session_type": "compliance_scoping"},
         )
         session_id = session_response.json()["id"]
 
         # Get questions
         questions_response = client.get(
-            f"/api/assessments/{session_id}/questions",
-            headers=authenticated_headers
+            f"/api/assessments/{session_id}/questions", headers=authenticated_headers
         )
 
         if questions_response.status_code == 200:
@@ -95,12 +93,14 @@ class TestNavigationAndWorkflow:
 
             # Verify key sections exist
             expected_sections = [
-                "compliance_status", "recent_activity", "next_actions",
-                "progress_overview", "recommendations"
+                "compliance_status",
+                "recent_activity",
+                "next_actions",
+                "progress_overview",
+                "recommendations",
             ]
 
-            present_sections = sum(1 for section in expected_sections
-                                 if section in dashboard_data)
+            present_sections = sum(1 for section in expected_sections if section in dashboard_data)
             assert present_sections >= 3, "Dashboard should have key information sections"
 
             # Verify progress indicators are intuitive
@@ -116,13 +116,12 @@ class TestNavigationAndWorkflow:
         session_response = client.post(
             "/api/assessments",
             headers=authenticated_headers,
-            json={"session_type": "compliance_scoping"}
+            json={"session_type": "compliance_scoping"},
         )
         session_id = session_response.json()["id"]
 
         progress_response = client.get(
-            f"/api/assessments/{session_id}/progress",
-            headers=authenticated_headers
+            f"/api/assessments/{session_id}/progress", headers=authenticated_headers
         )
 
         if progress_response.status_code == 200:
@@ -151,7 +150,7 @@ class TestNavigationAndWorkflow:
                 policy_response = client.post(
                     "/api/policies/generate",
                     headers=authenticated_headers,
-                    json={"framework_id": framework_id}
+                    json={"framework_id": framework_id},
                 )
 
                 if policy_response.status_code == 201:
@@ -196,7 +195,7 @@ class TestContentReadabilityAndClarity:
                 policy_response = client.post(
                     "/api/policies/generate",
                     headers=authenticated_headers,
-                    json={"framework_id": framework_id}
+                    json={"framework_id": framework_id},
                 )
 
                 if policy_response.status_code == 201:
@@ -205,20 +204,22 @@ class TestContentReadabilityAndClarity:
                     # Test readability metrics
                     self._assert_content_readability(policy_content)
 
-    def test_recommendation_clarity(self, client, authenticated_headers, sample_business_profile_data):
+    def test_recommendation_clarity(
+        self, client, authenticated_headers, sample_business_profile_data
+    ):
         """Test that recommendations are clear and actionable"""
         # Create business profile
         client.post(
             "/api/business-profiles",
             headers=authenticated_headers,
-            json=sample_business_profile_data
+            json=sample_business_profile_data,
         )
 
         # Get recommendations
         recommendations_response = client.post(
             "/api/frameworks/recommend",
             headers=authenticated_headers,
-            json=sample_business_profile_data
+            json=sample_business_profile_data,
         )
 
         if recommendations_response.status_code == 200:
@@ -244,14 +245,12 @@ class TestContentReadabilityAndClarity:
         # Test validation error messages
         invalid_profile = {
             "company_name": "",  # Invalid
-            "industry": "x",      # Too short
-            "employee_count": -1  # Invalid
+            "industry": "x",  # Too short
+            "employee_count": -1,  # Invalid
         }
 
         response = client.post(
-            "/api/business-profiles",
-            headers=authenticated_headers,
-            json=invalid_profile
+            "/api/business-profiles", headers=authenticated_headers, json=invalid_profile
         )
 
         assert response.status_code == 422
@@ -269,8 +268,17 @@ class TestContentReadabilityAndClarity:
             # Messages should guide users
             error_text = error.get("msg", "").lower()
             helpful_indicators = [
-                "required", "must be", "should be", "minimum", "maximum",
-                "invalid", "format", "length", "between", "at least", "greater than"
+                "required",
+                "must be",
+                "should be",
+                "minimum",
+                "maximum",
+                "invalid",
+                "format",
+                "length",
+                "between",
+                "at least",
+                "greater than",
             ]
 
             has_helpful_indicator = any(indicator in error_text for indicator in helpful_indicators)
@@ -279,26 +287,38 @@ class TestContentReadabilityAndClarity:
     def _assert_content_readability(self, content: str):
         """Assert that content meets readability standards"""
         # Basic readability checks
-        sentences = content.split('.')
-        avg_sentence_length = sum(len(s.split()) for s in sentences) / len(sentences) if sentences else 0
+        sentences = content.split(".")
+        avg_sentence_length = (
+            sum(len(s.split()) for s in sentences) / len(sentences) if sentences else 0
+        )
 
         # Sentences shouldn't be too long
         assert avg_sentence_length <= 25, "Sentences should be reasonably short for readability"
 
         # Should have proper structure with headings
-        assert content.count('#') >= 3, "Content should have clear structure with headings"
+        assert content.count("#") >= 3, "Content should have clear structure with headings"
 
         # Should avoid jargon without explanation
-        jargon_terms = ['gdpr', 'dpo', 'ico', 'supervisory authority']
+        jargon_terms = ["gdpr", "dpo", "ico", "supervisory authority"]
         for term in jargon_terms:
             if term in content.lower():
                 # If jargon is used, it should be explained or expanded
                 term_context = content.lower().find(term)
                 if term_context != -1:
-                    surrounding_text = content[max(0, term_context-50):term_context+100].lower()
-                    _ = any(indicator in surrounding_text for indicator in [
-                        'means', 'refers to', 'is', 'stands for', '(', 'also known as'
-                    ])
+                    surrounding_text = content[
+                        max(0, term_context - 50) : term_context + 100
+                    ].lower()
+                    _ = any(
+                        indicator in surrounding_text
+                        for indicator in [
+                            "means",
+                            "refers to",
+                            "is",
+                            "stands for",
+                            "(",
+                            "also known as",
+                        ]
+                    )
                     # Note: Not asserting this as it depends on context
 
 
@@ -308,11 +328,7 @@ class TestAccessibilityAndInclusion:
 
     def test_api_response_structure_consistency(self, client, authenticated_headers):
         """Test that API responses have consistent structure for UI consistency"""
-        endpoints_to_test = [
-            "/api/frameworks",
-            "/api/business-profiles",
-            "/api/assessments"
-        ]
+        endpoints_to_test = ["/api/frameworks", "/api/business-profiles", "/api/assessments"]
 
         for endpoint in endpoints_to_test:
             response = client.get(endpoint, headers=authenticated_headers)
@@ -326,9 +342,11 @@ class TestAccessibilityAndInclusion:
                     assert "code" in response_data["error"]
 
                 # Verify pagination consistency for list endpoints
-                if isinstance(response_data, dict) and any(key.endswith('s') for key in response_data):
+                if isinstance(response_data, dict) and any(
+                    key.endswith("s") for key in response_data
+                ):
                     # This is likely a list endpoint
-                    list_key = next((key for key in response_data if key.endswith('s')), None)
+                    list_key = next((key for key in response_data if key.endswith("s")), None)
                     if list_key:
                         assert isinstance(response_data[list_key], list)
 
@@ -354,13 +372,11 @@ class TestAccessibilityAndInclusion:
             "saas_tools": ["Office365"],
             "development_tools": ["GitHub"],
             "compliance_budget": "10000-50000",
-            "compliance_timeline": "3-6 months"
+            "compliance_timeline": "3-6 months",
         }
 
         response = client.post(
-            "/api/business-profiles",
-            headers=authenticated_headers,
-            json=international_profile
+            "/api/business-profiles", headers=authenticated_headers, json=international_profile
         )
 
         if response.status_code in [200, 201]:
@@ -382,12 +398,15 @@ class TestAccessibilityAndInclusion:
 
             # Verify responses include summary/condensed views suitable for mobile
             mobile_friendly_indicators = [
-                "summary", "condensed_view", "mobile_layout",
-                "key_metrics", "highlights", "overview"
+                "summary",
+                "condensed_view",
+                "mobile_layout",
+                "key_metrics",
+                "highlights",
+                "overview",
             ]
 
-            _ = any(indicator in dashboard_data
-                    for indicator in mobile_friendly_indicators)
+            _ = any(indicator in dashboard_data for indicator in mobile_friendly_indicators)
 
             # Note: This is more of a design guideline than a hard requirement
 
@@ -402,19 +421,23 @@ class TestUserGuidanceAndHelp:
         help_response = client.get("/api/help/getting-started", headers=authenticated_headers)
 
         # Help system should be available (even if content is basic) or return appropriate status
-        assert help_response.status_code in [200, 404, 501], "Help system should be implemented, planned, or return not found"
+        assert help_response.status_code in [200, 404, 501], (
+            "Help system should be implemented, planned, or return not found"
+        )
 
         if help_response.status_code == 200:
             help_data = help_response.json()
             assert "content" in help_data or "help_items" in help_data
 
-    def test_progress_indicators_and_motivation(self, client, authenticated_headers, sample_business_profile_data):
+    def test_progress_indicators_and_motivation(
+        self, client, authenticated_headers, sample_business_profile_data
+    ):
         """Test that users receive clear progress indicators and motivation"""
         # Create business profile
         client.post(
             "/api/business-profiles",
             headers=authenticated_headers,
-            json=sample_business_profile_data
+            json=sample_business_profile_data,
         )
 
         # Check progress tracking
@@ -425,12 +448,17 @@ class TestUserGuidanceAndHelp:
 
             # Verify motivational elements
             motivational_elements = [
-                "achievements", "milestones", "progress_percentage",
-                "completed_tasks", "next_milestone", "congratulations"
+                "achievements",
+                "milestones",
+                "progress_percentage",
+                "completed_tasks",
+                "next_milestone",
+                "congratulations",
             ]
 
-            present_elements = sum(1 for element in motivational_elements
-                                 if element in progress_data)
+            present_elements = sum(
+                1 for element in motivational_elements if element in progress_data
+            )
             assert present_elements >= 2, "Should provide motivational progress indicators"
 
     def test_workflow_guidance_and_next_steps(self, client, authenticated_headers):
@@ -443,8 +471,12 @@ class TestUserGuidanceAndHelp:
 
             # Verify next steps guidance
             guidance_indicators = [
-                "next_steps", "recommended_actions", "todo_items",
-                "action_items", "next_action", "suggestions"
+                "next_steps",
+                "recommended_actions",
+                "todo_items",
+                "action_items",
+                "next_action",
+                "suggestions",
             ]
 
             has_guidance = any(indicator in dashboard_data for indicator in guidance_indicators)
@@ -470,7 +502,9 @@ class TestUserGuidanceAndHelp:
                         assert len(framework[field]) <= 300, "List descriptions should be concise"
 
                 # Detailed view should have more information
-                detail_response = client.get(f"/api/frameworks/{framework_id}", headers=authenticated_headers)
+                detail_response = client.get(
+                    f"/api/frameworks/{framework_id}", headers=authenticated_headers
+                )
 
                 if detail_response.status_code == 200:
                     detail_data = detail_response.json()
@@ -478,11 +512,15 @@ class TestUserGuidanceAndHelp:
                     # Detail view should have more comprehensive information
                     detailed_fields = ["controls", "category", "version"]
                     present_detailed = sum(1 for field in detailed_fields if field in detail_data)
-                    assert present_detailed >= 1, "Detail view should provide more comprehensive information"
+                    assert present_detailed >= 1, (
+                        "Detail view should provide more comprehensive information"
+                    )
 
                     # Controls should be present and provide structure
                     if "controls" in detail_data:
-                        assert isinstance(detail_data["controls"], list), "Controls should be a list"
+                        assert isinstance(detail_data["controls"], list), (
+                            "Controls should be a list"
+                        )
 
 
 @pytest.mark.usability
@@ -498,12 +536,14 @@ class TestUserWorkflowEfficiency:
             json={
                 "task_ids": ["task1", "task2", "task3"],
                 "status": "completed",
-                "bulk_notes": "Completed batch of related tasks"
-            }
+                "bulk_notes": "Completed batch of related tasks",
+            },
         )
 
         # Bulk operations should be supported or return a helpful message
-        assert bulk_update_response.status_code in [200, 404, 501, 400], "Should handle bulk operations appropriately"
+        assert bulk_update_response.status_code in [200, 404, 501, 400], (
+            "Should handle bulk operations appropriately"
+        )
 
     def test_quick_actions_availability(self, client, authenticated_headers):
         """Test availability of quick actions for common tasks"""
@@ -514,13 +554,18 @@ class TestUserWorkflowEfficiency:
 
             # Verify common quick actions
             expected_actions = [
-                "complete_assessment", "generate_policy", "update_compliance_status",
-                "schedule_review", "export_report"
+                "complete_assessment",
+                "generate_policy",
+                "update_compliance_status",
+                "schedule_review",
+                "export_report",
             ]
 
             if "actions" in quick_actions:
                 available_actions = [action["id"] for action in quick_actions["actions"]]
-                matching_actions = sum(1 for action in expected_actions if action in available_actions)
+                matching_actions = sum(
+                    1 for action in expected_actions if action in available_actions
+                )
                 assert matching_actions >= 2, "Should provide common quick actions"
 
     def test_save_and_resume_functionality(self, client, authenticated_headers):
@@ -529,7 +574,7 @@ class TestUserWorkflowEfficiency:
         session_response = client.post(
             "/api/assessments",
             headers=authenticated_headers,
-            json={"session_type": "compliance_scoping"}
+            json={"session_type": "compliance_scoping"},
         )
 
         if session_response.status_code == 201:
@@ -542,18 +587,19 @@ class TestUserWorkflowEfficiency:
                 json={
                     "question_id": "data_processing",
                     "response": "partial answer",
-                    "save_progress": True
-                }
+                    "save_progress": True,
+                },
             )
 
             assert partial_response.status_code == 200, "Should allow saving partial progress"
 
             # Verify session can be resumed
             resume_response = client.get(
-                f"/api/assessments/{session_id}",
-                headers=authenticated_headers
+                f"/api/assessments/{session_id}", headers=authenticated_headers
             )
 
             if resume_response.status_code == 200:
                 session_data = resume_response.json()
-                assert session_data["status"] in ["in_progress", "draft"], "Session should be resumable"
+                assert session_data["status"] in ["in_progress", "draft"], (
+                    "Session should be resumable"
+                )

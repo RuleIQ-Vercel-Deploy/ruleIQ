@@ -17,19 +17,19 @@ from database.report_schedule import ReportSchedule
 
 class ReportScheduler:
     """Service to create, manage, and delete report schedules from the database."""
-    
+
     def __init__(self, db: AsyncSession):
         self.db = db
 
     async def create_schedule(
-        self, 
+        self,
         user_id: UUID,
         business_profile_id: UUID,
         report_type: str,
         frequency: str,
         parameters: Dict[str, Any],
         recipients: List[str],
-        active: bool = True
+        active: bool = True,
     ) -> ReportSchedule:
         """Creates a new report schedule in the database."""
         try:
@@ -40,7 +40,7 @@ class ReportScheduler:
                 frequency=frequency,
                 parameters=parameters,
                 recipients=recipients,
-                active=active
+                active=active,
             )
             self.db.add(new_schedule)
             await self.db.commit()
@@ -77,10 +77,12 @@ class ReportScheduler:
         except SQLAlchemyError as e:
             raise DatabaseException("Failed to retrieve active schedules.") from e
 
-    async def update_schedule_status(self, schedule_id: UUID, status: str, distribution_successful: bool = False) -> None:
+    async def update_schedule_status(
+        self, schedule_id: UUID, status: str, distribution_successful: bool = False
+    ) -> None:
         """Updates the status of a schedule after a run."""
         schedule = await self.get_schedule(schedule_id)
-        if status == 'success':
+        if status == "success":
             schedule.last_run_at = datetime.utcnow()
         # In a real app, you might store more detailed status or logs
         self.db.add(schedule)
@@ -93,7 +95,7 @@ class ReportScheduler:
             for key, value in updates.items():
                 if hasattr(schedule, key):
                     setattr(schedule, key, value)
-            
+
             self.db.add(schedule)
             await self.db.commit()
             await self.db.refresh(schedule)

@@ -56,7 +56,7 @@ async def get_readiness_assessment(
         "score_trend": assessment.score_trend,
         "estimated_readiness_date": assessment.estimated_readiness_date,
         "created_at": assessment.created_at,
-        "updated_at": assessment.updated_at
+        "updated_at": assessment.updated_at,
     }
 
     # Add risk level based on overall score
@@ -73,24 +73,25 @@ async def get_readiness_assessment(
     assessment_dict["recommendations"] = [
         "Complete missing policy documentation",
         "Implement additional security controls",
-        "Collect required evidence items"
+        "Collect required evidence items",
     ]
 
     return assessment_dict
+
 
 @router.get("/history")
 async def get_assessment_history(
     framework_id: Optional[UUID] = None,
     limit: int = 10,
-    current_user: User = Depends(get_current_active_user)
+    current_user: User = Depends(get_current_active_user),
 ):
     history = get_historical_assessments(current_user, framework_id, limit)
     return history
 
+
 @router.post("/report")
 async def generate_report(
-    report_config: ComplianceReport,
-    current_user: User = Depends(get_current_active_user)
+    report_config: ComplianceReport, current_user: User = Depends(get_current_active_user)
 ):
     report_data = await generate_compliance_report(
         current_user,
@@ -98,14 +99,14 @@ async def generate_report(
         report_config.report_type,
         report_config.format,
         report_config.include_evidence,
-        report_config.include_recommendations
+        report_config.include_recommendations,
     )
 
     if report_config.format == "pdf":
         return StreamingResponse(
             io.BytesIO(report_data),
             media_type="application/pdf",
-            headers={"Content-Disposition": "attachment; filename=compliance_report.pdf"}
+            headers={"Content-Disposition": "attachment; filename=compliance_report.pdf"},
         )
     else:
         return report_data
@@ -115,7 +116,7 @@ async def generate_report(
 async def generate_compliance_report_endpoint(
     report_request: ComplianceReport,
     current_user: User = Depends(get_current_active_user),
-    db: AsyncSession = Depends(get_async_db)
+    db: AsyncSession = Depends(get_async_db),
 ):
     """Generate compliance reports."""
     from uuid import uuid4
@@ -136,13 +137,13 @@ async def generate_compliance_report_endpoint(
         "status": "generated",
         "download_url": f"/api/reports/download/{report_id}",
         "title": title,
-        "format": report_request.format
+        "format": report_request.format,
     }
+
 
 @router.get("/reports/{report_id}/download")
 async def download_compliance_report(
-    report_id: str,
-    current_user: User = Depends(get_current_active_user)
+    report_id: str, current_user: User = Depends(get_current_active_user)
 ):
     """Download a generated compliance report."""
     # For now, return a simple response indicating the report is available
@@ -152,5 +153,5 @@ async def download_compliance_report(
         "status": "ready",
         "message": "Report is ready for download",
         "content_type": "application/pdf",
-        "size": 1024
+        "size": 1024,
     }

@@ -68,18 +68,22 @@ export function AIHelpTooltip({
         user_context: userContext
       });
 
-      // Only update if this is still the current request
-      if (requestId === currentRequestId) {
-        setAiResponse(response);
-      }
+      // Check if this request is still valid
+      setRequestId((latestRequestId) => {
+        if (currentRequestId === latestRequestId) {
+          setAiResponse(response);
+          setLoading(false);
+        }
+        return latestRequestId;
+      });
     } catch (err) {
-      if (requestId === currentRequestId) {
-        setError(err instanceof Error ? err.message : 'Failed to get AI help');
-      }
-    } finally {
-      if (requestId === currentRequestId) {
-        setLoading(false);
-      }
+      setRequestId((latestRequestId) => {
+        if (currentRequestId === latestRequestId) {
+          setError(err instanceof Error ? err.message : 'Failed to get AI help');
+          setLoading(false);
+        }
+        return latestRequestId;
+      });
     }
   };
 

@@ -7,71 +7,71 @@
     /* Base font size - 112.5% = 18px on 16px browser default */
     font-size: 112.5%;
     
-    /* Default Dark theme - Midnight Blue + Turquoise */
-    --background: 222 84% 5%; /* Midnight blue background #0F172A */
-    --foreground: 210 40% 95%; /* Light text for dark backgrounds */
+    /* Modern Dark Theme - Purple & Cyan Gradient */
+    --background: 0 0% 4%; /* Near black background #0A0A0B */
+    --foreground: 0 0% 98%; /* High contrast white text #FAFAFA */
 
-    --card: 222 84% 11%; /* Slightly lighter midnight #1E293B */
-    --card-foreground: 210 40% 95%;
+    --card: 0 0% 7%; /* Primary surface #111113 */
+    --card-foreground: 0 0% 98%;
 
-    --popover: 222 84% 11%;
-    --popover-foreground: 210 40% 95%;
+    --popover: 0 0% 9%; /* Secondary surface #18181B */
+    --popover-foreground: 0 0% 98%;
 
-    --primary: 188 100% 42%; /* Turquoise primary #00BCD4 */
+    --primary: 262 83% 58%; /* Vibrant purple #7C3AED */
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 215 25% 27%; /* Dark neutral #334155 */
-    --secondary-foreground: 210 40% 85%;
+    --secondary: 0 0% 15%; /* Dark neutral #27272A */
+    --secondary-foreground: 0 0% 98%;
 
-    --muted: 215 25% 27%; /* Muted backgrounds */
-    --muted-foreground: 215 16% 65%; /* Muted text */
+    --muted: 0 0% 15%; /* Muted backgrounds */
+    --muted-foreground: 240 5% 64%; /* Muted text #A1A1AA */
 
-    --accent: 188 100% 42%; /* Turquoise accent #00BCD4 */
+    --accent: 188 95% 43%; /* Cyan accent #06B6D4 */
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84% 60%; /* Error red */
     --destructive-foreground: 0 0% 100%;
 
-    --border: 215 28% 17%; /* Subtle borders for dark theme */
-    --input: 215 28% 17%;
-    --ring: 188 100% 42%; /* Turquoise focus ring */
+    --border: 0 0% 15%; /* Subtle borders for dark theme #27272A */
+    --input: 0 0% 15%;
+    --ring: 262 83% 58%; /* Purple focus ring */
 
     --radius: 0.5rem;
     
     /* Focus system variables */
-    --focus-ring: hsl(var(--accent));
+    --focus-ring: hsl(var(--primary));
     --focus-offset: 2px;
   }
   
   /* Light theme (optional override) */
   .light {
     --background: 0 0% 100%; /* White background */
-    --foreground: 222 84% 5%; /* Midnight text */
+    --foreground: 0 0% 4%; /* Near black text */
 
     --card: 0 0% 100%;
-    --card-foreground: 222 84% 5%;
+    --card-foreground: 0 0% 4%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 222 84% 5%;
+    --popover-foreground: 0 0% 4%;
 
-    --primary: 188 100% 42%; /* Turquoise primary */
+    --primary: 262 83% 58%; /* Purple primary */
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 210 40% 96%; /* Light blue-gray */
-    --secondary-foreground: 222 84% 5%;
+    --secondary: 0 0% 96%; /* Light gray */
+    --secondary-foreground: 0 0% 4%;
 
-    --muted: 210 40% 96%;
-    --muted-foreground: 215 16% 46%;
+    --muted: 0 0% 96%;
+    --muted-foreground: 240 4% 46%;
 
-    --accent: 188 100% 42%; /* Turquoise accent */
+    --accent: 188 95% 43%; /* Cyan accent */
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 214 32% 91%;
-    --input: 214 32% 91%;
-    --ring: 188 100% 42%;
+    --border: 0 0% 91%;
+    --input: 0 0% 91%;
+    --ring: 262 83% 58%;
   }
 }
 
@@ -183,6 +183,71 @@
 }
 
 @layer components {
+  /* Modern Gradient Text */
+  .gradient-text {
+    @apply bg-gradient-to-r from-brand-primary via-brand-secondary to-brand-tertiary bg-clip-text text-transparent;
+  }
+  
+  /* Animated Gradient Background */
+  .gradient-bg {
+    @apply bg-gradient-to-br from-gradient-from via-gradient-via to-gradient-to;
+    background-size: 400% 400%;
+    animation: gradient-shift 15s ease infinite;
+  }
+  
+  @keyframes gradient-shift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+  
+  /* Glass Morphism Cards */
+  .glass-card {
+    @apply bg-glass-white backdrop-blur-md border border-glass-border rounded-xl;
+  }
+  
+  .glass-card:hover {
+    @apply bg-glass-white-hover border-glass-border-hover;
+  }
+  
+  /* Neon Glow Effects */
+  .glow-purple {
+    box-shadow: 0 0 20px rgba(124, 58, 237, 0.5), 0 0 40px rgba(124, 58, 237, 0.3), 0 0 60px rgba(124, 58, 237, 0.1);
+  }
+  
+  .glow-cyan {
+    box-shadow: 0 0 20px rgba(6, 182, 212, 0.5), 0 0 40px rgba(6, 182, 212, 0.3), 0 0 60px rgba(6, 182, 212, 0.1);
+  }
+  
+  /* Modern Button Styles */
+  .btn-gradient {
+    @apply relative overflow-hidden bg-gradient-to-r from-brand-primary to-brand-secondary text-white font-semibold transition-all duration-300;
+  }
+  
+  .btn-gradient:hover {
+    @apply shadow-lg;
+    transform: translateY(-2px);
+  }
+  
+  .btn-gradient::before {
+    content: '';
+    @apply absolute inset-0 bg-gradient-to-r from-brand-secondary to-brand-tertiary opacity-0 transition-opacity duration-300;
+  }
+  
+  .btn-gradient:hover::before {
+    @apply opacity-100;
+  }
+  
+  /* Mesh Gradient Background */
+  .mesh-gradient {
+    background-image: 
+      radial-gradient(at 40% 20%, hsla(262, 83%, 58%, 0.3) 0px, transparent 50%),
+      radial-gradient(at 80% 0%, hsla(188, 95%, 43%, 0.3) 0px, transparent 50%),
+      radial-gradient(at 0% 50%, hsla(158, 76%, 42%, 0.3) 0px, transparent 50%),
+      radial-gradient(at 80% 50%, hsla(262, 83%, 58%, 0.2) 0px, transparent 50%),
+      radial-gradient(at 0% 100%, hsla(188, 95%, 43%, 0.2) 0px, transparent 50%);
+  }
+  
   /* Elevation system for dark theme */
   .elevation-low {
     @apply shadow-sm shadow-black/20;
@@ -194,28 +259,6 @@
   
   .elevation-high {
     @apply shadow-lg shadow-black/40;
-  }
-  
-  /* Glassmorphism effect for cards */
-  .glass {
-    @apply backdrop-blur-sm bg-card/50 border-border/50;
-  }
-  
-  /* Gradient borders */
-  .gradient-border {
-    @apply relative overflow-hidden;
-    background: linear-gradient(to right, hsl(var(--card)), hsl(var(--card))) padding-box,
-                linear-gradient(135deg, hsl(var(--primary)), hsl(var(--accent))) border-box;
-    border: 1px solid transparent;
-  }
-  
-  /* Glow effect on hover */
-  .glow-hover {
-    @apply transition-all duration-300;
-  }
-  
-  .glow-hover:hover {
-    box-shadow: 0 0 20px rgba(0, 188, 212, 0.3);
   }
   
   /* Skip to main content link (accessibility) */

@@ -15,9 +15,7 @@ from database.user import User
 
 
 async def create_or_update_business_profile(
-    db: AsyncSession,
-    user: User,
-    profile_data: Dict[str, Any]
+    db: AsyncSession, user: User, profile_data: Dict[str, Any]
 ) -> BusinessProfile:
     """Create or update a business profile for the authenticated user."""
     try:
@@ -45,10 +43,7 @@ async def create_or_update_business_profile(
         raise DatabaseException("Failed to create or update business profile.") from e
 
 
-async def get_business_profile(
-    db: AsyncSession,
-    user: User
-) -> Optional[BusinessProfile]:
+async def get_business_profile(db: AsyncSession, user: User) -> Optional[BusinessProfile]:
     """Get the business profile for the authenticated user."""
     try:
         stmt = select(BusinessProfile).where(BusinessProfile.user_id == user.id)
@@ -59,10 +54,7 @@ async def get_business_profile(
 
 
 async def update_assessment_status(
-    db: AsyncSession,
-    user: User,
-    assessment_completed: bool,
-    assessment_data: Dict
+    db: AsyncSession, user: User, assessment_completed: bool, assessment_data: Dict
 ) -> BusinessProfile:
     """Update the assessment completion status and data."""
     profile = await get_business_profile(db, user)
@@ -73,7 +65,7 @@ async def update_assessment_status(
         profile.assessment_completed = assessment_completed
         profile.assessment_data = assessment_data
         profile.updated_at = datetime.utcnow()
-        
+
         await db.commit()
         await db.refresh(profile)
 
@@ -86,25 +78,53 @@ async def update_assessment_status(
 def get_supported_industries() -> List[str]:
     """Get list of supported industries for business profiles."""
     return [
-        "Financial Services", "Healthcare", "Technology", "Manufacturing",
-        "Retail", "Education", "Government", "Non-profit",
-        "Professional Services", "Real Estate", "Transportation", "Energy",
-        "Media", "Hospitality", "Other"
+        "Financial Services",
+        "Healthcare",
+        "Technology",
+        "Manufacturing",
+        "Retail",
+        "Education",
+        "Government",
+        "Non-profit",
+        "Professional Services",
+        "Real Estate",
+        "Transportation",
+        "Energy",
+        "Media",
+        "Hospitality",
+        "Other",
     ]
 
 
 def get_cloud_provider_options() -> List[str]:
     """Get list of supported cloud providers."""
     return [
-        "AWS (Amazon Web Services)", "Microsoft Azure", "Google Cloud Platform",
-        "IBM Cloud", "Oracle Cloud", "DigitalOcean", "Linode", "Vultr", "Other"
+        "AWS (Amazon Web Services)",
+        "Microsoft Azure",
+        "Google Cloud Platform",
+        "IBM Cloud",
+        "Oracle Cloud",
+        "DigitalOcean",
+        "Linode",
+        "Vultr",
+        "Other",
     ]
 
 
 def get_saas_tool_options() -> List[str]:
     """Get list of common SaaS tools for integration guidance."""
     return [
-        "Microsoft 365", "Google Workspace", "Salesforce", "Slack", "Zoom",
-        "Atlassian (Jira/Confluence)", "HubSpot", "Zendesk", "DocuSign",
-        "Dropbox", "Box", "ServiceNow", "Other"
+        "Microsoft 365",
+        "Google Workspace",
+        "Salesforce",
+        "Slack",
+        "Zoom",
+        "Atlassian (Jira/Confluence)",
+        "HubSpot",
+        "Zendesk",
+        "DocuSign",
+        "Dropbox",
+        "Box",
+        "ServiceNow",
+        "Other",
     ]

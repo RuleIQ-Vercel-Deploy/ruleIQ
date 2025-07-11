@@ -14,8 +14,10 @@ from typing import Any, Dict, List, Literal, Optional, TypedDict, Union
 # Core Response Types and Enums
 # =====================================================================
 
+
 class SeverityLevel(str, Enum):
     """Severity levels for gaps, issues, and recommendations."""
+
     LOW = "low"
     MEDIUM = "medium"
     HIGH = "high"
@@ -24,6 +26,7 @@ class SeverityLevel(str, Enum):
 
 class PriorityLevel(str, Enum):
     """Priority levels for recommendations and actions."""
+
     LOW = "low"
     MEDIUM = "medium"
     HIGH = "high"
@@ -32,6 +35,7 @@ class PriorityLevel(str, Enum):
 
 class ConfidenceLevel(str, Enum):
     """Confidence levels for AI assessments."""
+
     LOW = "low"
     MEDIUM = "medium"
     HIGH = "high"
@@ -40,15 +44,17 @@ class ConfidenceLevel(str, Enum):
 
 class ImplementationEffort(str, Enum):
     """Implementation effort estimates."""
+
     MINIMAL = "minimal"  # < 1 week
-    LOW = "low"          # 1-2 weeks
-    MEDIUM = "medium"    # 2-6 weeks
-    HIGH = "high"        # 6-12 weeks
+    LOW = "low"  # 1-2 weeks
+    MEDIUM = "medium"  # 2-6 weeks
+    HIGH = "high"  # 6-12 weeks
     EXTENSIVE = "extensive"  # > 12 weeks
 
 
 class RiskLevel(str, Enum):
     """Risk assessment levels."""
+
     LOW = "low"
     MEDIUM = "medium"
     HIGH = "high"
@@ -59,8 +65,10 @@ class RiskLevel(str, Enum):
 # Gap Analysis Schemas
 # =====================================================================
 
+
 class Gap(TypedDict):
     """Individual compliance gap identified in assessment."""
+
     id: str
     title: str
     description: str
@@ -71,7 +79,7 @@ class Gap(TypedDict):
     target_state: str
     impact_description: str
     business_impact_score: float  # 0.0 - 1.0
-    technical_complexity: float   # 0.0 - 1.0
+    technical_complexity: float  # 0.0 - 1.0
     regulatory_requirement: bool
     estimated_effort: ImplementationEffort
     dependencies: List[str]
@@ -81,6 +89,7 @@ class Gap(TypedDict):
 
 class GapAnalysisResponse(TypedDict):
     """Complete gap analysis response structure."""
+
     gaps: List[Gap]
     overall_risk_level: RiskLevel
     priority_order: List[str]  # Gap IDs in priority order
@@ -97,8 +106,10 @@ class GapAnalysisResponse(TypedDict):
 # Recommendation Schemas
 # =====================================================================
 
+
 class Recommendation(TypedDict):
     """Individual compliance recommendation."""
+
     id: str
     title: str
     description: str
@@ -120,6 +131,7 @@ class Recommendation(TypedDict):
 
 class ImplementationPhase(TypedDict):
     """Implementation phase for recommendation rollout."""
+
     phase_number: int
     phase_name: str
     duration_weeks: int
@@ -131,6 +143,7 @@ class ImplementationPhase(TypedDict):
 
 class ImplementationPlan(TypedDict):
     """Complete implementation plan for recommendations."""
+
     total_duration_weeks: int
     phases: List[ImplementationPhase]
     resource_allocation: Dict[str, str]
@@ -142,6 +155,7 @@ class ImplementationPlan(TypedDict):
 
 class RecommendationResponse(TypedDict):
     """Complete recommendation response structure."""
+
     recommendations: List[Recommendation]
     implementation_plan: ImplementationPlan
     prioritization_rationale: str
@@ -156,8 +170,10 @@ class RecommendationResponse(TypedDict):
 # Assessment Analysis Schemas
 # =====================================================================
 
+
 class ComplianceInsight(TypedDict):
     """Key compliance insight from assessment analysis."""
+
     insight_type: Literal["strength", "weakness", "opportunity", "threat"]
     title: str
     description: str
@@ -168,6 +184,7 @@ class ComplianceInsight(TypedDict):
 
 class EvidenceRequirement(TypedDict):
     """Evidence requirement identified from assessment."""
+
     evidence_type: str
     description: str
     framework_reference: str
@@ -181,6 +198,7 @@ class EvidenceRequirement(TypedDict):
 
 class RiskAssessment(TypedDict):
     """Risk assessment results."""
+
     overall_risk_level: RiskLevel
     risk_score: float  # 0.0 - 100.0
     top_risk_factors: List[str]
@@ -193,6 +211,7 @@ class RiskAssessment(TypedDict):
 
 class ComplianceMetrics(TypedDict):
     """Quantitative compliance metrics."""
+
     overall_compliance_score: float  # 0.0 - 100.0
     framework_scores: Dict[str, float]
     maturity_level: Literal["initial", "developing", "defined", "managed", "optimized"]
@@ -203,6 +222,7 @@ class ComplianceMetrics(TypedDict):
 
 class AssessmentAnalysisResponse(TypedDict):
     """Complete assessment analysis response structure."""
+
     gaps: List[Gap]
     recommendations: List[Recommendation]
     risk_assessment: RiskAssessment
@@ -219,8 +239,10 @@ class AssessmentAnalysisResponse(TypedDict):
 # Help and Guidance Schemas
 # =====================================================================
 
+
 class GuidanceResponse(TypedDict):
     """Response for assessment question help/guidance."""
+
     guidance: str
     confidence_score: float
     related_topics: List[str]
@@ -234,6 +256,7 @@ class GuidanceResponse(TypedDict):
 
 class FollowUpQuestion(TypedDict):
     """Follow-up question for assessment completion."""
+
     question_id: str
     question_text: str
     category: str
@@ -245,6 +268,7 @@ class FollowUpQuestion(TypedDict):
 
 class FollowUpResponse(TypedDict):
     """Response for assessment follow-up questions."""
+
     follow_up_questions: List[FollowUpQuestion]
     recommendations: List[str]
     confidence_score: float
@@ -257,8 +281,10 @@ class FollowUpResponse(TypedDict):
 # Evidence and Workflow Schemas
 # =====================================================================
 
+
 class EvidenceItem(TypedDict):
     """Individual evidence item recommendation."""
+
     evidence_id: str
     title: str
     description: str
@@ -275,6 +301,7 @@ class EvidenceItem(TypedDict):
 
 class WorkflowStep(TypedDict):
     """Individual step in evidence collection workflow."""
+
     step_number: int
     title: str
     description: str
@@ -288,6 +315,7 @@ class WorkflowStep(TypedDict):
 
 class WorkflowPhase(TypedDict):
     """Phase in evidence collection workflow."""
+
     phase_number: int
     phase_name: str
     objective: str
@@ -299,6 +327,7 @@ class WorkflowPhase(TypedDict):
 
 class EvidenceWorkflow(TypedDict):
     """Complete evidence collection workflow."""
+
     workflow_id: str
     title: str
     description: str
@@ -315,8 +344,10 @@ class EvidenceWorkflow(TypedDict):
 # Policy Generation Schemas
 # =====================================================================
 
+
 class PolicySection(TypedDict):
     """Individual section of a generated policy."""
+
     section_number: str
     title: str
     content: str
@@ -327,6 +358,7 @@ class PolicySection(TypedDict):
 
 class PolicyDocument(TypedDict):
     """Complete generated policy document."""
+
     policy_id: str
     title: str
     version: str
@@ -343,9 +375,13 @@ class PolicyDocument(TypedDict):
 # Chat and Conversation Schemas
 # =====================================================================
 
+
 class IntentClassification(TypedDict):
     """User intent classification result."""
-    intent_type: Literal["evidence_query", "compliance_check", "guidance_request", "general_query", "assessment_help"]
+
+    intent_type: Literal[
+        "evidence_query", "compliance_check", "guidance_request", "general_query", "assessment_help"
+    ]
     confidence: float
     entities: Dict[str, List[str]]
     context_requirements: List[str]
@@ -354,6 +390,7 @@ class IntentClassification(TypedDict):
 
 class ChatResponse(TypedDict):
     """General chat response structure."""
+
     response_text: str
     intent_classification: IntentClassification
     confidence_score: float
@@ -366,8 +403,10 @@ class ChatResponse(TypedDict):
 # Meta Response Schemas
 # =====================================================================
 
+
 class ResponseMetadata(TypedDict):
     """Metadata for all AI responses."""
+
     response_id: str
     timestamp: str
     model_used: str
@@ -380,6 +419,7 @@ class ResponseMetadata(TypedDict):
 
 class StructuredAIResponse(TypedDict):
     """Wrapper for all structured AI responses."""
+
     metadata: ResponseMetadata
     response_type: str
     payload: Union[
@@ -391,7 +431,7 @@ class StructuredAIResponse(TypedDict):
         ChatResponse,
         PolicyDocument,
         EvidenceWorkflow,
-        Dict[str, Any]  # Fallback for custom responses
+        Dict[str, Any],  # Fallback for custom responses
     ]
     validation_passed: bool
     fallback_used: bool
@@ -401,8 +441,10 @@ class StructuredAIResponse(TypedDict):
 # Error and Validation Schemas
 # =====================================================================
 
+
 class ValidationError(TypedDict):
     """Schema validation error details."""
+
     field_path: str
     error_type: str
     error_message: str
@@ -413,6 +455,7 @@ class ValidationError(TypedDict):
 
 class SchemaValidationResult(TypedDict):
     """Result of schema validation operation."""
+
     is_valid: bool
     schema_name: str
     validation_errors: List[ValidationError]
@@ -434,7 +477,7 @@ AIResponseType = Union[
     FollowUpResponse,
     ChatResponse,
     PolicyDocument,
-    EvidenceWorkflow
+    EvidenceWorkflow,
 ]
 
 # Union of all structured response schemas
@@ -443,5 +486,5 @@ StructuredResponseSchema = Union[
     RecommendationResponse,
     AssessmentAnalysisResponse,
     GuidanceResponse,
-    FollowUpResponse
+    FollowUpResponse,
 ]

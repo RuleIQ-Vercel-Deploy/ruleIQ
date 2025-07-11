@@ -8,11 +8,6 @@ from logging.config import fileConfig
 
 # Import your models here for autogenerate support
 from database.base import Base
-from database.user import User
-from database.models.integrations import (
-    Integration, EvidenceCollection, EvidenceItem, 
-    IntegrationHealthLog, EvidenceAuditLog
-)
 
 # This is the Alembic Config object
 config = context.config
@@ -48,9 +43,7 @@ def run_migrations_online() -> None:
     )
 
     with connectable.connect() as connection:
-        context.configure(
-            connection=connection, target_metadata=target_metadata
-        )
+        context.configure(connection=connection, target_metadata=target_metadata)
 
         with context.begin_transaction():
             context.run_migrations()

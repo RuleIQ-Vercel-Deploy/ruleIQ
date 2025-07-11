@@ -34,9 +34,9 @@ export default function PoliciesPage() {
         page_size: 50
       })
       setPolicies(response.policies)
-    } catch (err: any) {
+    } catch (err) {
       console.error('Error fetching policies:', err)
-      setError(err.message || 'Failed to load policies')
+      setError(err instanceof Error ? err.message : 'Failed to load policies')
     } finally {
       setLoading(false)
     }
@@ -88,7 +88,7 @@ export default function PoliciesPage() {
       } else {
         await policyService.exportPolicyAsWord(policyId)
       }
-    } catch (err: any) {
+    } catch (err) {
       console.error('Error exporting policy:', err)
     }
   }
@@ -138,15 +138,15 @@ export default function PoliciesPage() {
                     {formatStatus(policy.status)}
                   </Badge>
                 </div>
-                <CardTitle className="text-navy">{policy.name}</CardTitle>
+                <CardTitle className="text-navy">{policy.policy_name}</CardTitle>
                 <CardDescription>
-                  {policy.description || `Policy for ${policy.framework}`}
+                  {`${policy.policy_type} policy for ${policy.framework_name || policy.framework_id}`}
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="flex items-center justify-between text-sm">
                   <span className="text-muted-foreground">Framework</span>
-                  <span className="font-medium">{policy.framework}</span>
+                  <span className="font-medium">{policy.framework_name || policy.framework_id}</span>
                 </div>
                 {policy.version && (
                   <div className="flex items-center justify-between text-sm">

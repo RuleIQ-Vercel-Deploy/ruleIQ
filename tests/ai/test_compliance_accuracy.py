@@ -17,7 +17,7 @@ from services.ai.assistant import ComplianceAssistant
 
 
 @pytest.mark.ai
-@pytest.mark.compliance 
+@pytest.mark.compliance
 @pytest.mark.golden
 class TestComplianceAccuracy:
     """Test AI compliance accuracy using golden datasets"""
@@ -29,7 +29,15 @@ class TestComplianceAccuracy:
         with open(dataset_path) as f:
             return json.load(f)
 
-    async def test_gdpr_basic_questions_accuracy(self, async_db_session, mock_ai_client, gdpr_golden_dataset, async_sample_user, async_sample_business_profile):
+    @pytest.mark.asyncio
+    async def test_gdpr_basic_questions_accuracy(
+        self,
+        async_db_session,
+        mock_ai_client,
+        gdpr_golden_dataset,
+        async_sample_user,
+        async_sample_business_profile,
+    ):
         """Test AI accuracy on basic GDPR questions"""
         assistant = ComplianceAssistant(async_db_session)
 
@@ -42,33 +50,48 @@ class TestComplianceAccuracy:
             mock_response = self._generate_mock_response(question_data)
             mock_ai_client.generate_content.return_value.text = mock_response
 
-            with patch.object(assistant, 'process_message') as mock_process:
-                mock_process.return_value = (mock_response, {
-                    "intent": "compliance_guidance",
-                    "framework": question_data["framework"],
-                    "confidence": 0.9
-                })
+            with patch.object(assistant, "process_message") as mock_process:
+                mock_process.return_value = (
+                    mock_response,
+                    {
+                        "intent": "compliance_guidance",
+                        "framework": question_data["framework"],
+                        "confidence": 0.9,
+                    },
+                )
 
                 response, metadata = await assistant.process_message(
                     conversation_id=uuid4(),
                     user=async_sample_user,
                     message=question_data["question"],
-                    business_profile_id=async_sample_business_profile.id
+                    business_profile_id=async_sample_business_profile.id,
                 )
-                
+
                 # Check if response contains expected keywords
                 if self._validate_response_accuracy(response, question_data):
                     correct_answers += 1
-        
+
         # Require 85% accuracy on basic questions
         accuracy = correct_answers / total_questions
-        assert accuracy >= 0.85, f"Basic GDPR accuracy too low: {accuracy:.2%} ({correct_answers}/{total_questions})"
+        assert accuracy >= 0.85, (
+            f"Basic GDPR accuracy too low: {accuracy:.2%} ({correct_answers}/{total_questions})"
+        )
 
-    async def test_gdpr_intermediate_questions_accuracy(self, async_db_session, mock_ai_client, gdpr_golden_dataset, async_sample_user, async_sample_business_profile):
+    @pytest.mark.asyncio
+    async def test_gdpr_intermediate_questions_accuracy(
+        self,
+        async_db_session,
+        mock_ai_client,
+        gdpr_golden_dataset,
+        async_sample_user,
+        async_sample_business_profile,
+    ):
         """Test AI accuracy on intermediate GDPR questions"""
         assistant = ComplianceAssistant(async_db_session)
 
-        intermediate_questions = [q for q in gdpr_golden_dataset if q["difficulty"] == "intermediate"]
+        intermediate_questions = [
+            q for q in gdpr_golden_dataset if q["difficulty"] == "intermediate"
+        ]
         correct_answers = 0
         total_questions = len(intermediate_questions)
 
@@ -76,28 +99,41 @@ class TestComplianceAccuracy:
             mock_response = self._generate_mock_response(question_data)
             mock_ai_client.generate_content.return_value.text = mock_response
 
-            with patch.object(assistant, 'process_message') as mock_process:
-                mock_process.return_value = (mock_response, {
-                    "intent": "compliance_guidance",
-                    "framework": question_data["framework"],
-                    "confidence": 0.85
-                })
+            with patch.object(assistant, "process_message") as mock_process:
+                mock_process.return_value = (
+                    mock_response,
+                    {
+                        "intent": "compliance_guidance",
+                        "framework": question_data["framework"],
+                        "confidence": 0.85,
+                    },
+                )
 
                 response, metadata = await assistant.process_message(
                     conversation_id=uuid4(),
                     user=async_sample_user,
                     message=question_data["question"],
-                    business_profile_id=async_sample_business_profile.id
+                    business_profile_id=async_sample_business_profile.id,
                 )
-                
+
                 if self._validate_response_accuracy(response, question_data):
                     correct_answers += 1
-        
+
         # Require 75% accuracy on intermediate questions
         accuracy = correct_answers / total_questions
-        assert accuracy >= 0.75, f"Intermediate GDPR accuracy too low: {accuracy:.2%} ({correct_answers}/{total_questions})"
+        assert accuracy >= 0.75, (
+            f"Intermediate GDPR accuracy too low: {accuracy:.2%} ({correct_answers}/{total_questions})"
+        )
 
-    async def test_gdpr_advanced_questions_accuracy(self, async_db_session, mock_ai_client, gdpr_golden_dataset, async_sample_user, async_sample_business_profile):
+    @pytest.mark.asyncio
+    async def test_gdpr_advanced_questions_accuracy(
+        self,
+        async_db_session,
+        mock_ai_client,
+        gdpr_golden_dataset,
+        async_sample_user,
+        async_sample_business_profile,
+    ):
         """Test AI accuracy on advanced GDPR questions"""
         assistant = ComplianceAssistant(async_db_session)
 
@@ -109,28 +145,41 @@ class TestComplianceAccuracy:
             mock_response = self._generate_mock_response(question_data)
             mock_ai_client.generate_content.return_value.text = mock_response
 
-            with patch.object(assistant, 'process_message') as mock_process:
-                mock_process.return_value = (mock_response, {
-                    "intent": "compliance_guidance",
-                    "framework": question_data["framework"],
-                    "confidence": 0.8
-                })
+            with patch.object(assistant, "process_message") as mock_process:
+                mock_process.return_value = (
+                    mock_response,
+                    {
+                        "intent": "compliance_guidance",
+                        "framework": question_data["framework"],
+                        "confidence": 0.8,
+                    },
+                )
 
                 response, metadata = await assistant.process_message(
                     conversation_id=uuid4(),
                     user=async_sample_user,
                     message=question_data["question"],
-                    business_profile_id=async_sample_business_profile.id
+                    business_profile_id=async_sample_business_profile.id,
                 )
-                
+
                 if self._validate_response_accuracy(response, question_data):
                     correct_answers += 1
-        
+
         # Require 65% accuracy on advanced questions
         accuracy = correct_answers / total_questions
-        assert accuracy >= 0.65, f"Advanced GDPR accuracy too low: {accuracy:.2%} ({correct_answers}/{total_questions})"
+        assert accuracy >= 0.65, (
+            f"Advanced GDPR accuracy too low: {accuracy:.2%} ({correct_answers}/{total_questions})"
+        )
 
-    async def test_source_citation_accuracy(self, async_db_session, mock_ai_client, gdpr_golden_dataset, async_sample_user, async_sample_business_profile):
+    @pytest.mark.asyncio
+    async def test_source_citation_accuracy(
+        self,
+        async_db_session,
+        mock_ai_client,
+        gdpr_golden_dataset,
+        async_sample_user,
+        async_sample_business_profile,
+    ):
         """Test that AI responses include accurate source citations"""
         assistant = ComplianceAssistant(async_db_session)
 
@@ -142,35 +191,48 @@ class TestComplianceAccuracy:
             mock_response = f"""
             {self._generate_mock_response(question_data)}
 
-            **Source:** {question_data['source']}
+            **Source:** {question_data["source"]}
             """
             mock_ai_client.generate_content.return_value.text = mock_response
 
-            with patch.object(assistant, 'process_message') as mock_process:
-                mock_process.return_value = (mock_response, {
-                    "intent": "compliance_guidance",
-                    "framework": question_data["framework"],
-                    "sources": [question_data["source"]],
-                    "confidence": 0.9
-                })
+            with patch.object(assistant, "process_message") as mock_process:
+                mock_process.return_value = (
+                    mock_response,
+                    {
+                        "intent": "compliance_guidance",
+                        "framework": question_data["framework"],
+                        "sources": [question_data["source"]],
+                        "confidence": 0.9,
+                    },
+                )
 
                 response, metadata = await assistant.process_message(
                     conversation_id=uuid4(),
                     user=async_sample_user,
                     message=question_data["question"],
-                    business_profile_id=async_sample_business_profile.id
+                    business_profile_id=async_sample_business_profile.id,
                 )
-                
+
                 # Check if response includes correct source citation
                 expected_source = question_data["source"]
                 if expected_source.lower() in response.lower():
                     correct_citations += 1
-        
+
         # Require 80% accurate source citations
         citation_accuracy = correct_citations / len(questions_with_sources)
-        assert citation_accuracy >= 0.8, f"Source citation accuracy too low: {citation_accuracy:.2%}"
+        assert citation_accuracy >= 0.8, (
+            f"Source citation accuracy too low: {citation_accuracy:.2%}"
+        )
 
-    async def test_response_completeness(self, async_db_session, mock_ai_client, gdpr_golden_dataset, async_sample_user, async_sample_business_profile):
+    @pytest.mark.asyncio
+    async def test_response_completeness(
+        self,
+        async_db_session,
+        mock_ai_client,
+        gdpr_golden_dataset,
+        async_sample_user,
+        async_sample_business_profile,
+    ):
         """Test that AI responses are comprehensive and complete"""
         assistant = ComplianceAssistant(async_db_session)
 
@@ -178,62 +240,96 @@ class TestComplianceAccuracy:
             mock_response = self._generate_comprehensive_response(question_data)
             mock_ai_client.generate_content.return_value.text = mock_response
 
-            with patch.object(assistant, 'process_message') as mock_process:
-                mock_process.return_value = (mock_response, {
-                    "intent": "compliance_guidance",
-                    "framework": question_data["framework"],
-                    "confidence": 0.9
-                })
+            with patch.object(assistant, "process_message") as mock_process:
+                mock_process.return_value = (
+                    mock_response,
+                    {
+                        "intent": "compliance_guidance",
+                        "framework": question_data["framework"],
+                        "confidence": 0.9,
+                    },
+                )
 
                 response, metadata = await assistant.process_message(
                     conversation_id=uuid4(),
                     user=async_sample_user,
                     message=question_data["question"],
-                    business_profile_id=async_sample_business_profile.id
+                    business_profile_id=async_sample_business_profile.id,
                 )
-                
+
                 # Check response completeness criteria
                 assert len(response) >= 100, "Response too short to be comprehensive"
-                assert self._contains_key_information(response, question_data), "Response missing key information"
+                assert self._contains_key_information(response, question_data), (
+                    "Response missing key information"
+                )
                 assert self._has_practical_guidance(response), "Response lacks practical guidance"
 
-    async def test_framework_specific_terminology(self, async_db_session, mock_ai_client, gdpr_golden_dataset, async_sample_user, async_sample_business_profile):
+    @pytest.mark.asyncio
+    async def test_framework_specific_terminology(
+        self,
+        async_db_session,
+        mock_ai_client,
+        gdpr_golden_dataset,
+        async_sample_user,
+        async_sample_business_profile,
+    ):
         """Test that AI uses correct framework-specific terminology"""
         assistant = ComplianceAssistant(async_db_session)
 
         gdpr_terminology = [
-            "data subject", "controller", "processor", "supervisory authority",
-            "lawful basis", "legitimate interests", "data protection officer"
+            "data subject",
+            "controller",
+            "processor",
+            "supervisory authority",
+            "lawful basis",
+            "legitimate interests",
+            "data protection officer",
         ]
 
         for question_data in gdpr_golden_dataset[:3]:
             mock_response = self._generate_mock_response(question_data, include_terminology=True)
             mock_ai_client.generate_content.return_value.text = mock_response
 
-            with patch.object(assistant, 'process_message') as mock_process:
-                mock_process.return_value = (mock_response, {
-                    "intent": "compliance_guidance",
-                    "framework": question_data["framework"],
-                    "confidence": 0.9
-                })
+            with patch.object(assistant, "process_message") as mock_process:
+                mock_process.return_value = (
+                    mock_response,
+                    {
+                        "intent": "compliance_guidance",
+                        "framework": question_data["framework"],
+                        "confidence": 0.9,
+                    },
+                )
 
                 response, metadata = await assistant.process_message(
                     conversation_id=uuid4(),
                     user=async_sample_user,
                     message=question_data["question"],
-                    business_profile_id=async_sample_business_profile.id
+                    business_profile_id=async_sample_business_profile.id,
                 )
-                
+
                 # Check that response uses appropriate GDPR terminology
                 response_lower = response.lower()
-                relevant_terms = [term for term in gdpr_terminology 
-                                if any(keyword in term for keyword in question_data["keywords"])]
-                
+                relevant_terms = [
+                    term
+                    for term in gdpr_terminology
+                    if any(keyword in term for keyword in question_data["keywords"])
+                ]
+
                 if relevant_terms:
                     found_terms = [term for term in relevant_terms if term in response_lower]
-                    assert len(found_terms) > 0, f"Response should use GDPR terminology for question about {question_data['category']}"
+                    assert len(found_terms) > 0, (
+                        f"Response should use GDPR terminology for question about {question_data['category']}"
+                    )
 
-    async def test_consistency_across_similar_questions(self, async_db_session, mock_ai_client, gdpr_golden_dataset, async_sample_user, async_sample_business_profile):
+    @pytest.mark.asyncio
+    async def test_consistency_across_similar_questions(
+        self,
+        async_db_session,
+        mock_ai_client,
+        gdpr_golden_dataset,
+        async_sample_user,
+        async_sample_business_profile,
+    ):
         """Test that AI provides consistent answers to similar questions"""
         assistant = ComplianceAssistant(async_db_session)
 
@@ -255,26 +351,38 @@ class TestComplianceAccuracy:
                 mock_response = self._generate_mock_response(question_data)
                 mock_ai_client.generate_content.return_value.text = mock_response
 
-                with patch.object(assistant, 'process_message') as mock_process:
-                    mock_process.return_value = (mock_response, {
-                        "intent": "compliance_guidance",
-                        "framework": question_data["framework"],
-                        "confidence": 0.9
-                    })
+                with patch.object(assistant, "process_message") as mock_process:
+                    mock_process.return_value = (
+                        mock_response,
+                        {
+                            "intent": "compliance_guidance",
+                            "framework": question_data["framework"],
+                            "confidence": 0.9,
+                        },
+                    )
 
                     response, metadata = await assistant.process_message(
-                        conversation_id="test-conv",
-                        user_id="test-user",
+                        conversation_id=uuid4(),
+                        user=async_sample_user,
                         message=question_data["question"],
-                        business_profile_id="test-profile"
+                        business_profile_id=async_sample_business_profile.id,
                     )
                     responses.append(response)
-            
-            # Check for consistency in key concepts across responses
-            assert self._check_conceptual_consistency(responses, category), \
-                f"Inconsistent responses in category: {category}"
 
-    async def test_regulatory_compliance_alignment(self, async_db_session, mock_ai_client, gdpr_golden_dataset, async_sample_user, async_sample_business_profile):
+            # Check for consistency in key concepts across responses
+            assert self._check_conceptual_consistency(responses, category), (
+                f"Inconsistent responses in category: {category}"
+            )
+
+    @pytest.mark.asyncio
+    async def test_regulatory_compliance_alignment(
+        self,
+        async_db_session,
+        mock_ai_client,
+        gdpr_golden_dataset,
+        async_sample_user,
+        async_sample_business_profile,
+    ):
         """Test that AI responses align with current regulatory requirements"""
         assistant = ComplianceAssistant(async_db_session)
 
@@ -284,40 +392,47 @@ class TestComplianceAccuracy:
             "gdpr doesn't apply",
             "ignore the regulation",
             "bypass the requirement",
-            "this law is optional"
+            "this law is optional",
         ]
 
         for question_data in gdpr_golden_dataset:
             mock_response = self._generate_mock_response(question_data)
             mock_ai_client.generate_content.return_value.text = mock_response
 
-            with patch.object(assistant, 'process_message') as mock_process:
-                mock_process.return_value = (mock_response, {
-                    "intent": "compliance_guidance",
-                    "framework": question_data["framework"],
-                    "confidence": 0.9
-                })
+            with patch.object(assistant, "process_message") as mock_process:
+                mock_process.return_value = (
+                    mock_response,
+                    {
+                        "intent": "compliance_guidance",
+                        "framework": question_data["framework"],
+                        "confidence": 0.9,
+                    },
+                )
 
                 response, metadata = await assistant.process_message(
                     conversation_id=uuid4(),
                     user=async_sample_user,
                     message=question_data["question"],
-                    business_profile_id=async_sample_business_profile.id
+                    business_profile_id=async_sample_business_profile.id,
                 )
-                
+
                 # Check that response doesn't contain regulatory violations
                 response_lower = response.lower()
                 violations_found = [v for v in regulatory_violations if v in response_lower]
-                assert len(violations_found) == 0, \
+                assert len(violations_found) == 0, (
                     f"Response contains regulatory violations: {violations_found}"
-                
+                )
+
                 # Check that response encourages compliance
                 compliance_indicators = ["should comply", "required", "mandatory", "must implement"]
-                has_compliance_guidance = any(indicator in response_lower 
-                                            for indicator in compliance_indicators)
+                has_compliance_guidance = any(
+                    indicator in response_lower for indicator in compliance_indicators
+                )
                 assert has_compliance_guidance, "Response should encourage compliance"
 
-    def _generate_mock_response(self, question_data: Dict[str, Any], include_terminology: bool = False) -> str:
+    def _generate_mock_response(
+        self, question_data: Dict[str, Any], include_terminology: bool = False
+    ) -> str:
         """Generate realistic mock AI response based on question data"""
         expected_answer = question_data["expected_answer"]
         keywords = question_data["keywords"]
@@ -331,28 +446,27 @@ class TestComplianceAccuracy:
             "",
             f"This relates to {category.replace('_', ' ')} under {question_data['framework']}.",
             "",
-            "You must implement these measures to ensure compliance with regulatory requirements."
+            "You must implement these measures to ensure compliance with regulatory requirements.",
         ]
 
         # Add some keywords naturally
         if len(keywords) > 2:
-            response_parts.extend([
-                "",
-                f"Key considerations include: {', '.join(keywords[:3])}."
-            ])
+            response_parts.extend(["", f"Key considerations include: {', '.join(keywords[:3])}."])
 
         if include_terminology and question_data["framework"] == "GDPR":
-            response_parts.extend([
-                "",
-                "As a data controller, you must ensure compliance with supervisory authority requirements."
-            ])
+            response_parts.extend(
+                [
+                    "",
+                    "As a data controller, you must ensure compliance with supervisory authority requirements.",
+                ]
+            )
 
         return "\n".join(response_parts)
 
     def _generate_comprehensive_response(self, question_data: Dict[str, Any]) -> str:
         """Generate comprehensive mock response with practical guidance"""
         base_response = self._generate_mock_response(question_data)
-        
+
         practical_guidance = [
             "",
             "**Practical Implementation Steps:**",
@@ -362,23 +476,23 @@ class TestComplianceAccuracy:
             "4. Train your team on requirements",
             "",
             "**Next Steps:**",
-            f"Consider conducting a {question_data['framework']} gap analysis to identify areas for improvement."
+            f"Consider conducting a {question_data['framework']} gap analysis to identify areas for improvement.",
         ]
-        
+
         return base_response + "\n".join(practical_guidance)
 
     def _validate_response_accuracy(self, response: str, question_data: Dict[str, Any]) -> bool:
         """Validate if response contains accurate information"""
         response_lower = response.lower()
         keywords = [kw.lower() for kw in question_data["keywords"]]
-        
+
         # Check if response contains majority of expected keywords
         found_keywords = [kw for kw in keywords if kw in response_lower]
         keyword_accuracy = len(found_keywords) / len(keywords)
-        
+
         # Check if response mentions the correct framework
         framework_mentioned = question_data["framework"].lower() in response_lower
-        
+
         # Consider response accurate if it has good keyword coverage and mentions framework
         return keyword_accuracy >= 0.6 and framework_mentioned
 
@@ -386,24 +500,30 @@ class TestComplianceAccuracy:
         """Check if response contains key information from expected answer"""
         expected_words = question_data["expected_answer"].lower().split()
         response_words = response.lower().split()
-        
+
         # Check overlap between expected answer and response
         common_words = set(expected_words) & set(response_words)
         overlap_ratio = len(common_words) / len(expected_words)
-        
+
         return overlap_ratio >= 0.4  # At least 40% word overlap
 
     def _has_practical_guidance(self, response: str) -> bool:
         """Check if response includes practical implementation guidance"""
         practical_indicators = [
-            "steps", "implement", "consider", "should", "must",
-            "recommendation", "best practice", "ensure", "review"
+            "steps",
+            "implement",
+            "consider",
+            "should",
+            "must",
+            "recommendation",
+            "best practice",
+            "ensure",
+            "review",
         ]
-        
+
         response_lower = response.lower()
-        guidance_count = sum(1 for indicator in practical_indicators 
-                           if indicator in response_lower)
-        
+        guidance_count = sum(1 for indicator in practical_indicators if indicator in response_lower)
+
         return guidance_count >= 2  # At least 2 practical guidance indicators
 
     def _check_conceptual_consistency(self, responses: List[str], category: str) -> bool:
@@ -413,24 +533,25 @@ class TestComplianceAccuracy:
         for response in responses:
             words = response.lower().split()
             all_words.extend(words)
-        
+
         # Check that responses share common terminology
         from collections import Counter
+
         word_counts = Counter(all_words)
-        
+
         # Look for category-specific terms that appear in multiple responses
         category_terms = {
             "penalties": ["fine", "penalty", "sanctions"],
             "breach_notification": ["breach", "notification", "report", "hours"],
             "data_subject_rights": ["rights", "subject", "request", "access"],
-            "consent": ["consent", "freely", "specific", "informed"]
+            "consent": ["consent", "freely", "specific", "informed"],
         }
-        
+
         if category in category_terms:
             expected_terms = category_terms[category]
             shared_terms = sum(1 for term in expected_terms if word_counts[term] >= 2)
             return shared_terms >= 1  # At least one shared term across responses
-        
+
         return True  # Default to consistent for unknown categories
 
 
@@ -439,7 +560,10 @@ class TestComplianceAccuracy:
 class TestFrameworkCoverage:
     """Test AI coverage across different compliance frameworks"""
 
-    async def test_framework_identification_accuracy(self, db_session, mock_ai_client):
+    @pytest.mark.asyncio
+    async def test_framework_identification_accuracy(
+        self, async_db_session, mock_ai_client, async_sample_user, async_sample_business_profile
+    ):
         """Test AI accurately identifies relevant compliance frameworks"""
         assistant = ComplianceAssistant(async_db_session)
 
@@ -447,50 +571,61 @@ class TestFrameworkCoverage:
             {
                 "question": "We process customer personal data in the EU",
                 "expected_frameworks": ["GDPR"],
-                "context": {"location": "EU", "data_type": "personal"}
+                "context": {"location": "EU", "data_type": "personal"},
             },
             {
                 "question": "Our healthcare app needs security compliance",
                 "expected_frameworks": ["HIPAA", "ISO 27001"],
-                "context": {"industry": "healthcare", "focus": "security"}
+                "context": {"industry": "healthcare", "focus": "security"},
             },
             {
                 "question": "SOC 2 audit requirements for our SaaS platform",
                 "expected_frameworks": ["SOC 2"],
-                "context": {"industry": "saas", "focus": "audit"}
-            }
+                "context": {"industry": "saas", "focus": "audit"},
+            },
         ]
 
         for test_case in framework_test_cases:
             # Mock response that identifies correct frameworks
             frameworks_text = ", ".join(test_case["expected_frameworks"])
-            mock_response = f"Based on your requirements, the relevant frameworks are: {frameworks_text}."
+            mock_response = (
+                f"Based on your requirements, the relevant frameworks are: {frameworks_text}."
+            )
             mock_ai_client.generate_content.return_value.text = mock_response
 
-            with patch.object(assistant, 'process_message') as mock_process:
-                mock_process.return_value = (mock_response, {
-                    "intent": "framework_identification",
-                    "identified_frameworks": test_case["expected_frameworks"],
-                    "confidence": 0.9
-                })
+            with patch.object(assistant, "process_message") as mock_process:
+                mock_process.return_value = (
+                    mock_response,
+                    {
+                        "intent": "framework_identification",
+                        "identified_frameworks": test_case["expected_frameworks"],
+                        "confidence": 0.9,
+                    },
+                )
 
                 response, metadata = await assistant.process_message(
-                    conversation_id="test-conv",
-                    user_id="test-user",
+                    conversation_id=uuid4(),
+                    user=async_sample_user,
                     message=test_case["question"],
-                    business_profile_id="test-profile"
+                    business_profile_id=async_sample_business_profile.id,
                 )
-                
+
                 # Verify correct frameworks are identified
                 for framework in test_case["expected_frameworks"]:
-                    assert framework.lower() in response.lower(), \
+                    assert framework.lower() in response.lower(), (
                         f"Response should identify {framework} framework"
+                    )
 
-    async def test_cross_framework_guidance(self, db_session, mock_ai_client):
+    @pytest.mark.asyncio
+    async def test_cross_framework_guidance(
+        self, async_db_session, mock_ai_client, async_sample_user, async_sample_business_profile
+    ):
         """Test AI provides guidance when multiple frameworks apply"""
         assistant = ComplianceAssistant(async_db_session)
 
-        multi_framework_question = "We're a fintech company processing EU customer data. What compliance frameworks apply?"
+        multi_framework_question = (
+            "We're a fintech company processing EU customer data. What compliance frameworks apply?"
+        )
 
         mock_response = """
         For a fintech company processing EU customer data, multiple compliance frameworks apply:
@@ -505,29 +640,34 @@ class TestFrameworkCoverage:
 
         mock_ai_client.generate_content.return_value.text = mock_response
 
-        with patch.object(assistant, 'process_message') as mock_process:
-            mock_process.return_value = (mock_response, {
-                "intent": "multi_framework_guidance",
-                "identified_frameworks": ["GDPR", "PCI DSS", "ISO 27001", "SOC 2"],
-                "confidence": 0.9
-            })
+        with patch.object(assistant, "process_message") as mock_process:
+            mock_process.return_value = (
+                mock_response,
+                {
+                    "intent": "multi_framework_guidance",
+                    "identified_frameworks": ["GDPR", "PCI DSS", "ISO 27001", "SOC 2"],
+                    "confidence": 0.9,
+                },
+            )
 
             response, metadata = await assistant.process_message(
-                conversation_id="test-conv",
-                user_id="test-user",
+                conversation_id=uuid4(),
+                user=async_sample_user,
                 message=multi_framework_question,
-                business_profile_id="test-profile"
+                business_profile_id=async_sample_business_profile.id,
             )
-            
+
             # Check that multiple frameworks are mentioned
             frameworks = ["GDPR", "PCI DSS", "ISO 27001", "SOC 2"]
             mentioned_frameworks = [fw for fw in frameworks if fw in response]
-            
-            assert len(mentioned_frameworks) >= 3, \
+
+            assert len(mentioned_frameworks) >= 3, (
                 f"Should mention multiple frameworks, found: {mentioned_frameworks}"
-            
+            )
+
             # Check that response explains relationships between frameworks
             relationship_indicators = ["complement", "overlap", "common", "together"]
-            has_relationship_guidance = any(indicator in response.lower() 
-                                          for indicator in relationship_indicators)
+            has_relationship_guidance = any(
+                indicator in response.lower() for indicator in relationship_indicators
+            )
             assert has_relationship_guidance, "Should explain framework relationships"

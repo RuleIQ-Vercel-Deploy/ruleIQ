@@ -101,10 +101,12 @@ export default function RegisterPage() {
       });
 
       router.push('/business-profile');
-    } catch (err: any) {
+    } catch (err) {
       // Handle ApiError from the API client
       const errorMessage =
-        err.message || err.response?.data?.detail || 'Registration failed. Please try again.';
+        err instanceof Error
+          ? err.message
+          : 'Registration failed. Please try again.';
       setError(errorMessage);
     } finally {
       setIsLoading(false);

@@ -27,10 +27,10 @@ class TestGDPRAccuracy:
             financial year, whichever is higher.
             """
 
-            response = client.post("/api/compliance/query", json={
-                "question": question_data["question"],
-                "framework": "GDPR"
-            })
+            response = client.post(
+                "/api/compliance/query",
+                json={"question": question_data["question"], "framework": "GDPR"},
+            )
 
             if response.status_code == 200:
                 response_text = response.json().get("answer", "").lower()
@@ -47,48 +47,73 @@ class TestGDPRAccuracy:
             {
                 "right": "Right of Access",
                 "article": "Article 15",
-                "key_elements": ["copy of personal data", "processing purposes", "categories of data"]
+                "key_elements": [
+                    "copy of personal data",
+                    "processing purposes",
+                    "categories of data",
+                ],
             },
             {
                 "right": "Right to Rectification",
                 "article": "Article 16",
-                "key_elements": ["inaccurate personal data", "incomplete data", "without undue delay"]
+                "key_elements": [
+                    "inaccurate personal data",
+                    "incomplete data",
+                    "without undue delay",
+                ],
             },
             {
                 "right": "Right to Erasure",
                 "article": "Article 17",
-                "key_elements": ["right to be forgotten", "no longer necessary", "unlawful processing"]
-            }
+                "key_elements": [
+                    "right to be forgotten",
+                    "no longer necessary",
+                    "unlawful processing",
+                ],
+            },
         ]
 
         for test_case in rights_test_cases:
             mock_ai_client.generate_content.return_value.text = f"""
-            The {test_case['right']} under GDPR {test_case['article']} allows data subjects to...
-            Key elements include: {', '.join(test_case['key_elements'])}
+            The {test_case["right"]} under GDPR {test_case["article"]} allows data subjects to...
+            Key elements include: {", ".join(test_case["key_elements"])}
             """
 
-            response = client.post("/api/compliance/query", json={
-                "question": f"What is the {test_case['right']} under GDPR?",
-                "framework": "GDPR"
-            })
+            response = client.post(
+                "/api/compliance/query",
+                json={
+                    "question": f"What is the {test_case['right']} under GDPR?",
+                    "framework": "GDPR",
+                },
+            )
 
             if response.status_code == 200:
                 response_text = response.json().get("answer", "").lower()
 
                 # Validate article reference
                 article_num = test_case["article"].split()[1]
-                assert f"article {article_num}" in response_text or f"art. {article_num}" in response_text
+                assert (
+                    f"article {article_num}" in response_text
+                    or f"art. {article_num}" in response_text
+                )
 
                 # Validate key elements presence
-                matching_elements = sum(1 for element in test_case["key_elements"]
-                                      if element.lower() in response_text)
-                assert matching_elements >= len(test_case["key_elements"]) * 0.6, \
+                matching_elements = sum(
+                    1 for element in test_case["key_elements"] if element.lower() in response_text
+                )
+                assert matching_elements >= len(test_case["key_elements"]) * 0.6, (
                     f"Missing key elements for {test_case['right']}"
+                )
 
-    def test_gdpr_breach_notification_timeline_accuracy(self, client, mock_ai_client, compliance_golden_dataset):
+    def test_gdpr_breach_notification_timeline_accuracy(
+        self, client, mock_ai_client, compliance_golden_dataset
+    ):
         """Test accuracy of GDPR breach notification timelines"""
-        breach_questions = [q for q in compliance_golden_dataset
-                          if q["framework"] == "GDPR" and q["category"] == "breach_notification"]
+        breach_questions = [
+            q
+            for q in compliance_golden_dataset
+            if q["framework"] == "GDPR" and q["category"] == "breach_notification"
+        ]
 
         for question_data in breach_questions:
             mock_ai_client.generate_content.return_value.text = """
@@ -97,10 +122,10 @@ class TestGDPRAccuracy:
             not later than 72 hours after having become aware of it.
             """
 
-            response = client.post("/api/compliance/query", json={
-                "question": question_data["question"],
-                "framework": "GDPR"
-            })
+            response = client.post(
+                "/api/compliance/query",
+                json={"question": question_data["question"], "framework": "GDPR"},
+            )
 
             if response.status_code == 200:
                 response_text = response.json().get("answer", "").lower()
@@ -114,19 +139,26 @@ class TestGDPRAccuracy:
     def test_gdpr_lawful_basis_accuracy(self, client, mock_ai_client):
         """Test accuracy of GDPR lawful basis information"""
         lawful_bases = [
-            "consent", "contract", "legal obligation",
-            "vital interests", "public task", "legitimate interests"
+            "consent",
+            "contract",
+            "legal obligation",
+            "vital interests",
+            "public task",
+            "legitimate interests",
         ]
 
         mock_ai_client.generate_content.return_value.text = f"""
         GDPR Article 6 establishes six lawful bases for processing personal data:
-        {', '.join(lawful_bases)}. Each basis has specific requirements and conditions.
+        {", ".join(lawful_bases)}. Each basis has specific requirements and conditions.
         """
 
-        response = client.post("/api/compliance/query", json={
-            "question": "What are the lawful bases for processing personal data under GDPR?",
-            "framework": "GDPR"
-        })
+        response = client.post(
+            "/api/compliance/query",
+            json={
+                "question": "What are the lawful bases for processing personal data under GDPR?",
+                "framework": "GDPR",
+            },
+        )
 
         if response.status_code == 200:
             response_text = response.json().get("answer", "").lower()
@@ -146,20 +178,29 @@ class TestISO27001Accuracy:
     def test_iso27001_security_domains_accuracy(self, client, mock_ai_client):
         """Test accuracy of ISO 27001 security control domains"""
         expected_domains = [
-            "access control", "cryptography", "communications security",
-            "acquisition", "supplier relationships", "incident management",
-            "business continuity", "compliance", "organization of information security"
+            "access control",
+            "cryptography",
+            "communications security",
+            "acquisition",
+            "supplier relationships",
+            "incident management",
+            "business continuity",
+            "compliance",
+            "organization of information security",
         ]
 
         mock_ai_client.generate_content.return_value.text = f"""
         ISO 27001 Annex A contains security controls organized into domains including:
-        {', '.join(expected_domains[:5])} and others covering comprehensive information security.
+        {", ".join(expected_domains[:5])} and others covering comprehensive information security.
         """
 
-        response = client.post("/api/compliance/query", json={
-            "question": "What are the main security control domains in ISO 27001?",
-            "framework": "ISO 27001"
-        })
+        response = client.post(
+            "/api/compliance/query",
+            json={
+                "question": "What are the main security control domains in ISO 27001?",
+                "framework": "ISO 27001",
+            },
+        )
 
         if response.status_code == 200:
             response_text = response.json().get("answer", "").lower()
@@ -174,20 +215,28 @@ class TestISO27001Accuracy:
     def test_iso27001_isms_requirements_accuracy(self, client, mock_ai_client):
         """Test accuracy of ISO 27001 ISMS requirements"""
         isms_elements = [
-            "context of the organization", "leadership", "planning",
-            "support", "operation", "performance evaluation", "improvement"
+            "context of the organization",
+            "leadership",
+            "planning",
+            "support",
+            "operation",
+            "performance evaluation",
+            "improvement",
         ]
 
         mock_ai_client.generate_content.return_value.text = f"""
         ISO 27001 requires establishing an Information Security Management System (ISMS)
-        following a structure based on: {', '.join(isms_elements)}.
+        following a structure based on: {", ".join(isms_elements)}.
         This follows the Plan-Do-Check-Act (PDCA) cycle.
         """
 
-        response = client.post("/api/compliance/query", json={
-            "question": "What are the main requirements for an ISMS under ISO 27001?",
-            "framework": "ISO 27001"
-        })
+        response = client.post(
+            "/api/compliance/query",
+            json={
+                "question": "What are the main requirements for an ISMS under ISO 27001?",
+                "framework": "ISO 27001",
+            },
+        )
 
         if response.status_code == 200:
             response_text = response.json().get("answer", "").lower()
@@ -213,10 +262,13 @@ class TestUKSpecificRegulations:
         UK-specific derogations and exemptions.
         """
 
-        response = client.post("/api/compliance/query", json={
-            "question": "How does the UK Data Protection Act 2018 relate to GDPR?",
-            "framework": "UK DPA 2018"
-        })
+        response = client.post(
+            "/api/compliance/query",
+            json={
+                "question": "How does the UK Data Protection Act 2018 relate to GDPR?",
+                "framework": "UK DPA 2018",
+            },
+        )
 
         if response.status_code == 200:
             response_text = response.json().get("answer", "").lower()
@@ -239,10 +291,13 @@ class TestUKSpecificRegulations:
         GDPR compliance, and can impose fines up to the maximum GDPR penalties.
         """
 
-        response = client.post("/api/compliance/query", json={
-            "question": "What is the role of the ICO in UK data protection?",
-            "framework": "UK DPA 2018"
-        })
+        response = client.post(
+            "/api/compliance/query",
+            json={
+                "question": "What is the role of the ICO in UK data protection?",
+                "framework": "UK DPA 2018",
+            },
+        )
 
         if response.status_code == 200:
             response_text = response.json().get("answer", "").lower()
@@ -261,27 +316,29 @@ class TestSectorSpecificCompliance:
 
     def test_financial_services_compliance_accuracy(self, client, mock_ai_client):
         """Test accuracy of financial services compliance requirements"""
-        financial_frameworks = [
-            "PCI DSS", "FCA regulations", "Basel III", "MiFID II", "GDPR"
-        ]
+        financial_frameworks = ["PCI DSS", "FCA regulations", "Basel III", "MiFID II", "GDPR"]
 
         mock_ai_client.generate_content.return_value.text = f"""
         Financial services companies in the UK must comply with multiple frameworks:
-        {', '.join(financial_frameworks)}. The Financial Conduct Authority (FCA)
+        {", ".join(financial_frameworks)}. The Financial Conduct Authority (FCA)
         regulates conduct requirements while PCI DSS governs payment card security.
         """
 
-        response = client.post("/api/compliance/query", json={
-            "question": "What compliance frameworks apply to UK financial services?",
-            "framework": "Financial Services"
-        })
+        response = client.post(
+            "/api/compliance/query",
+            json={
+                "question": "What compliance frameworks apply to UK financial services?",
+                "framework": "Financial Services",
+            },
+        )
 
         if response.status_code == 200:
             response_text = response.json().get("answer", "").lower()
 
             # Validate key frameworks
-            mentioned_frameworks = sum(1 for fw in financial_frameworks
-                                     if fw.lower() in response_text)
+            mentioned_frameworks = sum(
+                1 for fw in financial_frameworks if fw.lower() in response_text
+            )
             assert mentioned_frameworks >= 3, "Key financial frameworks should be mentioned"
 
             # Validate regulatory body
@@ -290,8 +347,12 @@ class TestSectorSpecificCompliance:
     def test_healthcare_compliance_accuracy(self, client, mock_ai_client):
         """Test accuracy of healthcare sector compliance requirements"""
         healthcare_elements = [
-            "patient data", "medical records", "clinical governance",
-            "care quality commission", "nhs", "caldicott principles"
+            "patient data",
+            "medical records",
+            "clinical governance",
+            "care quality commission",
+            "nhs",
+            "caldicott principles",
         ]
 
         mock_ai_client.generate_content.return_value.text = """
@@ -300,17 +361,21 @@ class TestSectorSpecificCompliance:
         oversees quality and safety standards for healthcare services.
         """
 
-        response = client.post("/api/compliance/query", json={
-            "question": "What are the data protection requirements for UK healthcare providers?",
-            "framework": "Healthcare"
-        })
+        response = client.post(
+            "/api/compliance/query",
+            json={
+                "question": "What are the data protection requirements for UK healthcare providers?",
+                "framework": "Healthcare",
+            },
+        )
 
         if response.status_code == 200:
             response_text = response.json().get("answer", "").lower()
 
             # Validate healthcare-specific elements
-            mentioned_elements = sum(1 for element in healthcare_elements
-                                   if element in response_text)
+            mentioned_elements = sum(
+                1 for element in healthcare_elements if element in response_text
+            )
             assert mentioned_elements >= 3, "Healthcare-specific elements should be mentioned"
 
 
@@ -348,18 +413,24 @@ class TestComplianceContentValidation:
         For data protection queries, contact our Data Protection Officer...
         """
 
-        response = client.post("/api/policies/generate", json={
-            "framework": "GDPR",
-            "policy_type": "data_protection"
-        })
+        response = client.post(
+            "/api/policies/generate", json={"framework": "GDPR", "policy_type": "data_protection"}
+        )
 
         if response.status_code == 200:
             policy_content = response.json().get("content", "")
 
             # Validate essential policy sections
             required_sections = [
-                "purpose", "scope", "definitions", "principles",
-                "lawful basis", "rights", "security", "breach", "contact"
+                "purpose",
+                "scope",
+                "definitions",
+                "principles",
+                "lawful basis",
+                "rights",
+                "security",
+                "breach",
+                "contact",
             ]
 
             missing_sections = []
@@ -375,9 +446,7 @@ class TestComplianceContentValidation:
 
     def test_implementation_plan_completeness(self, client, mock_ai_client):
         """Test that implementation plans have complete task breakdown"""
-        response = client.post("/api/implementation/plans", json={
-            "framework": "GDPR"
-        })
+        response = client.post("/api/implementation/plans", json={"framework": "GDPR"})
 
         if response.status_code == 200:
             plan_data = response.json()
@@ -400,7 +469,7 @@ class TestComplianceContentValidation:
             "industry": "Healthcare",
             "data_types": ["patient_data", "payment_data"],
             "employee_count": 50,
-            "has_international_operations": False
+            "has_international_operations": False,
         }
 
         response = client.post("/api/readiness/assessment", json=business_context)
@@ -420,7 +489,9 @@ class TestComplianceContentValidation:
             elif overall_score >= 40:
                 assert risk_level in ["Medium", "High"], f"Lower score mismatch: {risk_level}"
             else:
-                assert risk_level in ["High", "Critical"], f"Low score should have high risk: {risk_level}"
+                assert risk_level in ["High", "Critical"], (
+                    f"Low score should have high risk: {risk_level}"
+                )
 
             # Validate recommendations relevance
             recommendations = assessment_data.get("recommendations", [])
@@ -447,20 +518,20 @@ class TestSMEValidationFramework:
                 "Data subject rights are complete and accurate",
                 "Lawful basis requirements are properly explained",
                 "Breach notification timelines are correct",
-                "Territorial scope is accurately described"
+                "Territorial scope is accurately described",
             ],
             "uk_specific": [
                 "UK DPA 2018 provisions are correctly referenced",
                 "ICO guidance is current and relevant",
                 "Brexit implications are accurately addressed",
-                "UK derogations and exemptions are noted where relevant"
+                "UK derogations and exemptions are noted where relevant",
             ],
             "practical_implementation": [
                 "Recommendations are realistic for SMBs",
                 "Implementation timelines are achievable",
                 "Resource requirements are reasonable",
-                "Cost estimates align with market rates"
-            ]
+                "Cost estimates align with market rates",
+            ],
         }
 
         # Generate content for SME review
@@ -470,11 +541,14 @@ class TestSMEValidationFramework:
         Data subjects have rights including access, rectification, and erasure under Articles 15-17.
         """
 
-        response = client.post("/api/compliance/sme-review", json={
-            "content_type": "gdpr_guidance",
-            "framework": "GDPR",
-            "validation_checklist": validation_checklist
-        })
+        response = client.post(
+            "/api/compliance/sme-review",
+            json={
+                "content_type": "gdpr_guidance",
+                "framework": "GDPR",
+                "validation_checklist": validation_checklist,
+            },
+        )
 
         # This endpoint would flag content for SME review
         if response.status_code == 200:
@@ -491,7 +565,7 @@ class TestSMEValidationFramework:
             "content_type": "policy_template",
             "content": "Initial policy content...",
             "version": "1.0",
-            "sme_reviewed": False
+            "sme_reviewed": False,
         }
 
         response = client.post("/api/compliance/content", json=content_data)
@@ -505,12 +579,11 @@ class TestSMEValidationFramework:
                 "version": "1.1",
                 "sme_reviewed": True,
                 "sme_reviewer": "Legal Expert Name",
-                "review_notes": "Approved with minor clarifications"
+                "review_notes": "Approved with minor clarifications",
             }
 
             update_response = client.patch(
-                f"/api/compliance/content/{content_id}",
-                json=update_data
+                f"/api/compliance/content/{content_id}", json=update_data
             )
 
             assert update_response.status_code == 200
@@ -530,10 +603,10 @@ class TestSMEValidationFramework:
 
         mock_ai_client.generate_content.return_value.text = questionable_content
 
-        response = client.post("/api/compliance/validate-content", json={
-            "content": questionable_content,
-            "framework": "GDPR"
-        })
+        response = client.post(
+            "/api/compliance/validate-content",
+            json={"content": questionable_content, "framework": "GDPR"},
+        )
 
         if response.status_code == 200:
             validation_result = response.json()
@@ -545,5 +618,7 @@ class TestSMEValidationFramework:
 
             # Check specific flags
             flags = validation_result["accuracy_flags"]
-            penalty_flagged = any("penalty" in flag.lower() or "fine" in flag.lower() for flag in flags)
+            penalty_flagged = any(
+                "penalty" in flag.lower() or "fine" in flag.lower() for flag in flags
+            )
             assert penalty_flagged, "Should flag incorrect penalty amounts"

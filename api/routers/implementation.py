@@ -21,18 +21,19 @@ from services.implementation_service import (
 
 router = APIRouter()
 
+
 @router.post("/plans", response_model=ImplementationPlanResponse, status_code=201)
 async def create_plan(
     plan_data: ImplementationPlanCreate,
     current_user: User = Depends(get_current_active_user),
-    db: AsyncSession = Depends(get_async_db)
+    db: AsyncSession = Depends(get_async_db),
 ):
     plan = await generate_implementation_plan(
         db,
         current_user,
         plan_data.framework_id,
         control_domain=plan_data.control_domain,
-        timeline_weeks=plan_data.timeline_weeks
+        timeline_weeks=plan_data.timeline_weeks,
     )
 
     # Calculate computed fields for the response
@@ -57,24 +58,25 @@ async def create_plan(
         "updated_at": plan.updated_at,
         "total_phases": total_phases,
         "total_tasks": total_tasks,
-        "estimated_duration_weeks": estimated_duration_weeks
+        "estimated_duration_weeks": estimated_duration_weeks,
     }
 
     return plan_dict
 
+
 @router.get("/plans", response_model=ImplementationPlanListResponse)
 async def list_plans(
-    current_user: User = Depends(get_current_active_user),
-    db: AsyncSession = Depends(get_async_db)
+    current_user: User = Depends(get_current_active_user), db: AsyncSession = Depends(get_async_db)
 ):
     plans = await list_implementation_plans(db, current_user)
     return {"plans": plans}
+
 
 @router.get("/plans/{plan_id}", response_model=ImplementationPlanResponse)
 async def get_plan(
     plan_id: UUID,
     current_user: User = Depends(get_current_active_user),
-    db: AsyncSession = Depends(get_async_db)
+    db: AsyncSession = Depends(get_async_db),
 ):
     plan = await get_implementation_plan(db, current_user, plan_id)
     if not plan:
@@ -91,7 +93,9 @@ async def get_plan(
             all_tasks.append(task)
 
     # Calculate estimated duration from phases
-    estimated_duration_weeks = sum(phase.get("duration_weeks", 0) for phase in plan.phases) if plan.phases else 12
+    estimated_duration_weeks = (
+        sum(phase.get("duration_weeks", 0) for phase in plan.phases) if plan.phases else 12
+    )
 
     # Convert plan to dict and add computed fields
     plan_dict = {
@@ -111,10 +115,11 @@ async def get_plan(
         "total_phases": total_phases,
         "total_tasks": total_tasks,
         "estimated_duration_weeks": estimated_duration_weeks,
-        "tasks": all_tasks  # Flattened tasks for test compatibility
+        "tasks": all_tasks,  # Flattened tasks for test compatibility
     }
 
     return plan_dict
+
 
 @router.patch("/plans/{plan_id}/tasks/{task_id}")
 async def update_task(
@@ -122,15 +127,9 @@ async def update_task(
     task_id: str,
     task_update: ImplementationTaskUpdate,
     current_user: User = Depends(get_current_active_user),
-    db: AsyncSession = Depends(get_async_db)
+    db: AsyncSession = Depends(get_async_db),
 ):
-    plan = await update_task_status(
-        db,
-        current_user,
-        plan_id,
-        task_id,
-        task_update.status
-    )
+    plan = await update_task_status(db, current_user, plan_id, task_id, task_update.status)
     if not plan:
         raise HTTPException(status_code=404, detail="Implementation plan not found")
     return {"message": "Task updated", "plan_id": plan_id, "task_id": task_id}

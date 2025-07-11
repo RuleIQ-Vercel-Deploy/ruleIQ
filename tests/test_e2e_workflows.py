@@ -15,7 +15,9 @@ import pytest
 class TestCompleteComplianceJourney:
     """Test complete compliance implementation journeys from start to finish"""
 
-    def test_new_business_complete_gdpr_journey(self, client, authenticated_headers, mock_ai_client):
+    def test_new_business_complete_gdpr_journey(
+        self, client, authenticated_headers, mock_ai_client
+    ):
         """Test complete GDPR compliance journey for a new business"""
         mock_ai_client.generate_content.return_value.text = "Generated compliance content"
 
@@ -32,13 +34,11 @@ class TestCompleteComplianceJourney:
             "saas_tools": ["Salesforce", "Slack"],
             "existing_frameworks": [],
             "compliance_budget": "£10K-£25K",
-            "compliance_timeline": "6 months"
+            "compliance_timeline": "6 months",
         }
 
         profile_response = client.post(
-            "/api/business-profiles",
-            headers=authenticated_headers,
-            json=business_profile
+            "/api/business-profiles", headers=authenticated_headers, json=business_profile
         )
         assert profile_response.status_code == 201
         profile_response.json()["id"]
@@ -47,7 +47,7 @@ class TestCompleteComplianceJourney:
         assessment_response = client.post(
             "/api/assessments",
             headers=authenticated_headers,
-            json={"session_type": "compliance_scoping"}
+            json={"session_type": "compliance_scoping"},
         )
         assert assessment_response.status_code == 201
         session_id = assessment_response.json()["id"]
@@ -61,26 +61,27 @@ class TestCompleteComplianceJourney:
             {"question_id": "security_measures", "response": "basic"},
             {"question_id": "staff_training", "response": "none"},
             {"question_id": "incident_response", "response": "informal"},
-            {"question_id": "privacy_policy", "response": "outdated"}
+            {"question_id": "privacy_policy", "response": "outdated"},
         ]
 
         for response_data in assessment_responses:
             response = client.post(
                 f"/api/assessments/{session_id}/responses",
                 headers=authenticated_headers,
-                json=response_data
+                json=response_data,
             )
             assert response.status_code == 200
 
         # 4. Get framework recommendations
         recommendations_response = client.get(
-            f"/api/assessments/{session_id}/recommendations",
-            headers=authenticated_headers
+            f"/api/assessments/{session_id}/recommendations", headers=authenticated_headers
         )
         assert recommendations_response.status_code == 200
 
         recommendations = recommendations_response.json()["recommendations"]
-        gdpr_recommendation = next((r for r in recommendations if "GDPR" in r["framework"]["name"]), None)
+        gdpr_recommendation = next(
+            (r for r in recommendations if "GDPR" in r["framework"]["name"]), None
+        )
         assert gdpr_recommendation is not None, "GDPR should be recommended"
         assert gdpr_recommendation["priority"] == "High"
 
@@ -94,9 +95,9 @@ class TestCompleteComplianceJourney:
                 "framework_id": gdpr_framework_id,
                 "customizations": {
                     "company_name": business_profile["company_name"],
-                    "industry": business_profile["industry"]
-                }
-            }
+                    "industry": business_profile["industry"],
+                },
+            },
         )
         assert policy_response.status_code == 201
         policy_response.json()["id"]
@@ -105,7 +106,7 @@ class TestCompleteComplianceJourney:
         plan_response = client.post(
             "/api/implementation/plans",
             headers=authenticated_headers,
-            json={"framework_id": gdpr_framework_id}
+            json={"framework_id": gdpr_framework_id},
         )
         assert plan_response.status_code == 201
         plan_id = plan_response.json()["id"]
@@ -115,7 +116,9 @@ class TestCompleteComplianceJourney:
         assert plan_data["estimated_duration_weeks"] >= 12  # Realistic timeline
 
         # 7. Start implementation - complete first few tasks
-        plan_details = client.get(f"/api/implementation/plans/{plan_id}", headers=authenticated_headers)
+        plan_details = client.get(
+            f"/api/implementation/plans/{plan_id}", headers=authenticated_headers
+        )
         tasks = plan_details.json()["tasks"]
 
         for i, task in enumerate(tasks[:3]):  # Complete first 3 tasks
@@ -126,15 +129,15 @@ class TestCompleteComplianceJourney:
                     "status": "completed",
                     "actual_start": datetime.utcnow().isoformat(),
                     "actual_end": datetime.utcnow().isoformat(),
-                    "notes": f"Completed task {i+1}"
-                }
+                    "notes": f"Completed task {i + 1}",
+                },
             )
             assert task_update.status_code == 200
 
         # 8. Set up evidence collection
         evidence_response = client.get(
             f"/api/evidence/requirements?framework_id={gdpr_framework_id}",
-            headers=authenticated_headers
+            headers=authenticated_headers,
         )
         assert evidence_response.status_code == 200
 
@@ -151,8 +154,8 @@ class TestCompleteComplianceJourney:
                     "control_id": requirement["control_id"],
                     "evidence_type": "document",
                     "title": f"Evidence for {requirement['title']}",
-                    "collection_method": "manual"
-                }
+                    "collection_method": "manual",
+                },
             )
             assert evidence_create.status_code == 201
 
@@ -175,8 +178,8 @@ class TestCompleteComplianceJourney:
                 "title": "Initial GDPR Compliance Assessment",
                 "framework": "GDPR",
                 "report_type": "gap_analysis",
-                "format": "pdf"
-            }
+                "format": "pdf",
+            },
         )
         assert report_response.status_code == 201
 
@@ -193,7 +196,9 @@ class TestCompleteComplianceJourney:
         assert "implementation_progress" in dashboard_data
         assert "next_actions" in dashboard_data
 
-    def test_existing_business_framework_migration_journey(self, client, authenticated_headers, mock_ai_client):
+    def test_existing_business_framework_migration_journey(
+        self, client, authenticated_headers, mock_ai_client
+    ):
         """Test journey for business migrating from one framework to another"""
         mock_ai_client.generate_content.return_value.text = "Migration guidance content"
 
@@ -208,13 +213,11 @@ class TestCompleteComplianceJourney:
             "existing_frameworks": ["Basic Data Protection"],
             "planned_frameworks": ["GDPR", "FCA Guidelines"],
             "compliance_budget": "£50K-£100K",
-            "compliance_timeline": "12 months"
+            "compliance_timeline": "12 months",
         }
 
         profile_response = client.post(
-            "/api/business-profiles",
-            headers=authenticated_headers,
-            json=existing_business
+            "/api/business-profiles", headers=authenticated_headers, json=existing_business
         )
         assert profile_response.status_code == 201
 
@@ -224,8 +227,8 @@ class TestCompleteComplianceJourney:
             headers=authenticated_headers,
             json={
                 "current_frameworks": existing_business["existing_frameworks"],
-                "target_frameworks": existing_business["planned_frameworks"]
-            }
+                "target_frameworks": existing_business["planned_frameworks"],
+            },
         )
 
         if migration_response.status_code == 200:
@@ -245,29 +248,29 @@ class TestErrorStateHandling:
         session_response = client.post(
             "/api/assessments",
             headers=authenticated_headers,
-            json={"session_type": "compliance_scoping"}
+            json={"session_type": "compliance_scoping"},
         )
         session_id = session_response.json()["id"]
 
         # Submit response that might be interrupted
-        with patch('requests.post') as mock_post:
+        with patch("requests.post") as mock_post:
             mock_post.side_effect = TimeoutError("Network timeout")
 
             response = client.post(
                 f"/api/assessments/{session_id}/responses",
                 headers=authenticated_headers,
-                json={
-                    "question_id": "data_processing",
-                    "response": "yes",
-                    "auto_save": True
-                }
+                json={"question_id": "data_processing", "response": "yes", "auto_save": True},
             )
 
             # System should handle gracefully
-            assert response.status_code in [200, 408, 503], "Should handle network issues gracefully"
+            assert response.status_code in [200, 408, 503], (
+                "Should handle network issues gracefully"
+            )
 
         # Verify session state is recoverable
-        recovery_response = client.get(f"/api/assessments/{session_id}", headers=authenticated_headers)
+        recovery_response = client.get(
+            f"/api/assessments/{session_id}", headers=authenticated_headers
+        )
         assert recovery_response.status_code == 200
 
         session_data = recovery_response.json()
@@ -285,9 +288,7 @@ class TestErrorStateHandling:
 
         for invalid_data in invalid_requests:
             response = client.post(
-                "/api/business-profiles",
-                headers=authenticated_headers,
-                json=invalid_data
+                "/api/business-profiles", headers=authenticated_headers, json=invalid_data
             )
 
             # Should return proper error codes, not crash
@@ -307,13 +308,11 @@ class TestErrorStateHandling:
         business_data = {
             "company_name": "Concurrent Test Ltd",
             "industry": "Technology",
-            "employee_count": 25
+            "employee_count": 25,
         }
 
         profile_response = client.post(
-            "/api/business-profiles",
-            headers=authenticated_headers,
-            json=business_data
+            "/api/business-profiles", headers=authenticated_headers, json=business_data
         )
         profile_id = profile_response.json()["id"]
 
@@ -322,15 +321,11 @@ class TestErrorStateHandling:
         update_2 = {"industry": "FinTech", "version": 1}  # Same version - potential conflict
 
         response_1 = client.patch(
-            f"/api/business-profiles/{profile_id}",
-            headers=authenticated_headers,
-            json=update_1
+            f"/api/business-profiles/{profile_id}", headers=authenticated_headers, json=update_1
         )
 
         response_2 = client.patch(
-            f"/api/business-profiles/{profile_id}",
-            headers=authenticated_headers,
-            json=update_2
+            f"/api/business-profiles/{profile_id}", headers=authenticated_headers, json=update_2
         )
 
         # One should succeed, one should handle conflict
@@ -364,7 +359,7 @@ class TestErrorStateHandling:
                 policy_response = client.post(
                     "/api/policies/generate",
                     headers=authenticated_headers,
-                    json={"framework_id": framework_id}
+                    json={"framework_id": framework_id},
                 )
 
                 # Should provide graceful fallback
@@ -397,8 +392,8 @@ class TestAuditWorkflows:
             json={
                 "company_name": "Audit Test Corp",
                 "industry": "Technology",
-                "employee_count": 50
-            }
+                "employee_count": 50,
+            },
         )
         assert profile_response.status_code == 201
         auditable_actions.append(("create_business_profile", profile_response.json()["id"]))
@@ -420,7 +415,7 @@ class TestAuditWorkflows:
                 policy_response = client.post(
                     "/api/policies/generate",
                     headers=authenticated_headers,
-                    json={"framework_id": framework_id}
+                    json={"framework_id": framework_id},
                 )
                 if policy_response.status_code == 201:
                     policy_id = policy_response.json()["id"]
@@ -430,7 +425,7 @@ class TestAuditWorkflows:
                     approval_response = client.patch(
                         f"/api/policies/{policy_id}/status",
                         headers=authenticated_headers,
-                        json={"status": "approved", "approved": True}
+                        json={"status": "approved", "approved": True},
                     )
                     if approval_response.status_code == 200:
                         auditable_actions.append(("approve_policy", policy_id))
@@ -444,8 +439,9 @@ class TestAuditWorkflows:
             # Verify all actions are recorded
             recorded_actions = [entry["action"] for entry in audit_trail]
             for action_type, _resource_id in auditable_actions:
-                assert any(action_type in action for action in recorded_actions), \
+                assert any(action_type in action for action in recorded_actions), (
                     f"Action {action_type} should be in audit trail"
+                )
 
             # Verify audit entries have required fields
             for entry in audit_trail:
@@ -456,13 +452,15 @@ class TestAuditWorkflows:
                 # Verify timestamp format
                 assert "T" in entry["timestamp"], "Timestamp should be in ISO format"
 
-    def test_compliance_report_generation(self, client, authenticated_headers, sample_business_profile_data):
+    def test_compliance_report_generation(
+        self, client, authenticated_headers, sample_business_profile_data
+    ):
         """Test comprehensive compliance reporting"""
         # Setup business context
         profile_response = client.post(
             "/api/business-profiles",
             headers=authenticated_headers,
-            json=sample_business_profile_data
+            json=sample_business_profile_data,
         )
         assert profile_response.status_code == 201
 
@@ -473,30 +471,28 @@ class TestAuditWorkflows:
                 "report_type": "executive",
                 "format": "pdf",
                 "include_evidence": False,
-                "include_recommendations": True
+                "include_recommendations": True,
             },
             {
                 "title": "Detailed Compliance Report",
                 "report_type": "detailed",
                 "format": "pdf",
                 "include_evidence": True,
-                "include_recommendations": True
+                "include_recommendations": True,
             },
             {
                 "title": "Audit Preparation Report",
                 "report_type": "audit",
                 "format": "docx",
                 "include_evidence": True,
-                "include_recommendations": False
-            }
+                "include_recommendations": False,
+            },
         ]
 
         generated_reports = []
         for report_config in report_types:
             report_response = client.post(
-                "/api/readiness/reports",
-                headers=authenticated_headers,
-                json=report_config
+                "/api/readiness/reports", headers=authenticated_headers, json=report_config
             )
 
             if report_response.status_code == 201:
@@ -511,7 +507,7 @@ class TestAuditWorkflows:
                 # Check report accessibility
                 download_response = client.get(
                     f"/api/readiness/reports/{report_data['report_id']}/download",
-                    headers=authenticated_headers
+                    headers=authenticated_headers,
                 )
                 assert download_response.status_code in [200, 202], "Report should be accessible"
 
@@ -528,13 +524,11 @@ class TestAuditWorkflows:
             "employee_count": 200,
             "handles_personal_data": True,
             "provides_financial_services": True,
-            "has_international_operations": True
+            "has_international_operations": True,
         }
 
         profile_response = client.post(
-            "/api/business-profiles",
-            headers=authenticated_headers,
-            json=business_profile
+            "/api/business-profiles", headers=authenticated_headers, json=business_profile
         )
         assert profile_response.status_code == 201
 
@@ -548,8 +542,8 @@ class TestAuditWorkflows:
                 "include_policies": True,
                 "include_procedures": True,
                 "include_evidence": True,
-                "include_training_records": True
-            }
+                "include_training_records": True,
+            },
         )
 
         if submission_response.status_code == 201:
@@ -565,21 +559,24 @@ class TestAuditWorkflows:
             required_doc_types = ["policies", "procedures", "evidence", "training_records"]
 
             for doc_type in required_doc_types:
-                assert any(doc_type in doc["type"] for doc in included_docs), \
+                assert any(doc_type in doc["type"] for doc in included_docs), (
                     f"Submission should include {doc_type}"
+                )
 
 
 @pytest.mark.e2e
 class TestBusinessContinuityWorkflows:
     """Test business continuity and disaster recovery scenarios"""
 
-    def test_data_backup_and_recovery(self, client, authenticated_headers, sample_business_profile_data):
+    def test_data_backup_and_recovery(
+        self, client, authenticated_headers, sample_business_profile_data
+    ):
         """Test data backup and recovery procedures"""
         # Create substantial business data
         profile_response = client.post(
             "/api/business-profiles",
             headers=authenticated_headers,
-            json=sample_business_profile_data
+            json=sample_business_profile_data,
         )
         assert profile_response.status_code == 201
         profile_response.json()["id"]
@@ -588,7 +585,7 @@ class TestBusinessContinuityWorkflows:
         assessment_response = client.post(
             "/api/assessments",
             headers=authenticated_headers,
-            json={"session_type": "compliance_scoping"}
+            json={"session_type": "compliance_scoping"},
         )
         assessment_response.json()["id"]
 
@@ -596,11 +593,7 @@ class TestBusinessContinuityWorkflows:
         export_response = client.post(
             "/api/data/export",
             headers=authenticated_headers,
-            json={
-                "export_type": "complete_backup",
-                "format": "json",
-                "include_documents": True
-            }
+            json={"export_type": "complete_backup", "format": "json", "include_documents": True},
         )
 
         if export_response.status_code == 201:
@@ -610,8 +603,7 @@ class TestBusinessContinuityWorkflows:
 
             # Verify export completeness
             export_details = client.get(
-                f"/api/data/exports/{export_data['export_id']}",
-                headers=authenticated_headers
+                f"/api/data/exports/{export_data['export_id']}", headers=authenticated_headers
             )
 
             if export_details.status_code == 200:
@@ -630,8 +622,8 @@ class TestBusinessContinuityWorkflows:
                 "due_date": (datetime.utcnow() + timedelta(days=30)).isoformat(),
                 "framework": "GDPR",
                 "priority": "High",
-                "description": "Annual GDPR compliance review"
-            }
+                "description": "Annual GDPR compliance review",
+            },
         )
 
         if deadline_response.status_code == 201:
@@ -658,13 +650,11 @@ class TestBusinessContinuityWorkflows:
             "stores_health_data": True,
             "provides_financial_services": False,
             "has_international_operations": True,
-            "planned_frameworks": ["GDPR", "HIPAA", "ISO 27001"]
+            "planned_frameworks": ["GDPR", "HIPAA", "ISO 27001"],
         }
 
         profile_response = client.post(
-            "/api/business-profiles",
-            headers=authenticated_headers,
-            json=complex_business
+            "/api/business-profiles", headers=authenticated_headers, json=complex_business
         )
         assert profile_response.status_code == 201
 
@@ -674,8 +664,8 @@ class TestBusinessContinuityWorkflows:
             headers=authenticated_headers,
             json={
                 "frameworks": complex_business["planned_frameworks"],
-                "business_context": complex_business
-            }
+                "business_context": complex_business,
+            },
         )
 
         if coordination_response.status_code == 200:
@@ -693,5 +683,6 @@ class TestBusinessContinuityWorkflows:
 
             # Verify suggests implementation sequence
             sequence = coordination_plan["implementation_sequence"]
-            assert len(sequence) == len(complex_business["planned_frameworks"]), \
+            assert len(sequence) == len(complex_business["planned_frameworks"]), (
                 "Should provide sequence for all frameworks"
+            )

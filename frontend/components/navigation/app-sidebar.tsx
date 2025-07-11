@@ -53,11 +53,10 @@ export function AppSidebar() {
   const isSettingsActive = settingsSubMenu.some((item) => pathname.startsWith(item.href))
 
   return (
-    <Sidebar>
+    <Sidebar className="bg-surface-primary border-r border-glass-border">
       <SidebarHeader className="p-4">
         <Link href="/" className="flex items-center gap-2">
-          <span className="text-2xl font-bold text-navy">rule</span>
-          <span className="text-2xl font-bold text-gold">IQ</span>
+          <span className="text-2xl font-bold gradient-text">ruleIQ</span>
         </Link>
       </SidebarHeader>
       <SidebarContent className="p-2">
@@ -68,8 +67,8 @@ export function AppSidebar() {
                 asChild
                 isActive={pathname === item.href}
                 className={cn(
-                  "w-full justify-start",
-                  pathname === item.href && "bg-gold/10 text-gold hover:bg-gold/20"
+                  "w-full justify-start text-text-secondary hover:text-text-primary transition-colors",
+                  pathname === item.href && "bg-brand-primary/10 text-brand-primary hover:bg-brand-primary/20"
                 )}
               >
                 <Link href={item.href}>
@@ -82,7 +81,7 @@ export function AppSidebar() {
           <Collapsible defaultOpen={isSettingsActive}>
             <CollapsibleTrigger asChild>
               <SidebarMenuButton
-                className={cn("w-full justify-start group", isSettingsActive && "text-gold")}
+                className={cn("w-full justify-start group text-text-secondary hover:text-text-primary", isSettingsActive && "text-brand-primary")}
               >
                 <Settings />
                 <span>Settings</span>
@@ -97,8 +96,8 @@ export function AppSidebar() {
                       asChild
                       isActive={pathname.startsWith(item.href)}
                       className={cn(
-                        "w-full justify-start h-9",
-                        pathname.startsWith(item.href) && "bg-gold/10 text-gold hover:bg-gold/20"
+                        "w-full justify-start h-9 text-text-secondary hover:text-text-primary",
+                        pathname.startsWith(item.href) && "bg-brand-primary/10 text-brand-primary hover:bg-brand-primary/20"
                       )}
                       size="sm"
                     >

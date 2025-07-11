@@ -13,12 +13,12 @@ from typing import Awaitable, Callable, Optional, TypeVar
 
 logger = logging.getLogger(__name__)
 
-T = TypeVar('T')
+T = TypeVar("T")
 
 
 class RetryConfig:
     """Configuration for retry behavior."""
-    
+
     def __init__(
         self,
         max_attempts: int = 3,
@@ -27,7 +27,7 @@ class RetryConfig:
         exponential_base: float = 2.0,
         jitter: bool = True,
         exceptions: tuple = (Exception,),
-        on_retry: Optional[Callable] = None
+        on_retry: Optional[Callable] = None,
     ):
         self.max_attempts = max_attempts
         self.base_delay = base_delay
@@ -40,7 +40,7 @@ class RetryConfig:
 
 class RetryExhaustedError(Exception):
     """Raised when all retry attempts have been exhausted."""
-    
+
     def __init__(self, attempts: int, last_exception: Exception):
         self.attempts = attempts
         self.last_exception = last_exception
@@ -52,29 +52,29 @@ class RetryExhaustedError(Exception):
 
 class RetryManager:
     """Manages retry logic for both sync and async functions."""
-    
+
     def __init__(self, config: RetryConfig):
         self.config = config
-    
+
     def calculate_delay(self, attempt: int) -> float:
         """Calculate delay for the given attempt number."""
         delay = self.config.base_delay * (self.config.exponential_base ** (attempt - 1))
         delay = min(delay, self.config.max_delay)
-        
+
         if self.config.jitter:
             # Add up to 25% jitter to prevent thundering herd
             jitter_amount = delay * 0.25
             delay += random.uniform(-jitter_amount, jitter_amount)
-        
+
         return max(0, delay)
-    
+
     def should_retry(self, exception: Exception, attempt: int) -> bool:
         """Determine if we should retry based on the exception and attempt count."""
         if attempt >= self.config.max_attempts:
             return False
-        
+
         return isinstance(exception, self.config.exceptions)
-    
+
     def log_retry_attempt(self, attempt: int, exception: Exception, delay: float):
         """Log retry attempt details."""
         logger.warning(
@@ -82,32 +82,32 @@ class RetryManager:
             f"after {type(exception).__name__}: {exception}. "
             f"Retrying in {delay:.2f} seconds..."
         )
-    
+
     async def execute_async(self, func: Callable[..., Awaitable[T]], *args, **kwargs) -> T:
         """Execute async function with retry logic."""
         last_exception = None
-        
+
         for attempt in range(1, self.config.max_attempts + 1):
             try:
                 result = await func(*args, **kwargs)
                 if attempt > 1:
                     logger.info(f"Function succeeded on attempt {attempt}")
                 return result
-                
+
             except Exception as e:
                 last_exception = e
-                
+
                 if not self.should_retry(e, attempt):
                     if attempt >= self.config.max_attempts:
                         raise RetryExhaustedError(attempt, e)
                     else:
                         # Exception not in retry list, re-raise immediately
                         raise
-                
+
                 if attempt < self.config.max_attempts:
                     delay = self.calculate_delay(attempt)
                     self.log_retry_attempt(attempt, e, delay)
-                    
+
                     # Call retry callback if provided
                     if self.config.on_retry:
                         try:
@@ -117,46 +117,46 @@ class RetryManager:
                                 self.config.on_retry(attempt, e, delay)
                         except Exception as callback_error:
                             logger.warning(f"Retry callback failed: {callback_error}")
-                    
+
                     await asyncio.sleep(delay)
-        
+
         # This should never be reached, but just in case
         raise RetryExhaustedError(self.config.max_attempts, last_exception)
-    
+
     def execute_sync(self, func: Callable[..., T], *args, **kwargs) -> T:
         """Execute sync function with retry logic."""
         last_exception = None
-        
+
         for attempt in range(1, self.config.max_attempts + 1):
             try:
                 result = func(*args, **kwargs)
                 if attempt > 1:
                     logger.info(f"Function succeeded on attempt {attempt}")
                 return result
-                
+
             except Exception as e:
                 last_exception = e
-                
+
                 if not self.should_retry(e, attempt):
                     if attempt >= self.config.max_attempts:
                         raise RetryExhaustedError(attempt, e)
                     else:
                         # Exception not in retry list, re-raise immediately
                         raise
-                
+
                 if attempt < self.config.max_attempts:
                     delay = self.calculate_delay(attempt)
                     self.log_retry_attempt(attempt, e, delay)
-                    
+
                     # Call retry callback if provided
                     if self.config.on_retry:
                         try:
                             self.config.on_retry(attempt, e, delay)
                         except Exception as callback_error:
                             logger.warning(f"Retry callback failed: {callback_error}")
-                    
+
                     time.sleep(delay)
-        
+
         # This should never be reached, but just in case
         raise RetryExhaustedError(self.config.max_attempts, last_exception)
 
@@ -168,11 +168,11 @@ def retry(
     exponential_base: float = 2.0,
     jitter: bool = True,
     exceptions: tuple = (Exception,),
-    on_retry: Optional[Callable] = None
+    on_retry: Optional[Callable] = None,
 ):
     """
     Decorator for adding retry logic to functions.
-    
+
     Args:
         max_attempts: Maximum number of retry attempts
         base_delay: Base delay between retries in seconds
@@ -181,14 +181,14 @@ def retry(
         jitter: Whether to add random jitter to delays
         exceptions: Tuple of exceptions that should trigger retries
         on_retry: Optional callback function called on each retry
-    
+
     Example:
         @retry(max_attempts=3, exceptions=(ConnectionError, TimeoutError))
         async def api_call():
             # Your API call here
             pass
     """
-    
+
     def decorator(func: Callable) -> Callable:
         config = RetryConfig(
             max_attempts=max_attempts,
@@ -197,22 +197,26 @@ def retry(
             exponential_base=exponential_base,
             jitter=jitter,
             exceptions=exceptions,
-            on_retry=on_retry
+            on_retry=on_retry,
         )
-        
+
         retry_manager = RetryManager(config)
-        
+
         if inspect.iscoroutinefunction(func):
+
             @functools.wraps(func)
             async def async_wrapper(*args, **kwargs):
                 return await retry_manager.execute_async(func, *args, **kwargs)
+
             return async_wrapper
         else:
+
             @functools.wraps(func)
             def sync_wrapper(*args, **kwargs):
                 return retry_manager.execute_sync(func, *args, **kwargs)
+
             return sync_wrapper
-    
+
     return decorator
 
 
@@ -225,7 +229,7 @@ network_retry = retry(
         ConnectionError,
         TimeoutError,
         OSError,
-    )
+    ),
 )
 
 api_retry = retry(
@@ -237,7 +241,7 @@ api_retry = retry(
         ConnectionError,
         TimeoutError,
         OSError,
-    )
+    ),
 )
 
 database_retry = retry(
@@ -247,26 +251,16 @@ database_retry = retry(
     exceptions=(
         ConnectionError,
         OSError,
-    )
+    ),
 )
 
 
 # Utility functions for manual retry management
-async def retry_async(
-    func: Callable[..., Awaitable[T]],
-    config: RetryConfig,
-    *args,
-    **kwargs
-) -> T:
+async def retry_async(func: Callable[..., Awaitable[T]], config: RetryConfig, *args, **kwargs) -> T:
     """Manually retry an async function with the given configuration."""
     return await RetryManager(config).execute_async(func, *args, **kwargs)
 
 
-def retry_sync(
-    func: Callable[..., T],
-    config: RetryConfig,
-    *args,
-    **kwargs
-) -> T:
+def retry_sync(func: Callable[..., T], config: RetryConfig, *args, **kwargs) -> T:
     """Manually retry a sync function with the given configuration."""
     return RetryManager(config).execute_sync(func, *args, **kwargs)

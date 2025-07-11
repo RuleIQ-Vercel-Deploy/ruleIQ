@@ -17,6 +17,7 @@ _AsyncSessionLocal = None
 
 Base = declarative_base()
 
+
 def _get_configured_database_urls():
     """
     Retrieves and processes DATABASE_URL from environment variables.
@@ -27,13 +28,17 @@ def _get_configured_database_urls():
         # This print is for immediate feedback if the env var is missing when needed.
         # Logging might not be configured yet, or this might be a CLI script context.
         print("ERROR: DATABASE_URL environment variable not set at the time of database access.")
-        raise OSError("DATABASE_URL not configured. Please set it in your .env file or environment.")
+        raise OSError(
+            "DATABASE_URL not configured. Please set it in your .env file or environment."
+        )
 
     # Derive SYNC_DATABASE_URL
     sync_db_url = db_url
-    if "+asyncpg" in sync_db_url: # If it's an asyncpg URL, convert to psycopg2 for sync
+    if "+asyncpg" in sync_db_url:  # If it's an asyncpg URL, convert to psycopg2 for sync
         sync_db_url = sync_db_url.replace("+asyncpg", "+psycopg2")
-    elif "postgresql://" in sync_db_url and "+psycopg2" not in sync_db_url: # If it's generic, assume psycopg2
+    elif (
+        "postgresql://" in sync_db_url and "+psycopg2" not in sync_db_url
+    ):  # If it's generic, assume psycopg2
         sync_db_url = sync_db_url.replace("postgresql://", "postgresql+psycopg2://", 1)
     # If it's already psycopg2 or another dialect, it's used as is or might error later if incompatible.
 
@@ -43,14 +48,21 @@ def _get_configured_database_urls():
         # Attempt to convert to asyncpg if it's not already
         async_db_url_candidate = async_db_url.replace("+psycopg2", "+asyncpg")
         if "postgresql://" in async_db_url_candidate and "+asyncpg" not in async_db_url_candidate:
-            async_db_url = async_db_url_candidate.replace("postgresql://", "postgresql+asyncpg://", 1)
+            async_db_url = async_db_url_candidate.replace(
+                "postgresql://", "postgresql+asyncpg://", 1
+            )
         elif "+asyncpg" in async_db_url_candidate:
             async_db_url = async_db_url_candidate
         # If it's a generic postgresql:// URL without a specified sync driver, default to making it asyncpg
-        elif "postgresql://" in async_db_url and "+psycopg2" not in async_db_url and "+asyncpg" not in async_db_url:
+        elif (
+            "postgresql://" in async_db_url
+            and "+psycopg2" not in async_db_url
+            and "+asyncpg" not in async_db_url
+        ):
             async_db_url = async_db_url.replace("postgresql://", "postgresql+asyncpg://", 1)
 
     return db_url, sync_db_url, async_db_url
+
 
 def _init_sync_db():
     """Initializes synchronous database engine and session maker if not already initialized."""
@@ -72,12 +84,13 @@ def _init_sync_db():
                 "keepalives_idle": 30,
                 "keepalives_interval": 10,
                 "keepalives_count": 5,
-                "connect_timeout": 10
-            }
+                "connect_timeout": 10,
+            },
         }
 
         _engine = create_engine(sync_db_url, **engine_kwargs)
         _SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=_engine)
+
 
 def _init_async_db():
     """Initializes asynchronous database engine and session maker if not already initialized."""
@@ -100,14 +113,16 @@ def _init_async_db():
 
         # If the URL contains sslmode=require, remove it and add ssl=True to engine kwargs
         if "sslmode=require" in async_db_url:
-            async_db_url = async_db_url.replace("?sslmode=require", "").replace("&sslmode=require", "")
+            async_db_url = async_db_url.replace("?sslmode=require", "").replace(
+                "&sslmode=require", ""
+            )
             if "connect_args" not in engine_kwargs:
                 engine_kwargs["connect_args"] = {}
             engine_kwargs["connect_args"]["ssl"] = True
             # Add performance optimizations for SSL connections
             engine_kwargs["connect_args"]["server_settings"] = {
                 "jit": "off",  # Disable JIT for faster query planning
-                "application_name": "ruleIQ_backend"
+                "application_name": "ruleIQ_backend",
             }
 
         _async_engine = create_async_engine(async_db_url, **engine_kwargs)
@@ -119,37 +134,40 @@ def _init_async_db():
             autoflush=False,
         )
 
+
 # --- Dependency for Synchronous Database Session (Legacy/Transition) ---
 def get_db():
     """
     Provides a synchronous database session and ensures it's closed afterwards.
     Marked for deprecation.
     """
-    _init_sync_db() # Ensure engine and SessionLocal are initialized
+    _init_sync_db()  # Ensure engine and SessionLocal are initialized
     db = _SessionLocal()
     try:
         yield db
     finally:
         db.close()
+
 
 def get_db_session():
     """
     Generator function for database sessions.
     Provides a synchronous database session and ensures it's closed afterwards.
     """
-    _init_sync_db() # Ensure engine and SessionLocal are initialized
+    _init_sync_db()  # Ensure engine and SessionLocal are initialized
     db = _SessionLocal()
     try:
         yield db
     finally:
         db.close()
 
+
 # --- Dependency for Asynchronous Database Session ---
 async def get_async_db() -> AsyncGenerator[AsyncSession, None]:
     """
     Provides an asynchronous database session and ensures it's closed afterwards.
     """
-    _init_async_db() # Ensure async_engine and AsyncSessionLocal are initialized
+    _init_async_db()  # Ensure async_engine and AsyncSessionLocal are initialized
     async with _AsyncSessionLocal() as session:
         try:
             yield session
@@ -158,11 +176,13 @@ async def get_async_db() -> AsyncGenerator[AsyncSession, None]:
             raise
         # The 'async with' block handles session.close()
 
+
 async def create_db_and_tables():
     """Creates all database tables asynchronously."""
     _init_async_db()
     async with _async_engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
+
 
 async def cleanup_db_connections():
     """Cleanup database connections and dispose engines."""
@@ -176,6 +196,7 @@ async def cleanup_db_connections():
         _engine.dispose()
         _engine = None
 
+
 def get_engine_info():
     """Get information about current database engines for debugging."""
     info = {
@@ -185,20 +206,24 @@ def get_engine_info():
 
     if _async_engine:
         pool = _async_engine.pool
-        info.update({
-            "async_pool_size": pool.size(),
-            "async_pool_checked_in": pool.checkedin(),
-            "async_pool_checked_out": pool.checkedout(),
-            "async_pool_overflow": pool.overflow(),
-        })
+        info.update(
+            {
+                "async_pool_size": pool.size(),
+                "async_pool_checked_in": pool.checkedin(),
+                "async_pool_checked_out": pool.checkedout(),
+                "async_pool_overflow": pool.overflow(),
+            }
+        )
 
     if _engine:
         pool = _engine.pool
-        info.update({
-            "sync_pool_size": pool.size(),
-            "sync_pool_checked_in": pool.checkedin(),
-            "sync_pool_checked_out": pool.checkedout(),
-            "sync_pool_overflow": pool.overflow(),
-        })
+        info.update(
+            {
+                "sync_pool_size": pool.size(),
+                "sync_pool_checked_in": pool.checkedin(),
+                "sync_pool_checked_out": pool.checkedout(),
+                "sync_pool_overflow": pool.overflow(),
+            }
+        )
 
     return info

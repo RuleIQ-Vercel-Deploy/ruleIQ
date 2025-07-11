@@ -11,6 +11,14 @@ export default defineConfig({
     environment: 'jsdom',
     setupFiles: ['./tests/setup.ts'],
     css: true,
+    testTimeout: 10000, // 10 seconds per test
+    hookTimeout: 10000, // 10 seconds for hooks
+    pool: 'forks', // Use forks instead of threads for better isolation
+    poolOptions: {
+      forks: {
+        singleFork: true // Run tests sequentially in a single fork
+      }
+    },
     env: {
       NEXT_PUBLIC_API_URL: 'http://localhost:8000/api',
       NEXT_PUBLIC_WEBSOCKET_URL: 'ws://localhost:8000/api/chat/ws',

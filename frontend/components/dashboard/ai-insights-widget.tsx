@@ -22,6 +22,7 @@ import { cn } from "@/lib/utils"
 
 import type { DashboardInsight } from "@/lib/api/dashboard.service"
 
+
 interface AIInsightsWidgetProps {
   insights: DashboardInsight[]
   className?: string
@@ -31,8 +32,14 @@ interface AIInsightsWidgetProps {
   onRefresh?: () => void
   onDismiss?: (insightId: string) => void
   onBookmark?: (insightId: string) => void
-  complianceProfile?: any
-  onboardingData?: any
+  complianceProfile?: {
+    priorities?: string[];
+    maturityLevel?: string;
+  }
+  onboardingData?: {
+    fullName?: string;
+    timeline?: string;
+  }
 }
 
 export function AIInsightsWidget({
@@ -58,13 +65,13 @@ export function AIInsightsWidget({
   // Show error state
   if (error) {
     return (
-      <Card className={cn("border-destructive/50", className)}>
+      <Card className={cn("glass-card border-error/50", className)}>
         <CardHeader>
-          <CardTitle className="text-destructive">AI Insights Error</CardTitle>
-          <CardDescription>{error}</CardDescription>
+          <CardTitle className="text-error">AI Insights Error</CardTitle>
+          <CardDescription className="text-text-secondary">{error}</CardDescription>
         </CardHeader>
         <CardContent>
-          <Button onClick={onRefresh} variant="outline" size="sm">
+          <Button onClick={onRefresh} variant="outline" size="sm" className="border-glass-border hover:border-glass-border-hover hover:bg-glass-white">
             <RefreshCw className="h-4 w-4 mr-2" />
             Try Again
           </Button>
@@ -76,38 +83,38 @@ export function AIInsightsWidget({
   const getInsightIcon = (type: DashboardInsight['type']) => {
     switch (type) {
       case 'tip':
-        return <Lightbulb className="h-4 w-4 text-yellow-500" />
+        return <Lightbulb className="h-4 w-4 text-warning" />
       case 'recommendation':
-        return <TrendingUp className="h-4 w-4 text-blue-500" />
+        return <TrendingUp className="h-4 w-4 text-brand-secondary" />
       case 'risk-alert':
-        return <AlertTriangle className="h-4 w-4 text-red-500" />
+        return <AlertTriangle className="h-4 w-4 text-error" />
       case 'optimization':
-        return <Sparkles className="h-4 w-4 text-purple-500" />
+        return <Sparkles className="h-4 w-4 text-brand-primary" />
       default:
-        return <Brain className="h-4 w-4 text-muted-foreground" />
+        return <Brain className="h-4 w-4 text-text-secondary" />
     }
   }
 
   const getInsightBadge = (type: DashboardInsight['type']) => {
     switch (type) {
       case 'tip':
-        return <Badge variant="outline" className="text-yellow-600 border-yellow-200">Tip</Badge>
+        return <Badge className="bg-warning/20 text-warning border-warning/30">Tip</Badge>
       case 'recommendation':
-        return <Badge variant="outline" className="text-blue-600 border-blue-200">Recommendation</Badge>
+        return <Badge className="bg-brand-secondary/20 text-brand-secondary border-brand-secondary/30">Recommendation</Badge>
       case 'risk-alert':
-        return <Badge variant="outline" className="text-red-600 border-red-200">Risk Alert</Badge>
+        return <Badge className="bg-error/20 text-error border-error/30">Risk Alert</Badge>
       case 'optimization':
-        return <Badge variant="outline" className="text-purple-600 border-purple-200">Optimization</Badge>
+        return <Badge className="bg-brand-primary/20 text-brand-primary border-brand-primary/30">Optimization</Badge>
       default:
-        return <Badge variant="secondary">Insight</Badge>
+        return <Badge className="bg-surface-secondary text-text-tertiary">Insight</Badge>
     }
   }
 
   const getPriorityColor = (priority: number) => {
-    if (priority >= 8) return 'border-l-red-500'
-    if (priority >= 6) return 'border-l-amber-500'
-    if (priority >= 4) return 'border-l-blue-500'
-    return 'border-l-gray-500'
+    if (priority >= 8) return 'border-l-error'
+    if (priority >= 6) return 'border-l-warning'
+    if (priority >= 4) return 'border-l-brand-secondary'
+    return 'border-l-glass-border'
   }
 
   const handleDismiss = async (insightId: string) => {
@@ -218,16 +225,16 @@ export function AIInsightsWidget({
     .slice(0, maxInsights)
 
   return (
-    <Card className={cn("border-0 shadow-sm hover:shadow-md transition-shadow duration-200", className)}>
+    <Card className={cn("glass-card border-0 shadow-sm hover:shadow-md transition-all duration-200", className)}>
       <CardHeader className="pb-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="h-10 w-10 rounded-full bg-gold/10 flex items-center justify-center">
-              <Brain className="h-5 w-5 text-gold" />
+            <div className="h-10 w-10 rounded-full bg-gradient-to-br from-brand-primary/20 to-brand-secondary/20 flex items-center justify-center">
+              <Brain className="h-5 w-5 text-brand-secondary" />
             </div>
             <div>
-              <CardTitle className="text-xl font-bold text-navy">AI Insights</CardTitle>
-              <CardDescription className="text-muted-foreground">
+              <CardTitle className="text-xl font-bold gradient-text">AI Insights</CardTitle>
+              <CardDescription className="text-text-secondary">
                 Personalized compliance recommendations
               </CardDescription>
             </div>
@@ -250,14 +257,14 @@ export function AIInsightsWidget({
           <div
             key={insight.id}
             className={cn(
-              "group rounded-lg border-l-4 bg-card p-4 transition-colors hover:bg-accent/50",
+              "group rounded-lg border-l-4 bg-glass-white p-4 transition-all hover:bg-glass-white-hover border border-glass-border hover:border-glass-border-hover",
               getPriorityColor(insight.priority)
             )}
           >
             {/* Insight Header */}
             <div className="flex items-start justify-between mb-3">
               <div className="flex items-start gap-3 flex-1">
-                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10 mt-0.5">
+                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-brand-primary/10 to-brand-secondary/10 mt-0.5">
                   {getInsightIcon(insight.type)}
                 </div>
                 <div className="flex-1 min-w-0">
@@ -280,7 +287,7 @@ export function AIInsightsWidget({
                     size="sm"
                     className={cn(
                       "h-auto p-1",
-                      bookmarkedInsights.has(insight.id) ? "text-amber-500" : "text-muted-foreground"
+                      bookmarkedInsights.has(insight.id) ? "text-warning" : "text-text-tertiary"
                     )}
                     onClick={() => handleBookmark(insight.id)}
                   >
@@ -289,7 +296,7 @@ export function AIInsightsWidget({
                   <Button
                     variant="ghost"
                     size="sm"
-                    className="h-auto p-1 text-muted-foreground hover:text-foreground"
+                    className="h-auto p-1 text-text-tertiary hover:text-text-primary"
                     onClick={() => handleDismiss(insight.id)}
                   >
                     <X className="h-3 w-3" />
@@ -304,7 +311,7 @@ export function AIInsightsWidget({
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="h-auto px-3 py-1.5 text-xs border"
+                  className="h-auto px-3 py-1.5 text-xs border border-glass-border hover:border-glass-border-hover hover:bg-glass-white"
                   onClick={() => window.location.href = insight.action!.route}
                 >
                   {insight.action.label}
@@ -316,16 +323,16 @@ export function AIInsightsWidget({
         ))}
 
         {visibleInsights.length === 0 && (
-          <div className="text-center py-6 text-muted-foreground">
-            <Brain className="h-8 w-8 mx-auto mb-2 opacity-50" />
+          <div className="text-center py-6 text-text-secondary">
+            <Brain className="h-8 w-8 mx-auto mb-2 opacity-50 text-brand-secondary" />
             <p>No new insights</p>
-            <p className="text-xs">Check back later for AI-powered recommendations</p>
+            <p className="text-xs text-text-tertiary">Check back later for AI-powered recommendations</p>
           </div>
         )}
 
         {insights.length > maxInsights && (
-          <div className="pt-2 border-t">
-            <Button variant="ghost" size="sm" className="w-full">
+          <div className="pt-2 border-t border-glass-border">
+            <Button variant="ghost" size="sm" className="w-full hover:bg-glass-white">
               View All Insights ({insights.length})
             </Button>
           </div>

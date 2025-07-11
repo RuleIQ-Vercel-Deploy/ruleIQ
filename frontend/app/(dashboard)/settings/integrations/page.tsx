@@ -31,10 +31,14 @@ export default function IntegrationsPage() {
         prev.map((integ) =>
           integ.id === selectedIntegration.id
             ? {
-                ...integ,
-                isConnected: true,
+                id: integ.id,
+                name: integ.name,
+                logo: integ.logo,
+                description: integ.description,
+                isConnected: true as const,
                 lastSync: new Date().toISOString(),
                 syncStatus: "ok",
+                activity: []
               }
             : integ,
         ),
@@ -47,7 +51,16 @@ export default function IntegrationsPage() {
   const handleDisconnect = (id: string) => {
     setIntegrations((prev) =>
       prev.map((integ) =>
-        integ.id === id ? { ...integ, isConnected: false, lastSync: undefined, syncStatus: undefined } : integ,
+        integ.id === id 
+          ? {
+              id: integ.id,
+              name: integ.name,
+              logo: integ.logo,
+              description: integ.description,
+              isConnected: false as const,
+              permissions: []
+            }
+          : integ,
       ),
     )
   }
@@ -56,7 +69,7 @@ export default function IntegrationsPage() {
     <div className="flex min-h-screen w-full bg-midnight-blue">
       <AppSidebar />
       <div className="flex flex-1 flex-col">
-        <DashboardHeader title="Integrations" description="Connect and manage your third-party services." />
+        <DashboardHeader />
         <main className="flex-1 p-6">
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {integrations.map((integration) => (

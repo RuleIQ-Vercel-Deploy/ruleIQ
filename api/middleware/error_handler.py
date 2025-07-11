@@ -19,6 +19,7 @@ from core.exceptions import ApplicationException
 
 logger = get_logger(__name__)
 
+
 async def error_handler_middleware(request: Request, call_next):
     """
     Global error handling middleware.
@@ -35,7 +36,7 @@ async def error_handler_middleware(request: Request, call_next):
         # Handle custom application exceptions defined in core/exceptions.py
         logger.warning(
             f"{exc.__class__.__name__} caught: {exc.message}",
-            extra={"request_id": request_id, "status_code": exc.status_code}
+            extra={"request_id": request_id, "status_code": exc.status_code},
         )
         return JSONResponse(
             status_code=exc.status_code,
@@ -45,15 +46,14 @@ async def error_handler_middleware(request: Request, call_next):
                     "type": exc.__class__.__name__,
                     "message": exc.message,
                     "request_id": request_id,
-                }
+                },
             },
         )
 
     except ValidationError as exc:
         # Handle Pydantic's input validation errors
         logger.warning(
-            "ValidationError caught",
-            extra={"request_id": request_id, "errors": exc.errors()}
+            "ValidationError caught", extra={"request_id": request_id, "errors": exc.errors()}
         )
         return JSONResponse(
             status_code=422,  # Unprocessable Entity
@@ -64,7 +64,7 @@ async def error_handler_middleware(request: Request, call_next):
                     "message": "Input validation failed",
                     "details": exc.errors(),
                     "request_id": request_id,
-                }
+                },
             },
         )
 
@@ -73,7 +73,7 @@ async def error_handler_middleware(request: Request, call_next):
         logger.error(
             f"SQLAlchemyError caught: {exc}",
             exc_info=settings.is_development,
-            extra={"request_id": request_id}
+            extra={"request_id": request_id},
         )
         return JSONResponse(
             status_code=500,
@@ -83,7 +83,7 @@ async def error_handler_middleware(request: Request, call_next):
                     "type": "DatabaseException",
                     "message": "A database error occurred. Please check logs for details.",
                     "request_id": request_id,
-                }
+                },
             },
         )
 
@@ -93,7 +93,10 @@ async def error_handler_middleware(request: Request, call_next):
         logger.critical(
             f"Unhandled exception: {exc}",
             exc_info=True,
-            extra={"request_id": request_id, "traceback": tb if settings.is_development else "Omitted"}
+            extra={
+                "request_id": request_id,
+                "traceback": tb if settings.is_development else "Omitted",
+            },
         )
         return JSONResponse(
             status_code=500,
@@ -103,6 +106,6 @@ async def error_handler_middleware(request: Request, call_next):
                     "type": "InternalServerError",
                     "message": "An unexpected internal server error occurred.",
                     "request_id": request_id,
-                }
+                },
             },
         )

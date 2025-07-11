@@ -40,7 +40,7 @@ async def create_collection_plan(
 ):
     """
     Create an AI-driven evidence collection plan.
-    
+
     This endpoint analyzes your business profile and compliance framework requirements
     to generate a prioritized, optimized collection plan with automation recommendations.
     """
@@ -50,38 +50,38 @@ async def create_collection_plan(
         if not profile:
             raise HTTPException(
                 status_code=400,
-                detail="Business profile not found. Please complete your business profile first."
+                detail="Business profile not found. Please complete your business profile first.",
             )
-        
+
         # Get existing evidence if needed
         existing_evidence = []
         if plan_request.include_existing_evidence:
             # TODO: Fetch existing evidence from database
             pass
-        
+
         # Create business context
         business_context = {
-            'industry': profile.industry,
-            'employee_count': profile.employee_count,
-            'country': profile.country,
-            'data_sensitivity': profile.data_sensitivity,
-            'handles_personal_data': profile.handles_personal_data,
-            'processes_payments': profile.processes_payments,
-            'stores_health_data': profile.stores_health_data,
-            'provides_financial_services': profile.provides_financial_services,
-            'operates_critical_infrastructure': profile.operates_critical_infrastructure,
-            'has_international_operations': profile.has_international_operations,
+            "industry": profile.industry,
+            "employee_count": profile.employee_count,
+            "country": profile.country,
+            "data_sensitivity": profile.data_sensitivity,
+            "handles_personal_data": profile.handles_personal_data,
+            "processes_payments": profile.processes_payments,
+            "stores_health_data": profile.stores_health_data,
+            "provides_financial_services": profile.provides_financial_services,
+            "operates_critical_infrastructure": profile.operates_critical_infrastructure,
+            "has_international_operations": profile.has_international_operations,
         }
-        
+
         # Create collection plan
         plan = await smart_evidence_collector.create_collection_plan(
             business_profile_id=str(profile.id),
             framework=plan_request.framework,
             business_context=business_context,
             existing_evidence=existing_evidence,
-            target_completion_weeks=plan_request.target_completion_weeks or 12
+            target_completion_weeks=plan_request.target_completion_weeks or 12,
         )
-        
+
         # Convert to response model
         return CollectionPlanResponse(
             plan_id=plan.plan_id,
@@ -106,14 +106,14 @@ async def create_collection_plan(
                     due_date=task.due_date,
                     status=task.status.value,
                     created_at=task.created_at,
-                    metadata=task.metadata
+                    metadata=task.metadata,
                 )
                 for task in plan.tasks
             ],
             automation_opportunities=AutomationOpportunities(**plan.automation_opportunities),
-            created_at=plan.created_at
+            created_at=plan.created_at,
         )
-        
+
     except Exception as e:
         logger.error(f"Error creating collection plan: {e}")
         raise HTTPException(status_code=500, detail=str(e))
@@ -127,15 +127,15 @@ async def get_collection_plan(
 ):
     """Get a specific collection plan by ID."""
     plan = await smart_evidence_collector.get_collection_plan(plan_id)
-    
+
     if not plan:
         raise HTTPException(status_code=404, detail="Collection plan not found")
-    
+
     # Verify user owns this plan
     profile = await get_business_profile(db, current_user)
     if not profile or str(profile.id) != plan.business_profile_id:
         raise HTTPException(status_code=403, detail="Access denied")
-    
+
     # Convert to response model
     return CollectionPlanResponse(
         plan_id=plan.plan_id,
@@ -160,12 +160,12 @@ async def get_collection_plan(
                 due_date=task.due_date,
                 status=task.status.value,
                 created_at=task.created_at,
-                metadata=task.metadata
+                metadata=task.metadata,
             )
             for task in plan.tasks
         ],
         automation_opportunities=AutomationOpportunities(**plan.automation_opportunities),
-        created_at=plan.created_at
+        created_at=plan.created_at,
     )
 
 
@@ -181,7 +181,7 @@ async def list_collection_plans(
     profile = await get_business_profile(db, current_user)
     if not profile:
         return []
-    
+
     # Filter plans by business profile
     user_plans = []
     for _plan_id, plan in smart_evidence_collector.active_plans.items():
@@ -189,7 +189,7 @@ async def list_collection_plans(
             # Apply filters
             if framework and plan.framework != framework:
                 continue
-            
+
             # Calculate plan status
             completed_tasks = len([t for t in plan.tasks if t.status == CollectionStatus.COMPLETED])
             if completed_tasks == plan.total_tasks:
@@ -198,10 +198,10 @@ async def list_collection_plans(
                 plan_status = "in_progress"
             else:
                 plan_status = "pending"
-            
+
             if status and plan_status != status:
                 continue
-            
+
             # Create summary
             summary = CollectionPlanSummary(
                 plan_id=plan.plan_id,
@@ -211,10 +211,10 @@ async def list_collection_plans(
                 estimated_total_hours=plan.estimated_total_hours,
                 completion_target_date=plan.completion_target_date,
                 status=plan_status,
-                created_at=plan.created_at
+                created_at=plan.created_at,
             )
             user_plans.append(summary)
-    
+
     return user_plans
 
 
@@ -230,14 +230,14 @@ async def get_priority_tasks(
     plan = await smart_evidence_collector.get_collection_plan(plan_id)
     if not plan:
         raise HTTPException(status_code=404, detail="Collection plan not found")
-    
+
     profile = await get_business_profile(db, current_user)
     if not profile or str(profile.id) != plan.business_profile_id:
         raise HTTPException(status_code=403, detail="Access denied")
-    
+
     # Get priority tasks
     priority_tasks = await smart_evidence_collector.get_next_priority_tasks(plan_id, limit)
-    
+
     # Convert to response model
     return [
         EvidenceTaskResponse(
@@ -255,7 +255,7 @@ async def get_priority_tasks(
             due_date=task.due_date,
             status=task.status.value,
             created_at=task.created_at,
-            metadata=task.metadata
+            metadata=task.metadata,
         )
         for task in priority_tasks
     ]
@@ -274,22 +274,22 @@ async def update_task_status(
     plan = await smart_evidence_collector.get_collection_plan(plan_id)
     if not plan:
         raise HTTPException(status_code=404, detail="Collection plan not found")
-    
+
     profile = await get_business_profile(db, current_user)
     if not profile or str(profile.id) != plan.business_profile_id:
         raise HTTPException(status_code=403, detail="Access denied")
-    
+
     # Update task status
     success = await smart_evidence_collector.update_task_status(
         plan_id=plan_id,
         task_id=task_id,
         status=CollectionStatus(status_update.status),
-        completion_notes=status_update.completion_notes
+        completion_notes=status_update.completion_notes,
     )
-    
+
     if not success:
         raise HTTPException(status_code=404, detail="Task not found")
-    
+
     # Get updated task
     for task in plan.tasks:
         if task.task_id == task_id:
@@ -308,9 +308,9 @@ async def update_task_status(
                 due_date=task.due_date,
                 status=task.status.value,
                 created_at=task.created_at,
-                metadata=task.metadata
+                metadata=task.metadata,
             )
-    
+
     raise HTTPException(status_code=404, detail="Task not found")
 
 
@@ -326,33 +326,35 @@ async def get_automation_recommendations(
     if not profile:
         raise HTTPException(
             status_code=400,
-            detail="Business profile not found. Please complete your business profile first."
+            detail="Business profile not found. Please complete your business profile first.",
         )
-    
+
     # Get automation rules for common evidence types
     automation_rules = smart_evidence_collector.automation_rules
-    
+
     # Provide framework-specific recommendations
     recommendations = {
         "framework": framework,
         "automation_opportunities": [],
         "recommended_tools": set(),
-        "estimated_time_savings": 0.0
+        "estimated_time_savings": 0.0,
     }
-    
+
     for evidence_type, rules in automation_rules.items():
-        if rules['automation_level'].value in ['fully_automated', 'semi_automated']:
+        if rules["automation_level"].value in ["fully_automated", "semi_automated"]:
             opportunity = {
                 "evidence_type": evidence_type,
-                "automation_level": rules['automation_level'].value,
+                "automation_level": rules["automation_level"].value,
                 "effort_reduction": f"{rules['effort_reduction'] * 100:.0f}%",
                 "success_rate": f"{rules['success_rate'] * 100:.0f}%",
-                "recommended_tools": rules['tools']
+                "recommended_tools": rules["tools"],
             }
             recommendations["automation_opportunities"].append(opportunity)
-            recommendations["recommended_tools"].update(rules['tools'])
-            recommendations["estimated_time_savings"] += rules['effort_reduction'] * 8  # Assume 8 hours base
-    
+            recommendations["recommended_tools"].update(rules["tools"])
+            recommendations["estimated_time_savings"] += (
+                rules["effort_reduction"] * 8
+            )  # Assume 8 hours base
+
     recommendations["recommended_tools"] = list(recommendations["recommended_tools"])
-    
+
     return recommendations

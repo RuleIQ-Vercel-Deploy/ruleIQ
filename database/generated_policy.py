@@ -10,17 +10,22 @@ from .db_setup import Base
 
 class GeneratedPolicy(Base):
     """AI-generated compliance policies and procedures"""
+
     __tablename__ = "generated_policies"
 
     id = Column(PG_UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     # Foreign key references (truncated column names to match database)
-    user_id = Column(PG_UUID(as_uuid=True), ForeignKey('users.id'), nullable=False)
-    business_profil = Column(PG_UUID(as_uuid=True), ForeignKey('business_profiles.id'), nullable=False)  # business_profile_id truncated
-    framework_id = Column(PG_UUID(as_uuid=True), ForeignKey('compliance_frameworks.id'), nullable=False)
+    user_id = Column(PG_UUID(as_uuid=True), ForeignKey("users.id"), nullable=False)
+    business_profil = Column(
+        PG_UUID(as_uuid=True), ForeignKey("business_profiles.id"), nullable=False
+    )  # business_profile_id truncated
+    framework_id = Column(
+        PG_UUID(as_uuid=True), ForeignKey("compliance_frameworks.id"), nullable=False
+    )
 
     # Policy metadata
     policy_name = Column(String, nullable=False)
-    framework_name = Column(String, nullable=False) # Consider deriving from framework_id
+    framework_name = Column(String, nullable=False)  # Consider deriving from framework_id
     policy_type = Column(String, default="comprehensive")  # comprehensive, specific, update
 
     # Generation details

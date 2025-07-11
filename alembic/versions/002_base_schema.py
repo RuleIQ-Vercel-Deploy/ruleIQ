@@ -5,14 +5,10 @@ Revises: 001
 Create Date: 2024-01-10
 
 """
-import sqlalchemy as sa
-from sqlalchemy.dialects import postgresql
-
-from alembic import op
 
 # revision identifiers, used by Alembic.
-revision = '002'
-down_revision = '001'
+revision = "002"
+down_revision = "001"
 branch_labels = None
 depends_on = None
 

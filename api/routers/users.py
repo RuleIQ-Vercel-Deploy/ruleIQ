@@ -13,23 +13,21 @@ from database.user import User
 
 router = APIRouter()
 
+
 @router.get("/me", response_model=UserResponse)
-async def get_current_user(
-    current_user: User = Depends(get_current_active_user)
-):
+async def get_current_user(current_user: User = Depends(get_current_active_user)):
     return current_user
 
+
 @router.get("/profile", response_model=UserResponse)
-async def get_user_profile(
-    current_user: User = Depends(get_current_active_user)
-):
+async def get_user_profile(current_user: User = Depends(get_current_active_user)):
     """Get user profile - alias for /me endpoint for compatibility"""
     return current_user
 
+
 @router.get("/dashboard")
 async def get_user_dashboard(
-    current_user: User = Depends(get_current_active_user),
-    db: AsyncSession = Depends(get_async_db)
+    current_user: User = Depends(get_current_active_user), db: AsyncSession = Depends(get_async_db)
 ) -> Dict[str, Any]:
     """Get user dashboard data"""
     from sqlalchemy import select
@@ -44,28 +42,29 @@ async def get_user_dashboard(
         "user": {
             "id": str(current_user.id),
             "email": current_user.email,
-            "full_name": getattr(current_user, 'full_name', None)
+            "full_name": getattr(current_user, "full_name", None),
         },
         "business_profile": {
             "id": str(business_profile.id) if business_profile else None,
             "company_name": business_profile.company_name if business_profile else None,
-            "industry": business_profile.industry if business_profile else None
-        } if business_profile else None,
+            "industry": business_profile.industry if business_profile else None,
+        }
+        if business_profile
+        else None,
         "onboarding_completed": business_profile is not None,
-
         # Required sections for usability tests
         "compliance_status": {
             "overall_score": 75,  # Mock score for now
             "visual_indicator": "good",
             "status_text": "On track",
-            "last_updated": "2024-01-01T00:00:00Z"
+            "last_updated": "2024-01-01T00:00:00Z",
         },
         "recent_activity": [
             {
                 "id": "activity_1",
                 "type": "evidence_uploaded",
                 "description": "New evidence uploaded for GDPR compliance",
-                "timestamp": "2024-01-01T00:00:00Z"
+                "timestamp": "2024-01-01T00:00:00Z",
             }
         ],
         "next_actions": [
@@ -74,7 +73,7 @@ async def get_user_dashboard(
                 "title": "Complete risk assessment",
                 "priority": "high",
                 "due_date": "2024-01-15T00:00:00Z",
-                "framework": "GDPR"
+                "framework": "GDPR",
             }
         ],
         "progress_overview": {
@@ -84,8 +83,8 @@ async def get_user_dashboard(
             "frameworks": [
                 {"name": "GDPR", "progress": 75, "status": "in_progress"},
                 {"name": "ISO 27001", "progress": 45, "status": "in_progress"},
-                {"name": "SOC 2", "progress": 0, "status": "not_started"}
-            ]
+                {"name": "SOC 2", "progress": 0, "status": "not_started"},
+            ],
         },
         "recommendations": [
             {
@@ -93,7 +92,7 @@ async def get_user_dashboard(
                 "title": "Implement data retention policy",
                 "description": "Create and implement a comprehensive data retention policy",
                 "priority": "medium",
-                "framework": "GDPR"
+                "framework": "GDPR",
             }
         ],
         "next_steps": [
@@ -102,38 +101,33 @@ async def get_user_dashboard(
                 "title": "Complete business profile setup",
                 "description": "Finish setting up your business profile for better recommendations",
                 "priority": "high",
-                "estimated_time": "10 minutes"
+                "estimated_time": "10 minutes",
             },
             {
                 "id": "step_2",
                 "title": "Start GDPR assessment",
                 "description": "Begin your GDPR compliance assessment",
                 "priority": "medium",
-                "estimated_time": "30 minutes"
-            }
+                "estimated_time": "30 minutes",
+            },
         ],
-
         # Legacy fields for backward compatibility
-        "quick_stats": {
-            "evidence_items": 0,
-            "active_assessments": 0,
-            "compliance_score": 75
-        },
+        "quick_stats": {"evidence_items": 0, "active_assessments": 0, "compliance_score": 75},
         "active_frameworks": ["GDPR"],
         "implementation_progress": {
             "total_tasks": 10,
             "completed_tasks": 6,
             "in_progress_tasks": 2,
-            "percentage_complete": 65
-        }
+            "percentage_complete": 65,
+        },
     }
 
     return dashboard_data
 
+
 @router.put("/me/deactivate")
 async def deactivate_account(
-    current_user: User = Depends(get_current_active_user),
-    db: Session = Depends(get_db)
+    current_user: User = Depends(get_current_active_user), db: Session = Depends(get_db)
 ):
     current_user.is_active = False
     db.commit()

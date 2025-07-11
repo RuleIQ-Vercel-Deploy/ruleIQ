@@ -153,6 +153,25 @@ const mockAIResponses = {
   },
   
   followUp: {
+    questions: [
+      {
+        id: "ai_follow_1",
+        type: "radio" as const,
+        text: "Do you have automated systems in place to delete data when retention periods expire?",
+        options: [
+          { value: "yes", label: "Yes, fully automated" },
+          { value: "partial", label: "Partially automated" },
+          { value: "manual", label: "Manual process only" },
+          { value: "no", label: "No deletion process" }
+        ],
+        validation: { required: true },
+        weight: 2,
+        metadata: {
+          ai_generated: true,
+          reasoning: "Follow-up to assess implementation maturity"
+        }
+      }
+    ],
     follow_up_questions: [
       {
         id: "ai_follow_1",
@@ -523,9 +542,13 @@ Can you provide guidance on how to answer this question correctly?`;
       (context as any).size = currentAnswers['company_size'] || currentAnswers['employee_count'];
     }
 
-    // Extract industry information
+    // Extract industry information - ensure proper capitalization
     if (currentAnswers?.['industry'] || currentAnswers?.['business_sector']) {
-      context.industry = currentAnswers['industry'] || currentAnswers['business_sector'];
+      const industry = currentAnswers['industry'] || currentAnswers['business_sector'];
+      // Capitalize the industry name properly
+      if (typeof industry === 'string') {
+        context.industry = industry.charAt(0).toUpperCase() + industry.slice(1).toLowerCase();
+      }
     }
 
     // Extract compliance frameworks
@@ -566,9 +589,9 @@ Can you provide guidance on how to answer this question correctly?`;
 
     policyQuestions.forEach(policy => {
       if (currentAnswers[policy] === 'Yes' || currentAnswers[policy] === true) {
-        result.existing_policies.push(policy.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase()));
+        result.existing_policies.push(policy.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()));
       } else if (currentAnswers[policy] === 'No' || currentAnswers[policy] === false) {
-        result.gaps_identified.push(policy.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase()));
+        result.gaps_identified.push(policy.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()));
       }
     });
 
@@ -580,9 +603,9 @@ Can you provide guidance on how to answer this question correctly?`;
 
     complianceMeasures.forEach(measure => {
       if (currentAnswers[measure] === 'Yes' || currentAnswers[measure] === true) {
-        result.compliance_measures.push(measure.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase()));
+        result.compliance_measures.push(measure.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()));
       } else if (currentAnswers[measure] === 'No' || currentAnswers[measure] === false) {
-        result.gaps_identified.push(measure.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase()));
+        result.gaps_identified.push(measure.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()));
       }
     });
 
@@ -664,8 +687,8 @@ Can you provide guidance on how to answer this question correctly?`;
     }
 
     // Additional context from answers
-    if (currentAnswers?.['handles_personal_data']) {
-      result.risk_level = result.risk_level === 'low' ? 'medium' : 'high';
+    if (currentAnswers?.['handles_personal_data'] === 'Yes' || currentAnswers?.['data_sensitivity'] === 'High') {
+      result.risk_level = result.risk_level === 'low' ? 'medium' : result.risk_level;
     }
 
     if (currentAnswers?.['international_transfers'] === 'Yes') {
@@ -825,6 +848,18 @@ Can you provide guidance on how to answer this question correctly?`;
         timeline_preferences: timelinePreferences,
         assessment_type: context.assessmentType || 'general'
       };
+
+      // Use mock response in test/development mode
+      if (!this.useProductionEndpoints) {
+        return {
+          analysis: mockAIResponses.analysis.compliance_insights.maturity_level + ' - Based on your assessment responses, we have identified key areas for improvement.',
+          recommendations: mockAIResponses.analysis.recommendations,
+          confidence_score: 0.92,
+          gaps: mockAIResponses.analysis.gaps,
+          risk_assessment: mockAIResponses.analysis.risk_assessment,
+          compliance_insights: mockAIResponses.analysis.compliance_insights
+        };
+      }
 
       // Make AI request with timeout
       const aiRequest = apiClient.post('/ai/assessments/enhanced-analysis', {

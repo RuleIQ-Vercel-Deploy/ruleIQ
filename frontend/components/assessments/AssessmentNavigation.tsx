@@ -21,7 +21,6 @@ interface AssessmentNavigationProps {
 export function AssessmentNavigation({
   framework,
   currentSectionIndex,
-  progress,
   onSectionClick
 }: AssessmentNavigationProps) {
   const hasPreviousSection = currentSectionIndex > 0;
@@ -84,8 +83,8 @@ export function AssessmentNavigation({
             size="sm"
             className="w-full"
             onClick={() => {
-              // Could open a modal with all sections
-              console.log('Open section navigator');
+              // TODO: Open section navigator modal
+              onSectionClick(0);
             }}
           >
             <Grid className="h-4 w-4 mr-2" />

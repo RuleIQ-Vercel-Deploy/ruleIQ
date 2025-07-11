@@ -1,6 +1,40 @@
-import { Slack, Github, Gitlab, FileText, Bot } from "lucide-react"
+import { Slack, Github, Gitlab, FileText, Bot, Folder, Users, Calendar, Layers } from "lucide-react"
 
-export const integrations = [
+// Activity type for integration logs
+interface IntegrationActivity {
+  id: number
+  action: string
+  user?: string
+  timestamp: string
+  status: "ok" | "error" | "info"
+}
+
+// Base integration interface
+interface BaseIntegration {
+  id: string
+  name: string
+  logo: any // LucideIcon type
+  description: string
+}
+
+// Connected integration
+interface ConnectedIntegration extends BaseIntegration {
+  isConnected: true
+  lastSync: string
+  syncStatus: string
+  activity: IntegrationActivity[]
+}
+
+// Disconnected integration
+interface DisconnectedIntegration extends BaseIntegration {
+  isConnected: false
+  permissions: string[]
+}
+
+// Union type for Integration
+export type Integration = ConnectedIntegration | DisconnectedIntegration
+
+export const integrations: Integration[] = [
   {
     id: "slack",
     name: "Slack",
@@ -53,7 +87,38 @@ export const integrations = [
     isConnected: false,
     permissions: ["Read project data", "Create and modify issues", "Access user information"],
   },
+  {
+    id: "aws",
+    name: "Amazon Web Services",
+    logo: Layers,
+    description: "Monitor your AWS infrastructure and automatically collect compliance evidence.",
+    isConnected: false,
+    permissions: ["Read CloudTrail logs", "Access S3 buckets", "Read IAM policies", "Access compliance reports"],
+  },
+  {
+    id: "gsuite",
+    name: "Google Workspace",
+    logo: Users,
+    description: "Sync user management and document collaboration data for compliance tracking.",
+    isConnected: false,
+    permissions: ["Read user directory", "Access shared drives", "Read audit logs", "Access calendar data"],
+  },
+  {
+    id: "office365",
+    name: "Microsoft 365",
+    logo: Calendar,
+    description: "Connect Office 365 to track document changes and user activity.",
+    isConnected: false,
+    permissions: ["Read user profiles", "Access SharePoint", "Read audit logs", "Access Teams data"],
+  },
+  {
+    id: "sharepoint",
+    name: "SharePoint",
+    logo: Folder,
+    description: "Integrate with SharePoint to automatically sync compliance documents and policies.",
+    isConnected: false,
+    permissions: ["Read site collections", "Access document libraries", "Read user permissions"],
+  },
 ]
 
-export type Integration = (typeof integrations)[0]
-export type ActivityLog = (typeof integrations)[0]["activity"][0]
+export type ActivityLog = IntegrationActivity

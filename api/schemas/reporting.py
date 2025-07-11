@@ -16,6 +16,7 @@ class ReportFormat(str, Enum):
     HTML = "html"
     CSV = "csv"
 
+
 class ReportType(str, Enum):
     EXECUTIVE_SUMMARY = "executive_summary"
     GAP_ANALYSIS = "gap_analysis"
@@ -25,50 +26,71 @@ class ReportType(str, Enum):
     CONTROL_MATRIX = "control_matrix"
     RISK_ASSESSMENT = "risk_assessment"
 
+
 class ReportFrequency(str, Enum):
     DAILY = "daily"
     WEEKLY = "weekly"
     MONTHLY = "monthly"
-    CUSTOM = "custom" # For cron-based scheduling
+    CUSTOM = "custom"  # For cron-based scheduling
+
 
 # --- Structured Input Models ---
 
+
 class ReportParameters(BaseModel):
     """Structured model for report generation parameters."""
-    frameworks: Optional[List[str]] = Field(None, description="List of compliance frameworks to include.")
+
+    frameworks: Optional[List[str]] = Field(
+        None, description="List of compliance frameworks to include."
+    )
     start_date: Optional[date] = Field(None, description="Start date for the report's data range.")
     end_date: Optional[date] = Field(None, description="End date for the report's data range.")
-    include_evidence: bool = Field(False, description="Whether to attach detailed evidence to the report.")
+    include_evidence: bool = Field(
+        False, description="Whether to attach detailed evidence to the report."
+    )
     # Allows for additional, report-specific parameters not yet modeled
-    extra_params: Optional[Dict[str, Any]] = Field(default_factory=dict, description="Additional key-value parameters for custom reports.")
+    extra_params: Optional[Dict[str, Any]] = Field(
+        default_factory=dict, description="Additional key-value parameters for custom reports."
+    )
 
-    @validator('end_date', always=True)
+    @validator("end_date", always=True)
     def validate_date_range(self, v, values):
-        if 'start_date' in values and v and values['start_date'] and v < values['start_date']:
-            raise ValueError('End date cannot be before start date.')
+        if "start_date" in values and v and values["start_date"] and v < values["start_date"]:
+            raise ValueError("End date cannot be before start date.")
         return v
+
 
 class ScheduleConfig(BaseModel):
     """Structured model for schedule configuration."""
-    day_of_week: Optional[int] = Field(None, ge=0, le=6, description="Day of the week for weekly reports (0=Monday, 6=Sunday).")
-    day_of_month: Optional[int] = Field(None, ge=1, le=31, description="Day of the month for monthly reports.")
-    time_of_day: str = Field("09:00", description="Time of day to send the report (HH:MM format).")
-    cron_expression: Optional[str] = Field(None, description="A cron expression for custom scheduling.")
 
-    @validator('cron_expression', always=True)
+    day_of_week: Optional[int] = Field(
+        None, ge=0, le=6, description="Day of the week for weekly reports (0=Monday, 6=Sunday)."
+    )
+    day_of_month: Optional[int] = Field(
+        None, ge=1, le=31, description="Day of the month for monthly reports."
+    )
+    time_of_day: str = Field("09:00", description="Time of day to send the report (HH:MM format).")
+    cron_expression: Optional[str] = Field(
+        None, description="A cron expression for custom scheduling."
+    )
+
+    @validator("cron_expression", always=True)
     def validate_cron(self, v, values):
-        if v and values.get('frequency') != ReportFrequency.CUSTOM:
-            raise ValueError('cron_expression can only be set for custom frequency.')
+        if v and values.get("frequency") != ReportFrequency.CUSTOM:
+            raise ValueError("cron_expression can only be set for custom frequency.")
         # A basic cron validation could be added here
         return v
 
+
 # --- API Request/Response Models ---
+
 
 class GenerateReportRequest(BaseModel):
     business_profile_id: UUID
     report_type: ReportType
     format: ReportFormat = ReportFormat.PDF
     parameters: ReportParameters = Field(default_factory=ReportParameters)
+
 
 class ReportResponse(BaseModel):
     report_id: str
@@ -79,6 +101,7 @@ class ReportResponse(BaseModel):
     generated_at: datetime
     size_bytes: Optional[int] = None
 
+
 class CreateScheduleRequest(BaseModel):
     business_profile_id: UUID
     report_type: ReportType
@@ -88,14 +111,16 @@ class CreateScheduleRequest(BaseModel):
     parameters: ReportParameters = Field(default_factory=ReportParameters)
     schedule_config: ScheduleConfig = Field(default_factory=ScheduleConfig)
 
-    @validator('recipients')
+    @validator("recipients")
     def validate_recipients(self, v):
         import re
-        email_pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+
+        email_pattern = r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
         for email in v:
             if not re.match(email_pattern, email):
-                raise ValueError(f'Invalid email address: {email}')
+                raise ValueError(f"Invalid email address: {email}")
         return v
+
 
 class ScheduleResponse(BaseModel):
     id: UUID
@@ -115,6 +140,7 @@ class ScheduleResponse(BaseModel):
     class Config:
         from_attributes = True
 
+
 class UpdateScheduleRequest(BaseModel):
     frequency: Optional[ReportFrequency] = None
     recipients: Optional[List[str]] = None
@@ -122,19 +148,22 @@ class UpdateScheduleRequest(BaseModel):
     active: Optional[bool] = None
     schedule_config: Optional[ScheduleConfig] = None
 
-    @validator('recipients')
+    @validator("recipients")
     def validate_recipients(self, v):
         if v is not None:
             import re
-            email_pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+
+            email_pattern = r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
             for email in v:
                 if not re.match(email_pattern, email):
-                    raise ValueError(f'Invalid email address: {email}')
+                    raise ValueError(f"Invalid email address: {email}")
         return v
+
 
 class ScheduleListResponse(BaseModel):
     schedules: List[ScheduleResponse]
     total: int
+
 
 class ReportHistoryItem(BaseModel):
     report_id: str
@@ -145,11 +174,13 @@ class ReportHistoryItem(BaseModel):
     download_url: Optional[str] = None
     status: str
 
+
 class ReportHistoryResponse(BaseModel):
     reports: List[ReportHistoryItem]
     total: int
     page: int
     per_page: int
+
 
 class ReportStatsResponse(BaseModel):
     total_reports_generated: int
@@ -160,6 +191,7 @@ class ReportStatsResponse(BaseModel):
     success_rate: float
     by_report_type: Dict[str, int]
     by_frequency: Dict[str, int]
+
 
 class ExecuteScheduleResponse(BaseModel):
     status: str

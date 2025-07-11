@@ -31,7 +31,7 @@ class TestAIRateLimiter:
     async def test_rate_limiter_allows_requests_within_limit(self, rate_limiter):
         """Test that requests within the limit are allowed."""
         user_id = "test_user_1"
-        
+
         # First 3 requests should be allowed
         for _i in range(3):
             allowed, retry_after = await rate_limiter.check_rate_limit(user_id)
@@ -42,16 +42,16 @@ class TestAIRateLimiter:
     async def test_rate_limiter_blocks_requests_over_limit(self, rate_limiter):
         """Test that requests over the limit are blocked."""
         user_id = "test_user_2"
-        
+
         # Use up the normal limit (3 requests)
         for _i in range(3):
             allowed, retry_after = await rate_limiter.check_rate_limit(user_id)
             assert allowed is True
-        
+
         # Use up burst allowance (1 request)
         allowed, retry_after = await rate_limiter.check_rate_limit(user_id)
         assert allowed is True
-        
+
         # Next request should be blocked
         allowed, retry_after = await rate_limiter.check_rate_limit(user_id)
         assert allowed is False
@@ -61,16 +61,16 @@ class TestAIRateLimiter:
     async def test_rate_limiter_burst_allowance(self, rate_limiter):
         """Test that burst allowance works correctly."""
         user_id = "test_user_3"
-        
+
         # Use up normal limit
         for _i in range(3):
             allowed, retry_after = await rate_limiter.check_rate_limit(user_id)
             assert allowed is True
-        
+
         # Burst allowance should allow 1 more request
         allowed, retry_after = await rate_limiter.check_rate_limit(user_id)
         assert allowed is True
-        
+
         # Now should be blocked
         allowed, retry_after = await rate_limiter.check_rate_limit(user_id)
         assert allowed is False
@@ -93,8 +93,8 @@ class TestAIRateLimiter:
         current_time = time.time()
         future_time = current_time + 61  # 61 seconds later (past the window)
 
-        with patch('time.time', return_value=future_time):
-            with patch('api.middleware.ai_rate_limiter.time.time', return_value=future_time):
+        with patch("time.time", return_value=future_time):
+            with patch("api.middleware.ai_rate_limiter.time.time", return_value=future_time):
                 # Should be allowed again
                 allowed, retry_after = await rate_limiter.check_rate_limit(user_id)
                 assert allowed is True
@@ -104,16 +104,16 @@ class TestAIRateLimiter:
         """Test that different users have separate rate limits."""
         user1 = "test_user_5"
         user2 = "test_user_6"
-        
+
         # User 1 uses up their limit
         for _i in range(4):  # 3 normal + 1 burst
             allowed, retry_after = await rate_limiter.check_rate_limit(user1)
             assert allowed is True
-        
+
         # User 1 should be blocked
         allowed, retry_after = await rate_limiter.check_rate_limit(user1)
         assert allowed is False
-        
+
         # User 2 should still be allowed
         allowed, retry_after = await rate_limiter.check_rate_limit(user2)
         assert allowed is True
@@ -121,11 +121,11 @@ class TestAIRateLimiter:
     def test_get_remaining_requests(self, rate_limiter):
         """Test getting remaining requests for a user."""
         user_id = "test_user_7"
-        
+
         # Initially should have full limit
         remaining = rate_limiter.get_remaining_requests(user_id)
         assert remaining == 3
-        
+
         # After one request, should have 2 remaining
         # Simulate a request by adding to the deque
         rate_limiter.user_requests[user_id].append(time.time())
@@ -163,7 +163,7 @@ class TestAIRateLimitStats:
     def test_get_ai_rate_limit_stats_structure(self):
         """Test that rate limit stats return correct structure."""
         stats = get_ai_rate_limit_stats()
-        
+
         assert isinstance(stats, dict)
         assert "uptime_seconds" in stats
         assert "total_requests" in stats
@@ -176,7 +176,7 @@ class TestAIRateLimitStats:
     def test_rate_limit_stats_initial_values(self):
         """Test initial values of rate limit stats."""
         stats = get_ai_rate_limit_stats()
-        
+
         # Should start with zero requests
         assert stats["total_requests"] >= 0
         assert stats["rate_limited_requests"] >= 0
@@ -197,7 +197,7 @@ class TestRateLimitingIntegration:
         from database.user import User
 
         # Mock settings to disable testing mode
-        with patch('api.middleware.ai_rate_limiter.settings') as mock_settings:
+        with patch("api.middleware.ai_rate_limiter.settings") as mock_settings:
             mock_settings.is_testing = False
 
             # Create a test rate limiter with very low limits
@@ -233,18 +233,18 @@ class TestRateLimitingIntegration:
         """Test rate limiting under concurrent requests."""
         rate_limiter = AIRateLimiter(requests_per_minute=5, burst_allowance=1)
         user_id = "concurrent_test_user"
-        
+
         async def make_request():
             return await rate_limiter.check_rate_limit(user_id)
-        
+
         # Make 10 concurrent requests
         tasks = [make_request() for _ in range(10)]
         results = await asyncio.gather(*tasks)
-        
+
         # Count allowed and blocked requests
         allowed_count = sum(1 for allowed, _ in results if allowed)
         blocked_count = sum(1 for allowed, _ in results if not allowed)
-        
+
         # Should allow 6 requests (5 normal + 1 burst) and block 4
         assert allowed_count == 6
         assert blocked_count == 4

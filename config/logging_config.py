@@ -21,51 +21,53 @@ from config.settings import settings
 class CustomJsonFormatter(jsonlogger.JsonFormatter):
     def add_fields(self, log_record, record, message_dict):
         super().add_fields(log_record, record, message_dict)
-        if not log_record.get('timestamp'):
-            log_record['timestamp'] = record.created
-        if log_record.get('level'):
-            log_record['level'] = log_record['level'].upper()
+        if not log_record.get("timestamp"):
+            log_record["timestamp"] = record.created
+        if log_record.get("level"):
+            log_record["level"] = log_record["level"].upper()
         else:
-            log_record['level'] = record.levelname
+            log_record["level"] = record.levelname
 
         # Add request_id from contextvar
         request_id = request_id_var.get()
         if request_id:
-            log_record['request_id'] = request_id
+            log_record["request_id"] = request_id
 
         # Add user_id from contextvar
         user_id = user_id_var.get()
         if user_id:
-            log_record['user_id'] = str(user_id)
+            log_record["user_id"] = str(user_id)
+
 
 def get_logging_config(log_level: str) -> Dict[str, Any]:
     """Defines the logging configuration dictionary."""
     return {
-        'version': 1,
-        'disable_existing_loggers': False,
-        'formatters': {
-            'json': {
-                '()': 'config.logging_config.CustomJsonFormatter',
-                'format': '%(timestamp)s %(level)s %(name)s %(message)s %(request_id)s %(user_id)s'
+        "version": 1,
+        "disable_existing_loggers": False,
+        "formatters": {
+            "json": {
+                "()": "config.logging_config.CustomJsonFormatter",
+                "format": "%(timestamp)s %(level)s %(name)s %(message)s %(request_id)s %(user_id)s",
             },
         },
-        'handlers': {
-            'console': {
-                'class': 'logging.StreamHandler',
-                'stream': sys.stdout,
-                'formatter': 'json',
+        "handlers": {
+            "console": {
+                "class": "logging.StreamHandler",
+                "stream": sys.stdout,
+                "formatter": "json",
             },
         },
-        'root': {
-            'handlers': ['console'],
-            'level': log_level,
+        "root": {
+            "handlers": ["console"],
+            "level": log_level,
         },
-        'loggers': {
-            'uvicorn': {'handlers': ['console'], 'level': 'INFO', 'propagate': False},
-            'gunicorn': {'handlers': ['console'], 'level': 'INFO', 'propagate': False},
-            'celery': {'handlers': ['console'], 'level': 'INFO', 'propagate': False},
-        }
+        "loggers": {
+            "uvicorn": {"handlers": ["console"], "level": "INFO", "propagate": False},
+            "gunicorn": {"handlers": ["console"], "level": "INFO", "propagate": False},
+            "celery": {"handlers": ["console"], "level": "INFO", "propagate": False},
+        },
     }
+
 
 def setup_logging() -> None:
     """Setup logging configuration based on environment settings."""
@@ -75,46 +77,64 @@ def setup_logging() -> None:
     logger = logging.getLogger(__name__)
     logger.info(f"Logging initialized with level {log_level}")
 
+
 class ComplianceLogger:
     """A wrapper around the standard logger to provide structured logging for specific event types."""
+
     def __init__(self, name: str):
         self.logger = logging.getLogger(name)
 
     def log_user_action(self, user_id: str, action: str, details: Optional[Dict[str, Any]] = None):
         """Log user actions for audit purposes."""
-        self.logger.info(f"User action: {action}", extra={
-            'event_type': 'user_action',
-            'user_id': user_id,
-            'action': action,
-            'details': details or {},
-        })
+        self.logger.info(
+            f"User action: {action}",
+            extra={
+                "event_type": "user_action",
+                "user_id": user_id,
+                "action": action,
+                "details": details or {},
+            },
+        )
 
-    def log_compliance_event(self, event_type: str, framework: str, details: Optional[Dict[str, Any]] = None):
+    def log_compliance_event(
+        self, event_type: str, framework: str, details: Optional[Dict[str, Any]] = None
+    ):
         """Log compliance-related events."""
-        self.logger.info(f"Compliance event: {event_type}", extra={
-            'event_type': 'compliance_event',
-            'compliance_framework': framework,
-            'compliance_event_type': event_type,
-            'details': details or {},
-        })
+        self.logger.info(
+            f"Compliance event: {event_type}",
+            extra={
+                "event_type": "compliance_event",
+                "compliance_framework": framework,
+                "compliance_event_type": event_type,
+                "details": details or {},
+            },
+        )
 
     def log_ai_interaction(self, model: str, prompt_type: str, tokens_used: Optional[int] = None):
         """Log AI model interactions."""
-        self.logger.info(f"AI interaction with {model}", extra={
-            'event_type': 'ai_interaction',
-            'ai_model': model,
-            'prompt_type': prompt_type,
-            'tokens_used': tokens_used,
-        })
+        self.logger.info(
+            f"AI interaction with {model}",
+            extra={
+                "event_type": "ai_interaction",
+                "ai_model": model,
+                "prompt_type": prompt_type,
+                "tokens_used": tokens_used,
+            },
+        )
 
     def log_error(self, error: Exception, context: Optional[Dict[str, Any]] = None):
         """Log errors with additional context."""
-        self.logger.error(f"Error: {type(error).__name__}", extra={
-            'event_type': 'error',
-            'error_type': type(error).__name__,
-            'error_message': str(error),
-            'context': context or {},
-        }, exc_info=True)
+        self.logger.error(
+            f"Error: {type(error).__name__}",
+            extra={
+                "event_type": "error",
+                "error_type": type(error).__name__,
+                "error_message": str(error),
+                "context": context or {},
+            },
+            exc_info=True,
+        )
+
 
 def get_logger(name: str) -> logging.Logger:
     """Get a standard logger instance."""

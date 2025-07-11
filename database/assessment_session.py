@@ -11,11 +11,14 @@ from .db_setup import Base
 
 class AssessmentSession(Base):
     """User assessment sessions for compliance scoping"""
+
     __tablename__ = "assessment_sessions"
 
     id = Column(PG_UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    user_id = Column(PG_UUID(as_uuid=True), ForeignKey('users.id'), nullable=False)
-    business_profile_id = Column(PG_UUID(as_uuid=True), ForeignKey('business_profiles.id'), nullable=True)
+    user_id = Column(PG_UUID(as_uuid=True), ForeignKey("users.id"), nullable=False)
+    business_profile_id = Column(
+        PG_UUID(as_uuid=True), ForeignKey("business_profiles.id"), nullable=True
+    )
 
     # Session metadata
     session_type = Column(String, default="compliance_scoping")  # scoping, readiness, etc.
@@ -46,4 +49,6 @@ class AssessmentSession(Base):
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
     # Relationships
-    questions = relationship("AssessmentQuestion", back_populates="session", cascade="all, delete-orphan")
+    questions = relationship(
+        "AssessmentQuestion", back_populates="session", cascade="all, delete-orphan"
+    )

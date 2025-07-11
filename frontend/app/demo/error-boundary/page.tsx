@@ -20,7 +20,7 @@ function BrokenComponent() {
       <H2>Component with Error</H2>
       <Body>Click the button to trigger an error in this component.</Body>
       <Button 
-        variant="error" 
+        variant="destructive" 
         onClick={() => setShouldError(true)}
         className="gap-2"
       >
@@ -53,7 +53,7 @@ function AsyncBrokenComponent() {
       <H2>Component with Async Error</H2>
       <Body>Click the button to trigger an async error.</Body>
       <Button 
-        variant="error" 
+        variant="destructive" 
         onClick={handleAsyncError}
         className="gap-2"
       >
@@ -73,7 +73,7 @@ function WorkingComponent() {
       <H2>Working Component</H2>
       <Body>This component works normally. Count: {count}</Body>
       <Button 
-        variant="accent" 
+        variant="default" 
         onClick={() => setCount(count + 1)}
       >
         Increment Count

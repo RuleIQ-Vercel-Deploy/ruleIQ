@@ -18,25 +18,33 @@ from database.user import User as UserModel
 # Their definitions would be here.
 def calculate_policy_score(policies: List[GeneratedPolicyModel]) -> float:
     # Placeholder for actual calculation logic
-    if not policies: return 0.0
+    if not policies:
+        return 0.0
     return 75.0
+
 
 def calculate_implementation_score(plans: List[ImplementationPlanModel]) -> float:
     # Placeholder for actual calculation logic
-    if not plans: return 0.0
+    if not plans:
+        return 0.0
     return 60.0
+
 
 def calculate_evidence_score(evidence: List[EvidenceItemModel]) -> float:
     # Placeholder for actual calculation logic
-    if not evidence: return 0.0
+    if not evidence:
+        return 0.0
     return 80.0
+
 
 def analyze_readiness_details(policy_score, implementation_score, evidence_score):
     # Placeholder for detailed analysis
     return {
-        "priority_actions": [{"action": "Improve policy coverage", "urgency": "high", "impact": "high"}],
+        "priority_actions": [
+            {"action": "Improve policy coverage", "urgency": "high", "impact": "high"}
+        ],
         "quick_wins": [{"action": "Upload missing evidence for control X", "effort": "low"}],
-        "estimated_readiness_date": datetime.utcnow() + timedelta(days=90)
+        "estimated_readiness_date": datetime.utcnow() + timedelta(days=90),
     }
 
 
@@ -58,7 +66,7 @@ async def generate_compliance_report(
     if format == "pdf":
         # Placeholder for PDF generation
         return b"%PDF-1.4...minimal pdf..."
-    else: # json
+    else:  # json
         return {
             "report_metadata": {
                 "user_id": user.id,
@@ -80,11 +88,9 @@ async def get_historical_assessments(
     # associated with the user and business profile.
     return []
 
+
 async def generate_readiness_assessment(
-    db: AsyncSession,
-    user: UserModel,
-    framework_id: UUID,
-    assessment_type: str = "full"
+    db: AsyncSession, user: UserModel, framework_id: UUID, assessment_type: str = "full"
 ) -> ReadinessAssessmentModel:
     """Generate a comprehensive compliance readiness assessment asynchronously."""
 
@@ -96,7 +102,9 @@ async def generate_readiness_assessment(
         raise ValueError("Business profile not found")
 
     # Get compliance framework
-    framework_stmt = select(ComplianceFrameworkModel).where(ComplianceFrameworkModel.id == framework_id)
+    framework_stmt = select(ComplianceFrameworkModel).where(
+        ComplianceFrameworkModel.id == framework_id
+    )
     framework_res = await db.execute(framework_stmt)
     framework = framework_res.scalars().first()
     if not framework:
@@ -110,7 +118,8 @@ async def generate_readiness_assessment(
     policies = policies_res.scalars().all()
 
     impl_plans_stmt = select(ImplementationPlanModel).where(
-        ImplementationPlanModel.user_id == user.id, ImplementationPlanModel.framework_id == framework_id
+        ImplementationPlanModel.user_id == user.id,
+        ImplementationPlanModel.framework_id == framework_id,
     )
     impl_plans_res = await db.execute(impl_plans_stmt)
     implementation_plans = impl_plans_res.scalars().all()
@@ -140,11 +149,11 @@ async def generate_readiness_assessment(
         score_breakdown={
             "policy": policy_score,
             "implementation": implementation_score,
-            "evidence": evidence_score
+            "evidence": evidence_score,
         },
         priority_actions=analysis["priority_actions"],
         quick_wins=analysis["quick_wins"],
-        estimated_readiness_date=analysis["estimated_readiness_date"]
+        estimated_readiness_date=analysis["estimated_readiness_date"],
     )
 
     db.add(new_assessment)
@@ -155,7 +164,7 @@ async def generate_readiness_assessment(
     new_assessment.framework_scores = {
         "policy": policy_score,
         "implementation": implementation_score,
-        "evidence": evidence_score
+        "evidence": evidence_score,
     }
 
     # Determine risk level based on overall score
@@ -172,14 +181,13 @@ async def generate_readiness_assessment(
     new_assessment.recommendations = [
         "Complete missing policy documentation",
         "Implement additional security controls",
-        "Collect required evidence items"
+        "Collect required evidence items",
     ]
 
     return new_assessment
 
-async def get_readiness_dashboard(
-    db: AsyncSession, user: UserModel
-) -> Dict[str, Any]:
+
+async def get_readiness_dashboard(db: AsyncSession, user: UserModel) -> Dict[str, Any]:
     """Get a high-level readiness dashboard for the user."""
 
     # Get all frameworks and their latest assessments for the user
@@ -189,10 +197,14 @@ async def get_readiness_dashboard(
 
     framework_data = []
     for fw in all_frameworks:
-        assessment_stmt = select(ReadinessAssessmentModel).where(
-            ReadinessAssessmentModel.user_id == user.id,
-            ReadinessAssessmentModel.framework_id == fw.id
-        ).order_by(ReadinessAssessmentModel.created_at.desc())
+        assessment_stmt = (
+            select(ReadinessAssessmentModel)
+            .where(
+                ReadinessAssessmentModel.user_id == user.id,
+                ReadinessAssessmentModel.framework_id == fw.id,
+            )
+            .order_by(ReadinessAssessmentModel.created_at.desc())
+        )
         assessment_res = await db.execute(assessment_stmt)
         latest_assessment = assessment_res.scalars().first()
 
@@ -204,18 +216,24 @@ async def get_readiness_dashboard(
 
     # Calculate dashboard metrics
     total_frameworks = len(framework_data)
-    avg_score = sum(f["assessment"].overall_score for f in framework_data) / total_frameworks if total_frameworks > 0 else 0
+    avg_score = (
+        sum(f["assessment"].overall_score for f in framework_data) / total_frameworks
+        if total_frameworks > 0
+        else 0
+    )
 
     # Extract priority actions and other details
     all_priority_actions = []
     for fw_data in framework_data:
         for action in fw_data["assessment"].priority_actions[:3]:
-            all_priority_actions.append({
-                "framework": fw_data["framework"].display_name,
-                "action": action.get("action", "N/A"),
-                "urgency": action.get("urgency", "N/A"),
-                "impact": action.get("impact", "N/A")
-            })
+            all_priority_actions.append(
+                {
+                    "framework": fw_data["framework"].display_name,
+                    "action": action.get("action", "N/A"),
+                    "urgency": action.get("urgency", "N/A"),
+                    "impact": action.get("impact", "N/A"),
+                }
+            )
 
     return {
         "total_frameworks": total_frameworks,
@@ -225,7 +243,8 @@ async def get_readiness_dashboard(
                 "name": fw["framework"].display_name,
                 "score": fw["assessment"].overall_score,
                 "trend": fw["assessment"].score_trend,
-            } for fw in framework_data
+            }
+            for fw in framework_data
         ],
-        "priority_actions": all_priority_actions[:10]
+        "priority_actions": all_priority_actions[:10],
     }

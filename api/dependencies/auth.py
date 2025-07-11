@@ -38,6 +38,7 @@ _redis_available: Optional[bool] = None
 # Fallback in-memory blacklist for when Redis is unavailable
 _fallback_blacklist: Dict[str, float] = {}
 
+
 async def get_redis_client() -> Optional[redis.Redis]:
     """Get or create Redis client for token blacklisting."""
     global _redis_client, _redis_available
@@ -58,6 +59,7 @@ async def get_redis_client() -> Optional[redis.Redis]:
 
     return _redis_client
 
+
 async def blacklist_token(token: str) -> None:
     """Add a token to the blacklist with TTL."""
     import time
@@ -76,9 +78,11 @@ async def blacklist_token(token: str) -> None:
             # Redis failed, but we already have in-memory fallback
             pass
 
+
 async def is_token_blacklisted(token: str) -> bool:
     """Check if a token is blacklisted."""
     import time
+
     current_time = time.time()
 
     # First check in-memory blacklist (faster and always available)
@@ -106,6 +110,7 @@ async def is_token_blacklisted(token: str) -> bool:
 
     return False
 
+
 def validate_password(password: str) -> tuple[bool, str]:
     """Validate password strength."""
     if len(password) < 8:
@@ -124,11 +129,14 @@ def validate_password(password: str) -> tuple[bool, str]:
         return False, f"Password must contain at least one special character: {special_characters}"
     return True, "Password is valid."
 
+
 def verify_password(plain_password: str, hashed_password: str) -> bool:
     return pwd_context.verify(plain_password, hashed_password)
 
+
 def get_password_hash(password: str) -> str:
     return pwd_context.hash(password)
+
 
 def create_token(data: dict, token_type: str, expires_delta: Optional[timedelta] = None) -> str:
     to_encode = data.copy()
@@ -140,15 +148,16 @@ def create_token(data: dict, token_type: str, expires_delta: Optional[timedelta]
     to_encode.update({"exp": expire, "type": token_type, "iat": datetime.utcnow()})
     return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
 
+
 def create_access_token(data: dict, expires_delta: Optional[timedelta] = None) -> str:
     return create_token(
-        data,
-        "access",
-        expires_delta or timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+        data, "access", expires_delta or timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     )
+
 
 def create_refresh_token(data: dict) -> str:
     return create_token(data, "refresh", timedelta(days=REFRESH_TOKEN_EXPIRE_DAYS))
+
 
 def validate_token_expiry(payload: Dict) -> None:
     """Validate that token has not expired with additional checks."""
@@ -168,7 +177,9 @@ def validate_token_expiry(payload: Dict) -> None:
     if time_until_expiry.total_seconds() < 300:  # 5 minutes
         # Log warning but don't reject the token
         import logging
+
         logging.warning(f"Token expires in {time_until_expiry.total_seconds()} seconds")
+
 
 def decode_token(token: str) -> Optional[Dict]:
     """Decode JWT token with proper error handling for expiry."""
@@ -182,7 +193,10 @@ def decode_token(token: str) -> Optional[Dict]:
     except JWTError as e:
         raise NotAuthenticatedException(f"Token validation failed: {e!s}")
 
-async def get_current_user(token: Optional[str] = Depends(oauth2_scheme), db: AsyncSession = Depends(get_async_db)) -> Optional[User]:
+
+async def get_current_user(
+    token: Optional[str] = Depends(oauth2_scheme), db: AsyncSession = Depends(get_async_db)
+) -> Optional[User]:
     if token is None:
         return None
 
@@ -216,6 +230,7 @@ async def get_current_user(token: Optional[str] = Depends(oauth2_scheme), db: As
 
     return user
 
+
 async def get_current_active_user(current_user: User = Depends(get_current_user)) -> User:
     if current_user is None:
         raise NotAuthenticatedException("Not authenticated")
@@ -228,8 +243,13 @@ async def get_current_active_user(current_user: User = Depends(get_current_user)
 
     return current_user
 
-async def get_current_user_from_refresh_token(token: Optional[str] = Depends(oauth2_scheme), db: AsyncSession = Depends(get_async_db)) -> Optional[User]:
-    if token is None: # Refresh token might be passed in body or header, adjust if oauth2_scheme isn't right for it
+
+async def get_current_user_from_refresh_token(
+    token: Optional[str] = Depends(oauth2_scheme), db: AsyncSession = Depends(get_async_db)
+) -> Optional[User]:
+    if (
+        token is None
+    ):  # Refresh token might be passed in body or header, adjust if oauth2_scheme isn't right for it
         raise NotAuthenticatedException("Refresh token not provided.")
 
     try:

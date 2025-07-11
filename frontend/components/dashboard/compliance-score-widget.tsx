@@ -45,17 +45,17 @@ export function ComplianceScoreWidget({
   // Show error state
   if (error) {
     return (
-      <Card className={cn("border-destructive/50", className)}>
+      <Card className={cn("glass-card border-error/50", className)}>
         <CardHeader>
-          <CardTitle className="text-destructive flex items-center gap-2">
+          <CardTitle className="text-error flex items-center gap-2">
             <Shield className="h-5 w-5" />
             Compliance Score
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="text-sm text-muted-foreground mb-4">{error}</p>
+          <p className="text-sm text-text-secondary mb-4">{error}</p>
           {onRefresh && (
-            <Button onClick={onRefresh} variant="outline" size="sm">
+            <Button onClick={onRefresh} variant="outline" size="sm" className="border-glass-border hover:border-glass-border-hover hover:bg-glass-white">
               <RefreshCw className="h-4 w-4 mr-2" />
               Try Again
             </Button>
@@ -70,24 +70,24 @@ export function ComplianceScoreWidget({
       case 'up':
         return <TrendingUp className="h-4 w-4 text-success" />
       case 'down':
-        return <TrendingDown className="h-4 w-4 text-destructive" />
+        return <TrendingDown className="h-4 w-4 text-error" />
       default:
-        return <Minus className="h-4 w-4 text-muted-foreground" />
+        return <Minus className="h-4 w-4 text-text-tertiary" />
     }
   }
 
   const getScoreColor = (score: number) => {
     if (score >= 90) return "text-success"
     if (score >= 70) return "text-warning"
-    if (score >= 50) return "text-amber-600"
-    return "text-destructive"
+    if (score >= 50) return "text-warning"
+    return "text-error"
   }
 
   const getScoreBackground = (score: number) => {
     if (score >= 90) return "bg-success/10"
     if (score >= 70) return "bg-warning/10"
-    if (score >= 50) return "bg-amber-600/10"
-    return "bg-destructive/10"
+    if (score >= 50) return "bg-warning/10"
+    return "bg-error/10"
   }
 
   const getScoreLabel = (score: number) => {
@@ -98,11 +98,11 @@ export function ComplianceScoreWidget({
   }
 
   return (
-    <Card className={cn("overflow-hidden", className)}>
+    <Card className={cn("glass-card overflow-hidden", className)}>
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
-          <CardTitle className="text-lg font-semibold flex items-center gap-2">
-            <Shield className="h-5 w-5 text-gold" />
+          <CardTitle className="text-lg font-semibold flex items-center gap-2 gradient-text">
+            <Shield className="h-5 w-5 text-brand-secondary" />
             Overall Compliance
           </CardTitle>
           <div className="flex items-center gap-2">
@@ -133,15 +133,15 @@ export function ComplianceScoreWidget({
           )}>
             {data.overall_score}%
           </p>
-          <p className="text-sm font-medium text-muted-foreground mt-2">
+          <p className="text-sm font-medium text-text-secondary mt-2">
             {getScoreLabel(data.overall_score)}
           </p>
         </div>
 
         {/* Framework Breakdown */}
         {data.frameworks && data.frameworks.length > 0 && (
-          <div className="space-y-4 bg-muted/30 rounded-lg p-4">
-            <h4 className="text-sm font-semibold text-navy">Framework Breakdown</h4>
+          <div className="space-y-4 bg-glass-white rounded-lg p-4">
+            <h4 className="text-sm font-semibold text-text-primary">Framework Breakdown</h4>
             {data.frameworks.map((framework, index) => (
               <div key={index} className="space-y-2">
                 <div className="flex items-center justify-between text-sm">
@@ -184,7 +184,7 @@ export function ComplianceScoreWidget({
 
         {/* Last Updated */}
         {data.last_updated && (
-          <div className="flex items-center justify-between text-xs text-muted-foreground pt-4 border-t">
+          <div className="flex items-center justify-between text-xs text-text-tertiary pt-4 border-t border-glass-border">
             <span>
               Updated {new Date(data.last_updated).toLocaleDateString()}
             </span>

@@ -203,7 +203,7 @@ export default function ComplianceWizardPage() {
     return requiredQuestions.every(q => answers[q.id] !== undefined && answers[q.id] !== "");
   };
   
-  const handleAnswer = (questionId: string, value: any) => {
+  const handleAnswer = (questionId: string, value: string | string[] | boolean) => {
     setAnswers(prev => ({
       ...prev,
       [questionId]: value

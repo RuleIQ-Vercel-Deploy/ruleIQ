@@ -26,17 +26,17 @@ class TestEvidenceService:
             "description": "Company security policy document",
             "evidence_type": "document",
             "source": "manual",
-            "framework_mappings": ["ISO27001.A.5.1.1"]
+            "framework_mappings": ["ISO27001.A.5.1.1"],
         }
 
-        with patch('services.evidence_service.EvidenceService.create_evidence') as mock_create:
+        with patch("services.evidence_service.EvidenceService.create_evidence") as mock_create:
             mock_create.return_value = {
                 **evidence_data,
                 "id": str(uuid4()),
                 "user_id": str(sample_user.id),
                 "status": "valid",
                 "created_at": datetime.utcnow(),
-                "quality_score": 85.0
+                "quality_score": 85.0,
             }
 
             result = await EvidenceService.create_evidence(sample_user.id, evidence_data)
@@ -55,7 +55,7 @@ class TestEvidenceService:
             "evidence_type": "invalid_type",  # Invalid: not in allowed types
         }
 
-        with patch('services.evidence_service.EvidenceService.create_evidence') as mock_create:
+        with patch("services.evidence_service.EvidenceService.create_evidence") as mock_create:
             mock_create.side_effect = ValidationAPIError("Invalid evidence data")
 
             with pytest.raises(ValidationAPIError):
@@ -72,21 +72,23 @@ class TestEvidenceService:
                 "creation_date": "2024-01-01",
                 "author": "Chief Security Officer",
                 "version": "2.1",
-                "approval_date": "2024-01-15"
-            }
+                "approval_date": "2024-01-15",
+            },
         }
 
-        with patch('services.evidence_service.EvidenceService.validate_evidence_quality') as mock_validate:
+        with patch(
+            "services.evidence_service.EvidenceService.validate_evidence_quality"
+        ) as mock_validate:
             mock_validate.return_value = {
                 "quality_score": 92,
                 "validation_results": {
                     "completeness": "excellent",
                     "relevance": "high",
                     "timeliness": "current",
-                    "authenticity": "verified"
+                    "authenticity": "verified",
                 },
                 "issues": [],
-                "recommendations": ["Consider adding implementation timeline"]
+                "recommendations": ["Consider adding implementation timeline"],
             }
 
             result = EvidenceService.validate_evidence_quality(evidence_data)
@@ -105,28 +107,26 @@ class TestEvidenceService:
             "file_content": "Brief policy.",  # Too short
             "metadata": {
                 "creation_date": "2020-01-01",  # Too old
-            }
+            },
         }
 
-        with patch('services.evidence_service.EvidenceService.validate_evidence_quality') as mock_validate:
+        with patch(
+            "services.evidence_service.EvidenceService.validate_evidence_quality"
+        ) as mock_validate:
             mock_validate.return_value = {
                 "quality_score": 35,
                 "validation_results": {
                     "completeness": "poor",
                     "relevance": "medium",
                     "timeliness": "outdated",
-                    "authenticity": "unverified"
+                    "authenticity": "unverified",
                 },
-                "issues": [
-                    "Title too vague",
-                    "Content too brief",
-                    "Evidence is outdated"
-                ],
+                "issues": ["Title too vague", "Content too brief", "Evidence is outdated"],
                 "recommendations": [
                     "Provide more specific title",
                     "Add detailed content",
-                    "Update evidence with current information"
-                ]
+                    "Update evidence with current information",
+                ],
             }
 
             result = EvidenceService.validate_evidence_quality(poor_evidence_data)
@@ -141,7 +141,9 @@ class TestEvidenceService:
         framework_id = uuid4()
         control_ids = [str(uuid4()), str(uuid4())]
 
-        with patch('services.evidence_service.EvidenceService.identify_requirements') as mock_identify:
+        with patch(
+            "services.evidence_service.EvidenceService.identify_requirements"
+        ) as mock_identify:
             mock_identify.return_value = [
                 {
                     "control_id": control_ids[0],
@@ -151,7 +153,7 @@ class TestEvidenceService:
                     "automation_possible": False,
                     "collection_method": "manual",
                     "required_artifacts": ["policy_document", "approval_record"],
-                    "estimated_effort": "2-4 hours"
+                    "estimated_effort": "2-4 hours",
                 },
                 {
                     "control_id": control_ids[1],
@@ -161,8 +163,8 @@ class TestEvidenceService:
                     "automation_possible": True,
                     "collection_method": "automated",
                     "required_artifacts": ["access_logs", "audit_trail"],
-                    "estimated_effort": "automated"
-                }
+                    "estimated_effort": "automated",
+                },
             ]
 
             result = EvidenceService.identify_requirements(framework_id, control_ids)
@@ -183,18 +185,20 @@ class TestEvidenceService:
             "credentials_id": "gws_creds_001",
             "data_mapping": {
                 "user_list": "$.users[*].primaryEmail",
-                "admin_status": "$.users[*].isAdmin"
-            }
+                "admin_status": "$.users[*].isAdmin",
+            },
         }
 
-        with patch('services.evidence_service.EvidenceService.configure_automation') as mock_configure:
+        with patch(
+            "services.evidence_service.EvidenceService.configure_automation"
+        ) as mock_configure:
             mock_configure.return_value = {
                 "configuration_successful": True,
                 "automation_enabled": True,
                 "next_collection": datetime.utcnow() + timedelta(days=1),
                 "test_connection": "successful",
                 "estimated_data_points": 150,
-                "collection_schedule": "daily at 02:00 UTC"
+                "collection_schedule": "daily at 02:00 UTC",
             }
 
             result = EvidenceService.configure_automation(evidence_id, automation_config)
@@ -212,10 +216,12 @@ class TestEvidenceService:
             "source_type": "google_workspace",
             "endpoint": "https://invalid-endpoint.com",
             "collection_frequency": "daily",
-            "credentials_id": "invalid_creds"
+            "credentials_id": "invalid_creds",
         }
 
-        with patch('services.evidence_service.EvidenceService.configure_automation') as mock_configure:
+        with patch(
+            "services.evidence_service.EvidenceService.configure_automation"
+        ) as mock_configure:
             mock_configure.return_value = {
                 "configuration_successful": False,
                 "automation_enabled": False,
@@ -224,8 +230,8 @@ class TestEvidenceService:
                 "suggested_actions": [
                     "Verify credentials are valid",
                     "Check endpoint URL",
-                    "Ensure necessary permissions are granted"
-                ]
+                    "Ensure necessary permissions are granted",
+                ],
             }
 
             result = EvidenceService.configure_automation(evidence_id, automation_config)
@@ -238,7 +244,7 @@ class TestEvidenceService:
 
     def test_get_user_evidence_items_success(self, db_session, sample_user):
         """Test retrieving evidence items for a user"""
-        with patch('services.evidence_service.get_user_evidence_items') as mock_get:
+        with patch("services.evidence_service.get_user_evidence_items") as mock_get:
             mock_get.return_value = [
                 {
                     "id": str(uuid4()),
@@ -246,7 +252,7 @@ class TestEvidenceService:
                     "evidence_type": "document",
                     "status": "valid",
                     "quality_score": 85.0,
-                    "created_at": datetime.utcnow()
+                    "created_at": datetime.utcnow(),
                 },
                 {
                     "id": str(uuid4()),
@@ -254,8 +260,8 @@ class TestEvidenceService:
                     "evidence_type": "log",
                     "status": "valid",
                     "quality_score": 92.0,
-                    "created_at": datetime.utcnow()
-                }
+                    "created_at": datetime.utcnow(),
+                },
             ]
 
             result = mock_get(sample_user.id)
@@ -267,7 +273,7 @@ class TestEvidenceService:
 
     def test_get_user_evidence_items_empty(self, db_session, sample_user):
         """Test retrieving evidence items when user has none"""
-        with patch('services.evidence_service.get_user_evidence_items') as mock_get:
+        with patch("services.evidence_service.get_user_evidence_items") as mock_get:
             mock_get.return_value = []
 
             result = mock_get(sample_user.id)
@@ -281,7 +287,7 @@ class TestEvidenceService:
         new_status = "expired"
         reason = "Evidence older than 6 months"
 
-        with patch('services.evidence_service.EvidenceService.update_status') as mock_update:
+        with patch("services.evidence_service.EvidenceService.update_status") as mock_update:
             mock_update.return_value = {
                 "evidence_id": str(evidence_id),
                 "old_status": "valid",
@@ -289,7 +295,7 @@ class TestEvidenceService:
                 "reason": reason,
                 "updated_at": datetime.utcnow(),
                 "renewal_required": True,
-                "renewal_due_date": datetime.utcnow() + timedelta(days=30)
+                "renewal_due_date": datetime.utcnow() + timedelta(days=30),
             }
 
             result = EvidenceService.update_status(evidence_id, new_status, reason)
@@ -302,13 +308,9 @@ class TestEvidenceService:
     def test_search_evidence_by_framework(self, db_session, sample_user):
         """Test searching evidence items by framework"""
         framework = "ISO27001"
-        search_filters = {
-            "evidence_type": "document",
-            "status": "valid",
-            "min_quality_score": 80
-        }
+        search_filters = {"evidence_type": "document", "status": "valid", "min_quality_score": 80}
 
-        with patch('services.evidence_service.EvidenceService.search_by_framework') as mock_search:
+        with patch("services.evidence_service.EvidenceService.search_by_framework") as mock_search:
             mock_search.return_value = [
                 {
                     "id": str(uuid4()),
@@ -316,7 +318,7 @@ class TestEvidenceService:
                     "framework_mappings": ["ISO27001.A.9.1.1", "ISO27001.A.9.1.2"],
                     "evidence_type": "document",
                     "status": "valid",
-                    "quality_score": 88.0
+                    "quality_score": 88.0,
                 },
                 {
                     "id": str(uuid4()),
@@ -324,8 +326,8 @@ class TestEvidenceService:
                     "framework_mappings": ["ISO27001.A.16.1.1"],
                     "evidence_type": "document",
                     "status": "valid",
-                    "quality_score": 91.0
-                }
+                    "quality_score": 91.0,
+                },
             ]
 
             result = EvidenceService.search_by_framework(sample_user.id, framework, search_filters)
@@ -339,12 +341,12 @@ class TestEvidenceService:
         """Test deleting evidence item"""
         evidence_id = uuid4()
 
-        with patch('services.evidence_service.EvidenceService.delete_evidence') as mock_delete:
+        with patch("services.evidence_service.EvidenceService.delete_evidence") as mock_delete:
             mock_delete.return_value = {
                 "deleted": True,
                 "evidence_id": str(evidence_id),
                 "user_id": str(sample_user.id),
-                "cleanup_performed": True
+                "cleanup_performed": True,
             }
 
             result = EvidenceService.delete_evidence(evidence_id, sample_user.id)
@@ -357,7 +359,7 @@ class TestEvidenceService:
         """Test deleting non-existent evidence item"""
         evidence_id = uuid4()
 
-        with patch('services.evidence_service.EvidenceService.delete_evidence') as mock_delete:
+        with patch("services.evidence_service.EvidenceService.delete_evidence") as mock_delete:
             mock_delete.side_effect = NotFoundAPIError("Evidence item", evidence_id)
 
             with pytest.raises(NotFoundAPIError):
@@ -369,47 +371,40 @@ class TestEvidenceService:
         new_status = "reviewed"
         reason = "Quarterly review completed"
 
-        with patch('services.evidence_service.EvidenceService.bulk_update_status') as mock_bulk_update:
+        with patch(
+            "services.evidence_service.EvidenceService.bulk_update_status"
+        ) as mock_bulk_update:
             mock_bulk_update.return_value = {
                 "updated_count": 5,
                 "failed_count": 0,
                 "total_requested": 5,
                 "success_rate": 100.0,
                 "updated_evidence_ids": evidence_ids,
-                "failed_evidence_ids": []
+                "failed_evidence_ids": [],
             }
 
-            result = EvidenceService.bulk_update_status(evidence_ids, new_status, reason, sample_user.id)
+            result = EvidenceService.bulk_update_status(
+                evidence_ids, new_status, reason, sample_user.id
+            )
 
             assert result["updated_count"] == 5
             assert result["failed_count"] == 0
             assert result["success_rate"] == 100.0
-            mock_bulk_update.assert_called_once_with(evidence_ids, new_status, reason, sample_user.id)
+            mock_bulk_update.assert_called_once_with(
+                evidence_ids, new_status, reason, sample_user.id
+            )
 
     def test_get_evidence_statistics(self, db_session, sample_user):
         """Test getting evidence statistics for user"""
-        with patch('services.evidence_service.EvidenceService.get_statistics') as mock_stats:
+        with patch("services.evidence_service.EvidenceService.get_statistics") as mock_stats:
             mock_stats.return_value = {
                 "total_evidence_items": 42,
-                "by_status": {
-                    "valid": 35,
-                    "expired": 5,
-                    "pending": 2
-                },
-                "by_type": {
-                    "document": 25,
-                    "log": 12,
-                    "screenshot": 3,
-                    "configuration": 2
-                },
-                "by_framework": {
-                    "ISO27001": 28,
-                    "GDPR": 20,
-                    "SOC2": 15
-                },
+                "by_status": {"valid": 35, "expired": 5, "pending": 2},
+                "by_type": {"document": 25, "log": 12, "screenshot": 3, "configuration": 2},
+                "by_framework": {"ISO27001": 28, "GDPR": 20, "SOC2": 15},
                 "average_quality_score": 84.7,
                 "automation_coverage": 65.0,
-                "last_updated": datetime.utcnow()
+                "last_updated": datetime.utcnow(),
             }
 
             result = EvidenceService.get_statistics(sample_user.id)
@@ -431,15 +426,17 @@ class TestEvidenceValidation:
         evidence_data = {
             "evidence_type": "document",
             "file_content": "Policy document content...",
-            "metadata": {"document_type": "policy"}
+            "metadata": {"document_type": "policy"},
         }
 
-        with patch('services.evidence_service.EvidenceService.validate_evidence_type') as mock_validate:
+        with patch(
+            "services.evidence_service.EvidenceService.validate_evidence_type"
+        ) as mock_validate:
             mock_validate.return_value = {
                 "valid": True,
                 "type_specific_score": 85,
                 "requirements_met": ["has_content", "has_metadata"],
-                "requirements_missing": []
+                "requirements_missing": [],
             }
 
             result = EvidenceService.validate_evidence_type(evidence_data)
@@ -453,13 +450,23 @@ class TestEvidenceValidation:
         evidence_data = {
             "evidence_type": "log",
             "log_entries": [
-                {"timestamp": "2024-01-01T10:00:00Z", "event": "user_login", "user": "john@example.com"},
-                {"timestamp": "2024-01-01T10:05:00Z", "event": "file_access", "user": "john@example.com"}
+                {
+                    "timestamp": "2024-01-01T10:00:00Z",
+                    "event": "user_login",
+                    "user": "john@example.com",
+                },
+                {
+                    "timestamp": "2024-01-01T10:05:00Z",
+                    "event": "file_access",
+                    "user": "john@example.com",
+                },
             ],
-            "metadata": {"log_source": "application", "retention_period": "90_days"}
+            "metadata": {"log_source": "application", "retention_period": "90_days"},
         }
 
-        with patch('services.evidence_service.EvidenceService.validate_evidence_type') as mock_validate:
+        with patch(
+            "services.evidence_service.EvidenceService.validate_evidence_type"
+        ) as mock_validate:
             mock_validate.return_value = {
                 "valid": True,
                 "type_specific_score": 92,
@@ -468,8 +475,8 @@ class TestEvidenceValidation:
                 "log_analysis": {
                     "entry_count": 2,
                     "time_span": "5 minutes",
-                    "event_types": ["user_login", "file_access"]
-                }
+                    "event_types": ["user_login", "file_access"],
+                },
             }
 
             result = EvidenceService.validate_evidence_type(evidence_data)

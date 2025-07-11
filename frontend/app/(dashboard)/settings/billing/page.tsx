@@ -3,7 +3,7 @@
 import { 
   CreditCard, 
   Download, 
-  ExternalLink, 
+ 
   AlertCircle,
   CheckCircle,
   Calendar,
@@ -50,8 +50,8 @@ export default function BillingPage() {
       setPaymentMethods(methods)
       setInvoices(inv)
       setUpcomingInvoice(upcoming)
-    } catch (err: any) {
-      setError(err.message || 'Failed to load billing information')
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to load billing information')
     } finally {
       setLoading(false)
     }

@@ -12,13 +12,19 @@ from pydantic import BaseModel, Field
 
 class CollectionPlanCreate(BaseModel):
     """Request model for creating a collection plan."""
+
     framework: str = Field(..., description="Compliance framework (ISO27001, GDPR, SOC2, etc.)")
-    target_completion_weeks: Optional[int] = Field(12, ge=1, le=52, description="Target completion timeframe in weeks")
-    include_existing_evidence: Optional[bool] = Field(False, description="Include analysis of existing evidence")
+    target_completion_weeks: Optional[int] = Field(
+        12, ge=1, le=52, description="Target completion timeframe in weeks"
+    )
+    include_existing_evidence: Optional[bool] = Field(
+        False, description="Include analysis of existing evidence"
+    )
 
 
 class AutomationOpportunities(BaseModel):
     """Automation opportunities analysis."""
+
     total_tasks: int
     automatable_tasks: int
     automation_percentage: float
@@ -29,6 +35,7 @@ class AutomationOpportunities(BaseModel):
 
 class EvidenceTaskResponse(BaseModel):
     """Response model for an evidence collection task."""
+
     task_id: str
     framework: str
     control_id: str
@@ -48,6 +55,7 @@ class EvidenceTaskResponse(BaseModel):
 
 class CollectionPlanResponse(BaseModel):
     """Response model for a collection plan."""
+
     plan_id: str
     business_profile_id: str
     framework: str
@@ -61,6 +69,7 @@ class CollectionPlanResponse(BaseModel):
 
 class CollectionPlanSummary(BaseModel):
     """Summary model for collection plan listing."""
+
     plan_id: str
     framework: str
     total_tasks: int
@@ -73,12 +82,16 @@ class CollectionPlanSummary(BaseModel):
 
 class TaskStatusUpdate(BaseModel):
     """Request model for updating task status."""
-    status: str = Field(..., description="New status: pending, in_progress, completed, blocked, cancelled")
+
+    status: str = Field(
+        ..., description="New status: pending, in_progress, completed, blocked, cancelled"
+    )
     completion_notes: Optional[str] = Field(None, description="Notes about task completion")
 
 
 class AutomationRecommendation(BaseModel):
     """Automation recommendation for evidence collection."""
+
     evidence_type: str
     automation_level: str
     effort_reduction: str
@@ -88,6 +101,7 @@ class AutomationRecommendation(BaseModel):
 
 class AutomationRecommendationsResponse(BaseModel):
     """Response model for automation recommendations."""
+
     framework: str
     automation_opportunities: List[AutomationRecommendation]
     recommended_tools: List[str]

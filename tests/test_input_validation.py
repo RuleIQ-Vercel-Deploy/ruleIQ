@@ -11,7 +11,7 @@ from utils.input_validation import (
     SecurityValidator,
     ValidationError,
     validate_evidence_update,
-    validate_business_profile_update
+    validate_business_profile_update,
 )
 
 
@@ -27,7 +27,7 @@ class TestFieldValidator:
         """Test string length validation error."""
         with pytest.raises(ValidationError, match="must be at least"):
             FieldValidator.validate_string("Hi", min_length=5)
-        
+
         with pytest.raises(ValidationError, match="must be at most"):
             FieldValidator.validate_string("This is way too long" * 10, max_length=20)
 
@@ -98,12 +98,13 @@ class TestSecurityValidator:
             "DROP TABLE users",
             "UNION SELECT * FROM passwords",
             "../../../etc/passwd",
-            "__import__('os').system('rm -rf /')"
+            "__import__('os').system('rm -rf /')",
         ]
-        
+
         for dangerous_input in dangerous_inputs:
-            assert SecurityValidator.scan_for_dangerous_patterns(dangerous_input), \
+            assert SecurityValidator.scan_for_dangerous_patterns(dangerous_input), (
                 f"Failed to detect dangerous pattern: {dangerous_input}"
+            )
 
     def test_safe_patterns(self):
         """Test that safe patterns are not flagged."""
@@ -111,30 +112,31 @@ class TestSecurityValidator:
             "This is a normal description",
             "Evidence for ISO 27001 compliance",
             "Document contains policy information",
-            "Version 1.2.3 updated on 2024-01-01"
+            "Version 1.2.3 updated on 2024-01-01",
         ]
-        
+
         for safe_input in safe_inputs:
-            assert not SecurityValidator.scan_for_dangerous_patterns(safe_input), \
+            assert not SecurityValidator.scan_for_dangerous_patterns(safe_input), (
                 f"Incorrectly flagged safe input: {safe_input}"
+            )
 
     def test_validate_no_dangerous_content(self):
         """Test comprehensive dangerous content validation."""
         safe_data = {
             "title": "Evidence Document",
             "description": "This is a safe description",
-            "status": "pending"
+            "status": "pending",
         }
-        
+
         # Should not raise exception
         SecurityValidator.validate_no_dangerous_content(safe_data)
-        
+
         dangerous_data = {
             "title": "Evidence Document",
             "description": "<script>alert('xss')</script>",
-            "status": "pending"
+            "status": "pending",
         }
-        
+
         with pytest.raises(ValidationError, match="dangerous content"):
             SecurityValidator.validate_no_dangerous_content(dangerous_data)
 
@@ -145,14 +147,14 @@ class TestWhitelistValidator:
     def test_evidence_item_validation_success(self):
         """Test successful evidence item validation."""
         validator = WhitelistValidator("EvidenceItem")
-        
+
         valid_data = {
             "evidence_name": "Test Evidence",
             "description": "This is a test description",
             "evidence_type": "document",
-            "status": "pending"
+            "status": "pending",
         }
-        
+
         result = validator.validate_update_data(valid_data)
         assert result["evidence_name"] == "Test Evidence"
         assert result["evidence_type"] == "document"
@@ -160,37 +162,32 @@ class TestWhitelistValidator:
     def test_evidence_item_validation_invalid_field(self):
         """Test rejection of invalid fields."""
         validator = WhitelistValidator("EvidenceItem")
-        
-        invalid_data = {
-            "evidence_name": "Test Evidence",
-            "malicious_field": "should be rejected"
-        }
-        
+
+        invalid_data = {"evidence_name": "Test Evidence", "malicious_field": "should be rejected"}
+
         with pytest.raises(ValidationError, match="not allowed for updates"):
             validator.validate_update_data(invalid_data)
 
     def test_evidence_item_validation_invalid_enum(self):
         """Test rejection of invalid enum values."""
         validator = WhitelistValidator("EvidenceItem")
-        
-        invalid_data = {
-            "evidence_type": "malicious_type"
-        }
-        
+
+        invalid_data = {"evidence_type": "malicious_type"}
+
         with pytest.raises(ValidationError, match="must be one of"):
             validator.validate_update_data(invalid_data)
 
     def test_business_profile_validation_success(self):
         """Test successful business profile validation."""
         validator = WhitelistValidator("BusinessProfile")
-        
+
         valid_data = {
             "company_name": "Test Company",
             "industry": "Technology",
             "employee_count": 50,
-            "data_sensitivity": "Medium"
+            "data_sensitivity": "Medium",
         }
-        
+
         result = validator.validate_update_data(valid_data)
         assert result["company_name"] == "Test Company"
         assert result["employee_count"] == 50
@@ -198,12 +195,9 @@ class TestWhitelistValidator:
     def test_business_profile_validation_invalid_field(self):
         """Test rejection of invalid business profile fields."""
         validator = WhitelistValidator("BusinessProfile")
-        
-        invalid_data = {
-            "company_name": "Test Company",
-            "secret_admin_field": "should be rejected"
-        }
-        
+
+        invalid_data = {"company_name": "Test Company", "secret_admin_field": "should be rejected"}
+
         with pytest.raises(ValidationError, match="not allowed for updates"):
             validator.validate_update_data(invalid_data)
 
@@ -216,9 +210,9 @@ class TestConvenienceFunctions:
         valid_data = {
             "evidence_name": "Test Evidence",
             "description": "Safe description",
-            "status": "approved"
+            "status": "approved",
         }
-        
+
         result = validate_evidence_update(valid_data)
         assert result["evidence_name"] == "Test Evidence"
 
@@ -226,39 +220,30 @@ class TestConvenienceFunctions:
         """Test evidence update with security violation."""
         dangerous_data = {
             "evidence_name": "Test Evidence",
-            "description": "<script>alert('xss')</script>"
+            "description": "<script>alert('xss')</script>",
         }
-        
+
         with pytest.raises(ValidationError, match="dangerous content"):
             validate_evidence_update(dangerous_data)
 
     def test_validate_evidence_update_whitelist_error(self):
         """Test evidence update with whitelist violation."""
-        invalid_data = {
-            "evidence_name": "Test Evidence",
-            "admin_only_field": "should be rejected"
-        }
-        
+        invalid_data = {"evidence_name": "Test Evidence", "admin_only_field": "should be rejected"}
+
         with pytest.raises(ValidationError, match="not allowed"):
             validate_evidence_update(invalid_data)
 
     def test_validate_business_profile_update_success(self):
         """Test successful business profile update validation."""
-        valid_data = {
-            "company_name": "Test Company",
-            "employee_count": 100
-        }
-        
+        valid_data = {"company_name": "Test Company", "employee_count": 100}
+
         result = validate_business_profile_update(valid_data)
         assert result["company_name"] == "Test Company"
 
     def test_validate_business_profile_update_error(self):
         """Test business profile update with validation error."""
-        invalid_data = {
-            "company_name": "Test Company",
-            "employee_count": "not a number"
-        }
-        
+        invalid_data = {"company_name": "Test Company", "employee_count": "not a number"}
+
         with pytest.raises(ValidationError):
             validate_business_profile_update(invalid_data)
 
@@ -270,9 +255,9 @@ class TestAttackScenarios:
         """Test SQL injection prevention."""
         attack_data = {
             "evidence_name": "'; DROP TABLE evidence_items; --",
-            "description": "UNION SELECT * FROM users WHERE admin=true"
+            "description": "UNION SELECT * FROM users WHERE admin=true",
         }
-        
+
         with pytest.raises(ValidationError, match="dangerous content"):
             validate_evidence_update(attack_data)
 
@@ -280,9 +265,9 @@ class TestAttackScenarios:
         """Test XSS injection prevention."""
         attack_data = {
             "evidence_name": "Test <script>alert('XSS')</script>",
-            "description": "javascript:alert('XSS')"
+            "description": "javascript:alert('XSS')",
         }
-        
+
         with pytest.raises(ValidationError, match="dangerous content"):
             validate_evidence_update(attack_data)
 
@@ -290,9 +275,9 @@ class TestAttackScenarios:
         """Test path traversal prevention."""
         attack_data = {
             "evidence_name": "../../../etc/passwd",
-            "description": "../../admin/secrets.txt"
+            "description": "../../admin/secrets.txt",
         }
-        
+
         with pytest.raises(ValidationError, match="dangerous content"):
             validate_evidence_update(attack_data)
 
@@ -300,9 +285,9 @@ class TestAttackScenarios:
         """Test code execution prevention."""
         attack_data = {
             "evidence_name": "__import__('os').system('rm -rf /')",
-            "description": "eval(malicious_code())"
+            "description": "eval(malicious_code())",
         }
-        
+
         with pytest.raises(ValidationError, match="dangerous content"):
             validate_evidence_update(attack_data)
 
@@ -311,9 +296,9 @@ class TestAttackScenarios:
         attack_data = {
             "evidence_name": "Normal Evidence",
             "is_admin": True,  # Try to inject admin field
-            "user_role": "admin"  # Try to inject role field
+            "user_role": "admin",  # Try to inject role field
         }
-        
+
         with pytest.raises(ValidationError, match="not allowed"):
             validate_evidence_update(attack_data)
 
@@ -321,9 +306,9 @@ class TestAttackScenarios:
         """Test against massive payload attacks."""
         attack_data = {
             "evidence_name": "A" * 10000,  # Very long string
-            "description": "B" * 50000
+            "description": "B" * 50000,
         }
-        
+
         with pytest.raises(ValidationError, match="must be at most"):
             validate_evidence_update(attack_data)
 
@@ -334,10 +319,10 @@ class TestAttackScenarios:
             "metadata": {
                 "admin": True,
                 "permissions": ["admin", "read", "write"],
-                "dangerous_code": "<script>alert('xss')</script>"
-            }
+                "dangerous_code": "<script>alert('xss')</script>",
+            },
         }
-        
+
         # This should be rejected either for dangerous content or whitelist violation
         with pytest.raises(ValidationError):
             validate_evidence_update(attack_data)

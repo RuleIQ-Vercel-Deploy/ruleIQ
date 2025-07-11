@@ -18,13 +18,14 @@ load_dotenv()
 # Add the project root to Python path
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from config.logging_config import get_logger, setup_logging
-from database.db_setup import Base, _init_async_db, get_async_db
-from services.framework_service import initialize_default_frameworks
+from config.logging_config import get_logger, setup_logging  # noqa: E402
+from database.db_setup import Base, _init_async_db, get_async_db  # noqa: E402
+from services.framework_service import initialize_default_frameworks  # noqa: E402
 
 # Setup logging first
 setup_logging()
 logger = get_logger(__name__)
+
 
 async def create_tables():
     """Create all database tables asynchronously."""
@@ -42,6 +43,7 @@ async def create_tables():
         logger.error(f"Error creating tables: {e}", exc_info=True)
         return False
 
+
 async def populate_default_data():
     """Populate database with default frameworks and data asynchronously."""
     logger.info("Populating default data...")
@@ -56,6 +58,7 @@ async def populate_default_data():
         logger.error(f"Error populating default data: {e}", exc_info=True)
         return False
 
+
 async def test_connection():
     """Test database connection asynchronously."""
     logger.info("Testing database connection...")
@@ -67,6 +70,7 @@ async def test_connection():
     except Exception as e:
         logger.error(f"Database connection failed: {e}", exc_info=True)
         return False
+
 
 async def main():
     """Main asynchronous initialization function."""
@@ -91,6 +95,7 @@ async def main():
 
     logger.info("Database initialization completed successfully!")
     return True
+
 
 if __name__ == "__main__":
     success = asyncio.run(main())

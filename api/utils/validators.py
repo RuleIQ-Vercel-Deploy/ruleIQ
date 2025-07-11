@@ -3,9 +3,10 @@ import re
 import bleach
 
 # Regex patterns
-EMAIL_REGEX = re.compile(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$')
-SAFE_STRING_REGEX = re.compile(r'^[a-zA-Z0-9\s\-_.,!?]+$')
-UUID_REGEX = re.compile(r'^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$')
+EMAIL_REGEX = re.compile(r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$")
+SAFE_STRING_REGEX = re.compile(r"^[a-zA-Z0-9\s\-_.,!?]+$")
+UUID_REGEX = re.compile(r"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$")
+
 
 class InputValidators:
     """Common input validation functions"""
@@ -13,7 +14,7 @@ class InputValidators:
     @staticmethod
     def sanitize_html(value: str) -> str:
         """Remove dangerous HTML tags"""
-        allowed_tags = ['b', 'i', 'u', 'em', 'strong', 'p', 'br', 'ul', 'li', 'ol']
+        allowed_tags = ["b", "i", "u", "em", "strong", "p", "br", "ul", "li", "ol"]
         return bleach.clean(value, tags=allowed_tags, strip=True)
 
     @staticmethod
@@ -44,12 +45,14 @@ class InputValidators:
     def validate_url(url: str) -> str:
         """Validate URL format"""
         url_regex = re.compile(
-            r'^https?://'  # http:// or https://
-            r'(?:(?:[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?\.)+[A-Z]{2,6}\.?|'  # domain...
-            r'localhost|'  # localhost...
-            r'\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})'  # ...or ip
-            r'(?::\d+)?'  # optional port
-            r'(?:/?|[/?]\S+)$', re.IGNORECASE)
+            r"^https?://"  # http:// or https://
+            r"(?:(?:[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?\.)+[A-Z]{2,6}\.?|"  # domain...
+            r"localhost|"  # localhost...
+            r"\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})"  # ...or ip
+            r"(?::\d+)?"  # optional port
+            r"(?:/?|[/?]\S+)$",
+            re.IGNORECASE,
+        )
 
         if not url_regex.match(url):
             raise ValueError("Invalid URL format")
@@ -64,17 +67,22 @@ class InputValidators:
             raise ValueError("Employee count seems unrealistic")
         return value
 
+
 # Pydantic validators for reuse
 def email_validator(cls, v):
     return InputValidators.validate_email(v)
 
+
 def safe_string_validator(max_length: int = 255):
     def validator(cls, v):
         return InputValidators.validate_safe_string(v, max_length)
+
     return validator
+
 
 def company_name_validator(cls, v):
     return InputValidators.validate_company_name(v)
+
 
 def url_validator(cls, v):
     return InputValidators.validate_url(v)

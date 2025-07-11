@@ -11,6 +11,7 @@ from .db_setup import Base
 
 class ComplianceFramework(Base):
     """Compliance frameworks and their requirements"""
+
     __tablename__ = "compliance_frameworks"
 
     id = Column(PG_UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
@@ -24,7 +25,7 @@ class ComplianceFramework(Base):
     # Framework characteristics (truncated column names to match database)
     applicable_indu = Column(PG_JSONB, default=list)  # applicable_industries truncated
     employee_thresh = Column(Integer, nullable=True)  # employee_threshold truncated
-    revenue_thresho = Column(String, nullable=True) # revenue_threshold truncated
+    revenue_thresho = Column(String, nullable=True)  # revenue_threshold truncated
     geographic_scop = Column(PG_JSONB, default=lambda: ["UK"])  # geographic_scope truncated
 
     # Requirements and controls (truncated column names to match database)
@@ -36,7 +37,7 @@ class ComplianceFramework(Base):
     relevance_facto = Column(PG_JSONB, default=dict)  # relevance_factors truncated
     complexity_scor = Column(Integer, default=1)  # complexity_score truncated
     implementation_ = Column(Integer, default=12)  # implementation_time_weeks truncated
-    estimated_cost_ = Column(String, default="£5,000-£25,000") # estimated_cost_range truncated
+    estimated_cost_ = Column(String, default="£5,000-£25,000")  # estimated_cost_range truncated
 
     # Content templates (truncated column names to match database)
     policy_template = Column(Text, default="")
@@ -61,5 +62,5 @@ class ComplianceFramework(Base):
             "description": self.description,
             "category": self.category,
             "version": self.version,
-            "controls": []  # Simplified for now, can be expanded later
+            "controls": [],  # Simplified for now, can be expanded later
         }

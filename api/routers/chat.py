@@ -38,11 +38,12 @@ logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/chat", tags=["Chat Assistant"])
 
+
 @router.post("/conversations", response_model=ConversationResponse)
 async def create_conversation(
     request: CreateConversationRequest,
     db: AsyncSession = Depends(get_async_db),
-    current_user: User = Depends(get_current_user)
+    current_user: User = Depends(get_current_user),
 ):
     """Create a new chat conversation."""
     try:
@@ -56,11 +57,13 @@ async def create_conversation(
         if not business_profile:
             raise HTTPException(
                 status_code=400,
-                detail="No business profile found. Please complete your profile setup first."
+                detail="No business profile found. Please complete your profile setup first.",
             )
 
         # Get conversation count for title
-        count_stmt = select(func.count(ChatConversation.id)).where(ChatConversation.user_id == current_user.id)
+        count_stmt = select(func.count(ChatConversation.id)).where(
+            ChatConversation.user_id == current_user.id
+        )
         count_result = await db.execute(count_stmt)
         conversation_count = count_result.scalar() or 0
 
@@ -69,158 +72,178 @@ async def create_conversation(
             user_id=current_user.id,
             business_profile_id=business_profile.id,
             title=request.title or f"Chat {conversation_count + 1}",
-            status=ConversationStatus.ACTIVE
+            status=ConversationStatus.ACTIVE,
         )
 
         db.add(conversation)
         await db.flush()  # Get the conversation ID
-        
+
         messages = []
-        
+
         # If there's an initial message, process it
         if request.initial_message:
             assistant = ComplianceAssistant(db)
-            
+
             # Add user message
             user_message = ChatMessage(
                 conversation_id=conversation.id,
                 role="user",
                 content=request.initial_message,
-                sequence_number=1
+                sequence_number=1,
             )
             db.add(user_message)
-            
+
             # Generate assistant response
             response_text, metadata = await assistant.process_message(
                 conversation_id=conversation.id,
                 user=current_user,
                 message=request.initial_message,
-                business_profile_id=business_profile.id
+                business_profile_id=business_profile.id,
             )
-            
+
             # Add assistant message
             assistant_message = ChatMessage(
                 conversation_id=conversation.id,
                 role="assistant",
                 content=response_text,
                 metadata=metadata,
-                sequence_number=2
+                sequence_number=2,
             )
             db.add(assistant_message)
-            
+
             messages = [user_message, assistant_message]
-        
+
         await db.commit()
-        
+
         return ConversationResponse(
             id=conversation.id,
             title=conversation.title,
             status=conversation.status.value,
             messages=[MessageResponse.from_orm(msg) for msg in messages],
             created_at=conversation.created_at,
-            updated_at=conversation.updated_at
+            updated_at=conversation.updated_at,
         )
-        
+
     except Exception as e:
         db.rollback()
         logger.error(f"Error creating conversation: {e}")
         raise HTTPException(status_code=500, detail="Failed to create conversation")
+
 
 @router.get("/conversations", response_model=ConversationListResponse)
 async def list_conversations(
     page: int = Query(1, ge=1),
     per_page: int = Query(20, ge=1, le=100),
     db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user)
+    current_user: User = Depends(get_current_user),
 ):
     """List user's chat conversations."""
     try:
         # Get total count
-        total = db.query(ChatConversation).filter(
-            ChatConversation.user_id == current_user.id,
-            ChatConversation.status != ConversationStatus.DELETED
-        ).count()
-        
+        total = (
+            db.query(ChatConversation)
+            .filter(
+                ChatConversation.user_id == current_user.id,
+                ChatConversation.status != ConversationStatus.DELETED,
+            )
+            .count()
+        )
+
         # Get conversations with pagination
-        conversations = db.query(ChatConversation).filter(
-            ChatConversation.user_id == current_user.id,
-            ChatConversation.status != ConversationStatus.DELETED
-        ).order_by(desc(ChatConversation.updated_at)).offset(
-            (page - 1) * per_page
-        ).limit(per_page).all()
-        
+        conversations = (
+            db.query(ChatConversation)
+            .filter(
+                ChatConversation.user_id == current_user.id,
+                ChatConversation.status != ConversationStatus.DELETED,
+            )
+            .order_by(desc(ChatConversation.updated_at))
+            .offset((page - 1) * per_page)
+            .limit(per_page)
+            .all()
+        )
+
         # Get message counts and last message times
         conversation_summaries = []
         for conv in conversations:
-            message_count = db.query(ChatMessage).filter(
-                ChatMessage.conversation_id == conv.id
-            ).count()
-            
-            last_message = db.query(ChatMessage).filter(
-                ChatMessage.conversation_id == conv.id
-            ).order_by(desc(ChatMessage.created_at)).first()
-            
-            conversation_summaries.append(ConversationSummary(
-                id=conv.id,
-                title=conv.title,
-                status=conv.status.value,
-                message_count=message_count,
-                last_message_at=last_message.created_at if last_message else None,
-                created_at=conv.created_at
-            ))
-        
+            message_count = (
+                db.query(ChatMessage).filter(ChatMessage.conversation_id == conv.id).count()
+            )
+
+            last_message = (
+                db.query(ChatMessage)
+                .filter(ChatMessage.conversation_id == conv.id)
+                .order_by(desc(ChatMessage.created_at))
+                .first()
+            )
+
+            conversation_summaries.append(
+                ConversationSummary(
+                    id=conv.id,
+                    title=conv.title,
+                    status=conv.status.value,
+                    message_count=message_count,
+                    last_message_at=last_message.created_at if last_message else None,
+                    created_at=conv.created_at,
+                )
+            )
+
         return ConversationListResponse(
-            conversations=conversation_summaries,
-            total=total,
-            page=page,
-            per_page=per_page
+            conversations=conversation_summaries, total=total, page=page, per_page=per_page
         )
-        
+
     except Exception as e:
         logger.error(f"Error listing conversations: {e}")
         raise HTTPException(status_code=500, detail="Failed to list conversations")
+
 
 @router.get("/conversations/{conversation_id}", response_model=ConversationResponse)
 async def get_conversation(
     conversation_id: UUID,
     db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user)
+    current_user: User = Depends(get_current_user),
 ):
     """Get a specific conversation with all messages."""
     try:
-        conversation = db.query(ChatConversation).filter(
-            ChatConversation.id == conversation_id,
-            ChatConversation.user_id == current_user.id
-        ).first()
-        
+        conversation = (
+            db.query(ChatConversation)
+            .filter(
+                ChatConversation.id == conversation_id, ChatConversation.user_id == current_user.id
+            )
+            .first()
+        )
+
         if not conversation:
             raise HTTPException(status_code=404, detail="Conversation not found")
-        
-        messages = db.query(ChatMessage).filter(
-            ChatMessage.conversation_id == conversation_id
-        ).order_by(ChatMessage.sequence_number).all()
-        
+
+        messages = (
+            db.query(ChatMessage)
+            .filter(ChatMessage.conversation_id == conversation_id)
+            .order_by(ChatMessage.sequence_number)
+            .all()
+        )
+
         return ConversationResponse(
             id=conversation.id,
             title=conversation.title,
             status=conversation.status.value,
             messages=[MessageResponse.from_orm(msg) for msg in messages],
             created_at=conversation.created_at,
-            updated_at=conversation.updated_at
+            updated_at=conversation.updated_at,
         )
-        
+
     except HTTPException:
         raise
     except Exception as e:
         logger.error(f"Error getting conversation: {e}")
         raise HTTPException(status_code=500, detail="Failed to get conversation")
 
+
 @router.post("/conversations/{conversation_id}/messages", response_model=MessageResponse)
 async def send_message(
     conversation_id: UUID,
     request: SendMessageRequest,
     db: AsyncSession = Depends(get_async_db),
-    current_user: User = Depends(get_current_user)
+    current_user: User = Depends(get_current_user),
 ):
     """Send a message in a conversation."""
     try:
@@ -230,7 +253,7 @@ async def send_message(
         conv_stmt = select(ChatConversation).where(
             ChatConversation.id == conversation_id,
             ChatConversation.user_id == current_user.id,
-            ChatConversation.status == ConversationStatus.ACTIVE
+            ChatConversation.status == ConversationStatus.ACTIVE,
         )
         conv_result = await db.execute(conv_stmt)
         conversation = conv_result.scalars().first()
@@ -247,20 +270,22 @@ async def send_message(
             raise HTTPException(status_code=400, detail="Business profile not found")
 
         # Get next sequence number
-        msg_stmt = select(ChatMessage).where(
-            ChatMessage.conversation_id == conversation_id
-        ).order_by(desc(ChatMessage.sequence_number))
+        msg_stmt = (
+            select(ChatMessage)
+            .where(ChatMessage.conversation_id == conversation_id)
+            .order_by(desc(ChatMessage.sequence_number))
+        )
         msg_result = await db.execute(msg_stmt)
         last_message = msg_result.scalars().first()
-        
+
         next_sequence = (last_message.sequence_number + 1) if last_message else 1
-        
+
         # Add user message
         user_message = ChatMessage(
             conversation_id=conversation_id,
             role="user",
             content=request.message,
-            sequence_number=next_sequence
+            sequence_number=next_sequence,
         )
         db.add(user_message)
         await db.flush()
@@ -271,7 +296,7 @@ async def send_message(
             conversation_id=conversation_id,
             user=current_user,
             message=request.message,
-            business_profile_id=business_profile.id
+            business_profile_id=business_profile.id,
         )
 
         # Add assistant message
@@ -280,18 +305,19 @@ async def send_message(
             role="assistant",
             content=response_text,
             metadata=metadata,
-            sequence_number=next_sequence + 1
+            sequence_number=next_sequence + 1,
         )
         db.add(assistant_message)
 
         # Update conversation timestamp
         from datetime import datetime
+
         conversation.updated_at = datetime.utcnow()
 
         await db.commit()
-        
+
         return MessageResponse.from_orm(assistant_message)
-        
+
     except HTTPException:
         raise
     except Exception as e:
@@ -299,27 +325,31 @@ async def send_message(
         logger.error(f"Error sending message: {e}")
         raise HTTPException(status_code=500, detail="Failed to send message")
 
+
 @router.delete("/conversations/{conversation_id}")
 async def delete_conversation(
     conversation_id: UUID,
     db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user)
+    current_user: User = Depends(get_current_user),
 ):
     """Delete (archive) a conversation."""
     try:
-        conversation = db.query(ChatConversation).filter(
-            ChatConversation.id == conversation_id,
-            ChatConversation.user_id == current_user.id
-        ).first()
-        
+        conversation = (
+            db.query(ChatConversation)
+            .filter(
+                ChatConversation.id == conversation_id, ChatConversation.user_id == current_user.id
+            )
+            .first()
+        )
+
         if not conversation:
             raise HTTPException(status_code=404, detail="Conversation not found")
-        
+
         conversation.status = ConversationStatus.DELETED
         db.commit()
-        
+
         return {"message": "Conversation deleted successfully"}
-        
+
     except HTTPException:
         raise
     except Exception as e:
@@ -327,11 +357,12 @@ async def delete_conversation(
         logger.error(f"Error deleting conversation: {e}")
         raise HTTPException(status_code=500, detail="Failed to delete conversation")
 
+
 @router.post("/evidence-recommendations", response_model=List[EvidenceRecommendationResponse])
 async def get_evidence_recommendations(
     request: EvidenceRecommendationRequest,
     db: AsyncSession = Depends(get_async_db),
-    current_user: User = Depends(get_current_active_user)
+    current_user: User = Depends(get_current_active_user),
 ):
     """Get AI-powered evidence collection recommendations."""
     try:
@@ -347,22 +378,23 @@ async def get_evidence_recommendations(
         recommendations = await assistant.get_evidence_recommendations(
             user=current_user,
             business_profile_id=UUID(str(business_profile.id)),
-            target_framework=request.framework or "unknown"
+            target_framework=request.framework or "unknown",
         )
 
         return [EvidenceRecommendationResponse(**rec) for rec in recommendations]
-        
+
     except HTTPException:
         raise
     except Exception as e:
         logger.error(f"Error getting evidence recommendations: {e}")
         raise HTTPException(status_code=500, detail="Failed to get recommendations")
 
+
 @router.post("/compliance-analysis", response_model=ComplianceAnalysisResponse)
 async def analyze_compliance_gap(
     request: ComplianceAnalysisRequest,
     db: AsyncSession = Depends(get_async_db),
-    current_user: User = Depends(get_current_active_user)
+    current_user: User = Depends(get_current_active_user),
 ):
     """Analyze compliance gaps for a specific framework."""
     try:
@@ -378,12 +410,11 @@ async def analyze_compliance_gap(
 
         assistant = ComplianceAssistant(db)
         analysis = await assistant.analyze_evidence_gap(
-            business_profile_id=UUID(str(business_profile.id)),
-            framework=request.framework
+            business_profile_id=UUID(str(business_profile.id)), framework=request.framework
         )
 
         return ComplianceAnalysisResponse(**analysis)
-        
+
     except HTTPException:
         raise
     except Exception as e:
@@ -396,7 +427,7 @@ async def get_context_aware_recommendations(
     framework: str = Query(..., min_length=1, description="Framework to get recommendations for"),
     context_type: str = Query(default="comprehensive", description="Type of context analysis"),
     db: AsyncSession = Depends(get_async_db),
-    current_user: User = Depends(get_current_active_user)
+    current_user: User = Depends(get_current_active_user),
 ):
     """
     Get enhanced context-aware evidence recommendations that consider:
@@ -420,7 +451,7 @@ async def get_context_aware_recommendations(
             user=current_user,
             business_profile_id=UUID(str(business_profile.id)),
             framework=framework,
-            context_type=context_type
+            context_type=context_type,
         )
 
         return recommendations
@@ -438,7 +469,7 @@ async def generate_evidence_collection_workflow(
     control_id: Optional[str] = Query(None, description="Specific control ID (optional)"),
     workflow_type: str = Query(default="comprehensive", description="Type of workflow"),
     db: AsyncSession = Depends(get_async_db),
-    current_user: User = Depends(get_current_active_user)
+    current_user: User = Depends(get_current_active_user),
 ):
     """
     Generate intelligent, step-by-step evidence collection workflows
@@ -459,7 +490,7 @@ async def generate_evidence_collection_workflow(
             business_profile_id=UUID(str(business_profile.id)),
             framework=framework,
             control_id=control_id or "general",
-            workflow_type=workflow_type
+            workflow_type=workflow_type,
         )
 
         return workflow
@@ -468,7 +499,9 @@ async def generate_evidence_collection_workflow(
         raise
     except Exception as e:
         logger.error(f"Error generating evidence collection workflow: {e}")
-        raise HTTPException(status_code=500, detail="Failed to generate evidence collection workflow")
+        raise HTTPException(
+            status_code=500, detail="Failed to generate evidence collection workflow"
+        )
 
 
 @router.post("/generate-policy")
@@ -480,7 +513,7 @@ async def generate_customized_policy(
     include_templates: bool = Query(default=True, description="Include implementation templates"),
     geographic_scope: str = Query(default="Single location", description="Geographic scope"),
     db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user)
+    current_user: User = Depends(get_current_user),
 ):
     """
     Generate AI-powered, customized compliance policies based on:
@@ -491,19 +524,21 @@ async def generate_customized_policy(
     - Regulatory requirements
     """
     try:
-        business_profile = db.query(BusinessProfile).filter(
-            BusinessProfile.user_id == str(current_user.id)
-        ).first()
+        business_profile = (
+            db.query(BusinessProfile)
+            .filter(BusinessProfile.user_id == str(current_user.id))
+            .first()
+        )
 
         if not business_profile:
             raise HTTPException(status_code=400, detail="Business profile not found")
 
         customization_options = {
-            'tone': tone,
-            'detail_level': detail_level,
-            'include_templates': include_templates,
-            'geographic_scope': geographic_scope,
-            'industry_focus': business_profile.industry
+            "tone": tone,
+            "detail_level": detail_level,
+            "include_templates": include_templates,
+            "geographic_scope": geographic_scope,
+            "industry_focus": business_profile.industry,
         }
 
         assistant = ComplianceAssistant(db)
@@ -512,7 +547,7 @@ async def generate_customized_policy(
             business_profile_id=business_profile.id,
             framework=framework,
             policy_type=policy_type,
-            customization_options=customization_options
+            customization_options=customization_options,
         )
 
         return policy
@@ -529,7 +564,7 @@ async def get_smart_compliance_guidance(
     framework: str,
     guidance_type: str = Query(default="getting_started", description="Type of guidance needed"),
     db: AsyncSession = Depends(get_async_db),
-    current_user: User = Depends(get_current_user)
+    current_user: User = Depends(get_current_user),
 ):
     """
     Get intelligent, context-aware compliance guidance based on:
@@ -554,36 +589,39 @@ async def get_smart_compliance_guidance(
             user=current_user,
             business_profile_id=business_profile.id,
             framework=framework,
-            context_type="guidance"
+            context_type="guidance",
         )
 
         # Get gap analysis
         gap_analysis = await assistant.analyze_evidence_gap(
-            business_profile_id=business_profile.id,
-            framework=framework
+            business_profile_id=business_profile.id, framework=framework
         )
 
         # Combine into smart guidance
         guidance = {
-            'framework': framework,
-            'guidance_type': guidance_type,
-            'current_status': {
-                'completion_percentage': gap_analysis.get('completion_percentage', 0),
-                'maturity_level': recommendations.get('business_context', {}).get('maturity_level', 'Basic'),
-                'critical_gaps_count': len(gap_analysis.get('critical_gaps', []))
+            "framework": framework,
+            "guidance_type": guidance_type,
+            "current_status": {
+                "completion_percentage": gap_analysis.get("completion_percentage", 0),
+                "maturity_level": recommendations.get("business_context", {}).get(
+                    "maturity_level", "Basic"
+                ),
+                "critical_gaps_count": len(gap_analysis.get("critical_gaps", [])),
             },
-            'personalized_roadmap': recommendations.get('recommendations', [])[:5],
-            'next_immediate_steps': recommendations.get('next_steps', []),
-            'effort_estimation': recommendations.get('estimated_effort', {}),
-            'quick_wins': [
-                rec for rec in recommendations.get('recommendations', [])
-                if rec.get('effort_hours', 4) <= 2
+            "personalized_roadmap": recommendations.get("recommendations", [])[:5],
+            "next_immediate_steps": recommendations.get("next_steps", []),
+            "effort_estimation": recommendations.get("estimated_effort", {}),
+            "quick_wins": [
+                rec
+                for rec in recommendations.get("recommendations", [])
+                if rec.get("effort_hours", 4) <= 2
             ][:3],
-            'automation_opportunities': [
-                rec for rec in recommendations.get('recommendations', [])
-                if rec.get('automation_possible', False)
+            "automation_opportunities": [
+                rec
+                for rec in recommendations.get("recommendations", [])
+                if rec.get("automation_possible", False)
             ][:3],
-            'generated_at': datetime.utcnow().isoformat()
+            "generated_at": datetime.utcnow().isoformat(),
         }
 
         return guidance
@@ -596,9 +634,7 @@ async def get_smart_compliance_guidance(
 
 
 @router.get("/cache/metrics")
-async def get_ai_cache_metrics(
-    current_user: User = Depends(get_current_user)
-):
+async def get_ai_cache_metrics(current_user: User = Depends(get_current_user)):
     """
     Get AI response cache performance metrics including:
     - Cache hit rate and performance statistics
@@ -612,9 +648,9 @@ async def get_ai_cache_metrics(
         metrics = await ai_cache.get_cache_metrics()
 
         return {
-            'cache_performance': metrics,
-            'status': 'active',
-            'generated_at': datetime.utcnow().isoformat()
+            "cache_performance": metrics,
+            "status": "active",
+            "generated_at": datetime.utcnow().isoformat(),
         }
 
     except Exception as e:
@@ -625,7 +661,7 @@ async def get_ai_cache_metrics(
 @router.delete("/cache/clear")
 async def clear_ai_cache(
     pattern: str = Query(default="*", description="Cache pattern to clear"),
-    current_user: User = Depends(get_current_user)
+    current_user: User = Depends(get_current_user),
 ):
     """
     Clear AI response cache entries matching a pattern.
@@ -638,9 +674,9 @@ async def clear_ai_cache(
         cleared_count = await ai_cache.clear_cache_pattern(pattern)
 
         return {
-            'cleared_entries': cleared_count,
-            'pattern': pattern,
-            'cleared_at': datetime.utcnow().isoformat()
+            "cleared_entries": cleared_count,
+            "pattern": pattern,
+            "cleared_at": datetime.utcnow().isoformat(),
         }
 
     except Exception as e:
@@ -649,9 +685,7 @@ async def clear_ai_cache(
 
 
 @router.get("/performance/metrics")
-async def get_ai_performance_metrics(
-    current_user: User = Depends(get_current_user)
-):
+async def get_ai_performance_metrics(current_user: User = Depends(get_current_user)):
     """
     Get comprehensive AI performance metrics including:
     - Response time statistics
@@ -672,10 +706,10 @@ async def get_ai_performance_metrics(
         cache_metrics = await ai_cache.get_cache_metrics()
 
         return {
-            'performance_metrics': performance_metrics,
-            'cache_metrics': cache_metrics,
-            'system_status': 'optimal',
-            'generated_at': datetime.utcnow().isoformat()
+            "performance_metrics": performance_metrics,
+            "cache_metrics": cache_metrics,
+            "system_status": "optimal",
+            "generated_at": datetime.utcnow().isoformat(),
         }
 
     except Exception as e:
@@ -688,7 +722,7 @@ async def optimize_ai_performance(
     enable_batching: bool = Query(default=True, description="Enable request batching"),
     enable_compression: bool = Query(default=True, description="Enable prompt compression"),
     max_concurrent: int = Query(default=10, description="Maximum concurrent requests"),
-    current_user: User = Depends(get_current_user)
+    current_user: User = Depends(get_current_user),
 ):
     """
     Configure AI performance optimization settings.
@@ -709,13 +743,13 @@ async def optimize_ai_performance(
             optimizer.request_semaphore = asyncio.Semaphore(max_concurrent)
 
         return {
-            'optimization_settings': {
-                'batching_enabled': enable_batching,
-                'compression_enabled': enable_compression,
-                'max_concurrent_requests': max_concurrent
+            "optimization_settings": {
+                "batching_enabled": enable_batching,
+                "compression_enabled": enable_compression,
+                "max_concurrent_requests": max_concurrent,
             },
-            'status': 'updated',
-            'updated_at': datetime.utcnow().isoformat()
+            "status": "updated",
+            "updated_at": datetime.utcnow().isoformat(),
         }
 
     except Exception as e:
@@ -724,9 +758,7 @@ async def optimize_ai_performance(
 
 
 @router.get("/analytics/dashboard")
-async def get_analytics_dashboard(
-    current_user: User = Depends(get_current_user)
-):
+async def get_analytics_dashboard(current_user: User = Depends(get_current_user)):
     """
     Get comprehensive analytics dashboard data including:
     - Real-time performance metrics
@@ -751,7 +783,7 @@ async def get_analytics_dashboard(
 @router.get("/analytics/usage")
 async def get_usage_analytics(
     days: int = Query(default=7, description="Number of days to analyze"),
-    current_user: User = Depends(get_current_user)
+    current_user: User = Depends(get_current_user),
 ):
     """
     Get detailed usage analytics including:
@@ -776,7 +808,7 @@ async def get_usage_analytics(
 @router.get("/analytics/cost")
 async def get_cost_analytics(
     days: int = Query(default=30, description="Number of days to analyze"),
-    current_user: User = Depends(get_current_user)
+    current_user: User = Depends(get_current_user),
 ):
     """
     Get comprehensive cost analytics including:
@@ -801,7 +833,7 @@ async def get_cost_analytics(
 @router.get("/analytics/alerts")
 async def get_system_alerts(
     resolved: Optional[bool] = Query(default=None, description="Filter by resolution status"),
-    current_user: User = Depends(get_current_user)
+    current_user: User = Depends(get_current_user),
 ):
     """
     Get system alerts and notifications.
@@ -814,9 +846,9 @@ async def get_system_alerts(
         alerts = await monitor.get_alerts(resolved)
 
         return {
-            'alerts': alerts,
-            'total_count': len(alerts),
-            'filter_applied': {'resolved': resolved} if resolved is not None else None
+            "alerts": alerts,
+            "total_count": len(alerts),
+            "filter_applied": {"resolved": resolved} if resolved is not None else None,
         }
 
     except Exception as e:
@@ -825,10 +857,7 @@ async def get_system_alerts(
 
 
 @router.post("/analytics/alerts/{alert_id}/resolve")
-async def resolve_system_alert(
-    alert_id: str,
-    current_user: User = Depends(get_current_user)
-):
+async def resolve_system_alert(alert_id: str, current_user: User = Depends(get_current_user)):
     """
     Mark a system alert as resolved.
     """
@@ -840,9 +869,9 @@ async def resolve_system_alert(
 
         if success:
             return {
-                'alert_id': alert_id,
-                'status': 'resolved',
-                'resolved_at': datetime.utcnow().isoformat()
+                "alert_id": alert_id,
+                "status": "resolved",
+                "resolved_at": datetime.utcnow().isoformat(),
             }
         else:
             raise HTTPException(status_code=404, detail="Alert not found")
@@ -859,7 +888,7 @@ async def create_smart_evidence_plan(
     framework: str = Query(..., description="Compliance framework"),
     target_weeks: int = Query(default=12, description="Target completion weeks"),
     db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user)
+    current_user: User = Depends(get_current_user),
 ):
     """
     Create an intelligent evidence collection plan with AI-driven prioritization.
@@ -871,9 +900,11 @@ async def create_smart_evidence_plan(
     - Business context-aware planning
     """
     try:
-        business_profile = db.query(BusinessProfile).filter(
-            BusinessProfile.user_id == str(current_user.id)
-        ).first()
+        business_profile = (
+            db.query(BusinessProfile)
+            .filter(BusinessProfile.user_id == str(current_user.id))
+            .first()
+        )
 
         if not business_profile:
             raise HTTPException(status_code=400, detail="Business profile not found")
@@ -882,10 +913,10 @@ async def create_smart_evidence_plan(
 
         # Get business context
         business_context = {
-            'company_name': business_profile.company_name,
-            'industry': business_profile.industry,
-            'employee_count': business_profile.employee_count or 0,
-            'description': business_profile.description
+            "company_name": business_profile.company_name,
+            "industry": business_profile.industry,
+            "employee_count": business_profile.employee_count or 0,
+            "description": business_profile.description,
         }
 
         # Get existing evidence (simplified - would integrate with actual evidence database)
@@ -897,28 +928,28 @@ async def create_smart_evidence_plan(
             framework=framework,
             business_context=business_context,
             existing_evidence=existing_evidence,
-            target_completion_weeks=target_weeks
+            target_completion_weeks=target_weeks,
         )
 
         return {
-            'plan_id': plan.plan_id,
-            'framework': plan.framework,
-            'total_tasks': plan.total_tasks,
-            'estimated_total_hours': plan.estimated_total_hours,
-            'completion_target_date': plan.completion_target_date.isoformat(),
-            'automation_opportunities': plan.automation_opportunities,
-            'next_priority_tasks': [
+            "plan_id": plan.plan_id,
+            "framework": plan.framework,
+            "total_tasks": plan.total_tasks,
+            "estimated_total_hours": plan.estimated_total_hours,
+            "completion_target_date": plan.completion_target_date.isoformat(),
+            "automation_opportunities": plan.automation_opportunities,
+            "next_priority_tasks": [
                 {
-                    'task_id': task.task_id,
-                    'title': task.title,
-                    'priority': task.priority.value,
-                    'automation_level': task.automation_level.value,
-                    'estimated_effort_hours': task.estimated_effort_hours,
-                    'due_date': task.due_date.isoformat() if task.due_date else None
+                    "task_id": task.task_id,
+                    "title": task.title,
+                    "priority": task.priority.value,
+                    "automation_level": task.automation_level.value,
+                    "estimated_effort_hours": task.estimated_effort_hours,
+                    "due_date": task.due_date.isoformat() if task.due_date else None,
                 }
                 for task in plan.tasks[:5]  # First 5 tasks
             ],
-            'created_at': plan.created_at.isoformat()
+            "created_at": plan.created_at.isoformat(),
         }
 
     except HTTPException:
@@ -929,10 +960,7 @@ async def create_smart_evidence_plan(
 
 
 @router.get("/smart-evidence/plan/{plan_id}")
-async def get_smart_evidence_plan(
-    plan_id: str,
-    current_user: User = Depends(get_current_user)
-):
+async def get_smart_evidence_plan(plan_id: str, current_user: User = Depends(get_current_user)):
     """
     Get details of a smart evidence collection plan.
     """
@@ -946,28 +974,28 @@ async def get_smart_evidence_plan(
             raise HTTPException(status_code=404, detail="Collection plan not found")
 
         return {
-            'plan_id': plan.plan_id,
-            'framework': plan.framework,
-            'total_tasks': plan.total_tasks,
-            'estimated_total_hours': plan.estimated_total_hours,
-            'completion_target_date': plan.completion_target_date.isoformat(),
-            'tasks': [
+            "plan_id": plan.plan_id,
+            "framework": plan.framework,
+            "total_tasks": plan.total_tasks,
+            "estimated_total_hours": plan.estimated_total_hours,
+            "completion_target_date": plan.completion_target_date.isoformat(),
+            "tasks": [
                 {
-                    'task_id': task.task_id,
-                    'control_id': task.control_id,
-                    'title': task.title,
-                    'description': task.description,
-                    'priority': task.priority.value,
-                    'automation_level': task.automation_level.value,
-                    'estimated_effort_hours': task.estimated_effort_hours,
-                    'status': task.status.value,
-                    'due_date': task.due_date.isoformat() if task.due_date else None,
-                    'automation_tools': task.metadata.get('automation_tools', [])
+                    "task_id": task.task_id,
+                    "control_id": task.control_id,
+                    "title": task.title,
+                    "description": task.description,
+                    "priority": task.priority.value,
+                    "automation_level": task.automation_level.value,
+                    "estimated_effort_hours": task.estimated_effort_hours,
+                    "status": task.status.value,
+                    "due_date": task.due_date.isoformat() if task.due_date else None,
+                    "automation_tools": task.metadata.get("automation_tools", []),
                 }
                 for task in plan.tasks
             ],
-            'automation_opportunities': plan.automation_opportunities,
-            'created_at': plan.created_at.isoformat()
+            "automation_opportunities": plan.automation_opportunities,
+            "created_at": plan.created_at.isoformat(),
         }
 
     except HTTPException:
@@ -981,7 +1009,7 @@ async def get_smart_evidence_plan(
 async def get_next_priority_tasks(
     plan_id: str,
     limit: int = Query(default=5, description="Number of tasks to return"),
-    current_user: User = Depends(get_current_user)
+    current_user: User = Depends(get_current_user),
 ):
     """
     Get the next priority tasks for execution from a collection plan.
@@ -993,23 +1021,23 @@ async def get_next_priority_tasks(
         tasks = await collector.get_next_priority_tasks(plan_id, limit)
 
         return {
-            'plan_id': plan_id,
-            'next_tasks': [
+            "plan_id": plan_id,
+            "next_tasks": [
                 {
-                    'task_id': task.task_id,
-                    'control_id': task.control_id,
-                    'title': task.title,
-                    'description': task.description,
-                    'priority': task.priority.value,
-                    'automation_level': task.automation_level.value,
-                    'estimated_effort_hours': task.estimated_effort_hours,
-                    'due_date': task.due_date.isoformat() if task.due_date else None,
-                    'automation_tools': task.metadata.get('automation_tools', []),
-                    'success_rate': task.metadata.get('success_rate', 0.5)
+                    "task_id": task.task_id,
+                    "control_id": task.control_id,
+                    "title": task.title,
+                    "description": task.description,
+                    "priority": task.priority.value,
+                    "automation_level": task.automation_level.value,
+                    "estimated_effort_hours": task.estimated_effort_hours,
+                    "due_date": task.due_date.isoformat() if task.due_date else None,
+                    "automation_tools": task.metadata.get("automation_tools", []),
+                    "success_rate": task.metadata.get("success_rate", 0.5),
                 }
                 for task in tasks
             ],
-            'total_pending_tasks': len(tasks)
+            "total_pending_tasks": len(tasks),
         }
 
     except Exception as e:
@@ -1023,7 +1051,7 @@ async def update_evidence_task_status(
     task_id: str,
     status: str = Query(..., description="New task status"),
     completion_notes: Optional[str] = Query(None, description="Completion notes"),
-    current_user: User = Depends(get_current_user)
+    current_user: User = Depends(get_current_user),
 ):
     """
     Update the status of an evidence collection task.
@@ -1049,11 +1077,11 @@ async def update_evidence_task_status(
             raise HTTPException(status_code=404, detail="Plan or task not found")
 
         return {
-            'plan_id': plan_id,
-            'task_id': task_id,
-            'status': status,
-            'completion_notes': completion_notes,
-            'updated_at': datetime.utcnow().isoformat()
+            "plan_id": plan_id,
+            "task_id": task_id,
+            "status": status,
+            "completion_notes": completion_notes,
+            "updated_at": datetime.utcnow().isoformat(),
         }
 
     except HTTPException:
@@ -1066,7 +1094,7 @@ async def update_evidence_task_status(
 @router.get("/quality/trends")
 async def get_quality_trends(
     days: int = Query(default=30, description="Number of days to analyze"),
-    current_user: User = Depends(get_current_user)
+    current_user: User = Depends(get_current_user),
 ):
     """
     Get AI response quality trends and analytics.
@@ -1096,7 +1124,7 @@ async def submit_quality_feedback(
     feedback_type: str = Query(..., description="Type of feedback"),
     rating: Optional[float] = Query(None, description="Rating (1-5 scale)"),
     text_feedback: Optional[str] = Query(None, description="Text feedback"),
-    current_user: User = Depends(get_current_user)
+    current_user: User = Depends(get_current_user),
 ):
     """
     Submit user feedback for AI response quality improvement.
@@ -1129,21 +1157,18 @@ async def submit_quality_feedback(
             feedback_type=feedback_type_enum,
             rating=rating,
             text_feedback=text_feedback,
-            metadata={
-                'user_email': current_user.email,
-                'submitted_via': 'api'
-            }
+            metadata={"user_email": current_user.email, "submitted_via": "api"},
         )
 
         monitor = await get_quality_monitor()
         await monitor.record_user_feedback(feedback)
 
         return {
-            'feedback_id': feedback.feedback_id,
-            'response_id': response_id,
-            'feedback_type': feedback_type,
-            'status': 'recorded',
-            'submitted_at': feedback.timestamp.isoformat()
+            "feedback_id": feedback.feedback_id,
+            "response_id": response_id,
+            "feedback_type": feedback_type,
+            "status": "recorded",
+            "submitted_at": feedback.timestamp.isoformat(),
         }
 
     except HTTPException:
@@ -1154,10 +1179,7 @@ async def submit_quality_feedback(
 
 
 @router.get("/quality/assessment/{response_id}")
-async def get_quality_assessment(
-    response_id: str,
-    current_user: User = Depends(get_current_user)
-):
+async def get_quality_assessment(response_id: str, current_user: User = Depends(get_current_user)):
     """
     Get detailed quality assessment for a specific AI response.
     """
@@ -1172,23 +1194,23 @@ async def get_quality_assessment(
         assessment = monitor.quality_assessments[response_id]
 
         return {
-            'assessment_id': assessment.assessment_id,
-            'response_id': assessment.response_id,
-            'overall_score': assessment.overall_score,
-            'quality_level': assessment.quality_level.value,
-            'dimension_scores': {
+            "assessment_id": assessment.assessment_id,
+            "response_id": assessment.response_id,
+            "overall_score": assessment.overall_score,
+            "quality_level": assessment.quality_level.value,
+            "dimension_scores": {
                 dimension.value: {
-                    'score': score.score,
-                    'confidence': score.confidence,
-                    'explanation': score.explanation,
-                    'automated': score.automated
+                    "score": score.score,
+                    "confidence": score.confidence,
+                    "explanation": score.explanation,
+                    "automated": score.automated,
                 }
                 for dimension, score in assessment.dimension_scores.items()
             },
-            'feedback_count': assessment.feedback_count,
-            'improvement_suggestions': assessment.improvement_suggestions,
-            'timestamp': assessment.timestamp.isoformat(),
-            'metadata': assessment.metadata
+            "feedback_count": assessment.feedback_count,
+            "improvement_suggestions": assessment.improvement_suggestions,
+            "timestamp": assessment.timestamp.isoformat(),
+            "metadata": assessment.metadata,
         }
 
     except HTTPException:
@@ -1199,9 +1221,7 @@ async def get_quality_assessment(
 
 
 @router.get("/quality/metrics")
-async def get_quality_metrics(
-    current_user: User = Depends(get_current_user)
-):
+async def get_quality_metrics(current_user: User = Depends(get_current_user)):
     """
     Get comprehensive quality metrics and performance indicators.
     """
@@ -1211,14 +1231,14 @@ async def get_quality_metrics(
         monitor = await get_quality_monitor()
 
         return {
-            'overall_metrics': monitor.metrics,
-            'quality_thresholds': {
+            "overall_metrics": monitor.metrics,
+            "quality_thresholds": {
                 level.value: threshold for level, threshold in monitor.quality_thresholds.items()
             },
-            'total_assessments': len(monitor.quality_assessments),
-            'total_feedback_items': len(monitor.feedback_history),
-            'recent_trends': await monitor.get_quality_trends(7),  # Last 7 days
-            'generated_at': datetime.utcnow().isoformat()
+            "total_assessments": len(monitor.quality_assessments),
+            "total_feedback_items": len(monitor.feedback_history),
+            "recent_trends": await monitor.get_quality_trends(7),  # Last 7 days
+            "generated_at": datetime.utcnow().isoformat(),
         }
 
     except Exception as e:

@@ -2,14 +2,16 @@
 Database models package
 """
 
-from database.user import User
-from .integrations import (
+from ..user import User
+from ..models.integrations import (
     Integration,
     EvidenceCollection,
     IntegrationEvidenceItem,
     IntegrationHealthLog,
-    EvidenceAuditLog
+    EvidenceAuditLog,
 )
+from ..models.policy import Policy
+from ..models.evidence import Evidence
 
 __all__ = [
     "User",
@@ -17,5 +19,7 @@ __all__ = [
     "EvidenceCollection",
     "IntegrationEvidenceItem",
     "IntegrationHealthLog",
-    "EvidenceAuditLog"
+    "EvidenceAuditLog",
+    "Policy",
+    "Evidence",
 ]

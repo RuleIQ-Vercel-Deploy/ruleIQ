@@ -25,29 +25,29 @@ sys.path.append(str(project_root))
 
 class PerformanceTestRunner:
     """Orchestrates performance test execution and reporting"""
-    
+
     def __init__(self, config: Dict[str, Any]):
         self.config = config
         self.results = {}
         self.start_time = None
         self.system_monitor = SystemMonitor()
-    
+
     def run_all_tests(self) -> Dict[str, Any]:
         """Run all performance test suites"""
         print("🚀 Starting ComplianceGPT Performance Test Suite")
         print("=" * 60)
-        
+
         self.start_time = time.time()
         self.system_monitor.start_monitoring()
-        
+
         test_suites = [
             ("API Performance", self.run_api_performance_tests),
             ("Database Performance", self.run_database_performance_tests),
             ("Load Testing", self.run_load_tests),
             ("Memory Testing", self.run_memory_tests),
-            ("Concurrency Testing", self.run_concurrency_tests)
+            ("Concurrency Testing", self.run_concurrency_tests),
         ]
-        
+
         for suite_name, test_function in test_suites:
             if self.should_run_suite(suite_name):
                 print(f"\n📊 Running {suite_name} Tests...")
@@ -58,10 +58,10 @@ class PerformanceTestRunner:
                 except Exception as e:
                     print(f"❌ {suite_name} failed: {e!s}")
                     self.results[suite_name] = {"error": str(e)}
-        
+
         self.system_monitor.stop_monitoring()
         return self.generate_final_report()
-    
+
     def should_run_suite(self, suite_name: str) -> bool:
         """Check if test suite should be run based on configuration"""
         if "include_suites" in self.config:
@@ -69,193 +69,205 @@ class PerformanceTestRunner:
         if "exclude_suites" in self.config:
             return suite_name not in self.config["exclude_suites"]
         return True
-    
+
     def run_api_performance_tests(self) -> Dict[str, Any]:
         """Run API performance tests using pytest-benchmark"""
         cmd = [
-            "python", "-m", "pytest",
+            "python",
+            "-m",
+            "pytest",
             "tests/performance/test_api_performance.py",
             "-v",
             "--benchmark-only",
             "--benchmark-json=performance_api_results.json",
             "--benchmark-sort=mean",
             f"--benchmark-warmup={self.config.get('warmup_iterations', 3)}",
-            f"--benchmark-rounds={self.config.get('benchmark_rounds', 10)}"
+            f"--benchmark-rounds={self.config.get('benchmark_rounds', 10)}",
         ]
-        
+
         if self.config.get("benchmark_compare"):
             cmd.extend(["--benchmark-compare", self.config["benchmark_compare"]])
-        
+
         result = subprocess.run(cmd, capture_output=True, text=True, cwd=project_root)
-        
+
         # Parse benchmark results
         benchmark_file = project_root / "performance_api_results.json"
         if benchmark_file.exists():
             with open(benchmark_file) as f:
                 benchmark_data = json.load(f)
             return self.parse_benchmark_results(benchmark_data)
-        
+
         return {"status": "completed", "stdout": result.stdout, "stderr": result.stderr}
-    
+
     def run_database_performance_tests(self) -> Dict[str, Any]:
         """Run database performance tests"""
         cmd = [
-            "python", "-m", "pytest",
+            "python",
+            "-m",
+            "pytest",
             "tests/performance/test_database_performance.py",
             "-v",
             "--benchmark-only",
-            "--benchmark-json=performance_db_results.json"
+            "--benchmark-json=performance_db_results.json",
         ]
-        
+
         result = subprocess.run(cmd, capture_output=True, text=True, cwd=project_root)
-        
+
         # Parse results
         benchmark_file = project_root / "performance_db_results.json"
         if benchmark_file.exists():
             with open(benchmark_file) as f:
                 benchmark_data = json.load(f)
             return self.parse_benchmark_results(benchmark_data)
-        
+
         return {"status": "completed", "stdout": result.stdout, "stderr": result.stderr}
-    
+
     def run_load_tests(self) -> Dict[str, Any]:
         """Run load tests using Locust"""
         if not self.config.get("run_load_tests", False):
             return {"status": "skipped", "reason": "Load tests disabled"}
-        
+
         locust_config = self.config.get("locust", {})
         users = locust_config.get("users", 10)
         spawn_rate = locust_config.get("spawn_rate", 2)
         duration = locust_config.get("duration", "60s")
         host = locust_config.get("host", "http://localhost:8000")
-        
+
         cmd = [
             "locust",
-            "-f", "tests/performance/locustfile.py",
-            "--host", host,
-            "--users", str(users),
-            "--spawn-rate", str(spawn_rate),
-            "--run-time", duration,
-            "--html", "locust_report.html",
-            "--csv", "locust_results",
-            "--headless"
+            "-f",
+            "tests/performance/locustfile.py",
+            "--host",
+            host,
+            "--users",
+            str(users),
+            "--spawn-rate",
+            str(spawn_rate),
+            "--run-time",
+            duration,
+            "--html",
+            "locust_report.html",
+            "--csv",
+            "locust_results",
+            "--headless",
         ]
-        
+
         print(f"Running Locust with {users} users, spawn rate {spawn_rate}/s for {duration}")
         subprocess.run(cmd, capture_output=True, text=True, cwd=project_root)
-        
+
         # Parse Locust results
         return self.parse_locust_results()
-    
+
     def run_memory_tests(self) -> Dict[str, Any]:
         """Run memory usage tests"""
-        cmd = [
-            "python", "-m", "pytest",
-            "tests/performance/",
-            "-k", "memory",
-            "-v",
-            "--tb=short"
-        ]
-        
+        cmd = ["python", "-m", "pytest", "tests/performance/", "-k", "memory", "-v", "--tb=short"]
+
         # Monitor memory during tests
         initial_memory = psutil.virtual_memory().percent
         result = subprocess.run(cmd, capture_output=True, text=True, cwd=project_root)
         final_memory = psutil.virtual_memory().percent
-        
+
         return {
             "status": "completed",
             "initial_memory_percent": initial_memory,
             "final_memory_percent": final_memory,
             "memory_increase": final_memory - initial_memory,
             "stdout": result.stdout,
-            "stderr": result.stderr
+            "stderr": result.stderr,
         }
-    
+
     def run_concurrency_tests(self) -> Dict[str, Any]:
         """Run concurrency tests"""
         cmd = [
-            "python", "-m", "pytest",
+            "python",
+            "-m",
+            "pytest",
             "tests/performance/",
-            "-k", "concurrent",
+            "-k",
+            "concurrent",
             "-v",
-            "--tb=short"
+            "--tb=short",
         ]
-        
+
         result = subprocess.run(cmd, capture_output=True, text=True, cwd=project_root)
-        
+
         return {
             "status": "completed",
             "stdout": result.stdout,
             "stderr": result.stderr,
-            "return_code": result.returncode
+            "return_code": result.returncode,
         }
-    
+
     def parse_benchmark_results(self, benchmark_data: Dict[str, Any]) -> Dict[str, Any]:
         """Parse pytest-benchmark results"""
         benchmarks = benchmark_data.get("benchmarks", [])
-        
+
         summary = {
             "total_benchmarks": len(benchmarks),
             "fastest_test": None,
             "slowest_test": None,
             "average_time": 0,
-            "performance_issues": []
+            "performance_issues": [],
         }
-        
+
         if benchmarks:
             # Find fastest and slowest tests
             fastest = min(benchmarks, key=lambda x: x["stats"]["mean"])
             slowest = max(benchmarks, key=lambda x: x["stats"]["mean"])
-            
+
             summary["fastest_test"] = {
                 "name": fastest["name"],
                 "mean_time": fastest["stats"]["mean"],
-                "min_time": fastest["stats"]["min"]
+                "min_time": fastest["stats"]["min"],
             }
-            
+
             summary["slowest_test"] = {
                 "name": slowest["name"],
                 "mean_time": slowest["stats"]["mean"],
-                "max_time": slowest["stats"]["max"]
+                "max_time": slowest["stats"]["max"],
             }
-            
+
             # Calculate average
             total_time = sum(b["stats"]["mean"] for b in benchmarks)
             summary["average_time"] = total_time / len(benchmarks)
-            
+
             # Identify performance issues
             for benchmark in benchmarks:
                 mean_time = benchmark["stats"]["mean"]
                 max_time = benchmark["stats"]["max"]
-                
+
                 # Flag slow tests
                 if mean_time > 2.0:  # Mean > 2 seconds
-                    summary["performance_issues"].append({
-                        "test": benchmark["name"],
-                        "issue": "slow_mean_time",
-                        "value": mean_time,
-                        "threshold": 2.0
-                    })
-                
+                    summary["performance_issues"].append(
+                        {
+                            "test": benchmark["name"],
+                            "issue": "slow_mean_time",
+                            "value": mean_time,
+                            "threshold": 2.0,
+                        }
+                    )
+
                 if max_time > 5.0:  # Max > 5 seconds
-                    summary["performance_issues"].append({
-                        "test": benchmark["name"],
-                        "issue": "slow_max_time",
-                        "value": max_time,
-                        "threshold": 5.0
-                    })
-        
+                    summary["performance_issues"].append(
+                        {
+                            "test": benchmark["name"],
+                            "issue": "slow_max_time",
+                            "value": max_time,
+                            "threshold": 5.0,
+                        }
+                    )
+
         return summary
-    
+
     def parse_locust_results(self) -> Dict[str, Any]:
         """Parse Locust load test results"""
         results = {"status": "completed"}
-        
+
         # Parse CSV results if available
         csv_file = project_root / "locust_results_stats.csv"
         if csv_file.exists():
             import pandas as pd
-            
+
             try:
                 df = pd.read_csv(csv_file)
                 if not df.empty:
@@ -263,123 +275,139 @@ class PerformanceTestRunner:
                     total_requests = df["Request Count"].sum()
                     total_failures = df["Failure Count"].sum()
                     avg_response_time = df["Average Response Time"].mean()
-                    
-                    results.update({
-                        "total_requests": int(total_requests),
-                        "total_failures": int(total_failures),
-                        "failure_rate": total_failures / total_requests if total_requests > 0 else 0,
-                        "average_response_time": avg_response_time,
-                        "endpoints_tested": len(df)
-                    })
-                    
+
+                    results.update(
+                        {
+                            "total_requests": int(total_requests),
+                            "total_failures": int(total_failures),
+                            "failure_rate": total_failures / total_requests
+                            if total_requests > 0
+                            else 0,
+                            "average_response_time": avg_response_time,
+                            "endpoints_tested": len(df),
+                        }
+                    )
+
                     # Identify slow endpoints
                     slow_endpoints = df[df["Average Response Time"] > 2000]  # > 2 seconds
                     if not slow_endpoints.empty:
-                        results["slow_endpoints"] = slow_endpoints[["Name", "Average Response Time"]].to_dict("records")
-                    
+                        results["slow_endpoints"] = slow_endpoints[
+                            ["Name", "Average Response Time"]
+                        ].to_dict("records")
+
             except Exception as e:
                 results["csv_parse_error"] = str(e)
-        
+
         return results
-    
+
     def generate_final_report(self) -> Dict[str, Any]:
         """Generate comprehensive performance test report"""
         total_time = time.time() - self.start_time
         system_metrics = self.system_monitor.get_metrics()
-        
+
         report = {
             "summary": {
                 "test_start_time": self.start_time,
                 "total_duration": total_time,
                 "suites_run": len(self.results),
-                "system_metrics": system_metrics
+                "system_metrics": system_metrics,
             },
             "results": self.results,
             "recommendations": self.generate_recommendations(),
-            "config": self.config
+            "config": self.config,
         }
-        
+
         # Save report to file
         report_file = project_root / f"performance_report_{int(time.time())}.json"
-        with open(report_file, 'w') as f:
+        with open(report_file, "w") as f:
             json.dump(report, f, indent=2, default=str)
-        
+
         print(f"\n📄 Performance report saved to: {report_file}")
         self.print_summary(report)
-        
+
         return report
-    
+
     def generate_recommendations(self) -> List[Dict[str, str]]:
         """Generate performance improvement recommendations"""
         recommendations = []
-        
+
         # Analyze results and generate recommendations
         for suite_name, suite_results in self.results.items():
             if isinstance(suite_results, dict) and "performance_issues" in suite_results:
                 for issue in suite_results["performance_issues"]:
                     if issue["issue"] == "slow_mean_time":
-                        recommendations.append({
-                            "priority": "high",
-                            "category": "response_time",
-                            "description": f"Optimize {issue['test']} - mean response time {issue['value']:.2f}s exceeds threshold",
-                            "suggestion": "Consider database query optimization, caching, or algorithm improvements"
-                        })
-            
+                        recommendations.append(
+                            {
+                                "priority": "high",
+                                "category": "response_time",
+                                "description": f"Optimize {issue['test']} - mean response time {issue['value']:.2f}s exceeds threshold",
+                                "suggestion": "Consider database query optimization, caching, or algorithm improvements",
+                            }
+                        )
+
             # Check load test results
             if suite_name == "Load Testing" and isinstance(suite_results, dict):
                 failure_rate = suite_results.get("failure_rate", 0)
                 if failure_rate > 0.05:  # > 5% failure rate
-                    recommendations.append({
-                        "priority": "critical",
-                        "category": "reliability",
-                        "description": f"High failure rate detected: {failure_rate:.1%}",
-                        "suggestion": "Investigate error handling, resource limits, and system stability"
-                    })
-                
+                    recommendations.append(
+                        {
+                            "priority": "critical",
+                            "category": "reliability",
+                            "description": f"High failure rate detected: {failure_rate:.1%}",
+                            "suggestion": "Investigate error handling, resource limits, and system stability",
+                        }
+                    )
+
                 avg_response_time = suite_results.get("average_response_time", 0)
                 if avg_response_time > 2000:  # > 2 seconds
-                    recommendations.append({
-                        "priority": "medium",
-                        "category": "performance",
-                        "description": f"Average response time under load: {avg_response_time:.0f}ms",
-                        "suggestion": "Consider performance optimizations, load balancing, or scaling"
-                    })
-        
+                    recommendations.append(
+                        {
+                            "priority": "medium",
+                            "category": "performance",
+                            "description": f"Average response time under load: {avg_response_time:.0f}ms",
+                            "suggestion": "Consider performance optimizations, load balancing, or scaling",
+                        }
+                    )
+
         # System resource recommendations
         system_metrics = self.system_monitor.get_metrics()
         if system_metrics.get("max_cpu_percent", 0) > 80:
-            recommendations.append({
-                "priority": "medium",
-                "category": "resources",
-                "description": f"High CPU usage detected: {system_metrics['max_cpu_percent']:.1f}%",
-                "suggestion": "Monitor CPU usage in production, consider optimization or scaling"
-            })
-        
+            recommendations.append(
+                {
+                    "priority": "medium",
+                    "category": "resources",
+                    "description": f"High CPU usage detected: {system_metrics['max_cpu_percent']:.1f}%",
+                    "suggestion": "Monitor CPU usage in production, consider optimization or scaling",
+                }
+            )
+
         if system_metrics.get("max_memory_percent", 0) > 85:
-            recommendations.append({
-                "priority": "medium", 
-                "category": "resources",
-                "description": f"High memory usage detected: {system_metrics['max_memory_percent']:.1f}%",
-                "suggestion": "Review memory usage patterns and consider memory optimization"
-            })
-        
+            recommendations.append(
+                {
+                    "priority": "medium",
+                    "category": "resources",
+                    "description": f"High memory usage detected: {system_metrics['max_memory_percent']:.1f}%",
+                    "suggestion": "Review memory usage patterns and consider memory optimization",
+                }
+            )
+
         return recommendations
-    
+
     def print_summary(self, report: Dict[str, Any]):
         """Print performance test summary"""
-        print("\n" + "="*60)
+        print("\n" + "=" * 60)
         print("📊 PERFORMANCE TEST SUMMARY")
-        print("="*60)
-        
+        print("=" * 60)
+
         summary = report["summary"]
         print(f"⏱️  Total Duration: {summary['total_duration']:.1f} seconds")
         print(f"🧪 Test Suites Run: {summary['suites_run']}")
-        
+
         # System metrics
         system_metrics = summary["system_metrics"]
         print(f"💻 Peak CPU Usage: {system_metrics.get('max_cpu_percent', 0):.1f}%")
         print(f"🧠 Peak Memory Usage: {system_metrics.get('max_memory_percent', 0):.1f}%")
-        
+
         # Results summary
         print("\n📈 RESULTS BY SUITE:")
         for suite_name, results in report["results"].items():
@@ -391,12 +419,14 @@ class PerformanceTestRunner:
                     print(f"✅ {suite_name}: {results['total_benchmarks']} tests, {issues} issues")
                 elif "total_requests" in results:
                     failure_rate = results.get("failure_rate", 0)
-                    print(f"✅ {suite_name}: {results['total_requests']} requests, {failure_rate:.1%} failure rate")
+                    print(
+                        f"✅ {suite_name}: {results['total_requests']} requests, {failure_rate:.1%} failure rate"
+                    )
                 else:
                     print(f"✅ {suite_name}: Completed")
             else:
                 print(f"✅ {suite_name}: Completed")
-        
+
         # Recommendations
         recommendations = report["recommendations"]
         if recommendations:
@@ -411,46 +441,49 @@ class PerformanceTestRunner:
 
 class SystemMonitor:
     """Monitor system resources during performance tests"""
-    
+
     def __init__(self):
         self.monitoring = False
         self.metrics = {
             "cpu_samples": [],
             "memory_samples": [],
             "start_time": None,
-            "end_time": None
+            "end_time": None,
         }
-    
+
     def start_monitoring(self):
         """Start monitoring system resources"""
         self.monitoring = True
         self.metrics["start_time"] = time.time()
-        
+
         # Take initial readings
         self.metrics["cpu_samples"].append(psutil.cpu_percent())
         self.metrics["memory_samples"].append(psutil.virtual_memory().percent)
-    
+
     def stop_monitoring(self):
         """Stop monitoring and finalize metrics"""
         self.monitoring = False
         self.metrics["end_time"] = time.time()
-        
+
         # Take final readings
         self.metrics["cpu_samples"].append(psutil.cpu_percent())
         self.metrics["memory_samples"].append(psutil.virtual_memory().percent)
-    
+
     def get_metrics(self) -> Dict[str, Any]:
         """Get collected system metrics"""
         cpu_samples = self.metrics["cpu_samples"]
         memory_samples = self.metrics["memory_samples"]
-        
+
         return {
-            "duration": self.metrics.get("end_time", time.time()) - self.metrics.get("start_time", time.time()),
+            "duration": self.metrics.get("end_time", time.time())
+            - self.metrics.get("start_time", time.time()),
             "avg_cpu_percent": sum(cpu_samples) / len(cpu_samples) if cpu_samples else 0,
             "max_cpu_percent": max(cpu_samples) if cpu_samples else 0,
-            "avg_memory_percent": sum(memory_samples) / len(memory_samples) if memory_samples else 0,
+            "avg_memory_percent": sum(memory_samples) / len(memory_samples)
+            if memory_samples
+            else 0,
             "max_memory_percent": max(memory_samples) if memory_samples else 0,
-            "sample_count": len(cpu_samples)
+            "sample_count": len(cpu_samples),
         }
 
 
@@ -464,15 +497,15 @@ def load_config(config_file: Optional[str] = None) -> Dict[str, Any]:
             "users": 10,
             "spawn_rate": 2,
             "duration": "60s",
-            "host": "http://localhost:8000"
-        }
+            "host": "http://localhost:8000",
+        },
     }
-    
+
     if config_file and os.path.exists(config_file):
         with open(config_file) as f:
             file_config = json.load(f)
         default_config.update(file_config)
-    
+
     return default_config
 
 
@@ -483,16 +516,20 @@ def main():
     parser.add_argument("--include", nargs="+", help="Test suites to include")
     parser.add_argument("--exclude", nargs="+", help="Test suites to exclude")
     parser.add_argument("--load-tests", action="store_true", help="Run load tests")
-    parser.add_argument("--users", type=int, default=10, help="Number of concurrent users for load tests")
+    parser.add_argument(
+        "--users", type=int, default=10, help="Number of concurrent users for load tests"
+    )
     parser.add_argument("--duration", default="60s", help="Load test duration")
-    parser.add_argument("--host", default="http://localhost:8000", help="Target host for load tests")
+    parser.add_argument(
+        "--host", default="http://localhost:8000", help="Target host for load tests"
+    )
     parser.add_argument("--benchmark-compare", help="Compare with previous benchmark results")
-    
+
     args = parser.parse_args()
-    
+
     # Load configuration
     config = load_config(args.config)
-    
+
     # Override config with command line arguments
     if args.include:
         config["include_suites"] = args.include
@@ -502,22 +539,18 @@ def main():
         config["run_load_tests"] = True
     if args.benchmark_compare:
         config["benchmark_compare"] = args.benchmark_compare
-    
+
     # Update Locust configuration
-    config["locust"].update({
-        "users": args.users,
-        "duration": args.duration,
-        "host": args.host
-    })
-    
+    config["locust"].update({"users": args.users, "duration": args.duration, "host": args.host})
+
     # Run performance tests
     runner = PerformanceTestRunner(config)
     results = runner.run_all_tests()
-    
+
     # Exit with appropriate code
     has_errors = any("error" in r for r in results["results"].values() if isinstance(r, dict))
     critical_recommendations = any(r["priority"] == "critical" for r in results["recommendations"])
-    
+
     if has_errors or critical_recommendations:
         sys.exit(1)
     else:

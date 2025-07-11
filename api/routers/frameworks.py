@@ -12,18 +12,18 @@ from services.framework_service import get_framework_by_id, get_relevant_framewo
 
 router = APIRouter()
 
+
 @router.get("/", response_model=List[ComplianceFrameworkResponse])
 async def list_frameworks(
-    current_user: User = Depends(get_current_active_user),
-    db: AsyncSession = Depends(get_async_db)
+    current_user: User = Depends(get_current_active_user), db: AsyncSession = Depends(get_async_db)
 ):
     frameworks = await get_relevant_frameworks(db, current_user)
     return [fw["framework"] for fw in frameworks]
 
+
 @router.get("/recommendations", response_model=List[FrameworkRecommendation])
 async def get_framework_recommendations(
-    current_user: User = Depends(get_current_active_user),
-    db: AsyncSession = Depends(get_async_db)
+    current_user: User = Depends(get_current_active_user), db: AsyncSession = Depends(get_async_db)
 ):
     recommendations = await get_relevant_frameworks(db, current_user)
     return [
@@ -31,16 +31,17 @@ async def get_framework_recommendations(
             framework=rec["framework"],
             relevance_score=rec["relevance_score"],
             reasons=rec.get("reasons", []),
-            priority=rec.get("priority", "medium")
+            priority=rec.get("priority", "medium"),
         )
         for rec in recommendations
     ]
+
 
 @router.get("/recommendations/{business_profile_id}", response_model=List[FrameworkRecommendation])
 async def get_framework_recommendations_for_profile(
     business_profile_id: UUID,
     current_user: User = Depends(get_current_active_user),
-    db: AsyncSession = Depends(get_async_db)
+    db: AsyncSession = Depends(get_async_db),
 ):
     """Get framework recommendations for a specific business profile."""
     recommendations = await get_relevant_frameworks(db, current_user)
@@ -49,16 +50,17 @@ async def get_framework_recommendations_for_profile(
             framework=rec["framework"],
             relevance_score=rec["relevance_score"],
             reasons=rec.get("reasons", []),
-            priority=rec.get("priority", "medium")
+            priority=rec.get("priority", "medium"),
         )
         for rec in recommendations
     ]
+
 
 @router.get("/{framework_id}", response_model=ComplianceFrameworkResponse)
 async def get_framework(
     framework_id: UUID,
     current_user: User = Depends(get_current_active_user),
-    db: AsyncSession = Depends(get_async_db)
+    db: AsyncSession = Depends(get_async_db),
 ):
     framework = await get_framework_by_id(db, current_user, framework_id)
     if not framework:
@@ -67,7 +69,10 @@ async def get_framework(
     # Convert to proper response format with controls
     controls = []
     if framework.control_domains:
-        controls = [{"name": domain, "description": f"{domain} controls"} for domain in framework.control_domains]
+        controls = [
+            {"name": domain, "description": f"{domain} controls"}
+            for domain in framework.control_domains
+        ]
 
     return ComplianceFrameworkResponse(
         id=framework.id,
@@ -75,5 +80,5 @@ async def get_framework(
         description=framework.description,
         category=framework.category,
         version=framework.version,
-        controls=controls
+        controls=controls,
     )

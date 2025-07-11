@@ -27,8 +27,7 @@ class RateLimiter:
 
         # Remove requests older than 1 minute
         self.requests[identifier] = [
-            req_time for req_time in self.requests[identifier]
-            if req_time > minute_ago
+            req_time for req_time in self.requests[identifier] if req_time > minute_ago
         ]
 
         # Check if limit exceeded
@@ -52,21 +51,23 @@ class RateLimiter:
         }
         self._last_cleanup = current_time
 
+
 # Global rate limiter instances - configured based on environment
-from config.settings import get_settings
+from config.settings import get_settings  # noqa: E402
 
 settings = get_settings()
 
 # Use more relaxed limits for testing environment, but still enforce some limits
 if settings.is_testing:
     general_limiter = RateLimiter(requests_per_minute=100)  # Relaxed but still enforced for tests
-    auth_limiter = RateLimiter(requests_per_minute=50)      # Relaxed for auth tests
+    auth_limiter = RateLimiter(requests_per_minute=50)  # Relaxed for auth tests
 else:
     general_limiter = RateLimiter(requests_per_minute=settings.rate_limit_requests)
     auth_limiter = RateLimiter(requests_per_minute=10)  # Stricter for auth endpoints
 
 # Create a strict rate limiter for testing rate limiting functionality
 strict_test_limiter = RateLimiter(requests_per_minute=4)  # Very strict for testing
+
 
 async def rate_limit_middleware(request: Request, call_next):
     """General rate limiting middleware"""
@@ -87,30 +88,34 @@ async def rate_limit_middleware(request: Request, call_next):
                 "error": {
                     "message": "Rate limit exceeded",
                     "code": "RATE_LIMIT_EXCEEDED",
-                    "retry_after": retry_after
+                    "retry_after": retry_after,
                 }
             },
             headers={
                 "Retry-After": str(retry_after),
                 "X-RateLimit-Limit": str(general_limiter.requests_per_minute),
                 "X-RateLimit-Remaining": "0",
-                "X-RateLimit-Reset": str(int(time.time()) + retry_after)
-            }
+                "X-RateLimit-Reset": str(int(time.time()) + retry_after),
+            },
         )
 
     # Process request
     response = await call_next(request)
 
     # Add rate limit headers
-    remaining = general_limiter.requests_per_minute - len(general_limiter.requests.get(client_ip, []))
+    remaining = general_limiter.requests_per_minute - len(
+        general_limiter.requests.get(client_ip, [])
+    )
     response.headers["X-RateLimit-Limit"] = str(general_limiter.requests_per_minute)
     response.headers["X-RateLimit-Remaining"] = str(max(0, remaining))
     response.headers["X-RateLimit-Reset"] = str(int(time.time()) + 60)
 
     return response
 
+
 def auth_rate_limit():
     """Dependency for auth endpoint rate limiting"""
+
     async def check_limit(request: Request):
         # Skip rate limiting in testing environment
         if settings.is_testing:
@@ -123,10 +128,11 @@ def auth_rate_limit():
             raise HTTPException(
                 status_code=status.HTTP_429_TOO_MANY_REQUESTS,
                 detail=f"Too many authentication attempts. Try again in {retry_after} seconds",
-                headers={"Retry-After": str(retry_after)}
+                headers={"Retry-After": str(retry_after)},
             )
 
     return check_limit
+
 
 def rate_limit(requests_per_minute: int = 60):
     """Create a custom rate limit dependency with specified limit."""
@@ -145,7 +151,7 @@ def rate_limit(requests_per_minute: int = 60):
             raise HTTPException(
                 status_code=status.HTTP_429_TOO_MANY_REQUESTS,
                 detail=f"Rate limit exceeded: {requests_per_minute} requests per minute. Try again in {retry_after} seconds",
-                headers={"Retry-After": str(retry_after)}
+                headers={"Retry-After": str(retry_after)},
             )
 
     return check_custom_limit

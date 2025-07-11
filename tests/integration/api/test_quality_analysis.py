@@ -25,59 +25,65 @@ class TestQualityAnalysisAPI:
             "evidence_name": "Information Security Policy",
             "description": "Comprehensive security policy covering access controls, data protection, and incident response procedures",
             "evidence_type": "policy_document",
-            "raw_data": json.dumps({
-                "file_type": "pdf",
-                "content": "This policy establishes comprehensive security controls..."
-            })
+            "raw_data": json.dumps(
+                {
+                    "file_type": "pdf",
+                    "content": "This policy establishes comprehensive security controls...",
+                }
+            ),
         }
 
-    def test_get_evidence_quality_analysis(self, client, authenticated_headers, sample_business_profile, sample_evidence_data):
+    def test_get_evidence_quality_analysis(
+        self, client, authenticated_headers, sample_business_profile, sample_evidence_data
+    ):
         """Test getting AI-powered quality analysis for evidence."""
         # Create evidence
         create_response = client.post(
-            "/api/evidence/",
-            json=sample_evidence_data,
-            headers=authenticated_headers
+            "/api/evidence/", json=sample_evidence_data, headers=authenticated_headers
         )
-        
+
         if create_response.status_code != 200:
             pytest.skip("Evidence creation failed")
-            
+
         evidence_id = create_response.json()["id"]
 
         # Mock AI quality analysis
-        with patch('services.automation.quality_scorer.QualityScorer.calculate_enhanced_score') as mock_analysis:
+        with patch(
+            "services.automation.quality_scorer.QualityScorer.calculate_enhanced_score"
+        ) as mock_analysis:
             mock_analysis.return_value = {
-                'overall_score': 82.5,
-                'traditional_scores': {
-                    'completeness': 85,
-                    'freshness': 90,
-                    'content_quality': 80,
-                    'relevance': 85
+                "overall_score": 82.5,
+                "traditional_scores": {
+                    "completeness": 85,
+                    "freshness": 90,
+                    "content_quality": 80,
+                    "relevance": 85,
                 },
-                'ai_analysis': {
-                    'scores': {
-                        'completeness': 85,
-                        'clarity': 90,
-                        'currency': 80,
-                        'verifiability': 75,
-                        'relevance': 95,
-                        'sufficiency': 80
+                "ai_analysis": {
+                    "scores": {
+                        "completeness": 85,
+                        "clarity": 90,
+                        "currency": 80,
+                        "verifiability": 75,
+                        "relevance": 95,
+                        "sufficiency": 80,
                     },
-                    'overall_score': 84,
-                    'strengths': ['Clear documentation', 'Comprehensive coverage'],
-                    'weaknesses': ['Could include more examples'],
-                    'recommendations': ['Add implementation examples', 'Include compliance checklist'],
-                    'ai_confidence': 85
+                    "overall_score": 84,
+                    "strengths": ["Clear documentation", "Comprehensive coverage"],
+                    "weaknesses": ["Could include more examples"],
+                    "recommendations": [
+                        "Add implementation examples",
+                        "Include compliance checklist",
+                    ],
+                    "ai_confidence": 85,
                 },
-                'scoring_method': 'enhanced_ai',
-                'confidence': 85,
-                'analysis_timestamp': '2024-01-01T00:00:00'
+                "scoring_method": "enhanced_ai",
+                "confidence": 85,
+                "analysis_timestamp": "2024-01-01T00:00:00",
             }
 
             response = client.get(
-                f"/api/evidence/{evidence_id}/quality-analysis",
-                headers=authenticated_headers
+                f"/api/evidence/{evidence_id}/quality-analysis", headers=authenticated_headers
             )
 
             assert response.status_code == 200
@@ -91,51 +97,61 @@ class TestQualityAnalysisAPI:
             assert len(response_data["ai_analysis"]["strengths"]) == 2
             assert len(response_data["ai_analysis"]["recommendations"]) == 2
 
-    def test_detect_evidence_duplicates(self, client, authenticated_headers, sample_business_profile):
+    def test_detect_evidence_duplicates(
+        self, client, authenticated_headers, sample_business_profile
+    ):
         """Test semantic duplicate detection for evidence."""
         # Create multiple evidence items
         evidence_data_1 = {
             "evidence_name": "Security Policy v1",
             "description": "Information security policy covering access controls",
-            "evidence_type": "policy_document"
+            "evidence_type": "policy_document",
         }
-        
+
         evidence_data_2 = {
-            "evidence_name": "Security Policy v2", 
+            "evidence_name": "Security Policy v2",
             "description": "Updated information security policy with access controls",
-            "evidence_type": "policy_document"
+            "evidence_type": "policy_document",
         }
 
         # Create evidence items
-        create_response_1 = client.post("/api/evidence/", json=evidence_data_1, headers=authenticated_headers)
-        create_response_2 = client.post("/api/evidence/", json=evidence_data_2, headers=authenticated_headers)
-        
+        create_response_1 = client.post(
+            "/api/evidence/", json=evidence_data_1, headers=authenticated_headers
+        )
+        create_response_2 = client.post(
+            "/api/evidence/", json=evidence_data_2, headers=authenticated_headers
+        )
+
         if create_response_1.status_code != 200 or create_response_2.status_code != 200:
             pytest.skip("Evidence creation failed")
-            
+
         evidence_id_1 = create_response_1.json()["id"]
 
         # Mock duplicate detection
-        with patch('services.automation.quality_scorer.QualityScorer.detect_semantic_duplicates') as mock_detection:
-            mock_detection.return_value = [{
-                'candidate_id': create_response_2.json()["id"],
-                'candidate_name': 'Security Policy v2',
-                'similarity_score': 85,
-                'similarity_type': 'substantial_overlap',
-                'reasoning': 'Both are security policies with similar content and structure',
-                'recommendation': 'review_manually'
-            }]
+        with patch(
+            "services.automation.quality_scorer.QualityScorer.detect_semantic_duplicates"
+        ) as mock_detection:
+            mock_detection.return_value = [
+                {
+                    "candidate_id": create_response_2.json()["id"],
+                    "candidate_name": "Security Policy v2",
+                    "similarity_score": 85,
+                    "similarity_type": "substantial_overlap",
+                    "reasoning": "Both are security policies with similar content and structure",
+                    "recommendation": "review_manually",
+                }
+            ]
 
             duplicate_request = {
                 "evidence_id": evidence_id_1,
                 "similarity_threshold": 80,
-                "max_candidates": 20
+                "max_candidates": 20,
             }
 
             response = client.post(
                 f"/api/evidence/{evidence_id_1}/duplicate-detection",
                 json=duplicate_request,
-                headers=authenticated_headers
+                headers=authenticated_headers,
             )
 
             assert response.status_code == 200
@@ -147,7 +163,9 @@ class TestQualityAnalysisAPI:
             assert len(response_data["duplicates"]) == 1
             assert response_data["duplicates"][0]["similarity_score"] == 85
 
-    def test_batch_duplicate_detection(self, client, authenticated_headers, sample_business_profile):
+    def test_batch_duplicate_detection(
+        self, client, authenticated_headers, sample_business_profile
+    ):
         """Test batch duplicate detection across multiple evidence items."""
         # Create multiple evidence items
         evidence_items = []
@@ -155,10 +173,12 @@ class TestQualityAnalysisAPI:
             evidence_data = {
                 "evidence_name": f"Test Evidence {i}",
                 "description": f"Test description for evidence {i}",
-                "evidence_type": "policy_document"
+                "evidence_type": "policy_document",
             }
-            
-            create_response = client.post("/api/evidence/", json=evidence_data, headers=authenticated_headers)
+
+            create_response = client.post(
+                "/api/evidence/", json=evidence_data, headers=authenticated_headers
+            )
             if create_response.status_code == 200:
                 evidence_items.append(create_response.json()["id"])
 
@@ -166,40 +186,43 @@ class TestQualityAnalysisAPI:
             pytest.skip("Insufficient evidence items created")
 
         # Mock batch duplicate detection
-        with patch('services.automation.quality_scorer.QualityScorer.batch_duplicate_detection') as mock_batch:
+        with patch(
+            "services.automation.quality_scorer.QualityScorer.batch_duplicate_detection"
+        ) as mock_batch:
             mock_batch.return_value = {
-                'total_items': len(evidence_items),
-                'duplicate_groups': [{
-                    'primary_evidence': {
-                        'id': evidence_items[0],
-                        'name': 'Test Evidence 0',
-                        'type': 'policy_document'
-                    },
-                    'duplicates': [{
-                        'candidate_id': evidence_items[1],
-                        'candidate_name': 'Test Evidence 1',
-                        'similarity_score': 82,
-                        'similarity_type': 'substantial_overlap',
-                        'reasoning': 'Similar test evidence',
-                        'recommendation': 'merge'
-                    }],
-                    'group_size': 2,
-                    'highest_similarity': 82
-                }],
-                'potential_duplicates': 1,
-                'unique_items': 2,
-                'analysis_summary': 'Found 1 duplicate group with 1 potential duplicate'
+                "total_items": len(evidence_items),
+                "duplicate_groups": [
+                    {
+                        "primary_evidence": {
+                            "id": evidence_items[0],
+                            "name": "Test Evidence 0",
+                            "type": "policy_document",
+                        },
+                        "duplicates": [
+                            {
+                                "candidate_id": evidence_items[1],
+                                "candidate_name": "Test Evidence 1",
+                                "similarity_score": 82,
+                                "similarity_type": "substantial_overlap",
+                                "reasoning": "Similar test evidence",
+                                "recommendation": "merge",
+                            }
+                        ],
+                        "group_size": 2,
+                        "highest_similarity": 82,
+                    }
+                ],
+                "potential_duplicates": 1,
+                "unique_items": 2,
+                "analysis_summary": "Found 1 duplicate group with 1 potential duplicate",
             }
 
-            batch_request = {
-                "evidence_ids": evidence_items,
-                "similarity_threshold": 80
-            }
+            batch_request = {"evidence_ids": evidence_items, "similarity_threshold": 80}
 
             response = client.post(
                 "/api/evidence/duplicate-detection/batch",
                 json=batch_request,
-                headers=authenticated_headers
+                headers=authenticated_headers,
             )
 
             assert response.status_code == 200
@@ -217,18 +240,17 @@ class TestQualityAnalysisAPI:
         evidence_data = {
             "evidence_name": "Test Evidence",
             "description": "Test description for benchmarking",
-            "evidence_type": "policy_document"
+            "evidence_type": "policy_document",
         }
-        
-        create_response = client.post("/api/evidence/", json=evidence_data, headers=authenticated_headers)
-        
+
+        create_response = client.post(
+            "/api/evidence/", json=evidence_data, headers=authenticated_headers
+        )
+
         if create_response.status_code != 200:
             pytest.skip("Evidence creation failed")
 
-        response = client.get(
-            "/api/evidence/quality/benchmark",
-            headers=authenticated_headers
-        )
+        response = client.get("/api/evidence/quality/benchmark", headers=authenticated_headers)
 
         assert response.status_code == 200
         assert_api_response_security(response)
@@ -247,18 +269,17 @@ class TestQualityAnalysisAPI:
         evidence_data = {
             "evidence_name": "Test Evidence",
             "description": "Test description for trend analysis",
-            "evidence_type": "policy_document"
+            "evidence_type": "policy_document",
         }
-        
-        create_response = client.post("/api/evidence/", json=evidence_data, headers=authenticated_headers)
-        
+
+        create_response = client.post(
+            "/api/evidence/", json=evidence_data, headers=authenticated_headers
+        )
+
         if create_response.status_code != 200:
             pytest.skip("Evidence creation failed")
 
-        response = client.get(
-            "/api/evidence/quality/trends?days=30",
-            headers=authenticated_headers
-        )
+        response = client.get("/api/evidence/quality/trends?days=30", headers=authenticated_headers)
 
         assert response.status_code == 200
         assert_api_response_security(response)
@@ -274,10 +295,9 @@ class TestQualityAnalysisAPI:
     def test_quality_analysis_nonexistent_evidence(self, client, authenticated_headers):
         """Test quality analysis for non-existent evidence returns 404."""
         fake_evidence_id = str(uuid4())
-        
+
         response = client.get(
-            f"/api/evidence/{fake_evidence_id}/quality-analysis",
-            headers=authenticated_headers
+            f"/api/evidence/{fake_evidence_id}/quality-analysis", headers=authenticated_headers
         )
 
         assert response.status_code == 404
@@ -286,13 +306,13 @@ class TestQualityAnalysisAPI:
         """Test batch duplicate detection with insufficient evidence."""
         batch_request = {
             "evidence_ids": [str(uuid4())],  # Only one ID
-            "similarity_threshold": 80
+            "similarity_threshold": 80,
         }
 
         response = client.post(
             "/api/evidence/duplicate-detection/batch",
             json=batch_request,
-            headers=authenticated_headers
+            headers=authenticated_headers,
         )
 
         assert response.status_code == 422  # FastAPI validation error
@@ -310,13 +330,13 @@ class TestQualityAnalysisValidation:
         duplicate_request = {
             "evidence_id": str(uuid4()),
             "similarity_threshold": 150,  # Invalid - should be 50-100
-            "max_candidates": 20
+            "max_candidates": 20,
         }
 
         response = client.post(
             f"/api/evidence/{uuid4()}/duplicate-detection",
             json=duplicate_request,
-            headers=authenticated_headers
+            headers=authenticated_headers,
         )
 
         assert response.status_code == 422  # Validation error
@@ -324,16 +344,13 @@ class TestQualityAnalysisValidation:
     def test_batch_duplicate_detection_too_many_items(self, client, authenticated_headers):
         """Test batch duplicate detection with too many evidence items."""
         evidence_ids = [str(uuid4()) for _ in range(101)]  # Exceeds limit of 100
-        
-        batch_request = {
-            "evidence_ids": evidence_ids,
-            "similarity_threshold": 80
-        }
+
+        batch_request = {"evidence_ids": evidence_ids, "similarity_threshold": 80}
 
         response = client.post(
             "/api/evidence/duplicate-detection/batch",
             json=batch_request,
-            headers=authenticated_headers
+            headers=authenticated_headers,
         )
 
         assert response.status_code == 422  # Validation error
@@ -342,34 +359,39 @@ class TestQualityAnalysisValidation:
         """Test quality trends with invalid day range."""
         response = client.get(
             "/api/evidence/quality/trends?days=500",  # Exceeds limit of 365
-            headers=authenticated_headers
+            headers=authenticated_headers,
         )
 
         assert response.status_code == 422  # Validation error
 
-    def test_quality_analysis_ai_service_error(self, client, authenticated_headers, sample_business_profile):
+    def test_quality_analysis_ai_service_error(
+        self, client, authenticated_headers, sample_business_profile
+    ):
         """Test handling of AI service errors during quality analysis."""
         # Create evidence
         evidence_data = {
             "evidence_name": "Test Evidence",
             "description": "Test description",
-            "evidence_type": "policy_document"
+            "evidence_type": "policy_document",
         }
-        
-        create_response = client.post("/api/evidence/", json=evidence_data, headers=authenticated_headers)
-        
+
+        create_response = client.post(
+            "/api/evidence/", json=evidence_data, headers=authenticated_headers
+        )
+
         if create_response.status_code != 200:
             pytest.skip("Evidence creation failed")
-            
+
         evidence_id = create_response.json()["id"]
 
         # Mock AI service failure
-        with patch('services.automation.quality_scorer.QualityScorer.calculate_enhanced_score') as mock_analysis:
+        with patch(
+            "services.automation.quality_scorer.QualityScorer.calculate_enhanced_score"
+        ) as mock_analysis:
             mock_analysis.side_effect = Exception("AI service temporarily unavailable")
 
             response = client.get(
-                f"/api/evidence/{evidence_id}/quality-analysis",
-                headers=authenticated_headers
+                f"/api/evidence/{evidence_id}/quality-analysis", headers=authenticated_headers
             )
 
             assert response.status_code == 500

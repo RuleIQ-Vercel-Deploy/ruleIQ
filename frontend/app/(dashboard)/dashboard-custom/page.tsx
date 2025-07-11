@@ -130,7 +130,7 @@ export default function CustomDashboardPage() {
     }
   }, [apiData])
 
-  const handleLayoutChange = (layouts: any) => {
+  const handleLayoutChange = (layouts: ReactGridLayout.Layouts) => {
     // Save to localStorage or backend
     console.log("Layout changed:", layouts)
   }

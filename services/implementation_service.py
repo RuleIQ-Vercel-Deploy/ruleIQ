@@ -22,7 +22,7 @@ async def generate_implementation_plan(
     framework_id: UUID,
     policy_id: Optional[UUID] = None,
     control_domain: str = "All Domains",
-    timeline_weeks: int = 12
+    timeline_weeks: int = 12,
 ) -> ImplementationPlan:
     """Generate a detailed implementation plan for compliance controls."""
 
@@ -49,9 +49,7 @@ async def generate_implementation_plan(
         policy_result.scalars().first()
 
     # Generate implementation plan using AI
-    plan_data = await generate_plan_with_ai(
-        db, profile, framework.id, user.id
-    )
+    plan_data = await generate_plan_with_ai(db, profile, framework.id, user.id)
 
     # Calculate timeline dates
     start_datetime = datetime.utcnow()
@@ -89,9 +87,7 @@ async def get_implementation_plan(
     return result.scalars().first()
 
 
-async def list_implementation_plans(
-    db: AsyncSession, user: User
-) -> List[ImplementationPlan]:
+async def list_implementation_plans(db: AsyncSession, user: User) -> List[ImplementationPlan]:
     """List all implementation plans for a user."""
     stmt = select(ImplementationPlan).where(ImplementationPlan.user_id == user.id)
     result = await db.execute(stmt)

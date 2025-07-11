@@ -79,14 +79,26 @@ beforeAll(() => {
     },
   })
 
-  // Mock localStorage
+  // Mock localStorage with working implementation
+  const localStorageStore: Record<string, string> = {}
   const localStorageMock = {
-    getItem: vi.fn(),
-    setItem: vi.fn(),
-    removeItem: vi.fn(),
-    clear: vi.fn(),
-    length: 0,
-    key: vi.fn(),
+    getItem: vi.fn((key: string) => localStorageStore[key] || null),
+    setItem: vi.fn((key: string, value: string) => {
+      localStorageStore[key] = value
+    }),
+    removeItem: vi.fn((key: string) => {
+      delete localStorageStore[key]
+    }),
+    clear: vi.fn(() => {
+      Object.keys(localStorageStore).forEach(key => delete localStorageStore[key])
+    }),
+    get length() {
+      return Object.keys(localStorageStore).length
+    },
+    key: vi.fn((index: number) => {
+      const keys = Object.keys(localStorageStore)
+      return keys[index] || null
+    }),
   }
   Object.defineProperty(window, 'localStorage', {
     writable: true,
@@ -260,6 +272,7 @@ afterEach(() => {
   server.resetHandlers()
   // Clear localStorage and sessionStorage mocks
   if (window.localStorage) {
+    window.localStorage.clear() // This will actually clear our store
     vi.mocked(window.localStorage.clear).mockClear()
     vi.mocked(window.localStorage.getItem).mockClear()
     vi.mocked(window.localStorage.setItem).mockClear()

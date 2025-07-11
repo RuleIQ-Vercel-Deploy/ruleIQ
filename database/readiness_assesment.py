@@ -12,18 +12,25 @@ from .db_setup import Base
 
 class ReadinessAssessment(Base):
     """Compliance readiness assessments and scoring"""
+
     __tablename__ = "readiness_assessments"
 
     id = Column(PG_UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     # Assuming user_id, business_profile_id, framework_id are foreign keys.
     # Replace 'users.id' etc. with actual table.column names if different.
-    user_id = Column(PG_UUID(as_uuid=True), ForeignKey('users.id'), nullable=False)
-    business_profile_id = Column(PG_UUID(as_uuid=True), ForeignKey('business_profiles.id'), nullable=False)
-    framework_id = Column(PG_UUID(as_uuid=True), ForeignKey('compliance_frameworks.id'), nullable=False)
+    user_id = Column(PG_UUID(as_uuid=True), ForeignKey("users.id"), nullable=False)
+    business_profile_id = Column(
+        PG_UUID(as_uuid=True), ForeignKey("business_profiles.id"), nullable=False
+    )
+    framework_id = Column(
+        PG_UUID(as_uuid=True), ForeignKey("compliance_frameworks.id"), nullable=False
+    )
 
     # Assessment metadata
     assessment_name = Column(String, nullable=False)
-    framework_name = Column(String, nullable=False) # Consider if this should be derived from framework_id
+    framework_name = Column(
+        String, nullable=False
+    )  # Consider if this should be derived from framework_id
     assessment_type = Column(String, default="full")  # full, quick, targeted
 
     # Overall scoring
@@ -70,5 +77,7 @@ class ReadinessAssessment(Base):
     key_findings = Column(PG_JSONB, default=list)
     next_steps = Column(PG_JSONB, default=list)
 
-    created_at = Column(DateTime, default=datetime.utcnow) # Use datetime.utcnow for server-side UTC time
+    created_at = Column(
+        DateTime, default=datetime.utcnow
+    )  # Use datetime.utcnow for server-side UTC time
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)

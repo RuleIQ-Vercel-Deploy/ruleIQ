@@ -118,11 +118,11 @@ export default function NewPolicyPage() {
 
           {currentStep < 4 && (
             <div className="flex justify-between mt-12 border-t border-white/10 pt-6">
-              <Button variant="secondary-ruleiq" onClick={handleBack} disabled={currentStep === 1}>
+              <Button variant="secondary" onClick={handleBack} disabled={currentStep === 1}>
                 Back
               </Button>
               <Button
-                variant="accent"
+                variant="default"
                 onClick={handleNext}
                 disabled={
                   (currentStep === 1 && selectedFrameworks.length === 0) || (currentStep === 2 && !selectedPolicyType)

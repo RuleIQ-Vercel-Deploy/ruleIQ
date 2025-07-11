@@ -3,12 +3,9 @@ Authentication utilities for testing.
 """
 
 import uuid
-from datetime import datetime, timedelta
+from datetime import timedelta
 from typing import Optional, Dict, Any
-from unittest.mock import AsyncMock, MagicMock
 
-from fastapi import Depends, HTTPException, status
-from sqlalchemy.ext.asyncio import AsyncSession
 
 from database.user import User
 from api.dependencies.auth import oauth2_scheme, create_access_token
@@ -16,61 +13,59 @@ from api.dependencies.auth import oauth2_scheme, create_access_token
 
 class TestAuthManager:
     """Manages authentication for tests."""
-    
+
     def __init__(self):
         self.test_users = {}
         self.active_tokens = {}
         self.blacklisted_tokens = set()
-    
-    def create_test_user(self, 
-                        email: str = "test@example.com",
-                        user_id: Optional[str] = None,
-                        is_active: bool = True,
-                        permissions: Optional[list] = None,
-                        role: Optional[str] = None) -> User:
+
+    def create_test_user(
+        self,
+        email: str = "test@example.com",
+        user_id: Optional[str] = None,
+        is_active: bool = True,
+    ) -> User:
         """Create a test user."""
         if user_id is None:
             user_id = str(uuid.uuid4())
-        
+
         user = User(
             id=user_id,
             email=email,
             hashed_password="fake_password_hash",
             is_active=is_active,
-            permissions=permissions or [],
-            role=role or "user"
         )
-        
+
         self.test_users[user_id] = user
         return user
-    
+
     def create_test_token(self, user: User, expires_delta: Optional[timedelta] = None) -> str:
         """Create a test JWT token."""
         if expires_delta is None:
             expires_delta = timedelta(minutes=30)
-        
+
         token_data = {"sub": str(user.id)}
         token = create_access_token(data=token_data, expires_delta=expires_delta)
-        
+
         self.active_tokens[token] = user
         return token
-    
+
     def blacklist_token(self, token: str):
         """Blacklist a token."""
         self.blacklisted_tokens.add(token)
         if token in self.active_tokens:
             del self.active_tokens[token]
-    
+
     def is_token_blacklisted(self, token: str) -> bool:
         """Check if token is blacklisted."""
         return token in self.blacklisted_tokens
-    
+
     def get_user_from_token(self, token: str) -> Optional[User]:
         """Get user from token."""
         if token in self.blacklisted_tokens:
             return None
         return self.active_tokens.get(token)
-    
+
     def clear_all(self):
         """Clear all test data."""
         self.test_users.clear()
@@ -107,40 +102,38 @@ def create_auth_headers(user: Optional[User] = None) -> Dict[str, str]:
     """Create authentication headers for tests."""
     if user is None:
         user = _test_auth_manager.create_test_user()
-    
+
     token = _test_auth_manager.create_test_token(user)
     return {"Authorization": f"Bearer {token}"}
 
 
-def create_test_user_with_permissions(permissions: list, role: str = "user") -> User:
+def create_test_user_with_permissions() -> User:
     """Create test user with specific permissions."""
-    return _test_auth_manager.create_test_user(
-        permissions=permissions,
-        role=role
-    )
+    return _test_auth_manager.create_test_user()
 
 
 def setup_auth_mocks():
     """Set up authentication mocks for tests."""
     # Mock AI services to prevent external API calls
     import unittest.mock
-    
+
     # Mock Google Generative AI
     mock_genai = unittest.mock.MagicMock()
     mock_response = unittest.mock.MagicMock()
     mock_response.text = "Mock AI response for testing"
     mock_response.parts = [unittest.mock.MagicMock()]
     mock_response.parts[0].text = "Mock AI response for testing"
-    
+
     mock_model = unittest.mock.MagicMock()
     mock_model.generate_content.return_value = mock_response
     mock_genai.GenerativeModel.return_value = mock_model
-    
+
     # Apply mocks
     import sys
-    sys.modules['google.generativeai'] = mock_genai
-    sys.modules['google.generativeai.types'] = unittest.mock.MagicMock()
-    
+
+    sys.modules["google.generativeai"] = mock_genai
+    sys.modules["google.generativeai.types"] = unittest.mock.MagicMock()
+
     return mock_genai
 
 
@@ -152,26 +145,26 @@ def cleanup_auth_mocks():
 # Context manager for test authentication
 class TestAuthContext:
     """Context manager for test authentication setup."""
-    
+
     def __init__(self, app, user: Optional[User] = None):
         self.app = app
         self.user = user or _test_auth_manager.create_test_user()
         self.original_overrides = {}
-    
+
     def __enter__(self):
         """Enter context and set up auth overrides."""
         from api.dependencies.auth import get_current_user, get_current_active_user
         from database.db_setup import get_async_db
-        
+
         # Store original overrides
         self.original_overrides = self.app.dependency_overrides.copy()
-        
+
         # Set up auth overrides
         self.app.dependency_overrides[get_current_user] = lambda: self.user
         self.app.dependency_overrides[get_current_active_user] = lambda: self.user
-        
+
         return self
-    
+
     def __exit__(self, exc_type, exc_val, exc_tb):
         """Exit context and restore original overrides."""
         # Restore original overrides

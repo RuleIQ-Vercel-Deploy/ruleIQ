@@ -2,7 +2,6 @@
 OAuth2 configuration for integrations
 """
 
-
 from pydantic import BaseSettings
 
 
@@ -18,7 +17,7 @@ class OAuth2Config(BaseSettings):
         "https://www.googleapis.com/auth/admin.directory.user.readonly",
         "https://www.googleapis.com/auth/admin.directory.device.chromeos.readonly",
         "https://www.googleapis.com/auth/admin.directory.domain.readonly",
-        "https://www.googleapis.com/auth/admin.security.readonly"
+        "https://www.googleapis.com/auth/admin.security.readonly",
     ]
 
     # Microsoft OAuth2
@@ -26,9 +25,7 @@ class OAuth2Config(BaseSettings):
     MICROSOFT_CLIENT_SECRET: str = ""
     MICROSOFT_TENANT_ID: str = ""
     MICROSOFT_REDIRECT_URI: str = "http://localhost:8000/api/integrations/microsoft/callback"
-    MICROSOFT_SCOPES: list = [
-        "https://graph.microsoft.com/.default"
-    ]
+    MICROSOFT_SCOPES: list = ["https://graph.microsoft.com/.default"]
 
     # AWS (uses different auth method)
     AWS_ROLE_ARN: str = ""
@@ -49,7 +46,7 @@ class OAuth2Config(BaseSettings):
             "scope": " ".join(self.GOOGLE_SCOPES),
             "access_type": "offline",
             "prompt": "consent",
-            "state": state
+            "state": state,
         }
 
         return f"https://accounts.google.com/o/oauth2/v2/auth?{urlencode(params)}"
@@ -64,7 +61,7 @@ class OAuth2Config(BaseSettings):
             "redirect_uri": self.MICROSOFT_REDIRECT_URI,
             "response_mode": "query",
             "scope": " ".join(self.MICROSOFT_SCOPES),
-            "state": state
+            "state": state,
         }
 
         if self.MICROSOFT_TENANT_ID:

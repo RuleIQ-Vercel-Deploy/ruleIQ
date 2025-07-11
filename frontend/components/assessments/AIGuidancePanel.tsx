@@ -12,7 +12,7 @@ import {
   ExternalLink,
   RefreshCw
 } from "lucide-react";
-import { useState } from "react";
+import React, { useState } from "react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -49,6 +49,13 @@ export function AIGuidancePanel({
   const [error, setError] = useState<string | null>(null);
   const [requestId, setRequestId] = useState<string | null>(null);
   const { toast } = useToast();
+  
+  // Load guidance when defaultOpen is true
+  React.useEffect(() => {
+    if (defaultOpen && !aiResponse && !loading) {
+      loadGuidance();
+    }
+  }, []);
 
   const loadGuidance = async () => {
     // Prevent multiple concurrent requests
@@ -66,18 +73,22 @@ export function AIGuidancePanel({
         user_context: userContext
       });
 
-      // Only update if this is still the current request
-      if (requestId === currentRequestId) {
-        setAiResponse(response);
-      }
+      // Check if this request is still valid by checking the ref
+      setRequestId((latestRequestId) => {
+        if (currentRequestId === latestRequestId) {
+          setAiResponse(response);
+          setLoading(false);
+        }
+        return latestRequestId;
+      });
     } catch (err) {
-      if (requestId === currentRequestId) {
-        setError(err instanceof Error ? err.message : 'Failed to load AI guidance');
-      }
-    } finally {
-      if (requestId === currentRequestId) {
-        setLoading(false);
-      }
+      setRequestId((latestRequestId) => {
+        if (currentRequestId === latestRequestId) {
+          setError(err instanceof Error ? err.message : 'Failed to load AI guidance');
+          setLoading(false);
+        }
+        return latestRequestId;
+      });
     }
   };
 
@@ -137,7 +148,10 @@ export function AIGuidancePanel({
     <Card className={cn("border-l-4 border-l-primary", className)}>
       <Collapsible open={isOpen} onOpenChange={setIsOpen}>
         <CollapsibleTrigger asChild>
-          <CardHeader className="cursor-pointer hover:bg-muted/50 transition-colors">
+          <CardHeader 
+            className="cursor-pointer hover:bg-muted/50 transition-colors"
+            onClick={handleToggle}
+          >
             <div className="flex items-center justify-between">
               <CardTitle className="text-sm font-medium flex items-center gap-2">
                 <Bot className="h-4 w-4 text-primary" />
@@ -148,13 +162,16 @@ export function AIGuidancePanel({
                   </Badge>
                 )}
               </CardTitle>
-              <Button variant="ghost" size="sm" onClick={handleToggle}>
+              <div 
+                className="p-1"
+                onClick={(e) => e.stopPropagation()}
+              >
                 {isOpen ? (
                   <ChevronUp className="h-4 w-4" />
                 ) : (
                   <ChevronDown className="h-4 w-4" />
                 )}
-              </Button>
+              </div>
             </div>
           </CardHeader>
         </CollapsibleTrigger>

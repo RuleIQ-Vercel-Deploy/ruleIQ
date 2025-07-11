@@ -25,7 +25,7 @@ const actions: QuickActionItem[] = [
     label: "Compliance Wizard",
     icon: Bot,
     href: "/compliance-wizard",
-    color: "bg-gold/10 text-gold-dark hover:bg-gold/20",
+    color: "bg-warning/10 text-warning hover:bg-warning/20",
     description: "AI assessment",
     requiresProfile: false,
   },
@@ -33,7 +33,7 @@ const actions: QuickActionItem[] = [
     label: "New Assessment",
     icon: Shield,
     href: "/assessments/new",
-    color: "bg-blue-50 text-blue-600 hover:bg-blue-100",
+    color: "bg-brand-secondary/10 text-brand-secondary hover:bg-brand-secondary/20",
     description: "Start compliance check",
     requiresProfile: true,
   },
@@ -41,7 +41,7 @@ const actions: QuickActionItem[] = [
     label: "Generate Policy",
     icon: FileText,
     href: "/policies/generate",
-    color: "bg-green-50 text-green-600 hover:bg-green-100",
+    color: "bg-brand-tertiary/10 text-brand-tertiary hover:bg-brand-tertiary/20",
     description: "Create new policy",
     requiresProfile: true,
   },
@@ -49,14 +49,14 @@ const actions: QuickActionItem[] = [
     label: "Upload Evidence",
     icon: Upload,
     href: "/evidence?action=upload",
-    color: "bg-purple-50 text-purple-600 hover:bg-purple-100",
+    color: "bg-brand-primary/10 text-brand-primary hover:bg-brand-primary/20",
     description: "Add documents",
   },
   {
     label: "Ask IQ",
     icon: MessageSquare,
     href: "/chat",
-    color: "bg-indigo-50 text-indigo-600 hover:bg-indigo-100",
+    color: "bg-brand-secondary/10 text-brand-secondary hover:bg-brand-secondary/20",
     description: "Get instant help",
   },
 ];
@@ -86,14 +86,14 @@ export function QuickActionsWidget() {
   };
 
   return (
-    <Card className="h-full">
+    <Card className="h-full glass-card">
       <CardHeader className="flex flex-row items-center justify-between pb-4">
-        <CardTitle className="text-lg font-semibold">Quick Actions</CardTitle>
+        <CardTitle className="text-lg font-semibold gradient-text">Quick Actions</CardTitle>
         <Button
           variant="ghost"
           size="sm"
           onClick={() => router.push("/dashboard")}
-          className="text-xs"
+          className="text-xs hover:bg-glass-white"
         >
           View All
           <ArrowRight className="ml-1 h-3 w-3" />
@@ -113,9 +113,9 @@ export function QuickActionsWidget() {
                 disabled={isDisabled}
                 className={cn(
                   "group relative p-4 rounded-lg border transition-all duration-200",
-                  "hover:shadow-md",
-                  "focus:outline-none focus:ring-2 focus:ring-gold/20",
-                  isFeatured ? "border-gold/30 hover:border-gold/50" : "border-neutral-light hover:border-gold/20",
+                  "hover:shadow-md bg-glass-white hover:bg-glass-white-hover",
+                  "focus:outline-none focus:ring-2 focus:ring-brand-primary/20",
+                  isFeatured ? "border-warning/30 hover:border-warning/50" : "border-glass-border hover:border-glass-border-hover",
                   isDisabled && "opacity-50 cursor-not-allowed hover:shadow-none"
                 )}
               >
@@ -124,8 +124,8 @@ export function QuickActionsWidget() {
                     <Icon className="h-6 w-6" />
                   </div>
                   <div>
-                    <p className="font-medium text-sm text-gray-900">{item.label}</p>
-                    <p className="text-xs text-gray-500 mt-0.5">{item.description}</p>
+                    <p className="font-medium text-sm text-text-primary">{item.label}</p>
+                    <p className="text-xs text-text-secondary mt-0.5">{item.description}</p>
                   </div>
                 </div>
                 

@@ -14,9 +14,11 @@ class AssessmentQuestion(Base):
     session_id = Column(PG_UUID(as_uuid=True), ForeignKey("assessment_sessions.id"), nullable=False)
     question_text = Column(Text, nullable=False)
     answer_text = Column(Text, nullable=True)
-    question_type = Column(String(50), nullable=False)  # e.g., 'multiple_choice', 'free_text', 'yes_no'
-    options = Column(JSON, nullable=True) # For multiple choice options
-    order = Column(Integer, nullable=False, default=0) # To maintain question order
+    question_type = Column(
+        String(50), nullable=False
+    )  # e.g., 'multiple_choice', 'free_text', 'yes_no'
+    options = Column(JSON, nullable=True)  # For multiple choice options
+    order = Column(Integer, nullable=False, default=0)  # To maintain question order
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 

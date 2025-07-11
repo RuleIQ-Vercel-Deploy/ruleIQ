@@ -20,7 +20,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Skeleton } from "@/components/ui/skeleton"
 import { cn } from "@/lib/utils"
 
-import type { DashboardTask } from "@/lib/api/dashboard.service"
+import type { DashboardTask } from "@/types/dashboard"
 
 interface PendingTasksWidgetProps {
   tasks: DashboardTask[]
@@ -51,18 +51,18 @@ export function PendingTasksWidget({
   // Show error state
   if (error) {
     return (
-      <Card className={cn("border-destructive/50", className)}>
+      <Card className={cn("glass-card border-error/50", className)}>
         <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-destructive">
+          <CardTitle className="flex items-center gap-2 text-error">
             <CheckCircle2 className="h-5 w-5" />
             Pending Tasks
           </CardTitle>
-          <CardDescription>Error loading tasks</CardDescription>
+          <CardDescription className="text-text-secondary">Error loading tasks</CardDescription>
         </CardHeader>
         <CardContent className="text-center py-8">
-          <p className="text-sm text-muted-foreground mb-4">{error}</p>
+          <p className="text-sm text-text-secondary mb-4">{error}</p>
           {onRefresh && (
-            <Button onClick={onRefresh} size="sm" variant="outline">
+            <Button onClick={onRefresh} size="sm" variant="outline" className="border-glass-border hover:border-glass-border-hover hover:bg-glass-white">
               <RefreshCw className="h-4 w-4 mr-2" />
               Try Again
             </Button>
@@ -90,20 +90,20 @@ export function PendingTasksWidget({
   const getPriorityBadge = (priority: DashboardTask['priority']) => {
     switch (priority) {
       case 'critical':
-        return <Badge variant="destructive">Critical</Badge>
+        return <Badge className="bg-error/20 text-error border-error/30 hover:bg-error/30">Critical</Badge>
       case 'high':
-        return <Badge className="bg-amber-500 hover:bg-amber-600">High</Badge>
+        return <Badge className="bg-warning/20 text-warning border-warning/30 hover:bg-warning/30">High</Badge>
       case 'medium':
-        return <Badge variant="secondary">Medium</Badge>
+        return <Badge className="bg-brand-secondary/20 text-brand-secondary border-brand-secondary/30 hover:bg-brand-secondary/30">Medium</Badge>
       case 'low':
-        return <Badge variant="outline">Low</Badge>
+        return <Badge className="bg-surface-secondary text-text-tertiary border-glass-border hover:bg-surface-tertiary">Low</Badge>
       default:
-        return <Badge variant="secondary">Unknown</Badge>
+        return <Badge className="bg-surface-secondary text-text-tertiary">Unknown</Badge>
     }
   }
 
   const getDueDateStatus = (dueDate: string | null | undefined) => {
-    if (!dueDate) return { status: 'none', text: 'No deadline', color: 'text-muted-foreground' }
+    if (!dueDate) return { status: 'none', text: 'No deadline', color: 'text-text-tertiary' }
     
     const now = new Date()
     const due = new Date(dueDate)
@@ -111,13 +111,13 @@ export function PendingTasksWidget({
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
     
     if (diffDays < 0) {
-      return { status: 'overdue', text: 'Overdue', color: 'text-destructive' }
+      return { status: 'overdue', text: 'Overdue', color: 'text-error' }
     } else if (diffDays === 0) {
-      return { status: 'today', text: 'Due today', color: 'text-amber-500' }
+      return { status: 'today', text: 'Due today', color: 'text-warning' }
     } else if (diffDays <= 3) {
-      return { status: 'soon', text: `Due in ${diffDays} days`, color: 'text-amber-500' }
+      return { status: 'soon', text: `Due in ${diffDays} days`, color: 'text-warning' }
     } else {
-      return { status: 'future', text: `Due in ${diffDays} days`, color: 'text-muted-foreground' }
+      return { status: 'future', text: `Due in ${diffDays} days`, color: 'text-text-tertiary' }
     }
   }
 
@@ -138,12 +138,12 @@ export function PendingTasksWidget({
     .slice(0, maxTasks)
 
   return (
-    <Card className={cn("border-0 shadow-sm hover:shadow-md transition-shadow duration-200", className)}>
+    <Card className={cn("glass-card border-0 shadow-sm hover:shadow-md transition-all duration-200", className)}>
       <CardHeader className="pb-4">
         <div className="flex items-center justify-between">
           <div>
-            <CardTitle className="text-xl font-bold text-navy">Pending Tasks</CardTitle>
-            <CardDescription className="text-muted-foreground">
+            <CardTitle className="text-xl font-bold gradient-text">Pending Tasks</CardTitle>
+            <CardDescription className="text-text-secondary">
               {tasks.length} tasks requiring attention
             </CardDescription>
           </div>
@@ -172,12 +172,12 @@ export function PendingTasksWidget({
           return (
             <div
               key={task.id}
-              className="group rounded-lg border p-3 transition-colors hover:bg-accent/50"
+              className="group rounded-lg border border-glass-border p-3 transition-all hover:bg-glass-white hover:border-glass-border-hover"
             >
               {/* Task Header */}
               <div className="flex items-start justify-between mb-2">
                 <div className="flex items-start gap-3 flex-1">
-                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gold/10 mt-0.5">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-secondary/10 mt-0.5">
                     {getCategoryIcon(task.type)}
                   </div>
                   <div className="flex-1 min-w-0">
@@ -246,16 +246,16 @@ export function PendingTasksWidget({
         })}
 
         {filteredTasks.length === 0 && (
-          <div className="text-center py-6 text-muted-foreground">
-            <CheckCircle2 className="h-8 w-8 mx-auto mb-2 opacity-50" />
+          <div className="text-center py-6 text-text-secondary">
+            <CheckCircle2 className="h-8 w-8 mx-auto mb-2 opacity-50 text-brand-tertiary" />
             <p>No pending tasks</p>
-            <p className="text-xs">Great job staying on top of things!</p>
+            <p className="text-xs text-text-tertiary">Great job staying on top of things!</p>
           </div>
         )}
 
         {tasks.length > maxTasks && (
-          <div className="pt-2 border-t">
-            <Button variant="ghost" size="sm" className="w-full">
+          <div className="pt-2 border-t border-glass-border">
+            <Button variant="ghost" size="sm" className="w-full hover:bg-glass-white">
               View All {tasks.length} Tasks
             </Button>
           </div>

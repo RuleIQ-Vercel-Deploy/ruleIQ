@@ -39,6 +39,7 @@ TEST_USER_PASSWORD = "TestPassword123!"
 # API configuration
 API_BASE_URL = os.getenv("API_BASE_URL", "http://localhost:8000")
 
+
 def create_test_user():
     """Create a test user for development purposes using the API."""
     logger.info("Creating test user for development...")
@@ -46,10 +47,7 @@ def create_test_user():
     try:
         # Try to register the test user
         register_url = f"{API_BASE_URL}/api/auth/register"
-        user_data = {
-            "email": TEST_USER_EMAIL,
-            "password": TEST_USER_PASSWORD
-        }
+        user_data = {"email": TEST_USER_EMAIL, "password": TEST_USER_PASSWORD}
 
         response = requests.post(register_url, json=user_data)
 
@@ -86,16 +84,14 @@ def create_test_user():
         logger.error(f"Error creating test user: {e}")
         return False
 
+
 def test_login():
     """Test login with the test user credentials."""
     logger.info("Testing login with test user...")
 
     try:
         login_url = f"{API_BASE_URL}/api/auth/login"
-        login_data = {
-            "email": TEST_USER_EMAIL,
-            "password": TEST_USER_PASSWORD
-        }
+        login_data = {"email": TEST_USER_EMAIL, "password": TEST_USER_PASSWORD}
 
         response = requests.post(login_url, json=login_data)
 
@@ -113,6 +109,7 @@ def test_login():
         logger.error(f"Error testing login: {e}")
         return False
 
+
 def main():
     """Main function."""
     if len(sys.argv) > 1 and sys.argv[1] == "--test":
@@ -121,6 +118,7 @@ def main():
         success = create_test_user()
 
     return success
+
 
 if __name__ == "__main__":
     print("🚀 RuleIQ Test User Management")

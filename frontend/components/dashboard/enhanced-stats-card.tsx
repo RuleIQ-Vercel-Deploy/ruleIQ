@@ -29,10 +29,10 @@ export function EnhancedStatsCard({
   className,
 }: EnhancedStatsCardProps) {
   return (
-    <Card className={className}>
+    <Card className={`glass-card ${className || ''}`}>
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-        <CardTitle className="text-sm font-medium text-foreground">{title}</CardTitle>
-        <Icon className="h-4 w-4 text-muted-foreground" />
+        <CardTitle className="text-sm font-medium text-text-primary">{title}</CardTitle>
+        <Icon className="h-4 w-4 text-brand-secondary" />
       </CardHeader>
       <CardContent>
         <MetricDisplay
@@ -48,13 +48,13 @@ export function EnhancedStatsCard({
               : undefined
           }
         />
-        <CardDescription className="mt-2 text-muted-foreground">{description}</CardDescription>
+        <CardDescription className="mt-2 text-text-secondary">{description}</CardDescription>
         {chartData && (
           <div className="mt-4">
             <MiniChart
               data={chartData}
               type={chartType}
-              color={trend?.isPositive ? "#28A745" : "#FFC107"}
+              color={trend?.isPositive ? "#10B981" : "#F59E0B"}
               height={32}
             />
           </div>

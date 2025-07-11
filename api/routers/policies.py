@@ -11,18 +11,19 @@ from services.policy_service import generate_compliance_policy, get_policy_by_id
 
 router = APIRouter()
 
+
 @router.post("/generate", status_code=201)
 async def generate_policy(
     request: PolicyGenerateRequest,
     current_user: User = Depends(get_current_active_user),
-    db: AsyncSession = Depends(get_async_db)
+    db: AsyncSession = Depends(get_async_db),
 ):
     policy = await generate_compliance_policy(
         db,
         current_user.id,
         request.framework_id,
-        request.policy_type if hasattr(request, 'policy_type') else "comprehensive",
-        request.custom_requirements if hasattr(request, 'custom_requirements') else []
+        request.policy_type if hasattr(request, "policy_type") else "comprehensive",
+        request.custom_requirements if hasattr(request, "custom_requirements") else [],
     )
 
     # Return enhanced response with success message and next steps for usability tests
@@ -43,40 +44,42 @@ async def generate_policy(
             "Review the generated policy content",
             "Customize sections as needed for your organization",
             "Approve the policy when ready",
-            "Implement the policy across your organization"
+            "Implement the policy across your organization",
         ],
         "recommended_actions": [
             "Schedule a review meeting with stakeholders",
             "Set up policy training for staff",
-            "Create implementation timeline"
-        ]
+            "Create implementation timeline",
+        ],
     }
+
 
 @router.get("/", response_model=PolicyListResponse)
 async def list_policies(
-    current_user: User = Depends(get_current_active_user),
-    db: AsyncSession = Depends(get_async_db)
+    current_user: User = Depends(get_current_active_user), db: AsyncSession = Depends(get_async_db)
 ):
     policies = await get_user_policies(db, current_user.id)
     return {"policies": policies}
+
 
 @router.get("/{policy_id}", response_model=GeneratedPolicyResponse)
 async def get_policy(
     policy_id: UUID,
     current_user: User = Depends(get_current_active_user),
-    db: AsyncSession = Depends(get_async_db)
+    db: AsyncSession = Depends(get_async_db),
 ):
     policy = await get_policy_by_id(db, policy_id, current_user.id)
     if not policy:
         raise HTTPException(status_code=404, detail="Policy not found")
     return policy
 
+
 @router.patch("/{policy_id}/status")
 async def update_policy_status(
     policy_id: UUID,
     status_update: dict,
     current_user: User = Depends(get_current_active_user),
-    db: AsyncSession = Depends(get_async_db)
+    db: AsyncSession = Depends(get_async_db),
 ):
     """Update policy status"""
     policy = await get_policy_by_id(db, policy_id, current_user.id)
@@ -93,13 +96,11 @@ async def update_policy_status(
     return {
         "id": policy.id,
         "status": policy.status,
-        "approved": status_update.get("approved", False)
+        "approved": status_update.get("approved", False),
     }
 
+
 @router.put("/{policy_id}/approve")
-async def approve_policy(
-    policy_id: UUID,
-    current_user: User = Depends(get_current_active_user)
-):
+async def approve_policy(policy_id: UUID, current_user: User = Depends(get_current_active_user)):
     # Implementation for policy approval
     return {"message": "Policy approved", "policy_id": policy_id}

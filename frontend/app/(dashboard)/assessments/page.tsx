@@ -34,9 +34,9 @@ export default function AssessmentsPage() {
         page_size: 50
       })
       setAssessments(response.items)
-    } catch (err: any) {
+    } catch (err) {
       console.error('Error fetching assessments:', err)
-      setError(err.message || 'Failed to load assessments')
+      setError(err instanceof Error ? err.message : 'Failed to load assessments')
     } finally {
       setLoading(false)
     }

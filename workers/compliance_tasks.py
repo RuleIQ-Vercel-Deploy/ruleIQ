@@ -1,6 +1,7 @@
 """
 Celery background tasks for compliance scoring and monitoring, with async support.
 """
+
 import asyncio
 from typing import Any, Dict
 
@@ -22,6 +23,7 @@ logger = get_task_logger(__name__)
 
 # --- Async Helper Functions ---
 
+
 async def _update_all_compliance_scores_async() -> Dict[str, Any]:
     """Async helper to update compliance scores for all business profiles."""
     updated_count = 0
@@ -36,13 +38,20 @@ async def _update_all_compliance_scores_async() -> Dict[str, Any]:
             for profile in profiles:
                 try:
                     readiness_data = await calculate_readiness_score(profile.id, db)
-                    logger.debug(f"Updated compliance score for profile {profile.id}: {readiness_data.get('overall_score', 0)}")
+                    logger.debug(
+                        f"Updated compliance score for profile {profile.id}: {readiness_data.get('overall_score', 0)}"
+                    )
                     updated_count += 1
                 except ApplicationException as e:
-                    logger.error(f"Failed to update compliance score for profile {profile.id}: {e}", exc_info=True)
+                    logger.error(
+                        f"Failed to update compliance score for profile {profile.id}: {e}",
+                        exc_info=True,
+                    )
                     failed_count += 1
-            
-            logger.info(f"Finished compliance score update. Total: {total_profiles}, Updated: {updated_count}, Failed: {failed_count}")
+
+            logger.info(
+                f"Finished compliance score update. Total: {total_profiles}, Updated: {updated_count}, Failed: {failed_count}"
+            )
             return {
                 "status": "completed",
                 "total_profiles": total_profiles,
@@ -51,7 +60,10 @@ async def _update_all_compliance_scores_async() -> Dict[str, Any]:
             }
         except SQLAlchemyError as e:
             logger.error(f"Database error while fetching profiles: {e}", exc_info=True)
-            raise DatabaseException("Failed to fetch business profiles for compliance scoring.") from e
+            raise DatabaseException(
+                "Failed to fetch business profiles for compliance scoring."
+            ) from e
+
 
 async def _check_compliance_alerts_async() -> Dict[str, Any]:
     """Async helper to check for compliance issues requiring attention."""
@@ -64,23 +76,32 @@ async def _check_compliance_alerts_async() -> Dict[str, Any]:
             for profile in profiles:
                 try:
                     readiness_data = await calculate_readiness_score(profile.id, db)
-                    if readiness_data.get('overall_score', 100) < 70:
-                        alert = {"profile_id": str(profile.id), "score": readiness_data['overall_score'], "message": "Compliance score is below threshold."}
+                    if readiness_data.get("overall_score", 100) < 70:
+                        alert = {
+                            "profile_id": str(profile.id),
+                            "score": readiness_data["overall_score"],
+                            "message": "Compliance score is below threshold.",
+                        }
                         alerts.append(alert)
-                        logger.warning(f"Compliance alert for profile {profile.id}: Score is {readiness_data['overall_score']}")
+                        logger.warning(
+                            f"Compliance alert for profile {profile.id}: Score is {readiness_data['overall_score']}"
+                        )
                 except ApplicationException as e:
-                    logger.warning(f"Could not check compliance alerts for profile {profile.id}: {e}", exc_info=True)
-            
-            return {
-                "status": "completed",
-                "alerts_count": len(alerts),
-                "alerts": alerts
-            }
+                    logger.warning(
+                        f"Could not check compliance alerts for profile {profile.id}: {e}",
+                        exc_info=True,
+                    )
+
+            return {"status": "completed", "alerts_count": len(alerts), "alerts": alerts}
         except SQLAlchemyError as e:
-            logger.error(f"Database error while fetching profiles for alert check: {e}", exc_info=True)
+            logger.error(
+                f"Database error while fetching profiles for alert check: {e}", exc_info=True
+            )
             raise DatabaseException("Failed to fetch business profiles for alert check.") from e
 
+
 # --- Celery Tasks ---
+
 
 @celery_app.task(bind=True, max_retries=3, default_retry_delay=300)
 def update_all_compliance_scores(self):
@@ -89,13 +110,19 @@ def update_all_compliance_scores(self):
     try:
         return asyncio.run(_update_all_compliance_scores_async())
     except BusinessLogicException as e:
-        logger.error(f"Compliance score update failed with a business logic error. Not retrying. Error: {e}", exc_info=True)
+        logger.error(
+            f"Compliance score update failed with a business logic error. Not retrying. Error: {e}",
+            exc_info=True,
+        )
     except DatabaseException as e:
-        logger.error("Compliance score update failed with a database error. Retrying...", exc_info=True)
+        logger.error(
+            "Compliance score update failed with a database error. Retrying...", exc_info=True
+        )
         self.retry(exc=e)
     except Exception as e:
         logger.critical("Unexpected error in compliance score update. Retrying...", exc_info=True)
         self.retry(exc=e)
+
 
 @celery_app.task(bind=True, max_retries=3, default_retry_delay=300)
 def check_compliance_alerts(self):
@@ -104,9 +131,14 @@ def check_compliance_alerts(self):
     try:
         return asyncio.run(_check_compliance_alerts_async())
     except BusinessLogicException as e:
-        logger.error(f"Compliance alert check failed with a business logic error. Not retrying. Error: {e}", exc_info=True)
+        logger.error(
+            f"Compliance alert check failed with a business logic error. Not retrying. Error: {e}",
+            exc_info=True,
+        )
     except DatabaseException as e:
-        logger.error("Compliance alert check failed with a database error. Retrying...", exc_info=True)
+        logger.error(
+            "Compliance alert check failed with a database error. Retrying...", exc_info=True
+        )
         self.retry(exc=e)
     except Exception as e:
         logger.critical("Unexpected error in compliance alert check. Retrying...", exc_info=True)

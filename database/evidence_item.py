@@ -10,13 +10,18 @@ from .db_setup import Base
 
 class EvidenceItem(Base):
     """Evidence collection tracking for compliance audits"""
+
     __tablename__ = "evidence_items"
 
     id = Column(PG_UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     # Assuming foreign key references. Adjust table.column names if necessary.
-    user_id = Column(PG_UUID(as_uuid=True), ForeignKey('users.id'), nullable=False)
-    business_profile_id = Column(PG_UUID(as_uuid=True), ForeignKey('business_profiles.id'), nullable=False)
-    framework_id = Column(PG_UUID(as_uuid=True), ForeignKey('compliance_frameworks.id'), nullable=False)
+    user_id = Column(PG_UUID(as_uuid=True), ForeignKey("users.id"), nullable=False)
+    business_profile_id = Column(
+        PG_UUID(as_uuid=True), ForeignKey("business_profiles.id"), nullable=False
+    )
+    framework_id = Column(
+        PG_UUID(as_uuid=True), ForeignKey("compliance_frameworks.id"), nullable=False
+    )
 
     # Evidence metadata
     evidence_name = Column(String, nullable=False)
@@ -39,7 +44,9 @@ class EvidenceItem(Base):
     file_size_bytes = Column(Integer, nullable=True)
 
     # Status tracking
-    status = Column(String, default="not_started")  # not_started, in_progress, collected, approved, rejected
+    status = Column(
+        String, default="not_started"
+    )  # not_started, in_progress, collected, approved, rejected
     collection_notes = Column(Text, default="")
     review_notes = Column(Text, default="")
 

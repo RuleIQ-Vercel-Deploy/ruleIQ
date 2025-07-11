@@ -9,7 +9,7 @@ def test_authenticated_client_works(client, authenticated_headers, sample_busine
     """Test that authenticated client works properly."""
     print(f"Business profile ID: {sample_business_profile.id}")
     print(f"User ID: {sample_business_profile.user_id}")
-    
+
     request_data = {
         "question_id": "q1",
         "question_text": "What is GDPR compliance?",
@@ -20,10 +20,10 @@ def test_authenticated_client_works(client, authenticated_headers, sample_busine
             "industry": "technology",
         },
     }
-    
+
     from unittest.mock import patch
     from services.ai.assistant import ComplianceAssistant
-    
+
     with patch.object(ComplianceAssistant, "get_assessment_help") as mock_help:
         mock_help.return_value = {
             "guidance": "GDPR requires organizations to protect personal data...",
@@ -34,13 +34,11 @@ def test_authenticated_client_works(client, authenticated_headers, sample_busine
             "request_id": "test-request-id",
             "generated_at": "2024-01-01T00:00:00Z",
         }
-        
+
         response = client.post(
-            "/api/ai/assessments/gdpr/help",
-            json=request_data,
-            headers=authenticated_headers
+            "/api/ai/assessments/gdpr/help", json=request_data, headers=authenticated_headers
         )
-        
+
         print(f"Response status: {response.status_code}")
         if response.status_code != 200:
             print(f"Response body: {response.json()}")
@@ -54,7 +52,7 @@ def test_unauthenticated_client_fails(unauthenticated_test_client):
         "question_text": "What is GDPR compliance?",
         "framework_id": "gdpr",
     }
-    
+
     response = unauthenticated_test_client.post("/api/ai/assessments/gdpr/help", json=request_data)
     print(f"Response status: {response.status_code}")
     assert response.status_code == 401
@@ -64,19 +62,19 @@ def test_authenticated_client_works_again(client, authenticated_headers, sample_
     """Test that authenticated client still works after unauthenticated test."""
     print(f"Business profile ID: {sample_business_profile.id}")
     print(f"User ID: {sample_business_profile.user_id}")
-    
+
     request_data = {
         "question_id": "q1",
         "question_text": "What is compliance?",
         "framework_id": "invalid_framework",
     }
-    
+
     response = client.post(
         "/api/ai/assessments/invalid_framework/help",
         json=request_data,
         headers=authenticated_headers,
     )
-    
+
     print(f"Response status: {response.status_code}")
     if response.status_code not in [200, 400, 404]:
         print(f"Response body: {response.json()}")

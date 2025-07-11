@@ -47,15 +47,19 @@ class TestBusinessService:
     """Test business profile service logic"""
 
     @pytest.mark.asyncio
-    async def test_create_business_profile_valid_data(self, db_session, sample_business_profile_data):
+    async def test_create_business_profile_valid_data(
+        self, db_session, sample_business_profile_data
+    ):
         """Test creating a business profile with valid data"""
         # The service function create_or_update_business_profile expects a User object.
         # We'll create a mock User object for this test.
-        mock_user = patch('database.models.User').start()
+        mock_user = patch("database.models.User").start()
         mock_user.id = uuid4()
 
         # Mock the service method 'create_or_update_business_profile'
-        with patch('tests.test_services.create_or_update_business_profile') as mock_create_or_update:
+        with patch(
+            "tests.test_services.create_or_update_business_profile"
+        ) as mock_create_or_update:
             # The real function returns a BusinessProfile ORM object.
             # Create a mock ORM object that behaves like BusinessProfile
             mock_profile_id = uuid4()
@@ -71,9 +75,7 @@ class TestBusinessService:
 
             # Call the actual (mocked) service function
             result = await create_or_update_business_profile(
-                db=db_session,
-                user=mock_user,
-                profile_data=sample_business_profile_data
+                db=db_session, user=mock_user, profile_data=sample_business_profile_data
             )
 
             # Assertions need to match the structure of the ORM object
@@ -81,50 +83,46 @@ class TestBusinessService:
             assert result.user_id == mock_user.id
             assert result.id == mock_profile_id
             mock_create_or_update.assert_called_once_with(
-                db=db_session,
-                user=mock_user,
-                profile_data=sample_business_profile_data
+                db=db_session, user=mock_user, profile_data=sample_business_profile_data
             )
-        patch.stopall() # Stop patches started with patch().start()
+        patch.stopall()  # Stop patches started with patch().start()
 
     @pytest.mark.asyncio
     async def test_create_business_profile_invalid_data(self, db_session):
         """Test creating business profile with invalid data raises validation error"""
-        mock_user = patch('database.models.User').start()
+        mock_user = patch("database.models.User").start()
         mock_user.id = uuid4()
         invalid_data = {
             "company_name": "",  # Invalid: too short
             "industry": "NonExistentIndustry",
             "number_of_employees": -5,  # Invalid: negative
             "cloud_providers": ["AWS", "NonExistentProvider"],
-            "saas_tools_used": ["Salesforce", "NonExistentTool"]
+            "saas_tools_used": ["Salesforce", "NonExistentTool"],
         }
 
         # Mock the service method 'create_or_update_business_profile' to raise ValidationAPIError
-        with patch('tests.test_services.create_or_update_business_profile') as mock_create_or_update:
+        with patch(
+            "tests.test_services.create_or_update_business_profile"
+        ) as mock_create_or_update:
             mock_create_or_update.side_effect = ValidationAPIError("Invalid profile data provided.")
 
             with pytest.raises(ValidationAPIError):
                 await create_or_update_business_profile(
-                    db=db_session,
-                    user=mock_user,
-                    profile_data=invalid_data
+                    db=db_session, user=mock_user, profile_data=invalid_data
                 )
 
             mock_create_or_update.assert_called_once_with(
-                db=db_session,
-                user=mock_user,
-                profile_data=invalid_data
+                db=db_session, user=mock_user, profile_data=invalid_data
             )
         patch.stopall()
 
     @pytest.mark.asyncio
     async def test_get_business_profile_exists(self, db_session, sample_business_profile_data):
         """Test retrieving an existing business profile"""
-        mock_user = patch('database.models.User').start()
+        mock_user = patch("database.models.User").start()
         mock_user.id = uuid4()
 
-        with patch('tests.test_services.get_business_profile') as mock_get_profile:
+        with patch("tests.test_services.get_business_profile") as mock_get_profile:
             mock_profile_id = uuid4()
             mock_returned_profile = Mock(spec=BusinessProfile)
             mock_returned_profile.id = mock_profile_id
@@ -148,10 +146,10 @@ class TestBusinessService:
     @pytest.mark.asyncio
     async def test_get_business_profile_not_exists(self, db_session):
         """Test retrieving a non-existent business profile returns None"""
-        mock_user = patch('database.models.User').start()
+        mock_user = patch("database.models.User").start()
         mock_user.id = uuid4()
 
-        with patch('tests.test_services.get_business_profile') as mock_get_profile:
+        with patch("tests.test_services.get_business_profile") as mock_get_profile:
             mock_get_profile.return_value = None
 
             result = await get_business_profile(db=db_session, user=mock_user)
@@ -183,11 +181,14 @@ class TestBusinessService:
     @pytest.mark.asyncio
     async def test_update_assessment_details(self, db_session, sample_business_profile_data):
         """Test updating assessment details for a business profile"""
-        mock_user = patch('database.models.User').start()
+        mock_user = patch("database.models.User").start()
         mock_user.id = uuid4()
-        assessment_data_payload = {"some_key": "some_value", "completed_date": datetime.utcnow().isoformat()}
+        assessment_data_payload = {
+            "some_key": "some_value",
+            "completed_date": datetime.utcnow().isoformat(),
+        }
 
-        with patch('tests.test_services.update_assessment_status') as mock_update_status:
+        with patch("tests.test_services.update_assessment_status") as mock_update_status:
             mock_profile_id = uuid4()
 
             mock_returned_profile = Mock(spec=BusinessProfile)
@@ -206,7 +207,7 @@ class TestBusinessService:
                 db=db_session,
                 user=mock_user,
                 assessment_completed=True,
-                assessment_data=assessment_data_payload
+                assessment_data=assessment_data_payload,
             )
 
             assert result.assessment_completed is True
@@ -216,18 +217,18 @@ class TestBusinessService:
                 db=db_session,
                 user=mock_user,
                 assessment_completed=True,
-                assessment_data=assessment_data_payload
+                assessment_data=assessment_data_payload,
             )
         patch.stopall()
 
     def test_get_supported_options(self):
         """Test retrieving supported options for business profiles."""
-        
+
         # Test get_supported_industries
         industries = get_supported_industries()
         assert isinstance(industries, list)
-        assert "Technology" in industries 
-        assert len(industries) > 5 
+        assert "Technology" in industries
+        assert len(industries) > 5
 
         # Test get_cloud_provider_options
         cloud_providers = get_cloud_provider_options()
@@ -247,8 +248,8 @@ class TestBusinessService:
 class TestAssessmentService:
     """Test assessment service logic"""
 
-    async def test_start_assessment_session(self, db_session): # Renamed
-        """Test starting a new assessment session""" # Docstring updated
+    async def test_start_assessment_session(self, db_session):  # Renamed
+        """Test starting a new assessment session"""  # Docstring updated
         service = AssessmentService()
         mock_user = Mock(spec=User)
         mock_user.id = uuid4()
@@ -261,29 +262,34 @@ class TestAssessmentService:
         mock_created_session.session_type = "compliance_scoping"
         mock_created_session.status = "in_progress"
         mock_created_session.current_stage = 1
-        mock_created_session.total_stages = 5 # Example value from service
+        mock_created_session.total_stages = 5  # Example value from service
         mock_created_session.created_at = datetime.utcnow()
         mock_created_session.answers = {}
 
-        with patch('services.assessment_service.AssessmentService.start_assessment_session',
-                   return_value=mock_created_session) as mock_start_session:
-
-            result = await service.start_assessment_session(db=db_session, user=mock_user, session_type="compliance_scoping")
+        with patch(
+            "services.assessment_service.AssessmentService.start_assessment_session",
+            return_value=mock_created_session,
+        ) as mock_start_session:
+            result = await service.start_assessment_session(
+                db=db_session, user=mock_user, session_type="compliance_scoping"
+            )
 
             assert result is mock_created_session
             assert result.user_id == mock_user.id
             assert result.session_type == "compliance_scoping"
             assert result.status == "in_progress"
-            mock_start_session.assert_called_once_with(db=db_session, user=mock_user, session_type="compliance_scoping")
+            mock_start_session.assert_called_once_with(
+                db=db_session, user=mock_user, session_type="compliance_scoping"
+            )
 
-    async def test_update_assessment_response(self, db_session): # Renamed
-        """Test updating assessment responses""" # Docstring updated
+    async def test_update_assessment_response(self, db_session):  # Renamed
+        """Test updating assessment responses"""  # Docstring updated
         service = AssessmentService()
         mock_user = Mock(spec=User)
         mock_user.id = uuid4()
         mock_session_id = uuid4()
         question_id = "data_processing"
-        answer_data = {"response": "Yes, we process customer personal data"} # Example answer
+        answer_data = {"response": "Yes, we process customer personal data"}  # Example answer
 
         mock_updated_session = Mock(spec=AssessmentSession)
         mock_updated_session.id = mock_session_id
@@ -292,14 +298,16 @@ class TestAssessmentService:
         mock_updated_session.status = "in_progress"
         mock_updated_session.last_updated = datetime.utcnow()
 
-        with patch('services.assessment_service.AssessmentService.update_assessment_response',
-                   return_value=mock_updated_session) as mock_update_response:
+        with patch(
+            "services.assessment_service.AssessmentService.update_assessment_response",
+            return_value=mock_updated_session,
+        ) as mock_update_response:
             result = await service.update_assessment_response(
                 db=db_session,
                 user=mock_user,
                 session_id=mock_session_id,
                 question_id=question_id,
-                answer=answer_data
+                answer=answer_data,
             )
 
             assert result is mock_updated_session
@@ -309,11 +317,13 @@ class TestAssessmentService:
                 user=mock_user,
                 session_id=mock_session_id,
                 question_id=question_id,
-                answer=answer_data
+                answer=answer_data,
             )
 
-    async def test_complete_assessment_session_generates_recommendations(self, db_session): # Renamed
-        """Test completing an assessment session generates recommendations""" # Docstring updated
+    async def test_complete_assessment_session_generates_recommendations(
+        self, db_session
+    ):  # Renamed
+        """Test completing an assessment session generates recommendations"""  # Docstring updated
         service = AssessmentService()
         mock_user = Mock(spec=User)
         mock_user.id = uuid4()
@@ -325,19 +335,33 @@ class TestAssessmentService:
         mock_completed_session.status = "completed"
         mock_completed_session.completed_at = datetime.utcnow()
         mock_completed_session.recommendations = [
-            {"framework_id": "GDPR", "framework_name": "GDPR", "reason": "High relevance score: 80"},
-            {"framework_id": "ISO27001", "framework_name": "ISO 27001", "reason": "High relevance score: 70"}
+            {
+                "framework_id": "GDPR",
+                "framework_name": "GDPR",
+                "reason": "High relevance score: 80",
+            },
+            {
+                "framework_id": "ISO27001",
+                "framework_name": "ISO 27001",
+                "reason": "High relevance score: 70",
+            },
         ]
 
-        with patch('services.assessment_service.AssessmentService.complete_assessment_session',
-                   return_value=mock_completed_session) as mock_complete_session:
-            result = await service.complete_assessment_session(db=db_session, user=mock_user, session_id=mock_session_id)
+        with patch(
+            "services.assessment_service.AssessmentService.complete_assessment_session",
+            return_value=mock_completed_session,
+        ) as mock_complete_session:
+            result = await service.complete_assessment_session(
+                db=db_session, user=mock_user, session_id=mock_session_id
+            )
 
             assert result is mock_completed_session
             assert result.status == "completed"
             assert len(result.recommendations) >= 1
             assert all("framework_id" in rec for rec in result.recommendations)
-            mock_complete_session.assert_called_once_with(db=db_session, user=mock_user, session_id=mock_session_id)
+            mock_complete_session.assert_called_once_with(
+                db=db_session, user=mock_user, session_id=mock_session_id
+            )
 
     @pytest.mark.skip(reason="Method calculate_score does not exist on AssessmentService")
     async def test_calculate_compliance_score(self, db_session):
@@ -385,11 +409,12 @@ class TestPolicyService:
         # mock_ai_client.generate_content.return_value.text = mock_ai_response_text # Unused with this patch strategy
 
         # Patching the actual 'generate_compliance_policy' function
-        with patch('tests.test_services.generate_compliance_policy') as mock_gcp:
+        with patch("tests.test_services.generate_compliance_policy") as mock_gcp:
             # Mock the return value of generate_compliance_policy
             # The real function returns a GeneratedPolicy ORM object.
             # Create a mock ORM object that behaves like GeneratedPolicy
             from database.generated_policy import GeneratedPolicy
+
             mock_policy_id = uuid4()
             mock_returned_policy = Mock(spec=GeneratedPolicy)
             mock_returned_policy.id = mock_policy_id
@@ -406,7 +431,7 @@ class TestPolicyService:
                 db=db_session,
                 user_id=user_id,
                 framework_id=framework_id,
-                policy_type="data_protection"
+                policy_type="data_protection",
             )
 
             # Assertions based on the structure of the ORM object
@@ -421,7 +446,7 @@ class TestPolicyService:
                 db=db_session,
                 user_id=user_id,
                 framework_id=framework_id,
-                policy_type="data_protection"
+                policy_type="data_protection",
                 # custom_requirements defaults to None and is not passed explicitly
             )
 
@@ -494,40 +519,46 @@ class TestFrameworkService:
         """Test framework recommendation algorithm"""
         # Ensure sample_business_profile has an 'owner' attribute that is a mock User or a real User object
         # For this test, we'll assume sample_business_profile.owner is correctly set up by fixtures
-        with patch('tests.test_services.get_relevant_frameworks') as mock_get_relevant:
+        with patch("tests.test_services.get_relevant_frameworks") as mock_get_relevant:
             mock_get_relevant.return_value = [
                 {
                     "framework": {
                         "id": uuid4(),
                         "name": "GDPR",
                         "display_name": "General Data Protection Regulation",
-                        "category": "Data Protection"
+                        "category": "Data Protection",
                     },
                     "relevance_score": 95.0,
                     "reasons": ["Processes personal data", "UK business"],
-                    "priority": "High"
+                    "priority": "High",
                 },
                 {
                     "framework": {
                         "id": uuid4(),
                         "name": "ISO27001",
                         "display_name": "ISO 27001 Information Security",
-                        "category": "Security"
+                        "category": "Security",
                     },
                     "relevance_score": 80.0,
                     "reasons": ["Technology industry", "Customer data handling"],
-                    "priority": "Medium"
-                }
+                    "priority": "Medium",
+                },
             ]
 
-            result = await get_relevant_frameworks(db=async_db_session, user=sample_business_profile.owner)
+            result = await get_relevant_frameworks(
+                db=async_db_session, user=sample_business_profile.owner
+            )
 
             assert len(result) >= 1
             assert all(rec["relevance_score"] <= 100 for rec in result)
             assert all(rec["priority"] in ["High", "Medium", "Low"] for rec in result)
-            mock_get_relevant.assert_called_once_with(db=async_db_session, user=sample_business_profile.owner)
+            mock_get_relevant.assert_called_once_with(
+                db=async_db_session, user=sample_business_profile.owner
+            )
 
-    async def test_calculate_framework_relevance(self, db_session, sample_user, sample_business_profile, sample_compliance_framework):
+    async def test_calculate_framework_relevance(
+        self, db_session, sample_user, sample_business_profile, sample_compliance_framework
+    ):
         """Test framework relevance calculation"""
         # sample_business_profile and sample_framework should be fixtures providing mock/real ORM objects
         # For simplicity, we'll assume they are correctly structured mock objects for now.
@@ -538,7 +569,7 @@ class TestFrameworkService:
         # Populate mock_profile with data from business_context or a fixture
         mock_profile.industry = "Healthcare"
         mock_profile.employee_count = 25
-        mock_profile.data_sensitivity = "High" # Assuming this attribute exists
+        mock_profile.data_sensitivity = "High"  # Assuming this attribute exists
         # ... add other necessary attributes based on calculate_framework_relevance logic
 
         mock_framework = Mock(spec=ComplianceFramework)
@@ -567,7 +598,7 @@ class TestFrameworkService:
                 "description": "Personal data shall be processed lawfully, fairly and transparently",
                 "category": "data_processing",
                 "mandatory": True,
-                "implementation_guidance": "Implement privacy notices and consent mechanisms"
+                "implementation_guidance": "Implement privacy notices and consent mechanisms",
             },
             {
                 "id": "gdpr_art_25",
@@ -575,8 +606,8 @@ class TestFrameworkService:
                 "description": "Implement appropriate technical and organisational measures",
                 "category": "technical_measures",
                 "mandatory": True,
-                "implementation_guidance": "Build privacy considerations into system design"
-            }
+                "implementation_guidance": "Build privacy considerations into system design",
+            },
         ]
 
         # Mock the ComplianceFramework object that get_framework_by_id would return
@@ -585,17 +616,23 @@ class TestFrameworkService:
         # Based on initialize_default_frameworks, 'key_requirement' seems plausible for a list of strings/dicts
         # or 'controls' for a JSON structure. Let's assume 'key_requirement' for this example.
         # If it's a more complex structure, this mock needs to reflect that.
-        mock_framework_obj.key_requirement = expected_requirements # Or mock_framework_obj.controls = expected_requirements
-        mock_framework_obj.id = framework_id # Ensure the mock has the ID if needed later
+        mock_framework_obj.key_requirement = (
+            expected_requirements  # Or mock_framework_obj.controls = expected_requirements
+        )
+        mock_framework_obj.id = framework_id  # Ensure the mock has the ID if needed later
 
-        with patch('tests.test_services.get_framework_by_id') as mock_get_by_id:
+        with patch("tests.test_services.get_framework_by_id") as mock_get_by_id:
             mock_get_by_id.return_value = mock_framework_obj
 
             # Call the actual standalone function
-            retrieved_framework = await get_framework_by_id(db=async_db_session, user=sample_user, framework_id=framework_id)
+            retrieved_framework = await get_framework_by_id(
+                db=async_db_session, user=sample_user, framework_id=framework_id
+            )
 
             # Assert that the function was called correctly
-            mock_get_by_id.assert_called_once_with(db=async_db_session, user=sample_user, framework_id=framework_id)
+            mock_get_by_id.assert_called_once_with(
+                db=async_db_session, user=sample_user, framework_id=framework_id
+            )
 
             # Assert that we got the mocked framework object
             assert retrieved_framework is mock_framework_obj
@@ -617,10 +654,12 @@ class TestFrameworkService:
 class TestImplementationService:
     """Test implementation planning service logic"""
 
-    async def test_generate_implementation_plan(self, async_db_session, sample_user, sample_business_profile, sample_compliance_framework):
+    async def test_generate_implementation_plan(
+        self, async_db_session, sample_user, sample_business_profile, sample_compliance_framework
+    ):
         """Test implementation plan generation"""
         # Mock the entire function to avoid complex SQLAlchemy mocking
-        with patch('tests.test_services.generate_implementation_plan') as mock_generate_plan:
+        with patch("tests.test_services.generate_implementation_plan") as mock_generate_plan:
             # Create a mock ImplementationPlan object
             mock_plan = Mock(spec=ImplementationPlan)
             mock_plan.id = uuid4()
@@ -628,18 +667,22 @@ class TestImplementationService:
             mock_plan.framework_id = sample_compliance_framework.id
             mock_plan.title = "Test AI Plan for GDPR"
             mock_plan.phases = [
-                {"name": "Phase 1: Discovery", "tasks": [{"task_id": "t1", "description": "Discover stuff"}]},
-                {"name": "Phase 2: Implementation", "tasks": [{"task_id": "t2", "description": "Implement stuff"}]}
+                {
+                    "name": "Phase 1: Discovery",
+                    "tasks": [{"task_id": "t1", "description": "Discover stuff"}],
+                },
+                {
+                    "name": "Phase 2: Implementation",
+                    "tasks": [{"task_id": "t2", "description": "Implement stuff"}],
+                },
             ]
             mock_plan.status = "not_started"
-            
+
             mock_generate_plan.return_value = mock_plan
 
             # Call the mocked function
             result_plan_orm_object = await generate_implementation_plan(
-                db=async_db_session,
-                user=sample_user,
-                framework_id=sample_compliance_framework.id
+                db=async_db_session, user=sample_user, framework_id=sample_compliance_framework.id
             )
 
             assert result_plan_orm_object is not None
@@ -649,9 +692,7 @@ class TestImplementationService:
             assert len(result_plan_orm_object.phases) == 2
             assert result_plan_orm_object.status == "not_started"
             mock_generate_plan.assert_called_once_with(
-                db=async_db_session,
-                user=sample_user,
-                framework_id=sample_compliance_framework.id
+                db=async_db_session, user=sample_user, framework_id=sample_compliance_framework.id
             )
 
     async def test_update_task_progress(self, async_db_session, sample_user):
@@ -669,25 +710,33 @@ class TestImplementationService:
                 "phase_id": "phase_1",
                 "name": "Discovery",
                 "tasks": [
-                    {"task_id": task_id_to_update, "description": "Initial review", "status": "in_progress"},
-                    {"task_id": "task_002_other", "description": "Documentation", "status": "pending"}
-                ]
+                    {
+                        "task_id": task_id_to_update,
+                        "description": "Initial review",
+                        "status": "in_progress",
+                    },
+                    {
+                        "task_id": "task_002_other",
+                        "description": "Documentation",
+                        "status": "pending",
+                    },
+                ],
             }
         ]
 
         # Mock the entire function to avoid SQLAlchemy issues with Mock objects
-        with patch('tests.test_services.update_task_status') as mock_update_task:
+        with patch("tests.test_services.update_task_status") as mock_update_task:
             # Update the mock plan to reflect the expected change
-            mock_plan.phases[0]['tasks'][0]['status'] = new_status
+            mock_plan.phases[0]["tasks"][0]["status"] = new_status
             mock_update_task.return_value = mock_plan
-            
+
             # Call the mocked function
             updated_plan_orm_object = await update_task_status(
                 db=async_db_session,
                 user=sample_user,
                 plan_id=plan_id,
                 task_id=task_id_to_update,
-                status=new_status
+                status=new_status,
             )
 
             mock_update_task.assert_called_once_with(
@@ -695,11 +744,11 @@ class TestImplementationService:
                 user=sample_user,
                 plan_id=plan_id,
                 task_id=task_id_to_update,
-                status=new_status
+                status=new_status,
             )
-            
+
             assert updated_plan_orm_object is not None
-            assert updated_plan_orm_object.phases[0]['tasks'][0]['status'] == new_status
+            assert updated_plan_orm_object.phases[0]["tasks"][0]["status"] == new_status
 
     # async def test_calculate_resource_requirements(self, db_session):
     #     """Test resource requirement calculation"""
@@ -748,7 +797,9 @@ class TestEvidenceService:
         framework_id = uuid4()
         control_ids = [uuid4(), uuid4()]
 
-        with patch('services.evidence_service.EvidenceService.identify_requirements') as mock_identify:
+        with patch(
+            "services.evidence_service.EvidenceService.identify_requirements"
+        ) as mock_identify:
             mock_identify.return_value = [
                 {
                     "control_id": control_ids[0],
@@ -756,7 +807,7 @@ class TestEvidenceService:
                     "title": "Data Protection Policy",
                     "description": "Written policy documenting data protection procedures",
                     "automation_possible": False,
-                    "collection_method": "manual"
+                    "collection_method": "manual",
                 },
                 {
                     "control_id": control_ids[1],
@@ -764,8 +815,8 @@ class TestEvidenceService:
                     "title": "Access Control Logs",
                     "description": "System logs showing access control implementation",
                     "automation_possible": True,
-                    "collection_method": "automated"
-                }
+                    "collection_method": "automated",
+                },
             ]
 
             result = EvidenceService.identify_requirements(framework_id, control_ids)
@@ -782,15 +833,17 @@ class TestEvidenceService:
             "source_type": "cloud_api",
             "endpoint": "https://api.example.com/logs",
             "collection_frequency": "daily",
-            "credentials_id": "cloud_creds_001"
+            "credentials_id": "cloud_creds_001",
         }
 
-        with patch('services.evidence_service.EvidenceService.configure_automation') as mock_configure:
+        with patch(
+            "services.evidence_service.EvidenceService.configure_automation"
+        ) as mock_configure:
             mock_configure.return_value = {
                 "configuration_successful": True,
                 "automation_enabled": True,
                 "next_collection": datetime.utcnow() + timedelta(days=1),
-                "test_connection": "successful"
+                "test_connection": "successful",
             }
 
             result = EvidenceService.configure_automation(evidence_id, automation_config)
@@ -804,24 +857,22 @@ class TestEvidenceService:
         evidence_data = {
             "evidence_type": "document",
             "file_content": "Sample policy document content...",
-            "metadata": {
-                "creation_date": "2024-01-01",
-                "author": "DPO",
-                "version": "1.0"
-            }
+            "metadata": {"creation_date": "2024-01-01", "author": "DPO", "version": "1.0"},
         }
 
-        with patch('services.evidence_service.EvidenceService.validate_evidence_quality') as mock_validate:
+        with patch(
+            "services.evidence_service.EvidenceService.validate_evidence_quality"
+        ) as mock_validate:
             mock_validate.return_value = {
                 "quality_score": 85,
                 "validation_results": {
                     "completeness": "good",
                     "relevance": "high",
                     "timeliness": "current",
-                    "authenticity": "verified"
+                    "authenticity": "verified",
                 },
                 "issues": [],
-                "recommendations": ["Consider adding version control information"]
+                "recommendations": ["Consider adding version control information"],
             }
 
             result = EvidenceService.validate_evidence_quality(evidence_data)
@@ -842,13 +893,15 @@ class TestReadinessService:
         mock_user.id = uuid4()
         framework_id = uuid4()
 
-        with patch('tests.test_services.generate_readiness_assessment') as mock_generate:
+        with patch("tests.test_services.generate_readiness_assessment") as mock_generate:
             mock_assessment = Mock()
             mock_assessment.overall_score = 72.5
             mock_assessment.policy_score = 80.0
             mock_assessment.implementation_score = 65.0
             mock_assessment.evidence_score = 75.0
-            mock_assessment.priority_actions = [{"action": "Improve policy coverage", "urgency": "high"}]
+            mock_assessment.priority_actions = [
+                {"action": "Improve policy coverage", "urgency": "high"}
+            ]
             mock_assessment.quick_wins = [{"action": "Upload missing evidence", "effort": "low"}]
             mock_generate.return_value = mock_assessment
 
@@ -856,18 +909,18 @@ class TestReadinessService:
                 db=async_db_session,
                 user=mock_user,
                 framework_id=framework_id,
-                assessment_type="full"
+                assessment_type="full",
             )
 
             assert 0 <= result.overall_score <= 100
-            assert hasattr(result, 'policy_score')
-            assert hasattr(result, 'implementation_score')
-            assert hasattr(result, 'evidence_score')
+            assert hasattr(result, "policy_score")
+            assert hasattr(result, "implementation_score")
+            assert hasattr(result, "evidence_score")
             mock_generate.assert_called_once_with(
                 db=async_db_session,
                 user=mock_user,
                 framework_id=framework_id,
-                assessment_type="full"
+                assessment_type="full",
             )
 
     async def test_identify_compliance_gaps(self, async_db_session):
@@ -875,28 +928,28 @@ class TestReadinessService:
         mock_user = Mock()
         mock_user.id = uuid4()
 
-        with patch('tests.test_services.get_readiness_dashboard') as mock_dashboard:
+        with patch("tests.test_services.get_readiness_dashboard") as mock_dashboard:
             mock_dashboard.return_value = {
                 "total_frameworks": 2,
                 "average_score": 72.5,
                 "framework_scores": [
                     {"name": "GDPR", "score": 80.0, "trend": "improving"},
-                    {"name": "ISO 27001", "score": 65.0, "trend": "stable"}
+                    {"name": "ISO 27001", "score": 65.0, "trend": "stable"},
                 ],
                 "priority_actions": [
                     {
                         "framework": "GDPR",
                         "action": "Data protection by design and by default",
                         "urgency": "High",
-                        "impact": "High"
+                        "impact": "High",
                     },
                     {
                         "framework": "ISO 27001",
                         "action": "Security of processing",
                         "urgency": "Medium",
-                        "impact": "Medium"
-                    }
-                ]
+                        "impact": "Medium",
+                    },
+                ],
             }
 
             result = await get_readiness_dashboard(db=async_db_session, user=mock_user)
@@ -914,17 +967,17 @@ class TestReadinessService:
         report_type = "executive_summary"
         format_type = "json"
 
-        with patch('tests.test_services.generate_compliance_report') as mock_generate:
+        with patch("tests.test_services.generate_compliance_report") as mock_generate:
             mock_generate.return_value = {
                 "report_metadata": {
                     "user_id": mock_user.id,
                     "framework": framework,
                     "report_type": report_type,
-                    "generated_at": "2024-01-01T00:00:00"
+                    "generated_at": "2024-01-01T00:00:00",
                 },
                 "summary": "Your organization has achieved 68.5% compliance readiness across assessed frameworks.",
                 "recommendations": "Address high-priority GDPR gaps",
-                "evidence": "Evidence included."
+                "evidence": "Evidence included.",
             }
 
             result = await generate_compliance_report(
@@ -933,7 +986,7 @@ class TestReadinessService:
                 report_type=report_type,
                 format=format_type,
                 include_evidence=True,
-                include_recommendations=True
+                include_recommendations=True,
             )
 
             assert "report_metadata" in result
@@ -945,5 +998,5 @@ class TestReadinessService:
                 report_type=report_type,
                 format=format_type,
                 include_evidence=True,
-                include_recommendations=True
+                include_recommendations=True,
             )

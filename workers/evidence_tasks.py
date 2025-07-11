@@ -25,7 +25,10 @@ logger = get_task_logger(__name__)
 
 # --- Async Helper Functions ---
 
-async def _process_evidence_item_async(evidence_data: Dict[str, Any], user_id: UUID, business_profile_id: UUID, integration_id: str) -> Dict[str, Any]:
+
+async def _process_evidence_item_async(
+    evidence_data: Dict[str, Any], user_id: UUID, business_profile_id: UUID, integration_id: str
+) -> Dict[str, Any]:
     """Async helper to process a single piece of evidence."""
     async for db in get_async_db():
         try:
@@ -41,26 +44,36 @@ async def _process_evidence_item_async(evidence_data: Dict[str, Any], user_id: U
                 description=evidence_data.get("description"),
                 source=evidence_data.get("source"),
                 raw_data=evidence_data.get("raw_data", {}),
-                status='active'
+                status="active",
             )
 
             processor.process_evidence(new_evidence)
-            
+
             db.add(new_evidence)
             await db.commit()
             await db.refresh(new_evidence)
-            
-            logger.info(f"Successfully processed and saved new evidence {new_evidence.id} for user {user_id}")
+
+            logger.info(
+                f"Successfully processed and saved new evidence {new_evidence.id} for user {user_id}"
+            )
             return {"status": "processed", "evidence_id": str(new_evidence.id)}
 
         except SQLAlchemyError as e:
             await db.rollback()
-            logger.error(f"Database error while processing evidence for user {user_id}: {e}", exc_info=True)
+            logger.error(
+                f"Database error while processing evidence for user {user_id}: {e}", exc_info=True
+            )
             raise DatabaseException("Failed to process evidence due to a database error.") from e
         except Exception as e:
             await db.rollback()
-            logger.error(f"Unexpected error during evidence processing for user {user_id}: {e}", exc_info=True)
-            raise BusinessLogicException("An unexpected error occurred during evidence processing.") from e
+            logger.error(
+                f"Unexpected error during evidence processing for user {user_id}: {e}",
+                exc_info=True,
+            )
+            raise BusinessLogicException(
+                "An unexpected error occurred during evidence processing."
+            ) from e
+
 
 async def _sync_evidence_status_async() -> Dict[str, int]:
     """Async helper to find old, active evidence and mark it as stale."""
@@ -69,31 +82,51 @@ async def _sync_evidence_status_async() -> Dict[str, int]:
             cutoff_date = datetime.utcnow() - timedelta(days=90)
             stmt = (
                 update(EvidenceItem)
-                .where(EvidenceItem.status == 'active', EvidenceItem.collected_at < cutoff_date)
-                .values(status='stale')
+                .where(EvidenceItem.status == "active", EvidenceItem.collected_at < cutoff_date)
+                .values(status="stale")
                 .execution_options(synchronize_session=False)
             )
             result = await db.execute(stmt)
             await db.commit()
-            
+
             updated_count = result.rowcount
             logger.info(f"Evidence status sync completed. Marked {updated_count} items as stale.")
             return {"updated_count": updated_count}
         except SQLAlchemyError as e:
             await db.rollback()
             logger.error(f"Database error during evidence status sync: {e}", exc_info=True)
-            raise DatabaseException("Failed to sync evidence status due to a database error.") from e
+            raise DatabaseException(
+                "Failed to sync evidence status due to a database error."
+            ) from e
+
 
 # --- Celery Tasks ---
 
-@celery_app.task(bind=True, autoretry_for=(DatabaseException,), retry_backoff=True, max_retries=3, default_retry_delay=300)
-def process_evidence_item(self, evidence_data: Dict[str, Any], user_id_str: str, business_profile_id_str: str, integration_id: str):
+
+@celery_app.task(
+    bind=True,
+    autoretry_for=(DatabaseException,),
+    retry_backoff=True,
+    max_retries=3,
+    default_retry_delay=300,
+)
+def process_evidence_item(
+    self,
+    evidence_data: Dict[str, Any],
+    user_id_str: str,
+    business_profile_id_str: str,
+    integration_id: str,
+):
     """Processes a single evidence item by running the async helper."""
     logger.info(f"Processing evidence from integration '{integration_id}' for user '{user_id_str}'")
     try:
         user_id = UUID(user_id_str)
         business_profile_id = UUID(business_profile_id_str)
-        return asyncio.run(_process_evidence_item_async(evidence_data, user_id, business_profile_id, integration_id))
+        return asyncio.run(
+            _process_evidence_item_async(
+                evidence_data, user_id, business_profile_id, integration_id
+            )
+        )
     except BusinessLogicException as e:
         logger.error(f"Business logic error processing evidence, not retrying: {e}", exc_info=True)
         # Do not retry, let the task fail
@@ -101,12 +134,21 @@ def process_evidence_item(self, evidence_data: Dict[str, Any], user_id_str: str,
         logger.critical(f"Unexpected, non-retriable error processing evidence: {e}", exc_info=True)
         raise e
 
-@celery_app.task(bind=True, autoretry_for=(DatabaseException,), retry_backoff=True, max_retries=3, default_retry_delay=600)
+
+@celery_app.task(
+    bind=True,
+    autoretry_for=(DatabaseException,),
+    retry_backoff=True,
+    max_retries=3,
+    default_retry_delay=600,
+)
 def sync_evidence_status(self):
     """Periodically syncs the status of evidence items by running the async helper."""
     logger.info("Starting evidence status sync task")
     try:
         return asyncio.run(_sync_evidence_status_async())
     except Exception as e:
-        logger.critical(f"Unexpected, non-retriable error in evidence status sync: {e}", exc_info=True)
+        logger.critical(
+            f"Unexpected, non-retriable error in evidence status sync: {e}", exc_info=True
+        )
         raise e

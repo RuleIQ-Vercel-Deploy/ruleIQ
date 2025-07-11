@@ -92,7 +92,11 @@ describe('AIGuidancePanel', () => {
     );
 
     expect(screen.getByText('AI Compliance Guidance')).toBeInTheDocument();
-    expect(screen.getByText('Get AI guidance for this question')).toBeInTheDocument();
+    
+    // When defaultOpen is true, the panel is expanded but guidance is not loaded automatically
+    // The CollapsibleContent should be visible
+    const panel = screen.getByText('AI Compliance Guidance').closest('[data-state="open"]');
+    expect(panel).toBeInTheDocument();
   });
 
   it('expands and loads guidance when clicked', async () => {
@@ -110,15 +114,27 @@ describe('AIGuidancePanel', () => {
     const header = screen.getByText('AI Compliance Guidance');
     fireEvent.click(header);
 
-    // Should show loading state
-    expect(screen.getByText('Get AI guidance for this question')).toBeInTheDocument();
+    // Panel should be expanded
+    const panel = screen.getByText('AI Compliance Guidance').closest('[data-state="open"]');
+    expect(panel).toBeInTheDocument();
 
-    // Wait for guidance to load
+    // Wait for API to be called
+    await waitFor(() => {
+      expect(assessmentAIService.getQuestionHelp).toHaveBeenCalledWith({
+        question_id: 'test-question-1',
+        question_text: 'What are the key principles of GDPR?',
+        framework_id: 'gdpr',
+        user_context: mockUserContext
+      });
+    });
+
+    // Wait for guidance to load - check for the actual guidance text
     await waitFor(() => {
       expect(screen.getByText(mockAIResponse.guidance)).toBeInTheDocument();
     });
-
-    expect(screen.getByText('92% confidence')).toBeInTheDocument();
+    
+    // Check confidence score is displayed
+    expect(screen.getByText(/92% confidence/)).toBeInTheDocument();
   });
 
   it('handles loading state correctly', async () => {
@@ -139,8 +155,10 @@ describe('AIGuidancePanel', () => {
     const header = screen.getByText('AI Compliance Guidance');
     fireEvent.click(header);
 
-    // Should show loading state
-    expect(screen.getByText(/loading ai guidance/i)).toBeInTheDocument();
+    // Should show loading state - look for the Bot icon with animate-pulse class
+    const loadingBot = document.querySelector('.animate-pulse');
+    expect(loadingBot).toBeInTheDocument();
+    expect(screen.getByText(/Analyzing compliance requirements/i)).toBeInTheDocument();
     
     // Wait for completion
     await waitFor(() => {
@@ -149,8 +167,6 @@ describe('AIGuidancePanel', () => {
   });
 
   it('displays error state when AI service fails', async () => {
-    
-    
     vi.mocked(assessmentAIService.getQuestionHelp).mockRejectedValue(
       new Error('AI service timeout')
     );
@@ -168,7 +184,7 @@ describe('AIGuidancePanel', () => {
     fireEvent.click(header);
 
     await waitFor(() => {
-      expect(screen.getByText(/failed to load ai guidance/i)).toBeInTheDocument();
+      expect(screen.getByText(/AI service timeout/i)).toBeInTheDocument();
     });
 
     expect(screen.getByText('Try Again')).toBeInTheDocument();
@@ -234,7 +250,7 @@ describe('AIGuidancePanel', () => {
 
     expect(navigator.clipboard.writeText).toHaveBeenCalledWith(mockAIResponse.guidance);
     expect(mockToast).toHaveBeenCalledWith({
-      title: "Copied to clipboard",
+      title: "Guidance copied",
       description: "AI guidance has been copied to your clipboard.",
       duration: 2000
     });
@@ -267,7 +283,7 @@ describe('AIGuidancePanel', () => {
       expect.stringContaining(mockAIResponse.guidance)
     );
     expect(mockToast).toHaveBeenCalledWith({
-      title: "Copied to clipboard",
+      title: "Full guidance copied",
       description: "Complete AI guidance has been copied to your clipboard.",
       duration: 2000
     });

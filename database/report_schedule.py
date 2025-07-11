@@ -17,19 +17,21 @@ class ReportSchedule(Base):
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=False)
-    business_profile_id = Column(UUID(as_uuid=True), ForeignKey("business_profiles.id"), nullable=False)
-    
+    business_profile_id = Column(
+        UUID(as_uuid=True), ForeignKey("business_profiles.id"), nullable=False
+    )
+
     report_type = Column(String, nullable=False)
     # Frequency can be a simple string ('daily', 'weekly') or a cron expression
     frequency = Column(String, nullable=False)
-    
+
     parameters = Column(JSON, nullable=True, default=lambda: {})
     recipients = Column(JSON, nullable=False, default=lambda: [])
-    
+
     active = Column(Boolean, default=True, nullable=False)
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
     last_run_at = Column(DateTime, nullable=True)
-    
+
     owner = relationship("User", back_populates="report_schedules")
     business_profile = relationship("BusinessProfile")
 

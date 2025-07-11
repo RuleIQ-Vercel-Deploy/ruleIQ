@@ -12,7 +12,6 @@ import pytest
 from fastapi.testclient import TestClient
 from httpx import AsyncClient
 
-from main import app
 from services.ai.assistant import ComplianceAssistant
 from services.ai.circuit_breaker import AICircuitBreaker
 from services.ai.exceptions import ModelUnavailableException
@@ -22,16 +21,12 @@ class TestAIOptimizationEndpoints:
     """Integration tests for AI optimization endpoints."""
 
     @pytest.fixture
-    def client(self):
+    def client(self, client):
         """Test client for API endpoints."""
-        return TestClient(app)
+        # Use the client fixture from conftest which has proper mocking
+        return client
 
-    @pytest.fixture
-    async def async_client(self):
-        """Async test client for streaming endpoints."""
-        from httpx import ASGITransport
-        async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as ac:
-            yield ac
+    # Remove this fixture - use async_test_client directly from conftest
 
     @pytest.fixture
     def mock_ai_assistant(self):
@@ -42,22 +37,22 @@ class TestAIOptimizationEndpoints:
         assistant.circuit_breaker.get_status.return_value = {
             "overall_state": "CLOSED",
             "model_states": {"gemini-2.5-flash": "CLOSED"},
-            "metrics": {"success_rate": 0.95}
+            "metrics": {"success_rate": 0.95},
         }
         return assistant
 
-
-
     @pytest.mark.asyncio
-    async def test_streaming_analysis_endpoint(self, async_client, authenticated_headers, mock_ai_assistant):
+    async def test_streaming_analysis_endpoint(
+        self, async_test_client, authenticated_headers, mock_compliance_assistant
+    ):
         """Test streaming analysis endpoint with optimization features."""
         request_data = {
             "assessment_responses": [
                 {"question_id": "q1", "answer": "yes"},
-                {"question_id": "q2", "answer": "no"}
+                {"question_id": "q2", "answer": "no"},
             ],
             "framework_id": "gdpr",
-            "business_profile_id": "profile-123"
+            "business_profile_id": "profile-123",
         }
 
         # Mock streaming response
@@ -66,29 +61,34 @@ class TestAIOptimizationEndpoints:
             yield "Analysis chunk 2"
             yield "Analysis complete"
 
-        mock_ai_assistant.analyze_assessment_results_stream = AsyncMock(return_value=mock_stream())
+        mock_compliance_assistant.analyze_assessment_results_stream = AsyncMock(return_value=mock_stream())
 
-        with patch('api.routers.ai_assessments.ComplianceAssistant', return_value=mock_ai_assistant):
-            response = await async_client.post(
+        # Mock the constructor
+        with patch("api.routers.ai_assessments.ComplianceAssistant") as MockAssistant:
+            MockAssistant.return_value = mock_compliance_assistant
+            
+            response = await async_test_client.post(
                 "/api/ai/assessments/analysis/stream",
                 json=request_data,
-                headers=authenticated_headers
+                headers=authenticated_headers,
             )
 
             assert response.status_code == 200
             assert response.headers["content-type"] == "text/event-stream; charset=utf-8"
 
     @pytest.mark.asyncio
-    async def test_streaming_recommendations_endpoint(self, async_client, authenticated_headers, mock_ai_assistant):
+    async def test_streaming_recommendations_endpoint(
+        self, async_test_client, authenticated_headers, mock_ai_assistant
+    ):
         """Test streaming recommendations endpoint."""
         request_data = {
             "assessment_gaps": [
                 {"section": "data_protection", "severity": "high"},
-                {"section": "consent", "severity": "medium"}
+                {"section": "consent", "severity": "medium"},
             ],
             "framework_id": "gdpr",
             "business_profile_id": "profile-123",
-            "priority_level": "high"
+            "priority_level": "high",
         }
 
         # Mock streaming response
@@ -98,27 +98,33 @@ class TestAIOptimizationEndpoints:
             yield "Recommendation 2: "
             yield "Update consent mechanisms"
 
-        mock_ai_assistant.get_assessment_recommendations_stream = AsyncMock(return_value=mock_stream())
+        mock_ai_assistant.get_assessment_recommendations_stream = AsyncMock(
+            return_value=mock_stream()
+        )
 
-        with patch('api.routers.ai_assessments.ComplianceAssistant', return_value=mock_ai_assistant):
-            response = await async_client.post(
+        with patch(
+            "api.routers.ai_assessments.ComplianceAssistant", return_value=mock_ai_assistant
+        ):
+            response = await async_test_client.post(
                 "/api/ai/assessments/recommendations/stream",
                 json=request_data,
-                headers=authenticated_headers
+                headers=authenticated_headers,
             )
 
             assert response.status_code == 200
             assert response.headers["content-type"] == "text/event-stream; charset=utf-8"
 
     @pytest.mark.asyncio
-    async def test_streaming_help_endpoint(self, async_client, authenticated_headers, mock_ai_assistant):
+    async def test_streaming_help_endpoint(
+        self, async_test_client, authenticated_headers, mock_ai_assistant
+    ):
         """Test streaming help endpoint."""
         framework_id = "gdpr"
         request_data = {
             "question_id": "q1",
             "question_text": "What is personal data?",
             "framework_id": framework_id,
-            "section_id": "data_protection"
+            "section_id": "data_protection",
         }
 
         # Mock streaming response
@@ -129,23 +135,39 @@ class TestAIOptimizationEndpoints:
 
         mock_ai_assistant.get_assessment_help_stream = AsyncMock(return_value=mock_stream())
 
-        with patch('api.routers.ai_assessments.ComplianceAssistant', return_value=mock_ai_assistant):
-            response = await async_client.post(
+        with patch(
+            "api.routers.ai_assessments.ComplianceAssistant", return_value=mock_ai_assistant
+        ):
+            response = await async_test_client.post(
                 f"/api/ai/assessments/{framework_id}/help/stream",
                 json=request_data,
-                headers=authenticated_headers
+                headers=authenticated_headers,
             )
 
             assert response.status_code == 200
             assert response.headers["content-type"] == "text/event-stream; charset=utf-8"
 
-    def test_circuit_breaker_status_endpoint(self, client, authenticated_headers, mock_ai_assistant):
+    def test_circuit_breaker_status_endpoint(
+        self, client, authenticated_headers, mock_compliance_assistant
+    ):
         """Test circuit breaker status endpoint."""
-        with patch('api.routers.ai_assessments.ComplianceAssistant', return_value=mock_ai_assistant):
-            response = client.get(
-                "/api/ai/circuit-breaker/status",
-                headers=authenticated_headers
-            )
+        # Mock the circuit breaker health status
+        mock_compliance_assistant.circuit_breaker.get_health_status.return_value = {
+            "overall_state": "CLOSED",
+            "model_states": {
+                "gemini-2.5-flash": {"state": "CLOSED", "failures": 0, "success_rate": 1.0}
+            },
+            "metrics": {
+                "total_requests": 100,
+                "total_failures": 5,
+                "uptime_percentage": 95.0
+            }
+        }
+        
+        with patch(
+            "api.routers.ai_optimization.ComplianceAssistant", return_value=mock_compliance_assistant
+        ):
+            response = client.get("/api/ai-optimization/circuit-breaker/status", headers=authenticated_headers)
 
             assert response.status_code == 200
             data = response.json()
@@ -159,21 +181,16 @@ class TestAIOptimizationEndpoints:
             "task_type": "analysis",
             "complexity": "complex",
             "prefer_speed": False,
-            "context": {
-                "framework": "gdpr",
-                "prompt_length": 1500
-            }
+            "context": {"framework": "gdpr", "prompt_length": 1500},
         }
 
-        with patch('config.ai_config.get_ai_model') as mock_get_model:
+        with patch("config.ai_config.get_ai_model") as mock_get_model:
             mock_model = Mock()
             mock_model.model_name = "gemini-2.5-pro"
             mock_get_model.return_value = mock_model
 
             response = client.post(
-                "/api/ai/model-selection",
-                json=request_data,
-                headers=authenticated_headers
+                "/api/ai-optimization/model-selection", json=request_data, headers=authenticated_headers
             )
 
             assert response.status_code == 200
@@ -182,12 +199,14 @@ class TestAIOptimizationEndpoints:
             assert "reasoning" in data
 
     @pytest.mark.asyncio
-    async def test_streaming_with_circuit_breaker_open(self, async_client, authenticated_headers, mock_ai_assistant):
+    async def test_streaming_with_circuit_breaker_open(
+        self, async_test_client, authenticated_headers, mock_ai_assistant
+    ):
         """Test streaming behavior when circuit breaker is open."""
         request_data = {
             "assessment_responses": [{"question_id": "q1", "answer": "yes"}],
             "framework_id": "gdpr",
-            "business_profile_id": "profile-123"
+            "business_profile_id": "profile-123",
         }
 
         # Mock circuit breaker open state
@@ -195,43 +214,41 @@ class TestAIOptimizationEndpoints:
         mock_ai_assistant.circuit_breaker.get_status.return_value = {
             "overall_state": "OPEN",
             "model_states": {"gemini-2.5-flash": "OPEN"},
-            "metrics": {"success_rate": 0.45}
+            "metrics": {"success_rate": 0.45},
         }
 
         # Mock fallback response
         async def mock_fallback_stream():
             yield "Service temporarily unavailable. Please try again later."
 
-        mock_ai_assistant.analyze_assessment_results_stream = AsyncMock(return_value=mock_fallback_stream())
+        mock_ai_assistant.analyze_assessment_results_stream = AsyncMock(
+            return_value=mock_fallback_stream()
+        )
 
-        with patch('api.routers.ai_assessments.ComplianceAssistant', return_value=mock_ai_assistant):
-            response = await async_client.post(
+        with patch(
+            "api.routers.ai_assessments.ComplianceAssistant", return_value=mock_ai_assistant
+        ):
+            response = await async_test_client.post(
                 "/api/ai/assessments/analysis/stream",
                 json=request_data,
-                headers=authenticated_headers
+                headers=authenticated_headers,
             )
 
             assert response.status_code == 200
 
     def test_model_fallback_chain(self, client, authenticated_headers):
         """Test model fallback chain functionality."""
-        with patch('config.ai_config.get_ai_model') as mock_get_model:
+        with patch("config.ai_config.get_ai_model") as mock_get_model:
             # First model fails, second succeeds
             mock_get_model.side_effect = [
                 ModelUnavailableException("gemini-2.5-pro", "Circuit open"),
-                Mock(model_name="gemini-2.5-flash")
+                Mock(model_name="gemini-2.5-flash"),
             ]
 
-            request_data = {
-                "task_type": "analysis",
-                "complexity": "complex",
-                "prefer_speed": False
-            }
+            request_data = {"task_type": "analysis", "complexity": "complex", "prefer_speed": False}
 
             response = client.post(
-                "/api/ai/model-selection",
-                json=request_data,
-                headers=authenticated_headers
+                "/api/ai-optimization/model-selection", json=request_data, headers=authenticated_headers
             )
 
             assert response.status_code == 200
@@ -240,12 +257,14 @@ class TestAIOptimizationEndpoints:
             assert data["fallback_used"] is True
 
     @pytest.mark.asyncio
-    async def test_streaming_error_handling(self, async_client, authenticated_headers, mock_ai_assistant):
+    async def test_streaming_error_handling(
+        self, async_test_client, authenticated_headers, mock_ai_assistant
+    ):
         """Test error handling in streaming endpoints."""
         request_data = {
             "assessment_responses": [{"question_id": "q1", "answer": "yes"}],
             "framework_id": "gdpr",
-            "business_profile_id": "profile-123"
+            "business_profile_id": "profile-123",
         }
 
         # Mock streaming error
@@ -253,11 +272,13 @@ class TestAIOptimizationEndpoints:
             side_effect=Exception("AI service error")
         )
 
-        with patch('api.routers.ai_assessments.ComplianceAssistant', return_value=mock_ai_assistant):
-            response = await async_client.post(
+        with patch(
+            "api.routers.ai_assessments.ComplianceAssistant", return_value=mock_ai_assistant
+        ):
+            response = await async_test_client.post(
                 "/api/ai/assessments/analysis/stream",
                 json=request_data,
-                headers=authenticated_headers
+                headers=authenticated_headers,
             )
 
             # Should handle error gracefully
@@ -270,11 +291,10 @@ class TestAIOptimizationEndpoints:
         mock_ai_assistant.circuit_breaker.metrics.total_failures = 5
         mock_ai_assistant.circuit_breaker.metrics.average_response_time = 2.5
 
-        with patch('api.routers.ai_assessments.ComplianceAssistant', return_value=mock_ai_assistant):
-            response = client.get(
-                "/api/ai/performance/metrics",
-                headers=authenticated_headers
-            )
+        with patch(
+            "api.routers.ai_assessments.ComplianceAssistant", return_value=mock_ai_assistant
+        ):
+            response = client.get("/api/ai/performance/metrics", headers=authenticated_headers)
 
             assert response.status_code == 200
             data = response.json()
@@ -283,12 +303,14 @@ class TestAIOptimizationEndpoints:
             assert "average_response_time" in data
 
     @pytest.mark.asyncio
-    async def test_concurrent_streaming_requests(self, async_client, authenticated_headers, mock_ai_assistant):
+    async def test_concurrent_streaming_requests(
+        self, async_test_client, authenticated_headers, mock_ai_assistant
+    ):
         """Test handling multiple concurrent streaming requests."""
         request_data = {
             "assessment_responses": [{"question_id": "q1", "answer": "yes"}],
             "framework_id": "gdpr",
-            "business_profile_id": "profile-123"
+            "business_profile_id": "profile-123",
         }
 
         # Mock streaming response
@@ -297,14 +319,16 @@ class TestAIOptimizationEndpoints:
 
         mock_ai_assistant.analyze_assessment_results_stream = AsyncMock(return_value=mock_stream())
 
-        with patch('api.routers.ai_assessments.ComplianceAssistant', return_value=mock_ai_assistant):
+        with patch(
+            "api.routers.ai_assessments.ComplianceAssistant", return_value=mock_ai_assistant
+        ):
             # Create multiple concurrent requests
             tasks = []
             for _ in range(5):
-                task = async_client.post(
+                task = async_test_client.post(
                     "/api/ai/assessments/analysis/stream",
                     json=request_data,
-                    headers=authenticated_headers
+                    headers=authenticated_headers,
                 )
                 tasks.append(task)
 
@@ -318,10 +342,11 @@ class TestAIOptimizationEndpoints:
         """Test model health check endpoint."""
         mock_ai_assistant.circuit_breaker.check_model_health.return_value = True
 
-        with patch('api.routers.ai_assessments.ComplianceAssistant', return_value=mock_ai_assistant):
+        with patch(
+            "api.routers.ai_assessments.ComplianceAssistant", return_value=mock_ai_assistant
+        ):
             response = client.get(
-                "/api/ai/models/gemini-2.5-flash/health",
-                headers=authenticated_headers
+                "/api/ai/models/gemini-2.5-flash/health", headers=authenticated_headers
             )
 
             assert response.status_code == 200

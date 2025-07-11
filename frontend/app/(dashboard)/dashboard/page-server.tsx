@@ -22,9 +22,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { 
   StatsCardSkeleton, 
   ChartSkeleton, 
-  InsightsSkeleton,
-  DashboardSkeleton 
+  InsightsSkeleton 
 } from "@/components/ui/skeletons"
+
+import type { DashboardInsight, DashboardTask } from "@/types/dashboard"
 
 // Server-side data fetching functions
 async function getComplianceStats() {
@@ -33,7 +34,7 @@ async function getComplianceStats() {
   
   return {
     score: 87,
-    trend: 5,
+    trend: { value: 5, isPositive: true },
     frameworks: 5,
     activeFrameworks: 3,
     pendingTasks: 12,
@@ -43,60 +44,135 @@ async function getComplianceStats() {
   }
 }
 
-async function getAIInsights() {
+async function getAIInsights(): Promise<DashboardInsight[]> {
   await new Promise(resolve => setTimeout(resolve, 700))
   
   return [
     {
       id: "1",
-      type: "recommendation" as const,
+      type: "recommendation",
       title: "Update Password Policy",
       description: "Your password policy hasn't been reviewed in 6 months. Consider updating requirements.",
-      priority: "high" as const,
+      priority: "high",
+      created_at: new Date().toISOString(),
+      dismissible: true,
     },
     {
-      id: "2",
-      type: "alert" as const,
+      id: "2", 
+      type: "alert",
       title: "New GDPR Guidelines",
       description: "EU has released updated GDPR guidelines affecting data retention.",
-      priority: "medium" as const,
+      priority: "medium",
+      created_at: new Date().toISOString(),
+      dismissible: true,
     },
     {
       id: "3",
-      type: "success" as const,
+      type: "success",
       title: "ISO 27001 Compliant",
       description: "All requirements met for ISO 27001 certification renewal.",
-      priority: "low" as const,
+      priority: "low",
+      created_at: new Date().toISOString(),
+      dismissible: true,
     },
   ]
 }
 
-async function getPendingTasks() {
+async function getPendingTasks(): Promise<DashboardTask[]> {
   await new Promise(resolve => setTimeout(resolve, 600))
   
   return [
     {
       id: "1",
-      title: "Complete Risk Assessment",
+      title: "Complete Risk Assessment", 
       dueDate: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000),
-      priority: "high" as const,
+      priority: "high",
       framework: "ISO 27001",
+      type: "assessment",
+      status: "pending",
     },
     {
       id: "2",
       title: "Review Access Controls",
       dueDate: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000),
-      priority: "medium" as const,
+      priority: "medium", 
       framework: "SOC 2",
+      type: "review",
+      status: "pending",
     },
     {
       id: "3",
       title: "Update Privacy Policy",
       dueDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
-      priority: "low" as const,
+      priority: "low",
       framework: "GDPR",
+      type: "policy",
+      status: "pending",
     },
   ]
+}
+
+// Chart data functions
+async function getComplianceTrendData() {
+  await new Promise(resolve => setTimeout(resolve, 300))
+  
+  const now = new Date()
+  return Array.from({ length: 30 }, (_, i) => {
+    const date = new Date(now)
+    date.setDate(date.getDate() - (29 - i))
+    return {
+      date: date.toISOString(),
+      score: Math.floor(85 + Math.random() * 10 + Math.sin(i / 5) * 5),
+      target: 90
+    }
+  })
+}
+
+async function getFrameworkBreakdownData() {
+  await new Promise(resolve => setTimeout(resolve, 300))
+  
+  return [
+    { framework: "ISO 27001", score: 92, color: "#17255A" },
+    { framework: "GDPR", score: 87, color: "#CB963E" },
+    { framework: "SOC 2", score: 78, color: "#34FEF7" },
+    { framework: "NIST", score: 65, color: "#D0D5E3" },
+  ]
+}
+
+async function getRiskMatrixData() {
+  await new Promise(resolve => setTimeout(resolve, 300))
+  
+  return [
+    { id: "1", name: "Data Breach Risk", likelihood: 3 as const, impact: 5 as const, category: "Security" },
+    { id: "2", name: "Compliance Gap", likelihood: 4 as const, impact: 3 as const, category: "Regulatory" },
+    { id: "3", name: "Access Control", likelihood: 2 as const, impact: 4 as const, category: "Security" },
+    { id: "4", name: "Policy Updates", likelihood: 5 as const, impact: 2 as const, category: "Governance" },
+  ]
+}
+
+async function getTaskProgressData() {
+  await new Promise(resolve => setTimeout(resolve, 300))
+  
+  return [
+    { category: "Assessments", completed: 8, pending: 4, overdue: 1 },
+    { category: "Policies", completed: 12, pending: 2, overdue: 0 },
+    { category: "Evidence", completed: 25, pending: 8, overdue: 2 },
+    { category: "Reviews", completed: 6, pending: 3, overdue: 1 },
+  ]
+}
+
+async function getActivityHeatmapData() {
+  await new Promise(resolve => setTimeout(resolve, 300))
+  
+  const now = new Date()
+  return Array.from({ length: 84 }, (_, i) => {
+    const date = new Date(now)
+    date.setDate(date.getDate() - (83 - i))
+    return {
+      date: date.toISOString().split('T')[0]!,
+      count: Math.floor(Math.random() * 10)
+    }
+  })
 }
 
 // Async Server Components
@@ -107,34 +183,29 @@ async function ComplianceStats() {
     <>
       <EnhancedStatsCard
         title="Compliance Score"
-        value={stats.score}
-        unit="%"
+        description="Overall compliance rating"
+        value={`${stats.score}%`}
+        icon={Shield}
         trend={stats.trend}
-        trendLabel="from last month"
-        icon={<Shield className="h-4 w-4" />}
-        variant="primary"
       />
       <EnhancedStatsCard
         title="Active Frameworks"
+        description={`${stats.activeFrameworks} of ${stats.frameworks} frameworks`}
         value={stats.activeFrameworks}
-        total={stats.frameworks}
-        icon={<FileCheck className="h-4 w-4" />}
-        variant="secondary"
+        icon={FileCheck}
       />
       <EnhancedStatsCard
         title="Pending Tasks"
+        description="Tasks requiring attention"
         value={stats.pendingTasks}
-        trend={-3}
-        trendLabel="from last week"
-        icon={<RefreshCw className="h-4 w-4" />}
-        variant="warning"
+        icon={RefreshCw}
+        trend={{ value: 3, isPositive: false }}
       />
       <EnhancedStatsCard
         title="Risk Items"
+        description={`${stats.highRisks} high priority risks`}
         value={stats.highRisks}
-        total={stats.totalRisks}
-        icon={<AlertTriangle className="h-4 w-4" />}
-        variant="error"
+        icon={AlertTriangle}
       />
     </>
   )
@@ -148,6 +219,31 @@ async function AIInsights() {
 async function PendingTasks() {
   const tasks = await getPendingTasks()
   return <PendingTasksWidget tasks={tasks} />
+}
+
+async function ComplianceTrendChartWrapper() {
+  const data = await getComplianceTrendData()
+  return <ComplianceTrendChart data={data} />
+}
+
+async function FrameworkBreakdownChartWrapper() {
+  const data = await getFrameworkBreakdownData()
+  return <FrameworkBreakdownChart data={data} />
+}
+
+async function RiskMatrixWrapper() {
+  const risks = await getRiskMatrixData()
+  return <RiskMatrix risks={risks} />
+}
+
+async function TaskProgressChartWrapper() {
+  const data = await getTaskProgressData()
+  return <TaskProgressChart data={data} />
+}
+
+async function ActivityHeatmapWrapper() {
+  const data = await getActivityHeatmapData()
+  return <ActivityHeatmap data={data} />
 }
 
 export default async function DashboardPage() {
@@ -174,7 +270,7 @@ export default async function DashboardPage() {
           </CardHeader>
           <CardContent>
             <Suspense fallback={<ChartSkeleton />}>
-              <ComplianceTrendChart />
+              <ComplianceTrendChartWrapper />
             </Suspense>
           </CardContent>
         </Card>
@@ -210,7 +306,7 @@ export default async function DashboardPage() {
           </CardHeader>
           <CardContent>
             <Suspense fallback={<ChartSkeleton />}>
-              <FrameworkBreakdownChart />
+              <FrameworkBreakdownChartWrapper />
             </Suspense>
           </CardContent>
         </Card>
@@ -243,7 +339,7 @@ export default async function DashboardPage() {
           </CardHeader>
           <CardContent>
             <Suspense fallback={<ChartSkeleton />}>
-              <RiskMatrix />
+              <RiskMatrixWrapper />
             </Suspense>
           </CardContent>
         </Card>
@@ -258,7 +354,7 @@ export default async function DashboardPage() {
           </CardHeader>
           <CardContent>
             <Suspense fallback={<ChartSkeleton />}>
-              <TaskProgressChart />
+              <TaskProgressChartWrapper />
             </Suspense>
           </CardContent>
         </Card>
@@ -273,7 +369,7 @@ export default async function DashboardPage() {
           </CardHeader>
           <CardContent>
             <Suspense fallback={<ChartSkeleton />}>
-              <ActivityHeatmap />
+              <ActivityHeatmapWrapper />
             </Suspense>
           </CardContent>
         </Card>
