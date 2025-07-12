@@ -118,12 +118,16 @@ export interface AssessmentResult {
 export interface Gap {
   id: string;
   questionId: string;
+  questionText: string;
   section: string;
+  category: string;
   severity: 'critical' | 'high' | 'medium' | 'low';
   description: string;
   impact: string;
   currentState: string;
   targetState: string;
+  expectedAnswer: string;
+  actualAnswer?: string;
 }
 
 export interface Recommendation {
@@ -135,6 +139,11 @@ export interface Recommendation {
   estimatedEffort: string;
   resources?: string[];
   relatedFrameworks?: string[];
+  category: string;
+  impact: string;
+  effort: string;
+  estimatedTime: string;
+  relatedGaps?: string[];
 }
 
 export interface QuestionnaireEngineConfig {

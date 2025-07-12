@@ -53,10 +53,11 @@ describe('API Services - Simple Tests', () => {
       })
 
       expect(result).toEqual(mockResponse)
-      expect(mockApiClient.post).toHaveBeenCalledWith('/auth/login', {
-        email: 'test@example.com',
-        password: 'password123',
-      })
+      expect(mockApiClient.post).toHaveBeenCalledWith('/auth/login', expect.any(FormData), expect.objectContaining({
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      }))
     })
 
     it('should handle login failure', async () => {

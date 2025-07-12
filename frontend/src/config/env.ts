@@ -56,6 +56,7 @@ const processEnv = {
 // --------------------------
 
 const merged = serverSchema.merge(clientSchema);
+// eslint-disable-next-line no-unused-vars
 type _MergedInput = z.input<typeof merged>;
 type MergedOutput = z.output<typeof merged>;
 

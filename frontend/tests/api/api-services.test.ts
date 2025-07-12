@@ -1,35 +1,39 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
-import { assessmentService } from '@/lib/api/assessments.service'
-import { authService } from '@/lib/api/auth.service'
-import { evidenceService } from '@/lib/api/evidence.service'
-import { businessProfileService } from '@/lib/api/business-profiles.service'
-import { ApiError } from '@/lib/api/error-handler'
 
 // Mock fetch globally
 const mockFetch = vi.fn()
 global.fetch = mockFetch
 
-// Mock axios directly since our API client uses axios
-vi.mock('axios', () => ({
-  default: {
-    create: vi.fn(() => ({
-      request: mockFetch,
-      get: mockFetch,
-      post: mockFetch,
-      put: mockFetch,
-      delete: mockFetch,
-      interceptors: {
-        request: { use: vi.fn(), eject: vi.fn() },
-        response: { use: vi.fn(), eject: vi.fn() },
-      },
-    })),
-    request: mockFetch,
-    get: mockFetch,
-    post: mockFetch,
-    put: mockFetch,
-    delete: mockFetch,
+// Create a mock axios instance
+const mockAxiosInstance = {
+  request: mockFetch,
+  get: mockFetch,
+  post: mockFetch,
+  put: mockFetch,
+  delete: mockFetch,
+  patch: mockFetch,
+  interceptors: {
+    request: { use: vi.fn(), eject: vi.fn() },
+    response: { use: vi.fn(), eject: vi.fn() },
   },
-}))
+}
+
+// Mock axios module
+vi.mock('axios', () => {
+  return {
+    default: {
+      create: vi.fn(() => mockAxiosInstance),
+      isAxiosError: vi.fn((error) => error.isAxiosError === true),
+    },
+  }
+})
+
+// Import services after mocking
+import { assessmentService } from '@/lib/api/assessments.service'
+import { authService } from '@/lib/api/auth.service'
+import { evidenceService } from '@/lib/api/evidence.service'
+import { businessProfileService } from '@/lib/api/business-profiles.service'
+import { ApiError } from '@/lib/api/error-handler'
 
 // Mock secure storage
 vi.mock('@/lib/utils/secure-storage', () => ({

@@ -1,4 +1,5 @@
 import { type Page, Locator, expect } from '@playwright/test';
+import { TestSelectors } from '../fixtures/test-selectors';
 
 /**
  * Test utilities for ruleIQ E2E tests
@@ -6,6 +7,13 @@ import { type Page, Locator, expect } from '@playwright/test';
 
 export class TestHelpers {
   constructor(private page: Page) {}
+  
+  /**
+   * Get test selectors
+   */
+  get selectors() {
+    return TestSelectors;
+  }
 
   /**
    * Navigate to a specific page and wait for it to load

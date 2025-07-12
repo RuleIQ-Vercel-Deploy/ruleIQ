@@ -29,7 +29,7 @@ export function GapAnalysisCard({ gap, index }: GapAnalysisCardProps) {
           color: 'text-yellow-600',
           bgColor: 'bg-yellow-50',
           borderColor: 'border-yellow-200',
-          badgeVariant: 'warning' as const
+          badgeVariant: 'pending' as const
         };
       default:
         return {

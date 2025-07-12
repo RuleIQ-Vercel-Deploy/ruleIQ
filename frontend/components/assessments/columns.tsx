@@ -50,7 +50,7 @@ export const columns: ColumnDef<Assessment>[] = [
       const status = statuses.find((s) => s.value === row.original.status)
       return (
         <div className="w-[150px]">
-          <ProgressBar value={row.getValue("progress")} color={status?.progressColor} />
+          <ProgressBar value={row.getValue("progress")} color={status?.progressColor || "blue"} />
         </div>
       )
     },

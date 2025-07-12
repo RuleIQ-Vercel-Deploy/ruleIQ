@@ -50,6 +50,9 @@ export function AIGuidancePanel({
   const [requestId, setRequestId] = useState<string | null>(null);
   const { toast } = useToast();
   
+  // Suppress TypeScript unused variable warning
+  void requestId;
+  
   // Load guidance when defaultOpen is true
   React.useEffect(() => {
     if (defaultOpen && !aiResponse && !loading) {
@@ -65,13 +68,15 @@ export function AIGuidancePanel({
     setError(null);
 
     try {
-      const response = await assessmentAIService.getQuestionHelp({
+      const helpRequest = {
         question_id: question.id,
         question_text: question.text,
         framework_id: frameworkId,
-        section_id: sectionId,
-        user_context: userContext
-      });
+        ...(sectionId && { section_id: sectionId }),
+        ...(userContext && { user_context: userContext })
+      };
+      
+      const response = await assessmentAIService.getQuestionHelp(helpRequest);
 
       // Check if this request is still valid by checking the ref
       setRequestId((latestRequestId) => {

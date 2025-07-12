@@ -285,7 +285,7 @@ export function QuestionRenderer({
                   onChange(newFiles);
                 }}
                 disabled={disabled}
-                accept={question.metadata?.acceptedTypes?.join(',')}
+                accept={question.metadata?.['acceptedTypes']?.join(',')}
                 className="hidden"
                 id={`file-${question.id}`}
               />
@@ -347,7 +347,7 @@ export function QuestionRenderer({
               <span className="text-destructive ml-1">*</span>
             )}
           </h3>
-          {frameworkId && (
+          {frameworkId && sectionId && userContext && (
             <InlineAIErrorBoundary>
               <AIHelpTooltip
                 question={question}

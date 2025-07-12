@@ -5,7 +5,7 @@
  */
 
 import { render, RenderOptions, RenderResult } from '@testing-library/react';
-import { ReactElement } from 'react';
+import React, { ReactElement } from 'react';
 import { createMemoryLeakDetector, MemoryLeakDetector, setupMemoryLeakMatchers } from './memory-leak-detector';
 
 export interface RenderWithLeakDetectionOptions extends RenderOptions {

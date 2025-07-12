@@ -22,8 +22,6 @@ import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
-
-// Import TanStack Query hooks
 import { useDashboard } from "@/lib/tanstack-query/hooks"
 
 // Mock data generation functions
@@ -139,7 +137,7 @@ export default function Dashboard() {
                 Welcome back{onboardingData?.fullName ? `, ${onboardingData.fullName.split(' ')[0]}` : ''}
               </h1>
               <p className="text-text-secondary">
-                {complianceProfile?.priorities?.length > 0 
+                {complianceProfile?.priorities && complianceProfile.priorities.length > 0 
                   ? `Focusing on: ${complianceProfile.priorities[0]}` 
                   : "Here's what's happening with your compliance today"}
               </p>
@@ -219,8 +217,8 @@ export default function Dashboard() {
             ) : (
               <AIInsightsWidget 
                 insights={dashboardData?.insights || []} 
-                complianceProfile={complianceProfile}
-                onboardingData={onboardingData}
+                complianceProfile={complianceProfile || { priorities: [], maturityLevel: "" }}
+                onboardingData={onboardingData || { fullName: "", timeline: "" }}
               />
             )}
 

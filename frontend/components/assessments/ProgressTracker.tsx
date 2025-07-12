@@ -29,9 +29,9 @@ export function ProgressTracker({
   // Calculate section progress
   const sectionProgress = framework.sections.map((section, index) => {
     const sectionQuestions = section.questions.length;
-    const answeredInSection = section.questions.filter(q => 
+    const answeredInSection = section.questions.filter((_q, qIndex) => 
       // This would need to be passed from the engine
-      progress.answeredQuestions > 0 // Simplified for now
+      progress.answeredQuestions > qIndex // Simplified for now
     ).length;
     
     return {

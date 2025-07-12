@@ -2,6 +2,8 @@
 
 import { RefreshCw, Info } from "lucide-react"
 import { useState, useEffect } from "react"
+// @ts-ignore - react-grid-layout doesn't have proper types
+import { type Layouts } from "react-grid-layout"
 
 import { CustomizableDashboard } from "@/components/dashboard/customizable-dashboard"
 import { DashboardHeader } from "@/components/dashboard/dashboard-header"
@@ -130,7 +132,7 @@ export default function CustomDashboardPage() {
     }
   }, [apiData])
 
-  const handleLayoutChange = (layouts: ReactGridLayout.Layouts) => {
+  const handleLayoutChange = (layouts: Layouts) => {
     // Save to localStorage or backend
     console.log("Layout changed:", layouts)
   }

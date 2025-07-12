@@ -6,6 +6,9 @@ import { useAppStore } from "@/lib/stores/app.store"
 
 export default function FileUploadDemoPage() {
   const { addNotification } = useAppStore()
+  
+  // Suppress TypeScript unused variable warning
+  void addNotification
 
   const handleFileUpload = async (files: File[]) => {
     console.log("Files to upload:", files)

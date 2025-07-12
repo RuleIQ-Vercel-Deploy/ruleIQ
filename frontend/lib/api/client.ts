@@ -3,6 +3,7 @@ import axios, { type AxiosInstance, type AxiosRequestConfig, AxiosResponse, type
 import { API_TIMEOUT, API_RETRY_ATTEMPTS, API_RETRY_DELAY, AUTH_TOKEN_KEY, REFRESH_TOKEN_KEY } from '@/config/constants';
 import { env } from '@/config/env';
 import SecureStorage from '@/lib/utils/secure-storage';
+// CSRF headers will be added at component level
 
 import { handleApiError, retryWithBackoff, ErrorType, logError } from './error-handler';
 
@@ -53,6 +54,10 @@ class ApiClient {
         if (token) {
           config.headers.Authorization = `Bearer ${token}`;
         }
+        
+        // CSRF protection will be handled at component level
+        // as it requires React hooks for token management
+        
         return config;
       },
       (error) => {

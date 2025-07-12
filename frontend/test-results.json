@@ -1,0 +1,1565 @@
+🚀 Starting global setup for E2E tests...
+⏳ Waiting for application to be ready...
+✅ Application is ready. Page title: ruleIQ - AI-Powered Compliance Automation
+✅ Global setup completed successfully
+🧹 Starting global teardown for E2E tests...
+✅ Global teardown completed successfully
+{
+  "config": {
+    "configFile": "/home/omar/Documents/ruleIQ/frontend/playwright.config.ts",
+    "rootDir": "/home/omar/Documents/ruleIQ/frontend/tests/e2e",
+    "forbidOnly": false,
+    "fullyParallel": true,
+    "globalSetup": "/home/omar/Documents/ruleIQ/frontend/tests/e2e/global-setup.ts",
+    "globalTeardown": "/home/omar/Documents/ruleIQ/frontend/tests/e2e/global-teardown.ts",
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 8
+    },
+    "preserveOutput": "always",
+    "reporter": [
+      [
+        "json"
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "quiet": false,
+    "projects": [
+      {
+        "outputDir": "/home/omar/Documents/ruleIQ/frontend/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 8
+        },
+        "id": "chromium",
+        "name": "chromium",
+        "testDir": "/home/omar/Documents/ruleIQ/frontend/tests/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "/home/omar/Documents/ruleIQ/frontend/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 8
+        },
+        "id": "firefox",
+        "name": "firefox",
+        "testDir": "/home/omar/Documents/ruleIQ/frontend/tests/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "/home/omar/Documents/ruleIQ/frontend/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 8
+        },
+        "id": "webkit",
+        "name": "webkit",
+        "testDir": "/home/omar/Documents/ruleIQ/frontend/tests/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "/home/omar/Documents/ruleIQ/frontend/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 8
+        },
+        "id": "Mobile Chrome",
+        "name": "Mobile Chrome",
+        "testDir": "/home/omar/Documents/ruleIQ/frontend/tests/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "/home/omar/Documents/ruleIQ/frontend/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 8
+        },
+        "id": "Mobile Safari",
+        "name": "Mobile Safari",
+        "testDir": "/home/omar/Documents/ruleIQ/frontend/tests/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "shard": null,
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.53.1",
+    "workers": 8,
+    "webServer": {
+      "command": "pnpm dev",
+      "url": "http://localhost:3000",
+      "reuseExistingServer": true,
+      "timeout": 120000
+    }
+  },
+  "suites": [
+    {
+      "title": "basic-flow.test.ts",
+      "file": "basic-flow.test.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Basic Application Flow",
+          "file": "basic-flow.test.ts",
+          "line": 8,
+          "column": 6,
+          "specs": [
+            {
+              "title": "should navigate through main pages",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 12187,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-07-11T16:12:37.486Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "389d9888f02b9cf39f15-73b8100c5270455b5e5d",
+              "file": "basic-flow.test.ts",
+              "line": 15,
+              "column": 7
+            },
+            {
+              "title": "should display login page correctly",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 1,
+                      "status": "passed",
+                      "duration": 15621,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-07-11T16:12:37.521Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "389d9888f02b9cf39f15-66f8555ef97733cb1a1c",
+              "file": "basic-flow.test.ts",
+              "line": 28,
+              "column": 7
+            },
+            {
+              "title": "should display registration page correctly",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 2,
+                      "status": "passed",
+                      "duration": 15384,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-07-11T16:12:37.516Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "389d9888f02b9cf39f15-9cbaad7ec135aab7d854",
+              "file": "basic-flow.test.ts",
+              "line": 53,
+              "column": 7
+            },
+            {
+              "title": "should validate form inputs",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 3,
+                      "status": "passed",
+                      "duration": 15945,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-07-11T16:12:37.491Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "389d9888f02b9cf39f15-9ee67c2e8414d39086b6",
+              "file": "basic-flow.test.ts",
+              "line": 71,
+              "column": 7
+            },
+            {
+              "title": "should handle responsive design",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 4,
+                      "parallelIndex": 4,
+                      "status": "passed",
+                      "duration": 20792,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-07-11T16:12:37.509Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "389d9888f02b9cf39f15-a4e868602d6fae2d992c",
+              "file": "basic-flow.test.ts",
+              "line": 93,
+              "column": 7
+            },
+            {
+              "title": "should load without critical errors",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 5,
+                      "parallelIndex": 5,
+                      "status": "passed",
+                      "duration": 20748,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-07-11T16:12:37.499Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "389d9888f02b9cf39f15-b22be2f231eebe498f70",
+              "file": "basic-flow.test.ts",
+              "line": 119,
+              "column": 7
+            },
+            {
+              "title": "should have proper SEO meta tags",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 6,
+                      "parallelIndex": 6,
+                      "status": "passed",
+                      "duration": 11312,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-07-11T16:12:37.477Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "389d9888f02b9cf39f15-2b5e599312de52f772e6",
+              "file": "basic-flow.test.ts",
+              "line": 162,
+              "column": 7
+            },
+            {
+              "title": "should navigate through main pages",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [
+                    {
+                      "workerIndex": 7,
+                      "parallelIndex": 7,
+                      "status": "passed",
+                      "duration": 16787,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-07-11T16:12:37.527Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "389d9888f02b9cf39f15-1ee57f8e6cf9d6be1ba5",
+              "file": "basic-flow.test.ts",
+              "line": 15,
+              "column": 7
+            },
+            {
+              "title": "should display login page correctly",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [
+                    {
+                      "workerIndex": 8,
+                      "parallelIndex": 6,
+                      "status": "passed",
+                      "duration": 6392,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-07-11T16:12:52.372Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "389d9888f02b9cf39f15-a13a30de694a3ea3193b",
+              "file": "basic-flow.test.ts",
+              "line": 28,
+              "column": 7
+            },
+            {
+              "title": "should display registration page correctly",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [
+                    {
+                      "workerIndex": 9,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 5639,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-07-11T16:12:52.375Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "389d9888f02b9cf39f15-c75485279ec74b7f5ac2",
+              "file": "basic-flow.test.ts",
+              "line": 53,
+              "column": 7
+            },
+            {
+              "title": "should validate form inputs",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [
+                    {
+                      "workerIndex": 10,
+                      "parallelIndex": 2,
+                      "status": "passed",
+                      "duration": 7593,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-07-11T16:12:55.172Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "389d9888f02b9cf39f15-d709b3a9efd38f2765a2",
+              "file": "basic-flow.test.ts",
+              "line": 71,
+              "column": 7
+            },
+            {
+              "title": "should handle responsive design",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [
+                    {
+                      "workerIndex": 11,
+                      "parallelIndex": 1,
+                      "status": "passed",
+                      "duration": 11372,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-07-11T16:12:55.608Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "389d9888f02b9cf39f15-748e522636c9c9bf540c",
+              "file": "basic-flow.test.ts",
+              "line": 93,
+              "column": 7
+            },
+            {
+              "title": "should load without critical errors",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [
+                    {
+                      "workerIndex": 12,
+                      "parallelIndex": 3,
+                      "status": "passed",
+                      "duration": 11596,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-07-11T16:12:55.671Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "389d9888f02b9cf39f15-b73b3d78667802b152a5",
+              "file": "basic-flow.test.ts",
+              "line": 119,
+              "column": 7
+            },
+            {
+              "title": "should have proper SEO meta tags",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [
+                    {
+                      "workerIndex": 7,
+                      "parallelIndex": 7,
+                      "status": "passed",
+                      "duration": 3022,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-07-11T16:12:55.625Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "389d9888f02b9cf39f15-d0930536b70aa94c5448",
+              "file": "basic-flow.test.ts",
+              "line": 162,
+              "column": 7
+            },
+            {
+              "title": "should navigate through main pages",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [
+                    {
+                      "workerIndex": 13,
+                      "parallelIndex": 5,
+                      "status": "failed",
+                      "duration": 8479,
+                      "error": {
+                        "message": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: locator('nav').first()\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('nav').first()\u001b[22m\n",
+                        "stack": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: locator('nav').first()\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('nav').first()\u001b[22m\n\n    at /home/omar/Documents/ruleIQ/frontend/tests/e2e/basic-flow.test.ts:22:23",
+                        "location": {
+                          "file": "/home/omar/Documents/ruleIQ/frontend/tests/e2e/basic-flow.test.ts",
+                          "column": 23,
+                          "line": 22
+                        },
+                        "snippet": "  20 |     await expect(page).toHaveTitle(/ruleIQ/);\n  21 |     const nav = page.locator('nav').first();\n> 22 |     await expect(nav).toBeVisible();\n     |                       ^\n  23 |     \n  24 |     // Screenshot for reference\n  25 |     await helpers.takeScreenshot('01-homepage');"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/omar/Documents/ruleIQ/frontend/tests/e2e/basic-flow.test.ts",
+                            "column": 23,
+                            "line": 22
+                          },
+                          "message": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: locator('nav').first()\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('nav').first()\u001b[22m\n\n\n  20 |     await expect(page).toHaveTitle(/ruleIQ/);\n  21 |     const nav = page.locator('nav').first();\n> 22 |     await expect(nav).toBeVisible();\n     |                       ^\n  23 |     \n  24 |     // Screenshot for reference\n  25 |     await helpers.takeScreenshot('01-homepage');\n    at /home/omar/Documents/ruleIQ/frontend/tests/e2e/basic-flow.test.ts:22:23"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-07-11T16:13:00.235Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/omar/Documents/ruleIQ/frontend/test-results/basic-flow-Basic-Applicati-d216c-navigate-through-main-pages-webkit/test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "/home/omar/Documents/ruleIQ/frontend/test-results/basic-flow-Basic-Applicati-d216c-navigate-through-main-pages-webkit/video.webm"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/omar/Documents/ruleIQ/frontend/tests/e2e/basic-flow.test.ts",
+                        "column": 23,
+                        "line": 22
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "389d9888f02b9cf39f15-92cb986661ee5e6ad41b",
+              "file": "basic-flow.test.ts",
+              "line": 15,
+              "column": 7
+            },
+            {
+              "title": "should display login page correctly",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [
+                    {
+                      "workerIndex": 14,
+                      "parallelIndex": 4,
+                      "status": "passed",
+                      "duration": 2844,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-07-11T16:13:00.245Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "389d9888f02b9cf39f15-0d1690a72d6b5c51dc19",
+              "file": "basic-flow.test.ts",
+              "line": 28,
+              "column": 7
+            },
+            {
+              "title": "should display registration page correctly",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [
+                    {
+                      "workerIndex": 15,
+                      "parallelIndex": 7,
+                      "status": "passed",
+                      "duration": 4047,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-07-11T16:13:01.502Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "389d9888f02b9cf39f15-a074e5c3f649f6239eb0",
+              "file": "basic-flow.test.ts",
+              "line": 53,
+              "column": 7
+            },
+            {
+              "title": "should validate form inputs",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [
+                    {
+                      "workerIndex": 16,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 3666,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-07-11T16:13:03.831Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "389d9888f02b9cf39f15-e741c58380e8394c7589",
+              "file": "basic-flow.test.ts",
+              "line": 71,
+              "column": 7
+            },
+            {
+              "title": "should handle responsive design",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [
+                    {
+                      "workerIndex": 17,
+                      "parallelIndex": 6,
+                      "status": "failed",
+                      "duration": 9069,
+                      "error": {
+                        "message": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: locator('nav')\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('nav')\u001b[22m\n",
+                        "stack": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: locator('nav')\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('nav')\u001b[22m\n\n    at /home/omar/Documents/ruleIQ/frontend/tests/e2e/basic-flow.test.ts:96:39",
+                        "location": {
+                          "file": "/home/omar/Documents/ruleIQ/frontend/tests/e2e/basic-flow.test.ts",
+                          "column": 39,
+                          "line": 96
+                        },
+                        "snippet": "  94 |     // Desktop view\n  95 |     await helpers.navigateAndWait('/');\n> 96 |     await expect(page.locator('nav')).toBeVisible();\n     |                                       ^\n  97 |     \n  98 |     // Tablet view\n  99 |     await page.setViewportSize({ width: 768, height: 1024 });"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/omar/Documents/ruleIQ/frontend/tests/e2e/basic-flow.test.ts",
+                            "column": 39,
+                            "line": 96
+                          },
+                          "message": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: locator('nav')\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('nav')\u001b[22m\n\n\n  94 |     // Desktop view\n  95 |     await helpers.navigateAndWait('/');\n> 96 |     await expect(page.locator('nav')).toBeVisible();\n     |                                       ^\n  97 |     \n  98 |     // Tablet view\n  99 |     await page.setViewportSize({ width: 768, height: 1024 });\n    at /home/omar/Documents/ruleIQ/frontend/tests/e2e/basic-flow.test.ts:96:39"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-07-11T16:13:05.915Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/omar/Documents/ruleIQ/frontend/test-results/basic-flow-Basic-Applicati-dac4f-ld-handle-responsive-design-webkit/test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "/home/omar/Documents/ruleIQ/frontend/test-results/basic-flow-Basic-Applicati-dac4f-ld-handle-responsive-design-webkit/video.webm"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/omar/Documents/ruleIQ/frontend/tests/e2e/basic-flow.test.ts",
+                        "column": 39,
+                        "line": 96
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "389d9888f02b9cf39f15-5b84a88a90e140e287fc",
+              "file": "basic-flow.test.ts",
+              "line": 93,
+              "column": 7
+            },
+            {
+              "title": "should load without critical errors",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [
+                    {
+                      "workerIndex": 14,
+                      "parallelIndex": 4,
+                      "status": "passed",
+                      "duration": 7093,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-07-11T16:13:03.425Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "389d9888f02b9cf39f15-07e712e0a1e321639468",
+              "file": "basic-flow.test.ts",
+              "line": 119,
+              "column": 7
+            },
+            {
+              "title": "should have proper SEO meta tags",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [
+                    {
+                      "workerIndex": 15,
+                      "parallelIndex": 7,
+                      "status": "passed",
+                      "duration": 2344,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-07-11T16:13:05.887Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "389d9888f02b9cf39f15-3ad021a79c8f692bda12",
+              "file": "basic-flow.test.ts",
+              "line": 162,
+              "column": 7
+            },
+            {
+              "title": "should navigate through main pages",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Chrome",
+                  "projectName": "Mobile Chrome",
+                  "results": [
+                    {
+                      "workerIndex": 18,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 11643,
+                      "error": {
+                        "message": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: locator('nav').first()\nExpected: visible\nReceived: hidden\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('nav').first()\u001b[22m\n\u001b[2m    4 × locator resolved to <nav class=\"hidden md:flex items-center gap-8\">…</nav>\u001b[22m\n\u001b[2m      - unexpected value \"hidden\"\u001b[22m\n",
+                        "stack": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: locator('nav').first()\nExpected: visible\nReceived: hidden\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('nav').first()\u001b[22m\n\u001b[2m    4 × locator resolved to <nav class=\"hidden md:flex items-center gap-8\">…</nav>\u001b[22m\n\u001b[2m      - unexpected value \"hidden\"\u001b[22m\n\n    at /home/omar/Documents/ruleIQ/frontend/tests/e2e/basic-flow.test.ts:22:23",
+                        "location": {
+                          "file": "/home/omar/Documents/ruleIQ/frontend/tests/e2e/basic-flow.test.ts",
+                          "column": 23,
+                          "line": 22
+                        },
+                        "snippet": "  20 |     await expect(page).toHaveTitle(/ruleIQ/);\n  21 |     const nav = page.locator('nav').first();\n> 22 |     await expect(nav).toBeVisible();\n     |                       ^\n  23 |     \n  24 |     // Screenshot for reference\n  25 |     await helpers.takeScreenshot('01-homepage');"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/omar/Documents/ruleIQ/frontend/tests/e2e/basic-flow.test.ts",
+                            "column": 23,
+                            "line": 22
+                          },
+                          "message": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: locator('nav').first()\nExpected: visible\nReceived: hidden\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('nav').first()\u001b[22m\n\u001b[2m    4 × locator resolved to <nav class=\"hidden md:flex items-center gap-8\">…</nav>\u001b[22m\n\u001b[2m      - unexpected value \"hidden\"\u001b[22m\n\n\n  20 |     await expect(page).toHaveTitle(/ruleIQ/);\n  21 |     const nav = page.locator('nav').first();\n> 22 |     await expect(nav).toBeVisible();\n     |                       ^\n  23 |     \n  24 |     // Screenshot for reference\n  25 |     await helpers.takeScreenshot('01-homepage');\n    at /home/omar/Documents/ruleIQ/frontend/tests/e2e/basic-flow.test.ts:22:23"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-07-11T16:13:09.430Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/omar/Documents/ruleIQ/frontend/test-results/basic-flow-Basic-Applicati-d216c-navigate-through-main-pages-Mobile-Chrome/test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "/home/omar/Documents/ruleIQ/frontend/test-results/basic-flow-Basic-Applicati-d216c-navigate-through-main-pages-Mobile-Chrome/video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/omar/Documents/ruleIQ/frontend/test-results/basic-flow-Basic-Applicati-d216c-navigate-through-main-pages-Mobile-Chrome/error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/omar/Documents/ruleIQ/frontend/tests/e2e/basic-flow.test.ts",
+                        "column": 23,
+                        "line": 22
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "389d9888f02b9cf39f15-199f2b629171391b35f6",
+              "file": "basic-flow.test.ts",
+              "line": 15,
+              "column": 7
+            },
+            {
+              "title": "should display login page correctly",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Chrome",
+                  "projectName": "Mobile Chrome",
+                  "results": [
+                    {
+                      "workerIndex": 19,
+                      "parallelIndex": 7,
+                      "status": "passed",
+                      "duration": 7617,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-07-11T16:13:09.735Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "389d9888f02b9cf39f15-e5ca576e4dd391018b1c",
+              "file": "basic-flow.test.ts",
+              "line": 28,
+              "column": 7
+            },
+            {
+              "title": "should display registration page correctly",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Chrome",
+                  "projectName": "Mobile Chrome",
+                  "results": [
+                    {
+                      "workerIndex": 20,
+                      "parallelIndex": 5,
+                      "status": "passed",
+                      "duration": 4953,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-07-11T16:13:10.530Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "389d9888f02b9cf39f15-6800cd46bc662be54efb",
+              "file": "basic-flow.test.ts",
+              "line": 53,
+              "column": 7
+            },
+            {
+              "title": "should validate form inputs",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Chrome",
+                  "projectName": "Mobile Chrome",
+                  "results": [
+                    {
+                      "workerIndex": 21,
+                      "parallelIndex": 2,
+                      "status": "passed",
+                      "duration": 11652,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-07-11T16:13:11.624Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "389d9888f02b9cf39f15-19206d4cb6f5c88ced7b",
+              "file": "basic-flow.test.ts",
+              "line": 71,
+              "column": 7
+            },
+            {
+              "title": "should handle responsive design",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Chrome",
+                  "projectName": "Mobile Chrome",
+                  "results": [
+                    {
+                      "workerIndex": 23,
+                      "parallelIndex": 3,
+                      "status": "failed",
+                      "duration": 11382,
+                      "error": {
+                        "message": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: locator('nav')\nExpected: visible\nReceived: hidden\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('nav')\u001b[22m\n\u001b[2m    4 × locator resolved to <nav class=\"hidden md:flex items-center gap-8\">…</nav>\u001b[22m\n\u001b[2m      - unexpected value \"hidden\"\u001b[22m\n",
+                        "stack": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: locator('nav')\nExpected: visible\nReceived: hidden\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('nav')\u001b[22m\n\u001b[2m    4 × locator resolved to <nav class=\"hidden md:flex items-center gap-8\">…</nav>\u001b[22m\n\u001b[2m      - unexpected value \"hidden\"\u001b[22m\n\n    at /home/omar/Documents/ruleIQ/frontend/tests/e2e/basic-flow.test.ts:96:39",
+                        "location": {
+                          "file": "/home/omar/Documents/ruleIQ/frontend/tests/e2e/basic-flow.test.ts",
+                          "column": 39,
+                          "line": 96
+                        },
+                        "snippet": "  94 |     // Desktop view\n  95 |     await helpers.navigateAndWait('/');\n> 96 |     await expect(page.locator('nav')).toBeVisible();\n     |                                       ^\n  97 |     \n  98 |     // Tablet view\n  99 |     await page.setViewportSize({ width: 768, height: 1024 });"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/omar/Documents/ruleIQ/frontend/tests/e2e/basic-flow.test.ts",
+                            "column": 39,
+                            "line": 96
+                          },
+                          "message": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: locator('nav')\nExpected: visible\nReceived: hidden\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('nav')\u001b[22m\n\u001b[2m    4 × locator resolved to <nav class=\"hidden md:flex items-center gap-8\">…</nav>\u001b[22m\n\u001b[2m      - unexpected value \"hidden\"\u001b[22m\n\n\n  94 |     // Desktop view\n  95 |     await helpers.navigateAndWait('/');\n> 96 |     await expect(page.locator('nav')).toBeVisible();\n     |                                       ^\n  97 |     \n  98 |     // Tablet view\n  99 |     await page.setViewportSize({ width: 768, height: 1024 });\n    at /home/omar/Documents/ruleIQ/frontend/tests/e2e/basic-flow.test.ts:96:39"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-07-11T16:13:12.286Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/omar/Documents/ruleIQ/frontend/test-results/basic-flow-Basic-Applicati-dac4f-ld-handle-responsive-design-Mobile-Chrome/test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "/home/omar/Documents/ruleIQ/frontend/test-results/basic-flow-Basic-Applicati-dac4f-ld-handle-responsive-design-Mobile-Chrome/video.webm"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/omar/Documents/ruleIQ/frontend/test-results/basic-flow-Basic-Applicati-dac4f-ld-handle-responsive-design-Mobile-Chrome/error-context.md"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/omar/Documents/ruleIQ/frontend/tests/e2e/basic-flow.test.ts",
+                        "column": 39,
+                        "line": 96
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "389d9888f02b9cf39f15-b446fe6aa10b46233229",
+              "file": "basic-flow.test.ts",
+              "line": 93,
+              "column": 7
+            },
+            {
+              "title": "should load without critical errors",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Chrome",
+                  "projectName": "Mobile Chrome",
+                  "results": [
+                    {
+                      "workerIndex": 22,
+                      "parallelIndex": 4,
+                      "status": "passed",
+                      "duration": 10475,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-07-11T16:13:12.059Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "389d9888f02b9cf39f15-516af2dedb39ea92058d",
+              "file": "basic-flow.test.ts",
+              "line": 119,
+              "column": 7
+            },
+            {
+              "title": "should have proper SEO meta tags",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Chrome",
+                  "projectName": "Mobile Chrome",
+                  "results": [
+                    {
+                      "workerIndex": 24,
+                      "parallelIndex": 1,
+                      "status": "passed",
+                      "duration": 4875,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-07-11T16:13:14.166Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "389d9888f02b9cf39f15-a8a7715a512eba03f833",
+              "file": "basic-flow.test.ts",
+              "line": 162,
+              "column": 7
+            },
+            {
+              "title": "should navigate through main pages",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Safari",
+                  "projectName": "Mobile Safari",
+                  "results": [
+                    {
+                      "workerIndex": 25,
+                      "parallelIndex": 6,
+                      "status": "failed",
+                      "duration": 7666,
+                      "error": {
+                        "message": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: locator('nav').first()\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('nav').first()\u001b[22m\n",
+                        "stack": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: locator('nav').first()\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('nav').first()\u001b[22m\n\n    at /home/omar/Documents/ruleIQ/frontend/tests/e2e/basic-flow.test.ts:22:23",
+                        "location": {
+                          "file": "/home/omar/Documents/ruleIQ/frontend/tests/e2e/basic-flow.test.ts",
+                          "column": 23,
+                          "line": 22
+                        },
+                        "snippet": "  20 |     await expect(page).toHaveTitle(/ruleIQ/);\n  21 |     const nav = page.locator('nav').first();\n> 22 |     await expect(nav).toBeVisible();\n     |                       ^\n  23 |     \n  24 |     // Screenshot for reference\n  25 |     await helpers.takeScreenshot('01-homepage');"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/omar/Documents/ruleIQ/frontend/tests/e2e/basic-flow.test.ts",
+                            "column": 23,
+                            "line": 22
+                          },
+                          "message": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: locator('nav').first()\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('nav').first()\u001b[22m\n\n\n  20 |     await expect(page).toHaveTitle(/ruleIQ/);\n  21 |     const nav = page.locator('nav').first();\n> 22 |     await expect(nav).toBeVisible();\n     |                       ^\n  23 |     \n  24 |     // Screenshot for reference\n  25 |     await helpers.takeScreenshot('01-homepage');\n    at /home/omar/Documents/ruleIQ/frontend/tests/e2e/basic-flow.test.ts:22:23"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-07-11T16:13:17.812Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/omar/Documents/ruleIQ/frontend/test-results/basic-flow-Basic-Applicati-d216c-navigate-through-main-pages-Mobile-Safari/test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "/home/omar/Documents/ruleIQ/frontend/test-results/basic-flow-Basic-Applicati-d216c-navigate-through-main-pages-Mobile-Safari/video.webm"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/omar/Documents/ruleIQ/frontend/tests/e2e/basic-flow.test.ts",
+                        "column": 23,
+                        "line": 22
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "389d9888f02b9cf39f15-d887ef69719545b31984",
+              "file": "basic-flow.test.ts",
+              "line": 15,
+              "column": 7
+            },
+            {
+              "title": "should display login page correctly",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Safari",
+                  "projectName": "Mobile Safari",
+                  "results": [
+                    {
+                      "workerIndex": 26,
+                      "parallelIndex": 5,
+                      "status": "passed",
+                      "duration": 3103,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-07-11T16:13:18.390Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "389d9888f02b9cf39f15-bb37ce8c7594f520f454",
+              "file": "basic-flow.test.ts",
+              "line": 28,
+              "column": 7
+            },
+            {
+              "title": "should display registration page correctly",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Safari",
+                  "projectName": "Mobile Safari",
+                  "results": [
+                    {
+                      "workerIndex": 27,
+                      "parallelIndex": 7,
+                      "status": "passed",
+                      "duration": 2634,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-07-11T16:13:19.883Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "389d9888f02b9cf39f15-29ef059be66e28059337",
+              "file": "basic-flow.test.ts",
+              "line": 53,
+              "column": 7
+            },
+            {
+              "title": "should validate form inputs",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Safari",
+                  "projectName": "Mobile Safari",
+                  "results": [
+                    {
+                      "workerIndex": 28,
+                      "parallelIndex": 1,
+                      "status": "passed",
+                      "duration": 2735,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-07-11T16:13:21.586Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "389d9888f02b9cf39f15-0d58a8d81870c71f6978",
+              "file": "basic-flow.test.ts",
+              "line": 71,
+              "column": 7
+            },
+            {
+              "title": "should handle responsive design",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Safari",
+                  "projectName": "Mobile Safari",
+                  "results": [
+                    {
+                      "workerIndex": 29,
+                      "parallelIndex": 0,
+                      "status": "failed",
+                      "duration": 6610,
+                      "error": {
+                        "message": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: locator('nav')\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('nav')\u001b[22m\n",
+                        "stack": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: locator('nav')\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('nav')\u001b[22m\n\n    at /home/omar/Documents/ruleIQ/frontend/tests/e2e/basic-flow.test.ts:96:39",
+                        "location": {
+                          "file": "/home/omar/Documents/ruleIQ/frontend/tests/e2e/basic-flow.test.ts",
+                          "column": 39,
+                          "line": 96
+                        },
+                        "snippet": "  94 |     // Desktop view\n  95 |     await helpers.navigateAndWait('/');\n> 96 |     await expect(page.locator('nav')).toBeVisible();\n     |                                       ^\n  97 |     \n  98 |     // Tablet view\n  99 |     await page.setViewportSize({ width: 768, height: 1024 });"
+                      },
+                      "errors": [
+                        {
+                          "location": {
+                            "file": "/home/omar/Documents/ruleIQ/frontend/tests/e2e/basic-flow.test.ts",
+                            "column": 39,
+                            "line": 96
+                          },
+                          "message": "Error: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: locator('nav')\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('nav')\u001b[22m\n\n\n  94 |     // Desktop view\n  95 |     await helpers.navigateAndWait('/');\n> 96 |     await expect(page.locator('nav')).toBeVisible();\n     |                                       ^\n  97 |     \n  98 |     // Tablet view\n  99 |     await page.setViewportSize({ width: 768, height: 1024 });\n    at /home/omar/Documents/ruleIQ/frontend/tests/e2e/basic-flow.test.ts:96:39"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-07-11T16:13:23.348Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/home/omar/Documents/ruleIQ/frontend/test-results/basic-flow-Basic-Applicati-dac4f-ld-handle-responsive-design-Mobile-Safari/test-failed-1.png"
+                        },
+                        {
+                          "name": "video",
+                          "contentType": "video/webm",
+                          "path": "/home/omar/Documents/ruleIQ/frontend/test-results/basic-flow-Basic-Applicati-dac4f-ld-handle-responsive-design-Mobile-Safari/video.webm"
+                        }
+                      ],
+                      "errorLocation": {
+                        "file": "/home/omar/Documents/ruleIQ/frontend/tests/e2e/basic-flow.test.ts",
+                        "column": 39,
+                        "line": 96
+                      }
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "389d9888f02b9cf39f15-ed05b485652ae1f69a51",
+              "file": "basic-flow.test.ts",
+              "line": 93,
+              "column": 7
+            },
+            {
+              "title": "should load without critical errors",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Safari",
+                  "projectName": "Mobile Safari",
+                  "results": [
+                    {
+                      "workerIndex": 26,
+                      "parallelIndex": 5,
+                      "status": "passed",
+                      "duration": 6345,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-07-11T16:13:21.937Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "389d9888f02b9cf39f15-3d9046137ed19cd46a5f",
+              "file": "basic-flow.test.ts",
+              "line": 119,
+              "column": 7
+            },
+            {
+              "title": "should have proper SEO meta tags",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "Mobile Safari",
+                  "projectName": "Mobile Safari",
+                  "results": [
+                    {
+                      "workerIndex": 27,
+                      "parallelIndex": 7,
+                      "status": "passed",
+                      "duration": 1754,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-07-11T16:13:22.860Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "389d9888f02b9cf39f15-4dded1e13a7ac0fee953",
+              "file": "basic-flow.test.ts",
+              "line": 162,
+              "column": 7
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2025-07-11T16:12:26.563Z",
+    "duration": 63983.69,
+    "expected": 29,
+    "skipped": 0,
+    "unexpected": 6,
+    "flaky": 0
+  }
+}

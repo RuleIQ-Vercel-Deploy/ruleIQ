@@ -34,11 +34,11 @@ export default function MarketingPage() {
   ]
 
   const clientLogos = [
-    { name: "Client 1", img: "/placeholder.svg?width=150&height=40" },
-    { name: "Client 2", img: "/placeholder.svg?width=150&height=40" },
-    { name: "Client 3", img: "/placeholder.svg?width=150&height=40" },
-    { name: "Client 4", img: "/placeholder.svg?width=150&height=40" },
-    { name: "Client 5", img: "/placeholder.svg?width=150&height=40" },
+    { quote: "Trusted Partner", name: "Client 1", title: "UK Enterprise", img: "/placeholder.svg?width=150&height=40" },
+    { quote: "Trusted Partner", name: "Client 2", title: "UK Enterprise", img: "/placeholder.svg?width=150&height=40" },
+    { quote: "Trusted Partner", name: "Client 3", title: "UK Enterprise", img: "/placeholder.svg?width=150&height=40" },
+    { quote: "Trusted Partner", name: "Client 4", title: "UK Enterprise", img: "/placeholder.svg?width=150&height=40" },
+    { quote: "Trusted Partner", name: "Client 5", title: "UK Enterprise", img: "/placeholder.svg?width=150&height=40" },
   ]
 
   const features = [
@@ -128,7 +128,7 @@ export default function MarketingPage() {
                 className="w-full h-full absolute"
                 particleColor="#FFD700"
               />
-              <Button variant="gold" size="lg" className="z-10">
+              <Button variant="default" size="lg" className="z-10">
                 Start Free Trial
               </Button>
               <Button variant="outline" size="lg" className="z-10 bg-transparent">
@@ -277,7 +277,7 @@ export default function MarketingPage() {
                 placeholder="Enter your email"
                 className="bg-midnight-blue/50 border-gold/30 focus:ring-gold focus:border-gold"
               />
-              <Button variant="gold" className="w-full sm:w-auto">
+              <Button variant="default" className="w-full sm:w-auto">
                 Get Started Free
               </Button>
             </div>

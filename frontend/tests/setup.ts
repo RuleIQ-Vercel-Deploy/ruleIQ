@@ -133,6 +133,9 @@ beforeAll(() => {
   // Mock fetch
   global.fetch = vi.fn()
 
+  // Use real timers for better test stability
+  vi.useRealTimers()
+
   // Mock navigator.clipboard
   Object.defineProperty(navigator, 'clipboard', {
     writable: true,

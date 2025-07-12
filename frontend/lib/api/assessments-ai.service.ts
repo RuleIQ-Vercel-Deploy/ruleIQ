@@ -852,7 +852,7 @@ Can you provide guidance on how to answer this question correctly?`;
       // Use mock response in test/development mode
       if (!this.useProductionEndpoints) {
         return {
-          analysis: mockAIResponses.analysis.compliance_insights.maturity_level + ' - Based on your assessment responses, we have identified key areas for improvement.',
+          analysis: `${mockAIResponses.analysis.compliance_insights.maturity_level  } - Based on your assessment responses, we have identified key areas for improvement.`,
           recommendations: mockAIResponses.analysis.recommendations,
           confidence_score: 0.92,
           gaps: mockAIResponses.analysis.gaps,

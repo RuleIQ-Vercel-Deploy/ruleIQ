@@ -74,6 +74,7 @@ interface UserFormData {
 // Answer type for question responses
 type QuestionAnswer = string | string[] | boolean | undefined;
 
+/* eslint-disable no-unused-vars */
 interface Question {
   id: string;
   type: QuestionType;
@@ -89,6 +90,7 @@ interface Question {
   icon?: React.ReactNode;
   priority?: "high" | "medium" | "low";
 }
+/* eslint-enable no-unused-vars */
 
 // Question Bank - Smart, Dynamic Questions
 const questionBank: Record<string, Question> = {
@@ -155,7 +157,10 @@ const questionBank: Record<string, Question> = {
     icon: <Users className="h-5 w-5" />,
     nextQuestion: (_data, answer) => {
       if (answer === "Just me" || answer === "2-10") return "smallBusinessConcerns";
-      if (parseInt(answer) > 50) return "hasComplianceTeam";
+      if (typeof answer === 'string' && answer && answer.includes('-')) {
+        const firstNumber = parseInt(answer.split('-')[0]!);
+        if (!isNaN(firstNumber) && firstNumber > 50) return "hasComplianceTeam";
+      }
       return "industry";
     }
   },
@@ -177,7 +182,10 @@ const questionBank: Record<string, Question> = {
     question: "Do you have a dedicated compliance or legal team?",
     field: "hasComplianceTeam",
     options: ["Yes, full team", "Yes, part-time", "No, but planning to", "No dedicated team"],
-    nextQuestion: (_data, answer) => answer.includes("Yes") ? "complianceMaturity" : "industry"
+    nextQuestion: (_data, answer) => {
+      if (typeof answer === 'string' && answer?.includes("Yes")) return "complianceMaturity";
+      return "industry";
+    }
   },
 
   complianceMaturity: {
@@ -243,7 +251,7 @@ const questionBank: Record<string, Question> = {
     question: (data) => `Is ${data.companyName} B2B or B2C?`,
     field: "businessModel",
     options: ["B2B only", "B2C only", "Both B2B and B2C", "B2G (Government)", "Non-profit"],
-    nextQuestion: (_data, answer) => answer.includes("B2C") || answer === "Both B2B and B2C" ? "customerBase" : "regions"
+    nextQuestion: (_data, answer) => (typeof answer === 'string' && (answer.includes("B2C") || answer === "Both B2B and B2C")) ? "customerBase" : "regions"
   },
 
   customerBase: {
@@ -264,8 +272,8 @@ const questionBank: Record<string, Question> = {
     multiple: true,
     icon: <Globe className="h-5 w-5" />,
     nextQuestion: (_data, answer) => {
-      if (answer.includes("EU") || answer.includes("UK")) return "gdprRelevant";
-      if (answer.includes("USA")) return "usCompliance";
+      if (Array.isArray(answer) && (answer.includes("EU") || answer.includes("UK"))) return "gdprRelevant";
+      if (Array.isArray(answer) && answer.includes("USA")) return "usCompliance";
       return "dataTypes";
     }
   },
@@ -302,8 +310,8 @@ const questionBank: Record<string, Question> = {
     icon: <FileCheck className="h-5 w-5" />,
     priority: "high",
     nextQuestion: (_data, answer) => {
-      if (answer.includes("Payment/financial")) return "pciDssRelevant";
-      if (answer.includes("Health records")) return "hipaaRelevant";
+      if (Array.isArray(answer) && answer.includes("Payment/financial")) return "pciDssRelevant";
+      if (Array.isArray(answer) && answer.includes("Health records")) return "hipaaRelevant";
       return "currentCompliance";
     }
   },
@@ -351,7 +359,10 @@ const questionBank: Record<string, Question> = {
     options: (data) => {
       const priorities = [];
       if (data.gdprRelevant === "Yes, extensively") priorities.push("GDPR compliance");
-      if (data.customerBase && parseInt(data.customerBase.split("-")[0]) > 1000) priorities.push("SOC 2 certification");
+      if (data.customerBase && typeof data.customerBase === 'string' && data.customerBase && data.customerBase.includes('-')) {
+        const firstNumber = parseInt(data.customerBase.split("-")[0]!);
+        if (!isNaN(firstNumber) && firstNumber > 1000) priorities.push("SOC 2 certification");
+      }
       priorities.push("ISO 27001", "Build security policies", "Risk assessment", "Employee training");
       return priorities;
     },
@@ -643,10 +654,10 @@ export default function AIGuidedSignupPage() {
     if (currentQuestion.type === "choice") {
       handleNext(choice);
     } else if (currentQuestion.type === "multi-choice") {
-      const current = formData[currentQuestion.field!] || [];
+      const current = Array.isArray(formData[currentQuestion.field!]) ? formData[currentQuestion.field!] : [];
       setFormData({ 
         ...formData, 
-        [currentQuestion.field!]: [...current, choice] 
+        [currentQuestion.field!]: [...(current as string[]), choice] 
       });
     } else if (currentQuestion.type === "greeting") {
       if (choice === "Tell me more") {
@@ -712,17 +723,17 @@ export default function AIGuidedSignupPage() {
       };
       
       // Parse the full name
-      const { firstName, lastName } = parseFullName(formData.fullName);
+      const { firstName, lastName } = parseFullName(formData.fullName || "");
       
       // Prepare registration data in the format expected by auth store
       const registrationData = {
-        email: formData.email,
-        password: formData.password,
-        confirmPassword: formData.confirmPassword,
+        email: formData.email || "",
+        password: formData.password || "",
+        confirmPassword: formData.confirmPassword || "",
         firstName,
         lastName,
-        companyName: formData.companyName,
-        companySize: companySizeMap[formData.companySize] || 'small',
+        companyName: formData.companyName || "",
+        companySize: (formData.companySize ? companySizeMap[formData.companySize] : undefined) || 'small',
         industry: formData.industry || 'Other',
         complianceFrameworks: formData.currentFrameworks || [],
         hasDataProtectionOfficer: formData.hasComplianceTeam?.includes("Yes") || false,
@@ -814,8 +825,11 @@ export default function AIGuidedSignupPage() {
       frameworks.push("GDPR");
     }
     
-    if (data.customerBase && parseInt(data.customerBase.split("-")[0]) > 1000) {
-      frameworks.push("SOC 2");
+    if (data.customerBase && typeof data.customerBase === 'string' && data.customerBase && data.customerBase.includes('-')) {
+      const firstNumber = parseInt(data.customerBase.split("-")[0]!);
+      if (!isNaN(firstNumber) && firstNumber > 1000) {
+        frameworks.push("SOC 2");
+      }
     }
     
     if (data.industry === "Healthcare") {
@@ -920,12 +934,12 @@ export default function AIGuidedSignupPage() {
                                     className="flex items-center space-x-2 cursor-pointer"
                                   >
                                     <Checkbox
-                                      checked={(formData[currentQuestion.field!] || []).includes(option)}
+                                      checked={Array.isArray(formData[currentQuestion.field!]) ? (formData[currentQuestion.field!] as string[]).includes(option) : false}
                                       onCheckedChange={(checked) => {
                                         if (checked) {
                                           handleChoice(option);
                                         } else {
-                                          const current = formData[currentQuestion.field!] || [];
+                                          const current = Array.isArray(formData[currentQuestion.field!]) ? formData[currentQuestion.field!] as string[] : [];
                                           setFormData({
                                             ...formData,
                                             [currentQuestion.field!]: current.filter((item: string) => item !== option)
@@ -938,13 +952,13 @@ export default function AIGuidedSignupPage() {
                                   </label>
                                 ))}
                                 <div className="flex gap-2 mt-3">
-                                  {(formData[currentQuestion.field!]?.length > 0) ? (
+                                  {Array.isArray(formData[currentQuestion.field!]) && (formData[currentQuestion.field!] as string[]).length > 0 ? (
                                     <Button
                                       size="sm"
-                                      onClick={() => handleNext(formData[currentQuestion.field!])}
+                                      onClick={() => handleNext(formData[currentQuestion.field!] as QuestionAnswer)}
                                       className="flex-1 btn-gradient"
                                     >
-                                      Continue ({formData[currentQuestion.field!].length} selected)
+                                      Continue ({Array.isArray(formData[currentQuestion.field!]) ? (formData[currentQuestion.field!] as string[]).length : 0} selected)
                                       <ChevronRight className="ml-1 h-3 w-3" />
                                     </Button>
                                   ) : (
@@ -966,7 +980,7 @@ export default function AIGuidedSignupPage() {
                                   <Checkbox
                                     checked={formData.agreeToTerms || false}
                                     onCheckedChange={(checked) => 
-                                      setFormData({ ...formData, agreeToTerms: checked })
+                                      setFormData({ ...formData, agreeToTerms: checked === true })
                                     }
                                     className="border-glass-border data-[state=checked]:bg-brand-primary data-[state=checked]:border-brand-primary"
                                   />

@@ -1,0 +1,33 @@
+name: Vercel Rollback
+
+on:
+  workflow_dispatch:
+    inputs:
+      deploymentId:
+        description: "The Vercel Deployment ID to roll back to"
+        required: true
+        type: string
+
+jobs:
+  rollback:
+    name: Rollback Production
+    runs-on: ubuntu-latest
+    environment: production
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Vercel CLI
+        run: npm install --global vercel@latest
+
+      - name: Perform Rollback
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          PRODUCTION_DOMAIN: "ruleiq.com" # Your production domain
+        run: |
+          echo "Rolling back to deployment: ${{ github.event.inputs.deploymentId }}"
+          vercel alias set ${{ github.event.inputs.deploymentId }} $PRODUCTION_DOMAIN --token $VERCEL_TOKEN
+          echo "✅ Rollback complete."

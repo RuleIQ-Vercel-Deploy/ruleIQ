@@ -192,7 +192,7 @@ describe('Memory Leak Detection Tests', () => {
       );
 
       // Component should start loading immediately due to defaultOpen
-      expect(screen.getByText(/loading guidance/i)).toBeInTheDocument();
+      expect(screen.getByText(/analyzing compliance requirements/i)).toBeInTheDocument();
 
       // Unmount while loading
       unmount();
@@ -221,28 +221,21 @@ describe('Memory Leak Detection Tests', () => {
     });
 
     it('should cleanup setTimeout calls on unmount', async () => {
-      vi.useFakeTimers();
-      
-      const { unmount } = render(<AutoSaveIndicator />);
+      const { unmount, rerender } = render(<AutoSaveIndicator />);
 
-      // Advance time to trigger the interval
-      act(() => {
-        vi.advanceTimersByTime(10000);
+      // Wait for the component to trigger its internal timer
+      await act(async () => {
+        await new Promise(resolve => originalSetTimeout(resolve, 100));
       });
 
-      // Check that setTimeout was called
-      expect(global.setTimeout).toHaveBeenCalledWith(expect.any(Function), 1500);
+      // Check that timers were created
+      expect(activeTimers.size).toBeGreaterThan(0);
 
-      // Unmount before setTimeout completes
+      // Unmount component
       unmount();
 
-      // Advance time to when setTimeout would have fired
-      act(() => {
-        vi.advanceTimersByTime(2000);
-      });
-
-      // No errors should occur
-      vi.useRealTimers();
+      // All timers should be cleared
+      expect(activeTimers.size).toBe(0);
     });
   });
 
@@ -317,7 +310,7 @@ describe('Memory Leak Detection Tests', () => {
         
         // Small delay to allow effects to run
         await act(async () => {
-          await new Promise(resolve => setTimeout(resolve, 10));
+          await new Promise(resolve => originalSetTimeout(resolve, 10));
         });
         
         unmount();

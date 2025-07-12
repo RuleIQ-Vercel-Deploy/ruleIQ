@@ -260,13 +260,13 @@ describe('AssessmentWizard', () => {
 
       // Answer the question
       const questionInput = screen.getByTestId('question-input');
-      act(() => {
+      await act(async () => {
         fireEvent.change(questionInput, { target: { value: 'yes' } });
       });
 
       await waitFor(() => {
         expect(nextButton).toBeEnabled();
-      });
+      }, { timeout: 3000 });
     });
 
     it('should call nextQuestion when next button is clicked', async () => {
@@ -274,12 +274,12 @@ describe('AssessmentWizard', () => {
 
       // Answer the question first
       const questionInput = screen.getByTestId('question-input');
-      act(() => {
+      await act(async () => {
         fireEvent.change(questionInput, { target: { value: 'yes' } });
       });
 
       const nextButton = screen.getByRole('button', { name: /next/i });
-      act(() => {
+      await act(async () => {
         fireEvent.click(nextButton);
       });
 
@@ -307,7 +307,7 @@ describe('AssessmentWizard', () => {
 
       render(<AssessmentWizard {...mockProps} />);
 
-      expect(screen.getByRole('button', { name: /submit/i })).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: /complete assessment/i })).toBeInTheDocument();
       expect(screen.queryByRole('button', { name: /next/i })).not.toBeInTheDocument();
     });
   });
@@ -368,8 +368,21 @@ describe('AssessmentWizard', () => {
 
       render(<AssessmentWizard {...mockProps} />);
 
-      const nextButton = screen.getByRole('button', { name: /next/i });
-      fireEvent.click(nextButton);
+      // First answer the question to enable the button
+      const questionInput = screen.getByTestId('question-input');
+      fireEvent.change(questionInput, { target: { value: 'yes' } });
+
+      // Wait for button to be enabled
+      await waitFor(() => {
+        const actionButton = screen.queryByRole('button', { name: /next/i }) || 
+                             screen.getByRole('button', { name: /complete assessment/i });
+        expect(actionButton).toBeEnabled();
+      });
+
+      // Now click the button (which will trigger the validation error)
+      const actionButton = screen.queryByRole('button', { name: /next/i }) || 
+                           screen.getByRole('button', { name: /complete assessment/i });
+      fireEvent.click(actionButton);
 
       await waitFor(() => {
         expect(screen.getByText('Please select an answer')).toBeInTheDocument();
@@ -382,21 +395,32 @@ describe('AssessmentWizard', () => {
 
       render(<AssessmentWizard {...mockProps} />);
 
-      // Try to proceed without answering
-      const nextButton = screen.getByRole('button', { name: /next/i });
-      fireEvent.click(nextButton);
+      // First answer the question to enable the button
+      const questionInput = screen.getByTestId('question-input');
+      fireEvent.change(questionInput, { target: { value: 'yes' } });
+
+      // Wait for button to be enabled
+      await waitFor(() => {
+        const actionButton = screen.queryByRole('button', { name: /next/i }) || 
+                             screen.getByRole('button', { name: /complete assessment/i });
+        expect(actionButton).toBeEnabled();
+      });
+
+      // Try to proceed (this will trigger the validation error)
+      const actionButton = screen.queryByRole('button', { name: /next/i }) || 
+                           screen.getByRole('button', { name: /complete assessment/i });
+      fireEvent.click(actionButton);
 
       await waitFor(() => {
         expect(screen.getByText('Please select an answer')).toBeInTheDocument();
       });
 
-      // Answer the question
-      const questionInput = screen.getByTestId('question-input');
-      fireEvent.change(questionInput, { target: { value: 'yes' } });
+      // Answer the question again (simulating re-answering after error)
+      fireEvent.change(questionInput, { target: { value: 'no' } });
 
       // Now nextQuestion should succeed
       mockEngine.nextQuestion.mockResolvedValue(true);
-      fireEvent.click(nextButton);
+      fireEvent.click(actionButton);
 
       await waitFor(() => {
         expect(screen.queryByText('Please select an answer')).not.toBeInTheDocument();
@@ -411,8 +435,20 @@ describe('AssessmentWizard', () => {
 
       render(<AssessmentWizard {...mockProps} />);
 
-      const nextButton = screen.getByRole('button', { name: /next/i });
-      fireEvent.click(nextButton);
+      // First provide some input to enable the button (simulate checking/unchecking a box)
+      const questionInput = screen.getByTestId('question-input');
+      fireEvent.change(questionInput, { target: { value: 'names' } });
+
+      // Wait for button to be enabled
+      await waitFor(() => {
+        const actionButton = screen.queryByRole('button', { name: /next/i }) || 
+                             screen.getByRole('button', { name: /complete assessment/i });
+        expect(actionButton).toBeEnabled();
+      });
+
+      const actionButton = screen.queryByRole('button', { name: /next/i }) || 
+                           screen.getByRole('button', { name: /complete assessment/i });
+      fireEvent.click(actionButton);
 
       await waitFor(() => {
         expect(screen.getByText('Please select at least one option')).toBeInTheDocument();

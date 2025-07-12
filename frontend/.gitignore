@@ -25,3 +25,17 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# testing
+/coverage
+/playwright-report
+/test-results
+/tests/visual/screenshots
+/tests/visual/**/*-actual.png
+/tests/visual/**/*-diff.png
+/tests/visual/**/*-expected.png
+.chromatic
+
+# storybook
+/storybook-static
+/build-storybook.log

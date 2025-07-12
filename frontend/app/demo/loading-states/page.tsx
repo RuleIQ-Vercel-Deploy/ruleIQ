@@ -219,7 +219,7 @@ export default function LoadingStatesDemo() {
       <section className="space-y-4">
         <H2>Full Page Loader</H2>
         <Button 
-          variant="accent"
+          variant="secondary"
           onClick={() => {
             setShowPageLoader(true)
             setTimeout(() => setShowPageLoader(false), 3000)

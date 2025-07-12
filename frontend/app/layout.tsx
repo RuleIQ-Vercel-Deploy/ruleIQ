@@ -1,7 +1,6 @@
 import { Inter } from "next/font/google"
 
-import { ErrorBoundary } from "@/components/error-boundary"
-import { SidebarProvider } from "@/components/ui/sidebar"
+import { GlobalErrorBoundary } from "@/components/error-boundary-global"
 import { ThemeProvider } from "@/hooks/use-theme"
 import { QueryProvider } from "@/lib/tanstack-query/provider"
 import { cn } from "@/lib/utils"
@@ -72,9 +71,9 @@ export default function RootLayout({
       <body className="h-full antialiased" suppressHydrationWarning>
         <ThemeProvider defaultTheme="dark" storageKey="ruleiq-ui-theme">
           <QueryProvider>
-            <ErrorBoundary>
+            <GlobalErrorBoundary showErrorDetails={process.env.NODE_ENV === 'development'}>
               {children}
-            </ErrorBoundary>
+            </GlobalErrorBoundary>
           </QueryProvider>
         </ThemeProvider>
       </body>

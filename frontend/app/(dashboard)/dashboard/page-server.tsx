@@ -25,7 +25,7 @@ import {
   InsightsSkeleton 
 } from "@/components/ui/skeletons"
 
-import type { DashboardInsight, DashboardTask } from "@/types/dashboard"
+import type { DashboardInsight, PendingTask } from "@/types/dashboard"
 
 // Server-side data fetching functions
 async function getComplianceStats() {
@@ -53,60 +53,57 @@ async function getAIInsights(): Promise<DashboardInsight[]> {
       type: "recommendation",
       title: "Update Password Policy",
       description: "Your password policy hasn't been reviewed in 6 months. Consider updating requirements.",
-      priority: "high",
+      priority: 1,
       created_at: new Date().toISOString(),
       dismissible: true,
     },
     {
       id: "2", 
-      type: "alert",
+      type: "risk-alert",
       title: "New GDPR Guidelines",
       description: "EU has released updated GDPR guidelines affecting data retention.",
-      priority: "medium",
+      priority: 2,
       created_at: new Date().toISOString(),
       dismissible: true,
     },
     {
       id: "3",
-      type: "success",
+      type: "tip",
       title: "ISO 27001 Compliant",
       description: "All requirements met for ISO 27001 certification renewal.",
-      priority: "low",
+      priority: 3,
       created_at: new Date().toISOString(),
       dismissible: true,
     },
   ]
 }
 
-async function getPendingTasks(): Promise<DashboardTask[]> {
+async function getPendingTasks(): Promise<PendingTask[]> {
   await new Promise(resolve => setTimeout(resolve, 600))
   
   return [
     {
       id: "1",
       title: "Complete Risk Assessment", 
-      dueDate: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000),
+      dueDate: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000).toISOString(),
       priority: "high",
-      framework: "ISO 27001",
-      type: "assessment",
+      category: "ISO 27001",
       status: "pending",
     },
     {
       id: "2",
       title: "Review Access Controls",
-      dueDate: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000),
+      dueDate: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString(),
       priority: "medium", 
-      framework: "SOC 2",
-      type: "review",
+      category: "SOC 2",
       status: "pending",
     },
     {
       id: "3",
       title: "Update Privacy Policy",
-      dueDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+      dueDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
       priority: "low",
-      framework: "GDPR",
-      type: "policy",
+      category: "GDPR",
       status: "pending",
     },
   ]

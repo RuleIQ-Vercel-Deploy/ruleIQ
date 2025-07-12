@@ -48,15 +48,26 @@ export function ActionItemsList({ recommendations, gaps }: ActionItemsListProps)
   const [expandedItems, setExpandedItems] = useState<string[]>([]);
   const [completedItems, setCompletedItems] = useState<Set<string>>(new Set());
 
+  // Map recommendation priority to ActionItem priority
+  const mapPriority = (priority: string): 'high' | 'medium' | 'low' => {
+    switch (priority) {
+      case 'immediate': return 'high';
+      case 'short_term': return 'high';
+      case 'medium_term': return 'medium';
+      case 'long_term': return 'low';
+      default: return 'medium';
+    }
+  };
+
   // Convert recommendations to action items
   const actionItems: ActionItem[] = recommendations.map(rec => ({
     id: rec.id,
     title: rec.title,
     description: rec.description,
-    priority: rec.priority,
-    timeline: rec.estimatedTime,
-    resources: rec.resources,
-    relatedGaps: rec.relatedGaps || [],
+    priority: mapPriority(rec.priority),
+    timeline: rec.estimatedEffort,
+    resources: rec.resources || [],
+    relatedGaps: [rec.gapId],
     completed: false,
     subtasks: [
       { id: `${rec.id}-1`, title: 'Assign responsible team members', completed: false },
@@ -239,7 +250,7 @@ export function ActionItemsList({ recommendations, gaps }: ActionItemsListProps)
                               if (!gap) return null;
                               return (
                                 <div key={gapId} className="text-sm text-muted-foreground">
-                                  • {gap.questionText}
+                                  • {gap.description}
                                 </div>
                               );
                             })}

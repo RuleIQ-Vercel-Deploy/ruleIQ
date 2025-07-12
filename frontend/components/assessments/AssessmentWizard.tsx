@@ -182,6 +182,12 @@ export function AssessmentWizard({
     [engine],
   );
 
+  // Check if current question is answered (using answersVersion to trigger re-evaluation)
+  // This hook must be called before any conditional returns
+  const currentAnswer = useMemo(() => {
+    return currentQuestion && engine ? engine.getAnswers().get(currentQuestion.id)?.value : null;
+  }, [currentQuestion, engine, answersVersion]);
+
   if (!engine || !progress) {
     return (
       <div className="flex min-h-[400px] items-center justify-center">
@@ -197,11 +203,6 @@ export function AssessmentWizard({
   const isLastQuestion = progress.answeredQuestions === progress.totalQuestions - 1;
   const isInAIMode = engine?.isInAIMode() || false;
   const currentAIQuestion = engine?.getCurrentAIQuestion();
-
-  // Check if current question is answered (using answersVersion to trigger re-evaluation)
-  const currentAnswer = useMemo(() => {
-    return currentQuestion && engine ? engine.getAnswers().get(currentQuestion.id)?.value : null;
-  }, [currentQuestion, engine, answersVersion]);
 
   const isCurrentQuestionAnswered =
     currentAnswer !== null && currentAnswer !== undefined && currentAnswer !== '';

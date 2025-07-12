@@ -190,7 +190,7 @@ describe('AI Service Integration Tests', () => {
         assessment_id: 'test-assessment',
         responses: testAnswers,
         framework_id: 'gdpr',
-        business_profile: testBusinessProfiles[0]
+        business_profile: testBusinessProfiles[0] || {}
       };
 
       const response = await assessmentAIService.getAssessmentAnalysis(analysisRequest);

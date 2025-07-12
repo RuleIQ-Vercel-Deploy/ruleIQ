@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { motion } from "framer-motion";
-import { AlertCircle, Shield, ArrowRight, Loader2 } from "lucide-react";
+import { AlertCircle, Shield, ArrowRight, Loader2, Brain } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import * as React from "react";
@@ -260,7 +260,7 @@ export default function TraditionalSignupPage() {
                   className="w-full"
                   disabled={isLoading}
                 >
-                  <Bot className="mr-2 h-4 w-4" />
+                  <Brain className="mr-2 h-4 w-4" />
                   Try AI-Guided Setup Instead
                 </Button>
               </Link>

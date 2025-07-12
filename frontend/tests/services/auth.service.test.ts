@@ -13,21 +13,42 @@ vi.mock('@/lib/api/client', () => ({
   },
 }));
 
+// Mock SecureStorage
+vi.mock('@/lib/utils/secure-storage', () => ({
+  default: {
+    getAccessToken: vi.fn().mockResolvedValue('mock-access-token'),
+    setAccessToken: vi.fn().mockResolvedValue(undefined),
+    getRefreshToken: vi.fn().mockReturnValue('mock-refresh-token'),
+    setRefreshToken: vi.fn(),
+    clearAll: vi.fn(),
+    isSessionExpired: vi.fn().mockReturnValue(false),
+  },
+}));
+
 describe('AuthService', () => {
+  const originalLocation = window.location;
+
   beforeEach(() => {
     vi.clearAllMocks();
+    // Mock window.location
+    delete (window as any).location;
+    window.location = { ...originalLocation, href: '' } as Location;
   });
 
   afterEach(() => {
     vi.restoreAllMocks();
+    // Restore window.location
+    window.location = originalLocation;
   });
 
   describe('login', () => {
     it('should login successfully with valid credentials', async () => {
       const mockResponse = {
         data: {
-          access_token: 'mock-access-token',
-          refresh_token: 'mock-refresh-token',
+          tokens: {
+            access_token: 'mock-access-token',
+            refresh_token: 'mock-refresh-token',
+          },
           user: {
             id: '1',
             email: 'test@example.com',
@@ -48,7 +69,11 @@ describe('AuthService', () => {
 
       const result = await authService.login(credentials);
 
-      expect(apiClient.post).toHaveBeenCalledWith('/auth/login', credentials);
+      expect(apiClient.post).toHaveBeenCalledWith('/auth/login', expect.any(FormData), expect.objectContaining({
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      }));
       expect(result).toEqual(mockResponse.data);
     });
 
@@ -81,8 +106,10 @@ describe('AuthService', () => {
     it('should register new user successfully', async () => {
       const mockResponse = {
         data: {
-          access_token: 'mock-access-token',
-          refresh_token: 'mock-refresh-token',
+          tokens: {
+            access_token: 'mock-access-token',
+            refresh_token: 'mock-refresh-token',
+          },
           user: {
             id: '1',
             email: 'newuser@example.com',

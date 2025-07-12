@@ -12,7 +12,6 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { type Recommendation } from "@/lib/assessment-engine/types";
-import { cn } from "@/lib/utils";
 
 interface RecommendationCardProps {
   recommendation: Recommendation;
@@ -37,7 +36,7 @@ export function RecommendationCard({
           color: 'text-yellow-600',
           bgColor: 'bg-yellow-50', 
           borderColor: 'border-yellow-200',
-          badgeVariant: 'warning' as const
+          badgeVariant: 'pending' as const
         };
       default:
         return {
@@ -113,13 +112,15 @@ export function RecommendationCard({
             <span className="text-muted-foreground">Timeline:</span>
             <span className="font-medium">{recommendation.estimatedTime}</span>
           </div>
-          <div className="flex items-start gap-2 text-sm">
-            <Users className="h-4 w-4 text-muted-foreground mt-0.5" />
-            <span className="text-muted-foreground">Resources:</span>
-            <span className="font-medium">
-              {recommendation.resources.join(', ')}
-            </span>
-          </div>
+          {recommendation.resources && recommendation.resources.length > 0 && (
+            <div className="flex items-start gap-2 text-sm">
+              <Users className="h-4 w-4 text-muted-foreground mt-0.5" />
+              <span className="text-muted-foreground">Resources:</span>
+              <span className="font-medium">
+                {recommendation.resources.join(', ')}
+              </span>
+            </div>
+          )}
         </div>
 
         {/* Related Gaps */}

@@ -40,7 +40,7 @@ export function AssessmentNavigation({
           >
             <ChevronLeft className="h-4 w-4 mr-2" />
             <span className="truncate">
-              {hasPreviousSection && framework.sections[currentSectionIndex - 1].title}
+              {hasPreviousSection && framework.sections[currentSectionIndex - 1]?.title}
             </span>
           </Button>
 
@@ -70,7 +70,7 @@ export function AssessmentNavigation({
             className="flex-1 justify-end"
           >
             <span className="truncate">
-              {hasNextSection && framework.sections[currentSectionIndex + 1].title}
+              {hasNextSection && framework.sections[currentSectionIndex + 1]?.title}
             </span>
             <ChevronRight className="h-4 w-4 ml-2" />
           </Button>

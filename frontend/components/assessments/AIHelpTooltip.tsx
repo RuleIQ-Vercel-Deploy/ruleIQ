@@ -46,6 +46,9 @@ export function AIHelpTooltip({
   const [requestId, setRequestId] = useState<string | null>(null);
   const { toast } = useToast();
 
+  // Suppress TypeScript unused variable warning
+  void requestId;
+
   const handleGetHelp = async () => {
     if (aiResponse && !loading) {
       setIsOpen(!isOpen);
@@ -60,13 +63,15 @@ export function AIHelpTooltip({
     setIsOpen(true);
 
     try {
-      const response = await assessmentAIService.getQuestionHelp({
+      const helpRequest = {
         question_id: question.id,
         question_text: question.text,
         framework_id: frameworkId,
-        section_id: sectionId,
-        user_context: userContext
-      });
+        ...(sectionId && { section_id: sectionId }),
+        ...(userContext && { user_context: userContext })
+      };
+      
+      const response = await assessmentAIService.getQuestionHelp(helpRequest);
 
       // Check if this request is still valid
       setRequestId((latestRequestId) => {

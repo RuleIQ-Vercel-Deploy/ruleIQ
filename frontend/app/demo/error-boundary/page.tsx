@@ -5,7 +5,7 @@ import * as React from "react"
 
 import { FeatureErrorBoundary, useAsyncError } from "@/components/error-boundary"
 import { Button } from "@/components/ui/button"
-import { H1, H2, Body } from "@/components/ui/typography"
+import { H1, H2, Typography } from "@/components/ui/typography"
 
 // Component that throws an error
 function BrokenComponent() {
@@ -18,7 +18,7 @@ function BrokenComponent() {
   return (
     <div className="space-y-4 p-6 border rounded-lg">
       <H2>Component with Error</H2>
-      <Body>Click the button to trigger an error in this component.</Body>
+      <Typography variant="body">Click the button to trigger an error in this component.</Typography>
       <Button 
         variant="destructive" 
         onClick={() => setShouldError(true)}
@@ -51,7 +51,7 @@ function AsyncBrokenComponent() {
   return (
     <div className="space-y-4 p-6 border rounded-lg">
       <H2>Component with Async Error</H2>
-      <Body>Click the button to trigger an async error.</Body>
+      <Typography variant="body">Click the button to trigger an async error.</Typography>
       <Button 
         variant="destructive" 
         onClick={handleAsyncError}
@@ -71,7 +71,7 @@ function WorkingComponent() {
   return (
     <div className="space-y-4 p-6 border rounded-lg">
       <H2>Working Component</H2>
-      <Body>This component works normally. Count: {count}</Body>
+      <Typography variant="body">This component works normally. Count: {count}</Typography>
       <Button 
         variant="default" 
         onClick={() => setCount(count + 1)}
@@ -87,9 +87,9 @@ export default function ErrorBoundaryDemoPage() {
     <div className="container mx-auto p-8 space-y-8">
       <div className="space-y-4">
         <H1>Error Boundary Demo</H1>
-        <Body color="muted">
+        <Typography variant="body" color="muted">
           This page demonstrates how error boundaries catch and handle errors in React components.
-        </Body>
+        </Typography>
       </div>
 
       <div className="grid gap-6">
@@ -110,21 +110,21 @@ export default function ErrorBoundaryDemoPage() {
       <div className="space-y-4 p-6 bg-muted/20 rounded-lg">
         <H2>How Error Boundaries Work</H2>
         <ul className="space-y-2 list-disc list-inside">
-          <Body as="li">
+          <Typography as="li" variant="body">
             Click "Trigger Error" in the first component to see a synchronous error being caught
-          </Body>
-          <Body as="li">
+          </Typography>
+          <Typography as="li" variant="body">
             Click "Trigger Async Error" in the second component to see an async error being caught
-          </Body>
-          <Body as="li">
+          </Typography>
+          <Typography as="li" variant="body">
             Notice how the working component continues to function even when others error
-          </Body>
-          <Body as="li">
+          </Typography>
+          <Typography as="li" variant="body">
             Each FeatureErrorBoundary isolates errors to its own section
-          </Body>
-          <Body as="li">
+          </Typography>
+          <Typography as="li" variant="body">
             The global ErrorBoundary in the layout catches any uncaught errors
-          </Body>
+          </Typography>
         </ul>
       </div>
     </div>

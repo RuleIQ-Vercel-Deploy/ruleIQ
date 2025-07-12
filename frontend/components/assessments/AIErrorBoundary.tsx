@@ -36,7 +36,7 @@ class AIErrorBoundaryClass extends React.Component<
     return { hasError: true, error };
   }
 
-  componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
+  override componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
     console.error("AI Error Boundary caught error:", error, errorInfo);
     
     this.setState({ errorInfo });
@@ -57,16 +57,16 @@ class AIErrorBoundaryClass extends React.Component<
     this.setState({ hasError: false, error: null, errorInfo: null });
   };
 
-  render() {
+  override render() {
     if (this.state.hasError && this.state.error) {
       const FallbackComponent = this.props.fallback || DefaultAIErrorFallback;
-      return (
-        <FallbackComponent
-          error={this.state.error}
-          resetError={this.resetError}
-          errorInfo={this.state.errorInfo}
-        />
-      );
+      const props = {
+        error: this.state.error,
+        resetError: this.resetError,
+        ...(this.state.errorInfo && { errorInfo: this.state.errorInfo })
+      };
+      
+      return <FallbackComponent {...props} />;
     }
 
     return this.props.children;
@@ -137,7 +137,7 @@ export function InlineAIErrorBoundary({
 }) {
   return (
     <AIErrorBoundaryClass
-      fallback={({ error, resetError }) => (
+      fallback={({ resetError }) => (
         <div className="flex items-center gap-2 p-2 bg-amber-50 dark:bg-amber-950 border border-amber-200 dark:border-amber-800 rounded text-xs">
           <AlertTriangle className="h-3 w-3 text-amber-600 dark:text-amber-400" />
           <span className="text-amber-700 dark:text-amber-300">AI unavailable</span>
@@ -171,11 +171,13 @@ export function AIErrorBoundary({
     errorInfo?: React.ErrorInfo;
   }>;
 }) {
-  return (
-    <AIErrorBoundaryClass onError={onError} fallback={fallback}>
-      {children}
-    </AIErrorBoundaryClass>
-  );
+  const props: AIErrorBoundaryProps = {
+    children,
+    ...(onError && { onError }),
+    ...(fallback && { fallback })
+  };
+  
+  return <AIErrorBoundaryClass {...props} />;
 }
 
 // Hook for programmatic error handling in AI components

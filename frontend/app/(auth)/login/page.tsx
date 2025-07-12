@@ -18,14 +18,11 @@ import { Label } from '@/components/ui/label';
 import { authService } from '@/lib/api/auth.service';
 import { useAppStore } from '@/lib/stores/app.store';
 import { useAuthStore } from '@/lib/stores/auth.store';
+import { authSchemas } from '@/lib/security/validation';
+import { useCsrfToken, getCsrfHeaders } from '@/lib/hooks/use-csrf-token';
 
-const loginSchema = z.object({
-  email: z.string().email('Invalid email address'),
-  password: z.string().min(1, 'Password is required'),
-  rememberMe: z.boolean(),
-});
-
-type LoginFormData = z.infer<typeof loginSchema>;
+// Use secure validation schema
+type LoginFormData = z.infer<typeof authSchemas.login>;
 
 export default function LoginPage() {
   const router = useRouter();
@@ -33,6 +30,7 @@ export default function LoginPage() {
   const { addNotification } = useAppStore();
   const [showPassword, setShowPassword] = React.useState(false);
   const [isSubmitting, setIsSubmitting] = React.useState(false);
+  const { token: csrfToken, loading: csrfLoading, error: csrfError } = useCsrfToken();
 
   const {
     register,
@@ -42,7 +40,7 @@ export default function LoginPage() {
     watch,
     setError: setFormError,
   } = useForm<LoginFormData>({
-    resolver: zodResolver(loginSchema),
+    resolver: zodResolver(authSchemas.login),
     defaultValues: {
       email: '',
       password: '',
@@ -53,14 +51,21 @@ export default function LoginPage() {
   const rememberMe = watch('rememberMe');
 
   const onSubmit = async (data: LoginFormData) => {
+    if (!csrfToken) {
+      setFormError('root', { message: 'Security token not available. Please refresh and try again.' });
+      return;
+    }
+
     setIsSubmitting(true);
     clearError();
 
     try {
-      // Use auth service directly for better error handling
+      // Use auth service with CSRF protection
       await authService.login({
         email: data.email,
         password: data.password,
+      }, {
+        headers: getCsrfHeaders(csrfToken),
       });
 
       addNotification({
@@ -127,6 +132,23 @@ export default function LoginPage() {
               </CardHeader>
 
               <CardContent className="space-y-6 px-8 pb-8">
+                {/* CSRF Loading State */}
+                {csrfLoading && (
+                  <Alert>
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    <AlertDescription>Loading security verification...</AlertDescription>
+                  </Alert>
+                )}
+
+                {/* CSRF Error */}
+                {csrfError && (
+                  <Alert variant="destructive">
+                    <AlertCircle className="h-4 w-4" />
+                    <AlertDescription>Security verification failed: {csrfError}</AlertDescription>
+                  </Alert>
+                )}
+
+                {/* Form Errors */}
                 {(error || errors.root) && (
                   <Alert variant="destructive">
                     <AlertCircle className="h-4 w-4" />
@@ -144,7 +166,7 @@ export default function LoginPage() {
                       placeholder="Enter your email"
                       {...register('email')}
                       className={errors.email ? 'border-destructive bg-surface-secondary/50' : 'bg-surface-secondary/50 border-glass-border focus:border-brand-primary'}
-                      disabled={isSubmitting}
+                      disabled={isSubmitting || csrfLoading || !!csrfError}
                     />
                     {errors.email && (
                       <p className="text-sm text-destructive">{errors.email.message}</p>
@@ -169,7 +191,7 @@ export default function LoginPage() {
                         placeholder="Enter your password"
                         {...register('password')}
                         className={errors.password ? 'border-destructive pr-10 bg-surface-secondary/50' : 'pr-10 bg-surface-secondary/50 border-glass-border focus:border-brand-primary'}
-                        disabled={isSubmitting}
+                        disabled={isSubmitting || csrfLoading || !!csrfError}
                       />
                       <Button
                         type="button"
@@ -177,7 +199,7 @@ export default function LoginPage() {
                         size="sm"
                         className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent text-text-secondary hover:text-text-primary"
                         onClick={() => setShowPassword(!showPassword)}
-                        disabled={isSubmitting}
+                        disabled={isSubmitting || csrfLoading || !!csrfError}
                       >
                         {showPassword ? (
                           <EyeOff className="h-4 w-4" />
@@ -197,7 +219,7 @@ export default function LoginPage() {
                       id="rememberMe"
                       checked={rememberMe}
                       onCheckedChange={(checked) => setValue('rememberMe', !!checked)}
-                      disabled={isSubmitting}
+                      disabled={isSubmitting || csrfLoading || !!csrfError}
                       className="border-glass-border data-[state=checked]:bg-brand-primary data-[state=checked]:border-brand-primary"
                     />
                     <Label htmlFor="rememberMe" className="cursor-pointer text-sm font-normal text-text-secondary">
@@ -210,7 +232,7 @@ export default function LoginPage() {
                     type="submit"
                     className="btn-gradient w-full"
                     size="lg"
-                    disabled={isSubmitting}
+                    disabled={isSubmitting || csrfLoading || !!csrfError}
                   >
                     {isSubmitting ? (
                       <>
@@ -267,7 +289,7 @@ export default function LoginPage() {
 
                 {/* Sign Up Link */}
                 <div className="text-center text-sm">
-                  <span className="text-text-secondary">Don't have an account? </span>
+                  <span className="text-text-secondary">Don&apos;t have an account? </span>
                   <Link
                     href="/register"
                     className="text-brand-secondary hover:text-brand-secondary/80 font-medium hover:underline transition-colors"

@@ -156,16 +156,24 @@ describe('AssessmentWizard', () => {
   beforeEach(() => {
     vi.clearAllMocks()
     
+    // Create a mock answers map that can be updated
+    const mockAnswers = new Map()
+    
     // Set up default mock return values
     mockEngine.getCurrentQuestion.mockReturnValue(mockQuestion)
     mockEngine.getCurrentSection.mockReturnValue(mockSection)
     mockEngine.getProgress.mockReturnValue(mockProgress)
     mockEngine.loadProgress.mockReturnValue(false)
-    mockEngine.getAnswers.mockReturnValue(new Map())
+    mockEngine.getAnswers.mockReturnValue(mockAnswers)
     mockEngine.isInAIMode.mockReturnValue(false)
     mockEngine.getCurrentAIQuestion.mockReturnValue(null)
     mockEngine.hasAIQuestionsRemaining.mockReturnValue(false)
     mockEngine.getAIQuestionProgress.mockReturnValue({ current: 1, total: 1 })
+    
+    // Mock answerQuestion to update the answers map
+    mockEngine.answerQuestion.mockImplementation((questionId: string, value: any) => {
+      mockAnswers.set(questionId, { value, timestamp: new Date() })
+    })
     mockEngine.nextQuestion.mockResolvedValue(true)
     mockEngine.previousQuestion.mockReturnValue(true)
     mockEngine.jumpToSection.mockReturnValue(true)
@@ -211,6 +219,8 @@ describe('AssessmentWizard', () => {
     
     // Mock the engine to update to next question after nextQuestion is called
     mockEngine.nextQuestion.mockImplementation(async () => {
+      // This runs when nextQuestion is called, updating the mock returns
+      // for subsequent calls to getCurrentQuestion and getProgress
       mockEngine.getCurrentQuestion.mockReturnValue(secondQuestion)
       mockEngine.getProgress.mockReturnValue({
         ...mockProgress,
@@ -221,9 +231,20 @@ describe('AssessmentWizard', () => {
       return true
     })
     
+    // Wait for the button to be enabled after answering the question
+    await waitFor(() => {
+      const nextButton = screen.getByRole('button', { name: /next/i })
+      expect(nextButton).toBeEnabled()
+    })
+    
     // Navigate to next question
     const nextButton = screen.getByRole('button', { name: /next/i })
-    fireEvent.click(nextButton)
+    await act(async () => {
+      fireEvent.click(nextButton)
+    })
+    
+    // Verify that nextQuestion was called
+    expect(mockEngine.nextQuestion).toHaveBeenCalled()
     
     await waitFor(() => {
       expect(screen.getByText('Describe your data retention policies')).toBeInTheDocument()
@@ -255,18 +276,19 @@ describe('AssessmentWizard', () => {
   })
 
   it('should validate required questions', async () => {
-    // Set up the engine to return false for nextQuestion when validation fails
-    mockEngine.nextQuestion.mockResolvedValue(false)
-    
     render(<AssessmentWizard {...mockProps} />)
     
-    // Try to navigate without answering required question
+    // The next button should be disabled when required question is not answered
     const nextButton = screen.getByRole('button', { name: /next/i })
-    fireEvent.click(nextButton)
+    expect(nextButton).toBeDisabled()
     
-    // The component should try to go to next question
+    // Answer the question to enable the button
+    const input = screen.getByTestId('question-input')
+    fireEvent.change(input, { target: { value: 'yes' } })
+    
+    // Now the button should be enabled
     await waitFor(() => {
-      expect(mockEngine.nextQuestion).toHaveBeenCalled()
+      expect(nextButton).toBeEnabled()
     })
   })
 

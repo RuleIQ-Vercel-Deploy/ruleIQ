@@ -57,9 +57,9 @@ export default function DesignSystemPage() {
           <H3>Primary Actions</H3>
           <div className="flex flex-wrap gap-4">
             <Button variant="default">Default Button</Button>
-            <Button variant="navy">Navy Button</Button>
-            <Button variant="accent">Gold Accent</Button>
-            <Button variant="outline-navy">Outline Navy</Button>
+            <Button variant="default">Navy Button</Button>
+            <Button variant="secondary">Gold Accent</Button>
+            <Button variant="outline">Outline Navy</Button>
           </div>
         </div>
 
@@ -67,9 +67,9 @@ export default function DesignSystemPage() {
         <div className="space-y-4">
           <H3>Semantic Actions</H3>
           <div className="flex flex-wrap gap-4">
-            <Button variant="success">Success</Button>
-            <Button variant="warning">Warning</Button>
-            <Button variant="error">Error</Button>
+            <Button variant="secondary">Success</Button>
+            <Button variant="outline">Warning</Button>
+            <Button variant="destructive">Error</Button>
             <Button variant="destructive">Destructive</Button>
           </div>
         </div>

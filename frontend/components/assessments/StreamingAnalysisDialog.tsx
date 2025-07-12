@@ -11,17 +11,14 @@ import { useStreaming } from '@/lib/hooks/use-streaming';
 
 import type { 
   AIAnalysisRequest, 
-  AIRecommendationRequest,
-  Gap 
+  AIRecommendationRequest 
 } from '@/lib/api/assessments-ai.service';
-import type { AssessmentProgress } from '@/lib/assessment-engine/types';
+import type { AssessmentContext, Gap } from '@/lib/assessment-engine/types';
 
 interface StreamingAnalysisDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  assessmentProgress: AssessmentProgress;
-  businessProfileId: string;
-  frameworkId: string;
+  assessmentContext: AssessmentContext;
   onAnalysisComplete?: (analysis: string) => void;
   onRecommendationsComplete?: (recommendations: string) => void;
 }
@@ -29,9 +26,7 @@ interface StreamingAnalysisDialogProps {
 export function StreamingAnalysisDialog({
   open,
   onOpenChange,
-  assessmentProgress,
-  businessProfileId,
-  frameworkId,
+  assessmentContext,
   onAnalysisComplete,
   onRecommendationsComplete
 }: StreamingAnalysisDialogProps) {
@@ -41,14 +36,20 @@ export function StreamingAnalysisDialog({
   const recommendationsRef = useRef<StreamingResponseRef>(null);
 
   const startAnalysis = async () => {
+    // Convert Map to Record for API request
+    const responses: Record<string, any> = {};
+    assessmentContext.answers.forEach((value, key) => {
+      responses[key] = value;
+    });
+
     const analysisRequest: AIAnalysisRequest = {
-      assessment_results: Object.entries(assessmentProgress.answers).map(([questionId, answer]) => ({
-        question_id: questionId,
-        answer,
-        section_id: assessmentProgress.currentSection || 'unknown'
-      })),
-      framework_id: frameworkId,
-      business_profile_id: businessProfileId
+      assessment_id: assessmentContext.assessmentId,
+      responses,
+      framework_id: assessmentContext.frameworkId,
+      business_profile: {
+        id: assessmentContext.businessProfileId,
+        // Add other business profile fields as needed
+      }
     };
 
     await analysisControls.start(async (options) => {
@@ -60,7 +61,7 @@ export function StreamingAnalysisDialog({
     const recommendationsRequest: AIRecommendationRequest = {
       gaps,
       business_profile: {
-        id: businessProfileId,
+        id: assessmentContext.businessProfileId,
         // Add other business profile fields as needed
       }
     };
@@ -87,12 +88,16 @@ export function StreamingAnalysisDialog({
       const mockGaps: Gap[] = [
         {
           id: 'gap-1',
+          questionId: 'q1',
+          questionText: 'Do you have a documented data retention policy?',
           section: 'data-protection',
+          category: 'Data Management',
           severity: 'high',
           description: 'Missing data retention policies',
           impact: 'High compliance risk',
-          current_state: 'No formal policies',
-          target_state: 'Comprehensive retention schedule'
+          currentState: 'No formal policies',
+          targetState: 'Comprehensive retention schedule',
+          expectedAnswer: 'Yes'
         }
       ];
       
@@ -108,6 +113,41 @@ export function StreamingAnalysisDialog({
       onRecommendationsComplete?.(recommendationsState.content);
     }
   }, [recommendationsState.isComplete, recommendationsState.content]);
+
+  // Sync streaming states with StreamingResponse components
+  useEffect(() => {
+    if (analysisRef.current) {
+      if (analysisState.metadata) {
+        analysisRef.current.setMetadata(analysisState.metadata);
+      }
+      analysisState.chunks.forEach(chunk => {
+        analysisRef.current?.addChunk(chunk);
+      });
+      if (analysisState.error) {
+        analysisRef.current.setError(analysisState.error);
+      }
+      if (analysisState.isComplete && !analysisState.error) {
+        analysisRef.current.setComplete();
+      }
+    }
+  }, [analysisState]);
+
+  useEffect(() => {
+    if (recommendationsRef.current) {
+      if (recommendationsState.metadata) {
+        recommendationsRef.current.setMetadata(recommendationsState.metadata);
+      }
+      recommendationsState.chunks.forEach(chunk => {
+        recommendationsRef.current?.addChunk(chunk);
+      });
+      if (recommendationsState.error) {
+        recommendationsRef.current.setError(recommendationsState.error);
+      }
+      if (recommendationsState.isComplete && !recommendationsState.error) {
+        recommendationsRef.current.setComplete();
+      }
+    }
+  }, [recommendationsState]);
 
   const getOverallProgress = () => {
     if (!analysisState.isStreaming && !analysisState.isComplete) return 0;
@@ -155,7 +195,7 @@ export function StreamingAnalysisDialog({
   const canClose = !analysisState.isStreaming && !recommendationsState.isStreaming;
 
   return (
-    <Dialog open={open} onOpenChange={canClose ? onOpenChange : undefined}>
+    <Dialog open={open} onOpenChange={canClose ? onOpenChange : () => {}}>
       <DialogContent className="max-w-4xl max-h-[80vh] overflow-hidden">
         <DialogHeader>
           <DialogTitle>AI-Powered Assessment Analysis</DialogTitle>
@@ -223,39 +263,4 @@ export function StreamingAnalysisDialog({
       </DialogContent>
     </Dialog>
   );
-
-  // Sync streaming states with StreamingResponse components
-  useEffect(() => {
-    if (analysisRef.current) {
-      if (analysisState.metadata) {
-        analysisRef.current.setMetadata(analysisState.metadata);
-      }
-      analysisState.chunks.forEach(chunk => {
-        analysisRef.current?.addChunk(chunk);
-      });
-      if (analysisState.error) {
-        analysisRef.current.setError(analysisState.error);
-      }
-      if (analysisState.isComplete && !analysisState.error) {
-        analysisRef.current.setComplete();
-      }
-    }
-  }, [analysisState]);
-
-  useEffect(() => {
-    if (recommendationsRef.current) {
-      if (recommendationsState.metadata) {
-        recommendationsRef.current.setMetadata(recommendationsState.metadata);
-      }
-      recommendationsState.chunks.forEach(chunk => {
-        recommendationsRef.current?.addChunk(chunk);
-      });
-      if (recommendationsState.error) {
-        recommendationsRef.current.setError(recommendationsState.error);
-      }
-      if (recommendationsState.isComplete && !recommendationsState.error) {
-        recommendationsRef.current.setComplete();
-      }
-    }
-  }, [recommendationsState]);
 }
