@@ -6,9 +6,9 @@ function Skeleton({ className, ...props }: React.HTMLAttributes<HTMLDivElement>)
   return (
     <div
       className={cn(
-        "animate-pulse rounded-md",
-        // Custom ruleIQ skeleton color
-        "bg-white/10",
+        "animate-pulse rounded-lg",
+        // New design system skeleton
+        "bg-neutral-200",
         className,
       )}
       {...props}

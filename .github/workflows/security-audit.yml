@@ -1,0 +1,212 @@
+name: Security Audit & Vulnerability Scanning
+
+on:
+  push:
+    branches: [main, develop]
+    paths: ["frontend/**", "api/**", "config/**"]
+  pull_request:
+    branches: [main, develop]
+    paths: ["frontend/**", "api/**", "config/**"]
+  schedule:
+    - cron: "0 3 * * 1" # Weekly on Monday at 3 AM UTC
+
+jobs:
+  # OWASP ZAP Security Scanning
+  zap-scan:
+    name: OWASP ZAP Security Scan
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+
+      - name: Install dependencies
+        run: |
+          cd frontend
+          pnpm install
+
+      - name: Build application
+        run: |
+          cd frontend
+          pnpm build
+
+      - name: Start application
+        run: |
+          cd frontend
+          pnpm start &
+          sleep 30
+
+      - name: Run OWASP ZAP Baseline Scan
+        uses: zaproxy/action-baseline@v0.12.0
+        with:
+          target: "http://localhost:3000"
+          rules_file_name: ".zap/rules.tsv"
+          cmd_options: "-a"
+
+      - name: Upload ZAP results
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: zap-results
+          path: report_html.html
+
+  # Dependency vulnerability scanning
+  dependency-scan:
+    name: Dependency Vulnerability Scan
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+
+      - name: Install dependencies
+        run: |
+          cd frontend
+          pnpm install
+
+      - name: Run npm audit
+        run: |
+          cd frontend
+          pnpm audit --audit-level high
+
+      - name: Run Snyk security scan
+        uses: snyk/actions/node@master
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          args: --severity-threshold=high
+
+  # Code security analysis
+  code-security:
+    name: Code Security Analysis
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+
+      - name: Install dependencies
+        run: |
+          cd frontend
+          pnpm install
+
+      - name: Run ESLint security rules
+        run: |
+          cd frontend
+          pnpm eslint . --ext .js,.jsx,.ts,.tsx --config .eslintrc.security.js
+
+      - name: Run Semgrep security scan
+        uses: returntocorp/semgrep-action@v1
+        with:
+          config: >-
+            p/security-audit
+            p/secrets
+            p/owasp-top-ten
+            p/javascript
+
+  # Secret scanning
+  secret-scan:
+    name: Secret Scanning
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Run TruffleHog OSS
+        uses: trufflesecurity/trufflehog@main
+        with:
+          path: ./
+          base: main
+          head: HEAD
+          extra_args: --debug --only-verified
+
+  # Security headers validation
+  security-headers:
+    name: Security Headers Validation
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+
+      - name: Install dependencies
+        run: |
+          cd frontend
+          pnpm install
+
+      - name: Build application
+        run: |
+          cd frontend
+          pnpm build
+
+      - name: Start application
+        run: |
+          cd frontend
+          pnpm start &
+          sleep 30
+
+      - name: Check security headers
+        run: |
+          curl -I http://localhost:3000 | grep -E "(Content-Security-Policy|X-Frame-Options|X-Content-Type-Options|Referrer-Policy|Permissions-Policy)"
+
+  # Generate security report
+  security-report:
+    name: Security Report Generation
+    runs-on: ubuntu-latest
+    needs:
+      [zap-scan, dependency-scan, code-security, secret-scan, security-headers]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Generate security summary
+        run: |
+          cat > security-report.md << 'EOF'
+          # Security Audit Report
+
+          ## Summary
+          - **Date**: $(date)
+          - **Branch**: ${{ github.ref }}
+          - **Commit**: ${{ github.sha }}
+
+          ## Scan Results
+          - ✅ OWASP ZAP Security Scan
+          - ✅ Dependency Vulnerability Scan
+          - ✅ Code Security Analysis
+          - ✅ Secret Scanning
+          - ✅ Security Headers Validation
+
+          ## Next Steps
+          Review any findings in the detailed reports above and address critical/high severity issues.
+
+          EOF
+
+      - name: Upload security report
+        uses: actions/upload-artifact@v3
+        with:
+          name: security-report
+          path: security-report.md

@@ -12,16 +12,15 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
     return (
       <textarea
         className={cn(
-          "flex min-h-[80px] w-full rounded-md border bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50 transition-colors resize-none",
-          // Default state
-          "border-input focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2",
-          // Focus state using design system colors
-          "focus-visible:ring-ring focus-visible:border-ring",
+          "flex min-h-[80px] w-full rounded-lg border bg-white px-4 py-3 text-sm placeholder:text-neutral-400 disabled:cursor-not-allowed disabled:opacity-50 transition-all duration-200 resize-none",
+          // Default state with new design system
+          "border-neutral-200",
+          // Focus state with teal accent
+          "focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-600",
           // Error state
-          error && "border-error focus-visible:ring-error focus-visible:border-error",
+          error && "border-red-500 focus:ring-red-500/20 focus:border-red-500",
           // Success state
-          success && "border-success focus-visible:ring-success focus-visible:border-success",
-          // Remove hardcoded colors - let theme handle it
+          success && "border-green-500 focus:ring-green-500/20 focus:border-green-500",
           className,
         )}
         ref={ref}

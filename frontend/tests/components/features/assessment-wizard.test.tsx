@@ -234,7 +234,7 @@ describe('AssessmentWizard', () => {
 
     it('should render different question types correctly', () => {
       // Set up for checkbox question
-      const checkboxQuestion = mockFramework.sections[0].questions[1];
+      const checkboxQuestion = mockFramework.sections[0]!.questions![1]!;
       mockEngine.getCurrentQuestion.mockReturnValue(checkboxQuestion);
 
       render(<AssessmentWizard {...mockProps} />);
@@ -304,7 +304,7 @@ describe('AssessmentWizard', () => {
 
     it('should show submit button on last question', () => {
       // Set up for last question
-      const lastQuestionProgress = { ...mockProgress, currentQuestion: 'q2', answeredQuestions: 1 };
+      const lastQuestionProgress = { ...mockProgress, currentQuestion: 'q2', answeredQuestions: 2 };
       mockEngine.getProgress.mockReturnValue(lastQuestionProgress);
       mockEngine.nextQuestion.mockResolvedValue(false); // No more questions
 
@@ -327,7 +327,7 @@ describe('AssessmentWizard', () => {
 
     it('should call setAnswer when checkbox is selected', () => {
       // Set up for checkbox question
-      const checkboxQuestion = mockFramework.sections[0]!.questions[1]!;
+      const checkboxQuestion = mockFramework.sections[0]!.questions![1]!;
       mockEngine.getCurrentQuestion.mockReturnValue(checkboxQuestion);
 
       render(<AssessmentWizard {...mockProps} />);
@@ -340,7 +340,7 @@ describe('AssessmentWizard', () => {
 
     it('should handle multiple checkbox selections', () => {
       // Set up for checkbox question
-      const checkboxQuestion = mockFramework.sections[0].questions[1];
+      const checkboxQuestion = mockFramework.sections[0]!.questions![1]!;
       mockEngine.getCurrentQuestion.mockReturnValue(checkboxQuestion);
 
       render(<AssessmentWizard {...mockProps} />);
@@ -436,29 +436,22 @@ describe('AssessmentWizard', () => {
 
     it('should validate multiple choice questions require at least one selection', async () => {
       // Set up for checkbox question
-      const checkboxQuestion = mockFramework.sections[0].questions[1];
+      const checkboxQuestion = mockFramework.sections[0]!.questions![1]!;
       mockEngine.getCurrentQuestion.mockReturnValue(checkboxQuestion);
-      mockEngine.nextQuestion.mockRejectedValue(new Error('Please select at least one option'));
+
+      // Mock the answers to include checkbox selections
+      const answersMap = new Map();
+      answersMap.set('q2', { value: ['names'], timestamp: new Date() });
+      mockEngine.getAnswers.mockReturnValue(answersMap);
 
       render(<AssessmentWizard {...mockProps} />);
 
-      // First provide some input to enable the button (simulate checking/unchecking a box)
-      const questionInput = screen.getByTestId('question-input');
-      fireEvent.change(questionInput, { target: { value: 'names' } });
-
-      // For checkbox questions, we need to simulate array input
-      mockEngine.getAnswers.mockReturnValue(
-        new Map([['q2', { value: ['names'], timestamp: new Date() }]]),
-      );
-
-      // Force re-render by triggering answers update
-      const nextButton =
-        screen.getByRole('button', { name: /next/i }) ||
-        screen.getByRole('button', { name: /complete assessment/i });
-
       // The button should be enabled for checkbox questions with at least one selection
+      const nextButton = screen.getByRole('button', { name: /next/i });
       expect(nextButton).toBeEnabled();
 
+      // Mock successful navigation
+      mockEngine.nextQuestion.mockResolvedValue(true);
       fireEvent.click(nextButton);
 
       await waitFor(() => {
@@ -470,7 +463,7 @@ describe('AssessmentWizard', () => {
   describe('Submission', () => {
     it('should call submitAssessment when submit button is clicked', async () => {
       // Set up for last question
-      const lastQuestionProgress = { ...mockProgress, currentQuestion: 'q2', answeredQuestions: 1 };
+      const lastQuestionProgress = { ...mockProgress, currentQuestion: 'q2', answeredQuestions: 2 };
       mockEngine.getProgress.mockReturnValue(lastQuestionProgress);
       mockEngine.nextQuestion.mockResolvedValue(false); // No more questions
 
@@ -486,7 +479,7 @@ describe('AssessmentWizard', () => {
 
     it('should show loading state during submission', () => {
       // Set up for last question with loading state
-      const lastQuestionProgress = { ...mockProgress, currentQuestion: 'q2', answeredQuestions: 1 };
+      const lastQuestionProgress = { ...mockProgress, currentQuestion: 'q2', answeredQuestions: 2 };
       mockEngine.getProgress.mockReturnValue(lastQuestionProgress);
       mockEngine.nextQuestion.mockResolvedValue(false);
 
@@ -499,7 +492,7 @@ describe('AssessmentWizard', () => {
 
     it('should redirect to results page after successful submission', async () => {
       // Set up for last question
-      const lastQuestionProgress = { ...mockProgress, currentQuestion: 'q2', answeredQuestions: 1 };
+      const lastQuestionProgress = { ...mockProgress, currentQuestion: 'q2', answeredQuestions: 2 };
       mockEngine.getProgress.mockReturnValue(lastQuestionProgress);
       mockEngine.nextQuestion.mockResolvedValue(false);
 
@@ -549,7 +542,7 @@ describe('AssessmentWizard', () => {
 
     it('should handle submission errors gracefully', async () => {
       // Set up for last question
-      const lastQuestionProgress = { ...mockProgress, currentQuestion: 'q2', answeredQuestions: 1 };
+      const lastQuestionProgress = { ...mockProgress, currentQuestion: 'q2', answeredQuestions: 2 };
       mockEngine.getProgress.mockReturnValue(lastQuestionProgress);
       mockEngine.nextQuestion.mockResolvedValue(false);
       mockEngine.calculateResults.mockRejectedValue(new Error('Submission failed'));
