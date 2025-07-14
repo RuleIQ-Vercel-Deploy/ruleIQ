@@ -53,10 +53,10 @@ export function AppSidebar() {
   const isSettingsActive = settingsSubMenu.some((item) => pathname.startsWith(item.href))
 
   return (
-    <Sidebar className="bg-surface-primary border-r border-glass-border">
-      <SidebarHeader className="p-4">
+    <Sidebar className="bg-white border-r border-neutral-100">
+      <SidebarHeader className="p-4 border-b border-neutral-100">
         <Link href="/" className="flex items-center gap-2">
-          <span className="text-2xl font-bold gradient-text">ruleIQ</span>
+          <span className="text-2xl font-bold text-teal-600">ruleIQ</span>
         </Link>
       </SidebarHeader>
       <SidebarContent className="p-2">
@@ -67,8 +67,8 @@ export function AppSidebar() {
                 asChild
                 isActive={pathname === item.href}
                 className={cn(
-                  "w-full justify-start text-text-secondary hover:text-text-primary transition-colors",
-                  pathname === item.href && "bg-brand-primary/10 text-brand-primary hover:bg-brand-primary/20"
+                  "w-full justify-start text-neutral-600 hover:text-teal-600 hover:bg-teal-50 transition-colors rounded-lg",
+                  pathname === item.href && "bg-teal-50 text-teal-600 font-medium"
                 )}
               >
                 <Link href={item.href}>
@@ -81,7 +81,10 @@ export function AppSidebar() {
           <Collapsible defaultOpen={isSettingsActive}>
             <CollapsibleTrigger asChild>
               <SidebarMenuButton
-                className={cn("w-full justify-start group text-text-secondary hover:text-text-primary", isSettingsActive && "text-brand-primary")}
+                className={cn(
+                  "w-full justify-start group text-neutral-600 hover:text-teal-600 hover:bg-teal-50 rounded-lg",
+                  isSettingsActive && "text-teal-600"
+                )}
               >
                 <Settings />
                 <span>Settings</span>
@@ -96,8 +99,8 @@ export function AppSidebar() {
                       asChild
                       isActive={pathname.startsWith(item.href)}
                       className={cn(
-                        "w-full justify-start h-9 text-text-secondary hover:text-text-primary",
-                        pathname.startsWith(item.href) && "bg-brand-primary/10 text-brand-primary hover:bg-brand-primary/20"
+                        "w-full justify-start h-9 text-neutral-500 hover:text-teal-600 hover:bg-teal-50 rounded-lg",
+                        pathname.startsWith(item.href) && "bg-teal-50 text-teal-600 font-medium"
                       )}
                       size="sm"
                     >

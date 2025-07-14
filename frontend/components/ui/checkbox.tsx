@@ -16,20 +16,23 @@ const Checkbox = React.forwardRef<
   <CheckboxPrimitive.Root
     ref={ref}
     className={cn(
-      "peer h-4 w-4 shrink-0 rounded-sm border ring-offset-background disabled:cursor-not-allowed disabled:opacity-50 transition-colors",
-      // Default state
-      "border-input focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2",
-      // Oxford-blue focus and checked states
-      "focus-visible:ring-oxford-blue data-[state=checked]:bg-oxford-blue data-[state=checked]:text-eggshell-white data-[state=checked]:border-oxford-blue",
+      "peer h-4 w-4 shrink-0 rounded border bg-white disabled:cursor-not-allowed disabled:opacity-50 transition-all duration-200",
+      // Ensure minimum 16x16px tap target for accessibility
+      "min-h-[16px] min-w-[16px]",
+      // Default state with new design system
+      "border-neutral-300",
+      // Focus state with visible ring
+      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500/20 focus-visible:ring-offset-2",
+      // Checked state with teal
+      "data-[state=checked]:bg-teal-600 data-[state=checked]:border-teal-600 data-[state=checked]:text-white",
       // Error state
-      error && "border-error focus-visible:ring-error data-[state=checked]:bg-error data-[state=checked]:border-error",
+      error && "border-red-500 focus-visible:ring-red-500/20 data-[state=checked]:bg-red-500 data-[state=checked]:border-red-500",
       // Success state
       success &&
-        "border-success focus-visible:ring-success data-[state=checked]:bg-success data-[state=checked]:border-success",
-      // Custom styling for ruleIQ theme
-      "bg-eggshell-white border-oxford-blue/30",
+        "border-green-500 focus-visible:ring-green-500/20 data-[state=checked]:bg-green-500 data-[state=checked]:border-green-500",
       className,
     )}
+    aria-invalid={error ? "true" : undefined}
     {...props}
   >
     <CheckboxPrimitive.Indicator className={cn("flex items-center justify-center text-current")}>

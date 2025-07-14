@@ -2,27 +2,42 @@ import { test, expect } from '@playwright/test';
 
 test.describe('Homepage Smoke Test', () => {
   test('should load the homepage and display the main heading', async ({ page }) => {
-    // Navigate to the homepage
     await page.goto('/');
 
-    // Wait for the main heading to be visible to ensure the page has loaded.
-    // This selector will likely need to be updated to match your actual heading element.
+    // Check main heading
     const mainHeading = page.locator('h1');
-
-    // Assert that the heading is visible
     await expect(mainHeading).toBeVisible({ timeout: 10000 });
+    await expect(mainHeading).toContainText(/TransformYour Compliance/i);
 
-    // Optional: Assert that the heading contains specific text
-    // This is a good check to ensure the correct content is loading.
-    // Replace 'Welcome to ruleIQ' with the actual text of your main heading.
-    await expect(mainHeading).toContainText(/Welcome to ruleIQ/i);
+    // Check navigation
+    await expect(page.getByRole('link', { name: /sign in|login/i })).toBeVisible();
+    await expect(page.getByRole('link', { name: /sign up|register/i })).toBeVisible();
   });
 
-  test('should have a title', async ({ page }) => {
+  test('should have correct title and meta tags', async ({ page }) => {
     await page.goto('/');
 
-    // Assert that the page has the correct title.
-    // Replace 'ruleIQ' with your application's actual title.
     await expect(page).toHaveTitle(/ruleIQ/);
+    await expect(page.locator('meta[name="description"]')).toBeVisible();
+  });
+
+  test('should be responsive on mobile', async ({ page }) => {
+    await page.setViewportSize({ width: 375, height: 667 });
+    await page.goto('/');
+
+    // Check mobile-specific elements
+    await expect(page.locator('h1')).toBeVisible();
+    await expect(page.getByRole('button', { name: /menu/i })).toBeVisible();
+  });
+
+  test('should load all critical resources', async ({ page }) => {
+    await page.goto('/');
+
+    // Check for critical CSS/JS loading
+    await expect(page.locator('link[rel="stylesheet"]')).toBeVisible();
+    await expect(page.locator('script[src]')).toBeVisible();
+
+    // Check for images
+    await expect(page.locator('img')).toBeVisible();
   });
 });

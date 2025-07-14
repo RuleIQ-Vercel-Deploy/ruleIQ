@@ -212,8 +212,26 @@ export function AssessmentWizard({
     currentQuestion?.type === 'checkbox' &&
     Array.isArray(currentAnswer) &&
     currentAnswer.length > 0;
-  const isQuestionAnswered =
-    currentQuestion?.type === 'checkbox' ? isCheckboxAnswered : isCurrentQuestionAnswered;
+
+  // Handle checkbox questions properly
+  const isQuestionAnswered = (() => {
+    if (!currentQuestion) return false;
+
+    if (currentQuestion.type === 'checkbox') {
+      // For checkbox questions, check if at least one option is selected
+      const hasSelection = Array.isArray(currentAnswer) && currentAnswer.length > 0;
+
+      // If question is not required, empty selection is valid
+      if (currentQuestion.validation?.required === false) {
+        return true; // Always enabled for optional questions
+      }
+
+      return hasSelection;
+    }
+
+    // For non-checkbox questions
+    return isCurrentQuestionAnswered;
+  })();
 
   return (
     <div className="mx-auto max-w-4xl space-y-6">

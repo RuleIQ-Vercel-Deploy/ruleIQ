@@ -196,32 +196,6 @@ _SuperClaude v2.0.1 | Development framework | Evidence-based methodology | Advan
 ````markdown
 ruleIQ Frontend Development Guide
 
-This file provides guidance to Claude Code (claude.ai/code) when working with the ruleIQ compliance automation platform frontend.
-
-## 🎉 PRODUCTION STATUS: READY FOR DEPLOYMENT
-
-**Build Status**: ✅ Successful (36 static pages generated)
-**Critical Issues**: ✅ All Resolved
-**Environment Config**: ✅ Complete
-**Testing**: ✅ 26 tests passing
-**Production Readiness**: ✅ 95% Complete
-
-### Latest Updates (2025-07-02)
-
-- **Build Failures Fixed**: SSR issues, sidebar provider context, team page data structure
-- **Environment Variables**: Stripe keys added to all environments
-- **Production Config**: Docker, CI/CD, Next.js optimization complete
-- **Code Quality**: ESLint auto-fixes applied, remaining issues non-blocking
-
-## Project Context
-
-**ruleIQ** (formerly ComplianceGPT) is an AI-powered compliance automation platform for UK SMBs. This is the frontend codebase, separated from the backend API.
-
-### Target Users (Personas)
-
-- **Alex (Analytical)**: Data-driven, wants customization and control
-- **Ben (Cautious)**: Risk-averse, needs guidance and reassurance
-- **Catherine (Principled)**: Ethics-focused, values transparency and audit trails
 
 ## Development Commands
 

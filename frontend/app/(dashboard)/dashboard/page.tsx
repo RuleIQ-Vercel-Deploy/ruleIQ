@@ -127,16 +127,16 @@ export default function Dashboard() {
   return (
     <div className="flex flex-1">
       <AppSidebar />
-      <div className="flex-1 overflow-auto bg-surface-base">
+      <div className="flex-1 overflow-auto bg-neutral-50">
         <DashboardHeader />
-        <div className="p-6 space-y-8 bg-surface-base">
+        <div className="p-6 space-y-8">
           {/* Page Header with Refresh */}
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold gradient-text">
+              <h1 className="text-3xl font-bold text-neutral-900">
                 Welcome back{onboardingData?.fullName ? `, ${onboardingData.fullName.split(' ')[0]}` : ''}
               </h1>
-              <p className="text-text-secondary">
+              <p className="text-neutral-600">
                 {complianceProfile?.priorities && complianceProfile.priorities.length > 0 
                   ? `Focusing on: ${complianceProfile.priorities[0]}` 
                   : "Here's what's happening with your compliance today"}
@@ -147,7 +147,7 @@ export default function Dashboard() {
               size="sm"
               onClick={() => refetch()}
               disabled={isLoading}
-              className="border-glass-border hover:border-glass-border-hover hover:bg-glass-white"
+              className="border-neutral-200 hover:border-neutral-300 hover:bg-neutral-100"
             >
               <RefreshCw className={`h-4 w-4 mr-2 ${isLoading ? 'animate-spin' : ''}`} />
               Refresh

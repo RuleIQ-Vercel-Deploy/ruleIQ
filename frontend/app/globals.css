@@ -1,48 +1,51 @@
+@import './styles/design-system.css';
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;300;400;500;600;700;800;900&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   :root {
-    /* Base font size - 112.5% = 18px on 16px browser default */
-    font-size: 112.5%;
-    
-    /* Modern Dark Theme - Purple & Cyan Gradient */
-    --background: 0 0% 4%; /* Near black background #0A0A0B */
-    --foreground: 0 0% 98%; /* High contrast white text #FAFAFA */
+    /* Base font size - 100% = 16px */
+    font-size: 100%;
 
-    --card: 0 0% 7%; /* Primary surface #111113 */
-    --card-foreground: 0 0% 98%;
+    /* Light Theme with Teal Primary */
+    --background: 0 0% 100%; /* White background */
+    --foreground: 221 39% 11%; /* Dark text #111827 */
 
-    --popover: 0 0% 9%; /* Secondary surface #18181B */
-    --popover-foreground: 0 0% 98%;
+    --card: 0 0% 100%; /* White card */
+    --card-foreground: 221 39% 11%;
 
-    --primary: 262 83% 58%; /* Vibrant purple #7C3AED */
+    --popover: 0 0% 100%; /* White popover */
+    --popover-foreground: 221 39% 11%;
+
+    --primary: 180 40% 34%; /* Teal primary #2C7A7B */
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 0 0% 15%; /* Dark neutral #27272A */
-    --secondary-foreground: 0 0% 98%;
+    --secondary: 210 20% 96%; /* Light gray #F3F4F6 */
+    --secondary-foreground: 221 39% 11%;
 
-    --muted: 0 0% 15%; /* Muted backgrounds */
-    --muted-foreground: 240 5% 64%; /* Muted text #A1A1AA */
+    --muted: 210 20% 96%; /* Muted backgrounds */
+    --muted-foreground: 220 9% 46%; /* Muted text #6B7280 */
 
-    --accent: 188 95% 43%; /* Cyan accent #06B6D4 */
-    --accent-foreground: 0 0% 100%;
+    --accent: 174 55% 56%; /* Teal accent #4FD1C5 */
+    --accent-foreground: 221 39% 11%;
 
     --destructive: 0 84% 60%; /* Error red */
     --destructive-foreground: 0 0% 100%;
 
-    --border: 0 0% 15%; /* Subtle borders for dark theme #27272A */
-    --input: 0 0% 15%;
-    --ring: 262 83% 58%; /* Purple focus ring */
+    --border: 214 32% 91%; /* Light borders #E5E7EB */
+    --input: 214 32% 91%;
+    --ring: 180 40% 34%; /* Teal focus ring */
 
     --radius: 0.5rem;
-    
+
     /* Focus system variables */
     --focus-ring: hsl(var(--primary));
     --focus-offset: 2px;
   }
-  
+
   /* Light theme (optional override) */
   .light {
     --background: 0 0% 100%; /* White background */
@@ -79,100 +82,105 @@
   * {
     @apply border-border;
   }
-  
+
   html {
     @apply antialiased;
     -webkit-text-size-adjust: 100%;
     text-size-adjust: 100%;
   }
-  
+
   body {
-    @apply bg-background text-foreground text-base leading-relaxed;
-    font-family: var(--font-inter), system-ui, -apple-system, sans-serif;
+    @apply bg-neutral-50 text-base leading-relaxed text-foreground;
+    font-family:
+      'Inter',
+      var(--font-inter),
+      system-ui,
+      -apple-system,
+      sans-serif;
   }
-  
+
   /* Typography scale using rem units */
   h1 {
     @apply text-4xl font-bold tracking-tight; /* 2.25rem */
   }
-  
+
   h2 {
     @apply text-3xl font-semibold tracking-tight; /* 1.875rem */
   }
-  
+
   h3 {
     @apply text-2xl font-semibold; /* 1.5rem */
   }
-  
+
   h4 {
     @apply text-xl font-medium; /* 1.25rem */
   }
-  
+
   h5 {
     @apply text-lg font-medium; /* 1.125rem */
   }
-  
+
   h6 {
     @apply text-base font-medium; /* 1rem */
   }
-  
+
   p {
     @apply text-base leading-relaxed; /* 1rem */
   }
-  
+
   small {
     @apply text-sm; /* 0.875rem */
   }
-  
+
   /* Universal focus states using CSS variables */
   *:focus-visible {
-    @apply outline-none ring-2 ring-[var(--focus-ring)] ring-offset-[var(--focus-offset)] ring-offset-background transition-shadow duration-200;
+    @apply outline-none ring-2 ring-[hsl(var(--focus-ring))] ring-offset-[length:var(--focus-offset)] ring-offset-background transition-shadow duration-200;
   }
-  
+
   /* Input-specific focus states */
   input:focus-visible,
   textarea:focus-visible,
   select:focus-visible {
-    @apply ring-offset-0 border-[var(--focus-ring)];
+    @apply border-[var(--focus-ring)] ring-offset-0;
   }
-  
+
   /* Interactive elements focus */
   button:focus-visible,
   a:focus-visible,
-  [role="button"]:focus-visible {
+  [role='button']:focus-visible {
     @apply rounded-[calc(var(--radius)-2px)];
   }
-  
+
   /* Card/Interactive element focus */
-  [role="button"]:focus-visible,
-  [tabindex="0"]:focus-visible {
+  [role='button']:focus-visible,
+  [tabindex='0']:focus-visible {
     @apply outline-none ring-2 ring-primary ring-offset-2 ring-offset-background;
   }
-  
+
   /* Smooth transitions for interactive elements */
   button,
   a,
   input,
   textarea,
   select,
-  [role="button"],
-  [tabindex="0"] {
+  [role='button'],
+  [tabindex='0'] {
     @apply transition-all duration-200 ease-out;
   }
-  
+
   /* Hover states for interactive elements */
   button:hover:not(:disabled),
   a:hover,
-  [role="button"]:hover {
+  [role='button']:hover {
     @apply scale-[1.02];
   }
-  
+
   /* Active/pressed states */
   button:active:not(:disabled),
-  [role="button"]:active {
+  [role='button']:active {
     @apply scale-[0.98];
   }
-  
+
   /* Disabled states */
   button:disabled,
   input:disabled,
@@ -185,82 +193,94 @@
 @layer components {
   /* Modern Gradient Text */
   .gradient-text {
-    @apply bg-gradient-to-r from-brand-primary via-brand-secondary to-brand-tertiary bg-clip-text text-transparent;
+    @apply bg-gradient-to-r from-brand-primary via-brand-secondary to-brand-accent bg-clip-text text-transparent;
   }
-  
+
   /* Animated Gradient Background */
   .gradient-bg {
-    @apply bg-gradient-to-br from-gradient-from via-gradient-via to-gradient-to;
+    @apply bg-gradient-to-br from-teal-400 via-teal-500 to-teal-600;
     background-size: 400% 400%;
     animation: gradient-shift 15s ease infinite;
   }
-  
+
   @keyframes gradient-shift {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
   }
-  
+
   /* Glass Morphism Cards */
   .glass-card {
-    @apply bg-glass-white backdrop-blur-md border border-glass-border rounded-xl;
+    @apply rounded-xl border border-neutral-200 bg-white/70 backdrop-blur-md;
   }
-  
+
   .glass-card:hover {
-    @apply bg-glass-white-hover border-glass-border-hover;
+    @apply border-neutral-300 bg-white/80;
   }
-  
+
   /* Neon Glow Effects */
   .glow-purple {
-    box-shadow: 0 0 20px rgba(124, 58, 237, 0.5), 0 0 40px rgba(124, 58, 237, 0.3), 0 0 60px rgba(124, 58, 237, 0.1);
+    box-shadow:
+      0 0 20px rgba(124, 58, 237, 0.5),
+      0 0 40px rgba(124, 58, 237, 0.3),
+      0 0 60px rgba(124, 58, 237, 0.1);
   }
-  
+
   .glow-cyan {
-    box-shadow: 0 0 20px rgba(6, 182, 212, 0.5), 0 0 40px rgba(6, 182, 212, 0.3), 0 0 60px rgba(6, 182, 212, 0.1);
+    box-shadow:
+      0 0 20px rgba(6, 182, 212, 0.5),
+      0 0 40px rgba(6, 182, 212, 0.3),
+      0 0 60px rgba(6, 182, 212, 0.1);
   }
-  
+
   /* Modern Button Styles */
   .btn-gradient {
-    @apply relative overflow-hidden bg-gradient-to-r from-brand-primary to-brand-secondary text-white font-semibold transition-all duration-300;
+    @apply relative overflow-hidden bg-gradient-to-r from-brand-primary to-brand-secondary font-semibold text-white transition-all duration-300;
   }
-  
+
   .btn-gradient:hover {
     @apply shadow-lg;
     transform: translateY(-2px);
   }
-  
+
   .btn-gradient::before {
     content: '';
-    @apply absolute inset-0 bg-gradient-to-r from-brand-secondary to-brand-tertiary opacity-0 transition-opacity duration-300;
+    @apply absolute inset-0 bg-gradient-to-r from-brand-secondary to-brand-accent opacity-0 transition-opacity duration-300;
   }
-  
+
   .btn-gradient:hover::before {
     @apply opacity-100;
   }
-  
+
   /* Mesh Gradient Background */
   .mesh-gradient {
-    background-image: 
+    background-image:
       radial-gradient(at 40% 20%, hsla(262, 83%, 58%, 0.3) 0px, transparent 50%),
       radial-gradient(at 80% 0%, hsla(188, 95%, 43%, 0.3) 0px, transparent 50%),
       radial-gradient(at 0% 50%, hsla(158, 76%, 42%, 0.3) 0px, transparent 50%),
       radial-gradient(at 80% 50%, hsla(262, 83%, 58%, 0.2) 0px, transparent 50%),
       radial-gradient(at 0% 100%, hsla(188, 95%, 43%, 0.2) 0px, transparent 50%);
   }
-  
+
   /* Elevation system for dark theme */
   .elevation-low {
     @apply shadow-sm shadow-black/20;
   }
-  
+
   .elevation-medium {
     @apply shadow-md shadow-black/30;
   }
-  
+
   .elevation-high {
     @apply shadow-lg shadow-black/40;
   }
-  
+
   /* Skip to main content link (accessibility) */
   .skip-link {
     @apply absolute left-0 top-0 z-[100] -translate-y-full bg-primary px-4 py-2 text-primary-foreground transition-transform focus:translate-y-0;
@@ -298,13 +318,13 @@
     @apply text-primary; /* Primary color for headings */
   }
   .ProseMirror h1 {
-    @apply text-4xl font-bold my-4;
+    @apply my-4 text-4xl font-bold;
   }
   .ProseMirror h2 {
-    @apply text-3xl font-semibold my-3;
+    @apply my-3 text-3xl font-semibold;
   }
   .ProseMirror h3 {
-    @apply text-2xl font-semibold my-2;
+    @apply my-2 text-2xl font-semibold;
   }
   .ProseMirror p {
     @apply my-2 leading-relaxed;

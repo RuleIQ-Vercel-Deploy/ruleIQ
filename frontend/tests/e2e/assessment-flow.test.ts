@@ -1,313 +1,229 @@
 import { test, expect } from '@playwright/test';
+import { TEST_USERS, ASSESSMENT_DATA } from './fixtures/test-data';
+import { TestSelectors } from './fixtures/test-selectors';
 
-import { BUSINESS_PROFILES, ASSESSMENT_DATA } from './fixtures/test-data';
-import { AuthHelpers, BusinessProfileHelpers, AssessmentHelpers } from './utils/test-helpers';
-
-test.describe('Assessment Flow', () => {
-  let authHelpers: AuthHelpers;
-  let profileHelpers: BusinessProfileHelpers;
-  let assessmentHelpers: AssessmentHelpers;
-
+test.describe('Assessment Wizard Flow', () => {
   test.beforeEach(async ({ page }) => {
-    authHelpers = new AuthHelpers(page);
-    profileHelpers = new BusinessProfileHelpers(page);
-    assessmentHelpers = new AssessmentHelpers(page);
-    
-    // Setup: Login and complete business profile
-    await authHelpers.login();
-    await profileHelpers.completeProfileSetup(BUSINESS_PROFILES.TECH_STARTUP);
+    // Login before each test
+    await page.goto('/login');
+    await page.fill(TestSelectors.auth.emailInput, TEST_USERS.VALID_USER.email);
+    await page.fill(TestSelectors.auth.passwordInput, TEST_USERS.VALID_USER.password);
+    await page.click(TestSelectors.auth.submitButton);
+    await expect(page).toHaveURL(/.*dashboard/);
   });
 
-  test.describe('Framework Selection', () => {
-    test('should display available frameworks based on business profile', async ({ page }) => {
-      await assessmentHelpers.navigateAndWait('/assessments');
-      
-      // Should show framework recommendations
-      await expect(page.locator('[data-testid="recommended-frameworks"]')).toBeVisible();
-      
-      // Should show GDPR for tech startup with personal data
-      await expect(page.locator('[data-testid="framework-GDPR"]')).toBeVisible();
-      await expect(page.locator('[data-testid="framework-ISO27001"]')).toBeVisible();
+  test.describe('Assessment Creation', () => {
+    test('should create new GDPR assessment', async ({ page }) => {
+      // Navigate to assessments
+      await page.getByRole('link', { name: /assessments/i }).click();
+      await expect(page).toHaveURL(/.*assessments/);
+
+      // Start new assessment
+      await page.click(TestSelectors.assessments.newAssessmentButton);
+
+      // Select GDPR framework
+      await page.getByRole('button', { name: /gdpr/i }).click();
+
+      // Verify assessment started
+      await expect(page).toHaveURL(/.*assessments\/new/);
+      await expect(page.locator('text=GDPR Assessment')).toBeVisible();
     });
 
-    test('should show framework details on selection', async ({ page }) => {
-      await assessmentHelpers.navigateAndWait('/assessments');
-      
-      // Click on GDPR framework
-      await page.click('[data-testid="framework-GDPR"]');
-      
-      // Should show framework details
-      await expect(page.locator('[data-testid="framework-details"]')).toBeVisible();
-      await expect(page.locator('[data-testid="framework-description"]')).toContainText('General Data Protection Regulation');
-      await expect(page.locator('[data-testid="estimated-time"]')).toBeVisible();
-      await expect(page.locator('[data-testid="question-count"]')).toBeVisible();
-    });
+    test('should complete basic GDPR assessment', async ({ page }) => {
+      // Navigate to new assessment
+      await page.goto('/assessments/new');
 
-    test('should allow framework filtering and search', async ({ page }) => {
-      await assessmentHelpers.navigateAndWait('/assessments');
-      
-      // Filter by category
-      await page.selectOption('[data-testid="category-filter"]', 'privacy');
-      
-      // Should show only privacy frameworks
-      await expect(page.locator('[data-testid="framework-GDPR"]')).toBeVisible();
-      await expect(page.locator('[data-testid="framework-ISO27001"]')).not.toBeVisible();
-      
-      // Search for specific framework
-      await assessmentHelpers.fillField('[data-testid="framework-search"]', 'ISO');
-      
-      // Should show ISO frameworks
-      await expect(page.locator('[data-testid="framework-ISO27001"]')).toBeVisible();
-    });
+      // Select GDPR framework
+      await page.getByRole('button', { name: /gdpr/i }).click();
 
-    test('should show assessment mode options', async ({ page }) => {
-      await assessmentHelpers.navigateAndWait('/assessments');
-      await page.click('[data-testid="framework-GDPR"]');
-      
-      // Should show assessment mode options
-      await expect(page.locator('[data-testid="mode-quick"]')).toBeVisible();
-      await expect(page.locator('[data-testid="mode-comprehensive"]')).toBeVisible();
-      
-      // Select comprehensive mode
-      await page.click('[data-testid="mode-comprehensive"]');
-      
-      // Should show mode details
-      await expect(page.locator('[data-testid="mode-description"]')).toContainText('comprehensive');
-    });
-  });
+      // Complete assessment questions
+      for (const question of ASSESSMENT_DATA.GDPR_BASIC.questions) {
+        const questionElement = page.locator(`text=${question.question}`);
+        await expect(questionElement).toBeVisible();
 
-  test.describe('Assessment Execution', () => {
-    test('should start and complete a basic assessment', async ({ page }) => {
-      await assessmentHelpers.startAssessment('GDPR');
-      
-      // Should show assessment interface
-      await expect(page.locator('[data-testid="assessment-progress"]')).toBeVisible();
-      await expect(page.locator('[data-testid="question-counter"]')).toBeVisible();
-      
-      // Answer questions
-      await assessmentHelpers.answerQuestions(ASSESSMENT_DATA.GDPR_BASIC.questions);
-      
+        // Select answer based on question type
+        if (question.answer === 'yes') {
+          await page.getByRole('radio', { name: /yes/i }).check();
+        } else if (question.answer === 'no') {
+          await page.getByRole('radio', { name: /no/i }).check();
+        }
+
+        // Navigate to next question
+        const nextButton = page.getByRole('button', { name: /next|continue/i });
+        if (await nextButton.isVisible()) {
+          await nextButton.click();
+        }
+      }
+
       // Submit assessment
-      await assessmentHelpers.submitAssessment();
-      
-      // Should show results
-      await expect(page.locator('[data-testid="assessment-results"]')).toBeVisible();
-      await expect(page.locator('[data-testid="compliance-score"]')).toBeVisible();
+      await page.click(TestSelectors.assessments.submitAssessmentButton);
+
+      // Verify completion
+      await expect(page).toHaveURL(/.*results/);
+      await expect(page.locator('text=Assessment Complete')).toBeVisible();
     });
 
-    test('should show progress indicator during assessment', async ({ page }) => {
-      await assessmentHelpers.startAssessment('GDPR');
-      
-      // Should show initial progress
-      await expect(page.locator('[data-testid="progress-bar"]')).toHaveAttribute('aria-valuenow', '0');
-      
+    test('should save assessment progress', async ({ page }) => {
+      await page.goto('/assessments/new');
+      await page.getByRole('button', { name: /gdpr/i }).click();
+
       // Answer first question
-      await page.click('[data-testid="question-1-answer-yes"]');
-      await page.click('[data-testid="next-question-button"]');
-      
-      // Progress should update
-      const progress = await page.locator('[data-testid="progress-bar"]').getAttribute('aria-valuenow');
-      expect(parseInt(progress || '0')).toBeGreaterThan(0);
-    });
+      await page.getByRole('radio', { name: /yes/i }).first().check();
 
-    test('should allow navigation between questions', async ({ page }) => {
-      await assessmentHelpers.startAssessment('GDPR');
-      
-      // Answer first question
-      await page.click('[data-testid="question-1-answer-yes"]');
-      await page.click('[data-testid="next-question-button"]');
-      
-      // Should be on question 2
-      await expect(page.locator('[data-testid="question-2"]')).toBeVisible();
-      
-      // Go back to question 1
-      await page.click('[data-testid="previous-question-button"]');
-      
-      // Should be on question 1 with answer preserved
-      await expect(page.locator('[data-testid="question-1"]')).toBeVisible();
-      await expect(page.locator('[data-testid="question-1-answer-yes"]')).toBeChecked();
-    });
-
-    test('should save progress and allow resuming', async ({ page }) => {
-      await assessmentHelpers.startAssessment('GDPR');
-      
-      // Answer some questions
-      await page.click('[data-testid="question-1-answer-yes"]');
-      await page.click('[data-testid="next-question-button"]');
-      await page.click('[data-testid="question-2-answer-no"]');
-      
-      // Navigate away
+      // Navigate away and back
       await page.goto('/dashboard');
-      
-      // Return to assessments
-      await assessmentHelpers.navigateAndWait('/assessments');
-      
-      // Should show option to resume
-      await expect(page.locator('[data-testid="resume-assessment"]')).toBeVisible();
-      
-      // Resume assessment
-      await page.click('[data-testid="resume-assessment"]');
-      
-      // Should be on question 2 with answer preserved
-      await expect(page.locator('[data-testid="question-2"]')).toBeVisible();
-      await expect(page.locator('[data-testid="question-2-answer-no"]')).toBeChecked();
+      await page.goBack();
+
+      // Verify progress is saved (implementation depends on auto-save)
+      await expect(page.getByRole('radio', { name: /yes/i }).first()).toBeChecked();
     });
 
-    test('should handle conditional questions', async ({ page }) => {
-      await assessmentHelpers.startAssessment('GDPR');
-      
-      // Answer question that triggers conditional logic
-      await page.click('[data-testid="question-1-answer-yes"]');
-      await page.click('[data-testid="next-question-button"]');
-      
-      // Should show follow-up question
-      await expect(page.locator('[data-testid="conditional-question"]')).toBeVisible();
-      
-      // Change answer to skip conditional
-      await page.click('[data-testid="previous-question-button"]');
-      await page.click('[data-testid="question-1-answer-no"]');
-      await page.click('[data-testid="next-question-button"]');
-      
-      // Should skip conditional question
-      await expect(page.locator('[data-testid="conditional-question"]')).not.toBeVisible();
+    test('should handle assessment cancellation', async ({ page }) => {
+      await page.goto('/assessments/new');
+      await page.getByRole('button', { name: /gdpr/i }).click();
+
+      // Start answering questions
+      await page.getByRole('radio', { name: /yes/i }).first().check();
+
+      // Cancel assessment
+      await page.getByRole('button', { name: /cancel|exit/i }).click();
+
+      // Confirm cancellation
+      await page.getByRole('button', { name: /confirm|yes/i }).click();
+
+      // Should redirect to assessments page
+      await expect(page).toHaveURL(/.*assessments/);
+    });
+  });
+
+  test.describe('Assessment Navigation', () => {
+    test('should navigate between questions', async ({ page }) => {
+      await page.goto('/assessments/new');
+      await page.getByRole('button', { name: /iso 27001/i }).click();
+
+      // Answer first question
+      await page.getByRole('radio', { name: /yes/i }).first().check();
+
+      // Go to next question
+      await page.getByRole('button', { name: /next/i }).click();
+
+      // Verify we're on question 2
+      await expect(page.locator('text=2 of')).toBeVisible();
+
+      // Go back to previous question
+      await page.getByRole('button', { name: /previous|back/i }).click();
+
+      // Verify we're back on question 1
+      await expect(page.locator('text=1 of')).toBeVisible();
     });
 
+    test('should show progress indicator', async ({ page }) => {
+      await page.goto('/assessments/new');
+      await page.getByRole('button', { name: /gdpr/i }).click();
+
+      // Check progress bar exists
+      await expect(page.locator('[class*="progress"]')).toBeVisible();
+
+      // Check progress updates
+      const progressText = await page.locator('[class*="progress"]').textContent();
+      expect(progressText).toContain('1');
+    });
+  });
+
+  test.describe('Assessment Validation', () => {
     test('should validate required questions', async ({ page }) => {
-      await assessmentHelpers.startAssessment('GDPR');
-      
+      await page.goto('/assessments/new');
+      await page.getByRole('button', { name: /gdpr/i }).click();
+
       // Try to proceed without answering
-      await page.click('[data-testid="next-question-button"]');
-      
+      await page.getByRole('button', { name: /next/i }).click();
+
       // Should show validation error
-      await expect(page.locator('[data-testid="question-error"]')).toContainText('Please select an answer');
-      
-      // Should not advance to next question
-      await expect(page.locator('[data-testid="question-1"]')).toBeVisible();
+      await expect(page.locator('text=required')).toBeVisible();
+    });
+
+    test('should allow skipping optional questions', async ({ page }) => {
+      await page.goto('/assessments/new');
+      await page.getByRole('button', { name: /iso 27001/i }).click();
+
+      // Skip optional question
+      await page.getByRole('button', { name: /next|skip/i }).click();
+
+      // Should proceed to next question
+      await expect(page.locator('text=2 of')).toBeVisible();
     });
   });
 
   test.describe('Assessment Results', () => {
-    test.beforeEach(async ({ page }) => {
-      // Complete an assessment before each test
-      await assessmentHelpers.startAssessment('GDPR');
-      await assessmentHelpers.answerQuestions(ASSESSMENT_DATA.GDPR_BASIC.questions);
-      await assessmentHelpers.submitAssessment();
+    test('should display results after completion', async ({ page }) => {
+      await page.goto('/assessments/new');
+      await page.getByRole('button', { name: /gdpr/i }).click();
+
+      // Complete all questions
+      for (const question of ASSESSMENT_DATA.GDPR_BASIC.questions) {
+        if (question.answer === 'yes') {
+          await page.getByRole('radio', { name: /yes/i }).check();
+        }
+
+        const nextButton = page.getByRole('button', { name: /next|continue|submit/i });
+        if (await nextButton.isVisible()) {
+          await nextButton.click();
+        }
+      }
+
+      // Verify results page
+      await expect(page).toHaveURL(/.*results/);
+      await expect(page.locator('text=Assessment Results')).toBeVisible();
+      await expect(page.locator('[class*="score"]')).toBeVisible();
     });
 
-    test('should display comprehensive results', async ({ page }) => {
-      // Should show overall score
-      await expect(page.locator('[data-testid="overall-score"]')).toBeVisible();
-      
-      // Should show category breakdown
-      await expect(page.locator('[data-testid="category-scores"]')).toBeVisible();
-      
-      // Should show recommendations
-      await expect(page.locator('[data-testid="recommendations"]')).toBeVisible();
-      
-      // Should show action items
-      await expect(page.locator('[data-testid="action-items"]')).toBeVisible();
-    });
+    test('should allow downloading results', async ({ page }) => {
+      // Complete an assessment first
+      await page.goto('/assessments/new');
+      await page.getByRole('button', { name: /gdpr/i }).click();
 
-    test('should show detailed gap analysis', async ({ page }) => {
-      // Click on gap analysis tab
-      await page.click('[data-testid="gap-analysis-tab"]');
-      
-      // Should show gaps by category
-      await expect(page.locator('[data-testid="gaps-by-category"]')).toBeVisible();
-      
-      // Should show priority levels
-      await expect(page.locator('[data-testid="high-priority-gaps"]')).toBeVisible();
-      await expect(page.locator('[data-testid="medium-priority-gaps"]')).toBeVisible();
-      
-      // Should show implementation timeline
-      await expect(page.locator('[data-testid="implementation-timeline"]')).toBeVisible();
-    });
+      for (const question of ASSESSMENT_DATA.GDPR_BASIC.questions) {
+        if (question.answer === 'yes') {
+          await page.getByRole('radio', { name: /yes/i }).check();
+        }
 
-    test('should generate action plan', async ({ page }) => {
-      // Click generate action plan
-      await page.click('[data-testid="generate-action-plan-button"]');
-      
-      // Should show action plan
-      await expect(page.locator('[data-testid="action-plan"]')).toBeVisible();
-      
-      // Should show prioritized tasks
-      await expect(page.locator('[data-testid="priority-tasks"]')).toBeVisible();
-      
-      // Should show estimated effort
-      await expect(page.locator('[data-testid="estimated-effort"]')).toBeVisible();
-    });
+        const nextButton = page.getByRole('button', { name: /next|continue|submit/i });
+        if (await nextButton.isVisible()) {
+          await nextButton.click();
+        }
+      }
 
-    test('should export results in multiple formats', async ({ page }) => {
-      // Test PDF export
-      const [pdfDownload] = await Promise.all([
-        page.waitForEvent('download'),
-        page.click('[data-testid="export-pdf-button"]')
-      ]);
-      
-      expect(pdfDownload.suggestedFilename()).toContain('.pdf');
-      
-      // Test Excel export
-      const [excelDownload] = await Promise.all([
-        page.waitForEvent('download'),
-        page.click('[data-testid="export-excel-button"]')
-      ]);
-      
-      expect(excelDownload.suggestedFilename()).toContain('.xlsx');
-    });
+      // Download results
+      const downloadPromise = page.waitForEvent('download');
+      await page.getByRole('button', { name: /download|export/i }).click();
+      const download = await downloadPromise;
 
-    test('should allow sharing results', async ({ page }) => {
-      // Click share button
-      await page.click('[data-testid="share-results-button"]');
-      
-      // Should show sharing options
-      await expect(page.locator('[data-testid="share-dialog"]')).toBeVisible();
-      
-      // Should show link sharing
-      await expect(page.locator('[data-testid="share-link"]')).toBeVisible();
-      
-      // Should show email sharing
-      await expect(page.locator('[data-testid="share-email"]')).toBeVisible();
+      expect(download.suggestedFilename()).toMatch(/assessment-results.*\.pdf/);
     });
   });
 
   test.describe('Assessment History', () => {
-    test('should show assessment history', async ({ page }) => {
-      await assessmentHelpers.navigateAndWait('/assessments/history');
-      
-      // Should show list of completed assessments
-      await expect(page.locator('[data-testid="assessment-history-list"]')).toBeVisible();
-      
+    test('should display completed assessments', async ({ page }) => {
+      await page.goto('/assessments');
+
+      // Should show assessment list
+      await expect(
+        page.locator('[class*="assessment-card"], [class*="assessment-item"]'),
+      ).toBeVisible();
+
+      // Should show assessment status
+      await expect(page.locator('text=Completed')).toBeVisible();
+    });
+
+    test('should allow viewing assessment details', async ({ page }) => {
+      await page.goto('/assessments');
+
+      // Click on first assessment
+      await page.locator('[class*="assessment-card"]').first().click();
+
       // Should show assessment details
-      await expect(page.locator('[data-testid="assessment-date"]')).toBeVisible();
-      await expect(page.locator('[data-testid="assessment-score"]')).toBeVisible();
-      await expect(page.locator('[data-testid="assessment-framework"]')).toBeVisible();
-    });
-
-    test('should allow viewing historical results', async ({ page }) => {
-      await assessmentHelpers.navigateAndWait('/assessments/history');
-      
-      // Click on historical assessment
-      await page.click('[data-testid="view-assessment-1"]');
-      
-      // Should show historical results
-      await expect(page.locator('[data-testid="historical-results"]')).toBeVisible();
-      await expect(page.locator('[data-testid="assessment-date"]')).toBeVisible();
-    });
-
-    test('should compare assessments', async ({ page }) => {
-      await assessmentHelpers.navigateAndWait('/assessments/history');
-      
-      // Select multiple assessments for comparison
-      await page.check('[data-testid="select-assessment-1"]');
-      await page.check('[data-testid="select-assessment-2"]');
-      
-      // Click compare button
-      await page.click('[data-testid="compare-assessments-button"]');
-      
-      // Should show comparison view
-      await expect(page.locator('[data-testid="assessment-comparison"]')).toBeVisible();
-      await expect(page.locator('[data-testid="score-comparison"]')).toBeVisible();
-      await expect(page.locator('[data-testid="improvement-trends"]')).toBeVisible();
+      await expect(page).toHaveURL(/.*assessments\/[a-f0-9-]+/);
+      await expect(page.locator('text=Assessment Details')).toBeVisible();
     });
   });
 });

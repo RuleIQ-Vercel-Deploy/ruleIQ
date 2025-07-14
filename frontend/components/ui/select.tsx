@@ -22,26 +22,32 @@ const SelectTrigger = React.forwardRef<
   <SelectPrimitive.Trigger
     ref={ref}
     className={cn(
-      "flex h-10 w-full items-center justify-between rounded-md border bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50 transition-colors",
-      // Default state
-      "border-input focus:outline-none focus:ring-2 focus:ring-offset-2",
-      // Oxford-blue focus state
-      "focus:ring-oxford-blue focus:border-oxford-blue",
+      "flex h-10 w-full items-center justify-between rounded-lg border bg-white px-3 py-2 text-sm placeholder:text-neutral-400 disabled:cursor-not-allowed disabled:opacity-50 transition-all duration-200",
+      // Default state with new design system
+      "border-neutral-200",
+      // Focus state with teal accent
+      "focus:outline-none focus:ring-2 focus:ring-teal-500/20 focus:border-teal-600",
       // Error state
-      error && "border-error focus:ring-error focus:border-error",
+      error && "border-red-500 focus:ring-red-500/20 focus:border-red-500",
       // Success state
-      success && "border-success focus:ring-success focus:border-success",
-      // Custom styling for ruleIQ theme
-      "bg-eggshell-white text-oxford-blue [&>span]:text-oxford-blue",
+      success && "border-green-500 focus:ring-green-500/20 focus:border-green-500",
       className,
     )}
+    aria-invalid={error ? "true" : undefined}
     {...props}
   >
     {children}
     <SelectPrimitive.Icon asChild>
-      <ChevronDown className="h-4 w-4 opacity-50" />
+      <ChevronDown className="h-4 w-4 text-neutral-400" />
     </SelectPrimitive.Icon>
   </SelectPrimitive.Trigger>
+  <>
+    {error && !props["aria-describedby"] && (
+      <span className="sr-only" role="status" aria-live="assertive">
+        Error in select field
+      </span>
+    )}
+  </>
 ))
 SelectTrigger.displayName = SelectPrimitive.Trigger.displayName
 
@@ -81,11 +87,9 @@ const SelectContent = React.forwardRef<
     <SelectPrimitive.Content
       ref={ref}
       className={cn(
-        "relative z-50 max-h-96 min-w-[8rem] overflow-hidden rounded-md border shadow-md data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
-        // Custom styling for ruleIQ theme
-        "bg-eggshell-white border-oxford-blue/20",
-        // Add these classes for dark theme dropdowns
-        "[&.bg-oxford-blue]:bg-oxford-blue [&.text-eggshell-white]:text-eggshell-white [&.border-gold\\/50]:border-gold/50",
+        "relative z-50 max-h-96 min-w-[8rem] overflow-hidden rounded-lg border shadow-lg data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
+        // New design system styling
+        "bg-white border-neutral-200",
         position === "popper" &&
           "data-[side=bottom]:translate-y-1 data-[side=left]:-translate-x-1 data-[side=right]:translate-x-1 data-[side=top]:-translate-y-1",
         className,
@@ -115,7 +119,7 @@ const SelectLabel = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <SelectPrimitive.Label
     ref={ref}
-    className={cn("py-1.5 pl-8 pr-2 text-sm font-semibold", "text-oxford-blue", className)}
+    className={cn("py-1.5 pl-8 pr-2 text-sm font-semibold text-neutral-700", className)}
     {...props}
   />
 ))
@@ -128,12 +132,10 @@ const SelectItem = React.forwardRef<
   <SelectPrimitive.Item
     ref={ref}
     className={cn(
-      "relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50 transition-colors",
-      // Custom hover and focus states
-      "focus:bg-oxford-blue focus:text-eggshell-white data-[highlighted]:bg-oxford-blue data-[highlighted]:text-eggshell-white",
-      // Dark theme hover/focus
-      "data-[highlighted]:bg-gold/20",
-      "text-oxford-blue",
+      "relative flex w-full cursor-default select-none items-center rounded-md py-1.5 pl-8 pr-2 text-sm outline-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50 transition-colors",
+      // New design system hover and focus states
+      "text-neutral-900 hover:bg-neutral-50 focus:bg-neutral-50",
+      "data-[highlighted]:bg-teal-50 data-[highlighted]:text-teal-900",
       className,
     )}
     {...props}
@@ -155,7 +157,7 @@ const SelectSeparator = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <SelectPrimitive.Separator
     ref={ref}
-    className={cn("-mx-1 my-1 h-px bg-muted", "bg-oxford-blue/20", className)}
+    className={cn("-mx-1 my-1 h-px bg-neutral-200", className)}
     {...props}
   />
 ))

@@ -22,14 +22,21 @@ const RadioGroupItem = React.forwardRef<
     <RadioGroupPrimitive.Item
       ref={ref}
       className={cn(
-        "aspect-square h-4 w-4 rounded-full border text-primary ring-offset-background focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
-        "border-gold/50 text-gold data-[state=checked]:border-gold",
+        "aspect-square h-4 w-4 rounded-full border bg-white transition-all duration-200 disabled:cursor-not-allowed disabled:opacity-50",
+        // Ensure minimum 16x16px tap target for accessibility
+        "min-h-[16px] min-w-[16px]",
+        // Default state with new design system
+        "border-neutral-300",
+        // Focus state with visible ring
+        "focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-500/20 focus-visible:ring-offset-2",
+        // Checked state with teal
+        "data-[state=checked]:border-teal-600 data-[state=checked]:bg-teal-600 data-[state=checked]:text-white",
         className,
       )}
       {...props}
     >
       <RadioGroupPrimitive.Indicator className="flex items-center justify-center">
-        <Circle className="h-2.5 w-2.5 fill-current text-current" />
+        <Circle className="h-2.5 w-2.5 fill-white" />
       </RadioGroupPrimitive.Indicator>
     </RadioGroupPrimitive.Item>
   )

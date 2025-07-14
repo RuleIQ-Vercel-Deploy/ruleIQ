@@ -10,12 +10,12 @@
 
   <!-- turquoise stripes with consistent spacing -->
   <g id="stripes" mask="url(#diag-cut)">
-    <rect x="36.730469" y="139.730469" width="103.5" height="9.75" fill="#0cc0df"/>
-    <rect x="36.730469" y="152.480469" width="103.5" height="9.75" fill="#0cc0df"/>
-    <rect x="36.730469" y="165.230469" width="103.5" height="9.75" fill="#0cc0df"/>
-    <rect x="36.730469" y="177.980469" width="103.5" height="9.75" fill="#0cc0df"/>
-    <rect x="36.730469" y="190.730469" width="103.5" height="9.75" fill="#0cc0df"/>
-    <rect x="36.730469" y="203.480469" width="103.5" height="9.75" fill="#0cc0df"/>
-    <rect x="36.730469" y="216.230469" width="103.5" height="9.75" fill="#0cc0df"/>
+    <rect x="36.730469" y="139.730469" width="103.5" height="9.75" fill="#2C7A7B"/>
+    <rect x="36.730469" y="152.480469" width="103.5" height="9.75" fill="#2C7A7B"/>
+    <rect x="36.730469" y="165.230469" width="103.5" height="9.75" fill="#2C7A7B"/>
+    <rect x="36.730469" y="177.980469" width="103.5" height="9.75" fill="#2C7A7B"/>
+    <rect x="36.730469" y="190.730469" width="103.5" height="9.75" fill="#2C7A7B"/>
+    <rect x="36.730469" y="203.480469" width="103.5" height="9.75" fill="#2C7A7B"/>
+    <rect x="36.730469" y="216.230469" width="103.5" height="9.75" fill="#2C7A7B"/>
   </g>
 </svg>

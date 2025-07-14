@@ -63,6 +63,8 @@ export const TestSelectors = {
     descriptionInput: 'textarea, input[name*="description" i]',
     evidenceList: '[class*="evidence-list"], [role="list"]',
     evidenceCard: '[class*="evidence-card"], [class*="evidence-item"]',
+    submitButton:
+      'button[type="submit"], button:has-text("Submit"), button:has-text("Upload Evidence")',
   },
 
   // Common UI elements
@@ -81,15 +83,15 @@ export const TestSelectors = {
  * Helper function to wait for an element with multiple possible selectors
  */
 export async function waitForAnySelector(page: any, selectors: string[]) {
-  const promises = selectors.map(selector => 
-    page.waitForSelector(selector, { timeout: 5000 }).catch(() => null)
+  const promises = selectors.map((selector) =>
+    page.waitForSelector(selector, { timeout: 5000 }).catch(() => null),
   );
-  
+
   const element = await Promise.race(promises);
   if (!element) {
     throw new Error(`None of the selectors were found: ${selectors.join(', ')}`);
   }
-  
+
   return element;
 }
 
