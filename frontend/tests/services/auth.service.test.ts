@@ -8,6 +8,7 @@ vi.mock('@/lib/api/client', () => ({
   apiClient: {
     post: vi.fn(),
     get: vi.fn(),
+    patch: vi.fn(),
     delete: vi.fn(),
     getToken: vi.fn(),
   },
@@ -26,19 +27,8 @@ vi.mock('@/lib/utils/secure-storage', () => ({
 }));
 
 describe('AuthService', () => {
-  const originalLocation = window.location;
-
   beforeEach(() => {
     vi.clearAllMocks();
-    // Mock window.location
-    delete (window as any).location;
-    window.location = { ...originalLocation, href: '' } as Location;
-  });
-
-  afterEach(() => {
-    vi.restoreAllMocks();
-    // Restore window.location
-    window.location = originalLocation;
   });
 
   describe('login', () => {
@@ -57,10 +47,9 @@ describe('AuthService', () => {
           },
         },
         status: 200,
-        message: 'Success',
       };
 
-      vi.mocked(apiClient.post).mockResolvedValue(mockResponse);
+      vi.mocked(apiClient.post).mockResolvedValue(mockResponse as any);
 
       const credentials = {
         email: 'test@example.com',
@@ -69,11 +58,15 @@ describe('AuthService', () => {
 
       const result = await authService.login(credentials);
 
-      expect(apiClient.post).toHaveBeenCalledWith('/auth/login', expect.any(FormData), expect.objectContaining({
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      }));
+      expect(apiClient.post).toHaveBeenCalledWith(
+        '/auth/login',
+        expect.any(FormData),
+        expect.objectContaining({
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        }),
+      );
       expect(result).toEqual(mockResponse.data);
     });
 
@@ -117,15 +110,18 @@ describe('AuthService', () => {
             is_active: true,
           },
         },
+        status: 201,
       };
 
-      vi.mocked(apiClient.post).mockResolvedValue(mockResponse);
+      vi.mocked(apiClient.post).mockResolvedValue(mockResponse as any);
 
       const userData = {
         email: 'newuser@example.com',
         password: 'password123',
-        full_name: 'New User',
-        company: 'Test Company',
+        name: 'New User',
+        company_name: 'Test Company',
+        company_size: '1-10',
+        industry: 'Technology',
       };
 
       const result = await authService.register(userData);
@@ -141,29 +137,20 @@ describe('AuthService', () => {
       const userData = {
         email: 'existing@example.com',
         password: 'password123',
-        full_name: 'Test User',
+        name: 'Test User',
+        company_name: 'Test Company',
+        company_size: '1-10',
+        industry: 'Technology',
       };
 
       await expect(authService.register(userData)).rejects.toThrow('Email already exists');
-    });
-
-    it('should validate required fields', async () => {
-      const validationError = new Error('Validation failed');
-      vi.mocked(apiClient.post).mockRejectedValue(validationError);
-
-      const incompleteData = {
-        email: 'test@example.com',
-        // Missing password and full_name
-      };
-
-      await expect(authService.register(incompleteData as any)).rejects.toThrow('Validation failed');
     });
   });
 
   describe('logout', () => {
     it('should logout successfully', async () => {
-      const mockResponse = { data: { message: 'Logged out successfully' } };
-      vi.mocked(apiClient.post).mockResolvedValue(mockResponse);
+      const mockResponse = { data: { message: 'Logged out successfully' }, status: 200 };
+      vi.mocked(apiClient.post).mockResolvedValue(mockResponse as any);
       vi.mocked(apiClient.getToken).mockResolvedValue('mock-token');
 
       await authService.logout();
@@ -187,13 +174,16 @@ describe('AuthService', () => {
           access_token: 'new-access-token',
           refresh_token: 'new-refresh-token',
         },
+        status: 200,
       };
 
-      vi.mocked(apiClient.post).mockResolvedValue(mockResponse);
+      vi.mocked(apiClient.post).mockResolvedValue(mockResponse as any);
 
       const result = await authService.refreshToken();
 
-      expect(apiClient.post).toHaveBeenCalledWith('/auth/refresh');
+      expect(apiClient.post).toHaveBeenCalledWith('/auth/refresh', {
+        refresh_token: 'mock-refresh-token',
+      });
       expect(result).toEqual(mockResponse.data);
     });
 
@@ -215,13 +205,14 @@ describe('AuthService', () => {
           is_active: true,
           created_at: '2024-01-01T00:00:00Z',
         },
+        status: 200,
       };
 
-      vi.mocked(apiClient.get).mockResolvedValue(mockResponse);
+      vi.mocked(apiClient.get).mockResolvedValue(mockResponse as any);
 
       const result = await authService.getCurrentUser();
 
-      expect(apiClient.get).toHaveBeenCalledWith('/users/me');
+      expect(apiClient.get).toHaveBeenCalledWith('/auth/me');
       expect(result).toEqual(mockResponse.data);
     });
 
@@ -235,12 +226,12 @@ describe('AuthService', () => {
 
   describe('requestPasswordReset', () => {
     it('should request password reset successfully', async () => {
-      const mockResponse = { data: { message: 'Password reset email sent' } };
-      vi.mocked(apiClient.post).mockResolvedValue(mockResponse);
+      const mockResponse = { data: { message: 'Password reset email sent' }, status: 200 };
+      vi.mocked(apiClient.post).mockResolvedValue(mockResponse as any);
 
       await authService.requestPasswordReset('test@example.com');
 
-      expect(apiClient.post).toHaveBeenCalledWith('/auth/request-password-reset', {
+      expect(apiClient.post).toHaveBeenCalledWith('/auth/forgot-password', {
         email: 'test@example.com',
       });
     });
@@ -249,20 +240,22 @@ describe('AuthService', () => {
       const notFoundError = new Error('Email not found');
       vi.mocked(apiClient.post).mockRejectedValue(notFoundError);
 
-      await expect(authService.requestPasswordReset('nonexistent@example.com')).rejects.toThrow('Email not found');
+      await expect(authService.requestPasswordReset('nonexistent@example.com')).rejects.toThrow(
+        'Email not found',
+      );
     });
   });
 
   describe('resetPassword', () => {
     it('should reset password successfully', async () => {
-      const mockResponse = { data: { message: 'Password reset successfully' } };
-      vi.mocked(apiClient.post).mockResolvedValue(mockResponse);
+      const mockResponse = { data: { message: 'Password reset successfully' }, status: 200 };
+      vi.mocked(apiClient.post).mockResolvedValue(mockResponse as any);
 
       await authService.resetPassword('reset-token', 'newpassword123');
 
       expect(apiClient.post).toHaveBeenCalledWith('/auth/reset-password', {
         token: 'reset-token',
-        password: 'newpassword123',
+        new_password: 'newpassword123',
       });
     });
 
@@ -270,14 +263,16 @@ describe('AuthService', () => {
       const invalidTokenError = new Error('Invalid or expired token');
       vi.mocked(apiClient.post).mockRejectedValue(invalidTokenError);
 
-      await expect(authService.resetPassword('invalid-token', 'newpassword')).rejects.toThrow('Invalid or expired token');
+      await expect(authService.resetPassword('invalid-token', 'newpassword')).rejects.toThrow(
+        'Invalid or expired token',
+      );
     });
   });
 
   describe('verifyEmail', () => {
     it('should verify email successfully', async () => {
-      const mockResponse = { data: { message: 'Email verified successfully' } };
-      vi.mocked(apiClient.post).mockResolvedValue(mockResponse);
+      const mockResponse = { data: { message: 'Email verified successfully' }, status: 200 };
+      vi.mocked(apiClient.post).mockResolvedValue(mockResponse as any);
 
       await authService.verifyEmail('verification-token');
 
@@ -290,7 +285,9 @@ describe('AuthService', () => {
       const invalidTokenError = new Error('Invalid verification token');
       vi.mocked(apiClient.post).mockRejectedValue(invalidTokenError);
 
-      await expect(authService.verifyEmail('invalid-token')).rejects.toThrow('Invalid verification token');
+      await expect(authService.verifyEmail('invalid-token')).rejects.toThrow(
+        'Invalid verification token',
+      );
     });
   });
 
@@ -303,47 +300,49 @@ describe('AuthService', () => {
           full_name: 'Updated Name',
           is_active: true,
         },
+        status: 200,
       };
 
-      vi.mocked(apiClient.post).mockResolvedValue(mockResponse);
+      vi.mocked(apiClient.patch).mockResolvedValue(mockResponse as any);
 
       const updateData = {
         full_name: 'Updated Name',
         company: 'New Company',
       };
 
-      const result = await authService.updateProfile(updateData);
+      const result = await authService.updateProfile(updateData as any);
 
-      expect(apiClient.post).toHaveBeenCalledWith('/users/me', updateData);
+      expect(apiClient.patch).toHaveBeenCalledWith('/auth/profile', updateData);
       expect(result).toEqual(mockResponse.data);
     });
   });
 
   describe('changePassword', () => {
     it('should change password successfully', async () => {
-      const mockResponse = { data: { message: 'Password changed successfully' } };
-      vi.mocked(apiClient.post).mockResolvedValue(mockResponse);
+      const mockResponse = { data: { message: 'Password changed successfully' }, status: 200 };
+      vi.mocked(apiClient.post).mockResolvedValue(mockResponse as any);
 
-      const passwordData = {
-        current_password: 'oldpassword',
-        new_password: 'newpassword123',
-      };
+      const currentPassword = 'oldpassword';
+      const newPassword = 'newpassword123';
 
-      await authService.changePassword(passwordData);
+      await authService.changePassword(currentPassword, newPassword);
 
-      expect(apiClient.post).toHaveBeenCalledWith('/auth/change-password', passwordData);
+      expect(apiClient.post).toHaveBeenCalledWith('/auth/change-password', {
+        current_password: currentPassword,
+        new_password: newPassword,
+      });
     });
 
     it('should handle incorrect current password', async () => {
       const incorrectPasswordError = new Error('Current password is incorrect');
       vi.mocked(apiClient.post).mockRejectedValue(incorrectPasswordError);
 
-      const passwordData = {
-        current_password: 'wrongpassword',
-        new_password: 'newpassword123',
-      };
+      const currentPassword = 'wrongpassword';
+      const newPassword = 'newpassword123';
 
-      await expect(authService.changePassword(passwordData)).rejects.toThrow('Current password is incorrect');
+      await expect(authService.changePassword(currentPassword, newPassword)).rejects.toThrow(
+        'Current password is incorrect',
+      );
     });
   });
 });

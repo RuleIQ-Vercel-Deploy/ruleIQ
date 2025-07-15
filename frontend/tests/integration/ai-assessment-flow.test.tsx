@@ -1,6 +1,6 @@
 /**
  * Integration Tests for Complete AI Assessment Flows
- * 
+ *
  * Tests end-to-end AI assessment functionality including:
  * - Conversational assessment mode
  * - Smart question adaptation
@@ -18,7 +18,11 @@ import { AIGuidancePanel } from '@/components/assessments/AIGuidancePanel';
 import { AIHelpTooltip } from '@/components/assessments/AIHelpTooltip';
 import { assessmentAIService } from '@/lib/api/assessments-ai.service';
 import { QuestionnaireEngine } from '@/lib/assessment-engine/QuestionnaireEngine';
-import { type AssessmentFramework, type AssessmentContext, type Question } from '@/lib/assessment-engine/types';
+import {
+  type AssessmentFramework,
+  type AssessmentContext,
+  type Question,
+} from '@/lib/assessment-engine/types';
 
 // Mock AI service
 vi.mock('@/lib/api/assessments-ai.service', () => ({
@@ -28,13 +32,13 @@ vi.mock('@/lib/api/assessments-ai.service', () => ({
     getPersonalizedRecommendations: vi.fn(),
     getAssessmentAnalysis: vi.fn(),
     submitFeedback: vi.fn(),
-  }
+  },
 }));
 
 // Mock toast
 const mockToast = vi.fn();
 vi.mock('@/hooks/use-toast', () => ({
-  useToast: () => ({ toast: mockToast })
+  useToast: () => ({ toast: mockToast }),
 }));
 
 // Test Assessment Framework
@@ -49,26 +53,34 @@ const mockFramework: AssessmentFramework = {
       id: 'data-protection',
       title: 'Data Protection',
       description: 'Data protection principles',
-      weight: 1,
+      order: 1,
       questions: [
         {
           id: 'q1',
           text: 'Do you process personal data?',
-          type: 'yes_no',
+          type: 'radio',
+          options: [
+            { value: 'yes', label: 'Yes' },
+            { value: 'no', label: 'No' },
+          ],
           validation: { required: true },
           weight: 1,
-          metadata: { priority: 'high', triggers_ai: true }
+          metadata: { priority: 'high', triggers_ai: true },
         },
         {
           id: 'q2',
           text: 'Do you have a data protection policy?',
-          type: 'yes_no',
+          type: 'radio',
+          options: [
+            { value: 'yes', label: 'Yes' },
+            { value: 'no', label: 'No' },
+          ],
           validation: { required: true },
-          weight: 1
-        }
-      ]
-    }
-  ]
+          weight: 1,
+        },
+      ],
+    },
+  ],
 };
 
 const mockContext: AssessmentContext = {
@@ -79,17 +91,18 @@ const mockContext: AssessmentContext = {
   metadata: {
     industry: 'technology',
     company_size: 'small',
-    location: 'UK'
-  }
+    location: 'UK',
+  },
 };
 
 // Mock AI Responses
 const mockAIHelp = {
-  guidance: 'Personal data includes any information relating to an identified or identifiable natural person...',
+  guidance:
+    'Personal data includes any information relating to an identified or identifiable natural person...',
   confidence_score: 0.95,
   related_topics: ['GDPR', 'Personal Data', 'Data Processing'],
   follow_up_suggestions: ['What types of personal data do you process?'],
-  source_references: ['GDPR Article 4']
+  source_references: ['GDPR Article 4'],
 };
 
 const mockFollowUpQuestions = {
@@ -97,60 +110,76 @@ const mockFollowUpQuestions = {
     {
       id: 'ai-q1',
       text: 'What types of personal data do you process?',
-      type: 'multiple_choice',
-      options: ['Names', 'Email addresses', 'Financial data', 'Health data'],
+      type: 'radio' as const,
+      options: [
+        { value: 'Names', label: 'Names' },
+        { value: 'Email addresses', label: 'Email addresses' },
+        { value: 'Financial data', label: 'Financial data' },
+        { value: 'Health data', label: 'Health data' },
+      ],
       validation: { required: true },
-      metadata: { source: 'ai', reasoning: 'Need to understand data types for compliance assessment' }
+      metadata: {
+        source: 'ai',
+        reasoning: 'Need to understand data types for compliance assessment',
+      },
     },
     {
       id: 'ai-q2',
       text: 'What is the legal basis for processing this data?',
-      type: 'multiple_choice',
-      options: ['Consent', 'Contract', 'Legal obligation', 'Legitimate interest'],
+      type: 'radio' as const,
+      options: [
+        { value: 'Consent', label: 'Consent' },
+        { value: 'Contract', label: 'Contract' },
+        { value: 'Legal obligation', label: 'Legal obligation' },
+        { value: 'Legitimate interest', label: 'Legitimate interest' },
+      ],
       validation: { required: true },
-      metadata: { source: 'ai', reasoning: 'Legal basis is required for GDPR compliance' }
-    }
+      metadata: { source: 'ai', reasoning: 'Legal basis is required for GDPR compliance' },
+    },
   ],
-  reasoning: 'Based on your answer, we need more details about your data processing activities'
+  reasoning: 'Based on your answer, we need more details about your data processing activities',
 };
 
 const mockRecommendations = {
   recommendations: [
     {
       id: 'rec-1',
+      gapId: 'gap-1',
       title: 'Implement Data Protection Policy',
       description: 'Create a comprehensive data protection policy covering all GDPR requirements',
-      priority: 'high',
+      priority: 'immediate' as const,
       category: 'Policy',
+      impact: 'high',
+      effort: 'medium',
       estimatedEffort: 'Medium',
-      timeline: '2-4 weeks'
-    }
+      estimatedTime: '2-4 weeks',
+    },
   ],
   implementation_plan: {
     phases: [
       {
         name: 'Policy Development',
         duration_weeks: 2,
-        tasks: ['Draft policy', 'Review with legal', 'Approve policy']
-      }
+        tasks: ['Draft policy', 'Review with legal', 'Approve policy'],
+      },
     ],
     total_timeline_weeks: 4,
-    resource_requirements: ['Legal review', 'Management approval']
+    resource_requirements: ['Legal review', 'Management approval'],
   },
   success_metrics: [
     { metric: 'Policy completion', target: '100%' },
-    { metric: 'Staff training', target: '90%' }
-  ]
+    { metric: 'Staff training', target: '90%' },
+  ],
 };
 
 // Test Component that integrates AI features
-function TestAssessmentWithAI({ 
-  framework, 
-  context, 
-  enableAI = true 
-}: { 
-  framework: AssessmentFramework; 
-  context: AssessmentContext; 
+function TestAssessmentWithAI({
+  framework,
+  context,
+  enableAI = true,
+}: {
+  framework: AssessmentFramework;
+  context: AssessmentContext;
   enableAI?: boolean;
 }) {
   const [engine, setEngine] = React.useState<QuestionnaireEngine | null>(null);
@@ -160,7 +189,7 @@ function TestAssessmentWithAI({
   React.useEffect(() => {
     const newEngine = new QuestionnaireEngine(framework, context, {
       enableAI,
-      useMockAIOnError: true
+      useMockAIOnError: true,
     });
     setEngine(newEngine);
     setCurrentQuestion(newEngine.getCurrentQuestion());
@@ -176,7 +205,7 @@ function TestAssessmentWithAI({
 
     engine.answerQuestion(currentQuestion.id, value);
     const hasMore = await engine.nextQuestion();
-    
+
     if (hasMore) {
       setCurrentQuestion(engine.getCurrentQuestion() || engine.getCurrentAIQuestion());
       setIsAIMode(engine.isInAIMode());
@@ -204,18 +233,13 @@ function TestAssessmentWithAI({
       <div data-testid="assessment-container">
         <div data-testid="question-text">{currentQuestion.text}</div>
         <div data-testid="ai-mode-indicator">{isAIMode ? 'AI Mode' : 'Framework Mode'}</div>
-        
+
         {/* AI Help Tooltip */}
         <AIHelpTooltip
           question={currentQuestion}
           frameworkId={framework.id}
           sectionId="data-protection"
-          userContext={{
-            business_profile_id: context.businessProfileId,
-            industry: context.metadata.industry,
-            company_size: context.metadata.company_size,
-            location: context.metadata.location
-          }}
+          userContext={{}}
         />
 
         {/* AI Guidance Panel */}
@@ -223,35 +247,19 @@ function TestAssessmentWithAI({
           question={currentQuestion}
           frameworkId={framework.id}
           sectionId="data-protection"
-          userContext={{
-            business_profile_id: context.businessProfileId,
-            industry: context.metadata.industry,
-            company_size: context.metadata.company_size,
-            location: context.metadata.location
-          }}
+          userContext={{}}
         />
 
         {/* Answer Buttons */}
-        {currentQuestion.type === 'yes_no' && (
-          <div>
-            <button onClick={() => handleAnswer('yes')} data-testid="answer-yes">
-              Yes
-            </button>
-            <button onClick={() => handleAnswer('no')} data-testid="answer-no">
-              No
-            </button>
-          </div>
-        )}
-
-        {currentQuestion.type === 'multiple_choice' && currentQuestion.options && (
+        {currentQuestion.type === 'radio' && currentQuestion.options && (
           <div>
             {currentQuestion.options.map((option, index) => (
               <button
                 key={index}
-                onClick={() => handleAnswer(option)}
+                onClick={() => handleAnswer(option.value)}
                 data-testid={`answer-option-${index}`}
               >
-                {option}
+                {option.label}
               </button>
             ))}
           </div>
@@ -265,6 +273,15 @@ describe('AI Assessment Flow Integration', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     mockToast.mockClear();
+
+    // Mock clipboard API properly
+    Object.defineProperty(navigator, 'clipboard', {
+      value: {
+        writeText: vi.fn().mockResolvedValue(undefined),
+        readText: vi.fn().mockResolvedValue(''),
+      },
+      writable: true,
+    });
   });
 
   afterEach(() => {
@@ -276,14 +293,43 @@ describe('AI Assessment Flow Integration', () => {
 
     // Mock AI responses
     vi.mocked(assessmentAIService.getFollowUpQuestions).mockResolvedValue(mockFollowUpQuestions);
-    vi.mocked(assessmentAIService.getPersonalizedRecommendations).mockResolvedValue(mockRecommendations);
+    // Enhanced mock setup with error handling and configuration
+    const setupRecommendationsMock = (
+      config: {
+        shouldFail?: boolean;
+        delay?: number;
+        customResponse?: typeof mockRecommendations;
+      } = {},
+    ) => {
+      const { shouldFail = false, delay = 0, customResponse } = config;
+
+      const response = customResponse || {
+        ...mockRecommendations,
+        metadata: {
+          requestId: `test-req-${Date.now()}`,
+          timestamp: new Date().toISOString(),
+          processingTime: 150,
+        },
+      };
+
+      if (shouldFail) {
+        vi.mocked(assessmentAIService.getPersonalizedRecommendations).mockRejectedValue(
+          new Error('AI service unavailable'),
+        );
+      } else {
+        vi.mocked(assessmentAIService.getPersonalizedRecommendations).mockImplementation(() =>
+          delay > 0
+            ? new Promise((resolve) => setTimeout(() => resolve(response), delay))
+            : Promise.resolve(response),
+        );
+      }
+    };
+
+    // Default setup for successful response
+    setupRecommendationsMock();
 
     render(
-      <TestAssessmentWithAI 
-        framework={mockFramework} 
-        context={mockContext} 
-        enableAI={true}
-      />
+      <TestAssessmentWithAI framework={mockFramework} context={mockContext} enableAI={true} />,
     );
 
     // Start with first framework question
@@ -298,14 +344,18 @@ describe('AI Assessment Flow Integration', () => {
       expect(screen.getByTestId('ai-mode-indicator')).toHaveTextContent('AI Mode');
     });
 
-    expect(screen.getByTestId('question-text')).toHaveTextContent('What types of personal data do you process?');
+    expect(screen.getByTestId('question-text')).toHaveTextContent(
+      'What types of personal data do you process?',
+    );
 
     // Answer first AI question
     await user.click(screen.getByTestId('answer-option-0')); // Names
 
     // Should move to second AI question
     await waitFor(() => {
-      expect(screen.getByTestId('question-text')).toHaveTextContent('What is the legal basis for processing this data?');
+      expect(screen.getByTestId('question-text')).toHaveTextContent(
+        'What is the legal basis for processing this data?',
+      );
     });
 
     // Answer second AI question
@@ -316,7 +366,9 @@ describe('AI Assessment Flow Integration', () => {
       expect(screen.getByTestId('ai-mode-indicator')).toHaveTextContent('Framework Mode');
     });
 
-    expect(screen.getByTestId('question-text')).toHaveTextContent('Do you have a data protection policy?');
+    expect(screen.getByTestId('question-text')).toHaveTextContent(
+      'Do you have a data protection policy?',
+    );
 
     // Complete assessment
     await user.click(screen.getByTestId('answer-no'));
@@ -333,8 +385,8 @@ describe('AI Assessment Flow Integration', () => {
       user_answer: 'yes',
       assessment_context: expect.objectContaining({
         framework_id: 'gdpr-test',
-        business_profile_id: 'test-profile-456'
-      })
+        business_profile_id: 'test-profile-456',
+      }),
     });
   });
 
@@ -343,15 +395,11 @@ describe('AI Assessment Flow Integration', () => {
 
     // Mock AI service failure
     vi.mocked(assessmentAIService.getFollowUpQuestions).mockRejectedValue(
-      new Error('AI service unavailable')
+      new Error('AI service unavailable'),
     );
 
     render(
-      <TestAssessmentWithAI 
-        framework={mockFramework} 
-        context={mockContext} 
-        enableAI={true}
-      />
+      <TestAssessmentWithAI framework={mockFramework} context={mockContext} enableAI={true} />,
     );
 
     // Answer question that would trigger AI
@@ -372,11 +420,7 @@ describe('AI Assessment Flow Integration', () => {
     vi.mocked(assessmentAIService.getQuestionHelp).mockResolvedValue(mockAIHelp);
 
     render(
-      <TestAssessmentWithAI 
-        framework={mockFramework} 
-        context={mockContext} 
-        enableAI={true}
-      />
+      <TestAssessmentWithAI framework={mockFramework} context={mockContext} enableAI={true} />,
     );
 
     // Click AI help button
@@ -404,18 +448,14 @@ describe('AI Assessment Flow Integration', () => {
 
     // Mock slow AI responses
     vi.mocked(assessmentAIService.getQuestionHelp).mockImplementation(
-      () => new Promise(resolve => setTimeout(() => resolve(mockAIHelp), 100))
+      () => new Promise((resolve) => setTimeout(() => resolve(mockAIHelp), 100)),
     );
     vi.mocked(assessmentAIService.getFollowUpQuestions).mockImplementation(
-      () => new Promise(resolve => setTimeout(() => resolve(mockFollowUpQuestions), 50))
+      () => new Promise((resolve) => setTimeout(() => resolve(mockFollowUpQuestions), 50)),
     );
 
     render(
-      <TestAssessmentWithAI 
-        framework={mockFramework} 
-        context={mockContext} 
-        enableAI={true}
-      />
+      <TestAssessmentWithAI framework={mockFramework} context={mockContext} enableAI={true} />,
     );
 
     // Trigger multiple AI requests simultaneously
@@ -426,9 +466,12 @@ describe('AI Assessment Flow Integration', () => {
     await user.click(screen.getByTestId('answer-yes')); // Follow-up request
 
     // Both should complete without conflicts
-    await waitFor(() => {
-      expect(screen.getByTestId('ai-mode-indicator')).toHaveTextContent('AI Mode');
-    }, { timeout: 200 });
+    await waitFor(
+      () => {
+        expect(screen.getByTestId('ai-mode-indicator')).toHaveTextContent('AI Mode');
+      },
+      { timeout: 200 },
+    );
 
     // Should have made both API calls
     expect(assessmentAIService.getQuestionHelp).toHaveBeenCalled();
@@ -441,11 +484,7 @@ describe('AI Assessment Flow Integration', () => {
     vi.mocked(assessmentAIService.getFollowUpQuestions).mockResolvedValue(mockFollowUpQuestions);
 
     render(
-      <TestAssessmentWithAI 
-        framework={mockFramework} 
-        context={mockContext} 
-        enableAI={true}
-      />
+      <TestAssessmentWithAI framework={mockFramework} context={mockContext} enableAI={true} />,
     );
 
     // Answer first question
@@ -458,7 +497,7 @@ describe('AI Assessment Flow Integration', () => {
 
     // Answer AI questions
     await user.click(screen.getByTestId('answer-option-1')); // Email addresses
-    
+
     await waitFor(() => {
       expect(screen.getByTestId('question-text')).toHaveTextContent('What is the legal basis');
     });
@@ -471,7 +510,9 @@ describe('AI Assessment Flow Integration', () => {
     });
 
     // Should be on second framework question
-    expect(screen.getByTestId('question-text')).toHaveTextContent('Do you have a data protection policy?');
+    expect(screen.getByTestId('question-text')).toHaveTextContent(
+      'Do you have a data protection policy?',
+    );
 
     // Complete assessment
     await user.click(screen.getByTestId('answer-no'));
@@ -484,21 +525,21 @@ describe('AI Assessment Flow Integration', () => {
   it('generates AI recommendations at assessment completion', async () => {
     const user = userEvent.setup();
 
-    vi.mocked(assessmentAIService.getPersonalizedRecommendations).mockResolvedValue(mockRecommendations);
+    vi.mocked(assessmentAIService.getPersonalizedRecommendations).mockResolvedValue(
+      mockRecommendations,
+    );
 
     render(
-      <TestAssessmentWithAI 
-        framework={mockFramework} 
-        context={mockContext} 
-        enableAI={true}
-      />
+      <TestAssessmentWithAI framework={mockFramework} context={mockContext} enableAI={true} />,
     );
 
     // Complete assessment quickly (no AI follow-up)
     await user.click(screen.getByTestId('answer-no')); // First question
-    
+
     await waitFor(() => {
-      expect(screen.getByTestId('question-text')).toHaveTextContent('Do you have a data protection policy?');
+      expect(screen.getByTestId('question-text')).toHaveTextContent(
+        'Do you have a data protection policy?',
+      );
     });
 
     await user.click(screen.getByTestId('answer-no')); // Second question
@@ -522,11 +563,7 @@ describe('AI Assessment Flow Integration', () => {
     const user = userEvent.setup();
 
     render(
-      <TestAssessmentWithAI 
-        framework={mockFramework} 
-        context={mockContext} 
-        enableAI={false}
-      />
+      <TestAssessmentWithAI framework={mockFramework} context={mockContext} enableAI={false} />,
     );
 
     // Answer questions normally
@@ -534,7 +571,9 @@ describe('AI Assessment Flow Integration', () => {
 
     // Should NOT enter AI mode
     await waitFor(() => {
-      expect(screen.getByTestId('question-text')).toHaveTextContent('Do you have a data protection policy?');
+      expect(screen.getByTestId('question-text')).toHaveTextContent(
+        'Do you have a data protection policy?',
+      );
     });
 
     expect(screen.getByTestId('ai-mode-indicator')).toHaveTextContent('Framework Mode');
