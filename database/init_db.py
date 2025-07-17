@@ -28,19 +28,27 @@ logger = get_logger(__name__)
 
 
 async def create_tables():
-    """Create all database tables asynchronously."""
-    logger.info("Creating database tables...")
+    """Run Alembic migrations to create/update database tables."""
+    logger.info("Running database migrations...")
     try:
-        # Initialize the async database engine
-        _init_async_db()
-        from database.db_setup import _async_engine
-
-        async with _async_engine.begin() as conn:
-            await conn.run_sync(Base.metadata.create_all)
-        logger.info("Database tables created successfully.")
+        import subprocess
+        import sys
+        
+        # Run alembic upgrade to latest
+        result = subprocess.run(
+            [sys.executable, "-m", "alembic", "upgrade", "head"],
+            capture_output=True,
+            text=True
+        )
+        
+        if result.returncode != 0:
+            logger.error(f"Alembic migration failed: {result.stderr}")
+            return False
+            
+        logger.info("Database migrations applied successfully.")
         return True
     except Exception as e:
-        logger.error(f"Error creating tables: {e}", exc_info=True)
+        logger.error(f"Error running migrations: {e}", exc_info=True)
         return False
 
 

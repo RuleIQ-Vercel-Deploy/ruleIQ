@@ -48,8 +48,9 @@ class BaseIntegration(ABC):
         if not self.cipher:
             logger.error(
                 f"Fernet cipher not available for integration {self.config.provider} for user {self.config.user_id}. "
-                f"Credentials will not be encrypted/decrypted. This is a security risk."
+                f"Cannot proceed without encryption."
             )
+            raise IntegrationError("Encryption cipher not available. Cannot create integration without secure credential storage.")
 
     @property
     @abstractmethod
@@ -88,15 +89,10 @@ class BaseIntegration(ABC):
         finally:
             self.config.credentials = original_creds  # Restore original
 
-    def encrypt_credentials_to_str(self, credentials_dict: Dict[str, Any]) -> Optional[str]:
+    def encrypt_credentials_to_str(self, credentials_dict: Dict[str, Any]) -> str:
         if not self.cipher:
             logger.error("Cannot encrypt credentials: Fernet cipher is not initialized.")
-            # Fallback: store as JSON string if encryption fails (highly insecure, for dev only)
-            # In production, this should raise an error or prevent saving.
-            logger.critical(
-                "Storing credentials as unencrypted JSON string due to missing cipher. THIS IS INSECURE."
-            )
-            return json.dumps(credentials_dict)  # Insecure fallback
+            raise IntegrationError("Encryption cipher not available. Cannot save credentials securely.")
 
         try:
             credentials_json = json.dumps(credentials_dict)
@@ -107,36 +103,28 @@ class BaseIntegration(ABC):
             )  # Store as string (Fernet tokens are URL-safe base64)
         except Exception as e:
             logger.error(f"Failed to encrypt credentials: {e}", exc_info=True)
-            return None  # Or raise an error
+            raise IntegrationError(f"Failed to encrypt credentials: {e}") from e
 
     def decrypt_credentials_from_str(
         self, encrypted_credentials_str: str
-    ) -> Optional[Dict[str, Any]]:
+    ) -> Dict[str, Any]:
         if not self.cipher:
             logger.error("Cannot decrypt credentials: Fernet cipher is not initialized.")
-            # Attempt to parse as JSON if it might be an unencrypted fallback
-            try:
-                logger.warning(
-                    "Attempting to parse credentials as unencrypted JSON string due to missing cipher."
-                )
-                return json.loads(encrypted_credentials_str)
-            except json.JSONDecodeError:
-                logger.error("Failed to parse stored credentials as JSON, and cipher is missing.")
-                return None
+            raise IntegrationError("Decryption cipher not available. Cannot load credentials securely.")
 
         try:
             encrypted_bytes = encrypted_credentials_str.encode("utf-8")
             decrypted_bytes = self.cipher.decrypt(encrypted_bytes)
             credentials_json = decrypted_bytes.decode("utf-8")
             return json.loads(credentials_json)
-        except InvalidToken:
+        except InvalidToken as e:
             logger.error(
                 "Failed to decrypt credentials: Invalid Fernet token. Key might be wrong or data corrupted."
             )
-            return None
+            raise IntegrationError("Invalid credentials token") from e
         except Exception as e:
             logger.error(f"Failed to decrypt credentials: {e}", exc_info=True)
-            return None  # Or raise an error
+            raise IntegrationError(f"Failed to decrypt credentials: {e}") from e
 
 
 class IntegrationError(Exception):

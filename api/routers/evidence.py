@@ -5,6 +5,7 @@ from fastapi import APIRouter, Depends, File, HTTPException, UploadFile
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from api.dependencies.auth import get_current_active_user
+from api.dependencies.file import get_file_validator
 from api.schemas.evidence_classification import (
     BulkClassificationRequest,
     BulkClassificationResponse,
@@ -137,7 +138,7 @@ async def get_evidence_statistics(
     current_user: User = Depends(get_current_active_user),
 ):
     """Get evidence statistics for the current user."""
-    stats = await EvidenceService.get_evidence_statistics(db=db, user_id=current_user.id)
+    stats = await EvidenceService.get_evidence_statistics(db=db, user_id=UUID(str(current_user.id)))
     return stats
 
 
@@ -270,7 +271,7 @@ async def get_evidence_details(
 ):
     """Retrieve the details of a specific evidence item."""
     evidence, status = await EvidenceService.get_evidence_item_with_auth_check(
-        db=db, user_id=current_user.id, evidence_id=evidence_id
+        db=db, user_id=UUID(str(current_user.id)), evidence_id=evidence_id
     )
 
     if status == "not_found":
@@ -383,7 +384,7 @@ async def configure_evidence_automation(
     """Configure automation for evidence collection."""
     # Verify evidence exists and user has access
     evidence, status = await EvidenceService.get_evidence_item_with_auth_check(
-        db=db, user_id=current_user.id, evidence_id=evidence_id
+        db=db, user_id=UUID(str(current_user.id)), evidence_id=evidence_id
     )
 
     if status == "not_found":
@@ -407,22 +408,81 @@ async def upload_evidence_file_route(
     db: AsyncSession = Depends(get_async_db),
     current_user: User = Depends(get_current_active_user),
 ):
-    """Upload a file and link it to an evidence item."""
-    # Save file to a temporary location (in production, use proper file storage)
-    file_path = f"/tmp/{evidence_id}_{file.filename}"
+    """Upload a file and link it to an evidence item with enhanced security validation."""
+    # Import enhanced validator
+    from api.dependencies.file import EnhancedFileValidator
+    
+    # Initialize enhanced validator with strict security for evidence files
+    validator = EnhancedFileValidator(
+        max_size=50 * 1024 * 1024,  # 50MB limit for evidence files
+        allowed_types=[
+            "application/pdf", "image/jpeg", "image/png", "image/gif",
+            "text/csv", "text/plain", "application/json",
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        ],
+        security_level="strict",  # Strict validation for compliance evidence
+        enable_quarantine=True
+    )
+    
+    # Validate and analyze file
+    validated_file, analysis_report, quarantine_path = await validator.validate_and_analyze(file)
+    
+    # Log security analysis
+    logger.info(f"Evidence file validation: {analysis_report.filename} - "
+               f"Result: {analysis_report.validation_result.value}, "
+               f"Score: {analysis_report.security_score:.2f}")
+    
+    # Create secure file path
+    from api.dependencies.file import get_safe_upload_path
+    secure_path = get_safe_upload_path(f"{evidence_id}_{validated_file.filename}")
+    
+    # Save file securely
+    file_content = await validated_file.read()
+    with open(secure_path, 'wb') as f:
+        f.write(file_content)
 
+        # Upload evidence with enhanced metadata
     evidence = await EvidenceService.upload_evidence_file(
         db=db,
         user=current_user,
         evidence_id=evidence_id,
-        file_name=file.filename,
-        file_path=file_path,
-        metadata={"content_type": file.content_type},
+        file_name=analysis_report.filename,
+        file_path=str(secure_path),
+        metadata={
+            "content_type": analysis_report.content_type,
+            "detected_type": analysis_report.detected_type,
+            "file_size": analysis_report.file_size,
+            "file_hash": analysis_report.file_hash,
+            "security_score": analysis_report.security_score,
+            "validation_result": analysis_report.validation_result.value,
+            "validation_time": analysis_report.validation_time,
+            "quarantine_path": quarantine_path,
+            "original_filename": analysis_report.original_filename,
+            "threats_detected": analysis_report.threats_detected if analysis_report.threats_detected else None
+        },
     )
+    
     if not evidence:
+        # Clean up uploaded file on failure
+        if secure_path.exists():
+            secure_path.unlink()
         raise HTTPException(status_code=404, detail="Failed to upload or link file to evidence")
-    # Convert EvidenceItem to expected response format
-    return EvidenceService._convert_evidence_item_to_response(evidence)
+    
+    # Return enhanced response with security information
+    response = EvidenceService._convert_evidence_item_to_response(evidence)
+    
+    # Add security metadata to response if there were any concerns
+    if analysis_report.validation_result != "clean":
+        response.ai_metadata = response.ai_metadata or {}
+        response.ai_metadata["security_analysis"] = {
+            "validation_result": analysis_report.validation_result.value,
+            "security_score": analysis_report.security_score,
+            "threats_detected": analysis_report.threats_detected,
+            "recommendations": analysis_report.recommendations
+        }
+    
+    return response
 
 
 @router.get("/dashboard/{framework_id}", response_model=EvidenceDashboardResponse)
@@ -452,7 +512,7 @@ async def classify_evidence_with_ai(
     try:
         # Verify evidence exists and user has access
         evidence, status = await EvidenceService.get_evidence_item_with_auth_check(
-            db=db, user_id=current_user.id, evidence_id=evidence_id
+            db=db, user_id=UUID(str(current_user.id)), evidence_id=evidence_id
         )
 
         if status == "not_found":
@@ -525,7 +585,7 @@ async def bulk_classify_evidence(
             try:
                 # Verify evidence exists and user has access
                 evidence, status = await EvidenceService.get_evidence_item_with_auth_check(
-                    db=db, user_id=current_user.id, evidence_id=evidence_id
+                    db=db, user_id=UUID(str(current_user.id)), evidence_id=evidence_id
                 )
 
                 if status != "success":
@@ -535,8 +595,7 @@ async def bulk_classify_evidence(
                             success=False,
                             current_type="unknown",
                             error=f"Evidence not found or access denied: {status}",
-                        )
-                    )
+                        ))
                     failed_count += 1
                     continue
 
@@ -592,7 +651,7 @@ async def bulk_classify_evidence(
             except Exception as e:
                 results.append(
                     ClassificationResult(
-                        evidence_id=evidence_id, success=False, current_type="unknown", error=str(e)
+                        evidence_id=evidence_id, success=False, current_type="unknown", error=str(e), applied=False
                     )
                 )
                 failed_count += 1
@@ -627,7 +686,7 @@ async def get_control_mapping_suggestions(
 
         # Verify evidence exists and user has access
         evidence, status = await EvidenceService.get_evidence_item_with_auth_check(
-            db=db, user_id=current_user.id, evidence_id=evidence_id
+            db=db, user_id=UUID(str(current_user.id)), evidence_id=evidence_id
         )
 
         if status == "not_found":
@@ -778,7 +837,7 @@ async def get_evidence_quality_analysis(
 
         # Verify evidence exists and user has access
         evidence, status = await EvidenceService.get_evidence_item_with_auth_check(
-            db=db, user_id=current_user.id, evidence_id=evidence_id
+            db=db, user_id=UUID(str(current_user.id)), evidence_id=evidence_id
         )
 
         if status == "not_found":
@@ -847,7 +906,7 @@ async def detect_evidence_duplicates(
 
         # Verify evidence exists and user has access
         evidence, status = await EvidenceService.get_evidence_item_with_auth_check(
-            db=db, user_id=current_user.id, evidence_id=evidence_id
+            db=db, user_id=UUID(str(current_user.id)), evidence_id=evidence_id
         )
 
         if status == "not_found":
@@ -871,7 +930,7 @@ async def detect_evidence_duplicates(
             evidence_id=evidence_id,
             evidence_name=evidence.evidence_name or "Unnamed Evidence",
             duplicates_found=len(duplicates),
-            duplicates=duplicates,
+            duplicates=[{"evidence_id": str(d["id"]), "similarity_score": d["similarity"]} for d in duplicates],
             analysis_timestamp=datetime.utcnow().isoformat(),
         )
 
@@ -896,7 +955,7 @@ async def batch_duplicate_detection(
         evidence_items = []
         for evidence_id in request.evidence_ids:
             evidence, status = await EvidenceService.get_evidence_item_with_auth_check(
-                db=db, user_id=current_user.id, evidence_id=evidence_id
+                db=db, user_id=UUID(str(current_user.id)), evidence_id=evidence_id
             )
             if status == "success":
                 evidence_items.append(evidence)

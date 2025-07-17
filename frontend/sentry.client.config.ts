@@ -1,7 +1,15 @@
 import * as Sentry from "@sentry/nextjs";
 
-Sentry.init({
-  dsn: process.env.NEXT_PUBLIC_SENTRY_DSN,
+// Only initialize Sentry if a valid DSN is provided
+const sentryDsn = process.env.NEXT_PUBLIC_SENTRY_DSN;
+const isValidDsn = sentryDsn && 
+  sentryDsn !== "https://your-dsn@sentry.io/project-id" && 
+  sentryDsn.startsWith("https://") && 
+  sentryDsn.includes("@sentry.io");
+
+if (isValidDsn) {
+  Sentry.init({
+    dsn: sentryDsn,
   
   // Adjust this value in production, or use tracesSampler for greater control
   tracesSampleRate: process.env.NODE_ENV === "production" ? 0.1 : 1.0,
@@ -72,4 +80,7 @@ Sentry.init({
       component: "frontend",
     },
   },
-});
+  });
+} else {
+  console.log("Sentry disabled: No valid DSN provided or placeholder DSN detected");
+}

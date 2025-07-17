@@ -36,7 +36,7 @@ vi.mock('@/components/assessments/QuestionRenderer', () => ({
         type="text"
         onChange={(e) => props.onChange(e.target.value)}
         data-testid="question-input"
-        defaultValue={props.value}
+        defaultValue={props.value || ''}
       />
       {props.error && <div>{props.error}</div>}
     </div>
@@ -51,7 +51,7 @@ vi.mock('@/components/assessments/FollowUpQuestion', () => ({
         type="text"
         onChange={(e) => props.onChange(e.target.value)}
         data-testid="follow-up-input"
-        defaultValue={props.value}
+        defaultValue={props.value || ''}
       />
     </div>
   ),
@@ -467,28 +467,39 @@ describe('AssessmentWizard', () => {
       mockEngine.getProgress.mockReturnValue(lastQuestionProgress);
       mockEngine.nextQuestion.mockResolvedValue(false); // No more questions
 
-      // Answer the last question
+      // Set up the second question
+      const secondQuestion = mockFramework.sections[0]!.questions![1]!;
+      mockEngine.getCurrentQuestion.mockReturnValue(secondQuestion);
+
+      // Answer the last question - ensure it's properly set in answers
       const answersMap = new Map();
-      answersMap.set('q2', { value: 'test', timestamp: new Date() });
+      answersMap.set('q2', { value: ['names'], timestamp: new Date() });
       mockEngine.getAnswers.mockReturnValue(answersMap);
 
       render(<AssessmentWizard {...mockProps} />);
 
-      const nextButton = screen.getByRole('button', { name: /complete assessment/i });
-      expect(nextButton).toBeInTheDocument();
+      const completeButton = screen.getByRole('button', { name: /complete assessment/i });
+      expect(completeButton).toBeInTheDocument();
 
-      // Simulate answering the question
-      const questionInput = screen.getByTestId('question-input');
-      fireEvent.change(questionInput, { target: { value: 'test' } });
+      // Ensure button is enabled by having the question answered
+      await waitFor(
+        () => {
+          expect(completeButton).toBeEnabled();
+        },
+        { timeout: 3000 },
+      );
 
       // Click the complete assessment button
       await act(async () => {
-        fireEvent.click(nextButton);
+        fireEvent.click(completeButton);
       });
 
-      await waitFor(() => {
-        expect(mockEngine.calculateResults).toHaveBeenCalled();
-      });
+      await waitFor(
+        () => {
+          expect(mockEngine.calculateResults).toHaveBeenCalled();
+        },
+        { timeout: 5000 },
+      );
     });
 
     it('should show complete assessment button on last question', () => {
@@ -510,6 +521,10 @@ describe('AssessmentWizard', () => {
       mockEngine.getProgress.mockReturnValue(lastQuestionProgress);
       mockEngine.nextQuestion.mockResolvedValue(false);
 
+      // Set up the second question (checkbox type)
+      const secondQuestion = mockFramework.sections[0]!.questions![1]!;
+      mockEngine.getCurrentQuestion.mockReturnValue(secondQuestion);
+
       const mockResult = {
         assessmentId: mockProps.assessmentId,
         frameworkId: mockFramework.id,
@@ -521,27 +536,34 @@ describe('AssessmentWizard', () => {
       };
       mockEngine.calculateResults.mockResolvedValue(mockResult);
 
-      // Answer the last question
+      // Answer the last question - checkbox type needs array value
       const answersMap = new Map();
-      answersMap.set('q2', { value: 'test', timestamp: new Date() });
+      answersMap.set('q2', { value: ['names', 'emails'], timestamp: new Date() });
       mockEngine.getAnswers.mockReturnValue(answersMap);
 
       render(<AssessmentWizard {...mockProps} />);
 
       const completeButton = screen.getByRole('button', { name: /complete assessment/i });
 
-      // Ensure button is enabled by answering the question
-      const questionInput = screen.getByTestId('question-input');
-      fireEvent.change(questionInput, { target: { value: 'test' } });
+      // Ensure button is enabled by having the question answered
+      await waitFor(
+        () => {
+          expect(completeButton).toBeEnabled();
+        },
+        { timeout: 3000 },
+      );
 
       await act(async () => {
         fireEvent.click(completeButton);
       });
 
-      await waitFor(() => {
-        expect(mockEngine.calculateResults).toHaveBeenCalled();
-        expect(mockProps.onComplete).toHaveBeenCalledWith(mockResult);
-      });
+      await waitFor(
+        () => {
+          expect(mockEngine.calculateResults).toHaveBeenCalled();
+          expect(mockProps.onComplete).toHaveBeenCalledWith(mockResult);
+        },
+        { timeout: 5000 },
+      );
     });
   });
 

@@ -446,10 +446,13 @@ const getQuestionFlow = (): string[] => {
 
 const getNextQuestion = (currentId: string, data: UserFormData, answer?: QuestionAnswer): string | null => {
   const current = questionBank[currentId];
+  
+  console.log(`getNextQuestion: ${currentId}`, { answer, hasCustomNext: !!current?.nextQuestion });
 
   // Check if current question exists and has custom next logic
   if (current?.nextQuestion && answer !== undefined) {
     const nextId = current.nextQuestion(data, answer);
+    console.log(`Custom nextQuestion logic returned: ${nextId}`);
     // Validate that the returned question ID exists
     if (nextId && questionBank[nextId]) {
       return nextId;
@@ -461,6 +464,50 @@ const getNextQuestion = (currentId: string, data: UserFormData, answer?: Questio
   // Get base flow
   const flow = getQuestionFlow();
   const currentIndex = flow.findIndex(id => id === currentId);
+  
+  // If current question is not in main flow, determine where to continue based on context
+  if (currentIndex === -1) {
+    // Handle questions not in main flow
+    if (currentId === "smallBusinessConcerns") {
+      return "industry";
+    }
+    if (currentId === "complianceMaturity") {
+      return "industry";
+    }
+    if (currentId === "healthcareSpecific" || currentId === "financialSpecific" || currentId === "ecommerceSpecific") {
+      return "businessModel";
+    }
+    if (currentId === "customerBase") {
+      return "regions";
+    }
+    if (currentId === "gdprRelevant" || currentId === "usCompliance") {
+      return "dataTypes";
+    }
+    if (currentId === "pciDssRelevant" || currentId === "hipaaRelevant") {
+      return "currentCompliance";
+    }
+    if (currentId === "currentCompliance") {
+      return "compliancePriorities";
+    }
+    if (currentId === "budget") {
+      return "biggestChallenge";
+    }
+    
+    // If we don't know where to go, try to continue from where we logically should be
+    console.warn(`Question ${currentId} not found in main flow and no fallback defined`);
+    
+    // Try to determine logical next step based on data collected so far
+    if (!data.industry) return "industry";
+    if (!data.businessModel) return "businessModel";
+    if (!data.regions) return "regions";
+    if (!data.dataTypes) return "dataTypes";
+    if (!data.currentFrameworks) return "currentCompliance";
+    if (!data.topPriority) return "compliancePriorities";
+    if (!data.timeline) return "timeline";
+    if (!data.challenge) return "biggestChallenge";
+    
+    return "agreeToTerms"; // Final fallback
+  }
   
   // Find next unskipped question
   for (let i = currentIndex + 1; i < flow.length; i++) {
@@ -479,7 +526,7 @@ const getNextQuestion = (currentId: string, data: UserFormData, answer?: Questio
 };
 
 type Message = {
-  id: number;
+  id: string;
   type: "bot" | "user";
   content: string;
   options?: string[];
@@ -500,6 +547,12 @@ export default function AIGuidedSignupPage() {
   const [isLoading, setIsLoading] = React.useState(false);
   const [questionsAnswered, setQuestionsAnswered] = React.useState(0);
   const messagesEndRef = React.useRef<HTMLDivElement>(null);
+  const hasInitialized = React.useRef(false);
+
+  // Generate unique message ID using timestamp and random number
+  const generateMessageId = () => {
+    return `msg_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+  };
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -510,16 +563,19 @@ export default function AIGuidedSignupPage() {
   }, [messages]);
 
   React.useEffect(() => {
-    // Start with greeting
-    const greetingQuestion = questionBank['greeting'];
-    if (greetingQuestion) {
-      setMessages([{
-        id: 1,
-        type: "bot",
-        content: greetingQuestion.question as string,
-        options: greetingQuestion.options as string[],
-        icon: greetingQuestion.icon
-      }]);
+    // Start with greeting - only run once on mount, even in StrictMode
+    if (!hasInitialized.current) {
+      hasInitialized.current = true;
+      const greetingQuestion = questionBank['greeting'];
+      if (greetingQuestion) {
+        setMessages([{
+          id: generateMessageId(),
+          type: "bot",
+          content: greetingQuestion.question as string,
+          options: greetingQuestion.options as string[],
+          icon: greetingQuestion.icon
+        }]);
+      }
     }
   }, []);
 
@@ -540,7 +596,7 @@ export default function AIGuidedSignupPage() {
 
   const addBotMessage = (content: string, options?: string[], icon?: React.ReactNode) => {
     const newMessage: Message = {
-      id: messages.length + 1,
+      id: generateMessageId(),
       type: "bot",
       content,
       ...(options && { options }),
@@ -564,7 +620,7 @@ export default function AIGuidedSignupPage() {
 
   const addUserMessage = (content: string) => {
     setMessages(prev => [...prev, {
-      id: prev.length + 1,
+      id: generateMessageId(),
       type: "user",
       content
     }]);
@@ -623,12 +679,21 @@ export default function AIGuidedSignupPage() {
     
     setQuestionsAnswered(prev => prev + 1);
     
-    // Get next question
-    const nextQuestionId = getNextQuestion(currentQuestionId, formData, actualAnswer);
+    // Get next question with updated form data
+    const updatedFormData = currentQuestion.field 
+      ? { ...formData, [currentQuestion.field]: actualAnswer }
+      : formData;
+    
+    const nextQuestionId = getNextQuestion(currentQuestionId, updatedFormData, actualAnswer);
+    
+    console.log(`Moving from ${currentQuestionId} to ${nextQuestionId}`, { updatedFormData, actualAnswer });
     
     if (nextQuestionId) {
       const nextQuestion = questionBank[nextQuestionId];
-      if (!nextQuestion) return;
+      if (!nextQuestion) {
+        console.error(`Question ${nextQuestionId} not found in questionBank`);
+        return;
+      }
 
       setCurrentQuestionId(nextQuestionId);
 
@@ -930,7 +995,7 @@ export default function AIGuidedSignupPage() {
                               <div className="space-y-2">
                                 {message.options.map((option, optionIndex) => (
                                   <label
-                                    key={`option-${optionIndex}`}
+                                    key={`multi-choice-option-${optionIndex}`}
                                     className="flex items-center space-x-2 cursor-pointer"
                                   >
                                     <Checkbox
@@ -1010,7 +1075,7 @@ export default function AIGuidedSignupPage() {
                             ) : (
                               message.options.map((option, optionIndex) => (
                                 <Button
-                                  key={`button-option-${optionIndex}`}
+                                  key={`single-choice-option-${optionIndex}`}
                                   variant="outline"
                                   size="sm"
                                   onClick={() => handleChoice(option)}

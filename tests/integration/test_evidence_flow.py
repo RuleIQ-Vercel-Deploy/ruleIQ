@@ -22,7 +22,26 @@ async def manage_test_database_schema():
 
     # Create schema
     async with engine_to_use.begin() as conn:
-        await conn.run_sync(Base.metadata.create_all)
+        # Run Alembic migrations instead of create_all
+        import subprocess
+        import sys
+        import os
+        
+        # Change to project root
+        original_dir = os.getcwd()
+        project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+        os.chdir(project_root)
+        
+        try:
+            result = subprocess.run(
+                [sys.executable, "-m", "alembic", "upgrade", "head"],
+                capture_output=True,
+                text=True
+            )
+            if result.returncode != 0:
+                raise RuntimeError(f"Alembic migration failed: {result.stderr}")
+        finally:
+            os.chdir(original_dir)
 
     yield
 

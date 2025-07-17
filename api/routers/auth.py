@@ -1,7 +1,8 @@
 from datetime import timedelta
+from datetime import datetime
 from uuid import UUID, uuid4
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, Request, status
 from fastapi.security import OAuth2PasswordRequestForm
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
@@ -153,13 +154,19 @@ async def refresh_token(refresh_token: str, db: Session = Depends(get_db)):
 
 
 @router.post("/logout")
-async def logout(token: str = Depends(oauth2_scheme)):
+async def logout(request: Request, token: str = Depends(oauth2_scheme)):
     """Logout endpoint that blacklists the current token and invalidates sessions."""
     from api.dependencies.auth import blacklist_token, decode_token
-
+    
     if token:
-        # Blacklist the token
-        await blacklist_token(token)
+        # Enhanced blacklist with metadata
+        await blacklist_token(
+            token, 
+            reason="user_logout",
+            ip_address=getattr(request.client, 'host', None),
+            user_agent=request.headers.get('user-agent'),
+            metadata={"logout_timestamp": datetime.utcnow().isoformat()}
+        )
 
         # Also invalidate user sessions
         try:

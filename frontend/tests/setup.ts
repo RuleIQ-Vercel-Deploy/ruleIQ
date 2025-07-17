@@ -139,11 +139,22 @@ beforeAll(() => {
   // Mock navigator.clipboard
   Object.defineProperty(navigator, 'clipboard', {
     writable: true,
+    configurable: true,
     value: {
       writeText: vi.fn().mockResolvedValue(undefined),
       readText: vi.fn().mockResolvedValue(''),
     },
   })
+
+  // Fix user-event clipboard redefinition issue
+  const originalDefineProperty = Object.defineProperty
+  Object.defineProperty = function(obj: any, prop: string, descriptor: PropertyDescriptor) {
+    if (prop === 'clipboard' && obj === navigator) {
+      // Allow redefinition of clipboard property
+      return originalDefineProperty.call(this, obj, prop, { ...descriptor, configurable: true })
+    }
+    return originalDefineProperty.call(this, obj, prop, descriptor)
+  }
 
   // Mock File and FileReader
   global.File = class MockFile {

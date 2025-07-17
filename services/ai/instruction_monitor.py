@@ -6,8 +6,8 @@ for system instructions to optimize AI response quality and effectiveness.
 """
 
 import abc
+import json
 import os
-import pickle
 import statistics
 from collections import deque
 from dataclasses import asdict, dataclass
@@ -67,37 +67,39 @@ class FilePersistence(InstructionPersistence):
     def __init__(self, data_dir: str = "./data/instructions"):
         self.data_dir = data_dir
         os.makedirs(data_dir, exist_ok=True)
-        self.metrics_file = os.path.join(data_dir, "metrics.pkl")
-        self.performance_file = os.path.join(data_dir, "performance.pkl")
+        self.metrics_file = os.path.join(data_dir, "metrics.json")
+        self.performance_file = os.path.join(data_dir, "performance.json")
 
     def save_metrics(self, metrics: List["InstructionMetric"]):
         try:
-            with open(self.metrics_file, "wb") as f:
-                pickle.dump(list(metrics), f)
+            with open(self.metrics_file, "w") as f:
+                json.dump([asdict(m) for m in metrics], f, indent=4)
         except Exception as e:
             logger.error(f"Failed to save metrics: {e}")
 
     def load_metrics(self) -> List["InstructionMetric"]:
         try:
             if os.path.exists(self.metrics_file):
-                with open(self.metrics_file, "rb") as f:
-                    return pickle.load(f)
+                with open(self.metrics_file, "r") as f:
+                    data = json.load(f)
+                    return [InstructionMetric(**m) for m in data]
         except Exception as e:
             logger.error(f"Failed to load metrics: {e}")
         return []
 
     def save_performance_data(self, data: Dict[str, "InstructionPerformanceData"]):
         try:
-            with open(self.performance_file, "wb") as f:
-                pickle.dump(data, f)
+            with open(self.performance_file, "w") as f:
+                json.dump({k: asdict(v) for k, v in data.items()}, f, indent=4)
         except Exception as e:
             logger.error(f"Failed to save performance data: {e}")
 
     def load_performance_data(self) -> Dict[str, "InstructionPerformanceData"]:
         try:
             if os.path.exists(self.performance_file):
-                with open(self.performance_file, "rb") as f:
-                    return pickle.load(f)
+                with open(self.performance_file, "r") as f:
+                    data = json.load(f)
+                    return {k: InstructionPerformanceData(**v) for k, v in data.items()}
         except Exception as e:
             logger.error(f"Failed to load performance data: {e}")
         return {}
@@ -342,6 +344,17 @@ class InstructionPerformanceMonitor:
         }
 
         return comparison
+
+    def _generate_comparison_recommendation(
+        self, perf_a: InstructionPerformanceData, perf_b: InstructionPerformanceData
+    ) -> str:
+        """Generate a recommendation based on performance comparison."""
+        if perf_b.effectiveness_score > perf_a.effectiveness_score:
+            return f"Instruction B shows better overall effectiveness ({perf_b.effectiveness_score:.2f} vs {perf_a.effectiveness_score:.2f})."
+        elif perf_a.effectiveness_score > perf_b.effectiveness_score:
+            return f"Instruction A shows better overall effectiveness ({perf_a.effectiveness_score:.2f} vs {perf_b.effectiveness_score:.2f})."
+        else:
+            return "Both instructions have similar performance."
 
     def start_ab_test(
         self,
@@ -937,40 +950,6 @@ class InstructionPerformanceMonitor:
         except Exception as e:
             logger.error(f"Failed to save instruction data: {e}")
 
-    def record_metric(
-        self,
-        instruction_id: str,
-        metric_type: InstructionMetricType,
-        value: float,
-        context: Dict[str, Any],
-        session_id: Optional[str] = None,
-        user_id: Optional[str] = None,
-    ):
-        """
-        Record a performance metric for an instruction (enhanced with persistence)
-        """
-        metric = InstructionMetric(
-            metric_id=str(uuid4()),
-            instruction_id=instruction_id,
-            metric_type=metric_type,
-            value=value,
-            timestamp=datetime.now(),
-            context=context,
-            session_id=session_id,
-            user_id=user_id,
-            framework=context.get("framework"),
-            task_type=context.get("task_type"),
-        )
-
-        self.metrics_history.append(metric)
-        self._update_performance_cache(instruction_id)
-
-        # Check if this metric affects any active A/B tests
-        self._update_ab_test_metrics(metric)
-
-        # Periodically save data (every 10 metrics)
-        if len(self.metrics_history) % 10 == 0:
-            self._save_data()
 
 
 # Global instance with file persistence for production

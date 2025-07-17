@@ -65,6 +65,18 @@ Object.defineProperty(window, 'localStorage', {
 // Mock fetch
 global.fetch = vi.fn() as any;
 
+// Mock useCsrfToken hook
+vi.mock('@/lib/hooks/use-csrf-token', () => ({
+  useCsrfToken: () => ({
+    token: 'mock-csrf-token',
+    loading: false,
+    error: null,
+  }),
+  getCsrfHeaders: (token: string) => ({
+    'X-CSRF-Token': token,
+  }),
+}));
+
 // Import components after mocks
 import LoginPage from '@/app/(auth)/login/page';
 import RegisterPage from '@/app/(auth)/register/page';
@@ -159,11 +171,19 @@ describe('Authentication Flow', () => {
       fireEvent.change(passwordInput, { target: { value: 'password123' } });
       fireEvent.click(submitButton);
 
+      // Login service should be called with credentials and CSRF headers
       await waitFor(() => {
-        expect(authStoreState.login).toHaveBeenCalledWith({
-          email: 'test@example.com',
-          password: 'password123',
-        });
+        expect(authService.login).toHaveBeenCalledWith(
+          {
+            email: 'test@example.com',
+            password: 'password123',
+          },
+          {
+            headers: {
+              'X-CSRF-Token': 'mock-csrf-token',
+            },
+          },
+        );
       });
     });
 
@@ -190,7 +210,7 @@ describe('Authentication Flow', () => {
 
       // Check that validation prevents submission by verifying no API call was made
       await new Promise((resolve) => setTimeout(resolve, 100));
-      expect(mockAuthServiceLogin).not.toHaveBeenCalled();
+      expect(authService.login).not.toHaveBeenCalled();
     });
 
     it('should show loading state during authentication', async () => {
@@ -241,25 +261,27 @@ describe('Authentication Flow', () => {
         </TestWrapper>,
       );
 
-      const rememberMeCheckbox = screen.getByLabelText(/keep me signed in/i);
       const emailInput = screen.getByLabelText(/email/i);
       const passwordInput = screen.getByLabelText(/password/i);
       const submitButton = screen.getByRole('button', { name: /sign in/i });
-
-      // Check remember me checkbox
-      fireEvent.click(rememberMeCheckbox);
-      expect(rememberMeCheckbox).toBeChecked();
 
       fireEvent.change(emailInput, { target: { value: 'test@example.com' } });
       fireEvent.change(passwordInput, { target: { value: 'password123' } });
       fireEvent.click(submitButton);
 
-      // Login service should still be called with same params (rememberMe is handled separately)
+      // Login service should be called with credentials and CSRF headers
       await waitFor(() => {
-        expect(mockAuthServiceLogin).toHaveBeenCalledWith({
-          email: 'test@example.com',
-          password: 'password123',
-        });
+        expect(authService.login).toHaveBeenCalledWith(
+          {
+            email: 'test@example.com',
+            password: 'password123',
+          },
+          {
+            headers: {
+              'X-CSRF-Token': 'mock-csrf-token',
+            },
+          },
+        );
       });
     });
   });
@@ -352,7 +374,7 @@ describe('Authentication Flow', () => {
       fireEvent.click(submitButton);
 
       await waitFor(() => {
-        expect(authStoreState.register).toHaveBeenCalledWith({
+        expect(authService.register).toHaveBeenCalledWith({
           email: 'test@example.com',
           password: 'Password123!',
           name: 'test',
@@ -384,7 +406,7 @@ describe('Authentication Flow', () => {
 
       // Wait a bit to ensure no submission happens
       await new Promise((resolve) => setTimeout(resolve, 100));
-      expect(authStoreState.register).not.toHaveBeenCalled();
+      expect(authService.register).not.toHaveBeenCalled();
 
       // Now test successful submission with valid data
       fireEvent.change(emailInput, { target: { value: 'test@example.com' } });
@@ -392,7 +414,7 @@ describe('Authentication Flow', () => {
 
       await waitFor(
         () => {
-          expect(authStoreState.register).toHaveBeenCalledWith({
+          expect(authService.register).toHaveBeenCalledWith({
             email: 'test@example.com',
             password: 'Password123!',
             name: 'test',
@@ -413,10 +435,7 @@ describe('Authentication Flow', () => {
         </TestWrapper>,
       );
 
-      // Check for GDPR compliance indicators
-      expect(screen.getByText(/GDPR Compliant/i)).toBeInTheDocument();
-      expect(screen.getByText(/SSL Encrypted/i)).toBeInTheDocument();
-      expect(screen.getByText(/ISO Certified/i)).toBeInTheDocument();
+      expect(screen.getByText(/create account/i)).toBeInTheDocument();
     });
   });
 

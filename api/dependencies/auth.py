@@ -8,15 +8,15 @@ from datetime import datetime, timedelta
 from typing import Dict, Optional
 from uuid import UUID
 
-import redis.asyncio as redis
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
-from jose import JWTError, jwt
+from jose import ExpiredSignatureError, JWTError, jwt
 from passlib.context import CryptContext
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 
 from api.context import user_id_var
+from config.cache import get_cache_manager
 from config.settings import settings
 from core.exceptions import NotAuthenticatedException
 from database.db_setup import get_async_db
@@ -31,84 +31,21 @@ REFRESH_TOKEN_EXPIRE_DAYS = 7
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/token", auto_error=False)
 
-# Redis client for token blacklisting
-_redis_client: Optional[redis.Redis] = None
-_redis_available: Optional[bool] = None
 
-# Fallback in-memory blacklist for when Redis is unavailable
-_fallback_blacklist: Dict[str, float] = {}
-
-
-async def get_redis_client() -> Optional[redis.Redis]:
-    """Get or create Redis client for token blacklisting."""
-    global _redis_client, _redis_available
-
-    if _redis_available is False:
-        return None
-
-    if _redis_client is None:
-        try:
-            _redis_client = redis.from_url(settings.redis_url, decode_responses=True)
-            # Test the connection
-            await _redis_client.ping()
-            _redis_available = True
-        except Exception:
-            _redis_available = False
-            _redis_client = None
-            return None
-
-    return _redis_client
-
-
-async def blacklist_token(token: str) -> None:
-    """Add a token to the blacklist with TTL."""
-    import time
-
-    # Always add to in-memory blacklist first for immediate effect
-    expiry_time = time.time() + (ACCESS_TOKEN_EXPIRE_MINUTES * 60)
-    _fallback_blacklist[token] = expiry_time
-
-    # Also try to add to Redis if available
-    redis_client = await get_redis_client()
-    if redis_client:
-        try:
-            # Set TTL to match token expiration (30 minutes for access tokens)
-            await redis_client.setex(f"blacklist:{token}", ACCESS_TOKEN_EXPIRE_MINUTES * 60, "1")
-        except Exception:
-            # Redis failed, but we already have in-memory fallback
-            pass
+async def blacklist_token(token: str, reason: str = "logout", **kwargs) -> None:
+    """Add a token to the blacklist with enhanced security features."""
+    from .token_blacklist import blacklist_token as enhanced_blacklist_token
+    
+    # Use enhanced blacklist with TTL based on token type
+    ttl = ACCESS_TOKEN_EXPIRE_MINUTES * 60
+    await enhanced_blacklist_token(token, reason=reason, ttl=ttl, **kwargs)
 
 
 async def is_token_blacklisted(token: str) -> bool:
-    """Check if a token is blacklisted."""
-    import time
-
-    current_time = time.time()
-
-    # First check in-memory blacklist (faster and always available)
-    # Clean up expired tokens first
-    expired_tokens = [t for t, exp in _fallback_blacklist.items() if exp < current_time]
-    for token_to_remove in expired_tokens:
-        _fallback_blacklist.pop(token_to_remove, None)
-
-    # Check if token is in in-memory blacklist
-    if token in _fallback_blacklist:
-        return True
-
-    # Also check Redis if available (for distributed systems)
-    redis_client = await get_redis_client()
-    if redis_client:
-        try:
-            result = await redis_client.get(f"blacklist:{token}")
-            if result is not None:
-                # Add to in-memory cache for faster future lookups
-                _fallback_blacklist[token] = current_time + (ACCESS_TOKEN_EXPIRE_MINUTES * 60)
-                return True
-        except Exception:
-            # Redis failed, but we already checked in-memory
-            pass
-
-    return False
+    """Check if a token is blacklisted using enhanced blacklist."""
+    from .token_blacklist import is_token_blacklisted as enhanced_is_blacklisted
+    
+    return await enhanced_is_blacklisted(token)
 
 
 def validate_password(password: str) -> tuple[bool, str]:
@@ -188,7 +125,7 @@ def decode_token(token: str) -> Optional[Dict]:
         # Additional expiry validation
         validate_token_expiry(payload)
         return payload
-    except jwt.ExpiredSignatureError:
+    except ExpiredSignatureError:
         raise NotAuthenticatedException("Token has expired. Please log in again.")
     except JWTError as e:
         raise NotAuthenticatedException(f"Token validation failed: {e!s}")
@@ -239,7 +176,7 @@ async def get_current_active_user(current_user: User = Depends(get_current_user)
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Inactive user")
 
     # Set user_id in contextvar for logging
-    user_id_var.set(current_user.id)
+    user_id_var.set(UUID(str(current_user.id)))
 
     return current_user
 

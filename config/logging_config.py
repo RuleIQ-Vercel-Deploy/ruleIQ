@@ -56,15 +56,33 @@ def get_logging_config(log_level: str) -> Dict[str, Any]:
                 "stream": sys.stdout,
                 "formatter": "json",
             },
+            "file": {
+                "class": "logging.handlers.RotatingFileHandler",
+                "filename": "logs/app.log",
+                "maxBytes": 10485760,  # 10MB
+                "backupCount": 5,
+                "formatter": "json",
+            },
+            "error_file": {
+                "class": "logging.handlers.RotatingFileHandler",
+                "filename": "logs/error.log",
+                "maxBytes": 10485760,  # 10MB
+                "backupCount": 5,
+                "formatter": "json",
+                "level": "ERROR",
+            },
         },
         "root": {
-            "handlers": ["console"],
+            "handlers": ["console", "file", "error_file"],
             "level": log_level,
         },
         "loggers": {
-            "uvicorn": {"handlers": ["console"], "level": "INFO", "propagate": False},
-            "gunicorn": {"handlers": ["console"], "level": "INFO", "propagate": False},
-            "celery": {"handlers": ["console"], "level": "INFO", "propagate": False},
+            "uvicorn": {"handlers": ["console", "file"], "level": "INFO", "propagate": False},
+            "gunicorn": {"handlers": ["console", "file"], "level": "INFO", "propagate": False},
+            "celery": {"handlers": ["console", "file"], "level": "INFO", "propagate": False},
+            "api": {"handlers": ["console", "file", "error_file"], "level": "DEBUG", "propagate": False},
+            "services": {"handlers": ["console", "file", "error_file"], "level": "INFO", "propagate": False},
+            "database": {"handlers": ["file", "error_file"], "level": "WARNING", "propagate": False},
         },
     }
 

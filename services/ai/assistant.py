@@ -29,6 +29,7 @@ from .exceptions import (
     CircuitBreakerException,
     ModelUnavailableException,
 )
+from .safety_manager import SafetyDecision, ContentType
 from .instruction_integration import get_instruction_manager
 from .performance_optimizer import get_performance_optimizer
 from .prompt_templates import PromptTemplates
@@ -42,8 +43,9 @@ logger = get_logger(__name__)
 class ComplianceAssistant:
     """AI-powered compliance assistant using Google Gemini, with full async support."""
 
-    def __init__(self, db: AsyncSession):
+    def __init__(self, db: AsyncSession, user_context: Optional[Dict[str, Any]] = None):
         self.db = db
+        self.user_context = user_context or {}
         self.model = None  # Will be selected dynamically based on task
         self.context_manager = ContextManager(db)
         self.prompt_templates = PromptTemplates()
@@ -54,6 +56,17 @@ class ComplianceAssistant:
         self.analytics_monitor = None  # Will be initialized on first use
         self.quality_monitor = None  # Will be initialized on first use
         self.circuit_breaker = AICircuitBreaker()  # Initialize circuit breaker
+        
+        # Initialize role-based safety manager
+        from services.ai.safety_manager import get_safety_manager_for_user, ContentType
+        self.safety_manager = get_safety_manager_for_user(self.user_context)
+        self.content_type_map = {
+            "assessment_help": ContentType.ASSESSMENT_GUIDANCE,
+            "evidence_recommendations": ContentType.EVIDENCE_CLASSIFICATION,
+            "policy_generation": ContentType.POLICY_GENERATION,
+            "compliance_analysis": ContentType.COMPLIANCE_ANALYSIS,
+            "general": ContentType.GENERAL_QUESTION
+        }
 
         # More permissive safety settings for compliance content
         # Compliance discussions may involve sensitive topics that need to be addressed
@@ -2651,44 +2664,89 @@ class ComplianceAssistant:
         # Call the existing async Gemini method
         return await self._generate_gemini_response(enhanced_prompt)
 
-    def _validate_response_safety(self, response: str) -> Dict[str, Any]:
-        """Validates the safety of the generated response."""
+    def _validate_response_safety(self, response: str, input_content: str = "", 
+                                 content_type: str = "general", confidence_score: float = 0.8) -> Dict[str, Any]:
+        """Validates the safety of the generated response using advanced role-based safety manager."""
+        try:
+            # Map content type to safety manager enum
+            from services.ai.safety_manager import ContentType
+            mapped_content_type = self.content_type_map.get(content_type, ContentType.GENERAL_QUESTION)
+            
+            # Use advanced safety manager for evaluation
+            safety_record = self.safety_manager.evaluate_content_safety(
+                input_content=input_content,
+                response_content=response,
+                content_type=mapped_content_type,
+                confidence_score=confidence_score,
+                user_id=self.user_context.get("user_id"),
+                session_id=getattr(self, 'current_session_id', None)
+            )
+            
+            # Convert safety decision to response format
+            is_safe = safety_record.decision in [SafetyDecision.ALLOW, SafetyDecision.MODIFY]
+            safety_score = confidence_score * (1.0 - (safety_record.confidence_score or 0.0))
+            
+            modified_response = response
+            if safety_record.decision == SafetyDecision.BLOCK:
+                modified_response = (
+                    "I can only provide guidance on compliance and regulatory matters. "
+                    "How can I help you with your compliance requirements?"
+                )
+                is_safe = False
+                safety_score = 0.0
+            elif safety_record.decision == SafetyDecision.MODIFY:
+                # Apply safety manager's content modification
+                modified_response = self.safety_manager.modify_response_content(
+                    response, safety_record.applied_filters
+                )
+            
+            return {
+                "is_safe": is_safe,
+                "safety_score": safety_score,
+                "modified_response": modified_response,
+                "safety_record": safety_record,
+                "decision_reasoning": safety_record.reasoning
+            }
+            
+        except Exception as e:
+            # Fallback to basic safety validation
+            logger.warning(f"Advanced safety validation failed, using fallback: {e}")
+            return self._basic_safety_validation(response)
+    
+    def _basic_safety_validation(self, response: str) -> Dict[str, Any]:
+        """Fallback basic safety validation."""
         import re
-
-        # Define unsafe patterns
+        
         unsafe_patterns = [
             r"bypass.*security",
-            r"ignore.*compliance",
+            r"ignore.*compliance", 
             r"violate.*regulation",
             r"<script.*>",
             r"javascript:",
             r"data:text/html",
         ]
-
-        # Check for unsafe content
+        
         is_safe = True
         safety_score = 1.0
-
         response_lower = response.lower()
+        
         for pattern in unsafe_patterns:
             if re.search(pattern, response_lower):
                 is_safe = False
                 safety_score = 0.0
                 break
-
-        # Check response length (too short might indicate error)
+        
         if len(response.strip()) < 10:
             safety_score = 0.5
-
-        # Check for compliance focus
+            
         compliance_terms = ["compliance", "regulation", "framework", "policy", "audit", "evidence"]
         if not any(term in response_lower for term in compliance_terms):
             safety_score = max(safety_score - 0.2, 0.0)
-
+        
         modified_response = response
         if not is_safe:
             modified_response = "I can only provide guidance on compliance and regulatory matters. How can I help you with your compliance requirements?"
-
+        
         return {
             "is_safe": is_safe,
             "safety_score": safety_score,

@@ -19,7 +19,7 @@ from api.integrations.base.base_integration import (
 )
 from config.logging_config import get_logger
 from database.db_setup import get_async_db
-from database.integration_configuration import IntegrationConfiguration
+from database.models.integrations import Integration
 from database.user import User
 
 logger = get_logger(__name__)
@@ -107,9 +107,9 @@ async def connect_integration(
             )
 
         # Check if integration already exists
-        stmt = select(IntegrationConfiguration).where(
-            IntegrationConfiguration.user_id == current_user.id,
-            IntegrationConfiguration.provider == provider,
+        stmt = select(Integration).where(
+            Integration.user_id == current_user.id,
+            Integration.provider == provider,
         )
         result = await db.execute(stmt)
         config = result.scalars().first()
@@ -125,7 +125,7 @@ async def connect_integration(
             logger.info(f"Integration updated for user {current_user.id}, provider {provider}")
         else:
             # Create new configuration
-            config = IntegrationConfiguration(
+            config = Integration(
                 user_id=current_user.id,
                 provider=provider,
                 credentials=encrypted_creds,
@@ -176,9 +176,9 @@ async def disconnect_integration(
         )
 
     try:
-        stmt = select(IntegrationConfiguration).where(
-            IntegrationConfiguration.user_id == current_user.id,
-            IntegrationConfiguration.provider == provider_key,
+        stmt = select(Integration).where(
+            Integration.user_id == current_user.id,
+            Integration.provider == provider_key,
         )
         result = await db.execute(stmt)
         config = result.scalars().first()
@@ -218,9 +218,9 @@ async def get_integration_status(
         )
 
     try:
-        stmt = select(IntegrationConfiguration).where(
-            IntegrationConfiguration.user_id == current_user.id,
-            IntegrationConfiguration.provider == provider_key,
+        stmt = select(Integration).where(
+            Integration.user_id == current_user.id,
+            Integration.provider == provider_key,
         )
         result = await db.execute(stmt)
         config = result.scalars().first()

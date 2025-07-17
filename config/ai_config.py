@@ -10,12 +10,32 @@ primarily Google Generative AI for compliance content generation.
 import os
 from dataclasses import dataclass
 from enum import Enum
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Union, TYPE_CHECKING
+from unittest.mock import MagicMock
 
-import google.generativeai as genai
+if TYPE_CHECKING:
+    import google.generativeai as genai
+else:
+    try:
+        import google.generativeai as genai
+    except ImportError:
+        genai = None
+        
 from dotenv import load_dotenv
 
+# Import at top level
+from services.ai.response_formats import get_schema_for_response_type
+from services.ai.exceptions import AIServiceException
+from config.logging_config import get_logger
+
 load_dotenv()
+
+# Constants for magic numbers
+LARGE_PROMPT_THRESHOLD = 2000
+MEDIUM_PROMPT_THRESHOLD = 1000
+ENTERPRISE_EMPLOYEE_THRESHOLD = 1000
+SIMPLE_COMPLEXITY_THRESHOLD = 0.3
+COMPLEX_COMPLEXITY_THRESHOLD = 0.7
 
 
 class ModelType(Enum):
@@ -27,7 +47,6 @@ class ModelType(Enum):
     # New optimized model options
     GEMINI_25_PRO = "gemini-2.5-pro"
     GEMINI_25_FLASH = "gemini-2.5-flash"
-    GEMINI_25_FLASH_LIGHT = "gemini-2.5-flash-8b"
     GEMMA_3 = "gemma-3-8b-it"
 
 
@@ -52,7 +71,7 @@ class ModelMetadata:
 MODEL_FALLBACK_CHAIN = [
     ModelType.GEMINI_25_PRO,
     ModelType.GEMINI_25_FLASH,
-    ModelType.GEMINI_25_FLASH_LIGHT,
+
     ModelType.GEMMA_3,
 ]
 
@@ -73,14 +92,7 @@ MODEL_METADATA = {
         capability_score=8.0,
         max_tokens=4096,
         timeout_seconds=30.0,
-    ),
-    ModelType.GEMINI_25_FLASH_LIGHT: ModelMetadata(
-        name=ModelType.GEMINI_25_FLASH_LIGHT.value,
-        cost_score=2.0,
-        speed_score=10.0,
-        capability_score=6.0,
-        max_tokens=2048,
-        timeout_seconds=20.0,
+
     ),
     ModelType.GEMMA_3: ModelMetadata(
         name=ModelType.GEMMA_3.value,
@@ -179,7 +191,6 @@ class AIConfig:
             "model_timeouts": {
                 ModelType.GEMINI_25_PRO.value: 45.0,
                 ModelType.GEMINI_25_FLASH.value: 30.0,
-                ModelType.GEMINI_25_FLASH_LIGHT.value: 20.0,
                 ModelType.GEMMA_3.value: 15.0,
                 ModelType.GEMINI_FLASH.value: 30.0,  # Legacy
             },
@@ -194,9 +205,6 @@ class AIConfig:
             "enable_request_queuing": os.getenv("AI_OFFLINE_QUEUE_REQUESTS", "true").lower()
             == "true",
         }
-
-        self._initialize_google_ai()
-
     def _initialize_google_ai(self):
         """Initialize Google Generative AI with API key"""
         # Skip actual API initialization if using mock AI in tests
@@ -204,6 +212,18 @@ class AIConfig:
             return
 
         if not self.google_api_key:
+            raise ValueError("GOOGLE_API_KEY environment variable is required")
+
+        if genai is None:
+            raise ImportError("google.generativeai package is not installed")
+
+        # Try different configuration methods based on library version
+        try:
+            genai.configure(api_key=self.google_api_key)
+        except AttributeError:
+            # Alternative configuration method for newer versions
+            import google.ai.generativelanguage as glm
+            glm.configure(api_key=self.google_api_key)
             raise ValueError("GOOGLE_API_KEY environment variable is required")
 
         genai.configure(api_key=self.google_api_key)

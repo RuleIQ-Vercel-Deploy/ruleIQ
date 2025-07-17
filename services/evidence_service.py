@@ -361,18 +361,13 @@ class EvidenceService:
             return None, status
 
         # Securely update only validated and whitelisted fields
-        field_mapping = {
-            "title": "evidence_name",
-            "control_id": "control_reference",
-            "notes": "collection_notes",
-        }
+        ALLOWED_FIELDS = [
+            "evidence_name", "description", "control_reference",
+            "status", "collection_notes", "evidence_type"
+        ]
 
         for field, value in validated_data.items():
-            # Use explicit field mapping for legacy compatibility
-            if field in field_mapping:
-                setattr(item, field_mapping[field], value)
-            # Only set attributes that exist on the model and are in our whitelist
-            elif hasattr(item, field):
+            if field in ALLOWED_FIELDS:
                 setattr(item, field, value)
 
         # Always update the timestamp

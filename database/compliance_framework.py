@@ -1,7 +1,7 @@
 import uuid
 from datetime import datetime
 
-from sqlalchemy import Boolean, Column, DateTime, Integer, String, Text
+from sqlalchemy import Boolean, CheckConstraint, Column, DateTime, Integer, String, Text
 from sqlalchemy.dialects.postgresql import JSONB as PG_JSONB
 from sqlalchemy.dialects.postgresql import UUID as PG_UUID
 from sqlalchemy.orm import relationship
@@ -13,6 +13,12 @@ class ComplianceFramework(Base):
     """Compliance frameworks and their requirements"""
 
     __tablename__ = "compliance_frameworks"
+    __table_args__ = (
+        CheckConstraint(
+            "version ~ '^[0-9]+\\.[0-9]+(\\.[0-9]+)?$'",
+            name="ck_compliance_frameworks_version_format",
+        ),
+    )
 
     id = Column(PG_UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
 

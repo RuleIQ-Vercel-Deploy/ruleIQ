@@ -1,138 +1,234 @@
 """
-Database setup for ComplianceGPT, including synchronous and asynchronous configurations.
+Database setup for ruleIQ, including synchronous and asynchronous
+configurations. Provides comprehensive database initialization and
+management utilities.
 """
 
 import os
-from typing import AsyncGenerator
+import logging
+from typing import AsyncGenerator, Dict, Any
+from contextlib import contextmanager
+from typing import Generator
 
-from sqlalchemy import create_engine
-from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
-from sqlalchemy.orm import declarative_base, sessionmaker
+from sqlalchemy import create_engine, text, MetaData, Engine
+from sqlalchemy.ext.asyncio import (
+    AsyncSession,
+    create_async_engine,
+    async_sessionmaker,
+    AsyncEngine
+)
+from sqlalchemy.orm import declarative_base, sessionmaker, Session
+
+# Configure logging
+logger = logging.getLogger(__name__)
 
 # --- Global variables for engines and session makers (initialized lazily) ---
-_engine = None
-_SessionLocal = None
-_async_engine = None
-_AsyncSessionLocal = None
+_ENGINE: Engine | None = None
+_SESSION_LOCAL: sessionmaker[Session] | None = None
+_ASYNC_ENGINE: AsyncEngine | None = None
+_ASYNC_SESSION_LOCAL: async_sessionmaker[AsyncSession] | None = None
 
-Base = declarative_base()
+# Define a naming convention for database constraints
+naming_convention = {
+    "ix": "ix_%(column_0_label)s",
+    "uq": "uq_%(table_name)s_%(column_0_name)s",
+    "ck": "ck_%(table_name)s_%(constraint_name)s",
+    "fk": "fk_%(table_name)s_%(column_0_name)s_%(referred_table_name)s",
+    "pk": "pk_%(table_name)s"
+}
+
+# Create a metadata object with the naming convention
+metadata = MetaData(naming_convention=naming_convention)
+
+# Define the base class for declarative models
+Base = declarative_base(metadata=metadata)
 
 
-def _get_configured_database_urls():
-    """
-    Retrieves and processes DATABASE_URL from environment variables.
-    This function is called only when a database connection is first needed.
-    """
-    db_url = os.getenv("DATABASE_URL")
-    if not db_url:
-        # This print is for immediate feedback if the env var is missing when needed.
-        # Logging might not be configured yet, or this might be a CLI script context.
-        print("ERROR: DATABASE_URL environment variable not set at the time of database access.")
-        raise OSError(
-            "DATABASE_URL not configured. Please set it in your .env file or environment."
-        )
+class DatabaseConfig:
+    """Database configuration class for managing connection settings."""
+    
+    @staticmethod
+    def get_database_urls() -> tuple[str, str, str]:
+        """
+        Retrieves and processes DATABASE_URL from environment variables.
+        Returns tuple of (original_url, sync_url, async_url)
+        """
+        db_url = os.getenv("DATABASE_URL")
+        if not db_url:
+            error_msg = "DATABASE_URL environment variable not set. Please set it in your .env file or environment."
+            logger.error(error_msg)
+            raise OSError(error_msg)
 
-    # Derive SYNC_DATABASE_URL
-    sync_db_url = db_url
-    if "+asyncpg" in sync_db_url:  # If it's an asyncpg URL, convert to psycopg2 for sync
-        sync_db_url = sync_db_url.replace("+asyncpg", "+psycopg2")
-    elif (
-        "postgresql://" in sync_db_url and "+psycopg2" not in sync_db_url
-    ):  # If it's generic, assume psycopg2
-        sync_db_url = sync_db_url.replace("postgresql://", "postgresql+psycopg2://", 1)
-    # If it's already psycopg2 or another dialect, it's used as is or might error later if incompatible.
-
-    # Derive ASYNC_DATABASE_URL
-    async_db_url = db_url
-    if "+asyncpg" not in async_db_url:
-        # Attempt to convert to asyncpg if it's not already
-        async_db_url_candidate = async_db_url.replace("+psycopg2", "+asyncpg")
-        if "postgresql://" in async_db_url_candidate and "+asyncpg" not in async_db_url_candidate:
-            async_db_url = async_db_url_candidate.replace(
-                "postgresql://", "postgresql+asyncpg://", 1
-            )
-        elif "+asyncpg" in async_db_url_candidate:
-            async_db_url = async_db_url_candidate
-        # If it's a generic postgresql:// URL without a specified sync driver, default to making it asyncpg
+        # Derive SYNC_DATABASE_URL
+        sync_db_url = db_url
+        if "+asyncpg" in sync_db_url:  # If it's an asyncpg URL, convert to psycopg2 for sync
+            sync_db_url = sync_db_url.replace("+asyncpg", "+psycopg2")
         elif (
-            "postgresql://" in async_db_url
-            and "+psycopg2" not in async_db_url
-            and "+asyncpg" not in async_db_url
-        ):
-            async_db_url = async_db_url.replace("postgresql://", "postgresql+asyncpg://", 1)
+            "postgresql://" in sync_db_url and "+psycopg2" not in sync_db_url
+        ):  # If it's generic, assume psycopg2
+            sync_db_url = sync_db_url.replace("postgresql://", "postgresql+psycopg2://", 1)
 
-    return db_url, sync_db_url, async_db_url
+        # Derive ASYNC_DATABASE_URL
+        async_db_url = db_url
+        if "+asyncpg" not in async_db_url:
+            # Attempt to convert to asyncpg if it's not already
+            async_db_url_candidate = async_db_url.replace("+psycopg2", "+asyncpg")
+            if "postgresql://" in async_db_url_candidate and "+asyncpg" not in async_db_url_candidate:
+                async_db_url = async_db_url_candidate.replace(
+                    "postgresql://", "postgresql+asyncpg://", 1
+                )
+            elif "+asyncpg" in async_db_url_candidate:
+                async_db_url = async_db_url_candidate
+            # If it's a generic postgresql:// URL without a specified sync driver, default to making it asyncpg
+            elif (
+                "postgresql://" in async_db_url
+                and "+psycopg2" not in async_db_url
+                and "+asyncpg" not in async_db_url
+            ):
+                async_db_url = async_db_url.replace("postgresql://", "postgresql+asyncpg://", 1)
+
+        return db_url, sync_db_url, async_db_url
+
+    @staticmethod
+    def get_engine_kwargs(is_async: bool = False) -> Dict[str, Any]:
+        """Get optimized engine configuration based on sync/async mode."""
+        base_kwargs = {
+            "echo": os.getenv("SQLALCHEMY_ECHO", "False").lower() == "true",
+            "pool_size": int(os.getenv("DB_POOL_SIZE", "10")),
+            "max_overflow": int(os.getenv("DB_MAX_OVERFLOW", "20")),
+            "pool_pre_ping": True,
+            "pool_recycle": int(os.getenv("DB_POOL_RECYCLE", "1800")),
+            "pool_timeout": int(os.getenv("DB_POOL_TIMEOUT", "30")),
+        }
+
+        if is_async:
+            async_kwargs = {
+                **base_kwargs,
+                "pool_reset_on_return": "commit",
+            }
+            
+            # Handle SSL configuration for asyncpg
+            db_url = os.getenv("DATABASE_URL", "")
+            if "sslmode=require" in db_url:
+                async_kwargs["connect_args"] = {
+                    "ssl": True,
+                    "server_settings": {
+                        "jit": "off",
+                        "application_name": "ruleIQ_backend",
+                    }
+                }
+            return async_kwargs
+        else:
+            # Sync engine configuration
+            sync_kwargs = {
+                **base_kwargs,
+                "connect_args": {
+                    "keepalives": 1,
+                    "keepalives_idle": 30,
+                    "keepalives_interval": 10,
+                    "keepalives_count": 5,
+                    "connect_timeout": 10,
+                },
+            }
+            return sync_kwargs
 
 
 def _init_sync_db():
     """Initializes synchronous database engine and session maker if not already initialized."""
-    global _engine, _SessionLocal
-    if _engine is None:
-        _, sync_db_url, _ = _get_configured_database_urls()
-
-        # Connection pool configuration for sync engine - optimized for performance
-        engine_kwargs = {
-            "echo": os.getenv("SQLALCHEMY_ECHO", "False").lower() == "true",
-            "pool_size": 10,  # Reduced pool size for better resource management
-            "max_overflow": 20,  # Reduced overflow for stability
-            "pool_pre_ping": True,  # Validate connections before use
-            "pool_recycle": 1800,  # Recycle connections after 30 minutes (faster than 1 hour)
-            "pool_timeout": 30,  # Increased for better stability under load
-            # Add connection arguments for better performance
-            "connect_args": {
-                "keepalives": 1,
-                "keepalives_idle": 30,
-                "keepalives_interval": 10,
-                "keepalives_count": 5,
-                "connect_timeout": 10,
-            },
-        }
-
-        _engine = create_engine(sync_db_url, **engine_kwargs)
-        _SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=_engine)
+    global _ENGINE, _SESSION_LOCAL
+    if _ENGINE is None:
+        try:
+            _, sync_db_url, _ = DatabaseConfig.get_database_urls()
+            engine_kwargs = DatabaseConfig.get_engine_kwargs(is_async=False)
+            
+            _ENGINE = create_engine(sync_db_url, **engine_kwargs)
+            _SESSION_LOCAL = sessionmaker(autocommit=False, autoflush=False, bind=_ENGINE)
+            logger.info("Synchronous database engine initialized successfully")
+        except Exception as e:
+            logger.error(f"Failed to initialize synchronous database engine: {e}")
+            raise
 
 
 def _init_async_db():
     """Initializes asynchronous database engine and session maker if not already initialized."""
-    global _async_engine, _AsyncSessionLocal
-    if _async_engine is None:
-        _, _, async_db_url = _get_configured_database_urls()
-
-        # Handle SSL configuration for asyncpg - optimized for performance
-        engine_kwargs = {
-            "echo": os.getenv("SQLALCHEMY_ECHO", "False").lower() == "true",
-            # Connection pool configuration optimized for performance and stability
-            "pool_size": 10,  # Reduced pool size for better resource management
-            "max_overflow": 15,  # Reduced overflow for stability
-            "pool_pre_ping": True,  # Validate connections before use
-            "pool_recycle": 1800,  # Recycle connections after 30 minutes
-            "pool_timeout": 30,  # Increased for better stability under load
-            # Async-specific pool settings
-            "pool_reset_on_return": "commit",  # Reset connection state on return
-        }
-
-        # If the URL contains sslmode=require, remove it and add ssl=True to engine kwargs
-        if "sslmode=require" in async_db_url:
-            async_db_url = async_db_url.replace("?sslmode=require", "").replace(
-                "&sslmode=require", ""
+    global _ASYNC_ENGINE, _ASYNC_SESSION_LOCAL
+    if _ASYNC_ENGINE is None:
+        try:
+            _, _, async_db_url = DatabaseConfig.get_database_urls()
+            engine_kwargs = DatabaseConfig.get_engine_kwargs(is_async=True)
+            
+            _ASYNC_ENGINE = create_async_engine(async_db_url, **engine_kwargs)
+            _ASYNC_SESSION_LOCAL = sessionmaker(
+                bind=_ASYNC_ENGINE,
+                class_=AsyncSession,
+                expire_on_commit=False,
+                autocommit=False,
+                autoflush=False,
             )
-            if "connect_args" not in engine_kwargs:
-                engine_kwargs["connect_args"] = {}
-            engine_kwargs["connect_args"]["ssl"] = True
-            # Add performance optimizations for SSL connections
-            engine_kwargs["connect_args"]["server_settings"] = {
-                "jit": "off",  # Disable JIT for faster query planning
-                "application_name": "ruleIQ_backend",
-            }
+            logger.info("Asynchronous database engine initialized successfully")
+        except Exception as e:
+            logger.error(f"Failed to initialize asynchronous database engine: {e}")
+            raise
 
-        _async_engine = create_async_engine(async_db_url, **engine_kwargs)
-        _AsyncSessionLocal = sessionmaker(
-            bind=_async_engine,
-            class_=AsyncSession,
-            expire_on_commit=False,
-            autocommit=False,
-            autoflush=False,
-        )
+
+def init_db() -> bool:
+    """
+    Initialize database with proper error handling and logging.
+    This function can be called during application startup.
+    
+    Returns:
+        bool: True if initialization successful, False otherwise
+    """
+    try:
+        logger.info("Initializing database...")
+        
+        # Initialize both sync and async engines
+        _init_sync_db()
+        _init_async_db()
+        
+        # Verify database connection
+        if not test_database_connection():
+            return False
+            
+            
+        logger.info("Database initialization completed successfully")
+        return True
+        
+    except Exception as e:
+        logger.error(f"Database initialization failed: {e}", exc_info=True)
+        return False
+
+
+def test_database_connection() -> bool:
+    """Test database connection synchronously."""
+    try:
+        _init_sync_db()
+        from database.db_setup import _ENGINE
+        
+        with _ENGINE.connect() as conn:
+            conn.execute(text("SELECT 1"))
+            logger.info("Database connection test successful")
+            return True
+    except Exception as e:
+        logger.error(f"Database connection test failed: {e}")
+        return False
+
+
+async def test_async_database_connection() -> bool:
+    """Test database connection asynchronously."""
+    try:
+        _init_async_db()
+        from database.db_setup import _ASYNC_ENGINE
+        
+        async with _ASYNC_ENGINE.connect() as conn:
+            await conn.execute(text("SELECT 1"))
+            logger.info("Async database connection test successful")
+            return True
+    except Exception as e:
+        logger.error(f"Async database connection test failed: {e}")
+        return False
+
+
 
 
 # --- Dependency for Synchronous Database Session (Legacy/Transition) ---
@@ -141,8 +237,8 @@ def get_db():
     Provides a synchronous database session and ensures it's closed afterwards.
     Marked for deprecation.
     """
-    _init_sync_db()  # Ensure engine and SessionLocal are initialized
-    db = _SessionLocal()
+    _init_sync_db()
+    db = _SESSION_LOCAL()
     try:
         yield db
     finally:
@@ -154,8 +250,8 @@ def get_db_session():
     Generator function for database sessions.
     Provides a synchronous database session and ensures it's closed afterwards.
     """
-    _init_sync_db()  # Ensure engine and SessionLocal are initialized
-    db = _SessionLocal()
+    _init_sync_db()
+    db = _SESSION_LOCAL()
     try:
         yield db
     finally:
@@ -167,8 +263,8 @@ async def get_async_db() -> AsyncGenerator[AsyncSession, None]:
     """
     Provides an asynchronous database session and ensures it's closed afterwards.
     """
-    _init_async_db()  # Ensure async_engine and AsyncSessionLocal are initialized
-    async with _AsyncSessionLocal() as session:
+    _init_async_db()
+    async with _ASYNC_SESSION_LOCAL() as session:
         try:
             yield session
         except Exception:
@@ -177,35 +273,46 @@ async def get_async_db() -> AsyncGenerator[AsyncSession, None]:
         # The 'async with' block handles session.close()
 
 
-async def create_db_and_tables():
-    """Creates all database tables asynchronously."""
-    _init_async_db()
-    async with _async_engine.begin() as conn:
-        await conn.run_sync(Base.metadata.create_all)
+# --- Database Utilities ---
+@contextmanager
+def get_db_context():
+    """Context manager for synchronous database sessions."""
+    _init_sync_db()
+    db = _SESSION_LOCAL()
+    try:
+        yield db
+        db.commit()
+    except Exception:
+        db.rollback()
+        raise
+    finally:
+        db.close()
 
 
 async def cleanup_db_connections():
     """Cleanup database connections and dispose engines."""
-    global _engine, _async_engine
+    global _ENGINE, _ASYNC_ENGINE
 
-    if _async_engine:
-        await _async_engine.dispose()
-        _async_engine = None
+    if _ASYNC_ENGINE:
+        await _ASYNC_ENGINE.dispose()
+        _ASYNC_ENGINE = None
+        logger.info("Async database engine disposed")
 
-    if _engine:
-        _engine.dispose()
-        _engine = None
+    if _ENGINE:
+        _ENGINE.dispose()
+        _ENGINE = None
+        logger.info("Sync database engine disposed")
 
 
-def get_engine_info():
+def get_engine_info() -> Dict[str, Any]:
     """Get information about current database engines for debugging."""
     info = {
-        "sync_engine_initialized": _engine is not None,
-        "async_engine_initialized": _async_engine is not None,
+        "sync_engine_initialized": _ENGINE is not None,
+        "async_engine_initialized": _ASYNC_ENGINE is not None,
     }
 
-    if _async_engine:
-        pool = _async_engine.pool
+    if _ASYNC_ENGINE:
+        pool = _ASYNC_ENGINE.pool
         info.update(
             {
                 "async_pool_size": pool.size(),
@@ -215,8 +322,8 @@ def get_engine_info():
             }
         )
 
-    if _engine:
-        pool = _engine.pool
+    if _ENGINE:
+        pool = _ENGINE.pool
         info.update(
             {
                 "sync_pool_size": pool.size(),
@@ -227,3 +334,9 @@ def get_engine_info():
         )
 
     return info
+
+
+# Backward compatibility aliases
+_get_configured_database_urls = DatabaseConfig.get_database_urls
+_init_sync_db = _init_sync_db  # Keep for backward compatibility
+_init_async_db = _init_async_db  # Keep for backward compatibility

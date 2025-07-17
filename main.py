@@ -33,7 +33,7 @@ from api.routers import (
 from api.schemas import APIInfoResponse, HealthCheckResponse
 from config.logging_config import get_logger, setup_logging
 from config.settings import settings
-from database.db_setup import create_db_and_tables, get_async_db
+from database.db_setup import init_db, get_async_db
 from database import User  # Import all models through the database package
 
 # Setup logging
@@ -45,7 +45,7 @@ logger = get_logger(__name__)
 async def lifespan(app: FastAPI):
     # Startup
     logger.info("Starting ComplianceGPT API...")
-    await create_db_and_tables()
+    init_db()
     logger.info("Database tables created or verified.")
 
     # Initialize default frameworks
@@ -65,7 +65,7 @@ async def lifespan(app: FastAPI):
     await get_cache_manager()
     logger.info("Cache manager initialized.")
 
-    logger.info(f"Environment: {settings.env.value}")
+    logger.info(f"Environment: {settings.environment}")
     logger.info(f"Debug mode: {settings.debug}")
     yield
     # Shutdown
@@ -86,7 +86,7 @@ app = FastAPI(
 # CORS configuration
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=settings.allowed_origins,
+    allow_origins=settings.cors_allowed_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

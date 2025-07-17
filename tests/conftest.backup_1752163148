@@ -130,7 +130,7 @@ from database.assessment_session import AssessmentSession
 from database.chat_conversation import ChatConversation
 from database.chat_message import ChatMessage
 from database.implementation_plan import ImplementationPlan
-from database.integration_configuration import IntegrationConfiguration
+# IntegrationConfiguration was moved to database.models.integrations.Integration
 from database.readiness_assessment import ReadinessAssessment
 from database.report_schedule import ReportSchedule
 from database.models.integrations import (

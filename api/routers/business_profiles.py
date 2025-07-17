@@ -40,11 +40,15 @@ async def create_business_profile(
             raise HTTPException(status_code=400, detail=str(e))
 
         # Update existing profile fields with validated data
+        ALLOWED_FIELDS = [
+            "company_name", "industry", "company_size", "description",
+            "data_sensitivity", "geographic_scope", "target_frameworks"
+        ]
         for key, value in validated_data.items():
-            if hasattr(existing, key):
+            if key in ALLOWED_FIELDS:
                 setattr(existing, key, value)
 
-        existing.updated_at = datetime.utcnow()
+        # The updated_at field is automatically handled by the database
         await db.commit()
         await db.refresh(existing)
         return existing
@@ -122,10 +126,15 @@ async def update_business_profile(
     except ValidationError as e:
         raise HTTPException(status_code=400, detail=str(e))
 
+    ALLOWED_FIELDS = [
+        "company_name", "industry", "company_size", "description",
+        "data_sensitivity", "geographic_scope", "target_frameworks"
+    ]
     for key, value in validated_data.items():
-        if hasattr(profile, key):
+        if key in ALLOWED_FIELDS:
             setattr(profile, key, value)
 
+    # The updated_at field is automatically handled by the database
     await db.commit()
     await db.refresh(profile)
 
@@ -160,11 +169,15 @@ async def update_business_profile_by_id(
     except ValidationError as e:
         raise HTTPException(status_code=400, detail=str(e))
 
+    ALLOWED_FIELDS = [
+        "company_name", "industry", "company_size", "description",
+        "data_sensitivity", "geographic_scope", "target_frameworks"
+    ]
     for key, value in validated_data.items():
-        if hasattr(profile, key):
+        if key in ALLOWED_FIELDS:
             setattr(profile, key, value)
 
-    profile.updated_at = datetime.utcnow()
+    # The updated_at field is automatically handled by the database
     await db.commit()
     await db.refresh(profile)
 
@@ -234,11 +247,15 @@ async def patch_business_profile(
     except ValidationError as e:
         raise HTTPException(status_code=400, detail=str(e))
 
+    ALLOWED_FIELDS = [
+        "company_name", "industry", "company_size", "description",
+        "data_sensitivity", "geographic_scope", "target_frameworks"
+    ]
     for key, value in validated_data.items():
-        if hasattr(profile, key):
+        if key in ALLOWED_FIELDS:
             setattr(profile, key, value)
 
-    profile.updated_at = datetime.utcnow()
+    # The updated_at field is automatically handled by the database
     await db.commit()
     await db.refresh(profile)
 

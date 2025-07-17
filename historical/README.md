@@ -3,7 +3,8 @@
 This directory contains files that were moved out of the main codebase during the production cleanup phase. These files represent important historical context but are not needed for current development or deployment.
 
 ## Archive Date
-**Moved on:** July 10, 2025
+**Initial cleanup:** July 10, 2025
+**Additional cleanup:** July 17, 2025
 **Reason:** Production deployment cleanup - removing temporary files, outdated documentation, and development artifacts to create a clean deployment-ready codebase.
 
 ## Directory Structure
@@ -78,6 +79,46 @@ Contains generated test results and metrics files.
 - `test_session_metrics.json` - Test session performance metrics
 
 **Why archived:** These are output artifacts from test runs, not source code. They provide historical performance data but don't need to be in the main codebase.
+
+### 📁 test_scripts_additional/
+Contains additional test scripts moved during final cleanup phase.
+
+**Files:**
+- `test_ab_testing.py` - A/B testing framework validation script
+- `test_statistical_analysis.py` - Statistical analysis components testing
+
+**Why archived:** These are specialized testing scripts for statistical analysis features. While functional, they're not part of the formal test suite and were moved to reduce root directory clutter.
+
+### 📁 documentation_additional/
+Contains additional temporary documentation moved during final cleanup.
+
+**Files:**
+- `FIXES_SUMMARY.md` - Summary of validation fixes applied
+- `FRONTEND_TEST_HANDOVER.md` - Frontend testing handover documentation
+- `COMPLIANCE_TEST_FIX_SUMMARY.md` - Compliance testing fixes summary
+- `MEMORY_LEAK_FIX_SUMMARY.md` - Memory leak resolution documentation
+- `PRODUCTION_READINESS_CHECKLIST.md` - Production readiness checklist (completed)
+- `SECURITY_CHECKLIST_STATUS.md` - Security checklist status (completed)
+- `PROJECT_TASKS.md` - Project task tracking (completed)
+- `FIXED_TEST_DATABASE_SETUP.md` - Test database setup fixes
+- `FRONTEND_TEST_ACTION_PLAN.md` - Frontend testing action plan (completed)
+
+**Why archived:** These documents represent completed work phases, fix summaries, and temporary documentation that served their purpose during development but are no longer needed for ongoing operations.
+
+### 📁 temporary_files/
+Contains temporary utility scripts and one-off files created during development.
+
+**Files:**
+- `fix_settings.py` - Settings configuration fix script
+- `revert_api_main.py` - API main reversion script
+- `validate_production.py` - Production validation script
+- `check_routes.py` - Route validation utility
+- `screenshot-all-pages.js` - Frontend screenshot automation
+- `runpod_quick_setup.sh` - RunPod deployment setup script
+- `sync_to_runpod.sh` - RunPod synchronization script
+- `create-documentation-library.sh` - Documentation generation script
+
+**Why archived:** These are utility scripts created for specific one-time tasks, debugging, or deployment scenarios. They served their purpose but are not part of the core application infrastructure.
 
 ## What Remains in Main Codebase
 

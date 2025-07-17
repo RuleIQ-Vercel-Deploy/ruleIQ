@@ -299,7 +299,7 @@ from database.assessment_session import AssessmentSession
 from database.chat_conversation import ChatConversation
 from database.chat_message import ChatMessage
 from database.implementation_plan import ImplementationPlan
-from database.integration_configuration import IntegrationConfiguration
+# IntegrationConfiguration was moved to database.models.integrations.Integration
 from database.readiness_assessment import ReadinessAssessment
 from database.report_schedule import ReportSchedule
 
@@ -345,8 +345,29 @@ TestSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 @pytest.fixture(scope="session", autouse=True)
 def setup_database(event_loop):
     """Set up database for entire test session."""
-    # Create all tables
-    Base.metadata.create_all(bind=engine)
+    # Run Alembic migrations instead of create_all
+    import subprocess
+    import sys
+    import os
+    
+    # Change to project root directory
+    original_dir = os.getcwd()
+    project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    os.chdir(project_root)
+    
+    try:
+        # Run alembic upgrade to latest
+        result = subprocess.run(
+            [sys.executable, "-m", "alembic", "upgrade", "head"],
+            capture_output=True,
+            text=True
+        )
+        
+        if result.returncode != 0:
+            print(f"Alembic migration failed: {result.stderr}")
+            raise RuntimeError(f"Failed to run database migrations: {result.stderr}")
+    finally:
+        os.chdir(original_dir)
     
     # Initialize default frameworks
     session = TestSessionLocal()
@@ -923,6 +944,11 @@ async def async_test_client(db_session, sample_user):
 def sync_db_session(db_session):
     """Alias for compatibility."""
     return db_session
+
+@pytest.fixture
+def sync_sample_user(sample_user):
+    """Alias for compatibility."""
+    return sample_user
 
 @pytest.fixture
 def authenticated_test_client(client):
