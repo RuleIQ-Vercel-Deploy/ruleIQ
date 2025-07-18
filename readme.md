@@ -114,6 +114,10 @@ To stop all services:
    # Install dependencies
    pip install -r requirements.txt
 
+   # Configure environment
+   cp env.template .env.local
+   # Edit .env.local with your database credentials
+
    # Setup database
    python scripts/init_db.py
 

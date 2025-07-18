@@ -2,7 +2,6 @@ from fastapi import UploadFile, File, HTTPException, status
 from typing import List, Optional, Dict, Tuple
 import os
 import hashlib
-import magic
 import re
 import mimetypes
 import time
@@ -13,8 +12,17 @@ from enum import Enum
 from config.settings import get_settings
 from config.logging_config import get_logger
 
+# Get logger first
 settings = get_settings()
 logger = get_logger(__name__)
+
+# Try to import magic, but provide fallback if not available
+try:
+    import magic
+    MAGIC_AVAILABLE = True
+except ImportError:
+    MAGIC_AVAILABLE = False
+    logger.warning("python-magic not available. Using fallback MIME type detection.")
 
 class ValidationResult(Enum):
     """Validation result status."""
@@ -81,6 +89,59 @@ MALWARE_BYTE_PATTERNS = [
     b"exec(",
 ]
 
+
+def detect_mime_type_fallback(file_content: bytes, filename: str = "") -> str:
+    """
+    Fallback MIME type detection when python-magic is not available.
+    Uses file signatures and file extensions for detection.
+    """
+    if not file_content:
+        return "application/octet-stream"
+    
+    # Check against known file signatures
+    for mime_type, signatures in FILE_SIGNATURES.items():
+        if signatures is not None:
+            for signature in signatures:
+                if file_content.startswith(signature):
+                    return mime_type
+    
+    # Fallback to filename extension using mimetypes module
+    if filename:
+        guessed_type, _ = mimetypes.guess_type(filename)
+        if guessed_type:
+            return guessed_type
+    
+    # Try to detect text files
+    try:
+        file_content.decode('utf-8')
+        # Check for common text formats
+        if filename.lower().endswith('.csv'):
+            return "text/csv"
+        elif filename.lower().endswith('.json'):
+            return "application/json"
+        elif filename.lower().endswith('.xml'):
+            return "application/xml"
+        return "text/plain"
+    except UnicodeDecodeError:
+        pass
+    
+    # Default to octet-stream
+    return "application/octet-stream"
+
+
+def get_file_mime_type(file_content: bytes, filename: str = "") -> str:
+    """
+    Get MIME type using python-magic if available, otherwise use fallback detection.
+    """
+    if MAGIC_AVAILABLE:
+        try:
+            return magic.from_buffer(file_content, mime=True)
+        except Exception as e:
+            logger.warning(f"Magic detection failed: {e}, using fallback")
+            return detect_mime_type_fallback(file_content, filename)
+    else:
+        return detect_mime_type_fallback(file_content, filename)
+
 # File size limits by type (bytes)
 TYPE_SIZE_LIMITS = {
     "image/jpeg": 10 * 1024 * 1024,  # 10MB
@@ -120,7 +181,7 @@ def validate_file_content(file_content: bytes, content_type: str) -> bool:
     
     # Use python-magic for deep content inspection
     try:
-        detected_type = magic.from_buffer(file_content, mime=True)
+        detected_type = get_file_mime_type(file_content, filename)
         # Allow some flexibility for related types
         if content_type.startswith("text/") and detected_type.startswith("text/"):
             return True
@@ -179,7 +240,7 @@ def analyze_file_comprehensively(file_content: bytes, filename: str, content_typ
     # Basic file info
     file_size = len(file_content)
     file_hash = calculate_file_hash(file_content)
-    detected_type = magic.from_buffer(file_content, mime=True) if file_content else "unknown"
+    detected_type = get_file_mime_type(file_content, filename) if file_content else "unknown"
     safe_filename = sanitize_filename(filename)
     
     # Layer 1: File size validation by type

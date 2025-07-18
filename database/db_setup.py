@@ -10,6 +10,7 @@ from typing import AsyncGenerator, Dict, Any
 from contextlib import contextmanager
 from typing import Generator
 
+from dotenv import load_dotenv
 from sqlalchemy import create_engine, text, MetaData, Engine
 from sqlalchemy.ext.asyncio import (
     AsyncSession,
@@ -18,6 +19,11 @@ from sqlalchemy.ext.asyncio import (
     AsyncEngine
 )
 from sqlalchemy.orm import declarative_base, sessionmaker, Session
+
+# Load environment variables
+# Priority order: .env.local (dev) > .env (production) > system environment
+load_dotenv(".env.local", override=True)  # Local development takes precedence
+load_dotenv(".env", override=False)  # Production config as fallback
 
 # Configure logging
 logger = logging.getLogger(__name__)
@@ -48,16 +54,49 @@ class DatabaseConfig:
     """Database configuration class for managing connection settings."""
     
     @staticmethod
+    def validate_environment() -> None:
+        """Validate that required environment variables are set."""
+        required_vars = ["DATABASE_URL"]
+        missing_vars = []
+        
+        for var in required_vars:
+            if not os.getenv(var):
+                missing_vars.append(var)
+        
+        if missing_vars:
+            error_msg = (
+                f"Missing required environment variables: {', '.join(missing_vars)}\n"
+                f"Please copy env.template to .env.local and configure the variables."
+            )
+            logger.error(error_msg)
+            raise OSError(error_msg)
+        
+        # Log configuration source
+        if os.path.exists(".env.local"):
+            logger.info("Loaded configuration from .env.local")
+        elif os.path.exists(".env"):
+            logger.info("Loaded configuration from .env")
+        else:
+            logger.info("Using system environment variables")
+    
+    @staticmethod
     def get_database_urls() -> tuple[str, str, str]:
         """
         Retrieves and processes DATABASE_URL from environment variables.
         Returns tuple of (original_url, sync_url, async_url)
         """
+        # Validate environment first
+        DatabaseConfig.validate_environment()
+        
         db_url = os.getenv("DATABASE_URL")
         if not db_url:
             error_msg = "DATABASE_URL environment variable not set. Please set it in your .env file or environment."
             logger.error(error_msg)
             raise OSError(error_msg)
+
+        # Log database connection info (without password)
+        safe_url = db_url.split('@')[1] if '@' in db_url else db_url
+        logger.info(f"Connecting to database: {safe_url}")
 
         # Derive SYNC_DATABASE_URL
         sync_db_url = db_url
@@ -92,14 +131,18 @@ class DatabaseConfig:
     @staticmethod
     def get_engine_kwargs(is_async: bool = False) -> Dict[str, Any]:
         """Get optimized engine configuration based on sync/async mode."""
-        base_kwargs = {
-            "echo": os.getenv("SQLALCHEMY_ECHO", "False").lower() == "true",
-            "pool_size": int(os.getenv("DB_POOL_SIZE", "10")),
-            "max_overflow": int(os.getenv("DB_MAX_OVERFLOW", "20")),
-            "pool_pre_ping": True,
-            "pool_recycle": int(os.getenv("DB_POOL_RECYCLE", "1800")),
-            "pool_timeout": int(os.getenv("DB_POOL_TIMEOUT", "30")),
-        }
+        try:
+            base_kwargs = {
+                "echo": os.getenv("SQLALCHEMY_ECHO", "false").lower() == "true",
+                "pool_size": int(os.getenv("DB_POOL_SIZE", "10")),
+                "max_overflow": int(os.getenv("DB_MAX_OVERFLOW", "20")),
+                "pool_pre_ping": True,
+                "pool_recycle": int(os.getenv("DB_POOL_RECYCLE", "1800")),
+                "pool_timeout": int(os.getenv("DB_POOL_TIMEOUT", "30")),
+            }
+        except ValueError as e:
+            logger.error(f"Invalid database configuration value: {e}")
+            raise ValueError(f"Invalid database configuration: {e}")
 
         if is_async:
             async_kwargs = {

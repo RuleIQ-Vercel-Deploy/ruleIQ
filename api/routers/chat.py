@@ -36,7 +36,7 @@ from services.ai import ComplianceAssistant
 # Set up logging
 logger = logging.getLogger(__name__)
 
-router = APIRouter(prefix="/chat", tags=["Chat Assistant"])
+router = APIRouter(tags=["Chat Assistant"])
 
 
 @router.post("/conversations", response_model=ConversationResponse)
