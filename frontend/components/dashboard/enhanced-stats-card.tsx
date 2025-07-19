@@ -29,12 +29,10 @@ export function EnhancedStatsCard({
   className,
 }: EnhancedStatsCardProps) {
   return (
-    <Card className={`hover:shadow-lg transition-all duration-300 ${className || ''}`}>
+    <Card className={`glass-card ${className || ''}`}>
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-        <CardTitle className="text-sm font-medium text-neutral-700">{title}</CardTitle>
-        <div className="rounded-lg bg-teal-50 p-2">
-          <Icon className="h-4 w-4 text-teal-600" />
-        </div>
+        <CardTitle className="text-sm font-medium text-text-primary">{title}</CardTitle>
+        <Icon className="h-4 w-4 text-brand-secondary" />
       </CardHeader>
       <CardContent>
         <MetricDisplay
@@ -50,13 +48,13 @@ export function EnhancedStatsCard({
               : undefined
           }
         />
-        <CardDescription className="mt-2 text-neutral-600">{description}</CardDescription>
+        <CardDescription className="mt-2 text-text-secondary">{description}</CardDescription>
         {chartData && (
           <div className="mt-4">
             <MiniChart
               data={chartData}
               type={chartType}
-              color={trend?.isPositive ? "#2C7A7B" : "#DC2626"}
+              color={trend?.isPositive ? "#10B981" : "#F59E0B"}
               height={32}
             />
           </div>

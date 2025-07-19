@@ -19,114 +19,80 @@ const config = {
     },
     extend: {
       colors: {
-        // New Light Theme with Teal Primary
-        teal: {
-          50: '#E6FFFA',
-          100: '#B2F5EA',
-          200: '#81E6D9',
-          300: '#4FD1C5',
-          400: '#38B2AC',
-          500: '#319795',
-          600: '#2C7A7B',
-          700: '#285E61',
-          800: '#234E52',
-          900: '#1D4044',
-          950: '#0A3433',
+        // Modern ruleIQ Brand Colors - Premium Dark Theme
+        brand: {
+          primary: '#7C3AED', // Vibrant purple - main brand color
+          secondary: '#06B6D4', // Cyan - secondary accent
+          tertiary: '#10B981', // Emerald - success/positive states
+          dark: '#5B21B6', // Darker purple for hover states
+          light: '#A78BFA', // Lighter purple for backgrounds
         },
 
-        // Neutral colors (Light mode optimized)
+        // Gradient colors for modern effects
+        gradient: {
+          from: '#7C3AED', // Purple
+          via: '#06B6D4', // Cyan
+          to: '#10B981', // Emerald
+          'from-dark': '#5B21B6', // Dark purple
+          'via-dark': '#0891B2', // Dark cyan
+          'to-dark': '#059669', // Dark emerald
+        },
+
+        // Surface colors (Dark Mode First)
+        surface: {
+          base: '#0A0A0B', // Near black base
+          primary: '#111113', // Primary surface
+          secondary: '#18181B', // Secondary surface
+          tertiary: '#27272A', // Tertiary surface
+          elevated: '#2D2D30', // Elevated components
+          overlay: 'rgba(0,0,0,0.8)', // Modal overlays
+        },
+
+        // Neutral colors (Modern grayscale)
         neutral: {
-          50: '#F9FAFB',
-          100: '#F3F4F6',
-          200: '#E5E7EB',
-          300: '#D1D5DB',
-          400: '#9CA3AF',
-          500: '#6B7280',
-          600: '#4B5563',
-          700: '#374151',
-          800: '#1F2937',
-          900: '#111827',
-          950: '#030712',
+          50: '#FAFAFA',
+          100: '#F4F4F5',
+          200: '#E4E4E7',
+          300: '#D4D4D8',
+          400: '#A1A1AA',
+          500: '#71717A',
+          600: '#52525B',
+          700: '#3F3F46',
+          800: '#27272A',
+          900: '#18181B',
+          950: '#0A0A0B',
+        },
+
+        // Text colors (Optimized for dark surfaces)
+        text: {
+          primary: '#FAFAFA', // High contrast white
+          secondary: '#A1A1AA', // Muted gray
+          tertiary: '#71717A', // Even more muted
+          inverse: '#0A0A0B', // For light backgrounds
+          brand: '#A78BFA', // Brand purple text
+          accent: '#67E8F9', // Cyan accent text
         },
 
         // Semantic colors
-        success: {
-          50: '#F0FDF4',
-          100: '#DCFCE7',
-          200: '#BBF7D0',
-          300: '#86EFAC',
-          400: '#4ADE80',
-          500: '#10B981',
-          600: '#059669',
-          700: '#047857',
-          800: '#065F46',
-          900: '#064E3B',
-        },
-        warning: {
-          50: '#FFFBEB',
-          100: '#FEF3C7',
-          200: '#FDE68A',
-          300: '#FCD34D',
-          400: '#FBBF24',
-          500: '#F59E0B',
-          600: '#D97706',
-          700: '#B45309',
-          800: '#92400E',
-          900: '#78350F',
-        },
-        error: {
-          50: '#FEF2F2',
-          100: '#FEE2E2',
-          200: '#FECACA',
-          300: '#FCA5A5',
-          400: '#F87171',
-          500: '#EF4444',
-          600: '#DC2626',
-          700: '#B91C1C',
-          800: '#991B1B',
-          900: '#7F1D1D',
-        },
-        info: {
-          50: '#EFF6FF',
-          100: '#DBEAFE',
-          200: '#BFDBFE',
-          300: '#93C5FD',
-          400: '#60A5FA',
-          500: '#3B82F6',
-          600: '#2563EB',
-          700: '#1D4ED8',
-          800: '#1E40AF',
-          900: '#1E3A8A',
+        success: '#10B981',
+        warning: '#F59E0B',
+        error: '#EF4444',
+        info: '#06B6D4',
+
+        // Glass morphism effects
+        glass: {
+          white: 'rgba(255, 255, 255, 0.05)',
+          'white-hover': 'rgba(255, 255, 255, 0.08)',
+          border: 'rgba(255, 255, 255, 0.1)',
+          'border-hover': 'rgba(255, 255, 255, 0.2)',
         },
 
-        // Brand colors mapped to CSS variables
-        brand: {
-          primary: 'var(--primary)',
-          secondary: 'var(--secondary)',
-          accent: 'var(--accent)',
-          light: 'var(--primary-light)',
-          dark: 'var(--primary-dark)',
-        },
-
-        // Surface colors (Light Mode First)
-        surface: {
-          base: '#FFFFFF',
-          primary: '#FFFFFF',
-          secondary: 'var(--neutral-50)',
-          tertiary: 'var(--neutral-100)',
-          elevated: '#FFFFFF',
-          overlay: 'rgba(0,0,0,0.5)',
-        },
-
-        // Text colors (Optimized for light surfaces)
-        text: {
-          primary: 'var(--neutral-900)',
-          secondary: 'var(--neutral-600)',
-          muted: 'var(--neutral-500)',
-          inverse: '#FFFFFF',
-          brand: 'var(--teal-600)',
-          accent: 'var(--teal-700)',
-        },
+        // Legacy color mappings (for gradual migration)
+        navy: '#7C3AED', // Map to brand primary
+        gold: '#F59E0B', // Map to warning
+        'gold-dark': '#D97706', // Darker gold for hover states
+        turquoise: '#06B6D4', // Map to brand secondary
+        midnight: '#0A0A0B', // Map to surface base
 
         // shadcn/ui CSS variables (keep for compatibility)
         border: 'hsl(var(--border))',
@@ -279,7 +245,7 @@ const config = {
       },
     },
   },
-  plugins: [require('tailwindcss-animate'), require('@tailwindcss/typography')],
+  plugins: [require('tailwindcss-animate')],
 } satisfies Config;
 
 export default config;
