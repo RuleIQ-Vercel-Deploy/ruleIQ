@@ -24,13 +24,12 @@ export function DocumentOutline({ editor }: DocumentOutlineProps) {
     if (!editor) return
 
     const updateOutline = () => {
-      const nodes: OutlineNode[] = []
       const headings: { level: number; text: string; id: string }[] = []
 
       editor.state.doc.forEach((node, offset) => {
         if (node.type.name.startsWith("heading")) {
           headings.push({
-            level: node.attrs.level,
+            level: node.attrs['level'],
             text: node.textContent,
             id: `heading-${offset}`,
           })
@@ -42,18 +41,23 @@ export function DocumentOutline({ editor }: DocumentOutlineProps) {
         let i = 0
         while (i < items.length) {
           const item = items[i]
-          if (item.level === level) {
+          if (item && item.level === level) {
             const children: OutlineNode[] = []
             const nextItems = []
             i++
-            while (i < items.length && items[i].level > level) {
-              nextItems.push(items[i])
+            while (i < items.length && items[i] && items[i]!.level > level) {
+              nextItems.push(items[i]!)
               i++
             }
             if (nextItems.length > 0) {
               children.push(...buildTree(nextItems, level + 1))
             }
-            tree.push({ ...item, children })
+            tree.push({ 
+              id: item.id, 
+              level: item.level, 
+              text: item.text, 
+              children 
+            })
           } else {
             i++
           }

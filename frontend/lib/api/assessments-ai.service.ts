@@ -9,7 +9,7 @@ import type {
   Question,
   AssessmentProgress
 } from '@/lib/assessment-engine/types';
-import type { BusinessProfile } from '@/types/auth';
+import type { BusinessProfile } from '@/types/api';
 
 // AI Request/Response Interfaces
 export interface AIHelpRequest {
@@ -199,25 +199,42 @@ const mockAIResponses = {
     gaps: [
       {
         id: "gap_1",
-        questionId: "q3",
-        section: "Data Protection",
-        severity: "high" as const,
+        title: "Data Retention Policy Gap",
         description: "Informal retention practices instead of documented policies",
-        impact: "Potential GDPR violation for excessive data retention",
-        currentState: "Informal retention practices",
-        targetState: "Documented retention policies with defined periods"
+        severity: "high" as const,
+        category: "Data Protection",
+        framework_reference: "GDPR Article 5",
+        current_state: "Informal retention practices",
+        target_state: "Documented retention policies with defined periods",
+        impact_description: "Potential GDPR violation for excessive data retention",
+        business_impact_score: 0.8,
+        technical_complexity: 0.6,
+        regulatory_requirement: true,
+        estimated_effort: "medium" as const,
+        dependencies: ["Legal review", "Policy documentation"],
+        affected_systems: ["CRM", "Database"],
+        stakeholders: ["DPO", "Legal Team", "IT Department"]
       }
     ],
     recommendations: [
       {
         id: "ai_rec_1",
-        gapId: "gap_1",
-        priority: "immediate" as const,
         title: "Implement Comprehensive Data Retention Policy",
         description: "Create and document formal data retention policies with specific timeframes for different data categories, automated deletion processes, and regular compliance reviews.",
-        estimatedEffort: "3-4 weeks",
-        resources: ["Data Protection Officer", "Legal Team", "IT Department", "Compliance Manager"],
-        relatedFrameworks: ["GDPR", "ISO 27001"]
+        priority: "immediate" as const,
+        category: "Data Protection",
+        framework_references: ["GDPR", "ISO 27001"],
+        addresses_gaps: ["gap_1"],
+        effort_estimate: "medium" as const,
+        implementation_timeline: "3-4 weeks",
+        impact_score: 0.85,
+        cost_estimate: "Low",
+        resource_requirements: ["Data Protection Officer", "Legal Team", "IT Department", "Compliance Manager"],
+        success_criteria: ["Documented retention policy", "Automated deletion systems", "Legal approval"],
+        potential_challenges: ["Legal complexity", "System integration"],
+        mitigation_strategies: ["Early legal consultation", "Phased implementation"],
+        automation_potential: 0.7,
+        roi_estimate: "High"
       }
     ],
     risk_assessment: {
@@ -553,7 +570,7 @@ Can you provide guidance on how to answer this question correctly?`;
 
     // Extract compliance frameworks
     if (currentAnswers?.['compliance_frameworks']) {
-      context.compliance_frameworks = Array.isArray(currentAnswers['compliance_frameworks'])
+      context.planned_frameworks = Array.isArray(currentAnswers['compliance_frameworks'])
         ? currentAnswers['compliance_frameworks']
         : [currentAnswers['compliance_frameworks']];
     }

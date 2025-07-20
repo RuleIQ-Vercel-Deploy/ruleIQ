@@ -59,7 +59,15 @@ export function Toolbar({ editor }: ToolbarProps) {
           key={opt.name}
           size="sm"
           pressed={editor.isActive(opt.name.toLowerCase())}
-          onPressedChange={() => editor.chain().focus()[opt.command]().run()}
+          onPressedChange={() => {
+            switch (opt.command) {
+              case 'toggleBold': return editor.chain().focus().toggleBold().run()
+              case 'toggleItalic': return editor.chain().focus().toggleItalic().run()
+              case 'toggleUnderline': return editor.chain().focus().toggleUnderline().run()
+              case 'toggleStrike': return editor.chain().focus().toggleStrike().run()
+              default: return
+            }
+          }}
         >
           <opt.icon className="h-4 w-4" />
         </Toggle>
@@ -70,7 +78,7 @@ export function Toolbar({ editor }: ToolbarProps) {
           key={opt.name}
           size="sm"
           pressed={editor.isActive("heading", { level: opt.level })}
-          onPressedChange={() => editor.chain().focus().toggleHeading({ level: opt.level }).run()}
+          onPressedChange={() => editor.chain().focus().toggleHeading({ level: opt.level as 1 | 2 | 3 }).run()}
         >
           <opt.icon className="h-4 w-4" />
         </Toggle>
@@ -81,7 +89,13 @@ export function Toolbar({ editor }: ToolbarProps) {
           key={opt.name}
           size="sm"
           pressed={editor.isActive(opt.name.toLowerCase())}
-          onPressedChange={() => editor.chain().focus()[opt.command]().run()}
+          onPressedChange={() => {
+            switch (opt.command) {
+              case 'toggleBulletList': return editor.chain().focus().toggleBulletList().run()
+              case 'toggleOrderedList': return editor.chain().focus().toggleOrderedList().run()
+              default: return
+            }
+          }}
         >
           <opt.icon className="h-4 w-4" />
         </Toggle>

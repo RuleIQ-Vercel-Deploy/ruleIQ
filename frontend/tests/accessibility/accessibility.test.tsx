@@ -2,7 +2,7 @@ import { axe, toHaveNoViolations } from 'jest-axe';
 import { describe, it, expect } from 'vitest';
 
 import { AssessmentWizard } from '@/components/assessments/AssessmentWizard';
-import { LoginForm } from '@/components/auth/login-form';
+import { LoginForm } from '@/components/login-form-demo';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';

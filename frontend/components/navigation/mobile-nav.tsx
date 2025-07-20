@@ -75,7 +75,7 @@ export function MobileNav({ open, onOpenChange }: MobileNavProps) {
         </SheetHeader>
         <div className="flex flex-col space-y-2 p-6">
           {navigationItems.map((item) => {
-            const isActive = pathname === item.href || (item.href !== "/" && pathname.startsWith(item.href))
+            const isActive = pathname === item.href || (item.href !== "/" && pathname?.startsWith(item.href))
             return (
               <Link
                 key={item.href}

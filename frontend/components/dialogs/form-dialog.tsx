@@ -46,10 +46,10 @@ export function FormDialog({
         </DialogHeader>
         <div className="py-4">{children}</div>
         <DialogFooter>
-          <Button variant="secondary-ruleiq" size="medium" onClick={() => setOpen(false)}>
+          <Button variant="secondary" size="default" onClick={() => setOpen(false)}>
             {cancelText}
           </Button>
-          <Button type="submit" form={formId} variant="primary" size="medium" disabled={isLoading}>
+          <Button type="submit" form={formId} variant="default" size="default" disabled={isLoading}>
             {isLoading ? "Submitting..." : submitText}
           </Button>
         </DialogFooter>

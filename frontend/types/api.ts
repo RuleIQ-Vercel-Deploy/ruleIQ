@@ -12,6 +12,11 @@ export interface User {
   first_name?: string
   last_name?: string
   organization_id?: string
+  businessProfile?: {
+    id: string
+    company_name: string
+    industry: string
+  }
 }
 
 export interface AuthTokens {

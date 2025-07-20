@@ -16,15 +16,15 @@ export function ButtonExamples() {
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="flex flex-wrap items-center gap-3">
-            <Button variant="primary" size="medium">
+            <Button variant="default" size="default">
               <Plus className="h-4 w-4" />
               New Assessment
             </Button>
-            <Button variant="secondary-ruleiq" size="medium">
+            <Button variant="secondary" size="default">
               <Download className="h-4 w-4" />
               Export Report
             </Button>
-            <Button variant="ghost-ruleiq" size="medium">
+            <Button variant="ghost" size="default">
               <Settings className="h-4 w-4" />
               Settings
             </Button>
@@ -40,15 +40,15 @@ export function ButtonExamples() {
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="flex flex-wrap items-center gap-2">
-            <Button variant="ghost-ruleiq" size="small">
+            <Button variant="ghost" size="sm">
               <Eye className="h-3 w-3" />
               View
             </Button>
-            <Button variant="ghost-ruleiq" size="small">
+            <Button variant="ghost" size="sm">
               <Edit className="h-3 w-3" />
               Edit
             </Button>
-            <Button variant="error" size="small">
+            <Button variant="destructive" size="sm">
               <Trash2 className="h-3 w-3" />
               Delete
             </Button>
@@ -66,13 +66,13 @@ export function ButtonExamples() {
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="flex flex-wrap items-center gap-3">
-            <Button variant="primary" size="large">
+            <Button variant="default" size="lg">
               Save Changes
             </Button>
-            <Button variant="secondary-ruleiq" size="large">
+            <Button variant="secondary" size="lg">
               Cancel
             </Button>
-            <Button variant="ghost-ruleiq" size="large">
+            <Button variant="ghost" size="lg">
               Reset Form
             </Button>
           </div>
@@ -87,16 +87,16 @@ export function ButtonExamples() {
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="flex flex-wrap items-center gap-3">
-            <Button variant="success" size="medium">
+            <Button variant="success" size="default">
               Approve Assessment
             </Button>
-            <Button variant="warning" size="medium">
+            <Button variant="outline" size="default">
               Mark for Review
             </Button>
-            <Button variant="error" size="medium">
+            <Button variant="destructive" size="default">
               Reject Submission
             </Button>
-            <Button variant="accent" size="medium">
+            <Button variant="secondary" size="default">
               Feature Request
             </Button>
           </div>

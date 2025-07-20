@@ -137,7 +137,7 @@ export default function AssessmentPage() {
   const [loading, setLoading] = useState(true);
   const [framework, setFramework] = useState<AssessmentFramework | null>(null);
 
-  const assessmentId = params['id'] as string;
+  const assessmentId = params?.['id'] as string;
 
   useEffect(() => {
     loadAssessment();

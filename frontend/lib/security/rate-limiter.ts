@@ -1,4 +1,4 @@
-import { NextRequest } from 'next/server';
+import { type NextRequest } from 'next/server';
 
 /**
  * Simple in-memory rate limiting for Next.js middleware
@@ -49,7 +49,8 @@ export function getClientIp(request: NextRequest): string {
   
   if (forwarded) {
     // x-forwarded-for can contain multiple IPs, take the first one
-    return forwarded.split(',')[0].trim();
+    const firstIp = forwarded.split(',')[0];
+    return firstIp ? firstIp.trim() : 'unknown';
   }
   
   if (realIp) {
@@ -188,7 +189,7 @@ export const routeRateLimits: Record<string, (request: NextRequest) => RateLimit
  * Apply rate limiting based on route
  */
 export function applyRateLimit(request: NextRequest): RateLimitResult | null {
-  const pathname = request.nextUrl.pathname;
+  const {pathname} = request.nextUrl;
   
   // Check for specific route rate limits
   const rateLimiter = routeRateLimits[pathname];

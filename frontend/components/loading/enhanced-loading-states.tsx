@@ -4,7 +4,6 @@ import { motion } from 'framer-motion';
 
 import { 
   Skeleton,
-  CardSkeleton,
   TableRowSkeleton,
   StatCardSkeleton,
   AssessmentCardSkeleton,
@@ -208,14 +207,13 @@ export function ProgressLoader({ progress = 0 }: { progress?: number }) {
 export function DotsLoader({ className }: { className?: string }) {
   const dotVariants = {
     initial: { y: 0 },
-    animate: {
-      y: [-3, 3, -3],
-      transition: {
-        duration: 0.6,
-        repeat: Infinity,
-        ease: 'easeInOut',
-      },
-    },
+    animate: { y: [-3, 3, -3] },
+  };
+  
+  const transition = {
+    duration: 0.6,
+    repeat: Infinity,
+    ease: 'easeInOut' as const,
   };
 
   return (
@@ -227,7 +225,7 @@ export function DotsLoader({ className }: { className?: string }) {
           variants={dotVariants}
           initial="initial"
           animate="animate"
-          transition={{ delay }}
+          transition={{ ...transition, delay }}
         />
       ))}
     </div>

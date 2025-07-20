@@ -21,7 +21,7 @@ import {
   type AssessmentSection
 } from './types';
 
-import type { BusinessProfile } from '@/types/auth';
+import type { BusinessProfile } from '@/types/api';
 
 export class QuestionnaireEngine {
   private framework: AssessmentFramework;

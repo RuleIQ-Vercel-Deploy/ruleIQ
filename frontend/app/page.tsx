@@ -57,7 +57,7 @@ const HeroSection = () => {
             repeat: Infinity,
             ease: "linear"
           }}
-          className="absolute top-1/4 left-1/4 w-96 h-96 bg-brand-primary/20 rounded-full blur-3xl"
+          className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/20 rounded-full blur-3xl"
         />
         <motion.div
           animate={{
@@ -69,7 +69,7 @@ const HeroSection = () => {
             repeat: Infinity,
             ease: "linear"
           }}
-          className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-brand-secondary/20 rounded-full blur-3xl"
+          className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-secondary/20 rounded-full blur-3xl"
         />
       </div>
 
@@ -88,8 +88,8 @@ const HeroSection = () => {
           transition={{ duration: 0.5 }}
           className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-card mb-8"
         >
-          <Sparkles className="w-4 h-4 text-brand-secondary" />
-          <span className="text-sm font-medium text-text-primary">
+          <Sparkles className="w-4 h-4 text-primary" />
+          <span className="text-sm font-medium text-foreground">
             AI-Powered Compliance Automation
           </span>
         </motion.div>
@@ -103,7 +103,7 @@ const HeroSection = () => {
         >
           <span className="gradient-text">Transform</span>
           <br />
-          <span className="text-text-primary">Your Compliance</span>
+          <span className="text-foreground">Your Compliance</span>
         </motion.h1>
 
         {/* Subheading */}
@@ -111,7 +111,7 @@ const HeroSection = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.2 }}
-          className="text-xl md:text-2xl text-text-secondary max-w-3xl mx-auto mb-12"
+          className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto mb-12"
         >
           Automate compliance management with AI. Cut costs by 60%, reduce audit prep by 75%, 
           and achieve 99.9% accuracy across 50+ frameworks.
@@ -150,16 +150,16 @@ const HeroSection = () => {
           transition={{ duration: 0.5, delay: 0.4 }}
           className="flex flex-wrap gap-8 justify-center items-center"
         >
-          <div className="flex items-center gap-2 text-text-secondary">
-            <Shield className="w-5 h-5 text-brand-tertiary" />
+          <div className="flex items-center gap-2 text-muted-foreground">
+            <Shield className="w-5 h-5 text-primary" />
             <span className="text-sm">SOC 2 Certified</span>
           </div>
-          <div className="flex items-center gap-2 text-text-secondary">
-            <Lock className="w-5 h-5 text-brand-tertiary" />
+          <div className="flex items-center gap-2 text-muted-foreground">
+            <Lock className="w-5 h-5 text-primary" />
             <span className="text-sm">Bank-Grade Security</span>
           </div>
-          <div className="flex items-center gap-2 text-text-secondary">
-            <Globe className="w-5 h-5 text-brand-tertiary" />
+          <div className="flex items-center gap-2 text-muted-foreground">
+            <Globe className="w-5 h-5 text-primary" />
             <span className="text-sm">GDPR Compliant</span>
           </div>
         </motion.div>
@@ -201,11 +201,11 @@ const FeatureCard = ({ icon, title, description, delay = 0 }: FeatureCardProps) 
       viewport={{ once: true }}
       className="glass-card p-8 hover:border-brand-primary/50 transition-all duration-300 group"
     >
-      <div className="mb-4 p-3 rounded-lg bg-brand-primary/10 w-fit group-hover:bg-brand-primary/20 transition-colors">
+      <div className="mb-4 p-3 rounded-lg bg-primary/10 w-fit group-hover:bg-primary/20 transition-colors">
         {icon}
       </div>
-      <h3 className="text-xl font-semibold text-text-primary mb-3">{title}</h3>
-      <p className="text-text-secondary">{description}</p>
+      <h3 className="text-xl font-semibold text-foreground mb-3">{title}</h3>
+      <p className="text-muted-foreground">{description}</p>
     </motion.div>
   );
 };
@@ -235,7 +235,7 @@ const StatsSection = () => {
               <div className="text-5xl md:text-6xl font-bold gradient-text mb-2">
                 {stat.value}{stat.suffix}
               </div>
-              <div className="text-text-secondary">{stat.label}</div>
+              <div className="text-muted-foreground">{stat.label}</div>
             </motion.div>
           ))}
         </div>
@@ -258,14 +258,14 @@ const TestimonialCard = ({ quote, author, role, company, rating }: TestimonialPr
     <div className="glass-card p-8 h-full">
       <div className="flex gap-1 mb-4">
         {[...Array(rating)].map((_, i) => (
-          <Star key={i} className="w-5 h-5 fill-brand-secondary text-brand-secondary" />
+          <Star key={i} className="w-5 h-5 fill-primary text-primary" />
         ))}
       </div>
-      <p className="text-text-primary mb-6 text-lg italic">&ldquo;{quote}&rdquo;</p>
+      <p className="text-foreground mb-6 text-lg italic">&ldquo;{quote}&rdquo;</p>
       <div className="mt-auto">
-        <p className="font-semibold text-text-primary">{author}</p>
-        <p className="text-sm text-brand-secondary">{role}</p>
-        <p className="text-sm text-text-secondary">{company}</p>
+        <p className="font-semibold text-foreground">{author}</p>
+        <p className="text-sm text-primary">{role}</p>
+        <p className="text-sm text-muted-foreground">{company}</p>
       </div>
     </div>
   );
@@ -300,16 +300,16 @@ const PricingCard = ({ name, price, description, features, popular = false, onSe
       )}
       
       <div className="text-center mb-8">
-        <h3 className="text-2xl font-bold text-text-primary mb-2">{name}</h3>
+        <h3 className="text-2xl font-bold text-foreground mb-2">{name}</h3>
         <div className="text-4xl font-bold gradient-text mb-2">{price}</div>
-        <p className="text-text-secondary">{description}</p>
+        <p className="text-muted-foreground">{description}</p>
       </div>
 
       <ul className="space-y-3 mb-8">
         {features.map((feature, i) => (
           <li key={i} className="flex items-start gap-3">
-            <CheckCircle className="w-5 h-5 text-brand-tertiary flex-shrink-0 mt-0.5" />
-            <span className="text-text-secondary text-sm">{feature}</span>
+            <CheckCircle className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
+            <span className="text-muted-foreground text-sm">{feature}</span>
           </li>
         ))}
       </ul>
@@ -357,13 +357,13 @@ export default function HomePage() {
           </Link>
           
           <nav className="hidden md:flex items-center gap-8">
-            <Link href="#features" className="text-text-secondary hover:text-text-primary transition-colors">
+            <Link href="#features" className="text-muted-foreground hover:text-foreground transition-colors">
               Features
             </Link>
-            <Link href="#pricing" className="text-text-secondary hover:text-text-primary transition-colors">
+            <Link href="#pricing" className="text-muted-foreground hover:text-foreground transition-colors">
               Pricing
             </Link>
-            <Link href="#testimonials" className="text-text-secondary hover:text-text-primary transition-colors">
+            <Link href="#testimonials" className="text-muted-foreground hover:text-foreground transition-colors">
               Testimonials
             </Link>
           </nav>
@@ -371,7 +371,7 @@ export default function HomePage() {
           <div className="flex items-center gap-4">
             <Button
               variant="ghost"
-              className="text-text-secondary hover:text-text-primary"
+              className="text-muted-foreground hover:text-foreground"
               onClick={() => router.push("/login")}
             >
               Sign In
@@ -405,44 +405,44 @@ export default function HomePage() {
             <h2 className="text-4xl md:text-5xl font-bold mb-4">
               <span className="gradient-text">Powerful Features</span>
             </h2>
-            <p className="text-xl text-text-secondary max-w-3xl mx-auto">
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
               Everything you need to automate compliance and reduce risk
             </p>
           </motion.div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             <FeatureCard
-              icon={<Zap className="w-8 h-8 text-brand-secondary" />}
+              icon={<Zap className="w-8 h-8 text-primary" />}
               title="AI-Powered Analysis"
               description="Intelligent gap analysis and automated evidence collection powered by advanced AI"
               delay={0}
             />
             <FeatureCard
-              icon={<Shield className="w-8 h-8 text-brand-secondary" />}
+              icon={<Shield className="w-8 h-8 text-primary" />}
               title="Real-Time Monitoring"
               description="Continuous compliance tracking with instant alerts for any deviations"
               delay={0.1}
             />
             <FeatureCard
-              icon={<BarChart3 className="w-8 h-8 text-brand-secondary" />}
+              icon={<BarChart3 className="w-8 h-8 text-primary" />}
               title="Smart Reporting"
               description="Generate comprehensive compliance reports with a single click"
               delay={0.2}
             />
             <FeatureCard
-              icon={<Users className="w-8 h-8 text-brand-secondary" />}
+              icon={<Users className="w-8 h-8 text-primary" />}
               title="Team Collaboration"
               description="Streamline workflows and enable seamless team coordination"
               delay={0.3}
             />
             <FeatureCard
-              icon={<FileCheck className="w-8 h-8 text-brand-secondary" />}
+              icon={<FileCheck className="w-8 h-8 text-primary" />}
               title="Policy Automation"
               description="Auto-generate and maintain policies aligned with your frameworks"
               delay={0.4}
             />
             <FeatureCard
-              icon={<TrendingUp className="w-8 h-8 text-brand-secondary" />}
+              icon={<TrendingUp className="w-8 h-8 text-primary" />}
               title="Risk Assessment"
               description="Proactive risk identification and mitigation recommendations"
               delay={0.5}
@@ -464,7 +464,7 @@ export default function HomePage() {
             <h2 className="text-4xl md:text-5xl font-bold mb-4">
               <span className="gradient-text">Loved by Teams</span>
             </h2>
-            <p className="text-xl text-text-secondary max-w-3xl mx-auto">
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
               See what compliance professionals are saying about ruleIQ
             </p>
           </motion.div>
@@ -508,7 +508,7 @@ export default function HomePage() {
             <h2 className="text-4xl md:text-5xl font-bold mb-4">
               <span className="gradient-text">Simple Pricing</span>
             </h2>
-            <p className="text-xl text-text-secondary max-w-3xl mx-auto">
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
               Choose the plan that fits your compliance needs
             </p>
           </motion.div>
@@ -580,7 +580,7 @@ export default function HomePage() {
             </p>
             <Button
               size="lg"
-              className="bg-white text-brand-primary hover:bg-neutral-100 px-8 py-6 text-lg font-semibold"
+              className="bg-white text-primary hover:bg-neutral-100 px-8 py-6 text-lg font-semibold"
               onClick={() => router.push("/signup")}
             >
               Start Your Free Trial
@@ -596,40 +596,40 @@ export default function HomePage() {
           <div className="grid md:grid-cols-4 gap-8 mb-8">
             <div>
               <h3 className="text-2xl font-bold gradient-text mb-4">ruleIQ</h3>
-              <p className="text-text-secondary">
+              <p className="text-muted-foreground">
                 AI-powered compliance automation for modern businesses
               </p>
             </div>
             
             <div>
-              <h4 className="font-semibold text-text-primary mb-4">Product</h4>
-              <ul className="space-y-2 text-text-secondary">
-                <li><Link href="/features" className="hover:text-text-primary transition-colors">Features</Link></li>
-                <li><Link href="/pricing" className="hover:text-text-primary transition-colors">Pricing</Link></li>
-                <li><Link href="/integrations" className="hover:text-text-primary transition-colors">Integrations</Link></li>
+              <h4 className="font-semibold text-foreground mb-4">Product</h4>
+              <ul className="space-y-2 text-muted-foreground">
+                <li><Link href="/features" className="hover:text-foreground transition-colors">Features</Link></li>
+                <li><Link href="/pricing" className="hover:text-foreground transition-colors">Pricing</Link></li>
+                <li><Link href="/integrations" className="hover:text-foreground transition-colors">Integrations</Link></li>
               </ul>
             </div>
             
             <div>
-              <h4 className="font-semibold text-text-primary mb-4">Company</h4>
-              <ul className="space-y-2 text-text-secondary">
-                <li><Link href="/about" className="hover:text-text-primary transition-colors">About</Link></li>
-                <li><Link href="/blog" className="hover:text-text-primary transition-colors">Blog</Link></li>
-                <li><Link href="/careers" className="hover:text-text-primary transition-colors">Careers</Link></li>
+              <h4 className="font-semibold text-foreground mb-4">Company</h4>
+              <ul className="space-y-2 text-muted-foreground">
+                <li><Link href="/about" className="hover:text-foreground transition-colors">About</Link></li>
+                <li><Link href="/blog" className="hover:text-foreground transition-colors">Blog</Link></li>
+                <li><Link href="/careers" className="hover:text-foreground transition-colors">Careers</Link></li>
               </ul>
             </div>
             
             <div>
-              <h4 className="font-semibold text-text-primary mb-4">Support</h4>
-              <ul className="space-y-2 text-text-secondary">
-                <li><Link href="/help" className="hover:text-text-primary transition-colors">Help Center</Link></li>
-                <li><Link href="/contact" className="hover:text-text-primary transition-colors">Contact</Link></li>
-                <li><Link href="/status" className="hover:text-text-primary transition-colors">Status</Link></li>
+              <h4 className="font-semibold text-foreground mb-4">Support</h4>
+              <ul className="space-y-2 text-muted-foreground">
+                <li><Link href="/help" className="hover:text-foreground transition-colors">Help Center</Link></li>
+                <li><Link href="/contact" className="hover:text-foreground transition-colors">Contact</Link></li>
+                <li><Link href="/status" className="hover:text-foreground transition-colors">Status</Link></li>
               </ul>
             </div>
           </div>
           
-          <div className="border-t border-glass-border pt-8 text-center text-text-secondary">
+          <div className="border-t border-glass-border pt-8 text-center text-muted-foreground">
             <p>&copy; 2025 ruleIQ. All rights reserved.</p>
           </div>
         </div>

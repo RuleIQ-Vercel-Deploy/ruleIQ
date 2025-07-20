@@ -24,7 +24,7 @@ export function InviteMemberDialog() {
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button variant="accent">
+        <Button variant="secondary">
           <PlusCircle />
           Invite Team Member
         </Button>
@@ -65,10 +65,10 @@ export function InviteMemberDialog() {
           </div>
         </div>
         <DialogFooter>
-          <Button variant="ghost-ruleiq" onClick={() => setIsOpen(false)}>
+          <Button variant="ghost" onClick={() => setIsOpen(false)}>
             Cancel
           </Button>
-          <Button variant="primary" type="submit">
+          <Button variant="default" type="submit">
             Send Invitation
           </Button>
         </DialogFooter>

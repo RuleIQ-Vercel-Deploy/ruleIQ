@@ -14,6 +14,11 @@ export interface AuthUser extends User {
   companyId?: string
   lastLogin?: string
   emailVerified?: boolean
+  businessProfile?: {
+    id: string
+    company_name: string
+    industry: string
+  }
 }
 
 // Login form data interface
@@ -86,7 +91,7 @@ export const useAuthStore = create<AuthState>()(
     persist(
       (set, get) => ({
         // State initialization
-        user: process.env.NODE_ENV === 'development' && process.env.NEXT_PUBLIC_ENABLE_MOCK_DATA === 'true' ? {
+        user: process.env.NODE_ENV === 'development' && process.env['NEXT_PUBLIC_ENABLE_MOCK_DATA'] === 'true' ? {
           id: 'demo-user',
           email: 'demo@ruleiq.com',
           created_at: new Date().toISOString(),
@@ -100,10 +105,10 @@ export const useAuthStore = create<AuthState>()(
           permissions: ['read', 'write', 'admin']
         } : null,
         tokens: {
-          access: process.env.NODE_ENV === 'development' && process.env.NEXT_PUBLIC_ENABLE_MOCK_DATA === 'true' ? 'demo-token' : null,
-          refresh: process.env.NODE_ENV === 'development' && process.env.NEXT_PUBLIC_ENABLE_MOCK_DATA === 'true' ? 'demo-refresh' : null,
+          access: process.env.NODE_ENV === 'development' && process.env['NEXT_PUBLIC_ENABLE_MOCK_DATA'] === 'true' ? 'demo-token' : null,
+          refresh: process.env.NODE_ENV === 'development' && process.env['NEXT_PUBLIC_ENABLE_MOCK_DATA'] === 'true' ? 'demo-refresh' : null,
         },
-        isAuthenticated: process.env.NODE_ENV === 'development' && process.env.NEXT_PUBLIC_ENABLE_MOCK_DATA === 'true',
+        isAuthenticated: process.env.NODE_ENV === 'development' && process.env['NEXT_PUBLIC_ENABLE_MOCK_DATA'] === 'true',
         isLoading: false,
         error: null,
         sessionExpiry: null,

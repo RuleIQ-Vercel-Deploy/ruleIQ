@@ -32,10 +32,10 @@ export function DataTableToolbar<TData>({ table }: DataTableToolbarProps<TData>)
           />
         </div>
         {table.getColumn("framework") && (
-          <DataTableFacetedFilter column={table.getColumn("framework")} title="Framework" options={frameworks} />
+          <DataTableFacetedFilter column={table.getColumn("framework")!} title="Framework" options={frameworks} />
         )}
         {table.getColumn("status") && (
-          <DataTableFacetedFilter column={table.getColumn("status")} title="Status" options={statuses} />
+          <DataTableFacetedFilter column={table.getColumn("status")!} title="Status" options={statuses} />
         )}
         {isFiltered && (
           <Button

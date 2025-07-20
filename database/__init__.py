@@ -16,6 +16,8 @@ from .db_setup import (
     get_async_db,
     get_db_context,
     DatabaseConfig,
+    _ASYNC_SESSION_LOCAL as _AsyncSessionLocal,
+    _SESSION_LOCAL,
 )
 
 # Import all models to ensure they're registered with SQLAlchemy
@@ -54,6 +56,9 @@ __all__ = [
     "get_async_db",
     "get_db_context",
     "DatabaseConfig",
+    # Legacy exports for backward compatibility
+    "_AsyncSessionLocal",
+    "_SESSION_LOCAL",
     # Models
     "User",
     "BusinessProfile",

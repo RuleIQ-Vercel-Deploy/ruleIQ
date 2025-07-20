@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
 
 /**
  * Sentry tunnel route to bypass ad blockers and provide better error tracking
@@ -8,7 +8,7 @@ export async function POST(request: NextRequest) {
   try {
     const envelope = await request.text();
     const pieces = envelope.split('\n');
-    const header = JSON.parse(pieces[0]);
+    const header = JSON.parse(pieces[0] || '{}');
     
     // Extract the DSN from the header
     const dsn = header?.dsn;
@@ -17,7 +17,7 @@ export async function POST(request: NextRequest) {
     }
     
     // Validate that this is a legitimate Sentry DSN for our project
-    const expectedHost = process.env.NEXT_PUBLIC_SENTRY_DSN?.match(/https:\/\/(.+?)@(.+?)\//);
+    const expectedHost = process.env['NEXT_PUBLIC_SENTRY_DSN']?.match(/https:\/\/(.+?)@(.+?)\//);
     const dsnHost = dsn.match(/https:\/\/(.+?)@(.+?)\//);
     
     if (!expectedHost || !dsnHost || dsnHost[2] !== expectedHost[2]) {

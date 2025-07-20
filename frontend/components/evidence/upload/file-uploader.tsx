@@ -109,10 +109,10 @@ export function FileUploader() {
             ))}
           </div>
           <div className="flex justify-end items-center gap-4 pt-4 border-t border-gold/20">
-            <Button variant="ghost-ruleiq" onClick={handleClearAll}>
+            <Button variant="ghost" onClick={handleClearAll}>
               <X className="mr-2" /> Clear All
             </Button>
-            <Button variant="accent" size="medium" onClick={handleUploadAll}>
+            <Button variant="secondary" size="default" onClick={handleUploadAll}>
               <FileUp className="mr-2" /> Upload All ({files.length})
             </Button>
           </div>

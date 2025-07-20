@@ -57,10 +57,10 @@ export function PendingTasksWidget({
             <CheckCircle2 className="h-5 w-5" />
             Pending Tasks
           </CardTitle>
-          <CardDescription className="text-text-secondary">Error loading tasks</CardDescription>
+          <CardDescription className="text-muted-foreground">Error loading tasks</CardDescription>
         </CardHeader>
         <CardContent className="text-center py-8">
-          <p className="text-sm text-text-secondary mb-4">{error}</p>
+          <p className="text-sm text-muted-foreground mb-4">{error}</p>
           {onRefresh && (
             <Button onClick={onRefresh} size="sm" variant="outline" className="border-glass-border hover:border-glass-border-hover hover:bg-glass-white">
               <RefreshCw className="h-4 w-4 mr-2" />
@@ -94,16 +94,16 @@ export function PendingTasksWidget({
       case 'high':
         return <Badge className="bg-warning/20 text-warning border-warning/30 hover:bg-warning/30">High</Badge>
       case 'medium':
-        return <Badge className="bg-brand-secondary/20 text-brand-secondary border-brand-secondary/30 hover:bg-brand-secondary/30">Medium</Badge>
+        return <Badge className="bg-primary/20 text-primary border-primary/30 hover:bg-primary/30">Medium</Badge>
       case 'low':
-        return <Badge className="bg-surface-secondary text-text-tertiary border-glass-border hover:bg-surface-tertiary">Low</Badge>
+        return <Badge className="bg-secondary text-muted-foreground border-border hover:bg-secondary/80">Low</Badge>
       default:
-        return <Badge className="bg-surface-secondary text-text-tertiary">Unknown</Badge>
+        return <Badge className="bg-secondary text-muted-foreground">Unknown</Badge>
     }
   }
 
   const getDueDateStatus = (dueDate: string | null | undefined) => {
-    if (!dueDate) return { status: 'none', text: 'No deadline', color: 'text-text-tertiary' }
+    if (!dueDate) return { status: 'none', text: 'No deadline', color: 'text-muted-foreground' }
     
     const now = new Date()
     const due = new Date(dueDate)
@@ -117,7 +117,7 @@ export function PendingTasksWidget({
     } else if (diffDays <= 3) {
       return { status: 'soon', text: `Due in ${diffDays} days`, color: 'text-warning' }
     } else {
-      return { status: 'future', text: `Due in ${diffDays} days`, color: 'text-text-tertiary' }
+      return { status: 'future', text: `Due in ${diffDays} days`, color: 'text-muted-foreground' }
     }
   }
 
@@ -125,7 +125,7 @@ export function PendingTasksWidget({
     .filter(task => filter === 'all' || task.type === filter)
     .sort((a, b) => {
       // Sort by priority first (critical > high > medium > low)
-      const priorityOrder = { critical: 4, high: 3, medium: 2, low: 1 }
+      const priorityOrder: Record<DashboardTask['priority'], number> = { critical: 4, high: 3, medium: 2, low: 1 }
       const priorityDiff = priorityOrder[b.priority] - priorityOrder[a.priority]
       if (priorityDiff !== 0) return priorityDiff
       
@@ -143,7 +143,7 @@ export function PendingTasksWidget({
         <div className="flex items-center justify-between">
           <div>
             <CardTitle className="text-xl font-bold gradient-text">Pending Tasks</CardTitle>
-            <CardDescription className="text-text-secondary">
+            <CardDescription className="text-muted-foreground">
               {tasks.length} tasks requiring attention
             </CardDescription>
           </div>
@@ -177,7 +177,7 @@ export function PendingTasksWidget({
               {/* Task Header */}
               <div className="flex items-start justify-between mb-2">
                 <div className="flex items-start gap-3 flex-1">
-                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-secondary/10 mt-0.5">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10 mt-0.5">
                     {getCategoryIcon(task.type)}
                   </div>
                   <div className="flex-1 min-w-0">
@@ -246,10 +246,10 @@ export function PendingTasksWidget({
         })}
 
         {filteredTasks.length === 0 && (
-          <div className="text-center py-6 text-text-secondary">
-            <CheckCircle2 className="h-8 w-8 mx-auto mb-2 opacity-50 text-brand-tertiary" />
+          <div className="text-center py-6 text-muted-foreground">
+            <CheckCircle2 className="h-8 w-8 mx-auto mb-2 opacity-50 text-primary" />
             <p>No pending tasks</p>
-            <p className="text-xs text-text-tertiary">Great job staying on top of things!</p>
+            <p className="text-xs text-muted-foreground">Great job staying on top of things!</p>
           </div>
         )}
 

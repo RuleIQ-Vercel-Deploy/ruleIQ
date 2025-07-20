@@ -24,12 +24,13 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Progress } from "@/components/ui/progress"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Stepper } from "@/components/ui/stepper"
 import { Textarea } from "@/components/ui/textarea"
 import { H2, H3, Body, Caption } from "@/components/ui/typography"
 import { useAppStore } from "@/lib/stores/app.store"
 import { useBusinessProfileStore } from "@/lib/stores/business-profile.store"
 import { cn } from "@/lib/utils"
+
+import type { BusinessProfileFormData } from "@/types/business-profile"
 
 const steps = [
   { title: "Company Info", icon: Building2 },
@@ -150,7 +151,7 @@ interface ProfileWizardProps {
 
 export function ProfileWizard({ onComplete, initialData }: ProfileWizardProps) {
   const router = useRouter()
-  const { createProfile, updateProfile, profile, isLoading, error } = useBusinessProfileStore()
+  const { saveProfile, updateProfile, profile, isLoading, error } = useBusinessProfileStore()
   const { addNotification } = useAppStore()
   const [currentStep, setCurrentStep] = React.useState(0)
 
@@ -213,15 +214,35 @@ export function ProfileWizard({ onComplete, initialData }: ProfileWizardProps) {
 
   const onSubmit = async (data: ProfileWizardData) => {
     try {
-      const profileData = {
-        ...data,
-        founded_year: data.founded_year || undefined,
+      // Map wizard data to BusinessProfile format
+      const profileData: Partial<BusinessProfileFormData> = {
+        company_name: data.company_name,
+        industry: data.industry,
+        employee_count: parseInt(data.size.split('-')[0] || '1') || 1, // Convert "1-10" to 1
+        annual_revenue: data.annual_revenue || '',
+        country: data.country,
+        data_sensitivity: 'Moderate' as const, // Default value
+        handles_personal_data: data.data_types_collected?.includes('personal') || false,
+        processes_payments: data.data_types_collected?.includes('financial') || false,
+        stores_health_data: data.data_types_collected?.includes('health') || false,
+        provides_financial_services: data.industry === 'finance',
+        operates_critical_infrastructure: false, // Default
+        has_international_operations: data.data_storage_locations?.includes('us') || data.data_storage_locations?.includes('eu') || false,
+        cloud_providers: data.data_storage_locations?.map(loc => loc === 'cloud' ? 'AWS' : loc.toUpperCase()) || [],
+        saas_tools: [], // Default empty
+        development_tools: [], // Default empty
+        existing_frameworks: data.compliance_frameworks || [],
+        planned_frameworks: [], // Default empty
+        compliance_budget: data.annual_revenue || '',
+        compliance_timeline: '6-months',
+        assessment_completed: false,
+        assessment_data: {},
       }
 
       if (profile) {
-        await updateProfile(profileData)
+        await updateProfile(profileData as BusinessProfileFormData)
       } else {
-        await createProfile(profileData as any)
+        await saveProfile(profileData as BusinessProfileFormData)
       }
 
       addNotification({
@@ -389,7 +410,7 @@ export function ProfileWizard({ onComplete, initialData }: ProfileWizardProps) {
                   <Label htmlFor="industry">Industry *</Label>
                   <Select
                     onValueChange={(value) => setValue("industry", value)}
-                    defaultValue={getValues("industry")}
+                    {...(getValues("industry") && { defaultValue: getValues("industry") })}
                   >
                     <SelectTrigger className={errors.industry && "border-error"}>
                       <SelectValue placeholder="Select your industry" />
@@ -411,7 +432,7 @@ export function ProfileWizard({ onComplete, initialData }: ProfileWizardProps) {
                   <Label htmlFor="size">Company Size *</Label>
                   <Select
                     onValueChange={(value) => setValue("size", value)}
-                    defaultValue={getValues("size")}
+                    {...(getValues("size") && { defaultValue: getValues("size") })}
                   >
                     <SelectTrigger className={errors.size && "border-error"}>
                       <SelectValue placeholder="Select company size" />
@@ -433,7 +454,7 @@ export function ProfileWizard({ onComplete, initialData }: ProfileWizardProps) {
                   <Label htmlFor="annual_revenue">Annual Revenue</Label>
                   <Select
                     onValueChange={(value) => setValue("annual_revenue", value)}
-                    defaultValue={getValues("annual_revenue")}
+                    defaultValue={getValues("annual_revenue") ?? undefined}
                   >
                     <SelectTrigger>
                       <SelectValue placeholder="Select revenue range" />
@@ -452,7 +473,7 @@ export function ProfileWizard({ onComplete, initialData }: ProfileWizardProps) {
                   <Label htmlFor="country">Country *</Label>
                   <Select
                     onValueChange={(value) => setValue("country", value)}
-                    defaultValue={getValues("country")}
+                    {...(getValues("country") && { defaultValue: getValues("country") })}
                   >
                     <SelectTrigger className={errors.country && "border-error"}>
                       <SelectValue placeholder="Select country" />
@@ -616,7 +637,7 @@ export function ProfileWizard({ onComplete, initialData }: ProfileWizardProps) {
           {currentStep < steps.length - 1 ? (
             <Button
               type="button"
-              variant="accent"
+              variant="secondary"
               onClick={handleNext}
               disabled={isLoading}
               className="gap-2"
@@ -627,7 +648,7 @@ export function ProfileWizard({ onComplete, initialData }: ProfileWizardProps) {
           ) : (
             <Button
               type="submit"
-              variant="accent"
+              variant="secondary"
               loading={isLoading}
               className="gap-2"
             >

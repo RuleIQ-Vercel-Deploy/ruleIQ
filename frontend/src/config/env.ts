@@ -35,21 +35,21 @@ const serverSchema = z.object({
  */
 const processEnv = {
   // Client
-  NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
-  NEXT_PUBLIC_WEBSOCKET_URL: process.env.NEXT_PUBLIC_WEBSOCKET_URL,
-  NEXT_PUBLIC_AUTH_DOMAIN: process.env.NEXT_PUBLIC_AUTH_DOMAIN,
-  NEXT_PUBLIC_JWT_EXPIRES_IN: process.env.NEXT_PUBLIC_JWT_EXPIRES_IN,
-  NEXT_PUBLIC_ENABLE_ANALYTICS: process.env.NEXT_PUBLIC_ENABLE_ANALYTICS,
-  NEXT_PUBLIC_ENABLE_SENTRY: process.env.NEXT_PUBLIC_ENABLE_SENTRY,
-  NEXT_PUBLIC_ENABLE_MOCK_DATA: process.env.NEXT_PUBLIC_ENABLE_MOCK_DATA,
-  NEXT_PUBLIC_ENV: process.env.NEXT_PUBLIC_ENV,
-  NEXT_PUBLIC_VERCEL_ANALYTICS_ID: process.env.NEXT_PUBLIC_VERCEL_ANALYTICS_ID,
+  NEXT_PUBLIC_API_URL: process.env['$1'],
+  NEXT_PUBLIC_WEBSOCKET_URL: process.env['$1'],
+  NEXT_PUBLIC_AUTH_DOMAIN: process.env['$1'],
+  NEXT_PUBLIC_JWT_EXPIRES_IN: process.env['$1'],
+  NEXT_PUBLIC_ENABLE_ANALYTICS: process.env['$1'],
+  NEXT_PUBLIC_ENABLE_SENTRY: process.env['$1'],
+  NEXT_PUBLIC_ENABLE_MOCK_DATA: process.env['$1'],
+  NEXT_PUBLIC_ENV: process.env['$1'],
+  NEXT_PUBLIC_VERCEL_ANALYTICS_ID: process.env['$1'],
   // Server
-  NODE_ENV: process.env.NODE_ENV,
-  SENTRY_DSN: process.env.SENTRY_DSN,
-  SENTRY_ORG: process.env.SENTRY_ORG,
-  SENTRY_PROJECT: process.env.SENTRY_PROJECT,
-  SENTRY_AUTH_TOKEN: process.env.SENTRY_AUTH_TOKEN,
+  NODE_ENV: process.env['$1'],
+  SENTRY_DSN: process.env['$1'],
+  SENTRY_ORG: process.env['$1'],
+  SENTRY_PROJECT: process.env['$1'],
+  SENTRY_AUTH_TOKEN: process.env['$1'],
 } as const;
 
 // Don't touch the part below
@@ -63,7 +63,7 @@ type MergedOutput = z.output<typeof merged>;
 let env = {} as MergedOutput;
 const combinedSchema = merged;
 
-if (!!process.env.SKIP_ENV_VALIDATION === false) {
+if (!!process.env['$1'] === false) {
   const isServer = typeof window === 'undefined';
 
   const parsed = isServer

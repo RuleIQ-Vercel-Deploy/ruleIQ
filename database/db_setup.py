@@ -125,8 +125,19 @@ class DatabaseConfig:
                 and "+asyncpg" not in async_db_url
             ):
                 async_db_url = async_db_url.replace("postgresql://", "postgresql+asyncpg://", 1)
-
-        return db_url, sync_db_url, async_db_url
+    
+            # Remove sslmode from async_db_url to avoid conflicts with connect_args
+            if "sslmode=require" in async_db_url:
+                # A more robust way to remove the parameter
+                from urllib.parse import urlparse, urlunparse, parse_qs, urlencode
+                parts = urlparse(async_db_url)
+                query_params = parse_qs(parts.query)
+                query_params.pop('sslmode', None)
+                query_params.pop('channel_binding', None)
+                new_query = urlencode(query_params, doseq=True)
+                async_db_url = urlunparse(parts._replace(query=new_query))
+    
+            return db_url, sync_db_url, async_db_url
 
     @staticmethod
     def get_engine_kwargs(is_async: bool = False) -> Dict[str, Any]:
@@ -150,16 +161,18 @@ class DatabaseConfig:
                 "pool_reset_on_return": "commit",
             }
             
-            # Handle SSL configuration for asyncpg
+            # Handle SSL configuration for asyncpg explicitly
             db_url = os.getenv("DATABASE_URL", "")
-            if "sslmode=require" in db_url:
-                async_kwargs["connect_args"] = {
-                    "ssl": True,
-                    "server_settings": {
-                        "jit": "off",
-                        "application_name": "ruleIQ_backend",
-                    }
+            connect_args = {
+                "server_settings": {
+                    "jit": "off",
+                    "application_name": "ruleIQ_backend",
                 }
+            }
+            if "sslmode=require" in db_url:
+                connect_args["ssl"] = True
+            
+            async_kwargs["connect_args"] = connect_args
             return async_kwargs
         else:
             # Sync engine configuration
@@ -201,7 +214,7 @@ def _init_async_db():
             engine_kwargs = DatabaseConfig.get_engine_kwargs(is_async=True)
             
             _ASYNC_ENGINE = create_async_engine(async_db_url, **engine_kwargs)
-            _ASYNC_SESSION_LOCAL = sessionmaker(
+            _ASYNC_SESSION_LOCAL = async_sessionmaker(
                 bind=_ASYNC_ENGINE,
                 class_=AsyncSession,
                 expire_on_commit=False,

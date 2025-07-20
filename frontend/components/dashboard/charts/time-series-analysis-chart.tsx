@@ -77,7 +77,7 @@ export function TimeSeriesAnalysisChart({
                 y={data[0]?.target || 90} 
                 stroke="#CB963E" 
                 strokeDasharray="5 5"
-                label={{ value: "Target", position: "topRight" }}
+                label={{ value: "Target", position: "top" }}
               />
             )}
             

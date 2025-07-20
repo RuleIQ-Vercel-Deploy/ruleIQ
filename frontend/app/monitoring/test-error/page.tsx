@@ -1,10 +1,12 @@
 'use client';
 
-import { useState } from 'react';
 import * as Sentry from '@sentry/nextjs';
+import { AlertTriangle, Bug, Settings } from 'lucide-react';
+import { useState } from 'react';
+
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { AlertTriangle, Bug, Settings } from 'lucide-react';
+
 
 /**
  * Test page for Sentry error tracking

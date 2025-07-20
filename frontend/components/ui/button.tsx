@@ -14,8 +14,10 @@ const buttonVariants = cva(
         secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80",
         outline: "border-2 border-input bg-transparent hover:bg-accent hover:text-accent-foreground",
         ghost: "hover:bg-accent hover:text-accent-foreground",
+        "ghost-ruleiq": "hover:bg-accent hover:text-accent-foreground",
         link: "text-primary underline-offset-4 hover:underline",
         destructive: "bg-destructive text-destructive-foreground shadow hover:bg-destructive/90",
+        success: "bg-success text-success-foreground shadow hover:bg-success/90",
         // Brand-specific variant using CSS variables
         turquoise: "bg-accent text-accent-foreground shadow hover:bg-accent/90",
       },

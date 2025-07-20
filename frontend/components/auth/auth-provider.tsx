@@ -1,8 +1,10 @@
 'use client';
 
-import { createContext, useContext, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { createContext, useContext, useEffect, useState } from 'react';
+
 import { authService } from '@/lib/api/auth-service';
+
 import type { User } from '@/types/auth';
 
 interface AuthContextType {
@@ -44,7 +46,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         const token = localStorage.getItem('access_token');
         if (token) {
           const currentUser = await authService.getCurrentUser();
-          setUser(currentUser);
+          setUser(currentUser as unknown as User);
         }
       } catch (error) {
         console.error('Auth initialization error:', error);
@@ -60,8 +62,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const login = async (email: string, password: string) => {
     try {
       const response = await authService.login({ email, password });
-      localStorage.setItem('access_token', response.access_token);
-      setUser(response.user);
+      localStorage.setItem('access_token', response.tokens.access_token);
+      setUser(response.user as unknown as User);
       router.push('/dashboard');
     } catch (error) {
       throw error;
@@ -83,8 +85,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const register = async (userData: RegisterData) => {
     try {
       const response = await authService.register(userData);
-      localStorage.setItem('access_token', response.access_token);
-      setUser(response.user);
+      localStorage.setItem('access_token', response.tokens.access_token);
+      setUser(response.user as unknown as User);
       router.push('/dashboard');
     } catch (error) {
       throw error;
@@ -94,7 +96,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const refreshUser = async () => {
     try {
       const currentUser = await authService.getCurrentUser();
-      setUser(currentUser);
+          setUser(currentUser as unknown as User);
     } catch (error) {
       console.error('User refresh error:', error);
       setUser(null);

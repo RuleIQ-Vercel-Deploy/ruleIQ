@@ -16,15 +16,15 @@ export const SparklesCore = (props: {
   speed?: number
 }) => {
   const {
-    id = "tsparticles",
+    id: _id = "tsparticles",
     className,
-    background = "transparent",
-    particleSize = 1,
+    background: _background = "transparent",
+    particleSize: _particleSize = 1,
     minSize = 0.4,
     maxSize = 1,
     particleColor = "#FFD700",
     particleDensity = 1200,
-    speed = 1,
+    speed: _speed = 1,
   } = props
 
   const [isLoaded, setIsLoaded] = useState(false)

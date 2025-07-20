@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 
 import { dashboardService } from '@/lib/api/dashboard.service';
 
-import { createQueryKey, type BaseQueryOptions, getErrorMessage } from './base';
+import { createQueryKey, type BaseQueryOptions } from './base';
 
 import type { UserDashboard, WidgetData } from '@/lib/api/dashboard.service';
 

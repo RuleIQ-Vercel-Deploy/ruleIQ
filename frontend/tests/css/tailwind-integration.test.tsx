@@ -135,9 +135,9 @@ describe('Tailwind CSS Integration Tests', () => {
 
     it('should validate custom color values from config', () => {
       // Check if custom colors are defined in config
-      expect(fullConfig.theme?.extend?.colors).toBeDefined();
+      expect(fullConfig.theme?.['extend']?.colors).toBeDefined();
       
-      const colors = fullConfig.theme?.extend?.colors as any;
+      const colors = fullConfig.theme?.['extend']?.colors as any;
       
       // Primary colors
       expect(colors.primary).toBeDefined();

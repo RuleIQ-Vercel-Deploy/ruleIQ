@@ -1,4 +1,4 @@
-import { AUTH_TOKEN_KEY, REFRESH_TOKEN_KEY, USER_KEY } from '@/config/constants';
+import { USER_KEY } from '@/config/constants';
 import SecureStorage from '@/lib/utils/secure-storage';
 
 import { apiClient } from './client';

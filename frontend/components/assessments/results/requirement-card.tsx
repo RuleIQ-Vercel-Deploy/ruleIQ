@@ -13,7 +13,7 @@ interface RequirementCardProps {
   color: string
 }
 
-export function RequirementCard({ title, score, status, icon: Icon, color }: RequirementCardProps) {
+export function RequirementCard({ title, score, icon: Icon, color }: RequirementCardProps) {
   const getProgressColor = (s: number) => {
     if (s >= 90) return "success"
     if (s >= 70) return "warning"

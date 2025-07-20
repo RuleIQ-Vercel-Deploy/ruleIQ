@@ -42,7 +42,7 @@ from api.routers import (
 from api.middleware.error_handler import error_handler_middleware
 from api.middleware.rate_limiter import rate_limit_middleware
 from api.middleware.security_headers import security_headers_middleware
-from database import init_db, test_database_connection, cleanup_db_connections, get_db, _AsyncSessionLocal as AsyncSessionLocal
+from database import init_db, test_database_connection, test_async_database_connection, cleanup_db_connections, get_db, _AsyncSessionLocal as AsyncSessionLocal
 from config.settings import settings
 from monitoring.sentry import init_sentry
 from config.ai_config import ai_config
@@ -60,22 +60,26 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     Application lifespan context manager for startup/shutdown events
     """
     # Startup
-    logger.info("Starting ruleIQ API...")
+    logger.info("--- Lifespan Startup: Initiated ---")
+
+    # Validate configuration first
+    logger.info("--- Lifespan Startup: Validating Configuration... ---")
+    validate_configuration()
+    logger.info("--- Lifespan Startup: Configuration Validated ---")
     
     # Initialize Sentry
+    logger.info("--- Lifespan Startup: Initializing Sentry... ---")
     init_sentry()
+    logger.info("--- Lifespan Startup: Sentry Initialized ---")
 
-    # Initialize database using the new init_db function
-    if not init_db():
-        logger.error("Database initialization failed during startup")
-        raise RuntimeError("Database initialization failed")
+    # Asynchronously initialize and test the database connection
+    logger.info("--- Lifespan Startup: Verifying Database Connection (Async)... ---")
+    if not await test_async_database_connection():
+        logger.error("--- Lifespan Startup: Async database connection verification FAILED ---")
+        raise RuntimeError("Async database connection verification failed")
+    logger.info("--- Lifespan Startup: Database Connection Verified (Async) ---")
     
-    # Verify database connection
-    if not test_database_connection():
-        logger.error("Database connection verification failed")
-        raise RuntimeError("Database connection verification failed")
-    
-    logger.info("ruleIQ API started successfully")
+    logger.info("--- Lifespan Startup: Completed Successfully ---")
     
     yield
     
@@ -295,12 +299,28 @@ async def startup_event():
     """Set application start time"""
     app.state.start_time = time.time()
 
+# Diagnostic endpoint for JWT configuration (remove in production)
+@app.get("/debug/config")
+async def debug_config():
+    """Diagnostic endpoint - remove in production"""
+    from config.settings import get_settings
+    import os
+    
+    settings = get_settings()
+    return {
+        "jwt_secret_first_10": settings.jwt_secret[:10] if settings.jwt_secret else None,
+        "jwt_secret_length": len(settings.jwt_secret) if settings.jwt_secret else 0,
+        "working_directory": os.getcwd(),
+        "env_file_exists": os.path.exists(".env.local"),
+        "JWT_SECRET_env": os.getenv("JWT_SECRET")[:10] if os.getenv("JWT_SECRET") else None
+    }
+
 # Configuration validation
 def validate_configuration() -> None:
     """Validate critical configuration settings"""
     required_vars = [
         "database_url",
-        "secret_key",
+        "jwt_secret",
     ]
     
     missing_vars = []
@@ -310,9 +330,6 @@ def validate_configuration() -> None:
     
     if missing_vars:
         raise ValueError(f"Missing required environment variables: {missing_vars}")
-
-# Validate configuration on import
-validate_configuration()
 
 if __name__ == "__main__":
     uvicorn.run(

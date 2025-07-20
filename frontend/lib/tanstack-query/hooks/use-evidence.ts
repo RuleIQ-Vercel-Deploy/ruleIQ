@@ -7,8 +7,7 @@ import {
   type BaseQueryOptions, 
   type BaseMutationOptions,
   type PaginationParams,
-  type PaginatedResponse,
-  getErrorMessage 
+  type PaginatedResponse 
 } from './base';
 
 import type { 

@@ -3,7 +3,6 @@
  */
 
 import { type RenderOptions } from '@testing-library/react';
-import { ReactElement } from 'react';
 
 // Test utilities types
 export interface CustomRenderOptions extends Omit<RenderOptions, 'wrapper'> {

@@ -93,7 +93,7 @@ export const handlers = [
   http.get(`${baseURL}/assessments/:id`, ({ params }) => {
     return HttpResponse.json({
       data: {
-        id: params.id,
+        id: params['id'],
         name: 'Test Assessment',
         status: 'completed',
         framework_id: 'gdpr',
@@ -107,7 +107,7 @@ export const handlers = [
     const body = await request.json() as any
     return HttpResponse.json({
       data: {
-        id: params.id,
+        id: params['id'],
         ...body,
         updated_at: new Date().toISOString(),
       },
@@ -118,7 +118,7 @@ export const handlers = [
     const body = await request.json() as any
     return HttpResponse.json({
       data: {
-        id: params.id,
+        id: params['id'],
         ...body,
         updated_at: new Date().toISOString(),
       },
@@ -128,7 +128,7 @@ export const handlers = [
   http.post(`${baseURL}/assessments/:id/complete`, ({ params }) => {
     return HttpResponse.json({
       data: {
-        id: params.id,
+        id: params['id'],
         status: 'completed',
         completed_at: new Date().toISOString(),
       },
@@ -193,7 +193,7 @@ export const handlers = [
     const body = await request.json() as any
     return HttpResponse.json({
       data: {
-        id: params.id,
+        id: params['id'],
         ...body,
         updated_at: new Date().toISOString(),
       },
@@ -204,7 +204,7 @@ export const handlers = [
     const body = await request.json() as any
     return HttpResponse.json({
       data: {
-        id: params.id,
+        id: params['id'],
         ...body,
         updated_at: new Date().toISOString(),
       },
@@ -270,7 +270,7 @@ export const handlers = [
     const body = await request.json() as any
     return HttpResponse.json({
       data: {
-        id: params.id,
+        id: params['id'],
         ...body,
         updated_at: new Date().toISOString(),
       },

@@ -1,8 +1,8 @@
 "use client"
 
 import React from 'react'
-import { Line, Bar, Area, Pie, Radar, PolarArea } from 'recharts'
-import { ResponsiveContainer, LineChart, BarChart, AreaChart, PieChart, RadarChart, PolarAreaChart, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Cell } from 'recharts'
+import { Line, Bar, Area, Pie , ResponsiveContainer, LineChart, BarChart, AreaChart, PieChart, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Cell } from 'recharts'
+
 import { cn } from '@/lib/utils'
 
 export type ChartType = 'line' | 'bar' | 'area' | 'pie' | 'radar' | 'polar'
@@ -137,7 +137,7 @@ export function ChartWidget({
               fill="#8884d8"
               dataKey={dataKey}
             >
-              {data.map((entry, index) => (
+              {data.map((_entry, index) => (
                 <Cell key={`cell-${index}`} fill={colors[index % colors.length]} />
               ))}
             </Pie>
@@ -160,7 +160,7 @@ export function ChartWidget({
   return (
     <div className={cn("w-full", className)}>
       <ResponsiveContainer width="100%" height={height}>
-        {renderChart()}
+        {renderChart() || <div>Unsupported chart type</div>}
       </ResponsiveContainer>
     </div>
   )

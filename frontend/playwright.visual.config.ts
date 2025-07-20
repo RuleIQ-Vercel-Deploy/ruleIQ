@@ -40,7 +40,7 @@ export default defineConfig({
     viewport: { width: 1440, height: 900 },
     
     // Video recording for debugging
-    video: process.env.CI ? 'retain-on-failure' : 'off',
+    video: process.env['CI'] ? 'retain-on-failure' : 'off',
   },
   
   // Visual test specific projects
@@ -172,5 +172,5 @@ export default defineConfig({
   snapshotPathTemplate: '{snapshotDir}/{testFileDir}/{testFileName}-{arg}-{projectName}-{platform}{ext}',
   
   // Update snapshots mode
-  updateSnapshots: process.env.UPDATE_SNAPSHOTS === 'true' ? 'all' : 'missing',
+  updateSnapshots: process.env['UPDATE_SNAPSHOTS'] === 'true' ? 'all' : 'missing',
 });

@@ -119,7 +119,7 @@ export function useAsyncError() {
 
   const execute = useCallback(async <T,>(
     asyncFunction: () => Promise<T>,
-    options?: UseErrorHandlerOptions
+    _options?: UseErrorHandlerOptions
   ): Promise<T | null> => {
     setIsLoading(true);
     clearError();

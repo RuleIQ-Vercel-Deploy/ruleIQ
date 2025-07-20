@@ -226,7 +226,7 @@ describe("Form Components Accessibility", () => {
     it("should have sufficient contrast for all text elements", async () => {
       const { container } = render(
         <div>
-          <Button variant="primary">Primary</Button>
+          <Button variant="default">Primary</Button>
           <Button variant="secondary">Secondary</Button>
           <Input placeholder="Type here" />
           <Label>Form Label</Label>

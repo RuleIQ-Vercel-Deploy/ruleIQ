@@ -187,7 +187,7 @@ export function RateLimitInfo({
 }
 
 // Hook for managing rate limit state
-export function useRateLimitState(operation: string) {
+export function useRateLimitState(_operation: string) {
   const [rateLimitInfo, setRateLimitInfo] = React.useState<{
     isRateLimited: boolean;
     retryAfter: number;

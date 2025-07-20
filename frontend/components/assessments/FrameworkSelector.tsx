@@ -228,7 +228,7 @@ export function FrameworkSelector({
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-            <RadioGroup value={assessmentMode} onValueChange={(v) => setAssessmentMode(v as any)}>
+            <RadioGroup value={assessmentMode} onValueChange={(v) => setAssessmentMode(v as 'quick' | 'comprehensive')}>
               <div className="grid gap-4 md:grid-cols-2">
                 <div className="flex items-start space-x-2">
                   <RadioGroupItem value="quick" id="quick" />

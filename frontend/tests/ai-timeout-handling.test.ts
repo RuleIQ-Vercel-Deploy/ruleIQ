@@ -106,7 +106,7 @@ describe('AI Timeout Handling Tests', () => {
 
   describe('AI Service Timeout Scenarios', () => {
     test('should handle AI help request timeout', async () => {
-      const mockAIHelpWithTimeout = async (request: any, timeoutMs: number = 15000) => {
+      const mockAIHelpWithTimeout = async (request: any, timeoutMs: number = 15000): Promise<any> => {
         const aiRequest = new Promise((resolve, reject) => {
           // Simulate slow AI response
           setTimeout(() => {
@@ -158,7 +158,7 @@ describe('AI Timeout Handling Tests', () => {
     });
 
     test('should handle AI analysis request timeout', async () => {
-      const mockAIAnalysisWithTimeout = async (request: any, timeoutMs: number = 30000) => {
+      const mockAIAnalysisWithTimeout = async (request: any, timeoutMs: number = 30000): Promise<any> => {
         const aiRequest = new Promise((resolve) => {
           // Simulate very slow analysis
           setTimeout(() => {
@@ -245,7 +245,7 @@ describe('AI Timeout Handling Tests', () => {
         prompt: string,
         context: any,
         timeoutMs: number = 30000
-      ) => {
+      ): Promise<any> => {
         const aiRequest = new Promise((resolve) => {
           setTimeout(() => {
             resolve({
@@ -324,7 +324,7 @@ describe('AI Timeout Handling Tests', () => {
 
   describe('Error Propagation and Recovery', () => {
     test('should distinguish between timeout and other errors', async () => {
-      const handleDifferentErrors = async (errorType: 'timeout' | 'network' | 'server') => {
+      const handleDifferentErrors = async (errorType: 'timeout' | 'network' | 'server'): Promise<any> => {
         const timeoutPromise = new Promise<never>((_, reject) => {
           setTimeout(() => reject(new Error('Operation timed out after 1000ms')), 100);
         });

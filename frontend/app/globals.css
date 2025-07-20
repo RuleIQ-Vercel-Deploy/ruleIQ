@@ -2,6 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Import the new design system */
+@import './styles/design-system.css';
+
 @layer base {
   :root {
     /* Base font size - 112.5% = 18px on 16px browser default */

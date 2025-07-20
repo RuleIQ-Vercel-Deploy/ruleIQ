@@ -46,7 +46,7 @@ export function ManageIntegrationDialog({ isOpen, onOpenChange, integration }: M
         </DialogHeader>
         <div className="mt-4 max-h-[60vh] overflow-y-auto pr-2">
           <div className="divide-y divide-oxford-blue/50">
-            {integration.activity?.map((item) => (
+            {(integration as any).activity?.map((item: any) => (
               <ActivityLogItem key={item.id} item={item} />
             ))}
           </div>

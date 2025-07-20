@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import * as React from 'react';
 import { useForm } from 'react-hook-form';
-import * as z from 'zod';
+
 
 import { SecurityBadges, TrustSignals } from '@/components/auth/security-badges';
 import { Alert, AlertDescription } from '@/components/ui/alert';
@@ -16,10 +16,12 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { authService } from '@/lib/api/auth.service';
+import { useCsrfToken } from '@/lib/hooks/use-csrf-token';
+import { authSchemas } from '@/lib/security/validation';
 import { useAppStore } from '@/lib/stores/app.store';
 import { useAuthStore } from '@/lib/stores/auth.store';
-import { authSchemas } from '@/lib/security/validation';
-import { useCsrfToken, getCsrfHeaders } from '@/lib/hooks/use-csrf-token';
+
+import type * as z from 'zod';
 
 // Use secure validation schema
 type LoginFormData = z.infer<typeof authSchemas.login>;
@@ -60,12 +62,10 @@ export default function LoginPage() {
     clearError();
 
     try {
-      // Use auth service with CSRF protection
+      // Use auth service
       await authService.login({
         email: data.email,
         password: data.password,
-      }, {
-        headers: getCsrfHeaders(csrfToken),
       });
 
       addNotification({
@@ -117,14 +117,14 @@ export default function LoginPage() {
             <Card className="glass-card w-full max-w-md border-0 bg-surface-primary/80 backdrop-blur-xl shadow-2xl">
               <CardHeader className="space-y-6 pb-6 text-center">
                 <div className="mb-4 flex items-center justify-center gap-2">
-                  <Shield className="text-brand-primary h-7 w-7" />
+                  <Shield className="text-primary h-7 w-7" />
                   <span className="text-2xl font-bold">
                     <span className="gradient-text">ruleIQ</span>
                   </span>
                 </div>
                 <div>
                   <CardTitle className="mb-2 text-2xl font-bold gradient-text">Secure Login</CardTitle>
-                  <CardDescription className="text-base text-text-secondary">
+                  <CardDescription className="text-base text-muted-foreground">
                     Access your AI-powered compliance dashboard
                   </CardDescription>
                 </div>
@@ -159,13 +159,13 @@ export default function LoginPage() {
                 <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                   {/* Email Field */}
                   <div className="space-y-2">
-                    <Label htmlFor="email" className="text-text-primary">Email Address</Label>
+                    <Label htmlFor="email" className="text-foreground">Email Address</Label>
                     <Input
                       id="email"
                       type="email"
                       placeholder="Enter your email"
                       {...register('email')}
-                      className={errors.email ? 'border-destructive bg-surface-secondary/50' : 'bg-surface-secondary/50 border-glass-border focus:border-brand-primary'}
+                      className={errors.email ? 'border-destructive bg-surface-secondary/50' : 'bg-surface-secondary/50 border-glass-border focus:border-primary'}
                       disabled={isSubmitting || csrfLoading || !!csrfError}
                     />
                     {errors.email && (
@@ -176,10 +176,10 @@ export default function LoginPage() {
                   {/* Password Field */}
                   <div className="space-y-2">
                     <div className="flex items-center justify-between">
-                      <Label htmlFor="password" className="text-text-primary">Password</Label>
+                      <Label htmlFor="password" className="text-foreground">Password</Label>
                       <Link
                         href="/forgot-password"
-                        className="text-brand-secondary hover:text-brand-secondary/80 text-sm hover:underline transition-colors"
+                        className="text-primary hover:text-primary/80 text-sm hover:underline transition-colors"
                       >
                         Forgot password?
                       </Link>
@@ -190,14 +190,14 @@ export default function LoginPage() {
                         type={showPassword ? 'text' : 'password'}
                         placeholder="Enter your password"
                         {...register('password')}
-                        className={errors.password ? 'border-destructive pr-10 bg-surface-secondary/50' : 'pr-10 bg-surface-secondary/50 border-glass-border focus:border-brand-primary'}
+                        className={errors.password ? 'border-destructive pr-10 bg-surface-secondary/50' : 'pr-10 bg-surface-secondary/50 border-glass-border focus:border-primary'}
                         disabled={isSubmitting || csrfLoading || !!csrfError}
                       />
                       <Button
                         type="button"
                         variant="ghost"
                         size="sm"
-                        className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent text-text-secondary hover:text-text-primary"
+                        className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent text-muted-foreground hover:text-foreground"
                         onClick={() => setShowPassword(!showPassword)}
                         disabled={isSubmitting || csrfLoading || !!csrfError}
                       >
@@ -220,9 +220,9 @@ export default function LoginPage() {
                       checked={rememberMe}
                       onCheckedChange={(checked) => setValue('rememberMe', !!checked)}
                       disabled={isSubmitting || csrfLoading || !!csrfError}
-                      className="border-glass-border data-[state=checked]:bg-brand-primary data-[state=checked]:border-brand-primary"
+                      className="border-glass-border data-[state=checked]:bg-primary data-[state=checked]:border-primary"
                     />
-                    <Label htmlFor="rememberMe" className="cursor-pointer text-sm font-normal text-text-secondary">
+                    <Label htmlFor="rememberMe" className="cursor-pointer text-sm font-normal text-muted-foreground">
                       Keep me signed in for 30 days
                     </Label>
                   </div>
@@ -251,7 +251,7 @@ export default function LoginPage() {
                     <span className="w-full border-t border-glass-border" />
                   </div>
                   <div className="relative flex justify-center text-xs uppercase">
-                    <span className="bg-surface-primary/80 px-2 text-text-tertiary">
+                    <span className="bg-surface-primary/80 px-2 text-muted-foreground">
                       Or continue with
                     </span>
                   </div>
@@ -289,10 +289,10 @@ export default function LoginPage() {
 
                 {/* Sign Up Link */}
                 <div className="text-center text-sm">
-                  <span className="text-text-secondary">Don&apos;t have an account? </span>
+                  <span className="text-muted-foreground">Don&apos;t have an account? </span>
                   <Link
                     href="/register"
-                    className="text-brand-secondary hover:text-brand-secondary/80 font-medium hover:underline transition-colors"
+                    className="text-primary hover:text-primary/80 font-medium hover:underline transition-colors"
                   >
                     Create account
                   </Link>

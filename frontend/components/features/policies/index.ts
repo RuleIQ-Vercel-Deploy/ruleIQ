@@ -1,5 +1,3 @@
-// Export all policy-related components
-// Example exports:
-// export * from './policy-list'
-// export * from './policy-editor'
-// export * from './policy-generator'
+// Policy components - placeholder exports
+// TODO: Implement actual policy components  
+export const POLICIES_PLACEHOLDER = true;

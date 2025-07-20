@@ -15,7 +15,7 @@ export function AnimatedLogo({
   className,
   size = "default",
   animationType = "once",
-  duration = 2
+  duration: _duration = 2
 }: AnimatedLogoProps) {
   const shouldReduceMotion = useReducedMotion()
   
@@ -36,39 +36,27 @@ export function AnimatedLogo({
     animate: {
       rotate: shouldReduceMotion ? 0 : 360,
       scale: 1,
-      opacity: 1,
-      transition: {
-        rotate: {
-          duration,
-          ease: "easeInOut"
-        },
-        scale: {
-          duration: 0.5,
-          ease: "easeOut"
-        },
-        opacity: {
-          duration: 0.3
-        }
-      }
+      opacity: 1
     },
     continuous: {
-      rotate: 360,
-      transition: {
-        rotate: {
-          duration,
-          ease: "linear",
-          repeat: Infinity
-        }
-      }
+      rotate: 360
     },
     hover: {
-      rotate: 360,
-      transition: {
-        duration: 0.6,
-        ease: "easeInOut"
-      }
+      rotate: 360
     }
   }
+
+  // const _transitions = {
+  //   animate: {
+  //     rotate: { duration, ease: "easeInOut" },
+  //     scale: { duration: 0.5, ease: "easeOut" },
+  //     opacity: { duration: 0.3 }
+  //   },
+  //   continuous: {
+  //     rotate: { duration, ease: "linear", repeat: Infinity }
+  //   },
+  //   hover: { duration: 0.6, ease: "easeInOut" }
+  // }
 
   // Determine animation behavior
   const getAnimationProps = () => {
@@ -90,7 +78,7 @@ export function AnimatedLogo({
           animate: { rotate: 360 },
           transition: {
             duration: 1.5,
-            ease: "linear",
+            ease: "linear" as const,
             repeat: Infinity
           }
         }

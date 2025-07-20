@@ -53,7 +53,7 @@ export function ComplianceScoreWidget({
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="text-sm text-text-secondary mb-4">{error}</p>
+          <p className="text-sm text-muted-foreground mb-4">{error}</p>
           {onRefresh && (
             <Button onClick={onRefresh} variant="outline" size="sm" className="border-glass-border hover:border-glass-border-hover hover:bg-glass-white">
               <RefreshCw className="h-4 w-4 mr-2" />
@@ -72,7 +72,7 @@ export function ComplianceScoreWidget({
       case 'down':
         return <TrendingDown className="h-4 w-4 text-error" />
       default:
-        return <Minus className="h-4 w-4 text-text-tertiary" />
+        return <Minus className="h-4 w-4 text-muted-foreground" />
     }
   }
 
@@ -102,7 +102,7 @@ export function ComplianceScoreWidget({
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
           <CardTitle className="text-lg font-semibold flex items-center gap-2 gradient-text">
-            <Shield className="h-5 w-5 text-brand-secondary" />
+            <Shield className="h-5 w-5 text-primary" />
             Overall Compliance
           </CardTitle>
           <div className="flex items-center gap-2">
@@ -133,7 +133,7 @@ export function ComplianceScoreWidget({
           )}>
             {data.overall_score}%
           </p>
-          <p className="text-sm font-medium text-text-secondary mt-2">
+          <p className="text-sm font-medium text-muted-foreground mt-2">
             {getScoreLabel(data.overall_score)}
           </p>
         </div>
@@ -141,7 +141,7 @@ export function ComplianceScoreWidget({
         {/* Framework Breakdown */}
         {data.frameworks && data.frameworks.length > 0 && (
           <div className="space-y-4 bg-glass-white rounded-lg p-4">
-            <h4 className="text-sm font-semibold text-text-primary">Framework Breakdown</h4>
+            <h4 className="text-sm font-semibold text-foreground">Framework Breakdown</h4>
             {data.frameworks.map((framework, index) => (
               <div key={index} className="space-y-2">
                 <div className="flex items-center justify-between text-sm">
@@ -184,7 +184,7 @@ export function ComplianceScoreWidget({
 
         {/* Last Updated */}
         {data.last_updated && (
-          <div className="flex items-center justify-between text-xs text-text-tertiary pt-4 border-t border-glass-border">
+          <div className="flex items-center justify-between text-xs text-muted-foreground pt-4 border-t border-border">
             <span>
               Updated {new Date(data.last_updated).toLocaleDateString()}
             </span>

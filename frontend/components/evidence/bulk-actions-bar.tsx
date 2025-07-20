@@ -18,21 +18,21 @@ export function BulkActionsBar({ selectedCount, onClearSelection }: BulkActionsB
         </p>
         <div className="h-6 w-px bg-oxford-blue/20" />
         <div className="flex items-center gap-2">
-          <Button variant="ghost-ruleiq" size="small">
+          <Button variant="ghost" size="sm">
             <ShieldCheck />
             Change Status
           </Button>
-          <Button variant="ghost-ruleiq" size="small">
+          <Button variant="ghost" size="sm">
             <Archive />
             Archive
           </Button>
-          <Button variant="ghost-ruleiq" size="small" className="text-error hover:bg-error/10 hover:text-error">
+          <Button variant="ghost" size="sm" className="text-error hover:bg-error/10 hover:text-error">
             <Trash2 />
             Delete
           </Button>
         </div>
         <div className="h-6 w-px bg-oxford-blue/20" />
-        <Button variant="link" size="small" onClick={onClearSelection} className="text-oxford-blue">
+        <Button variant="link" size="sm" onClick={onClearSelection} className="text-oxford-blue">
           Clear
         </Button>
       </div>

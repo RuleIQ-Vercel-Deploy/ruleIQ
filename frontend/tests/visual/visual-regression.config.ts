@@ -16,10 +16,10 @@ const config: PlaywrightTestConfig = {
   timeout: 60 * 1000,
   
   // Number of retries for flaky tests
-  retries: process.env.CI ? 2 : 0,
+  retries: process.env['CI'] ? 2 : 0,
   
   // Number of workers
-  workers: process.env.CI ? 2 : 4,
+  workers: process.env['CI'] ? 2 : 4,
   
   // Reporter configuration
   reporter: [
@@ -31,7 +31,7 @@ const config: PlaywrightTestConfig = {
   // Global test configuration
   use: {
     // Base URL
-    baseURL: process.env.PLAYWRIGHT_BASE_URL || 'http://localhost:3000',
+    baseURL: process.env['PLAYWRIGHT_BASE_URL'] || 'http://localhost:3000',
     
     // Screenshot options
     screenshot: {
@@ -40,10 +40,10 @@ const config: PlaywrightTestConfig = {
     },
     
     // Video recording
-    video: process.env.CI ? 'retain-on-failure' : 'off',
+    video: process.env['CI'] ? 'retain-on-failure' : 'off',
     
     // Trace recording
-    trace: process.env.CI ? 'on-first-retry' : 'off',
+    trace: process.env['CI'] ? 'on-first-retry' : 'off',
     
     // Viewport
     viewport: { width: 1440, height: 900 },
@@ -137,9 +137,6 @@ const config: PlaywrightTestConfig = {
       // Animation handling
       animations: 'disabled',
       
-      // Wait for fonts to load
-      fonts: 'wait',
-      
       // CSS animations
       caret: 'hide',
       
@@ -158,10 +155,10 @@ const config: PlaywrightTestConfig = {
   quiet: false,
   
   // Update snapshots
-  updateSnapshots: process.env.UPDATE_SNAPSHOTS === 'true' ? 'all' : 'missing',
+  updateSnapshots: process.env['UPDATE_SNAPSHOTS'] === 'true' ? 'all' : 'missing',
   
   // Web server configuration for local testing
-  webServer: process.env.CI ? undefined : {
+  webServer: process.env['CI'] ? undefined : {
     command: 'pnpm dev',
     port: 3000,
     timeout: 120 * 1000,

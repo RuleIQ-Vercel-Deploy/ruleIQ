@@ -220,7 +220,7 @@ export function AssessmentWizard({
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-navy">{framework.name}</h1>
+          <h1 className="text-2xl font-bold text-foreground">{framework.name}</h1>
           <p className="text-muted-foreground">{framework.description}</p>
         </div>
         <div className="flex items-center gap-2">
@@ -373,7 +373,7 @@ export function AssessmentWizard({
 
               <Button
                 onClick={handleNext}
-                className="bg-gold text-navy hover:bg-gold-dark"
+                className="bg-primary text-primary-foreground hover:bg-primary/90"
                 disabled={
                   isLoadingAI ||
                   (!isQuestionAnswered && currentQuestion?.validation?.required !== false)

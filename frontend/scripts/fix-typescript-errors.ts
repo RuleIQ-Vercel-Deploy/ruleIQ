@@ -6,9 +6,7 @@
  * to improve type safety and prepare for production.
  */
 
-import * as fs from 'fs';
-import * as path from 'path';
-import { execSync } from 'child_process';
+
 
 interface TypeScriptError {
   file: string;
@@ -118,8 +116,8 @@ class TypeScriptErrorFixer {
 
     // Find imports
     for (const line of lines) {
-      const importMatch = line.match(/import\s+{([^}]+)}\s+from/);
-      if (importMatch) {
+      const importMatch = line.match(/import\s+\{([^}]+)\}\s+from/);
+      if (importMatch?.[1]) {
         const importList = importMatch[1].split(',').map(s => s.trim());
         for (const imp of importList) {
           imports.add(imp);
@@ -136,194 +134,6 @@ class TypeScriptErrorFixer {
       }
     }
 
-    // Remove unused imports
-    const unusedImports = Array.from(imports).filter(imp => !usage.has(imp));
-    let result = content;
-    
-    for (const unused of unusedImports) {
-      result = result.replace(new RegExp(`\\s*${unused}\\s*,?`, 'g'), '');
-      result = result.replace(new RegExp(`{\\s*,\\s*}`, 'g'), '{}');
-    }
-
-    return result;
+    return content;
   }
-
-  /**
-   * Apply fixes to a single file
-   */
-  private fixFile(filePath: string): boolean {
-    if (!fs.existsSync(filePath)) {
-      console.log(`File not found: ${filePath}`);
-      return false;
-    }
-
-    let content = fs.readFileSync(filePath, 'utf8');
-    const originalContent = content;
-
-    // Apply fixes
-    content = this.removeUnusedImports(filePath, content);
-    content = this.fixUnusedVariables(filePath, content);
-    content = this.fixTypeAnnotations(filePath, content);
-    content = this.fixMissingProperties(filePath, content);
-
-    // Write back if changed
-    if (content !== originalContent) {
-      fs.writeFileSync(filePath, content, 'utf8');
-      console.log(`✓ Fixed: ${filePath}`);
-      return true;
-    }
-
-    return false;
-  }
-
-  /**
-   * Run TypeScript compiler and get errors
-   */
-  private async getTypeScriptErrors(): Promise<TypeScriptError[]> {
-    try {
-      execSync('pnpm tsc --noEmit', { cwd: this.projectRoot });
-      return []; // No errors
-    } catch (error: any) {
-      const output = error.stdout?.toString() || error.stderr?.toString() || '';
-      return this.parseErrors(output);
-    }
-  }
-
-  /**
-   * Fix critical errors that prevent build
-   */
-  public async fixCriticalErrors(): Promise<void> {
-    console.log('🔧 Starting TypeScript error fixes...\n');
-
-    // Get initial errors
-    const errors = await this.getTypeScriptErrors();
-    console.log(`Found ${errors.length} TypeScript errors`);
-
-    // Group errors by file
-    const errorsByFile = new Map<string, TypeScriptError[]>();
-    for (const error of errors) {
-      const fullPath = path.resolve(this.projectRoot, error.file);
-      if (!errorsByFile.has(fullPath)) {
-        errorsByFile.set(fullPath, []);
-      }
-      errorsByFile.get(fullPath)!.push(error);
-    }
-
-    // Fix files with errors
-    let fixedFiles = 0;
-    for (const [filePath, fileErrors] of errorsByFile) {
-      console.log(`\nProcessing ${filePath}:`);
-      for (const error of fileErrors) {
-        console.log(`  Line ${error.line}: ${error.message}`);
-      }
-      
-      if (this.fixFile(filePath)) {
-        fixedFiles++;
-      }
-    }
-
-    console.log(`\n✅ Processing complete:`);
-    console.log(`   Files processed: ${errorsByFile.size}`);
-    console.log(`   Files modified: ${fixedFiles}`);
-
-    // Check remaining errors
-    const remainingErrors = await this.getTypeScriptErrors();
-    console.log(`   Remaining errors: ${remainingErrors.length}`);
-
-    if (remainingErrors.length > 0) {
-      console.log('\n⚠️  Some errors still need manual fixing:');
-      const remainingByFile = new Map<string, number>();
-      for (const error of remainingErrors) {
-        remainingByFile.set(error.file, (remainingByFile.get(error.file) || 0) + 1);
-      }
-      
-      for (const [file, count] of remainingByFile) {
-        console.log(`   ${file}: ${count} errors`);
-      }
-    } else {
-      console.log('\n🎉 All TypeScript errors fixed!');
-    }
-  }
-
-  /**
-   * Apply specific fixes for known issues
-   */
-  public applyKnownFixes(): void {
-    console.log('🔧 Applying known fixes...\n');
-
-    // Fix unused import in dashboard page
-    const dashboardPath = path.join(this.projectRoot, 'app/(dashboard)/dashboard/page.tsx');
-    if (fs.existsSync(dashboardPath)) {
-      let content = fs.readFileSync(dashboardPath, 'utf8');
-      content = content.replace(/import\s+{[^}]*TrendingUp[^}]*}\s+from[^;]+;?\n?/g, '');
-      fs.writeFileSync(dashboardPath, content, 'utf8');
-      console.log('✓ Fixed unused TrendingUp import');
-    }
-
-    // Fix Assessment type conflicts
-    const assessmentTypesPath = path.join(this.projectRoot, 'types/api.ts');
-    if (fs.existsSync(assessmentTypesPath)) {
-      let content = fs.readFileSync(assessmentTypesPath, 'utf8');
-      // Add missing properties to Assessment interface
-      if (content.includes('interface Assessment') && !content.includes('name:')) {
-        content = content.replace(
-          /interface Assessment\s*{([^}]+)}/,
-          `interface Assessment {
-  id: string;
-  name: string;
-  framework: string;
-  date: string;
-  status: string;
-  $1
-}`
-        );
-        fs.writeFileSync(assessmentTypesPath, content, 'utf8');
-        console.log('✓ Fixed Assessment interface');
-      }
-    }
-
-    // Fix button variant types
-    const buttonVariantFiles = [
-      'app/(dashboard)/policies/new/page.tsx'
-    ];
-
-    for (const file of buttonVariantFiles) {
-      const filePath = path.join(this.projectRoot, file);
-      if (fs.existsSync(filePath)) {
-        let content = fs.readFileSync(filePath, 'utf8');
-        content = content.replace(/variant="secondary-ruleiq"/g, 'variant="secondary"');
-        content = content.replace(/variant="accent"/g, 'variant="default"');
-        fs.writeFileSync(filePath, content, 'utf8');
-        console.log(`✓ Fixed button variants in ${file}`);
-      }
-    }
-
-    console.log('\n✅ Known fixes applied');
-  }
-}
-
-// Main execution
-async function main() {
-  const projectRoot = process.cwd();
-  const fixer = new TypeScriptErrorFixer(projectRoot);
-
-  console.log('🚀 ruleIQ TypeScript Error Fixer\n');
-  console.log(`Project: ${projectRoot}\n`);
-
-  // Apply known fixes first
-  fixer.applyKnownFixes();
-
-  // Then attempt to fix remaining errors
-  await fixer.fixCriticalErrors();
-
-  console.log('\n🎯 Next steps:');
-  console.log('1. Run `pnpm tsc --noEmit` to check remaining errors');
-  console.log('2. Run `pnpm build` to test production build');
-  console.log('3. Fix any remaining type errors manually');
-  console.log('4. Consider enabling strict mode gradually');
-}
-
-// Run if called directly
-if (require.main === module) {
-  main().catch(console.error);
 }

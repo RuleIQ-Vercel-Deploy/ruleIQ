@@ -2,7 +2,6 @@
 
 import { 
   Building2, 
-  Globe, 
   Users, 
   Shield, 
   Calendar,
@@ -20,13 +19,13 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
-import { H1, H2, H3, Body, Caption } from "@/components/ui/typography"
+import { H1, H3, Body, Caption } from "@/components/ui/typography"
 import { useBusinessProfileStore } from "@/lib/stores/business-profile.store"
 
 import { ProfileWizard } from "./profile-wizard"
 
 export function ProfileView() {
-  const { profile, isLoading, isProfileComplete } = useBusinessProfileStore()
+  const { profile, isLoading, isComplete } = useBusinessProfileStore()
   const [isEditing, setIsEditing] = React.useState(false)
 
   // Calculate profile completion percentage
@@ -36,13 +35,13 @@ export function ProfileView() {
     const fields = [
       profile.company_name,
       profile.industry,
-      profile.size,
+      profile.employee_count,
       profile.country,
-      profile.compliance_frameworks?.length > 0,
-      profile.data_types_collected?.length > 0,
-      profile.data_storage_locations?.length > 0,
-      profile.website,
-      profile.description,
+      profile.existing_frameworks?.length > 0,
+      profile.planned_frameworks?.length > 0,
+      profile.cloud_providers?.length > 0,
+      profile.annual_revenue,
+      profile.assessment_completed,
     ]
     
     const completed = fields.filter(Boolean).length
@@ -78,7 +77,7 @@ export function ProfileView() {
           </div>
         )}
         <ProfileWizard 
-          initialData={profile || undefined}
+          {...(profile && { initialData: profile })}
           onComplete={() => setIsEditing(false)}
         />
       </div>
@@ -113,14 +112,14 @@ export function ProfileView() {
               <div className="space-y-1">
                 <H3>Profile Completion</H3>
                 <Body color="muted">
-                  {isProfileComplete 
+                  {isComplete 
                     ? "Your profile is complete and ready for compliance automation"
                     : "Complete your profile to unlock all features"
                   }
                 </Body>
               </div>
               <div className="flex items-center gap-2">
-                {isProfileComplete ? (
+                {isComplete ? (
                   <CheckCircle2 className="h-5 w-5 text-success" />
                 ) : (
                   <AlertCircle className="h-5 w-5 text-warning" />
@@ -149,35 +148,32 @@ export function ProfileView() {
               <Body className="font-medium">{profile.company_name}</Body>
             </div>
             
-            {profile.website && (
+            {profile.annual_revenue && (
               <div>
-                <Caption color="muted">Website</Caption>
-                <a 
-                  href={profile.website} 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="text-sm text-cyan hover:text-cyan-light flex items-center gap-1"
-                >
-                  <Globe className="h-3 w-3" />
-                  {profile.website}
-                </a>
-              </div>
-            )}
-            
-            {profile.founded_year && (
-              <div>
-                <Caption color="muted">Founded</Caption>
+                <Caption color="muted">Annual Revenue</Caption>
                 <Body className="flex items-center gap-1">
-                  <Calendar className="h-4 w-4" />
-                  {profile.founded_year}
+                  <DollarSign className="h-4 w-4" />
+                  {profile.annual_revenue}
                 </Body>
               </div>
             )}
             
-            {profile.description && (
+            {profile.compliance_timeline && (
               <div>
-                <Caption color="muted">Description</Caption>
-                <Body className="text-sm">{profile.description}</Body>
+                <Caption color="muted">Compliance Timeline</Caption>
+                <Body className="flex items-center gap-1">
+                  <Calendar className="h-4 w-4" />
+                  {profile.compliance_timeline}
+                </Body>
+              </div>
+            )}
+            
+            {profile.data_sensitivity && (
+              <div>
+                <Caption color="muted">Data Sensitivity</Caption>
+                <Badge variant={profile.data_sensitivity === 'High' || profile.data_sensitivity === 'Confidential' ? 'destructive' : 'secondary'}>
+                  {profile.data_sensitivity}
+                </Badge>
               </div>
             )}
           </CardContent>
@@ -201,7 +197,7 @@ export function ProfileView() {
             
             <div>
               <Caption color="muted">Company Size</Caption>
-              <Body className="font-medium">{profile.size} employees</Body>
+              <Body className="font-medium">{profile.employee_count} employees</Body>
             </div>
             
             {profile.annual_revenue && (
@@ -234,7 +230,7 @@ export function ProfileView() {
           </CardHeader>
           <CardContent>
             <div className="flex flex-wrap gap-2">
-              {profile.compliance_frameworks.map((framework) => (
+              {profile.existing_frameworks.map((framework: string) => (
                 <Badge key={framework} variant="secondary" className="uppercase">
                   {framework}
                 </Badge>
@@ -252,11 +248,11 @@ export function ProfileView() {
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            {profile.data_types_collected && profile.data_types_collected.length > 0 && (
+            {profile.saas_tools && profile.saas_tools.length > 0 && (
               <div>
-                <Caption color="muted">Data Types Collected</Caption>
+                <Caption color="muted">SaaS Tools</Caption>
                 <div className="flex flex-wrap gap-2 mt-1">
-                  {profile.data_types_collected.map((type) => (
+                  {profile.saas_tools.map((type: string) => (
                     <Badge key={type} variant="outline" className="text-xs">
                       {type.replace(/_/g, ' ')}
                     </Badge>
@@ -265,11 +261,11 @@ export function ProfileView() {
               </div>
             )}
             
-            {profile.data_storage_locations && profile.data_storage_locations.length > 0 && (
+            {profile.cloud_providers && profile.cloud_providers.length > 0 && (
               <div>
-                <Caption color="muted">Storage Locations</Caption>
+                <Caption color="muted">Cloud Providers</Caption>
                 <div className="flex flex-wrap gap-2 mt-1">
-                  {profile.data_storage_locations.map((location) => (
+                  {profile.cloud_providers.map((location: string) => (
                     <Badge key={location} variant="outline" className="text-xs">
                       {location.toUpperCase()}
                     </Badge>
@@ -281,9 +277,9 @@ export function ProfileView() {
             <div className="flex items-center gap-2">
               <Share2 className="h-4 w-4" />
               <Body className="text-sm">
-                {profile.third_party_sharing 
-                  ? "Shares data with third parties"
-                  : "Does not share data with third parties"
+                {profile.has_international_operations 
+                  ? "Has international operations"
+                  : "Operates domestically only"
                 }
               </Body>
             </div>
@@ -293,8 +289,8 @@ export function ProfileView() {
 
       {/* Timestamps */}
       <div className="flex items-center justify-between text-sm text-muted-foreground">
-        <Caption>Created: {new Date(profile.created_at).toLocaleDateString()}</Caption>
-        <Caption>Last updated: {new Date(profile.updated_at).toLocaleDateString()}</Caption>
+        <Caption>Created: {profile.created_at ? new Date(profile.created_at).toLocaleDateString() : 'Unknown'}</Caption>
+        <Caption>Last updated: {profile.updated_at ? new Date(profile.updated_at).toLocaleDateString() : 'Unknown'}</Caption>
       </div>
     </div>
   )

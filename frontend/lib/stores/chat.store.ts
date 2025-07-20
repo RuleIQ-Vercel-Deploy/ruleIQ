@@ -152,7 +152,7 @@ export const useChatStore = create<ChatState>()(
         set({ isSendingMessage: true, error: null });
         
         // Get current user info
-        const {user} = useAuthStore.getState();
+        const {user: _user} = useAuthStore.getState();
         
         // Optimistically add message to UI
         const tempMessage: ChatMessage = {
@@ -168,7 +168,7 @@ export const useChatStore = create<ChatState>()(
           messages: {
             ...state.messages,
             [state.activeConversationId!]: [
-              ...(state.messages[state.activeConversationId!] || []),
+              ...(state.messages[state.activeConversationId!] || [] || []),
               tempMessage,
             ],
           },
@@ -191,7 +191,7 @@ export const useChatStore = create<ChatState>()(
             set((state) => ({
               messages: {
                 ...state.messages,
-                [state.activeConversationId!]: state.messages[state.activeConversationId!]
+                [state.activeConversationId!]: state.messages[state.activeConversationId!] || []
                   .map((msg) => msg.id === tempMessage.id ? response : msg),
               },
             }));
@@ -203,7 +203,7 @@ export const useChatStore = create<ChatState>()(
           set((state) => ({
             messages: {
               ...state.messages,
-              [state.activeConversationId!]: state.messages[state.activeConversationId!]
+              [state.activeConversationId!]: state.messages[state.activeConversationId!] || []
                 .filter((msg) => msg.id !== tempMessage.id),
             },
             error: error.message || 'Failed to send message',

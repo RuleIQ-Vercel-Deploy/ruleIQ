@@ -1,8 +1,9 @@
 'use client';
 
 import * as Sentry from '@sentry/nextjs';
-import { useEffect } from 'react';
 import { AlertCircle, RefreshCw, Home } from 'lucide-react';
+import { useEffect } from 'react';
+
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 

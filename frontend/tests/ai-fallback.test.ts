@@ -6,8 +6,8 @@
 
 // Set up test environment to use mock data
 process.env.NODE_ENV = 'test';
-process.env.NEXT_PUBLIC_USE_REAL_AI = 'false';
-process.env.NEXT_PUBLIC_ENABLE_MOCK_DATA = 'true';
+process.env['NEXT_PUBLIC_USE_REAL_AI'] = 'false';
+process.env['NEXT_PUBLIC_ENABLE_MOCK_DATA'] = 'true';
 
 describe('AI Fallback Tests', () => {
   describe('Mock Data Fallback', () => {
@@ -28,7 +28,7 @@ describe('AI Fallback Tests', () => {
       // Simulate the service behavior
       const getQuestionHelp = async (request: any) => {
         // In development mode, always return mock data
-        if (process.env.NEXT_PUBLIC_USE_REAL_AI !== 'true') {
+        if (process.env['NEXT_PUBLIC_USE_REAL_AI'] !== 'true') {
           return mockHelpResponse;
         }
         
@@ -100,7 +100,7 @@ describe('AI Fallback Tests', () => {
 
       // Simulate the service behavior
       const getAssessmentAnalysis = async (request: any) => {
-        if (process.env.NEXT_PUBLIC_USE_REAL_AI !== 'true') {
+        if (process.env['NEXT_PUBLIC_USE_REAL_AI'] !== 'true') {
           return mockAnalysisResponse;
         }
         throw new Error('Production endpoint not available');
@@ -264,22 +264,22 @@ describe('AI Fallback Tests', () => {
 
   describe('Production vs Development Mode', () => {
     test('should use mock data in development mode', () => {
-      const originalEnv = process.env.NEXT_PUBLIC_USE_REAL_AI;
+      const originalEnv = process.env['NEXT_PUBLIC_USE_REAL_AI'];
       
       // Test development mode
-      process.env.NEXT_PUBLIC_USE_REAL_AI = 'false';
+      process.env['NEXT_PUBLIC_USE_REAL_AI'] = 'false';
       
-      const shouldUseMockData = process.env.NEXT_PUBLIC_USE_REAL_AI !== 'true';
+      const shouldUseMockData = process.env['NEXT_PUBLIC_USE_REAL_AI'] !== 'true';
       expect(shouldUseMockData).toBe(true);
       
       // Test production mode
-      process.env.NEXT_PUBLIC_USE_REAL_AI = 'true';
+      process.env['NEXT_PUBLIC_USE_REAL_AI'] = 'true';
       
-      const shouldUseRealAI = process.env.NEXT_PUBLIC_USE_REAL_AI === 'true';
+      const shouldUseRealAI = process.env['NEXT_PUBLIC_USE_REAL_AI'] === 'true';
       expect(shouldUseRealAI).toBe(true);
       
       // Restore original environment
-      process.env.NEXT_PUBLIC_USE_REAL_AI = originalEnv;
+      process.env['NEXT_PUBLIC_USE_REAL_AI'] = originalEnv;
     });
   });
 });

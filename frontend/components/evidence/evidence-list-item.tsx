@@ -47,7 +47,7 @@ export function EvidenceListItem({ evidence, isSelected, onSelectionChange }: Ev
           className="rounded-full"
         />
         <span className="text-sm text-eggshell-white/60 hidden lg:inline">{evidence.uploadedBy}</span>
-        <Button variant="ghost-ruleiq" size="icon" className="h-8 w-8">
+        <Button variant="ghost" size="icon" className="h-8 w-8">
           <MoreVertical className="h-4 w-4" />
           <span className="sr-only">More actions</span>
         </Button>

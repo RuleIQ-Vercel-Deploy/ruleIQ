@@ -40,7 +40,7 @@ export function useMutationWithToast<
 
   return useMutation<TData, TError, TVariables>({
     mutationFn,
-    onMutate: (variables) => {
+    onMutate: (_variables) => {
       if (loadingMessage) {
         toast({
           title: loadingMessage,
@@ -48,7 +48,7 @@ export function useMutationWithToast<
         });
       }
     },
-    onSuccess: (data, variables) => {
+    onSuccess: (data, _variables) => {
       // Show success toast
       const message = typeof successMessage === 'function' 
         ? successMessage(data) 

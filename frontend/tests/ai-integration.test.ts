@@ -135,7 +135,7 @@ describe('AI Integration Tests', () => {
       // Should have mock questions
       const currentQuestion = engine.getCurrentAIQuestion();
       expect(currentQuestion).toBeTruthy();
-      expect(currentQuestion?.metadata?.isAIGenerated).toBe(true);
+      expect(currentQuestion?.metadata?.['isAIGenerated']).toBe(true);
     });
 
     it('should handle AI timeout scenarios', { timeout: 15000 }, async () => {
@@ -161,7 +161,7 @@ describe('AI Integration Tests', () => {
       expect(engine.isInAIMode()).toBe(true);
       
       const currentQuestion = engine.getCurrentAIQuestion();
-      expect(currentQuestion?.metadata?.isAIGenerated).toBe(true);
+      expect(currentQuestion?.metadata?.['isAIGenerated']).toBe(true);
     });
 
     it('should navigate through AI questions correctly', async () => {

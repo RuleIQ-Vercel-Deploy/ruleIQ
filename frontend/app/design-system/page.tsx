@@ -38,9 +38,9 @@ export default function DesignSystemPage() {
         {/* Typography with Colors */}
         <div className="space-y-4">
           <H3 className="mt-8">Typography Colors</H3>
-          <Typography color="navy">Navy Text - Primary brand color</Typography>
-          <Typography color="gold">Gold Text - Accent color for highlights</Typography>
-          <Typography color="cyan">Cyan Text - Energy accent</Typography>
+          <Typography color="primary">Primary Text - Primary brand color</Typography>
+          <Typography color="accent">Accent Text - Accent color for highlights</Typography>
+          <Typography color="brand">Brand Text - Brand color</Typography>
           <Typography color="muted">Muted Text - Secondary information</Typography>
           <Typography color="error">Error Text - For error messages</Typography>
           <Typography color="success">Success Text - For success messages</Typography>

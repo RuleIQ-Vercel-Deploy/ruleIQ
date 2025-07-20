@@ -23,6 +23,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
 import { useDashboard } from "@/lib/tanstack-query/hooks"
+import { safeGetFromStorage } from "@/lib/utils/type-safety"
 
 // Mock data generation functions
 function generateMockTrendData() {
@@ -105,16 +106,11 @@ export default function Dashboard() {
   } | null>(null)
   
   React.useEffect(() => {
-    try {
-      if (typeof window !== 'undefined' && window.localStorage) {
-        const profile = localStorage.getItem('ruleiq_compliance_profile')
-        const onboarding = localStorage.getItem('ruleiq_onboarding_data')
-        if (profile) setComplianceProfile(JSON.parse(profile))
-        if (onboarding) setOnboardingData(JSON.parse(onboarding))
-      }
-    } catch (error) {
-      console.warn('Unable to read from localStorage:', error)
-      // Continue without personalization
+    if (typeof window !== 'undefined' && window.localStorage) {
+      const profile = safeGetFromStorage('ruleiq_compliance_profile')
+      const onboarding = safeGetFromStorage('ruleiq_onboarding_data')
+      if (profile) setComplianceProfile(profile)
+      if (onboarding) setOnboardingData(onboarding)
     }
   }, [])
 
@@ -136,7 +132,7 @@ export default function Dashboard() {
               <h1 className="text-3xl font-bold gradient-text">
                 Welcome back{onboardingData?.fullName ? `, ${onboardingData.fullName.split(' ')[0]}` : ''}
               </h1>
-              <p className="text-text-secondary">
+              <p className="text-muted-foreground">
                 {complianceProfile?.priorities && complianceProfile.priorities.length > 0 
                   ? `Focusing on: ${complianceProfile.priorities[0]}` 
                   : "Here's what's happening with your compliance today"}

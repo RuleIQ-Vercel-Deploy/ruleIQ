@@ -849,7 +849,7 @@ export default function AIGuidedSignupPage() {
       <Card className="relative w-full max-w-3xl glass-card border-0 bg-surface-primary/80 backdrop-blur-xl shadow-2xl">
         <CardHeader className="text-center space-y-4 pb-6">
           <div className="flex items-center justify-center gap-2">
-            <Shield className="h-8 w-8 text-brand-primary" />
+            <Shield className="h-8 w-8 text-primary" />
             <span className="text-3xl font-bold">
               <span className="gradient-text">ruleIQ</span>
             </span>
@@ -857,16 +857,16 @@ export default function AIGuidedSignupPage() {
           
           <div>
             <CardTitle className="text-2xl font-bold gradient-text">Smart Compliance Setup</CardTitle>
-            <CardDescription className="text-text-secondary">AI-powered onboarding tailored to your business</CardDescription>
+            <CardDescription className="text-muted-foreground">AI-powered onboarding tailored to your business</CardDescription>
           </div>
           
           <div className="space-y-2">
             <div className="flex justify-between text-sm">
-              <span className="text-text-secondary">Progress</span>
-              <span className="text-text-secondary">{Math.round(progress)}%</span>
+              <span className="text-muted-foreground">Progress</span>
+              <span className="text-muted-foreground">{Math.round(progress)}%</span>
             </div>
             <Progress value={progress} className="h-2 bg-surface-secondary" />
-            <p className="text-xs text-text-tertiary">
+            <p className="text-xs text-muted-foreground">
               Estimated time: {Math.max(1, 5 - Math.floor(questionsAnswered / 3))} minutes remaining
             </p>
           </div>
@@ -874,13 +874,13 @@ export default function AIGuidedSignupPage() {
           {/* Dynamic badges based on progress */}
           <div className="flex justify-center gap-2 flex-wrap">
             {formData.industry && (
-              <Badge variant="secondary" className="bg-surface-secondary/50 border-glass-border text-text-primary">{formData.industry}</Badge>
+              <Badge variant="secondary" className="bg-surface-secondary/50 border-glass-border text-foreground">{formData.industry}</Badge>
             )}
             {formData.companySize && (
-              <Badge variant="secondary" className="bg-surface-secondary/50 border-glass-border text-text-primary">{formData.companySize} employees</Badge>
+              <Badge variant="secondary" className="bg-surface-secondary/50 border-glass-border text-foreground">{formData.companySize} employees</Badge>
             )}
             {formData.topPriority && (
-              <Badge className="bg-brand-primary/20 border-brand-primary/50 text-brand-light">{formData.topPriority}</Badge>
+              <Badge className="bg-primary/20 border-primary/50 text-primary-foreground">{formData.topPriority}</Badge>
             )}
           </div>
         </CardHeader>
@@ -902,8 +902,8 @@ export default function AIGuidedSignupPage() {
                 >
                   {message.type === "bot" && (
                     <div className="flex-shrink-0">
-                      <div className="w-8 h-8 rounded-full bg-brand-primary/20 flex items-center justify-center">
-                        {message.icon || <Bot className="h-5 w-5 text-brand-primary" />}
+                      <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center">
+                        {message.icon || <Bot className="h-5 w-5 text-primary" />}
                       </div>
                     </div>
                   )}
@@ -912,7 +912,7 @@ export default function AIGuidedSignupPage() {
                     "max-w-[80%] rounded-lg p-3",
                     message.type === "bot" 
                       ? "glass-card" 
-                      : "bg-gradient-to-r from-brand-primary to-brand-secondary text-white"
+                      : "bg-gradient-to-r from-primary to-primary text-primary-foreground"
                   )}>
                     {message.isTyping ? (
                       <div className="flex gap-1">
@@ -946,7 +946,7 @@ export default function AIGuidedSignupPage() {
                                           });
                                         }
                                       }}
-                                      className="border-glass-border data-[state=checked]:bg-brand-primary data-[state=checked]:border-brand-primary"
+                                      className="border-glass-border data-[state=checked]:bg-primary data-[state=checked]:border-primary"
                                     />
                                     <span className="text-sm">{option}</span>
                                   </label>
@@ -982,9 +982,9 @@ export default function AIGuidedSignupPage() {
                                     onCheckedChange={(checked) => 
                                       setFormData({ ...formData, agreeToTerms: checked === true })
                                     }
-                                    className="border-glass-border data-[state=checked]:bg-brand-primary data-[state=checked]:border-brand-primary"
+                                    className="border-glass-border data-[state=checked]:bg-primary data-[state=checked]:border-primary"
                                   />
-                                  <span className="text-sm text-text-secondary">
+                                  <span className="text-sm text-muted-foreground">
                                     {currentQuestion.confirmText}
                                   </span>
                                 </label>
@@ -1014,7 +1014,7 @@ export default function AIGuidedSignupPage() {
                                   variant="outline"
                                   size="sm"
                                   onClick={() => handleChoice(option)}
-                                  className="block w-full text-left bg-surface-secondary/50 border-glass-border hover:bg-surface-secondary/70 hover:border-glass-border-hover hover:text-brand-primary transition-colors"
+                                  className="block w-full text-left bg-surface-secondary/50 border-glass-border hover:bg-surface-secondary/70 hover:border-glass-border-hover hover:text-primary transition-colors"
                                   disabled={isTyping}
                                 >
                                   {option}
@@ -1040,7 +1040,7 @@ export default function AIGuidedSignupPage() {
                 value={userInput}
                 onChange={(e) => setUserInput(e.target.value)}
                 placeholder="Type your answer..."
-                className="flex-1 bg-surface-secondary/50 border-glass-border focus:border-brand-primary"
+                className="flex-1 bg-surface-secondary/50 border-glass-border focus:border-primary"
                 disabled={isLoading}
               />
               <Button type="submit" disabled={!userInput.trim() || isLoading} className="btn-gradient">
@@ -1053,7 +1053,7 @@ export default function AIGuidedSignupPage() {
           <div className="text-center pt-4 border-t border-glass-border">
             <Link
               href="/signup-traditional"
-              className="text-sm text-text-secondary hover:text-brand-secondary inline-flex items-center gap-1 transition-colors"
+              className="text-sm text-muted-foreground hover:text-primary inline-flex items-center gap-1 transition-colors"
             >
               <ArrowLeft className="h-3 w-3" />
               Prefer traditional signup?

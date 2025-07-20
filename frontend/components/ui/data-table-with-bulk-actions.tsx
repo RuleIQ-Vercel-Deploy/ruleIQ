@@ -14,7 +14,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table"
-import { Download, Trash2, Archive, Send, CheckCircle } from "lucide-react"
+import { Download, Trash2, Archive, CheckCircle } from "lucide-react"
 import * as React from "react"
 
 import { Button } from "@/components/ui/button"
@@ -27,7 +27,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import { cn } from "@/lib/utils"
+
 
 interface BulkAction<T> {
   id: string
@@ -88,7 +88,7 @@ export function DataTableWithBulkActions<TData, TValue>({
       id: "archive",
       label: "Archive",
       icon: Archive,
-      handler: async (selection, items) => {
+      handler: async (_selection, items) => {
         console.log("Archiving", items.length, "items")
         // Implement archive logic
       },
@@ -98,7 +98,7 @@ export function DataTableWithBulkActions<TData, TValue>({
       label: "Delete",
       icon: Trash2,
       variant: "destructive",
-      handler: async (selection, items) => {
+      handler: async (_selection, items) => {
         console.log("Deleting", items.length, "items")
         // Implement delete logic
       },

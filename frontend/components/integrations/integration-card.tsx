@@ -24,7 +24,9 @@ const statusIcons = {
 }
 
 export function IntegrationCard({ integration, onConnect, onManage, onDisconnect }: IntegrationCardProps) {
-  const { name, logo: Icon, description, isConnected, lastSync, syncStatus } = integration
+  const { name, logo: Icon, description, isConnected } = integration
+  const lastSync = 'lastSync' in integration ? integration.lastSync : undefined
+  const syncStatus = 'syncStatus' in integration ? integration.syncStatus : undefined
 
   return (
     <Card className="bg-oxford-blue/30 border-oxford-blue/50 text-eggshell-white flex flex-col">
@@ -70,13 +72,13 @@ export function IntegrationCard({ integration, onConnect, onManage, onDisconnect
       <CardFooter className="bg-oxford-blue/20 px-6 py-4 mt-auto">
         {isConnected ? (
           <div className="flex w-full items-center justify-between">
-            <Button variant="ghost-ruleiq" size="small" onClick={() => alert("Syncing now...")}>
+            <Button variant="ghost" size="sm" onClick={() => alert("Syncing now...")}>
               <RefreshCw className="mr-2" />
               Sync Now
             </Button>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="secondary-ruleiq" size="small">
+                <Button variant="secondary" size="sm">
                   Manage
                   <MoreVertical className="ml-2" />
                 </Button>
@@ -97,7 +99,7 @@ export function IntegrationCard({ integration, onConnect, onManage, onDisconnect
             </DropdownMenu>
           </div>
         ) : (
-          <Button variant="accent" className="w-full" onClick={() => onConnect(integration)}>
+          <Button variant="secondary" className="w-full" onClick={() => onConnect(integration)}>
             <Power className="mr-2" />
             Connect
           </Button>

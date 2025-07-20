@@ -4,13 +4,21 @@ Environment Configuration Management for RuleIQ
 This module handles all environment variables and configuration settings
 using Pydantic for validation and type safety.
 """
+from dotenv import load_dotenv
+
+# Load .env.local file at the very top to ensure variables are available
+load_dotenv(".env.local")
 
 import json
+import logging
+import os
 from enum import Enum
 from typing import Any, Dict, List, Optional, Union
 
 from pydantic import Field, field_validator, ValidationInfo
 from pydantic_settings import BaseSettings, SettingsConfigDict
+
+logger = logging.getLogger(__name__)
 
 
 def parse_list_from_string(v: Union[str, list]) -> list:
@@ -110,23 +118,44 @@ class Settings(BaseSettings):
     # JWT CONFIGURATION
     # ============================================================
     jwt_secret: str = Field(
-        default="dev-secret-key-change-in-production",
-        description=(
-            "Secret key for signing JWT tokens. "
-            "Must be set in production."
-        )
+        default_factory=lambda: os.getenv("JWT_SECRET", "dev-secret-key-change-in-production"),
+        description="Secret key for signing JWT tokens. Must be set via environment variable."
     )
+    
+    @field_validator("jwt_secret")
     @classmethod
     def validate_jwt_secret(cls, v: str, info: ValidationInfo) -> str:
-        """Ensure JWT secret is set, especially in production."""
-        forbidden_value = "your-secret-key-here-change-this-in-production"
-        if not v or v == forbidden_value:
+        """Ensure JWT secret is properly set and secure."""
+        # Skip validation for empty string during initialization
+        if not v:
+            return v
+            
+        forbidden_values = [
+            "dev-secret-key-change-in-production",
+            "your-secret-key-here-change-this-in-production",
+            "secret",
+            "password",
+            "123456"
+        ]
+        
+        if v in forbidden_values:
             env = info.data.get("environment")
             if env == Environment.PRODUCTION:
                 raise ValueError(
-                    "JWT_SECRET must be set in a production environment."
+                    "JWT_SECRET environment variable must be set in production. "
+                    "Use a cryptographically secure random string of at least 256 bits."
                 )
-            raise ValueError("JWT_SECRET must be set.")
+            # In development, allow the default but warn
+            if v == "dev-secret-key-change-in-production":
+                logger.warning(
+                    "Using default JWT secret for development. "
+                    "Set JWT_SECRET environment variable for security."
+                )
+        
+        # Ensure minimum security requirements
+        if len(v) < 32 and info.data.get("environment") == Environment.PRODUCTION:
+            raise ValueError("JWT_SECRET must be at least 32 characters long in production")
+        
         return v
 
     # ===================================================================
@@ -278,6 +307,13 @@ class Settings(BaseSettings):
     # NEXT.JS FRONTEND
     # ===================================================================
     next_public_api_url: str = Field(default="http://localhost:8000")
+
+
+    def model_post_init(self, __context) -> None:
+        """Add diagnostic logging after model initialization."""
+        print(f"[SETTINGS INIT] JWT_SECRET loaded: {self.jwt_secret[:10] if self.jwt_secret else 'None'}...")
+        print(f"[SETTINGS INIT] Working directory: {os.getcwd()}")
+        print(f"[SETTINGS INIT] Environment: {self.environment}")
 
     model_config = SettingsConfigDict(
         env_file=".env.local",

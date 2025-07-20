@@ -7,7 +7,7 @@ const nextConfig = {
     ignoreDuringBuilds: true, // Allow build to proceed with ESLint warnings
   },
   typescript: {
-    ignoreBuildErrors: true, // Temporarily allow build to proceed with TypeScript errors
+    ignoreBuildErrors: false, // Enforce TypeScript errors during build
   },
 
   // Performance optimizations

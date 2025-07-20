@@ -1,5 +1,6 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { ZodSchema, ZodError } from 'zod';
+import { type NextRequest, NextResponse } from 'next/server';
+import { type ZodSchema, ZodError } from 'zod';
+
 import { sanitizeObject } from './validation';
 
 /**
@@ -79,7 +80,8 @@ export function getClientIp(request: NextRequest): string {
   const realIp = request.headers.get('x-real-ip');
   
   if (forwarded) {
-    return forwarded.split(',')[0].trim();
+    const firstIp = forwarded.split(',')[0];
+    return firstIp ? firstIp.trim() : 'unknown';
   }
   
   if (realIp) {

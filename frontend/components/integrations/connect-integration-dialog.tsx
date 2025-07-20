@@ -42,7 +42,7 @@ export function ConnectIntegrationDialog({
         <div className="py-4">
           <h3 className="font-semibold mb-2 text-eggshell-white">Permissions Required:</h3>
           <ul className="space-y-2">
-            {integration.permissions?.map((permission) => (
+            {(integration as any).permissions?.map((permission: string) => (
               <li key={permission} className="flex items-start gap-3">
                 <Check className="h-5 w-5 text-success mt-0.5" />
                 <span className="text-grey-300">{permission}</span>
@@ -51,10 +51,10 @@ export function ConnectIntegrationDialog({
           </ul>
         </div>
         <DialogFooter>
-          <Button variant="ghost-ruleiq" onClick={() => onOpenChange(false)}>
+          <Button variant="ghost" onClick={() => onOpenChange(false)}>
             Cancel
           </Button>
-          <Button variant="accent" onClick={onConfirm}>
+          <Button variant="secondary" onClick={onConfirm}>
             <Power className="mr-2" />
             Authorize & Connect
           </Button>

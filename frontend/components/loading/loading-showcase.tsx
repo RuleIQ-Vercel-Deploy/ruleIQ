@@ -61,19 +61,19 @@ export function LoadingShowcase() {
         </CardHeader>
         <CardContent>
           <div className="flex flex-wrap items-center gap-4">
-            <Button variant="primary" size="medium" loading={isLoading} onClick={handleButtonClick}>
+            <Button variant="default" size="default" loading={isLoading} onClick={handleButtonClick}>
               <RefreshCw className="h-4 w-4" />
               Click to Load
             </Button>
-            <Button variant="secondary-ruleiq" size="medium" loading={isLoading} onClick={handleButtonClick}>
+            <Button variant="secondary" size="default" loading={isLoading} onClick={handleButtonClick}>
               <RefreshCw className="h-4 w-4" />
               Click to Load
             </Button>
-            <Button variant="error" size="medium" loading={isLoading} onClick={handleButtonClick}>
+            <Button variant="destructive" size="default" loading={isLoading} onClick={handleButtonClick}>
               <RefreshCw className="h-4 w-4" />
               Click to Load
             </Button>
-            <Button variant="ghost-ruleiq" size="medium" loading={isLoading} onClick={handleButtonClick}>
+            <Button variant="ghost" size="default" loading={isLoading} onClick={handleButtonClick}>
               <RefreshCw className="h-4 w-4" />
               Click to Load
             </Button>

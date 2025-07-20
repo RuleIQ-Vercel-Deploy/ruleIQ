@@ -1,11 +1,11 @@
-import axios, { type AxiosInstance, type AxiosRequestConfig, AxiosResponse, type AxiosError } from 'axios';
+import axios, { type AxiosInstance, type AxiosRequestConfig, type AxiosError } from 'axios';
 
-import { API_TIMEOUT, API_RETRY_ATTEMPTS, API_RETRY_DELAY, AUTH_TOKEN_KEY, REFRESH_TOKEN_KEY } from '@/config/constants';
+import { API_TIMEOUT } from '@/config/constants';
 import { env } from '@/config/env';
 import SecureStorage from '@/lib/utils/secure-storage';
 // CSRF headers will be added at component level
 
-import { handleApiError, retryWithBackoff, ErrorType, logError } from './error-handler';
+import { handleApiError, retryWithBackoff, logError } from './error-handler';
 
 import type { ApiResponse, ApiError as ApiErrorType } from '@/types/global';
 
@@ -204,7 +204,7 @@ class ApiClient {
    */
   private async retryRequest<T>(
     fn: () => Promise<T>,
-    context?: string
+    _context?: string
   ): Promise<T> {
     try {
       return await fn();

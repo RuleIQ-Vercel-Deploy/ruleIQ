@@ -67,11 +67,11 @@ export function ConfirmDialog({
         </DialogHeader>
         <DialogFooter className="mt-4">
           <DialogClose asChild>
-            <Button variant="secondary-ruleiq" size="medium">
+            <Button variant="secondary" size="default">
               {cancelText}
             </Button>
           </DialogClose>
-          <Button variant={variant === "destructive" ? "error" : "primary"} size="medium" onClick={handleConfirm}>
+          <Button variant={variant === "destructive" ? "destructive" : "default"} size="default" onClick={handleConfirm}>
             {confirmText}
           </Button>
         </DialogFooter>

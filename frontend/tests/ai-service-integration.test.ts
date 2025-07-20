@@ -4,18 +4,18 @@
  */
 
 // Mock the environment and dependencies
-process.env.NEXT_PUBLIC_API_URL = 'http://localhost:8000';
-process.env.NEXT_PUBLIC_WEBSOCKET_URL = 'ws://localhost:8000/ws';
-process.env.NEXT_PUBLIC_AUTH_DOMAIN = 'localhost';
-process.env.NEXT_PUBLIC_JWT_EXPIRES_IN = '24h';
-process.env.NEXT_PUBLIC_ENABLE_ANALYTICS = 'false';
-process.env.NEXT_PUBLIC_ENABLE_SENTRY = 'false';
-process.env.NEXT_PUBLIC_ENABLE_MOCK_DATA = 'true';
-process.env.NEXT_PUBLIC_USE_REAL_AI = 'false';
-process.env.NODE_ENV = 'test';
+process.env['$1'] = 'http://localhost:8000';
+process.env['$1'] = 'ws://localhost:8000/ws';
+process.env['$1'] = 'localhost';
+process.env['$1'] = '24h';
+process.env['$1'] = 'false';
+process.env['$1'] = 'false';
+process.env['$1'] = 'true';
+process.env['$1'] = 'false';
+process.env['$1'] = 'test';
 
 import { assessmentAIService } from '@/lib/api/assessments-ai.service';
-import type { BusinessProfile } from '@/types/auth';
+import type { BusinessProfile } from '@/types/api';
 
 describe('AI Service Integration Tests', () => {
   // Test data for different business scenarios

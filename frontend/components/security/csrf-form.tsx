@@ -1,9 +1,10 @@
 'use client';
 
-import { ReactNode, FormEvent } from 'react';
-import { useCsrfToken, getCsrfHeaders } from '@/lib/hooks/use-csrf-token';
-import { Button } from '@/components/ui/button';
 import { Loader2 } from 'lucide-react';
+import { type ReactNode, type FormEvent } from 'react';
+
+import { Button } from '@/components/ui/button';
+import { useCsrfToken } from '@/lib/hooks/use-csrf-token';
 
 interface CsrfFormProps {
   children: ReactNode;
@@ -11,9 +12,7 @@ interface CsrfFormProps {
   action?: string;
   method?: 'POST' | 'PUT' | 'DELETE' | 'PATCH';
   className?: string;
-  submitText?: string;
-  loadingText?: string;
-  disabled?: boolean;
+
 }
 
 /**
@@ -25,9 +24,6 @@ export function CsrfForm({
   action,
   method = 'POST',
   className,
-  submitText = 'Submit',
-  loadingText = 'Submitting...',
-  disabled = false,
 }: CsrfFormProps) {
   const { token, loading: tokenLoading, error: tokenError } = useCsrfToken();
 

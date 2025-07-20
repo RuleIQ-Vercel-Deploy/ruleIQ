@@ -141,18 +141,18 @@ export function PricingSection({ onSelectPlan, currentPlan, showHeader = true }:
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-7xl mx-auto">
         <PricingCard 
           planId="starter" 
-          onSelectPlan={onSelectPlan}
-          currentPlan={currentPlan}
+          {...(onSelectPlan && { onSelectPlan })}
+          {...(currentPlan && { currentPlan })}
         />
         <PricingCard 
           planId="professional" 
-          onSelectPlan={onSelectPlan}
-          currentPlan={currentPlan}
+          {...(onSelectPlan && { onSelectPlan })}
+          {...(currentPlan && { currentPlan })}
         />
         <PricingCard 
           planId="enterprise" 
-          onSelectPlan={onSelectPlan}
-          currentPlan={currentPlan}
+          {...(onSelectPlan && { onSelectPlan })}
+          {...(currentPlan && { currentPlan })}
         />
       </div>
       

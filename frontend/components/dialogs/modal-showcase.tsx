@@ -63,7 +63,7 @@ export function ModalShowcase() {
         <CardContent className="flex flex-wrap items-center gap-4">
           <ConfirmDialog
             trigger={
-              <Button variant="secondary-ruleiq" size="medium">
+              <Button variant="secondary" size="default">
                 Show Confirmation
               </Button>
             }
@@ -74,7 +74,7 @@ export function ModalShowcase() {
           />
           <ConfirmDialog
             trigger={
-              <Button variant="error" size="medium">
+              <Button variant="destructive" size="default">
                 <Trash2 className="h-4 w-4" />
                 Delete Item
               </Button>
@@ -100,7 +100,7 @@ export function ModalShowcase() {
         <CardContent>
           <FormDialog
             trigger={
-              <Button variant="primary" size="medium">
+              <Button variant="default" size="default">
                 <UserPlus className="h-4 w-4" />
                 Add New User
               </Button>

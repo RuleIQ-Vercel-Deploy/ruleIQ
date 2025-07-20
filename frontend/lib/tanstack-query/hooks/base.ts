@@ -1,4 +1,4 @@
-import { useQuery, useMutation, type UseQueryOptions, type UseMutationOptions } from '@tanstack/react-query';
+import { type UseQueryOptions, type UseMutationOptions } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 
 // Common error type for API responses

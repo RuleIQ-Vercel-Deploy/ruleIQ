@@ -6,7 +6,7 @@ import { Responsive, WidthProvider, type Layout } from "react-grid-layout"
 import { toast } from "sonner"
 
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent } from "@/components/ui/card"
 import {
   Dialog,
   DialogContent,
@@ -24,7 +24,6 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { Switch } from "@/components/ui/switch"
-import { cn } from "@/lib/utils"
 
 import { AIInsightsWidget } from "./ai-insights-widget"
 import { ComplianceTrendChart, FrameworkBreakdownChart, ActivityHeatmap, RiskMatrix, TaskProgressChart } from "./charts"
@@ -174,7 +173,7 @@ export function CustomizableDashboard({ data, onLayoutChange }: CustomizableDash
   const [selectedWidgetType, setSelectedWidgetType] = useState<WidgetType>("ai-insights")
 
   // Handle layout changes
-  const handleLayoutChange = useCallback((currentLayout: Layout[], allLayouts: any) => {
+  const handleLayoutChange = useCallback((_layout: Layout[], allLayouts: any) => {
     setLayouts(allLayouts)
     if (onLayoutChange) {
       onLayoutChange(allLayouts)
@@ -250,8 +249,10 @@ export function CustomizableDashboard({ data, onLayoutChange }: CustomizableDash
         return <AIInsightsWidget insights={data?.insights || []} />
       case "compliance-score":
         return <ComplianceScoreWidget 
-          overallScore={data?.compliance_score || 0}
-          frameworks={data?.framework_scores || {}}
+          data={{
+            overall_score: data?.compliance_score || 0,
+            frameworks: data?.framework_scores || []
+          }}
         />
       case "pending-tasks":
         return <PendingTasksWidget tasks={data?.pending_tasks || []} />

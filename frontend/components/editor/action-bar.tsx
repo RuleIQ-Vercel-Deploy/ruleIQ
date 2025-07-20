@@ -8,7 +8,7 @@ import { editorData } from "@/lib/data/editor-data"
 
 export function ActionBar() {
   const {status} = editorData.metadata
-  const statusVariant = status === "Approved" ? "success" : status === "In Review" ? "warning" : "secondary"
+  const statusVariant = status === "Approved" ? "success" : status === "In Review" ? "pending" : "secondary"
 
   return (
     <div className="flex items-center justify-between border-t border-border bg-background p-2">

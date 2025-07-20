@@ -3,7 +3,7 @@
  */
 
 import { type AssessmentProgress } from "@/lib/assessment-engine/types";
-import { type BusinessProfile } from "@/types/auth";
+import { type BusinessProfile } from "@/types/api";
 
 /**
  * User context for AI requests - provides business and assessment context

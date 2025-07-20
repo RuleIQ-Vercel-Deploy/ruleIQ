@@ -218,7 +218,7 @@ const defaultWidgets: WidgetConfig[] = [
 export const useDashboardStore = create<DashboardState>()(
   devtools(
     persist(
-      (set, get) => ({
+      (set, _get) => ({
         // Initial State
         widgets: defaultWidgets,
         complianceScore: null,

@@ -1,6 +1,7 @@
-import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
-import { validateCSRFToken, CSRF_HEADER_NAME } from './csrf';
+import { type NextRequest, NextResponse } from 'next/server';
+
+import { CSRF_HEADER_NAME } from './csrf';
 
 /**
  * CSRF protection middleware for API routes

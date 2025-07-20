@@ -20,7 +20,6 @@ import {
 import { 
   type BusinessProfile, 
   type BusinessProfileFormData,
-  WizardStepData,
   WIZARD_STEPS,
   type FrameworkRecommendation
 } from '@/types/business-profile';

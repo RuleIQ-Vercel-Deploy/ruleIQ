@@ -17,27 +17,27 @@ export function ButtonShowcase() {
         <CardContent>
           <div className="space-y-4">
             <div className="flex flex-wrap items-center gap-4">
-              <Button variant="primary" size="small">
+              <Button variant="default" size="sm">
                 <Plus className="h-3 w-3" />
                 Small Primary
               </Button>
-              <Button variant="primary" size="medium">
+              <Button variant="default" size="default">
                 <Download className="h-4 w-4" />
                 Medium Primary
               </Button>
-              <Button variant="primary" size="large">
+              <Button variant="default" size="lg">
                 <Settings className="h-5 w-5" />
                 Large Primary
               </Button>
             </div>
             <div className="flex flex-wrap items-center gap-4">
-              <Button variant="primary" size="small" disabled>
+              <Button variant="default" size="sm" disabled>
                 Disabled Small
               </Button>
-              <Button variant="primary" size="medium" disabled>
+              <Button variant="default" size="default" disabled>
                 Disabled Medium
               </Button>
-              <Button variant="primary" size="large" disabled>
+              <Button variant="default" size="lg" disabled>
                 Disabled Large
               </Button>
             </div>
@@ -56,27 +56,27 @@ export function ButtonShowcase() {
         <CardContent>
           <div className="space-y-4">
             <div className="flex flex-wrap items-center gap-4">
-              <Button variant="secondary-ruleiq" size="small">
+              <Button variant="secondary" size="sm">
                 <Heart className="h-3 w-3" />
                 Small Secondary
               </Button>
-              <Button variant="secondary-ruleiq" size="medium">
+              <Button variant="secondary" size="default">
                 <Star className="h-4 w-4" />
                 Medium Secondary
               </Button>
-              <Button variant="secondary-ruleiq" size="large">
+              <Button variant="secondary" size="lg">
                 <ArrowRight className="h-5 w-5" />
                 Large Secondary
               </Button>
             </div>
             <div className="flex flex-wrap items-center gap-4">
-              <Button variant="secondary-ruleiq" size="small" disabled>
+              <Button variant="secondary" size="sm" disabled>
                 Disabled Small
               </Button>
-              <Button variant="secondary-ruleiq" size="medium" disabled>
+              <Button variant="secondary" size="default" disabled>
                 Disabled Medium
               </Button>
-              <Button variant="secondary-ruleiq" size="large" disabled>
+              <Button variant="secondary" size="lg" disabled>
                 Disabled Large
               </Button>
             </div>
@@ -93,27 +93,27 @@ export function ButtonShowcase() {
         <CardContent>
           <div className="space-y-4">
             <div className="flex flex-wrap items-center gap-4">
-              <Button variant="ghost-ruleiq" size="small">
+              <Button variant="ghost" size="sm">
                 <Plus className="h-3 w-3" />
                 Small Ghost
               </Button>
-              <Button variant="ghost-ruleiq" size="medium">
+              <Button variant="ghost" size="default">
                 <Download className="h-4 w-4" />
                 Medium Ghost
               </Button>
-              <Button variant="ghost-ruleiq" size="large">
+              <Button variant="ghost" size="lg">
                 <Settings className="h-5 w-5" />
                 Large Ghost
               </Button>
             </div>
             <div className="flex flex-wrap items-center gap-4">
-              <Button variant="ghost-ruleiq" size="small" disabled>
+              <Button variant="ghost" size="sm" disabled>
                 Disabled Small
               </Button>
-              <Button variant="ghost-ruleiq" size="medium" disabled>
+              <Button variant="ghost" size="default" disabled>
                 Disabled Medium
               </Button>
-              <Button variant="ghost-ruleiq" size="large" disabled>
+              <Button variant="ghost" size="lg" disabled>
                 Disabled Large
               </Button>
             </div>
@@ -130,19 +130,19 @@ export function ButtonShowcase() {
         <CardContent>
           <div className="space-y-4">
             <div className="flex flex-wrap items-center gap-4">
-              <Button variant="accent" size="medium">
+              <Button variant="secondary" size="default">
                 <Star className="h-4 w-4" />
                 Accent Button
               </Button>
-              <Button variant="success" size="medium">
+              <Button variant="success" size="default">
                 <Plus className="h-4 w-4" />
                 Success Button
               </Button>
-              <Button variant="warning" size="medium">
+              <Button variant="outline" size="default">
                 <Settings className="h-4 w-4" />
                 Warning Button
               </Button>
-              <Button variant="error" size="medium">
+              <Button variant="destructive" size="default">
                 <Download className="h-4 w-4" />
                 Error Button
               </Button>
@@ -165,13 +165,13 @@ export function ButtonShowcase() {
                 Action Group
               </h4>
               <div className="flex flex-wrap items-center gap-3">
-                <Button variant="primary" size="medium">
+                <Button variant="default" size="default">
                   Save Changes
                 </Button>
-                <Button variant="secondary-ruleiq" size="medium">
+                <Button variant="secondary" size="default">
                   Cancel
                 </Button>
-                <Button variant="ghost-ruleiq" size="medium">
+                <Button variant="ghost" size="default">
                   Reset
                 </Button>
               </div>
@@ -183,11 +183,11 @@ export function ButtonShowcase() {
                 Form Actions
               </h4>
               <div className="flex flex-wrap items-center gap-3">
-                <Button variant="primary" size="large">
+                <Button variant="default" size="lg">
                   <Plus className="h-5 w-5" />
                   Create Assessment
                 </Button>
-                <Button variant="secondary-ruleiq" size="large">
+                <Button variant="secondary" size="lg">
                   <Download className="h-5 w-5" />
                   Export Data
                 </Button>
@@ -200,16 +200,16 @@ export function ButtonShowcase() {
                 Status Actions
               </h4>
               <div className="flex flex-wrap items-center gap-3">
-                <Button variant="success" size="small">
+                <Button variant="success" size="sm">
                   Approve
                 </Button>
-                <Button variant="warning" size="small">
+                <Button variant="outline" size="sm">
                   Review
                 </Button>
-                <Button variant="error" size="small">
+                <Button variant="destructive" size="sm">
                   Reject
                 </Button>
-                <Button variant="ghost-ruleiq" size="small">
+                <Button variant="ghost" size="sm">
                   View Details
                 </Button>
               </div>

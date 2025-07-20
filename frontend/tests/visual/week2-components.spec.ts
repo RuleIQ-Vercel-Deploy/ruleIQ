@@ -129,7 +129,7 @@ test.describe('Week 2 Components Visual Regression', () => {
   test.describe('Color Contrast', () => {
     test('All components together', async ({ page }) => {
       await expect(page.locator('[data-testid="all-components"]')).toHaveScreenshot('all-components.png', {
-        fullPage: true,
+
         animations: 'disabled'
       });
     });

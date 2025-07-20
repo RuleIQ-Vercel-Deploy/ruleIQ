@@ -25,7 +25,7 @@ import {
   InsightsSkeleton 
 } from "@/components/ui/skeletons"
 
-import type { DashboardInsight, PendingTask } from "@/types/dashboard"
+import type { DashboardInsight, DashboardTask } from "@/types/dashboard"
 
 // Server-side data fetching functions
 async function getComplianceStats() {
@@ -78,33 +78,39 @@ async function getAIInsights(): Promise<DashboardInsight[]> {
   ]
 }
 
-async function getPendingTasks(): Promise<PendingTask[]> {
+async function getPendingTasks(): Promise<DashboardTask[]> {
   await new Promise(resolve => setTimeout(resolve, 600))
   
   return [
     {
       id: "1",
-      title: "Complete Risk Assessment", 
-      dueDate: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000).toISOString(),
-      priority: "high",
-      category: "ISO 27001",
-      status: "pending",
+      title: "Complete Risk Assessment",
+      description: "Conduct comprehensive risk assessment for current quarter",
+      type: "assessment" as const,
+      due_date: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000).toISOString(),
+      priority: "high" as const,
+      framework: "ISO 27001",
+      status: "pending" as const,
     },
     {
       id: "2",
       title: "Review Access Controls",
-      dueDate: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString(),
-      priority: "medium", 
-      category: "SOC 2",
-      status: "pending",
+      description: "Audit and update user access permissions",
+      type: "compliance" as const,
+      due_date: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString(),
+      priority: "medium" as const,
+      framework: "SOC 2",
+      status: "pending" as const,
     },
     {
       id: "3",
       title: "Update Privacy Policy",
-      dueDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
-      priority: "low",
-      category: "GDPR",
-      status: "pending",
+      description: "Revise privacy policy to reflect new data processing requirements",
+      type: "compliance" as const,
+      due_date: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
+      priority: "low" as const,
+      framework: "GDPR",
+      status: "pending" as const,
     },
   ]
 }

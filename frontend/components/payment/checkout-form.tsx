@@ -2,7 +2,7 @@
 
 import { Elements, PaymentElement, useStripe, useElements } from "@stripe/react-stripe-js"
 import { Loader2, Lock, CreditCard } from "lucide-react"
-import { useState, useEffect } from "react"
+import { useState } from "react"
 
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Button } from "@/components/ui/button"
@@ -15,9 +15,9 @@ import { getStripe, PRICING_PLANS, type PricingPlan, formatPrice } from "@/lib/s
 
 interface CheckoutFormProps {
   planId: PricingPlan
-  customerEmail?: string
-  onSuccess?: (sessionId: string) => void
-  onError?: (error: string) => void
+  customerEmail?: string | undefined
+  onSuccess?: (sessionId: string) => void | undefined
+  onError?: (error: string) => void | undefined
 }
 
 // Inner form component that uses Stripe hooks
@@ -176,8 +176,8 @@ function CheckoutFormInner({ planId, customerEmail, onSuccess, onError }: Checko
 
 // Main checkout form component with Stripe Elements wrapper
 export function CheckoutForm({ planId, customerEmail, onSuccess, onError }: CheckoutFormProps) {
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+  const [loading] = useState(false)
+  const [error] = useState<string | null>(null)
 
   const plan = PRICING_PLANS[planId]
   const stripePromise = getStripe()

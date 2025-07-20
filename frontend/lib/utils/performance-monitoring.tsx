@@ -13,7 +13,7 @@ interface PerformanceEntry {
 class PerformanceMonitor {
   private entries: PerformanceEntry[] = []
   private maxEntries = 1000
-  private enabled = process.env.NODE_ENV === 'development' || process.env.NEXT_PUBLIC_ENABLE_PERFORMANCE_MONITORING === 'true'
+  private enabled = process.env.NODE_ENV === 'development' || process.env['NEXT_PUBLIC_ENABLE_PERFORMANCE_MONITORING'] === 'true'
 
   // Record a performance entry
   record(entry: PerformanceEntry) {
@@ -71,13 +71,13 @@ class PerformanceMonitor {
       if (!grouped[entry.operation]) {
         grouped[entry.operation] = { count: 0, avgDuration: 0, successRate: 0 }
       }
-      grouped[entry.operation].count++
+      grouped[entry.operation]!.count++
     })
 
     Object.keys(grouped).forEach(operation => {
       const operationEntries = entries.filter(e => e.operation === operation)
-      grouped[operation].avgDuration = operationEntries.reduce((sum, e) => sum + e.duration, 0) / operationEntries.length
-      grouped[operation].successRate = operationEntries.filter(e => e.success).length / operationEntries.length
+      grouped[operation]!.avgDuration = operationEntries.reduce((sum, e) => sum + e.duration, 0) / operationEntries.length
+      grouped[operation]!.successRate = operationEntries.filter(e => e.success).length / operationEntries.length
     })
 
     return grouped

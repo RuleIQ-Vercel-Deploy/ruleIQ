@@ -6,8 +6,7 @@ import { useBusinessProfileStore } from '@/lib/stores/business-profile.store';
 import { 
   createQueryKey, 
   type BaseQueryOptions, 
-  type BaseMutationOptions,
-  getErrorMessage 
+  type BaseMutationOptions 
 } from './base';
 
 import type { 

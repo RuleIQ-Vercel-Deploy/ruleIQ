@@ -33,7 +33,7 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
     return { hasError: true, error }
   }
 
-  componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
+  override componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
     // Log error to error reporting service
     console.error('Error caught by boundary:', error, errorInfo)
     
@@ -45,7 +45,7 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
     this.setState({ hasError: false, error: null })
   }
 
-  render() {
+  override render() {
     if (this.state.hasError && this.state.error) {
       const FallbackComponent = this.props.fallback || DefaultErrorFallback
       return <FallbackComponent error={this.state.error} resetError={this.resetError} />
@@ -86,7 +86,7 @@ function DefaultErrorFallback({ error, resetError }: ErrorFallbackProps) {
 
         <div className="flex gap-3 justify-center">
           <Button
-            variant="accent"
+            variant="secondary"
             onClick={resetError}
             className="gap-2"
           >

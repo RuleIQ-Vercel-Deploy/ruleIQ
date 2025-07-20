@@ -1,10 +1,9 @@
 "use client"
 
-import { Bell, Search, Menu } from "lucide-react"
+import React from "react"
 import Link from "next/link"
-import * as React from "react"
-
-import { Badge } from "@/components/ui/badge"
+import { Menu, Search, Bell } from "lucide-react"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
@@ -15,7 +14,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Input } from "@/components/ui/input"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { useSidebar } from "@/components/ui/sidebar"
 import { cn } from "@/lib/utils"
 

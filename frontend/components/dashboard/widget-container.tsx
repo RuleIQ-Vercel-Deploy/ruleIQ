@@ -1,14 +1,14 @@
 "use client"
 
-import React, { useCallback, useState } from 'react'
-import { DndContext, closestCenter, KeyboardSensor, PointerSensor, useSensor, useSensors, DragEndEvent } from '@dnd-kit/core'
-import { arrayMove, SortableContext, sortableKeyboardCoordinates, rectSortingStrategy } from '@dnd-kit/sortable'
-import { useSortable } from '@dnd-kit/sortable'
+import { DndContext, closestCenter, KeyboardSensor, PointerSensor, useSensor, useSensors, type DragEndEvent } from '@dnd-kit/core'
+import { arrayMove, SortableContext, sortableKeyboardCoordinates, rectSortingStrategy , useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { GripVertical, X, Settings, Maximize2, Minimize2 } from 'lucide-react'
-import { cn } from '@/lib/utils'
+import React, { useCallback, useState } from 'react'
+
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
+import { cn } from '@/lib/utils'
 
 export interface WidgetConfig {
   id: string
@@ -204,7 +204,7 @@ export function WidgetContainer({
               key={widget.id}
               widget={widget}
               onRemove={handleRemoveWidget}
-              onSettings={onWidgetSettings}
+              {...(onWidgetSettings && { onSettings: onWidgetSettings })}
               isExpanded={expandedWidgets.has(widget.id)}
               onToggleExpand={handleToggleExpand}
             />

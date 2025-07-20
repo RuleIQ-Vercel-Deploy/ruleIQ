@@ -1,18 +1,6 @@
 'use client'
 
 import { useState } from 'react'
-import { useDesignSystem } from '@/providers/design-system-provider'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Badge } from '@/components/ui/badge'
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
-import { Checkbox } from '@/components/ui/checkbox'
-import { TopNavigation } from '@/components/navigation/top-navigation'
-import { AppSidebar } from '@/components/navigation/app-sidebar'
-import { ThemeDemo } from '@/components/theme-demo'
-import { NavigationDemo } from '@/components/navigation-demo'
 import { 
   Check, 
   AlertTriangle, 
@@ -23,6 +11,14 @@ import {
   Smartphone,
   Eye
 } from 'lucide-react'
+
+import { NavigationDemo } from '@/components/navigation-demo'
+import { ThemeDemo } from '@/components/theme-demo'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
+import { useDesignSystem } from '@/hooks/use-design-system'
 
 export function MigrationShowcase() {
   const { designSystem, toggleDesignSystem, isNewTheme } = useDesignSystem()
@@ -98,7 +94,7 @@ export function MigrationShowcase() {
         <div className="container mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <Sparkles className="h-8 w-8 text-brand-primary" />
+              <Sparkles className="h-8 w-8 text-primary" />
               <div>
                 <h1 className="text-2xl font-bold">Design System Migration</h1>
                 <p className="text-sm text-muted-foreground">
@@ -110,7 +106,7 @@ export function MigrationShowcase() {
               <Badge variant={isNewTheme ? 'brand' : 'secondary'}>
                 {isNewTheme ? 'Teal Theme' : 'Legacy Theme'}
               </Badge>
-              <Button onClick={toggleDesignSystem} variant="brand-outline">
+              <Button onClick={toggleDesignSystem} variant="outline">
                 <Palette className="h-4 w-4 mr-2" />
                 Switch to {isNewTheme ? 'Legacy' : 'Teal'}
               </Button>
@@ -134,7 +130,7 @@ export function MigrationShowcase() {
                 onClick={() => setActiveDemo(id as any)}
                 className={`flex items-center gap-2 py-4 px-2 border-b-2 transition-colors ${
                   activeDemo === id
-                    ? 'border-brand-primary text-brand-primary'
+                    ? 'border-primary text-primary'
                     : 'border-transparent text-muted-foreground hover:text-foreground'
                 }`}
               >
@@ -194,7 +190,7 @@ export function MigrationShowcase() {
               <CardContent>
                 <div className="grid md:grid-cols-2 gap-6">
                   <div className="space-y-4">
-                    <h4 className="font-semibold text-brand-primary">🌙 Legacy Theme (Dark)</h4>
+                    <h4 className="font-semibold text-primary">🌙 Legacy Theme (Dark)</h4>
                     <ul className="space-y-2 text-sm text-muted-foreground">
                       <li>• Dark purple/cyan color scheme</li>
                       <li>• Dark backgrounds with light text</li>
@@ -204,7 +200,7 @@ export function MigrationShowcase() {
                     </ul>
                   </div>
                   <div className="space-y-4">
-                    <h4 className="font-semibold text-brand-primary">🎨 Teal Theme (Light)</h4>
+                    <h4 className="font-semibold text-primary">🎨 Teal Theme (Light)</h4>
                     <ul className="space-y-2 text-sm text-muted-foreground">
                       <li>• Professional teal color scheme</li>
                       <li>• Clean white backgrounds</li>

@@ -36,7 +36,7 @@ export function FilePreviewCard({ file, onRemove, onUpdate }: FilePreviewCardPro
         <div className="flex-1">
           <div className="flex justify-between items-center">
             <p className="text-sm font-medium text-eggshell-white truncate">{file.file.name}</p>
-            <Button variant="ghost-ruleiq" size="icon" className="h-6 w-6" onClick={() => onRemove(file.id)}>
+            <Button variant="ghost" size="icon" className="h-6 w-6" onClick={() => onRemove(file.id)}>
               <X className="h-4 w-4" />
             </Button>
           </div>

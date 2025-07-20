@@ -1,5 +1,6 @@
 import { createHash } from 'crypto';
-import { NextRequest } from 'next/server';
+
+import { type NextRequest } from 'next/server';
 
 /**
  * CSRF token utilities for ruleIQ
@@ -28,7 +29,7 @@ export function verifyCsrfToken(request: NextRequest): boolean {
     }
 
     // Recreate hash and compare
-    const secret = process.env.CSRF_SECRET || 'fallback-secret-change-in-production';
+    const secret = process.env['CSRF_SECRET'] || 'fallback-secret-change-in-production';
     const expectedHash = createHash('sha256').update(token + secret).digest('hex');
     
     if (storedHash !== expectedHash) {
@@ -103,7 +104,7 @@ export async function verifyCsrfFromFormData(request: NextRequest): Promise<bool
   });
 
   // Copy cookies
-  const cookies = request.cookies;
+  const {cookies} = request;
   Object.defineProperty(tempRequest, 'cookies', {
     value: cookies,
     writable: false,

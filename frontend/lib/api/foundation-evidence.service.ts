@@ -220,7 +220,7 @@ class FoundationEvidenceService {
       }
     };
 
-    eventSource.onerror = (error) => {
+    eventSource.onerror = (_error) => {
       onError(new Error('Connection to progress stream failed'));
     };
 

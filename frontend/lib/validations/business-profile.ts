@@ -11,7 +11,6 @@ import {
   INDUSTRIES,
   ANNUAL_REVENUE_RANGES,
   COUNTRIES,
-  DATA_SENSITIVITY_LEVELS,
   COMPLIANCE_FRAMEWORKS,
   CLOUD_PROVIDERS,
   SAAS_TOOLS,
@@ -22,7 +21,7 @@ import {
 
 // Base validation schemas for reuse
 const nonEmptyString = z.string().min(1, 'This field is required').trim();
-const _optionalString = z.string().optional();
+// const _optionalString = z.string().optional();
 const positiveInteger = z.number().int().positive('Must be a positive number');
 
 // Company Information Schema

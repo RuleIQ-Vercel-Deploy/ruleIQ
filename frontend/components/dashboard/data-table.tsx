@@ -197,7 +197,7 @@ export function DataTable({ className, assessments }: DataTableProps) {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {currentData.map((item, index) => (
+            {currentData.map((item) => (
               <TableRow
                 key={item.id}
                 className="hover:bg-muted/50 transition-colors border-b border-border"
@@ -275,7 +275,7 @@ export function DataTable({ className, assessments }: DataTableProps) {
             {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
               <Button
                 key={page}
-                variant={currentPage === page ? "primary" : "outline"}
+                variant={currentPage === page ? "default" : "outline"}
                 size="sm"
                 onClick={() => setCurrentPage(page)}
                 className="h-8 w-8 p-0"

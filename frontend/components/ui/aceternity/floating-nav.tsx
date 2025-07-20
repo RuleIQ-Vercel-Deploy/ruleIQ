@@ -77,7 +77,7 @@ export const FloatingNav = ({
           <Button variant="outline" size="sm" className="rounded-full bg-transparent">
             Login
           </Button>
-          <Button variant="gold" size="sm" className="rounded-full">
+          <Button variant="default" size="sm" className="rounded-full">
             Get Started
           </Button>
         </div>

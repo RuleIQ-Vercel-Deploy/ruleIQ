@@ -193,8 +193,8 @@ export function FormShowcase() {
               <FormField
                 label="Email Address"
                 required
-                error={validationState.email?.error}
-                success={validationState.email?.success}
+                {...(validationState['email']?.error && { error: validationState['email'].error })}
+                {...(validationState['email']?.success && { success: validationState['email'].success })}
                 description="We'll use this for your account login"
               >
                 <Input
@@ -209,8 +209,8 @@ export function FormShowcase() {
                 <FormField
                   label="Password"
                   required
-                  error={validationState.password?.error}
-                  success={validationState.password?.success}
+                  {...(validationState['password']?.error && { error: validationState['password'].error })}
+                  {...(validationState['password']?.success && { success: validationState['password'].success })}
                 >
                   <Input
                     type="password"
@@ -223,8 +223,8 @@ export function FormShowcase() {
                 <FormField
                   label="Confirm Password"
                   required
-                  error={validationState.confirmPassword?.error}
-                  success={validationState.confirmPassword?.success}
+                  {...(validationState['confirmPassword']?.error && { error: validationState['confirmPassword'].error })}
+                  {...(validationState['confirmPassword']?.success && { success: validationState['confirmPassword'].success })}
                 >
                   <Input
                     type="password"
@@ -245,8 +245,8 @@ export function FormShowcase() {
               <FormField
                 label="Company Name"
                 required
-                error={validationState.companyName?.error}
-                success={validationState.companyName?.success}
+                {...(validationState['companyName']?.error && { error: validationState['companyName'].error })}
+                {...(validationState['companyName']?.success && { success: validationState['companyName'].success })}
               >
                 <Input
                   placeholder="Your Company Ltd."
@@ -258,8 +258,8 @@ export function FormShowcase() {
               <FormField
                 label="Industry"
                 required
-                error={validationState.industry?.error}
-                success={validationState.industry?.success}
+                {...(validationState['industry']?.error && { error: validationState['industry'].error })}
+                {...(validationState['industry']?.success && { success: validationState['industry'].success })}
                 description="Select your primary industry"
               >
                 <Select onValueChange={(value) => handleInputChange("industry", value)}>
@@ -330,10 +330,10 @@ export function FormShowcase() {
 
             {/* Form Actions */}
             <div className="flex flex-col sm:flex-row gap-3 pt-4">
-              <Button variant="primary" size="large" className="flex-1">
+              <Button variant="default" size="lg" className="flex-1">
                 Create Account
               </Button>
-              <Button variant="secondary-ruleiq" size="large" className="flex-1">
+              <Button variant="secondary" size="lg" className="flex-1">
                 Cancel
               </Button>
             </div>

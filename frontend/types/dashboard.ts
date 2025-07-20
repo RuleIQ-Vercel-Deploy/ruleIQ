@@ -35,6 +35,20 @@ export interface PendingTask {
   status: 'pending' | 'in_progress' | 'completed';
 }
 
+export interface DashboardTask {
+  id: string;
+  title: string;
+  description?: string;
+  type: 'evidence' | 'assessment' | 'compliance' | 'review';
+  priority: 'critical' | 'high' | 'medium' | 'low';
+  status: 'pending' | 'in_progress' | 'completed';
+  due_date?: string;
+  framework?: string;
+  assigned_to?: string;
+  created_at?: string;
+  updated_at?: string;
+}
+
 export interface DashboardData {
   compliance_score: number;
   active_alerts: number;

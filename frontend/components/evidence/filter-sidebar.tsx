@@ -96,7 +96,7 @@ export function FilterSidebar() {
               <Calendar
                 initialFocus
                 mode="range"
-                defaultMonth={date?.from}
+                {...(date?.from && { defaultMonth: date.from })}
                 selected={date}
                 onSelect={setDate}
                 numberOfMonths={2}
@@ -115,8 +115,8 @@ export function FilterSidebar() {
             {frameworks.map((framework) => (
               <Button
                 key={framework.value}
-                variant="secondary-ruleiq"
-                size="small"
+                variant="secondary"
+                size="sm"
                 className="bg-oxford-blue/80 text-eggshell-white/80 border-gold/30 hover:bg-gold/20"
               >
                 {framework.label}

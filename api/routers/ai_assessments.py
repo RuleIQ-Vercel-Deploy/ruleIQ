@@ -46,7 +46,7 @@ from services.ai.exceptions import (
 # Set up logging
 logger = logging.getLogger(__name__)
 
-router = APIRouter(prefix="/ai/assessments", tags=["AI Assessment Assistant"])
+router = APIRouter(prefix="", tags=["AI Assessment Assistant"])
 
 
 # Request/Response Models

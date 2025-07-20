@@ -1,8 +1,9 @@
 "use client";
 
-import React, { Component, ErrorInfo, ReactNode } from 'react';
 import * as Sentry from '@sentry/nextjs';
 import { AlertCircle, RefreshCw, Home } from 'lucide-react';
+import React, { Component, type ErrorInfo, type ReactNode } from 'react';
+
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 
@@ -34,7 +35,7 @@ export class GlobalErrorBoundary extends Component<Props, State> {
     return { hasError: true, error };
   }
 
-  componentDidCatch(error: Error, errorInfo: ErrorInfo) {
+  override componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     console.error('GlobalErrorBoundary caught an error:', error, errorInfo);
     
     // Log error to Sentry
@@ -75,7 +76,7 @@ export class GlobalErrorBoundary extends Component<Props, State> {
     }
   };
 
-  render() {
+  override render() {
     if (this.state.hasError) {
       // Custom fallback UI
       if (this.props.fallback) {
@@ -193,7 +194,7 @@ export function useErrorHandler() {
         component: 'useErrorHandler',
         manual: true,
       },
-      extra: context,
+      ...(context && { extra: context }),
     });
   }, []);
 }

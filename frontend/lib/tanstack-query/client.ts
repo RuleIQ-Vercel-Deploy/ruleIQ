@@ -75,7 +75,7 @@ const safeStorage = {
 };
 
 // Create a persister for offline support with safe storage
-const persister = createSyncStoragePersister({
+const _persister = createSyncStoragePersister({
   storage: safeStorage,
   key: 'ruleiq-query-cache',
   throttleTime: 1000,

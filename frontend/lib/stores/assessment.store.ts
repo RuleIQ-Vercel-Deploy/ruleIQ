@@ -4,6 +4,7 @@ import { create } from 'zustand'
 import { persist, createJSONStorage , devtools } from 'zustand/middleware'
 
 import { assessmentService, type CreateAssessmentRequest, type UpdateAssessmentRequest, type SubmitAssessmentAnswerRequest } from '@/lib/api/assessments.service'
+import { toAppError } from '@/lib/utils/type-safety'
 
 import { performanceMiddleware, withPerformanceMonitoring } from '../utils/performance-monitoring.tsx'
 
@@ -107,10 +108,10 @@ export const useAssessmentStore = create<AssessmentState>()(
               isLoading: false,
             }, false, 'loadAssessments/success')
           }, { paramsCount: Object.keys(params || {}).length })
-          .catch((error: any) => {
+          .catch((error: unknown) => {
             set({
               isLoading: false,
-              error: error.detail || error.message || 'Failed to load assessments',
+              error: toAppError(error).message,
             }, false, 'loadAssessments/error')
           })
         },
@@ -124,10 +125,11 @@ export const useAssessmentStore = create<AssessmentState>()(
               currentAssessment: assessment,
               isLoading: false,
             }, false, 'loadAssessment/success')
-          } catch (error: any) {
+          } catch (error: unknown) {
+            const appError = toAppError(error)
             set({
               isLoading: false,
-              error: error.detail || error.message || 'Failed to load assessment',
+              error: appError.message,
             }, false, 'loadAssessment/error')
           }
         },
@@ -145,10 +147,11 @@ export const useAssessmentStore = create<AssessmentState>()(
             }), false, 'createAssessment/success')
             
             return assessment
-          } catch (error: any) {
+          } catch (error: unknown) {
+            const appError = toAppError(error)
             set({
               isCreating: false,
-              error: error.detail || error.message || 'Failed to create assessment',
+              error: appError.message,
             }, false, 'createAssessment/error')
             throw error
           }
@@ -169,10 +172,10 @@ export const useAssessmentStore = create<AssessmentState>()(
                 : state.currentAssessment,
               isSaving: false,
             }), false, 'updateAssessment/success')
-          } catch (error: any) {
+          } catch (error: unknown) {
             set({
               isSaving: false,
-              error: error.detail || error.message || 'Failed to update assessment',
+              error: toAppError(error).message,
             }, false, 'updateAssessment/error')
           }
         },
@@ -190,10 +193,10 @@ export const useAssessmentStore = create<AssessmentState>()(
                 : state.currentAssessment,
               isLoading: false,
             }), false, 'deleteAssessment/success')
-          } catch (error: any) {
+          } catch (error: unknown) {
             set({
               isLoading: false,
-              error: error.detail || error.message || 'Failed to delete assessment',
+              error: toAppError(error).message,
             }, false, 'deleteAssessment/error')
           }
         },
@@ -213,10 +216,10 @@ export const useAssessmentStore = create<AssessmentState>()(
                 : state.currentAssessment,
               isSubmitting: false,
             }), false, 'completeAssessment/success')
-          } catch (error: any) {
+          } catch (error: unknown) {
             set({
               isSubmitting: false,
-              error: error.detail || error.message || 'Failed to complete assessment',
+              error: toAppError(error).message,
             }, false, 'completeAssessment/error')
           }
         },
@@ -231,10 +234,10 @@ export const useAssessmentStore = create<AssessmentState>()(
               assessmentQuestions: questions,
               isLoading: false,
             }, false, 'loadQuestions/success')
-          } catch (error: any) {
+          } catch (error: unknown) {
             set({
               isLoading: false,
-              error: error.detail || error.message || 'Failed to load questions',
+              error: toAppError(error).message,
             }, false, 'loadQuestions/error')
           }
         },
@@ -245,10 +248,10 @@ export const useAssessmentStore = create<AssessmentState>()(
           try {
             await assessmentService.submitAssessmentAnswer(assessmentId, data)
             set({ isSubmitting: false }, false, 'submitAnswer/success')
-          } catch (error: any) {
+          } catch (error: unknown) {
             set({
               isSubmitting: false,
-              error: error.detail || error.message || 'Failed to submit answer',
+              error: toAppError(error).message,
             }, false, 'submitAnswer/error')
           }
         },
@@ -263,10 +266,10 @@ export const useAssessmentStore = create<AssessmentState>()(
               assessmentResults: results,
               isLoading: false,
             }, false, 'loadResults/success')
-          } catch (error: any) {
+          } catch (error: unknown) {
             set({
               isLoading: false,
-              error: error.detail || error.message || 'Failed to load results',
+              error: toAppError(error).message,
             }, false, 'loadResults/error')
           }
         },
@@ -279,10 +282,10 @@ export const useAssessmentStore = create<AssessmentState>()(
             const result = await assessmentService.getQuickAssessment(businessProfileId, frameworkId)
             set({ isCreating: false }, false, 'quickAssessment/success')
             return result
-          } catch (error: any) {
+          } catch (error: unknown) {
             set({
               isCreating: false,
-              error: error.detail || error.message || 'Failed to start quick assessment',
+              error: toAppError(error).message,
             }, false, 'quickAssessment/error')
             throw error
           }

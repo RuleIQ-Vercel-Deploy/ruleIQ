@@ -8,12 +8,12 @@
 export const TEST_CONFIG = {
   // Test environment settings
   ENVIRONMENT: {
-    BASE_URL: process.env.PLAYWRIGHT_BASE_URL || 'http://localhost:3000',
-    API_BASE_URL: process.env.API_BASE_URL || 'http://localhost:8000',
-    TEST_USER_EMAIL: process.env.TEST_USER_EMAIL || 'test@ruleiq.com',
-    TEST_USER_PASSWORD: process.env.TEST_USER_PASSWORD || 'TestPassword123!',
-    HEADLESS: process.env.CI === 'true',
-    SLOW_MO: process.env.CI === 'true' ? 0 : 100,
+    BASE_URL: process.env['$1'] || 'http://localhost:3000',
+    API_BASE_URL: process.env['$1'] || 'http://localhost:8000',
+    TEST_USER_EMAIL: process.env['$1'] || 'test@ruleiq.com',
+    TEST_USER_PASSWORD: process.env['$1'] || 'TestPassword123!',
+    HEADLESS: process.env['CI'] === 'true',
+    SLOW_MO: process.env['CI'] === 'true' ? 0 : 100,
   },
 
   // Performance thresholds
@@ -202,7 +202,7 @@ export const TEST_CONFIG = {
 
   // API mocking configurations
   API_MOCKING: {
-    ENABLED: process.env.MOCK_API === 'true',
+    ENABLED: process.env['$1'] === 'true',
     DELAY_RANGE: [100, 500], // Random delay range for realistic testing
     ERROR_RATE: 0.05,        // 5% error rate for resilience testing
     
@@ -231,7 +231,7 @@ export const TEST_CONFIG = {
   REPORTING: {
     HTML_REPORT: true,
     JSON_REPORT: true,
-    JUNIT_REPORT: process.env.CI === 'true',
+    JUNIT_REPORT: process.env['CI'] === 'true',
     COVERAGE_REPORT: true,
     PERFORMANCE_BUDGET_REPORT: true,
     ACCESSIBILITY_REPORT: true,
@@ -245,10 +245,10 @@ export const TEST_CONFIG = {
 
   // CI/CD specific settings
   CI: {
-    PARALLEL_WORKERS: process.env.CI === 'true' ? 2 : undefined,
-    FAIL_FAST: process.env.CI === 'true',
-    FORBID_ONLY: process.env.CI === 'true',
-    MAX_FAILURES: process.env.CI === 'true' ? 5 : undefined,
+    PARALLEL_WORKERS: process.env['CI'] === 'true' ? 2 : undefined,
+    FAIL_FAST: process.env['CI'] === 'true',
+    FORBID_ONLY: process.env['CI'] === 'true',
+    MAX_FAILURES: process.env['CI'] === 'true' ? 5 : undefined,
     
     // Artifact retention
     ARTIFACT_RETENTION_DAYS: 30,
@@ -282,7 +282,7 @@ export const TEST_CONFIG = {
   // Security testing
   SECURITY: {
     CSP_ENABLED: true,
-    HTTPS_ONLY: process.env.NODE_ENV === 'production',
+    HTTPS_ONLY: process.env['$1'] === 'production',
     SECURE_HEADERS: [
       'X-Frame-Options',
       'X-Content-Type-Options',
@@ -326,13 +326,13 @@ export function getRetryCount(type: keyof TestConfig['RETRIES'] = 'DEFAULT'): nu
 
 // Environment-specific configurations
 export function getEnvironmentConfig() {
-  const env = process.env.NODE_ENV || 'development';
+  const env = process.env['$1'] || 'development';
   
   return {
     ...TEST_CONFIG.ENVIRONMENT,
     IS_DEVELOPMENT: env === 'development',
     IS_PRODUCTION: env === 'production',
-    IS_CI: process.env.CI === 'true',
-    IS_LOCAL: !process.env.CI,
+    IS_CI: process.env['CI'] === 'true',
+    IS_LOCAL: !process.env['CI'],
   };
 }

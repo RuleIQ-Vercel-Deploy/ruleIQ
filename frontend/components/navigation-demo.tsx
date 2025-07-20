@@ -1,14 +1,15 @@
 'use client'
 
+import { Menu } from 'lucide-react'
 import { useState } from 'react'
-import { useDesignSystem } from '@/providers/design-system-provider'
+
+import { AppSidebar } from '@/components/navigation/app-sidebar'
+import { MobileNav } from '@/components/navigation/mobile-nav'
+import { TopNavigation } from '@/components/navigation/top-navigation'
+import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { AppSidebar } from '@/components/navigation/app-sidebar'
-import { TopNavigation } from '@/components/navigation/top-navigation'
-import { MobileNav } from '@/components/navigation/mobile-nav'
-import { Menu } from 'lucide-react'
+import { useDesignSystem } from '@/providers/design-system-provider'
 
 export function NavigationDemo() {
   const { designSystem, toggleDesignSystem, isNewTheme } = useDesignSystem()
@@ -30,7 +31,7 @@ export function NavigationDemo() {
           <div className="flex items-center justify-between">
             <h1 className="text-3xl font-bold">Navigation Demo</h1>
             <div className="flex items-center gap-4">
-              <Badge variant={isNewTheme ? 'brand' : 'secondary'}>
+              <Badge variant={isNewTheme ? 'default' : 'secondary'}>
                 {isNewTheme ? 'Teal Theme' : 'Legacy Theme'}
               </Badge>
               <Button onClick={toggleDesignSystem}>

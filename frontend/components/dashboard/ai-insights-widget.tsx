@@ -68,7 +68,7 @@ export function AIInsightsWidget({
       <Card className={cn("glass-card border-error/50", className)}>
         <CardHeader>
           <CardTitle className="text-error">AI Insights Error</CardTitle>
-          <CardDescription className="text-text-secondary">{error}</CardDescription>
+          <CardDescription className="text-muted-foreground">{error}</CardDescription>
         </CardHeader>
         <CardContent>
           <Button onClick={onRefresh} variant="outline" size="sm" className="border-glass-border hover:border-glass-border-hover hover:bg-glass-white">
@@ -85,13 +85,13 @@ export function AIInsightsWidget({
       case 'tip':
         return <Lightbulb className="h-4 w-4 text-warning" />
       case 'recommendation':
-        return <TrendingUp className="h-4 w-4 text-brand-secondary" />
+        return <TrendingUp className="h-4 w-4 text-primary" />
       case 'risk-alert':
         return <AlertTriangle className="h-4 w-4 text-error" />
       case 'optimization':
-        return <Sparkles className="h-4 w-4 text-brand-primary" />
+        return <Sparkles className="h-4 w-4 text-primary" />
       default:
-        return <Brain className="h-4 w-4 text-text-secondary" />
+        return <Brain className="h-4 w-4 text-muted-foreground" />
     }
   }
 
@@ -100,13 +100,13 @@ export function AIInsightsWidget({
       case 'tip':
         return <Badge className="bg-warning/20 text-warning border-warning/30">Tip</Badge>
       case 'recommendation':
-        return <Badge className="bg-brand-secondary/20 text-brand-secondary border-brand-secondary/30">Recommendation</Badge>
+        return <Badge className="bg-primary/20 text-primary border-primary/30">Recommendation</Badge>
       case 'risk-alert':
         return <Badge className="bg-error/20 text-error border-error/30">Risk Alert</Badge>
       case 'optimization':
-        return <Badge className="bg-brand-primary/20 text-brand-primary border-brand-primary/30">Optimization</Badge>
+        return <Badge className="bg-primary/20 text-primary border-primary/30">Optimization</Badge>
       default:
-        return <Badge className="bg-surface-secondary text-text-tertiary">Insight</Badge>
+        return <Badge className="bg-secondary text-muted-foreground">Insight</Badge>
     }
   }
 
@@ -230,11 +230,11 @@ export function AIInsightsWidget({
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="h-10 w-10 rounded-full bg-gradient-to-br from-brand-primary/20 to-brand-secondary/20 flex items-center justify-center">
-              <Brain className="h-5 w-5 text-brand-secondary" />
+              <Brain className="h-5 w-5 text-primary" />
             </div>
             <div>
               <CardTitle className="text-xl font-bold gradient-text">AI Insights</CardTitle>
-              <CardDescription className="text-text-secondary">
+              <CardDescription className="text-muted-foreground">
                 Personalized compliance recommendations
               </CardDescription>
             </div>
@@ -287,7 +287,7 @@ export function AIInsightsWidget({
                     size="sm"
                     className={cn(
                       "h-auto p-1",
-                      bookmarkedInsights.has(insight.id) ? "text-warning" : "text-text-tertiary"
+                      bookmarkedInsights.has(insight.id) ? "text-warning" : "text-muted-foreground"
                     )}
                     onClick={() => handleBookmark(insight.id)}
                   >
@@ -296,7 +296,7 @@ export function AIInsightsWidget({
                   <Button
                     variant="ghost"
                     size="sm"
-                    className="h-auto p-1 text-text-tertiary hover:text-text-primary"
+                    className="h-auto p-1 text-muted-foreground hover:text-foreground"
                     onClick={() => handleDismiss(insight.id)}
                   >
                     <X className="h-3 w-3" />
@@ -312,7 +312,7 @@ export function AIInsightsWidget({
                   variant="ghost"
                   size="sm"
                   className="h-auto px-3 py-1.5 text-xs border border-glass-border hover:border-glass-border-hover hover:bg-glass-white"
-                  onClick={() => window.location.href = insight.action!.route}
+                  onClick={() => insight.action?.route && (window.location.href = insight.action.route)}
                 >
                   {insight.action.label}
                   <ChevronRight className="h-3 w-3 ml-1" />
@@ -323,10 +323,10 @@ export function AIInsightsWidget({
         ))}
 
         {visibleInsights.length === 0 && (
-          <div className="text-center py-6 text-text-secondary">
-            <Brain className="h-8 w-8 mx-auto mb-2 opacity-50 text-brand-secondary" />
+          <div className="text-center py-6 text-muted-foreground">
+            <Brain className="h-8 w-8 mx-auto mb-2 opacity-50 text-primary" />
             <p>No new insights</p>
-            <p className="text-xs text-text-tertiary">Check back later for AI-powered recommendations</p>
+            <p className="text-xs text-muted-foreground">Check back later for AI-powered recommendations</p>
           </div>
         )}
 

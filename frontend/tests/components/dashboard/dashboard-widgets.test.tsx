@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
-import { ComplianceScoreWidget } from '@/components/dashboard/widgets/compliance-score-widget'
-import { PendingTasksWidget } from '@/components/dashboard/widgets/pending-tasks-widget'
+import { ComplianceScoreWidget } from '@/components/dashboard/compliance-score-widget'
+import { PendingTasksWidget } from '@/components/dashboard/pending-tasks-widget'
 import { AIInsightsWidget } from '@/components/dashboard/widgets/ai-insights-widget'
 import { RecentActivityWidget } from '@/components/dashboard/widgets/recent-activity-widget'
 

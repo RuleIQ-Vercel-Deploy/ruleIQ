@@ -1,7 +1,6 @@
 "use client"
 
 import { 
-  FileIcon, 
   Upload, 
   X, 
   CheckCircle2, 

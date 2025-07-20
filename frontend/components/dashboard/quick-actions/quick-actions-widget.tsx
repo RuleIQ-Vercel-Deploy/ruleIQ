@@ -33,7 +33,7 @@ const actions: QuickActionItem[] = [
     label: "New Assessment",
     icon: Shield,
     href: "/assessments/new",
-    color: "bg-brand-secondary/10 text-brand-secondary hover:bg-brand-secondary/20",
+    color: "bg-primary/10 text-primary hover:bg-primary/20",
     description: "Start compliance check",
     requiresProfile: true,
   },
@@ -41,7 +41,7 @@ const actions: QuickActionItem[] = [
     label: "Generate Policy",
     icon: FileText,
     href: "/policies/generate",
-    color: "bg-brand-tertiary/10 text-brand-tertiary hover:bg-brand-tertiary/20",
+    color: "bg-secondary/10 text-secondary hover:bg-secondary/20",
     description: "Create new policy",
     requiresProfile: true,
   },
@@ -49,14 +49,14 @@ const actions: QuickActionItem[] = [
     label: "Upload Evidence",
     icon: Upload,
     href: "/evidence?action=upload",
-    color: "bg-brand-primary/10 text-brand-primary hover:bg-brand-primary/20",
+    color: "bg-primary/10 text-primary hover:bg-primary/20",
     description: "Add documents",
   },
   {
     label: "Ask IQ",
     icon: MessageSquare,
     href: "/chat",
-    color: "bg-brand-secondary/10 text-brand-secondary hover:bg-brand-secondary/20",
+    color: "bg-primary/10 text-primary hover:bg-primary/20",
     description: "Get instant help",
   },
 ];
@@ -114,7 +114,7 @@ export function QuickActionsWidget() {
                 className={cn(
                   "group relative p-4 rounded-lg border transition-all duration-200",
                   "hover:shadow-md bg-glass-white hover:bg-glass-white-hover",
-                  "focus:outline-none focus:ring-2 focus:ring-brand-primary/20",
+                  "focus:outline-none focus:ring-2 focus:ring-primary/20",
                   isFeatured ? "border-warning/30 hover:border-warning/50" : "border-glass-border hover:border-glass-border-hover",
                   isDisabled && "opacity-50 cursor-not-allowed hover:shadow-none"
                 )}
@@ -124,8 +124,8 @@ export function QuickActionsWidget() {
                     <Icon className="h-6 w-6" />
                   </div>
                   <div>
-                    <p className="font-medium text-sm text-text-primary">{item.label}</p>
-                    <p className="text-xs text-text-secondary mt-0.5">{item.description}</p>
+                    <p className="font-medium text-sm text-foreground">{item.label}</p>
+                    <p className="text-xs text-muted-foreground mt-0.5">{item.description}</p>
                   </div>
                 </div>
                 

@@ -13,7 +13,7 @@ import { PRICING_PLANS, type PricingPlan, formatPrice } from "@/lib/stripe/clien
 
 export default function CheckoutPage() {
   const searchParams = useSearchParams()
-  const planId = searchParams.get('plan') as PricingPlan
+  const planId = searchParams?.get('plan') as PricingPlan
   const user = useAuthStore(state => state.user)
   
   // Validate plan ID

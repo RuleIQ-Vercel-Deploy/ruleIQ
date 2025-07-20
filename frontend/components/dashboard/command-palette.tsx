@@ -1,18 +1,18 @@
 "use client"
 
 import {
-  Calculator,
-  Calendar,
-  CreditCard,
+  
+  
+  
   FileCheck,
   FileText,
   Gauge,
   Home,
   Laptop,
-  Search,
+  
   Settings,
   Shield,
-  Smile,
+  
   User,
 } from "lucide-react"
 import { useRouter } from "next/navigation"

@@ -1,7 +1,7 @@
 import { loadStripe, type Stripe } from '@stripe/stripe-js'
 
 // Ensure you have your Stripe publishable key in environment variables
-const stripePublishableKey = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
+const stripePublishableKey = process.env['NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY']
 
 if (!stripePublishableKey) {
   console.warn('NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY is not set in environment variables')
@@ -25,7 +25,7 @@ export const PRICING_PLANS = {
     price: 29,
     currency: 'gbp',
     interval: 'month' as const,
-    stripePriceId: process.env.NEXT_PUBLIC_STRIPE_STARTER_PRICE_ID,
+    stripePriceId: process.env['NEXT_PUBLIC_STRIPE_STARTER_PRICE_ID'],
     features: [
       '1 Business Profile',
       'Basic Compliance Assessment',
@@ -41,7 +41,7 @@ export const PRICING_PLANS = {
     price: 99,
     currency: 'gbp',
     interval: 'month' as const,
-    stripePriceId: process.env.NEXT_PUBLIC_STRIPE_PROFESSIONAL_PRICE_ID,
+    stripePriceId: process.env['NEXT_PUBLIC_STRIPE_PROFESSIONAL_PRICE_ID'],
     popular: true,
     features: [
       '5 Business Profiles',
@@ -60,7 +60,7 @@ export const PRICING_PLANS = {
     price: 299,
     currency: 'gbp',
     interval: 'month' as const,
-    stripePriceId: process.env.NEXT_PUBLIC_STRIPE_ENTERPRISE_PRICE_ID,
+    stripePriceId: process.env['NEXT_PUBLIC_STRIPE_ENTERPRISE_PRICE_ID'],
     features: [
       'Unlimited Business Profiles',
       'Full Compliance Suite',

@@ -31,12 +31,12 @@ export function PendingInvitationsTable() {
                     </p>
                   </div>
                   <div className="flex flex-none items-center gap-x-4">
-                    <Button variant="ghost-ruleiq" size="small" className="text-oxford-blue/80 hover:text-oxford-blue">
+                    <Button variant="ghost" size="sm" className="text-oxford-blue/80 hover:text-oxford-blue">
                       <Send className="h-3.5 w-3.5 mr-1.5" />
                       Resend
                     </Button>
                     <Button
-                      variant="ghost-ruleiq"
+                      variant="ghost"
                       size="icon"
                       className="h-8 w-8 text-error/80 hover:text-error hover:bg-error/10"
                     >
