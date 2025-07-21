@@ -64,12 +64,11 @@ class ComplianceService {
    */
   async getFrameworkComplianceStatus(
     businessProfileId: string,
-    frameworkId: string
+    frameworkId: string,
   ): Promise<ComplianceStatus> {
-    const response = await apiClient.get<ComplianceStatus>(
-      `/compliance/status/${frameworkId}`,
-      { params: { business_profile_id: businessProfileId } }
-    );
+    const response = await apiClient.get<ComplianceStatus>(`/compliance/status/${frameworkId}`, {
+      params: { business_profile_id: businessProfileId },
+    });
     return response.data;
   }
 
@@ -87,7 +86,7 @@ class ComplianceService {
   }): Promise<{ tasks: ComplianceTask[]; total: number }> {
     const response = await apiClient.get<{ tasks: ComplianceTask[]; total: number }>(
       '/compliance/tasks',
-      { params }
+      { params },
     );
     return response.data;
   }
@@ -105,12 +104,9 @@ class ComplianceService {
    */
   async updateComplianceTask(
     taskId: string,
-    data: Partial<ComplianceTask>
+    data: Partial<ComplianceTask>,
   ): Promise<ComplianceTask> {
-    const response = await apiClient.patch<ComplianceTask>(
-      `/compliance/tasks/${taskId}`,
-      data
-    );
+    const response = await apiClient.patch<ComplianceTask>(`/compliance/tasks/${taskId}`, data);
     return response.data;
   }
 
@@ -127,7 +123,7 @@ class ComplianceService {
   }): Promise<{ risks: ComplianceRisk[]; total: number }> {
     const response = await apiClient.get<{ risks: ComplianceRisk[]; total: number }>(
       '/compliance/risks',
-      { params }
+      { params },
     );
     return response.data;
   }
@@ -145,12 +141,9 @@ class ComplianceService {
    */
   async updateComplianceRisk(
     riskId: string,
-    data: Partial<ComplianceRisk>
+    data: Partial<ComplianceRisk>,
   ): Promise<ComplianceRisk> {
-    const response = await apiClient.patch<ComplianceRisk>(
-      `/compliance/risks/${riskId}`,
-      data
-    );
+    const response = await apiClient.patch<ComplianceRisk>(`/compliance/risks/${riskId}`, data);
     return response.data;
   }
 
@@ -159,7 +152,7 @@ class ComplianceService {
    */
   async getComplianceTimeline(
     businessProfileId: string,
-    frameworkId?: string
+    frameworkId?: string,
   ): Promise<{
     milestones: Array<{
       date: string;
@@ -217,7 +210,7 @@ class ComplianceService {
    */
   async generateComplianceCertificate(
     businessProfileId: string,
-    frameworkId: string
+    frameworkId: string,
   ): Promise<{
     certificate_id: string;
     issued_date: string;

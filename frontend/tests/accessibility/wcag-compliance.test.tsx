@@ -4,7 +4,7 @@ import { injectAxe, checkA11y, getViolations } from 'axe-playwright';
 // WCAG 2.2 AA compliance levels
 const WCAG_LEVELS = {
   A: ['wcag2a', 'wcag21a', 'wcag22a'],
-  AA: ['wcag2aa', 'wcag21aa', 'wcag22aa']
+  AA: ['wcag2aa', 'wcag21aa', 'wcag22aa'],
 };
 
 test.describe('WCAG 2.2 AA Compliance Tests', () => {
@@ -15,13 +15,13 @@ test.describe('WCAG 2.2 AA Compliance Tests', () => {
 
   test('Homepage WCAG 2.2 AA compliance', async ({ page }) => {
     await page.goto('/', { waitUntil: 'networkidle' });
-    
+
     // Run comprehensive WCAG 2.2 AA checks
     const violations = await getViolations(page, undefined, {
       runOnly: {
         type: 'tag',
-        values: WCAG_LEVELS.AA
-      }
+        values: WCAG_LEVELS.AA,
+      },
     });
 
     // Log violations for debugging
@@ -41,17 +41,17 @@ test.describe('WCAG 2.2 AA Compliance Tests', () => {
       '/evidence',
       '/chat',
       '/login',
-      '/register'
+      '/register',
     ];
 
     for (const route of routes) {
       await page.goto(route, { waitUntil: 'networkidle' });
-      
+
       const violations = await getViolations(page, undefined, {
         runOnly: {
           type: 'tag',
-          values: WCAG_LEVELS.AA
-        }
+          values: WCAG_LEVELS.AA,
+        },
       });
 
       expect(violations.length).toBe(0);
@@ -66,7 +66,7 @@ test.describe('WCAG 2.2 AA Compliance Tests', () => {
       const issues: any[] = [];
       const elements = document.querySelectorAll('*');
 
-      elements.forEach(element => {
+      elements.forEach((element) => {
         const style = window.getComputedStyle(element);
         const backgroundColor = style.backgroundColor;
         const color = style.color;
@@ -81,7 +81,7 @@ test.describe('WCAG 2.2 AA Compliance Tests', () => {
           const values = rgb.match(/\d+/g);
           if (!values || values.length < 3) return 0;
 
-          const [r, g, b] = values.map(v => {
+          const [r, g, b] = values.map((v) => {
             const val = parseInt(v) / 255;
             return val <= 0.03928 ? val / 12.92 : Math.pow((val + 0.055) / 1.055, 2.4);
           });
@@ -92,8 +92,8 @@ test.describe('WCAG 2.2 AA Compliance Tests', () => {
         const bgLuminance = getLuminance(backgroundColor);
         const fgLuminance = getLuminance(color);
 
-        const contrast = (Math.max(bgLuminance, fgLuminance) + 0.05) / 
-                        (Math.min(bgLuminance, fgLuminance) + 0.05);
+        const contrast =
+          (Math.max(bgLuminance, fgLuminance) + 0.05) / (Math.min(bgLuminance, fgLuminance) + 0.05);
 
         // WCAG AA requires 4.5:1 for normal text, 3:1 for large text
         const fontSize = parseFloat(style.fontSize);
@@ -107,7 +107,7 @@ test.describe('WCAG 2.2 AA Compliance Tests', () => {
             text: element.textContent.substring(0, 50),
             contrast: contrast.toFixed(2),
             required: requiredContrast,
-            colors: { background: backgroundColor, foreground: color }
+            colors: { background: backgroundColor, foreground: color },
           });
         }
       });
@@ -128,11 +128,11 @@ test.describe('WCAG 2.2 AA Compliance Tests', () => {
         header: document.querySelector('header') !== null,
         footer: document.querySelector('footer') !== null,
         aside: document.querySelector('aside')?.getAttribute('aria-label') || null,
-        regions: [] as string[]
+        regions: [] as string[],
       };
 
       // Check for properly labeled regions
-      document.querySelectorAll('[role="region"]').forEach(region => {
+      document.querySelectorAll('[role="region"]').forEach((region) => {
         const label = region.getAttribute('aria-label') || region.getAttribute('aria-labelledby');
         if (label) {
           results.regions.push(label);
@@ -158,9 +158,9 @@ test.describe('WCAG 2.2 AA Compliance Tests', () => {
 
       headings.forEach((heading, index) => {
         const level = parseInt(heading.tagName[1]);
-        
+
         // Check for multiple h1s
-        if (level === 1 && headings.filter(h => h.tagName === 'H1').length > 1) {
+        if (level === 1 && headings.filter((h) => h.tagName === 'H1').length > 1) {
           issues.push('Multiple H1 elements found');
         }
 
@@ -173,11 +173,11 @@ test.describe('WCAG 2.2 AA Compliance Tests', () => {
       });
 
       return {
-        headings: headings.map(h => ({
+        headings: headings.map((h) => ({
           level: h.tagName,
-          text: h.textContent?.trim().substring(0, 50)
+          text: h.textContent?.trim().substring(0, 50),
         })),
-        issues
+        issues,
       };
     });
 
@@ -191,42 +191,55 @@ test.describe('WCAG 2.2 AA Compliance Tests', () => {
       const issues: any[] = [];
 
       // Check for valid ARIA roles
-      document.querySelectorAll('[role]').forEach(element => {
+      document.querySelectorAll('[role]').forEach((element) => {
         const role = element.getAttribute('role');
         const validRoles = [
-          'button', 'link', 'menuitem', 'tab', 'navigation', 'main',
-          'complementary', 'contentinfo', 'banner', 'search', 'form',
-          'region', 'alert', 'dialog', 'alertdialog', 'progressbar'
+          'button',
+          'link',
+          'menuitem',
+          'tab',
+          'navigation',
+          'main',
+          'complementary',
+          'contentinfo',
+          'banner',
+          'search',
+          'form',
+          'region',
+          'alert',
+          'dialog',
+          'alertdialog',
+          'progressbar',
         ];
 
         if (role && !validRoles.includes(role)) {
           issues.push({
             type: 'invalid-role',
             element: element.tagName,
-            role
+            role,
           });
         }
       });
 
       // Check for required ARIA properties
-      document.querySelectorAll('[role="button"]').forEach(button => {
+      document.querySelectorAll('[role="button"]').forEach((button) => {
         if (!button.hasAttribute('aria-label') && !button.textContent?.trim()) {
           issues.push({
             type: 'missing-label',
             element: 'button',
-            text: 'Button without accessible label'
+            text: 'Button without accessible label',
           });
         }
       });
 
       // Check for aria-describedby references
-      document.querySelectorAll('[aria-describedby]').forEach(element => {
+      document.querySelectorAll('[aria-describedby]').forEach((element) => {
         const id = element.getAttribute('aria-describedby');
         if (id && !document.getElementById(id)) {
           issues.push({
             type: 'broken-reference',
             element: element.tagName,
-            reference: id
+            reference: id,
           });
         }
       });
@@ -244,22 +257,22 @@ test.describe('WCAG 2.2 AA Compliance Tests', () => {
       const issues: any[] = [];
 
       // Check all form inputs
-      document.querySelectorAll('input, select, textarea').forEach(input => {
+      document.querySelectorAll('input, select, textarea').forEach((input) => {
         const id = input.id;
         const name = input.getAttribute('name');
         const type = input.getAttribute('type');
-        
+
         // Check for labels
         const label = document.querySelector(`label[for="${id}"]`);
         const ariaLabel = input.getAttribute('aria-label');
         const ariaLabelledby = input.getAttribute('aria-labelledby');
-        
+
         if (!label && !ariaLabel && !ariaLabelledby && type !== 'hidden') {
           issues.push({
             type: 'missing-label',
             element: input.tagName,
             name: name || 'unnamed',
-            inputType: type
+            inputType: type,
           });
         }
 
@@ -270,7 +283,7 @@ test.describe('WCAG 2.2 AA Compliance Tests', () => {
             issues.push({
               type: 'missing-error-association',
               element: input.tagName,
-              name: name || 'unnamed'
+              name: name || 'unnamed',
             });
           }
         }
@@ -280,19 +293,19 @@ test.describe('WCAG 2.2 AA Compliance Tests', () => {
           issues.push({
             type: 'missing-aria-required',
             element: input.tagName,
-            name: name || 'unnamed'
+            name: name || 'unnamed',
           });
         }
       });
 
       // Check for fieldset/legend for grouped inputs
-      document.querySelectorAll('input[type="radio"], input[type="checkbox"]').forEach(input => {
+      document.querySelectorAll('input[type="radio"], input[type="checkbox"]').forEach((input) => {
         const fieldset = input.closest('fieldset');
         if (!fieldset || !fieldset.querySelector('legend')) {
           issues.push({
             type: 'missing-fieldset-legend',
             element: 'input',
-            inputType: input.getAttribute('type')
+            inputType: input.getAttribute('type'),
           });
         }
       });
@@ -310,7 +323,7 @@ test.describe('WCAG 2.2 AA Compliance Tests', () => {
       const issues: any[] = [];
 
       // Check all images
-      document.querySelectorAll('img').forEach(img => {
+      document.querySelectorAll('img').forEach((img) => {
         const alt = img.getAttribute('alt');
         const src = img.getAttribute('src');
         const role = img.getAttribute('role');
@@ -319,7 +332,7 @@ test.describe('WCAG 2.2 AA Compliance Tests', () => {
         if (alt === null && role !== 'presentation') {
           issues.push({
             type: 'missing-alt',
-            src: src?.substring(0, 50)
+            src: src?.substring(0, 50),
           });
         }
 
@@ -327,13 +340,13 @@ test.describe('WCAG 2.2 AA Compliance Tests', () => {
         if (alt === '' && !role) {
           issues.push({
             type: 'decorative-image-without-role',
-            src: src?.substring(0, 50)
+            src: src?.substring(0, 50),
           });
         }
       });
 
       // Check for SVGs
-      document.querySelectorAll('svg').forEach(svg => {
+      document.querySelectorAll('svg').forEach((svg) => {
         const title = svg.querySelector('title');
         const ariaLabel = svg.getAttribute('aria-label');
         const role = svg.getAttribute('role');
@@ -341,7 +354,7 @@ test.describe('WCAG 2.2 AA Compliance Tests', () => {
         if (!title && !ariaLabel && role !== 'presentation') {
           issues.push({
             type: 'inaccessible-svg',
-            element: 'svg'
+            element: 'svg',
           });
         }
       });
@@ -358,7 +371,7 @@ test.describe('WCAG 2.2 AA Compliance Tests', () => {
     const linkIssues = await page.evaluate(() => {
       const issues: any[] = [];
 
-      document.querySelectorAll('a').forEach(link => {
+      document.querySelectorAll('a').forEach((link) => {
         const href = link.getAttribute('href');
         const text = link.textContent?.trim();
         const ariaLabel = link.getAttribute('aria-label');
@@ -367,7 +380,7 @@ test.describe('WCAG 2.2 AA Compliance Tests', () => {
         if (!text && !ariaLabel) {
           issues.push({
             type: 'missing-link-text',
-            href: href || 'no-href'
+            href: href || 'no-href',
           });
         }
 
@@ -377,19 +390,18 @@ test.describe('WCAG 2.2 AA Compliance Tests', () => {
           issues.push({
             type: 'generic-link-text',
             text,
-            href: href || 'no-href'
+            href: href || 'no-href',
           });
         }
 
         // Check for links that open in new window
         if (link.getAttribute('target') === '_blank') {
-          const hasWarning = ariaLabel?.includes('opens in new') || 
-                           text?.includes('opens in new');
+          const hasWarning = ariaLabel?.includes('opens in new') || text?.includes('opens in new');
           if (!hasWarning) {
             issues.push({
               type: 'new-window-without-warning',
               text: text?.substring(0, 30),
-              href: href || 'no-href'
+              href: href || 'no-href',
             });
           }
         }
@@ -407,25 +419,25 @@ test.describe('WCAG 2.2 AA Compliance Tests', () => {
     const focusIssues = await page.evaluate(async () => {
       const issues: any[] = [];
       const focusableElements = document.querySelectorAll(
-        'a, button, input, select, textarea, [tabindex]:not([tabindex="-1"])'
+        'a, button, input, select, textarea, [tabindex]:not([tabindex="-1"])',
       );
 
       for (const element of Array.from(focusableElements)) {
         // Focus the element
         (element as HTMLElement).focus();
-        
+
         // Check if focus is visible
         const styles = window.getComputedStyle(element);
         const outline = styles.outline;
         const boxShadow = styles.boxShadow;
         const border = styles.border;
-        
+
         // Get styles before focus for comparison
         (element as HTMLElement).blur();
         const blurredStyles = window.getComputedStyle(element);
-        
-        const hasVisibleFocus = 
-          outline !== 'none' || 
+
+        const hasVisibleFocus =
+          outline !== 'none' ||
           boxShadow !== blurredStyles.boxShadow ||
           border !== blurredStyles.border;
 
@@ -433,7 +445,7 @@ test.describe('WCAG 2.2 AA Compliance Tests', () => {
           issues.push({
             element: element.tagName,
             class: element.className,
-            text: element.textContent?.substring(0, 30)
+            text: element.textContent?.substring(0, 30),
           });
         }
       }
@@ -450,14 +462,14 @@ test.describe('WCAG 2.2 AA Compliance Tests', () => {
     const tableIssues = await page.evaluate(() => {
       const issues: any[] = [];
 
-      document.querySelectorAll('table').forEach(table => {
+      document.querySelectorAll('table').forEach((table) => {
         // Check for caption or aria-label
         const caption = table.querySelector('caption');
         const ariaLabel = table.getAttribute('aria-label');
         if (!caption && !ariaLabel) {
           issues.push({
             type: 'missing-table-caption',
-            element: 'table'
+            element: 'table',
           });
         }
 
@@ -466,16 +478,16 @@ test.describe('WCAG 2.2 AA Compliance Tests', () => {
         if (headers.length === 0) {
           issues.push({
             type: 'missing-table-headers',
-            element: 'table'
+            element: 'table',
           });
         }
 
         // Check for scope attributes on headers
-        headers.forEach(header => {
+        headers.forEach((header) => {
           if (!header.hasAttribute('scope')) {
             issues.push({
               type: 'missing-header-scope',
-              text: header.textContent?.substring(0, 30)
+              text: header.textContent?.substring(0, 30),
             });
           }
         });
@@ -494,13 +506,13 @@ test.describe('WCAG 2.2 AA Compliance Tests', () => {
       const issues: any[] = [];
 
       // Check video elements
-      document.querySelectorAll('video').forEach(video => {
+      document.querySelectorAll('video').forEach((video) => {
         // Check for captions
         const tracks = video.querySelectorAll('track[kind="captions"]');
         if (tracks.length === 0) {
           issues.push({
             type: 'missing-captions',
-            element: 'video'
+            element: 'video',
           });
         }
 
@@ -509,19 +521,19 @@ test.describe('WCAG 2.2 AA Compliance Tests', () => {
         if (!audioDesc) {
           issues.push({
             type: 'missing-audio-description',
-            element: 'video'
+            element: 'video',
           });
         }
       });
 
       // Check audio elements
-      document.querySelectorAll('audio').forEach(audio => {
+      document.querySelectorAll('audio').forEach((audio) => {
         // Check for transcript
         const transcriptId = audio.getAttribute('aria-describedby');
         if (!transcriptId || !document.getElementById(transcriptId)) {
           issues.push({
             type: 'missing-transcript',
-            element: 'audio'
+            element: 'audio',
           });
         }
       });
@@ -538,11 +550,11 @@ test.describe('WCAG 2.2 AA Compliance Tests', () => {
     const languageCheck = await page.evaluate(() => {
       const html = document.documentElement;
       const lang = html.getAttribute('lang');
-      
+
       return {
         hasLang: !!lang,
         lang: lang,
-        validLang: lang ? /^[a-z]{2}(-[A-Z]{2})?$/.test(lang) : false
+        validLang: lang ? /^[a-z]{2}(-[A-Z]{2})?$/.test(lang) : false,
       };
     });
 
@@ -554,16 +566,18 @@ test.describe('WCAG 2.2 AA Compliance Tests', () => {
     await page.goto('/', { waitUntil: 'networkidle' });
 
     const skipLinks = await page.evaluate(() => {
-      const links = Array.from(document.querySelectorAll('a')).filter(link => 
-        link.textContent?.toLowerCase().includes('skip') ||
-        link.className.toLowerCase().includes('skip')
+      const links = Array.from(document.querySelectorAll('a')).filter(
+        (link) =>
+          link.textContent?.toLowerCase().includes('skip') ||
+          link.className.toLowerCase().includes('skip'),
       );
 
-      return links.map(link => ({
+      return links.map((link) => ({
         text: link.textContent,
         href: link.getAttribute('href'),
-        visible: window.getComputedStyle(link).position === 'absolute' &&
-                 window.getComputedStyle(link).left.includes('-')
+        visible:
+          window.getComputedStyle(link).position === 'absolute' &&
+          window.getComputedStyle(link).left.includes('-'),
       }));
     });
 

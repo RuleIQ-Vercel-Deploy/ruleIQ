@@ -50,7 +50,9 @@ class BaseIntegration(ABC):
                 f"Fernet cipher not available for integration {self.config.provider} for user {self.config.user_id}. "
                 f"Cannot proceed without encryption."
             )
-            raise IntegrationError("Encryption cipher not available. Cannot create integration without secure credential storage.")
+            raise IntegrationError(
+                "Encryption cipher not available. Cannot create integration without secure credential storage."
+            )
 
     @property
     @abstractmethod
@@ -92,7 +94,9 @@ class BaseIntegration(ABC):
     def encrypt_credentials_to_str(self, credentials_dict: Dict[str, Any]) -> str:
         if not self.cipher:
             logger.error("Cannot encrypt credentials: Fernet cipher is not initialized.")
-            raise IntegrationError("Encryption cipher not available. Cannot save credentials securely.")
+            raise IntegrationError(
+                "Encryption cipher not available. Cannot save credentials securely."
+            )
 
         try:
             credentials_json = json.dumps(credentials_dict)
@@ -105,12 +109,12 @@ class BaseIntegration(ABC):
             logger.error(f"Failed to encrypt credentials: {e}", exc_info=True)
             raise IntegrationError(f"Failed to encrypt credentials: {e}") from e
 
-    def decrypt_credentials_from_str(
-        self, encrypted_credentials_str: str
-    ) -> Dict[str, Any]:
+    def decrypt_credentials_from_str(self, encrypted_credentials_str: str) -> Dict[str, Any]:
         if not self.cipher:
             logger.error("Cannot decrypt credentials: Fernet cipher is not initialized.")
-            raise IntegrationError("Decryption cipher not available. Cannot load credentials securely.")
+            raise IntegrationError(
+                "Decryption cipher not available. Cannot load credentials securely."
+            )
 
         try:
             encrypted_bytes = encrypted_credentials_str.encode("utf-8")

@@ -154,7 +154,18 @@ async def _send_report_summary_notifications_async():
 # --- Celery Tasks ---
 
 
-@celery_app.task(bind=True, max_retries=3, default_retry_delay=300)
+@celery_app.task(
+    bind=True,
+    autoretry_for=(DatabaseException, Exception),
+    retry_kwargs={
+        'max_retries': 5,
+        'countdown': 120,  # Start with 2 minutes for report generation
+    },
+    retry_backoff=True,
+    retry_backoff_max=600,  # Max 10 minutes for reports
+    retry_jitter=True,
+    rate_limit='2/m',  # 2 report generations per minute
+)
 def generate_and_distribute_report(self, schedule_id: str):
     """Celery task to generate and distribute a report by running the async helper."""
     try:
@@ -170,9 +181,20 @@ def generate_and_distribute_report(self, schedule_id: str):
         self.retry(exc=e)
 
 
-@celery_app.task
+@celery_app.task(
+    bind=True,
+    autoretry_for=(Exception,),
+    retry_kwargs={
+        'max_retries': 3,
+        'countdown': 90,  # Start with 90 seconds for on-demand reports
+    },
+    retry_backoff=True,
+    retry_backoff_max=400,
+    retry_jitter=True,
+    rate_limit='5/m',  # 5 on-demand reports per minute
+)
 def generate_report_on_demand(
-    user_id: str, profile_id: str, report_type: str, recipients: List[str]
+    self, user_id: str, profile_id: str, report_type: str, recipients: List[str]
 ):
     """Mock task for on-demand report generation."""
     logger.info(f"On-demand report for user {user_id}, profile {profile_id}")
@@ -182,15 +204,37 @@ def generate_report_on_demand(
     return {"status": "completed"}
 
 
-@celery_app.task
-def cleanup_old_reports():
+@celery_app.task(
+    bind=True,
+    autoretry_for=(Exception,),
+    retry_kwargs={
+        'max_retries': 3,
+        'countdown': 60,
+    },
+    retry_backoff=True,
+    retry_backoff_max=300,
+    retry_jitter=True,
+    rate_limit='1/h',  # 1 cleanup task per hour
+)
+def cleanup_old_reports(self):
     """Mock task for cleaning up old reports."""
     logger.info("Running mock cleanup for old reports.")
     return {"status": "completed", "cleaned_reports": 0}
 
 
-@celery_app.task
-def send_report_summary_notifications():
+@celery_app.task(
+    bind=True,
+    autoretry_for=(Exception,),
+    retry_kwargs={
+        'max_retries': 5,
+        'countdown': 45,
+    },
+    retry_backoff=True,
+    retry_backoff_max=300,
+    retry_jitter=True,
+    rate_limit='10/m',  # 10 summary notifications per minute
+)
+def send_report_summary_notifications(self):
     """Celery task to send summary notifications by running the async helper."""
     try:
         return asyncio.run(_send_report_summary_notifications_async())

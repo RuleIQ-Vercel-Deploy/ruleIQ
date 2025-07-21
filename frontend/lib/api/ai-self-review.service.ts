@@ -22,10 +22,10 @@ export interface SelfReviewRequest {
 export interface SelfReviewResponse {
   review_id: string;
   timestamp: string;
-  
+
   // Initial Response
   original_response: AIHelpResponse;
-  
+
   // Self-Review Analysis
   self_critique: {
     identified_issues: SelfReviewIssue[];
@@ -34,10 +34,10 @@ export interface SelfReviewResponse {
     completeness_review: CompletenessReview;
     clarity_evaluation: ClarityEvaluation;
   };
-  
+
   // Revised Response
   revised_response: AIHelpResponse;
-  
+
   // Meta-Review Information
   review_quality: {
     overall_confidence: number; // 1-10 scale
@@ -45,7 +45,7 @@ export interface SelfReviewResponse {
     revision_significance: 'none' | 'minor' | 'moderate' | 'major';
     areas_needing_verification: string[];
   };
-  
+
   // User Guidance
   user_guidance: {
     how_to_use: string;
@@ -57,7 +57,14 @@ export interface SelfReviewResponse {
 export interface SelfReviewIssue {
   issue_id: string;
   severity: 'low' | 'medium' | 'high' | 'critical';
-  category: 'factual_accuracy' | 'logical_consistency' | 'completeness' | 'clarity' | 'relevance' | 'bias' | 'assumption';
+  category:
+    | 'factual_accuracy'
+    | 'logical_consistency'
+    | 'completeness'
+    | 'clarity'
+    | 'relevance'
+    | 'bias'
+    | 'assumption';
   description: string;
   location: string; // Where in the response the issue was found
   suggested_fix: string;
@@ -121,15 +128,16 @@ const mockSelfReviewResponse: SelfReviewResponse = {
   review_id: 'review_001',
   timestamp: new Date().toISOString(),
   original_response: {
-    guidance: "This question assesses your organization's data retention practices under GDPR. You should document specific retention periods for different categories of personal data, ensure you have legal basis for retention, and implement automatic deletion processes where possible.",
+    guidance:
+      "This question assesses your organization's data retention practices under GDPR. You should document specific retention periods for different categories of personal data, ensure you have legal basis for retention, and implement automatic deletion processes where possible.",
     confidence_score: 0.92,
-    related_topics: ["Data Protection by Design", "Right to Erasure", "Data Minimization"],
+    related_topics: ['Data Protection by Design', 'Right to Erasure', 'Data Minimization'],
     follow_up_suggestions: [
-      "Review your current data retention schedule",
-      "Consult with your legal team on retention requirements",
-      "Consider implementing automated deletion tools"
+      'Review your current data retention schedule',
+      'Consult with your legal team on retention requirements',
+      'Consider implementing automated deletion tools',
     ],
-    source_references: ["GDPR Article 5(1)(e)", "GDPR Recital 39"]
+    source_references: ['GDPR Article 5(1)(e)', 'GDPR Recital 39'],
   },
   self_critique: {
     identified_issues: [
@@ -139,8 +147,9 @@ const mockSelfReviewResponse: SelfReviewResponse = {
         category: 'completeness',
         description: 'Missing mention of specific retention periods for different data categories',
         location: 'Main guidance section',
-        suggested_fix: 'Add examples of common retention periods (e.g., employee data: 6 years, customer data: varies by purpose)',
-        confidence_in_identification: 8
+        suggested_fix:
+          'Add examples of common retention periods (e.g., employee data: 6 years, customer data: varies by purpose)',
+        confidence_in_identification: 8,
       },
       {
         issue_id: 'issue_002',
@@ -148,9 +157,10 @@ const mockSelfReviewResponse: SelfReviewResponse = {
         category: 'clarity',
         description: 'Term "legal basis" could be clearer for non-legal audiences',
         location: 'First sentence, legal basis reference',
-        suggested_fix: 'Explain what constitutes legal basis (e.g., contract, legal obligation, legitimate interest)',
-        confidence_in_identification: 9
-      }
+        suggested_fix:
+          'Explain what constitutes legal basis (e.g., contract, legal obligation, legitimate interest)',
+        confidence_in_identification: 9,
+      },
     ],
     confidence_assessment: {
       original_confidence: 0.92,
@@ -159,67 +169,65 @@ const mockSelfReviewResponse: SelfReviewResponse = {
         {
           factor: 'Missing specific examples',
           impact: 'decreases',
-          explanation: 'Lack of concrete examples may reduce practical applicability'
+          explanation: 'Lack of concrete examples may reduce practical applicability',
         },
         {
           factor: 'Accurate regulatory references',
           impact: 'increases',
-          explanation: 'Correct citation of GDPR articles increases reliability'
-        }
+          explanation: 'Correct citation of GDPR articles increases reliability',
+        },
       ],
-      uncertainty_areas: ['Specific retention periods for different industries', 'Technical implementation details']
+      uncertainty_areas: [
+        'Specific retention periods for different industries',
+        'Technical implementation details',
+      ],
     },
     accuracy_check: {
       factual_claims: [
         {
           claim: 'GDPR requires documented retention periods',
           verification_status: 'verified',
-          confidence_level: 10
+          confidence_level: 10,
         },
         {
           claim: 'Automatic deletion processes are required',
           verification_status: 'uncertain',
-          confidence_level: 6
-        }
+          confidence_level: 6,
+        },
       ],
       regulatory_references: [
         {
           reference: 'GDPR Article 5(1)(e)',
           accuracy_status: 'correct',
-          notes: 'Correctly cites data minimization principle'
+          notes: 'Correctly cites data minimization principle',
         },
         {
           reference: 'GDPR Recital 39',
           accuracy_status: 'correct',
-          notes: 'Relevant to data retention principles'
-        }
+          notes: 'Relevant to data retention principles',
+        },
       ],
-      overall_accuracy_score: 8.5
+      overall_accuracy_score: 8.5,
     },
     completeness_review: {
       missing_aspects: [
         'Specific retention periods by data category',
         'Legal basis types explanation',
-        'Industry-specific considerations'
+        'Industry-specific considerations',
       ],
       incomplete_explanations: [
         'What constitutes adequate documentation',
-        'How to implement automated deletion'
+        'How to implement automated deletion',
       ],
       areas_needing_expansion: [
         'Practical implementation steps',
-        'Common challenges and solutions'
+        'Common challenges and solutions',
       ],
-      completeness_score: 7.2
+      completeness_score: 7.2,
     },
     clarity_evaluation: {
-      unclear_explanations: [
-        'Legal basis for retention (needs definition)'
-      ],
-      jargon_without_explanation: [
-        'Legal basis',
-        'Data Protection by Design'
-      ],
+      unclear_explanations: ['Legal basis for retention (needs definition)'],
+      jargon_without_explanation: ['Legal basis', 'Data Protection by Design'],
       logical_flow_issues: [],
       clarity_score: 8.1,
       readability_assessment: {
@@ -228,23 +236,33 @@ const mockSelfReviewResponse: SelfReviewResponse = {
         improvement_suggestions: [
           'Define technical terms',
           'Add more concrete examples',
-          'Include step-by-step guidance'
-        ]
-      }
-    }
+          'Include step-by-step guidance',
+        ],
+      },
+    },
   },
   revised_response: {
-    guidance: "This question assesses your organization's data retention practices under GDPR. You must document specific retention periods for different categories of personal data based on your legal basis for processing (such as contractual obligations, legal requirements, or legitimate interests).\n\nKey requirements:\n• Document retention periods for each data category (e.g., employee records: 6 years after termination, customer data: varies by purpose)\n• Ensure you have a valid legal basis for retention\n• Implement processes for timely deletion when retention periods expire\n• Consider automated deletion tools to ensure compliance\n\nThe goal is to retain data only as long as necessary for the original purpose, balancing business needs with privacy rights.",
+    guidance:
+      "This question assesses your organization's data retention practices under GDPR. You must document specific retention periods for different categories of personal data based on your legal basis for processing (such as contractual obligations, legal requirements, or legitimate interests).\n\nKey requirements:\n• Document retention periods for each data category (e.g., employee records: 6 years after termination, customer data: varies by purpose)\n• Ensure you have a valid legal basis for retention\n• Implement processes for timely deletion when retention periods expire\n• Consider automated deletion tools to ensure compliance\n\nThe goal is to retain data only as long as necessary for the original purpose, balancing business needs with privacy rights.",
     confidence_score: 0.87,
-    related_topics: ["Data Protection by Design", "Right to Erasure", "Data Minimization", "Legal Basis for Processing"],
-    follow_up_suggestions: [
-      "Create a data retention schedule mapping data categories to retention periods",
-      "Identify your legal basis for retention (contract, legal obligation, legitimate interest)",
-      "Consult with your legal team on industry-specific retention requirements",
-      "Research automated deletion tools suitable for your data systems",
-      "Establish a process for regular review and updates of retention policies"
+    related_topics: [
+      'Data Protection by Design',
+      'Right to Erasure',
+      'Data Minimization',
+      'Legal Basis for Processing',
     ],
-    source_references: ["GDPR Article 5(1)(e) - Data minimization", "GDPR Article 6 - Legal basis for processing", "GDPR Recital 39 - Retention periods"]
+    follow_up_suggestions: [
+      'Create a data retention schedule mapping data categories to retention periods',
+      'Identify your legal basis for retention (contract, legal obligation, legitimate interest)',
+      'Consult with your legal team on industry-specific retention requirements',
+      'Research automated deletion tools suitable for your data systems',
+      'Establish a process for regular review and updates of retention policies',
+    ],
+    source_references: [
+      'GDPR Article 5(1)(e) - Data minimization',
+      'GDPR Article 6 - Legal basis for processing',
+      'GDPR Recital 39 - Retention periods',
+    ],
   },
   review_quality: {
     overall_confidence: 8.7,
@@ -253,18 +271,22 @@ const mockSelfReviewResponse: SelfReviewResponse = {
     areas_needing_verification: [
       'Industry-specific retention requirements',
       'Technical implementation details for automated deletion',
-      'Specific legal basis requirements by jurisdiction'
-    ]
+      'Specific legal basis requirements by jurisdiction',
+    ],
   },
   user_guidance: {
-    how_to_use: "This response has been self-reviewed and revised. The revised version includes more specific guidance and examples. Use this as a starting point, but consider consulting with legal experts for your specific situation.",
-    confidence_interpretation: "Confidence score of 8.7/10 means this guidance is well-founded but may need customization for your specific industry or circumstances. Areas marked for verification should be checked with relevant experts.",
-    when_to_seek_additional_help: "Seek additional legal advice if: you operate in a regulated industry, handle special category data, have complex international data transfers, or need specific technical implementation guidance."
-  }
+    how_to_use:
+      'This response has been self-reviewed and revised. The revised version includes more specific guidance and examples. Use this as a starting point, but consider consulting with legal experts for your specific situation.',
+    confidence_interpretation:
+      'Confidence score of 8.7/10 means this guidance is well-founded but may need customization for your specific industry or circumstances. Areas marked for verification should be checked with relevant experts.',
+    when_to_seek_additional_help:
+      'Seek additional legal advice if: you operate in a regulated industry, handle special category data, have complex international data transfers, or need specific technical implementation guidance.',
+  },
 };
 
 class AISelfReviewService {
-  private useProductionEndpoints = process.env.NODE_ENV === 'production' || process.env['NEXT_PUBLIC_USE_REAL_AI'] === 'true';
+  private useProductionEndpoints =
+    process.env.NODE_ENV === 'production' || process.env['NEXT_PUBLIC_USE_REAL_AI'] === 'true';
 
   /**
    * Perform self-review of an AI response
@@ -272,21 +294,18 @@ class AISelfReviewService {
   async performSelfReview(request: SelfReviewRequest): Promise<SelfReviewResponse> {
     try {
       if (this.useProductionEndpoints) {
-        const response = await apiClient.post<SelfReviewResponse>(
-          '/ai/self-review',
-          request
-        );
+        const response = await apiClient.post<SelfReviewResponse>('/ai/self-review', request);
         return response.data;
       }
 
       // Development fallback - simulate review processing time
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
+      await new Promise((resolve) => setTimeout(resolve, 1500));
+
       return {
         ...mockSelfReviewResponse,
         review_id: `review_${Date.now()}`,
         timestamp: new Date().toISOString(),
-        original_response: request.original_response
+        original_response: request.original_response,
       };
     } catch (error) {
       console.error('Failed to perform self-review:', error);
@@ -299,11 +318,11 @@ class AISelfReviewService {
    */
   async getSpecializedReview(
     type: 'guidance' | 'analysis' | 'recommendations',
-    request: SelfReviewRequest
+    request: SelfReviewRequest,
   ): Promise<SelfReviewResponse> {
     const specializedRequest = {
       ...request,
-      review_focus: this.getReviewFocusForType(type)
+      review_focus: this.getReviewFocusForType(type),
     };
 
     return this.performSelfReview(specializedRequest);
@@ -314,7 +333,7 @@ class AISelfReviewService {
    */
   async quickConfidenceCheck(
     response: AIHelpResponse,
-    context: { question_text: string; framework_id: string }
+    context: { question_text: string; framework_id: string },
   ): Promise<{
     confidence_score: number;
     confidence_factors: string[];
@@ -325,7 +344,7 @@ class AISelfReviewService {
       if (this.useProductionEndpoints) {
         const apiResponse = await apiClient.post('/ai/quick-confidence-check', {
           response,
-          context
+          context,
         });
         return apiResponse.data;
       }
@@ -336,13 +355,13 @@ class AISelfReviewService {
         confidence_factors: [
           'Accurate regulatory references',
           'Clear explanation structure',
-          'Practical actionable advice'
+          'Practical actionable advice',
         ],
         quick_issues: [
           'Could benefit from more specific examples',
-          'Technical implementation details are limited'
+          'Technical implementation details are limited',
         ],
-        recommendation: 'use_as_is'
+        recommendation: 'use_as_is',
       };
     } catch (error) {
       console.error('Failed to perform quick confidence check:', error);
@@ -350,7 +369,7 @@ class AISelfReviewService {
         confidence_score: 7.0,
         confidence_factors: ['Unable to verify at this time'],
         quick_issues: ['Review service temporarily unavailable'],
-        recommendation: 'review_recommended'
+        recommendation: 'review_recommended',
       };
     }
   }
@@ -358,11 +377,13 @@ class AISelfReviewService {
   /**
    * Get self-review metrics and analytics
    */
-  async getSelfReviewMetrics(timeframe: 'day' | 'week' | 'month' = 'week'): Promise<SelfReviewMetrics> {
+  async getSelfReviewMetrics(
+    timeframe: 'day' | 'week' | 'month' = 'week',
+  ): Promise<SelfReviewMetrics> {
     try {
       if (this.useProductionEndpoints) {
         const response = await apiClient.get<SelfReviewMetrics>(
-          `/ai/self-review/metrics?timeframe=${timeframe}`
+          `/ai/self-review/metrics?timeframe=${timeframe}`,
         );
         return response.data;
       }
@@ -374,15 +395,15 @@ class AISelfReviewService {
         common_issue_categories: [
           { category: 'completeness', frequency: 34 },
           { category: 'clarity', frequency: 28 },
-          { category: 'factual_accuracy', frequency: 19 }
+          { category: 'factual_accuracy', frequency: 19 },
         ],
         revision_frequency: [
           { level: 'none', count: 23 },
           { level: 'minor', count: 58 },
           { level: 'moderate', count: 34 },
-          { level: 'major', count: 12 }
+          { level: 'major', count: 12 },
         ],
-        user_satisfaction_with_reviews: 8.4
+        user_satisfaction_with_reviews: 8.4,
       };
     } catch (error) {
       console.error('Failed to get self-review metrics:', error);
@@ -402,13 +423,13 @@ class AISelfReviewService {
       clarity_rating: number; // 1-10
       comments?: string;
       improvement_suggestions?: string[];
-    }
+    },
   ): Promise<void> {
     try {
       if (this.useProductionEndpoints) {
         await apiClient.post('/ai/self-review/feedback', {
           review_id: reviewId,
-          ...feedback
+          ...feedback,
         });
       } else {
         console.log('Self-review feedback submitted:', { reviewId, feedback });
@@ -422,7 +443,9 @@ class AISelfReviewService {
   /**
    * Get recommended review focus based on response type
    */
-  private getReviewFocusForType(type: 'guidance' | 'analysis' | 'recommendations'): SelfReviewRequest['review_focus'] {
+  private getReviewFocusForType(
+    type: 'guidance' | 'analysis' | 'recommendations',
+  ): SelfReviewRequest['review_focus'] {
     switch (type) {
       case 'guidance':
         return 'clarity';
@@ -448,16 +471,17 @@ class AISelfReviewService {
       complexTopic: response.guidance.length > 500,
       manyReferences: (response.source_references?.length || 0) > 3,
       noFollowUp: !response.follow_up_suggestions?.length,
-      highStakes: response.guidance.toLowerCase().includes('legal') || 
-                  response.guidance.toLowerCase().includes('compliance') ||
-                  response.guidance.toLowerCase().includes('regulatory')
+      highStakes:
+        response.guidance.toLowerCase().includes('legal') ||
+        response.guidance.toLowerCase().includes('compliance') ||
+        response.guidance.toLowerCase().includes('regulatory'),
     };
 
     if (factors.lowConfidence) {
       return {
         recommend: true,
         reason: 'Low confidence score suggests self-review would be beneficial',
-        priority: 'high'
+        priority: 'high',
       };
     }
 
@@ -465,7 +489,7 @@ class AISelfReviewService {
       return {
         recommend: true,
         reason: 'High-stakes compliance topic with complex guidance',
-        priority: 'high'
+        priority: 'high',
       };
     }
 
@@ -473,14 +497,14 @@ class AISelfReviewService {
       return {
         recommend: true,
         reason: 'Complex response could benefit from self-review',
-        priority: 'medium'
+        priority: 'medium',
       };
     }
 
     return {
       recommend: false,
       reason: 'Response appears straightforward and confident',
-      priority: 'low'
+      priority: 'low',
     };
   }
 
@@ -494,34 +518,37 @@ class AISelfReviewService {
     user_action_needed: boolean;
   } {
     const significantIssues = review.self_critique.identified_issues.filter(
-      issue => issue.severity === 'high' || issue.severity === 'critical'
+      (issue) => issue.severity === 'high' || issue.severity === 'critical',
     );
 
-    const confidenceChange = review.self_critique.confidence_assessment.reviewed_confidence - 
-                            review.self_critique.confidence_assessment.original_confidence;
+    const confidenceChange =
+      review.self_critique.confidence_assessment.reviewed_confidence -
+      review.self_critique.confidence_assessment.original_confidence;
 
-    const summary = `Self-review ${review.review_quality.revision_significance === 'none' ? 'confirmed' : 'improved'} this response. ` +
-                   `${significantIssues.length > 0 ? `Found ${significantIssues.length} significant issues. ` : ''}` +
-                   `Confidence ${confidenceChange >= 0 ? 'maintained' : 'adjusted'} based on review.`;
+    const summary =
+      `Self-review ${review.review_quality.revision_significance === 'none' ? 'confirmed' : 'improved'} this response. ` +
+      `${significantIssues.length > 0 ? `Found ${significantIssues.length} significant issues. ` : ''}` +
+      `Confidence ${confidenceChange >= 0 ? 'maintained' : 'adjusted'} based on review.`;
 
-    const keyChanges = review.self_critique.identified_issues.map(issue => 
-      `${issue.category}: ${issue.suggested_fix}`
-    ).slice(0, 3); // Show top 3 changes
+    const keyChanges = review.self_critique.identified_issues
+      .map((issue) => `${issue.category}: ${issue.suggested_fix}`)
+      .slice(0, 3); // Show top 3 changes
 
-    const confidenceExplanation = confidenceChange > 0 
-      ? `Confidence increased by ${(confidenceChange * 100).toFixed(1)}% after review`
-      : confidenceChange < 0 
-        ? `Confidence decreased by ${Math.abs(confidenceChange * 100).toFixed(1)}% after identifying areas for improvement`
-        : 'Confidence remained stable after review';
+    const confidenceExplanation =
+      confidenceChange > 0
+        ? `Confidence increased by ${(confidenceChange * 100).toFixed(1)}% after review`
+        : confidenceChange < 0
+          ? `Confidence decreased by ${Math.abs(confidenceChange * 100).toFixed(1)}% after identifying areas for improvement`
+          : 'Confidence remained stable after review';
 
-    const userActionNeeded = review.review_quality.areas_needing_verification.length > 0 ||
-                            significantIssues.length > 0;
+    const userActionNeeded =
+      review.review_quality.areas_needing_verification.length > 0 || significantIssues.length > 0;
 
     return {
       summary,
       key_changes: keyChanges,
       confidence_explanation: confidenceExplanation,
-      user_action_needed: userActionNeeded
+      user_action_needed: userActionNeeded,
     };
   }
 }

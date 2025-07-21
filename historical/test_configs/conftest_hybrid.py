@@ -7,13 +7,12 @@ import asyncio
 import os
 import warnings
 import logging
-from typing import Generator, AsyncGenerator, Optional, Dict, Any
-from contextlib import asynccontextmanager
+from typing import AsyncGenerator, Dict
 from uuid import uuid4
 
 import pytest
-from sqlalchemy import create_engine, text
-from sqlalchemy.ext.asyncio import AsyncSession, AsyncEngine, create_async_engine
+from sqlalchemy import create_engine
+from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.pool import StaticPool
 from fastapi.testclient import TestClient
@@ -51,9 +50,6 @@ sys.path.insert(0, str(project_root))
 from database.db_setup import Base, _get_configured_database_urls
 from database.user import User
 from database.business_profile import BusinessProfile
-from database.compliance_framework import ComplianceFramework
-from database.evidence_item import EvidenceItem
-from database.generated_policy import GeneratedPolicy
 
 
 class HybridDatabaseManager:
@@ -593,4 +589,4 @@ def mock_ai_services():
     sys.modules["google.generativeai"] = mock_genai
     sys.modules["google.generativeai.types"] = unittest.mock.MagicMock()
 
-    yield mock_genai
+    return mock_genai

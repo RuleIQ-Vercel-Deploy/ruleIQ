@@ -7,10 +7,10 @@ export const queryClient = new QueryClient({
     queries: {
       // 24 hours for background refetch
       gcTime: 1000 * 60 * 60 * 24,
-      
+
       // Consider data stale after 5 minutes
       staleTime: 1000 * 60 * 5,
-      
+
       // Retry failed requests 3 times with exponential backoff
       retry: (failureCount, error: any) => {
         // Don't retry on 4xx errors (client errors)
@@ -19,20 +19,20 @@ export const queryClient = new QueryClient({
         }
         return failureCount < 3;
       },
-      
+
       // Exponential backoff delay
       retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
-      
+
       // Refetch on window focus for fresh data
       refetchOnWindowFocus: true,
-      
+
       // Don't refetch on reconnect by default (can be overridden per query)
       refetchOnReconnect: 'always',
     },
     mutations: {
       // Retry mutations once on failure
       retry: 1,
-      
+
       // Show error notifications by default
       onError: (error: any) => {
         console.error('Mutation error:', error);
@@ -100,7 +100,7 @@ if (typeof window !== 'undefined') {
 
 // Helper function to invalidate queries by key pattern
 export const invalidateQueries = (patterns: string[]) => {
-  patterns.forEach(pattern => {
+  patterns.forEach((pattern) => {
     queryClient.invalidateQueries({ queryKey: [pattern] });
   });
 };

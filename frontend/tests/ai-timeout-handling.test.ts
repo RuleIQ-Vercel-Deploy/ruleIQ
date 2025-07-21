@@ -10,7 +10,7 @@ describe('AI Timeout Handling Tests', () => {
       const executeWithTimeout = async <T>(
         promise: Promise<T>,
         timeoutMs: number = 30000,
-        operation: string = 'Operation'
+        operation: string = 'Operation',
       ): Promise<T> => {
         const timeoutPromise = new Promise<never>((_, reject) => {
           setTimeout(() => {
@@ -30,7 +30,7 @@ describe('AI Timeout Handling Tests', () => {
       };
 
       // Test successful operation within timeout
-      const fastOperation = new Promise<string>(resolve => {
+      const fastOperation = new Promise<string>((resolve) => {
         setTimeout(() => resolve('success'), 100);
       });
 
@@ -42,7 +42,7 @@ describe('AI Timeout Handling Tests', () => {
       const executeWithTimeout = async <T>(
         promise: Promise<T>,
         timeoutMs: number = 30000,
-        operation: string = 'Operation'
+        operation: string = 'Operation',
       ): Promise<T> => {
         const timeoutPromise = new Promise<never>((_, reject) => {
           setTimeout(() => {
@@ -62,20 +62,20 @@ describe('AI Timeout Handling Tests', () => {
       };
 
       // Test timeout scenario
-      const slowOperation = new Promise<string>(resolve => {
+      const slowOperation = new Promise<string>((resolve) => {
         setTimeout(() => resolve('slow success'), 2000);
       });
 
-      await expect(executeWithTimeout(slowOperation, 500, 'Slow operation'))
-        .rejects
-        .toThrow('Slow operation is taking longer than expected. Please try again.');
+      await expect(executeWithTimeout(slowOperation, 500, 'Slow operation')).rejects.toThrow(
+        'Slow operation is taking longer than expected. Please try again.',
+      );
     });
 
     test('should handle different timeout durations correctly', async () => {
       const executeWithTimeout = async <T>(
         promise: Promise<T>,
         timeoutMs: number = 30000,
-        operation: string = 'Operation'
+        operation: string = 'Operation',
       ): Promise<T> => {
         const timeoutPromise = new Promise<never>((_, reject) => {
           setTimeout(() => {
@@ -87,18 +87,18 @@ describe('AI Timeout Handling Tests', () => {
       };
 
       // Test very short timeout
-      const operation1 = new Promise<string>(resolve => setTimeout(() => resolve('result'), 200));
-      await expect(executeWithTimeout(operation1, 100, 'Very short timeout'))
-        .rejects
-        .toThrow('Very short timeout timed out after 100ms');
+      const operation1 = new Promise<string>((resolve) => setTimeout(() => resolve('result'), 200));
+      await expect(executeWithTimeout(operation1, 100, 'Very short timeout')).rejects.toThrow(
+        'Very short timeout timed out after 100ms',
+      );
 
       // Test medium timeout
-      const operation2 = new Promise<string>(resolve => setTimeout(() => resolve('result'), 300));
+      const operation2 = new Promise<string>((resolve) => setTimeout(() => resolve('result'), 300));
       const result2 = await executeWithTimeout(operation2, 500, 'Medium timeout');
       expect(result2).toBe('result');
 
       // Test long timeout
-      const operation3 = new Promise<string>(resolve => setTimeout(() => resolve('result'), 100));
+      const operation3 = new Promise<string>((resolve) => setTimeout(() => resolve('result'), 100));
       const result3 = await executeWithTimeout(operation3, 5000, 'Long timeout');
       expect(result3).toBe('result');
     });
@@ -106,7 +106,10 @@ describe('AI Timeout Handling Tests', () => {
 
   describe('AI Service Timeout Scenarios', () => {
     test('should handle AI help request timeout', async () => {
-      const mockAIHelpWithTimeout = async (request: any, timeoutMs: number = 15000): Promise<any> => {
+      const mockAIHelpWithTimeout = async (
+        request: any,
+        timeoutMs: number = 15000,
+      ): Promise<any> => {
         const aiRequest = new Promise((resolve, reject) => {
           // Simulate slow AI response
           setTimeout(() => {
@@ -115,7 +118,7 @@ describe('AI Timeout Handling Tests', () => {
               confidence_score: 0.8,
               related_topics: ['Topic 1'],
               follow_up_suggestions: ['Suggestion 1'],
-              source_references: ['Reference 1']
+              source_references: ['Reference 1'],
             });
           }, timeoutMs + 1000); // Intentionally slower than timeout
         });
@@ -137,7 +140,7 @@ describe('AI Timeout Handling Tests', () => {
               related_topics: [],
               follow_up_suggestions: ['Try again later'],
               source_references: [],
-              fallback: true
+              fallback: true,
             };
           }
           throw error;
@@ -147,18 +150,21 @@ describe('AI Timeout Handling Tests', () => {
       const request = {
         question_id: 'q1',
         question_text: 'Test question',
-        framework_id: 'gdpr'
+        framework_id: 'gdpr',
       };
 
       const response = await mockAIHelpWithTimeout(request, 500);
-      
+
       expect(response.fallback).toBe(true);
       expect(response.confidence_score).toBe(0.1);
       expect(response.guidance).toContain('Unable to get AI assistance');
     });
 
     test('should handle AI analysis request timeout', async () => {
-      const mockAIAnalysisWithTimeout = async (request: any, timeoutMs: number = 30000): Promise<any> => {
+      const mockAIAnalysisWithTimeout = async (
+        request: any,
+        timeoutMs: number = 30000,
+      ): Promise<any> => {
         const aiRequest = new Promise((resolve) => {
           // Simulate very slow analysis
           setTimeout(() => {
@@ -166,8 +172,12 @@ describe('AI Timeout Handling Tests', () => {
               gaps: [],
               recommendations: [],
               risk_assessment: { overall_risk_level: 'medium', risk_score: 5, key_risk_areas: [] },
-              compliance_insights: { maturity_level: 'developing', score_breakdown: {}, improvement_priority: [] },
-              evidence_requirements: []
+              compliance_insights: {
+                maturity_level: 'developing',
+                score_breakdown: {},
+                improvement_priority: [],
+              },
+              evidence_requirements: [],
             });
           }, timeoutMs + 2000); // Intentionally slower than timeout
         });
@@ -193,8 +203,8 @@ describe('AI Timeout Handling Tests', () => {
                   description: 'Unable to analyze gaps at this time',
                   impact: 'Analysis timeout',
                   currentState: 'Unknown',
-                  targetState: 'Requires manual review'
-                }
+                  targetState: 'Requires manual review',
+                },
               ],
               recommendations: [
                 {
@@ -203,21 +213,21 @@ describe('AI Timeout Handling Tests', () => {
                   priority: 'medium_term' as const,
                   title: 'Manual Review Required',
                   description: 'Please conduct manual compliance review',
-                  estimatedEffort: 'Variable'
-                }
+                  estimatedEffort: 'Variable',
+                },
               ],
               risk_assessment: {
                 overall_risk_level: 'medium' as const,
                 risk_score: 5,
-                key_risk_areas: ['Analysis incomplete']
+                key_risk_areas: ['Analysis incomplete'],
               },
               compliance_insights: {
                 maturity_level: 'unknown',
                 score_breakdown: {},
-                improvement_priority: ['Complete assessment']
+                improvement_priority: ['Complete assessment'],
               },
               evidence_requirements: [],
-              fallback: true
+              fallback: true,
             };
           }
           throw error;
@@ -228,11 +238,11 @@ describe('AI Timeout Handling Tests', () => {
         assessment_id: 'test',
         responses: {},
         framework_id: 'gdpr',
-        business_profile: {}
+        business_profile: {},
       };
 
       const response = await mockAIAnalysisWithTimeout(request, 1000);
-      
+
       expect(response.fallback).toBe(true);
       expect(response.gaps).toHaveLength(1);
       expect(response.gaps[0].description).toContain('Unable to analyze');
@@ -244,7 +254,7 @@ describe('AI Timeout Handling Tests', () => {
       const mockEnhancedAIWithTimeout = async (
         prompt: string,
         context: any,
-        timeoutMs: number = 30000
+        timeoutMs: number = 30000,
       ): Promise<any> => {
         const aiRequest = new Promise((resolve) => {
           setTimeout(() => {
@@ -252,7 +262,7 @@ describe('AI Timeout Handling Tests', () => {
               analysis: 'Detailed AI analysis',
               recommendations: [],
               confidence_score: 0.9,
-              context_used: context
+              context_used: context,
             });
           }, timeoutMs + 1000);
         });
@@ -268,28 +278,29 @@ describe('AI Timeout Handling Tests', () => {
         } catch (error) {
           if (error instanceof Error && error.message.includes('timed out')) {
             return {
-              analysis: 'Unable to generate detailed analysis at this time. Please ensure all required information is provided and try again.',
+              analysis:
+                'Unable to generate detailed analysis at this time. Please ensure all required information is provided and try again.',
               recommendations: [
                 {
-                  id: "timeout_rec_1",
-                  gapId: "unknown",
-                  priority: "medium_term" as const,
-                  title: "Review Current Compliance Status",
-                  description: "Conduct a comprehensive review of your current compliance status",
-                  estimatedEffort: "1-2 weeks"
+                  id: 'timeout_rec_1',
+                  gapId: 'unknown',
+                  priority: 'medium_term' as const,
+                  title: 'Review Current Compliance Status',
+                  description: 'Conduct a comprehensive review of your current compliance status',
+                  estimatedEffort: '1-2 weeks',
                 },
                 {
-                  id: "timeout_rec_2", 
-                  gapId: "unknown",
-                  priority: "medium_term" as const,
-                  title: "Identify Priority Areas",
-                  description: "Identify priority areas for improvement based on business risk",
-                  estimatedEffort: "1 week"
-                }
+                  id: 'timeout_rec_2',
+                  gapId: 'unknown',
+                  priority: 'medium_term' as const,
+                  title: 'Identify Priority Areas',
+                  description: 'Identify priority areas for improvement based on business risk',
+                  estimatedEffort: '1 week',
+                },
               ],
               confidence_score: 0.3,
               fallback: true,
-              timeout: true
+              timeout: true,
             };
           }
           throw error;
@@ -298,22 +309,18 @@ describe('AI Timeout Handling Tests', () => {
 
       const context = {
         businessProfile: { industry: 'Technology' },
-        currentAnswers: { 'data_protection': 'No' },
-        assessmentType: 'gdpr'
+        currentAnswers: { data_protection: 'No' },
+        assessmentType: 'gdpr',
       };
 
-      const response = await mockEnhancedAIWithTimeout(
-        'Provide recommendations',
-        context,
-        800
-      );
+      const response = await mockEnhancedAIWithTimeout('Provide recommendations', context, 800);
 
       expect(response.fallback).toBe(true);
       expect(response.timeout).toBe(true);
       expect(response.confidence_score).toBe(0.3);
       expect(response.analysis).toContain('Unable to generate detailed analysis');
       expect(response.recommendations).toHaveLength(2);
-      
+
       response.recommendations.forEach((rec: any) => {
         expect(rec.id).toMatch(/timeout_rec_\d+/);
         expect(rec.priority).toBe('medium_term');
@@ -324,26 +331,31 @@ describe('AI Timeout Handling Tests', () => {
 
   describe('Error Propagation and Recovery', () => {
     test('should distinguish between timeout and other errors', async () => {
-      const handleDifferentErrors = async (errorType: 'timeout' | 'network' | 'server'): Promise<any> => {
+      const handleDifferentErrors = async (
+        errorType: 'timeout' | 'network' | 'server',
+      ): Promise<any> => {
         const timeoutPromise = new Promise<never>((_, reject) => {
           setTimeout(() => reject(new Error('Operation timed out after 1000ms')), 100);
         });
 
         const errorPromise = new Promise<never>((_, reject) => {
-          setTimeout(() => {
-            switch (errorType) {
-              case 'timeout':
-                // This will be beaten by timeoutPromise
-                reject(new Error('Should not reach here'));
-                break;
-              case 'network':
-                reject(new Error('Network connection failed'));
-                break;
-              case 'server':
-                reject(new Error('Internal server error'));
-                break;
-            }
-          }, errorType === 'timeout' ? 200 : 50);
+          setTimeout(
+            () => {
+              switch (errorType) {
+                case 'timeout':
+                  // This will be beaten by timeoutPromise
+                  reject(new Error('Should not reach here'));
+                  break;
+                case 'network':
+                  reject(new Error('Network connection failed'));
+                  break;
+                case 'server':
+                  reject(new Error('Internal server error'));
+                  break;
+              }
+            },
+            errorType === 'timeout' ? 200 : 50,
+          );
         });
 
         try {

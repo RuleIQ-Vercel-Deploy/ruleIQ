@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import { useRouter } from "next/navigation";
-import { useEffect, useCallback } from "react";
-import { toast } from "sonner";
+import { useRouter } from 'next/navigation';
+import { useEffect, useCallback } from 'react';
+import { toast } from 'sonner';
 
-import { useAuthStore } from "@/lib/stores/auth.store";
+import { useAuthStore } from '@/lib/stores/auth.store';
 
 interface Shortcut {
   key: string;
@@ -24,80 +24,80 @@ export function useKeyboardShortcuts() {
 
   const shortcuts: Shortcut[] = [
     {
-      key: "k",
+      key: 'k',
       metaKey: true,
       action: () => {
         // This will be handled by command palette
-        document.dispatchEvent(new CustomEvent("openCommandPalette"));
+        document.dispatchEvent(new CustomEvent('openCommandPalette'));
       },
-      description: "Open command palette",
+      description: 'Open command palette',
     },
     {
-      key: "n",
+      key: 'n',
       altKey: true,
       action: () => {
         if (!hasProfile) {
-          toast.error("Complete your business profile first");
+          toast.error('Complete your business profile first');
           return;
         }
-        router.push("/assessments/new");
+        router.push('/assessments/new');
       },
-      description: "New assessment",
+      description: 'New assessment',
       requiresProfile: true,
     },
     {
-      key: "p",
+      key: 'p',
       altKey: true,
       action: () => {
         if (!hasProfile) {
-          toast.error("Complete your business profile first");
+          toast.error('Complete your business profile first');
           return;
         }
-        router.push("/policies/generate");
+        router.push('/policies/generate');
       },
-      description: "Generate policy",
+      description: 'Generate policy',
       requiresProfile: true,
     },
     {
-      key: "u",
+      key: 'u',
       altKey: true,
       action: () => {
-        router.push("/evidence?action=upload");
+        router.push('/evidence?action=upload');
       },
-      description: "Upload evidence",
+      description: 'Upload evidence',
     },
     {
-      key: "i",
+      key: 'i',
       altKey: true,
       action: () => {
-        router.push("/chat");
+        router.push('/chat');
       },
-      description: "Open IQ chat",
+      description: 'Open IQ chat',
     },
     {
-      key: "d",
+      key: 'd',
       altKey: true,
       action: () => {
-        router.push("/dashboard");
+        router.push('/dashboard');
       },
-      description: "Go to dashboard",
+      description: 'Go to dashboard',
     },
     {
-      key: "s",
+      key: 's',
       altKey: true,
       action: () => {
-        router.push("/settings");
+        router.push('/settings');
       },
-      description: "Open settings",
+      description: 'Open settings',
     },
     {
-      key: "?",
+      key: '?',
       shiftKey: true,
       action: () => {
         // Show keyboard shortcuts help
-        document.dispatchEvent(new CustomEvent("showKeyboardShortcuts"));
+        document.dispatchEvent(new CustomEvent('showKeyboardShortcuts'));
       },
-      description: "Show keyboard shortcuts",
+      description: 'Show keyboard shortcuts',
     },
   ];
 
@@ -105,11 +105,7 @@ export function useKeyboardShortcuts() {
     (event: KeyboardEvent) => {
       // Don't trigger shortcuts when typing in inputs
       const target = event.target as HTMLElement;
-      if (
-        target.tagName === "INPUT" ||
-        target.tagName === "TEXTAREA" ||
-        target.isContentEditable
-      ) {
+      if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable) {
         return;
       }
 
@@ -120,13 +116,7 @@ export function useKeyboardShortcuts() {
         const altMatches = shortcut.altKey ? event.altKey : !event.altKey;
         const metaMatches = shortcut.metaKey ? event.metaKey : !event.metaKey;
 
-        return (
-          keyMatches &&
-          ctrlMatches &&
-          shiftMatches &&
-          altMatches &&
-          metaMatches
-        );
+        return keyMatches && ctrlMatches && shiftMatches && altMatches && metaMatches;
       });
 
       if (matchedShortcut) {
@@ -134,12 +124,12 @@ export function useKeyboardShortcuts() {
         matchedShortcut.action();
       }
     },
-    [shortcuts, hasProfile]
+    [shortcuts, hasProfile],
   );
 
   useEffect(() => {
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
   }, [handleKeyDown]);
 
   return shortcuts;
@@ -147,12 +137,12 @@ export function useKeyboardShortcuts() {
 
 export function getShortcutDisplay(shortcut: Shortcut): string {
   const keys = [];
-  
-  if (shortcut.metaKey) keys.push("⌘");
-  if (shortcut.ctrlKey) keys.push("Ctrl");
-  if (shortcut.altKey) keys.push("Alt");
-  if (shortcut.shiftKey) keys.push("Shift");
+
+  if (shortcut.metaKey) keys.push('⌘');
+  if (shortcut.ctrlKey) keys.push('Ctrl');
+  if (shortcut.altKey) keys.push('Alt');
+  if (shortcut.shiftKey) keys.push('Shift');
   keys.push(shortcut.key.toUpperCase());
-  
-  return keys.join("+");
+
+  return keys.join('+');
 }

@@ -1,20 +1,20 @@
-"use client"
+'use client';
 
-import { MoreHorizontal, Eye, Edit, Trash2 } from "lucide-react"
+import { MoreHorizontal, Eye, Edit, Trash2 } from 'lucide-react';
 
-import { Button } from "@/components/ui/button"
+import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from '@/components/ui/dropdown-menu';
 
-import type { Row } from "@tanstack/react-table"
+import type { Row } from '@tanstack/react-table';
 
 interface DataTableRowActionsProps<TData> {
-  row: Row<TData>
+  row: Row<TData>;
 }
 
 export function DataTableRowActions<TData>({ row: _row }: DataTableRowActionsProps<TData>) {
@@ -23,13 +23,13 @@ export function DataTableRowActions<TData>({ row: _row }: DataTableRowActionsPro
       <DropdownMenuTrigger asChild>
         <Button
           variant="ghost"
-          className="flex h-8 w-8 p-0 data-[state=open]:bg-accent hover:bg-accent"
+          className="flex h-8 w-8 p-0 hover:bg-accent data-[state=open]:bg-accent"
         >
           <MoreHorizontal className="h-4 w-4" />
           <span className="sr-only">Open menu</span>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-[160px] bg-popover border-border">
+      <DropdownMenuContent align="end" className="w-[160px] border-border bg-popover">
         <DropdownMenuItem className="hover:bg-accent focus:bg-accent">
           <Eye className="mr-2 h-4 w-4" />
           View Details
@@ -45,5 +45,5 @@ export function DataTableRowActions<TData>({ row: _row }: DataTableRowActionsPro
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
-  )
+  );
 }

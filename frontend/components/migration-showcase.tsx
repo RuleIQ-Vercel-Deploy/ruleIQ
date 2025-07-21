@@ -1,91 +1,127 @@
-'use client'
+'use client';
 
-import { useState } from 'react'
-import { 
-  Check, 
-  AlertTriangle, 
-  Info, 
-  Sparkles, 
-  Palette, 
+import { useState } from 'react';
+import {
+  Check,
+  AlertTriangle,
+  Info,
+  Sparkles,
+  Palette,
   Monitor,
   Smartphone,
-  Eye
-} from 'lucide-react'
+  Eye,
+} from 'lucide-react';
 
-import { NavigationDemo } from '@/components/navigation-demo'
-import { ThemeDemo } from '@/components/theme-demo'
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
-import { useDesignSystem } from '@/hooks/use-design-system'
+import { NavigationDemo } from '@/components/navigation-demo';
+import { ThemeDemo } from '@/components/theme-demo';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { useDesignSystem } from '@/hooks/use-design-system';
 
 export function MigrationShowcase() {
-  const { designSystem, toggleDesignSystem, isNewTheme } = useDesignSystem()
-  const [activeDemo, setActiveDemo] = useState<'overview' | 'components' | 'navigation' | 'pages'>('overview')
+  const { designSystem, toggleDesignSystem, isNewTheme } = useDesignSystem();
+  const [activeDemo, setActiveDemo] = useState<'overview' | 'components' | 'navigation' | 'pages'>(
+    'overview',
+  );
 
   const phases = [
     {
       phase: 1,
-      title: "Foundation & Infrastructure",
-      status: "completed",
-      description: "Feature flags, theme provider, CSS variables, Tailwind config",
-      items: ["✅ Environment configuration", "✅ Design system provider", "✅ CSS variable system", "✅ Tailwind theme support"]
+      title: 'Foundation & Infrastructure',
+      status: 'completed',
+      description: 'Feature flags, theme provider, CSS variables, Tailwind config',
+      items: [
+        '✅ Environment configuration',
+        '✅ Design system provider',
+        '✅ CSS variable system',
+        '✅ Tailwind theme support',
+      ],
     },
     {
       phase: 2,
-      title: "Core UI Components",
-      status: "completed",
-      description: "Button, Input, Card, Label, Badge, Alert components",
-      items: ["✅ Button variants", "✅ Form components", "✅ Card layouts", "✅ Badge system", "✅ Alert notifications"]
+      title: 'Core UI Components',
+      status: 'completed',
+      description: 'Button, Input, Card, Label, Badge, Alert components',
+      items: [
+        '✅ Button variants',
+        '✅ Form components',
+        '✅ Card layouts',
+        '✅ Badge system',
+        '✅ Alert notifications',
+      ],
     },
     {
       phase: 3,
-      title: "Navigation Components",
-      status: "completed",
-      description: "Top navigation, sidebar, mobile navigation",
-      items: ["✅ Top navigation bar", "✅ App sidebar", "✅ Mobile navigation", "✅ Theme switching"]
+      title: 'Navigation Components',
+      status: 'completed',
+      description: 'Top navigation, sidebar, mobile navigation',
+      items: [
+        '✅ Top navigation bar',
+        '✅ App sidebar',
+        '✅ Mobile navigation',
+        '✅ Theme switching',
+      ],
     },
     {
       phase: 4,
-      title: "Page-by-Page Migration",
-      status: "in_progress",
-      description: "Dashboard, authentication, assessment pages",
-      items: ["🔄 Dashboard page", "🔄 Login page", "⏳ Assessment pages", "⏳ Settings pages"]
+      title: 'Page-by-Page Migration',
+      status: 'in_progress',
+      description: 'Dashboard, authentication, assessment pages',
+      items: ['🔄 Dashboard page', '🔄 Login page', '⏳ Assessment pages', '⏳ Settings pages'],
     },
     {
       phase: 5,
-      title: "Testing & QA",
-      status: "pending",
-      description: "Visual regression, accessibility, performance testing",
-      items: ["⏳ Visual testing", "⏳ Accessibility audit", "⏳ Performance checks", "⏳ Cross-browser testing"]
+      title: 'Testing & QA',
+      status: 'pending',
+      description: 'Visual regression, accessibility, performance testing',
+      items: [
+        '⏳ Visual testing',
+        '⏳ Accessibility audit',
+        '⏳ Performance checks',
+        '⏳ Cross-browser testing',
+      ],
     },
     {
       phase: 6,
-      title: "Gradual Rollout",
-      status: "pending",
-      description: "Feature flags, A/B testing, production deployment",
-      items: ["⏳ Feature flag rollout", "⏳ User feedback", "⏳ Production deployment", "⏳ Legacy cleanup"]
-    }
-  ]
+      title: 'Gradual Rollout',
+      status: 'pending',
+      description: 'Feature flags, A/B testing, production deployment',
+      items: [
+        '⏳ Feature flag rollout',
+        '⏳ User feedback',
+        '⏳ Production deployment',
+        '⏳ Legacy cleanup',
+      ],
+    },
+  ];
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'completed': return 'success'
-      case 'in_progress': return 'pending'
-      case 'pending': return 'tag'
-      default: return 'secondary'
+      case 'completed':
+        return 'success';
+      case 'in_progress':
+        return 'pending';
+      case 'pending':
+        return 'tag';
+      default:
+        return 'secondary';
     }
-  }
+  };
 
   const getStatusIcon = (status: string) => {
     switch (status) {
-      case 'completed': return <Check className="h-4 w-4" />
-      case 'in_progress': return <AlertTriangle className="h-4 w-4" />
-      case 'pending': return <Eye className="h-4 w-4" />
-      default: return <Info className="h-4 w-4" />
+      case 'completed':
+        return <Check className="h-4 w-4" />;
+      case 'in_progress':
+        return <AlertTriangle className="h-4 w-4" />;
+      case 'pending':
+        return <Eye className="h-4 w-4" />;
+      default:
+        return <Info className="h-4 w-4" />;
     }
-  }
+  };
 
   return (
     <div className="min-h-screen">
@@ -107,7 +143,7 @@ export function MigrationShowcase() {
                 {isNewTheme ? 'Teal Theme' : 'Legacy Theme'}
               </Badge>
               <Button onClick={toggleDesignSystem} variant="outline">
-                <Palette className="h-4 w-4 mr-2" />
+                <Palette className="mr-2 h-4 w-4" />
                 Switch to {isNewTheme ? 'Legacy' : 'Teal'}
               </Button>
             </div>
@@ -123,12 +159,12 @@ export function MigrationShowcase() {
               { id: 'overview', label: 'Migration Overview', icon: Monitor },
               { id: 'components', label: 'UI Components', icon: Sparkles },
               { id: 'navigation', label: 'Navigation', icon: Smartphone },
-              { id: 'pages', label: 'Page Examples', icon: Eye }
+              { id: 'pages', label: 'Page Examples', icon: Eye },
             ].map(({ id, label, icon: Icon }) => (
               <button
                 key={id}
                 onClick={() => setActiveDemo(id as any)}
-                className={`flex items-center gap-2 py-4 px-2 border-b-2 transition-colors ${
+                className={`flex items-center gap-2 border-b-2 px-2 py-4 transition-colors ${
                   activeDemo === id
                     ? 'border-primary text-primary'
                     : 'border-transparent text-muted-foreground hover:text-foreground'
@@ -150,8 +186,8 @@ export function MigrationShowcase() {
               <Info className="h-4 w-4" />
               <AlertTitle>Migration Status</AlertTitle>
               <AlertDescription>
-                We're migrating from a dark purple/cyan theme to a clean teal/light theme. 
-                Phases 1-3 are complete, Phase 4 is in progress.
+                We're migrating from a dark purple/cyan theme to a clean teal/light theme. Phases
+                1-3 are complete, Phase 4 is in progress.
               </AlertDescription>
             </Alert>
 
@@ -172,7 +208,7 @@ export function MigrationShowcase() {
                   <CardContent>
                     <ul className="space-y-2">
                       {phase.items.map((item, index) => (
-                        <li key={index} className="text-sm flex items-center gap-2">
+                        <li key={index} className="flex items-center gap-2 text-sm">
                           <span className="text-xs">{item}</span>
                         </li>
                       ))}
@@ -185,10 +221,12 @@ export function MigrationShowcase() {
             <Card>
               <CardHeader>
                 <CardTitle>Theme Comparison</CardTitle>
-                <CardDescription>Visual differences between the legacy and new themes</CardDescription>
+                <CardDescription>
+                  Visual differences between the legacy and new themes
+                </CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="grid md:grid-cols-2 gap-6">
+                <div className="grid gap-6 md:grid-cols-2">
                   <div className="space-y-4">
                     <h4 className="font-semibold text-primary">🌙 Legacy Theme (Dark)</h4>
                     <ul className="space-y-2 text-sm text-muted-foreground">
@@ -216,7 +254,7 @@ export function MigrationShowcase() {
         )}
 
         {activeDemo === 'components' && <ThemeDemo />}
-        
+
         {activeDemo === 'navigation' && <NavigationDemo />}
 
         {activeDemo === 'pages' && (
@@ -225,7 +263,8 @@ export function MigrationShowcase() {
               <Info className="h-4 w-4" />
               <AlertTitle>Page Migration Examples</AlertTitle>
               <AlertDescription>
-                Examples of how pages look in both themes. Dashboard and login pages have been migrated.
+                Examples of how pages look in both themes. Dashboard and login pages have been
+                migrated.
               </AlertDescription>
             </Alert>
 
@@ -239,9 +278,11 @@ export function MigrationShowcase() {
                   <div className="space-y-4">
                     <div className="flex items-center gap-2">
                       <Badge variant="success">✅ Migrated</Badge>
-                      <span className="text-sm">Background, gradients, and component styling updated</span>
+                      <span className="text-sm">
+                        Background, gradients, and component styling updated
+                      </span>
                     </div>
-                    <ul className="text-sm text-muted-foreground space-y-1">
+                    <ul className="space-y-1 text-sm text-muted-foreground">
                       <li>• Dynamic background colors</li>
                       <li>• Theme-aware gradient text</li>
                       <li>• Proper button and card styling</li>
@@ -262,7 +303,7 @@ export function MigrationShowcase() {
                       <Badge variant="pending">🔄 In Progress</Badge>
                       <span className="text-sm">Login page migrated, signup pages pending</span>
                     </div>
-                    <ul className="text-sm text-muted-foreground space-y-1">
+                    <ul className="space-y-1 text-sm text-muted-foreground">
                       <li>• Form input styling</li>
                       <li>• Card background adaptation</li>
                       <li>• Brand logo colors</li>
@@ -283,7 +324,7 @@ export function MigrationShowcase() {
                       <Badge variant="tag">⏳ Pending</Badge>
                       <span className="text-sm">Assessment pages need migration</span>
                     </div>
-                    <ul className="text-sm text-muted-foreground space-y-1">
+                    <ul className="space-y-1 text-sm text-muted-foreground">
                       <li>• Wizard component styling</li>
                       <li>• Progress indicator theming</li>
                       <li>• Question renderer updates</li>
@@ -297,15 +338,16 @@ export function MigrationShowcase() {
         )}
       </div>
 
-      <div className="border-t mt-12">
+      <div className="mt-12 border-t">
         <div className="container mx-auto px-6 py-4">
-          <div className="text-sm text-muted-foreground text-center">
-            <strong>Migration Progress:</strong> Phase {phases.filter(p => p.status === 'completed').length}/6 Complete • 
-            Current Theme: {designSystem} • 
-            Components: {['Button', 'Input', 'Card', 'Label', 'Badge', 'Alert', 'Navigation'].length} Migrated
+          <div className="text-center text-sm text-muted-foreground">
+            <strong>Migration Progress:</strong> Phase{' '}
+            {phases.filter((p) => p.status === 'completed').length}/6 Complete • Current Theme:{' '}
+            {designSystem} • Components:{' '}
+            {['Button', 'Input', 'Card', 'Label', 'Badge', 'Alert', 'Navigation'].length} Migrated
           </div>
         </div>
       </div>
     </div>
-  )
+  );
 }

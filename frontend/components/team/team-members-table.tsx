@@ -1,13 +1,20 @@
-"use client"
+'use client';
 
-import { type ColumnDef, flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table"
+import { type ColumnDef, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table';
 
-import { Card, CardContent } from "@/components/ui/card"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { Card, CardContent } from '@/components/ui/card';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
 
 interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[]
-  data: TData[]
+  columns: ColumnDef<TData, TValue>[];
+  data: TData[];
 }
 
 export function TeamMembersTable<TData, TValue>({ columns, data }: DataTableProps<TData, TValue>) {
@@ -15,7 +22,7 @@ export function TeamMembersTable<TData, TValue>({ columns, data }: DataTableProp
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
-  })
+  });
 
   return (
     <Card className="bg-eggshell-white/90 border-oxford-blue/20 text-oxford-blue">
@@ -28,9 +35,11 @@ export function TeamMembersTable<TData, TValue>({ columns, data }: DataTableProp
                   {headerGroup.headers.map((header) => {
                     return (
                       <TableHead key={header.id} className="text-oxford-blue font-semibold">
-                        {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
+                        {header.isPlaceholder
+                          ? null
+                          : flexRender(header.column.columnDef.header, header.getContext())}
                       </TableHead>
-                    )
+                    );
                   })}
                 </TableRow>
               ))}
@@ -40,17 +49,22 @@ export function TeamMembersTable<TData, TValue>({ columns, data }: DataTableProp
                 table.getRowModel().rows.map((row) => (
                   <TableRow
                     key={row.id}
-                    data-state={row.getIsSelected() && "selected"}
+                    data-state={row.getIsSelected() && 'selected'}
                     className="border-oxford-blue/10 hover:bg-oxford-blue/5"
                   >
                     {row.getVisibleCells().map((cell) => (
-                      <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
+                      <TableCell key={cell.id}>
+                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                      </TableCell>
                     ))}
                   </TableRow>
                 ))
               ) : (
                 <TableRow>
-                  <TableCell colSpan={columns.length} className="h-24 text-center text-oxford-blue/70">
+                  <TableCell
+                    colSpan={columns.length}
+                    className="text-oxford-blue/70 h-24 text-center"
+                  >
                     No results.
                   </TableCell>
                 </TableRow>
@@ -60,5 +74,5 @@ export function TeamMembersTable<TData, TValue>({ columns, data }: DataTableProp
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }

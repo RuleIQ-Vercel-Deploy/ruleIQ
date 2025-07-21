@@ -1,6 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-
 import { authService } from '@/lib/api/auth.service';
 import { useAuthStore } from '@/lib/stores/auth.store';
 
@@ -14,7 +13,7 @@ export function useLogin(
     { access_token: string; refresh_token: string; user: User },
     unknown,
     LoginRequest
-  >
+  >,
 ) {
   const queryClient = useQueryClient();
   const { setTokens, setUser } = useAuthStore();
@@ -25,16 +24,16 @@ export function useLogin(
       // Store tokens and user in auth store
       setTokens(data.access_token, data.refresh_token);
       setUser(data.user);
-      
+
       // Clear all queries to fetch fresh data
       queryClient.clear();
-      
+
       // Call the provided onSuccess callback
       options?.onSuccess?.(data, variables, context);
     },
     onError: (error, variables, context) => {
       console.error('Login error:', getErrorMessage(error));
-      
+
       // Call the provided onError callback
       options?.onError?.(error, variables, context);
     },
@@ -48,7 +47,7 @@ export function useSignup(
     { access_token: string; refresh_token: string; user: User },
     unknown,
     SignupRequest
-  >
+  >,
 ) {
   const queryClient = useQueryClient();
   const { setTokens, setUser } = useAuthStore();
@@ -59,16 +58,16 @@ export function useSignup(
       // Store tokens and user in auth store
       setTokens(data.access_token, data.refresh_token);
       setUser(data.user);
-      
+
       // Clear all queries to fetch fresh data
       queryClient.clear();
-      
+
       // Call the provided onSuccess callback
       options?.onSuccess?.(data, variables, context);
     },
     onError: (error, variables, context) => {
       console.error('Signup error:', getErrorMessage(error));
-      
+
       // Call the provided onError callback
       options?.onError?.(error, variables, context);
     },
@@ -77,9 +76,7 @@ export function useSignup(
 }
 
 // Hook for logout
-export function useLogout(
-  options?: BaseMutationOptions<void, unknown, void>
-) {
+export function useLogout(options?: BaseMutationOptions<void, unknown, void>) {
   const queryClient = useQueryClient();
   const { logout: clearAuth } = useAuthStore();
 
@@ -88,10 +85,10 @@ export function useLogout(
     onSuccess: (data, variables, context) => {
       // Clear auth store
       clearAuth();
-      
+
       // Clear all cached data
       queryClient.clear();
-      
+
       // Call the provided onSuccess callback
       options?.onSuccess?.(data, variables, context);
     },
@@ -100,7 +97,7 @@ export function useLogout(
       // Even if logout fails, clear local state
       clearAuth();
       queryClient.clear();
-      
+
       // Call the provided onError callback
       options?.onError?.(error, variables, context);
     },
@@ -110,7 +107,7 @@ export function useLogout(
 
 // Hook for password reset request
 export function useRequestPasswordReset(
-  options?: BaseMutationOptions<{ message: string }, unknown, { email: string }>
+  options?: BaseMutationOptions<{ message: string }, unknown, { email: string }>,
 ) {
   return useMutation({
     mutationFn: ({ email }) => authService.requestPasswordReset(email),
@@ -120,7 +117,7 @@ export function useRequestPasswordReset(
 
 // Hook for password reset
 export function useResetPassword(
-  options?: BaseMutationOptions<{ message: string }, unknown, { token: string; password: string }>
+  options?: BaseMutationOptions<{ message: string }, unknown, { token: string; password: string }>,
 ) {
   return useMutation({
     mutationFn: ({ token, password }) => authService.resetPassword(token, password),
@@ -130,7 +127,7 @@ export function useResetPassword(
 
 // Hook for email verification
 export function useVerifyEmail(
-  options?: BaseMutationOptions<{ message: string }, unknown, string>
+  options?: BaseMutationOptions<{ message: string }, unknown, string>,
 ) {
   return useMutation({
     mutationFn: (token: string) => authService.verifyEmail(token),
@@ -140,11 +137,7 @@ export function useVerifyEmail(
 
 // Hook for refreshing token
 export function useRefreshToken(
-  options?: BaseMutationOptions<
-    { access_token: string; refresh_token: string },
-    unknown,
-    void
-  >
+  options?: BaseMutationOptions<{ access_token: string; refresh_token: string }, unknown, void>,
 ) {
   const { setTokens, refreshToken } = useAuthStore();
 

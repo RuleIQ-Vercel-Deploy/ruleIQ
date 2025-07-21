@@ -148,7 +148,10 @@ class FoundationEvidenceService {
    * Start foundation evidence collection
    */
   async startCollection(request: FoundationEvidenceRequest): Promise<EvidenceCollectionResponse> {
-    const response = await apiClient.post<EvidenceCollectionResponse>('/foundation/evidence/collect', request);
+    const response = await apiClient.post<EvidenceCollectionResponse>(
+      '/foundation/evidence/collect',
+      request,
+    );
     return response.data;
   }
 
@@ -156,7 +159,9 @@ class FoundationEvidenceService {
    * Get collection status
    */
   async getCollectionStatus(collectionId: string): Promise<EvidenceCollectionStatus> {
-    const response = await apiClient.get<EvidenceCollectionStatus>(`/foundation/evidence/collect/${collectionId}/status`);
+    const response = await apiClient.get<EvidenceCollectionStatus>(
+      `/foundation/evidence/collect/${collectionId}/status`,
+    );
     return response.data;
   }
 
@@ -169,7 +174,7 @@ class FoundationEvidenceService {
       evidence_type?: string;
       page?: number;
       page_size?: number;
-    }
+    },
   ): Promise<{
     collection_id: string;
     status: string;
@@ -183,7 +188,9 @@ class FoundationEvidenceService {
     if (options?.page) params.append('page', options.page.toString());
     if (options?.page_size) params.append('page_size', options.page_size.toString());
 
-    const response = await apiClient.get(`/foundation/evidence/collect/${collectionId}/results?${params}`);
+    const response = await apiClient.get(
+      `/foundation/evidence/collect/${collectionId}/results?${params}`,
+    );
     return response.data;
   }
 
@@ -207,7 +214,7 @@ class FoundationEvidenceService {
   streamCollectionProgress(
     collectionId: string,
     onProgress: (status: Partial<EvidenceCollectionStatus>) => void,
-    onError: (error: Error) => void
+    onError: (error: Error) => void,
   ): EventSource {
     const eventSource = new EventSource(`/api/foundation/evidence/collect/${collectionId}/stream`);
 
@@ -230,11 +237,13 @@ class FoundationEvidenceService {
   /**
    * Get supported evidence types for a provider
    */
-  getSupportedEvidenceTypes(provider: 'aws' | 'okta' | 'google_workspace' | 'microsoft_365'): string[] {
+  getSupportedEvidenceTypes(
+    provider: 'aws' | 'okta' | 'google_workspace' | 'microsoft_365',
+  ): string[] {
     const evidenceTypes = {
       aws: [
         'iam_policies',
-        'iam_users', 
+        'iam_users',
         'iam_roles',
         'security_groups',
         'vpc_configuration',
@@ -243,7 +252,7 @@ class FoundationEvidenceService {
         'guardduty_findings',
         'inspector_findings',
         's3_buckets',
-        'ec2_instances'
+        'ec2_instances',
       ],
       okta: [
         'users',
@@ -253,14 +262,14 @@ class FoundationEvidenceService {
         'system_logs',
         'mfa_factors',
         'zones',
-        'auth_servers'
+        'auth_servers',
       ],
       google_workspace: [
         'user_directory',
         'access_groups',
         'admin_activity_logs',
         'user_access_logs',
-        'domain_configuration'
+        'domain_configuration',
       ],
       microsoft_365: [
         'user_directory',
@@ -268,8 +277,8 @@ class FoundationEvidenceService {
         'applications',
         'user_access_logs',
         'admin_activity_logs',
-        'organization_configuration'
-      ]
+        'organization_configuration',
+      ],
     };
 
     return evidenceTypes[provider] || [];
@@ -281,31 +290,31 @@ class FoundationEvidenceService {
   getComplianceControlMapping(): Record<string, string[]> {
     return {
       // AWS Evidence Types
-      'iam_policies': ['CC6.1', 'CC6.2', 'CC6.3'],
-      'iam_users': ['CC6.1', 'CC6.2', 'CC6.7'],
-      'iam_roles': ['CC6.1', 'CC6.3'],
-      'security_groups': ['CC6.1', 'CC6.6'],
-      'cloudtrail_logs': ['CC6.1', 'CC7.2', 'CC7.3'],
-      'config_rules': ['CC7.1', 'CC7.2'],
-      'guardduty_findings': ['CC7.1', 'CC7.3'],
-      
+      iam_policies: ['CC6.1', 'CC6.2', 'CC6.3'],
+      iam_users: ['CC6.1', 'CC6.2', 'CC6.7'],
+      iam_roles: ['CC6.1', 'CC6.3'],
+      security_groups: ['CC6.1', 'CC6.6'],
+      cloudtrail_logs: ['CC6.1', 'CC7.2', 'CC7.3'],
+      config_rules: ['CC7.1', 'CC7.2'],
+      guardduty_findings: ['CC7.1', 'CC7.3'],
+
       // Okta Evidence Types
-      'users': ['CC6.1', 'CC6.2', 'CC6.7'],
-      'groups': ['CC6.1', 'CC6.2'],
-      'applications': ['CC6.1', 'CC6.2', 'CC6.8'],
-      'system_logs': ['CC6.1', 'CC7.2', 'CC7.3'],
-      'mfa_factors': ['CC6.1', 'CC6.7'],
-      'policies': ['CC6.1', 'CC6.2'],
-      
+      users: ['CC6.1', 'CC6.2', 'CC6.7'],
+      groups: ['CC6.1', 'CC6.2'],
+      applications: ['CC6.1', 'CC6.2', 'CC6.8'],
+      system_logs: ['CC6.1', 'CC7.2', 'CC7.3'],
+      mfa_factors: ['CC6.1', 'CC6.7'],
+      policies: ['CC6.1', 'CC6.2'],
+
       // Google Workspace Evidence Types
-      'user_directory': ['CC6.1', 'CC6.2', 'CC6.7'],
-      'access_groups': ['CC6.1', 'CC6.2', 'CC6.3'],
-      'admin_activity_logs': ['CC7.1', 'CC7.2', 'CC7.3'],
-      'user_access_logs': ['CC6.1', 'CC6.2', 'CC7.2'],
-      'domain_configuration': ['CC6.1', 'CC6.6'],
-      
+      user_directory: ['CC6.1', 'CC6.2', 'CC6.7'],
+      access_groups: ['CC6.1', 'CC6.2', 'CC6.3'],
+      admin_activity_logs: ['CC7.1', 'CC7.2', 'CC7.3'],
+      user_access_logs: ['CC6.1', 'CC6.2', 'CC7.2'],
+      domain_configuration: ['CC6.1', 'CC6.6'],
+
       // Microsoft 365 Evidence Types
-      'organization_configuration': ['CC6.1', 'CC6.6']
+      organization_configuration: ['CC6.1', 'CC6.6'],
     };
   }
 
@@ -319,21 +328,21 @@ class FoundationEvidenceService {
     // Base time estimates per evidence type (in minutes)
     const timeEstimates: Record<string, number> = {
       // AWS
-      'iam_policies': 2,
-      'iam_users': 3,
-      'iam_roles': 2,
-      'security_groups': 1,
-      'cloudtrail_logs': 5,
-      'config_rules': 3,
-      'guardduty_findings': 4,
-      
+      iam_policies: 2,
+      iam_users: 3,
+      iam_roles: 2,
+      security_groups: 1,
+      cloudtrail_logs: 5,
+      config_rules: 3,
+      guardduty_findings: 4,
+
       // Okta
-      'users': 4,
-      'groups': 2,
-      'applications': 3,
-      'system_logs': 6,
-      'mfa_factors': 1,
-      'policies': 2
+      users: 4,
+      groups: 2,
+      applications: 3,
+      system_logs: 6,
+      mfa_factors: 1,
+      policies: 2,
     };
 
     const totalMinutes = evidenceTypes.reduce((total, type) => {
@@ -345,13 +354,17 @@ class FoundationEvidenceService {
     const estimatedMinutes = Math.ceil(totalMinutes * parallelEfficiency);
 
     // Determine confidence based on known evidence types
-    const knownTypes = evidenceTypes.filter(type => timeEstimates[type]);
-    const confidence = knownTypes.length === evidenceTypes.length ? 'high' :
-                      knownTypes.length > evidenceTypes.length * 0.7 ? 'medium' : 'low';
+    const knownTypes = evidenceTypes.filter((type) => timeEstimates[type]);
+    const confidence =
+      knownTypes.length === evidenceTypes.length
+        ? 'high'
+        : knownTypes.length > evidenceTypes.length * 0.7
+          ? 'medium'
+          : 'low';
 
     return {
       estimated_minutes: estimatedMinutes,
-      confidence
+      confidence,
     };
   }
 
@@ -469,23 +482,24 @@ class FoundationEvidenceService {
       by_system: {} as Record<string, number>,
       by_controls: {} as Record<string, number>,
       average_quality: 0,
-      coverage_by_framework: {} as Record<string, number>
+      coverage_by_framework: {} as Record<string, number>,
     };
 
     let totalQuality = 0;
 
-    results.forEach(evidence => {
+    results.forEach((evidence) => {
       // Count by type
       summary.by_type[evidence.evidence_type] = (summary.by_type[evidence.evidence_type] || 0) + 1;
-      
+
       // Count by system
-      summary.by_system[evidence.source_system] = (summary.by_system[evidence.source_system] || 0) + 1;
-      
+      summary.by_system[evidence.source_system] =
+        (summary.by_system[evidence.source_system] || 0) + 1;
+
       // Count by controls
-      evidence.compliance_controls.forEach(control => {
+      evidence.compliance_controls.forEach((control) => {
         summary.by_controls[control] = (summary.by_controls[control] || 0) + 1;
       });
-      
+
       // Sum quality scores
       totalQuality += evidence.quality_score;
     });
@@ -494,9 +508,19 @@ class FoundationEvidenceService {
     summary.average_quality = results.length > 0 ? totalQuality / results.length : 0;
 
     // Calculate framework coverage (simplified)
-    const soc2Controls = ['CC6.1', 'CC6.2', 'CC6.3', 'CC6.6', 'CC6.7', 'CC6.8', 'CC7.1', 'CC7.2', 'CC7.3'];
+    const soc2Controls = [
+      'CC6.1',
+      'CC6.2',
+      'CC6.3',
+      'CC6.6',
+      'CC6.7',
+      'CC6.8',
+      'CC7.1',
+      'CC7.2',
+      'CC7.3',
+    ];
     const coveredControls = Object.keys(summary.by_controls);
-    const soc2Coverage = coveredControls.filter(control => soc2Controls.includes(control)).length;
+    const soc2Coverage = coveredControls.filter((control) => soc2Controls.includes(control)).length;
     summary.coverage_by_framework['SOC2_TYPE2'] = (soc2Coverage / soc2Controls.length) * 100;
 
     return summary;

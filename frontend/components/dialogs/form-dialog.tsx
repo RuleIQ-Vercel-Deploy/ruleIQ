@@ -1,8 +1,8 @@
-"use client"
+'use client';
 
-import * as React from "react"
+import * as React from 'react';
 
-import { Button } from "@/components/ui/button"
+import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
@@ -11,17 +11,17 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog"
+} from '@/components/ui/dialog';
 
 interface FormDialogProps {
-  trigger: React.ReactNode
-  title: string
-  description?: string
-  formId: string
-  children: React.ReactNode
-  submitText?: string
-  cancelText?: string
-  isLoading?: boolean
+  trigger: React.ReactNode;
+  title: string;
+  description?: string;
+  formId: string;
+  children: React.ReactNode;
+  submitText?: string;
+  cancelText?: string;
+  isLoading?: boolean;
 }
 
 export function FormDialog({
@@ -30,11 +30,11 @@ export function FormDialog({
   description,
   formId,
   children,
-  submitText = "Submit",
-  cancelText = "Cancel",
+  submitText = 'Submit',
+  cancelText = 'Cancel',
   isLoading = false,
 }: FormDialogProps) {
-  const [open, setOpen] = React.useState(false)
+  const [open, setOpen] = React.useState(false);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -50,10 +50,10 @@ export function FormDialog({
             {cancelText}
           </Button>
           <Button type="submit" form={formId} variant="default" size="default" disabled={isLoading}>
-            {isLoading ? "Submitting..." : submitText}
+            {isLoading ? 'Submitting...' : submitText}
           </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
-  )
+  );
 }

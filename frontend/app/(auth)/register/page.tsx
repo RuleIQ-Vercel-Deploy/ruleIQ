@@ -104,9 +104,7 @@ export default function RegisterPage() {
     } catch (err) {
       // Handle ApiError from the API client
       const errorMessage =
-        err instanceof Error
-          ? err.message
-          : 'Registration failed. Please try again.';
+        err instanceof Error ? err.message : 'Registration failed. Please try again.';
       setError(errorMessage);
     } finally {
       setIsLoading(false);
@@ -115,7 +113,7 @@ export default function RegisterPage() {
 
   return (
     <div className="container relative flex min-h-screen items-center justify-center py-10">
-      <div className="to-gold/5 absolute inset-0 bg-gradient-to-br from-primary/5 via-background" />
+      <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-background to-gold/5" />
 
       <motion.div
         initial={{ opacity: 0, y: 20 }}

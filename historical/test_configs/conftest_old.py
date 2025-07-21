@@ -5,27 +5,11 @@ Now uses hybrid approach to support both sync (TestClient) and async tests.
 
 # Import hybrid configuration first
 from tests.conftest_hybrid import (
-    HybridDatabaseManager,
-    _hybrid_db_manager,
-    event_loop,
-    setup_test_database,
-    sync_db_session,
-    sync_db_session_isolated,
-    sync_sample_user,
-    sync_sample_business_profile_session,
-    sync_sample_business_profile,
     async_db_session,
-    async_sample_user,
-    async_sample_business_profile,
-    authenticated_test_client,
-    unauthenticated_test_client,
-    test_client,
     auth_token,
     authenticated_headers,
-    client,
     sample_user,
     sample_business_profile,
-    mock_ai_services,
 )
 
 import os
@@ -42,11 +26,9 @@ logging.getLogger("passlib.handlers.bcrypt").setLevel(logging.ERROR)
 
 # Environment variables are now set in conftest_hybrid.py
 
-import asyncio
 import sys
 from datetime import datetime
 from pathlib import Path
-from typing import Optional
 from uuid import uuid4
 
 # Set up comprehensive AI mocking before any imports
@@ -100,19 +82,15 @@ if True:  # Always enable in tests
     sys.modules["google.generativeai.types"] = mock_types
 
 import pytest
-from fastapi import Depends
-from sqlalchemy import text
-from sqlalchemy.ext.asyncio import AsyncSession
 
 # Add project root to the Python path to resolve import errors
 project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
 
 # Assuming these are the correct paths from your project structure
-from database import db_setup
 from database.business_profile import BusinessProfile
 from database.compliance_framework import ComplianceFramework
-from database.db_setup import Base, get_async_db
+from database.db_setup import get_async_db
 from database.evidence_item import EvidenceItem
 from database.generated_policy import GeneratedPolicy
 
@@ -130,7 +108,6 @@ except ImportError:
     pass
 
 # Import FastAPI test client for API tests
-from fastapi.testclient import TestClient
 
 
 # Event loop and database setup now handled by conftest_hybrid.py

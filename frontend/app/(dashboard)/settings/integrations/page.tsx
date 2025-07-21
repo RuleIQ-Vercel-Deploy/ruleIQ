@@ -1,29 +1,32 @@
-"use client"
+'use client';
 
-import * as React from "react"
+import * as React from 'react';
 
-import { DashboardHeader } from "@/components/dashboard/dashboard-header"
-import { ConnectIntegrationDialog } from "@/components/integrations/connect-integration-dialog"
-import { IntegrationCard } from "@/components/integrations/integration-card"
-import { ManageIntegrationDialog } from "@/components/integrations/manage-integration-dialog"
-import { AppSidebar } from "@/components/navigation/app-sidebar"
-import { integrations as initialIntegrations, type Integration } from "@/lib/data/integrations-data"
+import { DashboardHeader } from '@/components/dashboard/dashboard-header';
+import { ConnectIntegrationDialog } from '@/components/integrations/connect-integration-dialog';
+import { IntegrationCard } from '@/components/integrations/integration-card';
+import { ManageIntegrationDialog } from '@/components/integrations/manage-integration-dialog';
+import { AppSidebar } from '@/components/navigation/app-sidebar';
+import {
+  integrations as initialIntegrations,
+  type Integration,
+} from '@/lib/data/integrations-data';
 
 export default function IntegrationsPage() {
-  const [integrations, setIntegrations] = React.useState(initialIntegrations)
-  const [isConnectModalOpen, setConnectModalOpen] = React.useState(false)
-  const [isManageModalOpen, setManageModalOpen] = React.useState(false)
-  const [selectedIntegration, setSelectedIntegration] = React.useState<Integration | null>(null)
+  const [integrations, setIntegrations] = React.useState(initialIntegrations);
+  const [isConnectModalOpen, setConnectModalOpen] = React.useState(false);
+  const [isManageModalOpen, setManageModalOpen] = React.useState(false);
+  const [selectedIntegration, setSelectedIntegration] = React.useState<Integration | null>(null);
 
   const handleConnect = (integration: Integration) => {
-    setSelectedIntegration(integration)
-    setConnectModalOpen(true)
-  }
+    setSelectedIntegration(integration);
+    setConnectModalOpen(true);
+  };
 
   const handleManage = (integration: Integration) => {
-    setSelectedIntegration(integration)
-    setManageModalOpen(true)
-  }
+    setSelectedIntegration(integration);
+    setManageModalOpen(true);
+  };
 
   const handleConfirmConnect = () => {
     if (selectedIntegration) {
@@ -37,36 +40,36 @@ export default function IntegrationsPage() {
                 description: integ.description,
                 isConnected: true as const,
                 lastSync: new Date().toISOString(),
-                syncStatus: "ok",
-                activity: []
+                syncStatus: 'ok',
+                activity: [],
               }
             : integ,
         ),
-      )
+      );
     }
-    setConnectModalOpen(false)
-    setSelectedIntegration(null)
-  }
+    setConnectModalOpen(false);
+    setSelectedIntegration(null);
+  };
 
   const handleDisconnect = (id: string) => {
     setIntegrations((prev) =>
       prev.map((integ) =>
-        integ.id === id 
+        integ.id === id
           ? {
               id: integ.id,
               name: integ.name,
               logo: integ.logo,
               description: integ.description,
               isConnected: false as const,
-              permissions: []
+              permissions: [],
             }
           : integ,
       ),
-    )
-  }
+    );
+  };
 
   return (
-    <div className="flex min-h-screen w-full bg-midnight-blue">
+    <div className="bg-midnight-blue flex min-h-screen w-full">
       <AppSidebar />
       <div className="flex flex-1 flex-col">
         <DashboardHeader />
@@ -96,5 +99,5 @@ export default function IntegrationsPage() {
         integration={selectedIntegration}
       />
     </div>
-  )
+  );
 }

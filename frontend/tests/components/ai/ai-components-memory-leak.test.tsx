@@ -3,7 +3,11 @@ import { vi, describe, it, expect, beforeEach } from 'vitest';
 import { AIHelpTooltip } from '@/components/assessments/AIHelpTooltip';
 import { AIGuidancePanel } from '@/components/assessments/AIGuidancePanel';
 import { AIErrorBoundary } from '@/components/assessments/AIErrorBoundary';
-import { renderWithLeakDetection, testComponentMemoryLeaks, testRapidMountUnmount } from '@/tests/utils/component-test-helpers';
+import {
+  renderWithLeakDetection,
+  testComponentMemoryLeaks,
+  testRapidMountUnmount,
+} from '@/tests/utils/component-test-helpers';
 
 // Mock the AI service
 vi.mock('@/lib/api/services/assessment-ai.service', () => ({
@@ -11,28 +15,28 @@ vi.mock('@/lib/api/services/assessment-ai.service', () => ({
     getQuestionHelp: vi.fn().mockResolvedValue({
       help_text: 'AI help response',
       key_points: ['Point 1', 'Point 2'],
-      follow_up_questions: ['Question 1?', 'Question 2?']
-    })
-  }
+      follow_up_questions: ['Question 1?', 'Question 2?'],
+    }),
+  },
 }));
 
 // Mock the toast hook
 vi.mock('@/components/ui/use-toast', () => ({
   useToast: () => ({
-    toast: vi.fn()
-  })
+    toast: vi.fn(),
+  }),
 }));
 
 const mockQuestion = {
   id: 'q1',
   text: 'Do you process personal data?',
   type: 'boolean' as const,
-  required: true
+  required: true,
 };
 
 const mockUserContext = {
   company_name: 'Test Corp',
-  industry: 'Technology'
+  industry: 'Technology',
 };
 
 describe('AI Components - Memory Leak Detection', () => {
@@ -47,32 +51,28 @@ describe('AI Components - Memory Leak Detection', () => {
         {
           question: mockQuestion,
           frameworkId: 'gdpr',
-          userContext: mockUserContext
+          userContext: mockUserContext,
         },
         async (result) => {
           // Test keyboard shortcut
           fireEvent.keyDown(document, { key: 'h', ctrlKey: true });
-          
+
           // Wait for any effects
           await waitFor(() => {
             expect(screen.getByRole('button', { name: /ai help/i })).toBeInTheDocument();
           });
-        }
+        },
       );
     });
 
     it('should cleanup async operations when unmounting during request', async () => {
       const { unmount, leakDetector, assertNoLeaks } = renderWithLeakDetection(
-        <AIHelpTooltip
-          question={mockQuestion}
-          frameworkId="gdpr"
-          userContext={mockUserContext}
-        />
+        <AIHelpTooltip question={mockQuestion} frameworkId="gdpr" userContext={mockUserContext} />,
       );
 
       // Make the AI service slow
       vi.mocked(assessmentAIService.getQuestionHelp).mockImplementation(
-        () => new Promise(resolve => setTimeout(resolve, 1000))
+        () => new Promise((resolve) => setTimeout(resolve, 1000)),
       );
 
       // Trigger help request
@@ -86,7 +86,7 @@ describe('AI Components - Memory Leak Detection', () => {
       unmount();
 
       // Wait to ensure no late updates
-      await new Promise(resolve => setTimeout(resolve, 100));
+      await new Promise((resolve) => setTimeout(resolve, 100));
 
       // Assert no leaks
       assertNoLeaks();
@@ -95,18 +95,14 @@ describe('AI Components - Memory Leak Detection', () => {
 
     it('should handle rapid open/close cycles without leaks', async () => {
       const { unmount, leakDetector, assertNoLeaks } = renderWithLeakDetection(
-        <AIHelpTooltip
-          question={mockQuestion}
-          frameworkId="gdpr"
-          userContext={mockUserContext}
-        />
+        <AIHelpTooltip question={mockQuestion} frameworkId="gdpr" userContext={mockUserContext} />,
       );
 
       // Rapidly open and close tooltip
       for (let i = 0; i < 10; i++) {
         const helpButton = screen.getByRole('button', { name: /ai help/i });
         fireEvent.click(helpButton);
-        
+
         // If tooltip is open, close it
         const closeButton = screen.queryByRole('button', { name: /close/i });
         if (closeButton) {
@@ -121,15 +117,12 @@ describe('AI Components - Memory Leak Detection', () => {
 
     it('should cleanup all event listeners including document listeners', () => {
       const { unmount, leakDetector } = renderWithLeakDetection(
-        <AIHelpTooltip
-          question={mockQuestion}
-          frameworkId="gdpr"
-        />
+        <AIHelpTooltip question={mockQuestion} frameworkId="gdpr" />,
       );
 
       // Get initial report
       const initialReport = leakDetector.getReport();
-      
+
       // Unmount
       unmount();
 
@@ -138,36 +131,29 @@ describe('AI Components - Memory Leak Detection', () => {
 
       // Check specifically for keyboard event listeners
       const keyboardListeners = finalReport.eventListeners.details.filter(
-        detail => detail.event === 'keydown'
+        (detail) => detail.event === 'keydown',
       );
 
       expect(keyboardListeners).toHaveLength(0);
       expect(leakDetector).toHaveNoMemoryLeaks();
-      
+
       leakDetector.teardown();
     });
   });
 
   describe('AIGuidancePanel Memory Leaks', () => {
     it('should cleanup when unmounting during initial load', async () => {
-      await testComponentMemoryLeaks(
-        AIGuidancePanel,
-        {
-          question: mockQuestion,
-          frameworkId: 'gdpr',
-          defaultOpen: true,
-          userContext: mockUserContext
-        }
-      );
+      await testComponentMemoryLeaks(AIGuidancePanel, {
+        question: mockQuestion,
+        frameworkId: 'gdpr',
+        defaultOpen: true,
+        userContext: mockUserContext,
+      });
     });
 
     it('should cleanup loading states properly', async () => {
       const { unmount, leakDetector, assertNoLeaks } = renderWithLeakDetection(
-        <AIGuidancePanel
-          question={mockQuestion}
-          frameworkId="gdpr"
-          defaultOpen={false}
-        />
+        <AIGuidancePanel question={mockQuestion} frameworkId="gdpr" defaultOpen={false} />,
       );
 
       // Open panel
@@ -190,15 +176,11 @@ describe('AI Components - Memory Leak Detection', () => {
     it('should handle error states without leaks', async () => {
       // Make AI service fail
       vi.mocked(assessmentAIService.getQuestionHelp).mockRejectedValue(
-        new Error('AI service error')
+        new Error('AI service error'),
       );
 
       const { unmount, leakDetector, assertNoLeaks } = renderWithLeakDetection(
-        <AIGuidancePanel
-          question={mockQuestion}
-          frameworkId="gdpr"
-          defaultOpen={true}
-        />
+        <AIGuidancePanel question={mockQuestion} frameworkId="gdpr" defaultOpen={true} />,
       );
 
       // Wait for error state
@@ -222,7 +204,7 @@ describe('AI Components - Memory Leak Detection', () => {
 
     it('should cleanup error state on unmount', async () => {
       const onError = vi.fn();
-      
+
       await testComponentMemoryLeaks(
         () => (
           <AIErrorBoundary onError={onError}>
@@ -235,11 +217,11 @@ describe('AI Components - Memory Leak Detection', () => {
           await waitFor(() => {
             expect(screen.getByText(/something went wrong/i)).toBeInTheDocument();
           });
-          
+
           // Try to recover
           const retryButton = screen.getByRole('button', { name: /try again/i });
           fireEvent.click(retryButton);
-        }
+        },
       );
     });
 
@@ -248,7 +230,7 @@ describe('AI Components - Memory Leak Detection', () => {
       const { unmount, leakDetector, assertNoLeaks } = renderWithLeakDetection(
         <AIErrorBoundary onError={onError}>
           <ThrowError shouldThrow={true} />
-        </AIErrorBoundary>
+        </AIErrorBoundary>,
       );
 
       // Verify error was caught
@@ -264,15 +246,8 @@ describe('AI Components - Memory Leak Detection', () => {
     it('should handle nested AI components without leaks', async () => {
       const NestedAIComponents = () => (
         <AIErrorBoundary>
-          <AIGuidancePanel
-            question={mockQuestion}
-            frameworkId="gdpr"
-            defaultOpen={true}
-          >
-            <AIHelpTooltip
-              question={mockQuestion}
-              frameworkId="gdpr"
-            />
+          <AIGuidancePanel question={mockQuestion} frameworkId="gdpr" defaultOpen={true}>
+            <AIHelpTooltip question={mockQuestion} frameworkId="gdpr" />
           </AIGuidancePanel>
         </AIErrorBoundary>
       );
@@ -289,7 +264,7 @@ describe('AI Components - Memory Leak Detection', () => {
           </div>
         ),
         {},
-        10
+        10,
       );
     });
   });
@@ -297,28 +272,25 @@ describe('AI Components - Memory Leak Detection', () => {
   describe('Performance and Memory Monitoring', () => {
     it('should not accumulate memory with repeated AI requests', async () => {
       const { unmount, leakDetector } = renderWithLeakDetection(
-        <AIHelpTooltip
-          question={mockQuestion}
-          frameworkId="gdpr"
-        />
+        <AIHelpTooltip question={mockQuestion} frameworkId="gdpr" />,
       );
 
       // Make multiple AI requests
       for (let i = 0; i < 5; i++) {
         const helpButton = screen.getByRole('button', { name: /ai help/i });
         fireEvent.click(helpButton);
-        
+
         // Wait for response
         await waitFor(() => {
           expect(screen.getByText(/ai help response/i)).toBeInTheDocument();
         });
-        
+
         // Close tooltip
         const closeButton = screen.getByRole('button', { name: /close/i });
         fireEvent.click(closeButton);
-        
+
         // Small delay between requests
-        await new Promise(resolve => setTimeout(resolve, 50));
+        await new Promise((resolve) => setTimeout(resolve, 50));
       }
 
       // Get memory report before unmount

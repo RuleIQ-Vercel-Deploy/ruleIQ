@@ -29,11 +29,7 @@ export function useScrollAnimation(threshold = 0.1) {
 }
 
 // Hook for staggered animations
-export function useStaggerAnimation(
-  inView: boolean,
-  staggerChildren = 0.1,
-  delayChildren = 0
-) {
+export function useStaggerAnimation(inView: boolean, staggerChildren = 0.1, delayChildren = 0) {
   const controls = useAnimation();
 
   useEffect(() => {
@@ -116,11 +112,7 @@ export function useGestureAnimation() {
 }
 
 // Hook for auto-animating numbers
-export function useCountAnimation(
-  end: number,
-  duration = 2,
-  start = 0
-) {
+export function useCountAnimation(end: number, duration = 2, start = 0) {
   const [count, setCount] = useState(start);
 
   useEffect(() => {
@@ -130,7 +122,7 @@ export function useCountAnimation(
     const animate = (timestamp: number) => {
       if (!startTime) startTime = timestamp;
       const progress = Math.min((timestamp - startTime) / (duration * 1000), 1);
-      
+
       setCount(Math.floor(progress * (end - start) + start));
 
       if (progress < 1) {

@@ -12,7 +12,6 @@ interface CsrfFormProps {
   action?: string;
   method?: 'POST' | 'PUT' | 'DELETE' | 'PATCH';
   className?: string;
-
 }
 
 /**
@@ -29,7 +28,7 @@ export function CsrfForm({
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    
+
     if (!token) {
       console.error('CSRF token not available');
       return;
@@ -56,27 +55,18 @@ export function CsrfForm({
 
   if (tokenError) {
     return (
-      <div className="p-4 bg-red-50 border border-red-200 rounded-md">
-        <p className="text-red-800">
-          Security error: {tokenError}
-        </p>
-        <p className="text-sm text-red-600 mt-1">
-          Please refresh the page and try again.
-        </p>
+      <div className="rounded-md border border-red-200 bg-red-50 p-4">
+        <p className="text-red-800">Security error: {tokenError}</p>
+        <p className="mt-1 text-sm text-red-600">Please refresh the page and try again.</p>
       </div>
     );
   }
 
   return (
-    <form 
-      onSubmit={handleSubmit}
-      action={action}
-      method={method}
-      className={className}
-    >
+    <form onSubmit={handleSubmit} action={action} method={method} className={className}>
       {/* Hidden CSRF token field for fallback */}
       <input type="hidden" name="_csrf" value={token || ''} />
-      
+
       {children}
     </form>
   );

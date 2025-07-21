@@ -27,7 +27,7 @@ export function RateLimitNotice({
   window,
   suggestion,
   onRetry,
-  className
+  className,
 }: RateLimitNoticeProps) {
   const [countdown, setCountdown] = React.useState(retryAfter);
   const [canRetry, setCanRetry] = React.useState(false);
@@ -39,7 +39,7 @@ export function RateLimitNotice({
     }
 
     const timer = setInterval(() => {
-      setCountdown(prev => {
+      setCountdown((prev) => {
         if (prev <= 1) {
           setCanRetry(true);
           return 0;
@@ -78,14 +78,12 @@ export function RateLimitNotice({
   return (
     <Alert className={`border-orange-200 bg-orange-50 ${className}`}>
       <AlertTriangle className="h-4 w-4 text-orange-600" />
-      <AlertTitle className="text-orange-800 font-semibold">
-        Rate Limit Reached
-      </AlertTitle>
-      <AlertDescription className="text-orange-700 space-y-3">
+      <AlertTitle className="font-semibold text-orange-800">Rate Limit Reached</AlertTitle>
+      <AlertDescription className="space-y-3 text-orange-700">
         <div>
           You've reached the rate limit for <strong>{getOperationDisplayName(operation)}</strong>.
         </div>
-        
+
         <div className="flex items-center gap-2 text-sm">
           <Badge variant="outline" className="border-orange-300 text-orange-700">
             {limit} requests per {window}
@@ -102,9 +100,9 @@ export function RateLimitNotice({
         )}
 
         {suggestion && (
-          <div className="text-sm bg-orange-100 p-3 rounded-md border border-orange-200">
+          <div className="rounded-md border border-orange-200 bg-orange-100 p-3 text-sm">
             <div className="flex items-start gap-2">
-              <Info className="h-4 w-4 text-orange-600 mt-0.5 flex-shrink-0" />
+              <Info className="mt-0.5 h-4 w-4 flex-shrink-0 text-orange-600" />
               <span>{suggestion}</span>
             </div>
           </div>
@@ -112,19 +110,17 @@ export function RateLimitNotice({
 
         <div className="space-y-2">
           <div className="text-sm font-medium">While you wait, you can:</div>
-          <ul className="text-sm space-y-1 ml-4">
+          <ul className="ml-4 space-y-1 text-sm">
             <li>• Review existing guidance and recommendations</li>
             <li>• Continue with other assessment questions</li>
             <li>• Check our knowledge base for immediate answers</li>
-            {operation === 'help' && (
-              <li>• Consult the framework documentation directly</li>
-            )}
+            {operation === 'help' && <li>• Consult the framework documentation directly</li>}
           </ul>
         </div>
 
         {canRetry && onRetry && (
           <div className="pt-2">
-            <Button 
+            <Button
               onClick={onRetry}
               variant="outline"
               size="sm"
@@ -152,7 +148,7 @@ export function RateLimitInfo({
   remaining,
   limit,
   window,
-  className
+  className,
 }: RateLimitInfoProps) {
   const percentage = (remaining / limit) * 100;
   const isLow = percentage < 20;
@@ -168,17 +164,17 @@ export function RateLimitInfo({
         <span>
           {remaining} of {limit} {operation} requests remaining
         </span>
-        <Badge 
-          variant={isVeryLow ? "destructive" : isLow ? "secondary" : "outline"}
+        <Badge
+          variant={isVeryLow ? 'destructive' : isLow ? 'secondary' : 'outline'}
           className="text-xs"
         >
           {Math.round(percentage)}%
         </Badge>
       </div>
-      
+
       {isLow && (
         <div className="mt-1 text-orange-600">
-          <Info className="h-3 w-3 inline mr-1" />
+          <Info className="mr-1 inline h-3 w-3" />
           Rate limit resets every {window}
         </div>
       )}
@@ -206,7 +202,7 @@ export function useRateLimitState(_operation: string) {
         limit: rateLimitError.error.limit,
         window: rateLimitError.error.window,
         remaining: 0,
-        suggestion: rateLimitError.suggestion
+        suggestion: rateLimitError.suggestion,
       });
       return true;
     }
@@ -219,13 +215,13 @@ export function useRateLimitState(_operation: string) {
     const window = '1 minute'; // Default window
 
     if (limit > 0) {
-      setRateLimitInfo(prev => ({
+      setRateLimitInfo((prev) => ({
         ...prev,
         isRateLimited: false,
         limit,
         remaining,
         window,
-        retryAfter: 0
+        retryAfter: 0,
       }));
     }
   }, []);
@@ -238,6 +234,6 @@ export function useRateLimitState(_operation: string) {
     rateLimitInfo,
     handleRateLimitError,
     updateRateLimitHeaders,
-    clearRateLimit
+    clearRateLimit,
   };
 }

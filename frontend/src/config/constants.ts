@@ -51,7 +51,11 @@ export const COMPLIANCE_FRAMEWORKS = [
   { id: 'iso27001', name: 'ISO 27001', description: 'Information Security Management' },
   { id: 'soc2', name: 'SOC 2', description: 'Service Organization Control 2' },
   { id: 'pci-dss', name: 'PCI DSS', description: 'Payment Card Industry Data Security Standard' },
-  { id: 'hipaa', name: 'HIPAA', description: 'Health Insurance Portability and Accountability Act' },
+  {
+    id: 'hipaa',
+    name: 'HIPAA',
+    description: 'Health Insurance Portability and Accountability Act',
+  },
   { id: 'fca', name: 'FCA', description: 'Financial Conduct Authority' },
 ] as const;
 

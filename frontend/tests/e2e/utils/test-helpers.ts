@@ -7,7 +7,7 @@ import { TestSelectors } from '../fixtures/test-selectors';
 
 export class TestHelpers {
   constructor(private page: Page) {}
-  
+
   /**
    * Get test selectors
    */
@@ -51,11 +51,11 @@ export class TestHelpers {
   async waitForToast(message?: string) {
     const toast = this.page.locator('[data-testid="toast"]').first();
     await expect(toast).toBeVisible();
-    
+
     if (message) {
       await expect(toast).toContainText(message);
     }
-    
+
     return toast;
   }
 
@@ -64,20 +64,24 @@ export class TestHelpers {
    */
   async waitForLoadingToComplete() {
     // Wait for any loading spinners to disappear
-    await this.page.waitForSelector('[data-testid="loading-spinner"]', { 
-      state: 'hidden',
-      timeout: 10000 
-    }).catch(() => {
-      // Ignore if no loading spinner exists
-    });
-    
+    await this.page
+      .waitForSelector('[data-testid="loading-spinner"]', {
+        state: 'hidden',
+        timeout: 10000,
+      })
+      .catch(() => {
+        // Ignore if no loading spinner exists
+      });
+
     // Wait for skeleton loaders to disappear
-    await this.page.waitForSelector('[data-testid="skeleton-loader"]', { 
-      state: 'hidden',
-      timeout: 10000 
-    }).catch(() => {
-      // Ignore if no skeleton loader exists
-    });
+    await this.page
+      .waitForSelector('[data-testid="skeleton-loader"]', {
+        state: 'hidden',
+        timeout: 10000,
+      })
+      .catch(() => {
+        // Ignore if no skeleton loader exists
+      });
   }
 
   /**
@@ -98,9 +102,9 @@ export class TestHelpers {
    * Take a screenshot with a descriptive name
    */
   async takeScreenshot(name: string) {
-    await this.page.screenshot({ 
+    await this.page.screenshot({
       path: `test-results/screenshots/${name}-${Date.now()}.png`,
-      fullPage: true 
+      fullPage: true,
     });
   }
 
@@ -125,11 +129,11 @@ export class TestHelpers {
    * Mock API responses for testing
    */
   async mockApiResponse(url: string, response: any) {
-    await this.page.route(url, route => {
+    await this.page.route(url, (route) => {
       route.fulfill({
         status: 200,
         contentType: 'application/json',
-        body: JSON.stringify(response)
+        body: JSON.stringify(response),
       });
     });
   }
@@ -138,8 +142,8 @@ export class TestHelpers {
    * Wait for API call to complete
    */
   async waitForApiCall(urlPattern: string) {
-    return this.page.waitForResponse(response => 
-      response.url().includes(urlPattern) && response.status() === 200
+    return this.page.waitForResponse(
+      (response) => response.url().includes(urlPattern) && response.status() === 200,
     );
   }
 }
@@ -153,12 +157,12 @@ export class AuthHelpers extends TestHelpers {
    */
   async login(email: string = 'test@example.com', password: string = 'TestPassword123!') {
     await this.navigateAndWait('/login');
-    
+
     await this.fillField('[data-testid="email-input"]', email);
     await this.fillField('[data-testid="password-input"]', password);
-    
+
     await this.clickAndWait('[data-testid="login-button"]', '[data-testid="dashboard"]');
-    
+
     // Verify we're logged in
     await expect(this.page.locator('[data-testid="user-menu"]')).toBeVisible();
   }
@@ -181,17 +185,17 @@ export class AuthHelpers extends TestHelpers {
     company?: string;
   }) {
     await this.navigateAndWait('/register');
-    
+
     await this.fillField('[data-testid="full-name-input"]', userData.fullName);
     await this.fillField('[data-testid="email-input"]', userData.email);
     await this.fillField('[data-testid="password-input"]', userData.password);
-    
+
     if (userData.company) {
       await this.fillField('[data-testid="company-input"]', userData.company);
     }
-    
+
     await this.clickAndWait('[data-testid="register-button"]');
-    
+
     // Wait for success message or redirect
     await this.waitForToast('Registration successful');
   }
@@ -211,22 +215,25 @@ export class BusinessProfileHelpers extends TestHelpers {
     dataTypes: string[];
   }) {
     await this.navigateAndWait('/business-profile/setup');
-    
+
     // Step 1: Company Information
     await this.fillField('[data-testid="company-name-input"]', profileData.companyName);
     await this.page.selectOption('[data-testid="industry-select"]', profileData.industry);
-    await this.page.selectOption('[data-testid="employee-count-select"]', profileData.employeeCount);
+    await this.page.selectOption(
+      '[data-testid="employee-count-select"]',
+      profileData.employeeCount,
+    );
     await this.clickAndWait('[data-testid="next-button"]');
-    
+
     // Step 2: Data Types
     for (const dataType of profileData.dataTypes) {
       await this.page.check(`[data-testid="data-type-${dataType}"]`);
     }
     await this.clickAndWait('[data-testid="next-button"]');
-    
+
     // Step 3: Review and Submit
     await this.clickAndWait('[data-testid="submit-button"]', '[data-testid="dashboard"]');
-    
+
     await this.waitForToast('Business profile created successfully');
   }
 }
@@ -241,11 +248,11 @@ export class AssessmentHelpers extends TestHelpers {
   async startAssessment(frameworkName: string) {
     await this.navigateAndWait('/assessments');
     await this.clickAndWait('[data-testid="new-assessment-button"]');
-    
+
     // Select framework
     await this.page.click(`[data-testid="framework-${frameworkName}"]`);
     await this.clickAndWait('[data-testid="start-assessment-button"]');
-    
+
     // Wait for assessment to load
     await this.page.waitForSelector('[data-testid="assessment-question"]');
   }
@@ -266,7 +273,7 @@ export class AssessmentHelpers extends TestHelpers {
   async submitAssessment() {
     await this.clickAndWait('[data-testid="submit-assessment-button"]');
     await this.waitForToast('Assessment submitted successfully');
-    
+
     // Wait for results page
     await this.page.waitForSelector('[data-testid="assessment-results"]');
   }
@@ -282,16 +289,16 @@ export class EvidenceHelpers extends TestHelpers {
   async uploadEvidence(filePath: string, title: string, description?: string) {
     await this.navigateAndWait('/evidence');
     await this.clickAndWait('[data-testid="upload-evidence-button"]');
-    
+
     // Upload file
     await this.page.setInputFiles('[data-testid="file-input"]', filePath);
-    
+
     // Fill metadata
     await this.fillField('[data-testid="evidence-title-input"]', title);
     if (description) {
       await this.fillField('[data-testid="evidence-description-input"]', description);
     }
-    
+
     await this.clickAndWait('[data-testid="upload-button"]');
     await this.waitForToast('Evidence uploaded successfully');
   }

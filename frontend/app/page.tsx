@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { motion, useScroll, useTransform } from "framer-motion";
-import { 
+import { motion, useScroll, useTransform } from 'framer-motion';
+import {
   ArrowRight,
   Sparkles,
   Shield,
@@ -14,15 +14,15 @@ import {
   TrendingUp,
   Users,
   FileCheck,
-  ChevronRight
-} from "lucide-react";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import React, { useState, useEffect, useRef } from "react";
+  ChevronRight,
+} from 'lucide-react';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import React, { useState, useEffect, useRef } from 'react';
 
-import { Button } from "@/components/ui/button";
-import { useAuthStore } from "@/lib/stores/auth.store";
-import { cn } from "@/lib/utils";
+import { Button } from '@/components/ui/button';
+import { useAuthStore } from '@/lib/stores/auth.store';
+import { cn } from '@/lib/utils';
 
 // Hero Section with Animated Background
 const HeroSection = () => {
@@ -31,20 +31,20 @@ const HeroSection = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: containerRef,
-    offset: ["start start", "end start"]
+    offset: ['start start', 'end start'],
   });
-  
-  const y = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
+
+  const y = useTransform(scrollYProgress, [0, 1], ['0%', '50%']);
   const opacity = useTransform(scrollYProgress, [0, 1], [1, 0]);
 
   return (
-    <section ref={containerRef} className="relative min-h-screen flex items-center justify-center overflow-hidden">
+    <section
+      ref={containerRef}
+      className="relative flex min-h-screen items-center justify-center overflow-hidden"
+    >
       {/* Animated Mesh Gradient Background */}
-      <motion.div 
-        className="absolute inset-0 mesh-gradient"
-        style={{ y }}
-      />
-      
+      <motion.div className="mesh-gradient absolute inset-0" style={{ y }} />
+
       {/* Floating Orbs */}
       <div className="absolute inset-0">
         <motion.div
@@ -55,9 +55,9 @@ const HeroSection = () => {
           transition={{
             duration: 20,
             repeat: Infinity,
-            ease: "linear"
+            ease: 'linear',
           }}
-          className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/20 rounded-full blur-3xl"
+          className="absolute left-1/4 top-1/4 h-96 w-96 rounded-full bg-primary/20 blur-3xl"
         />
         <motion.div
           animate={{
@@ -67,9 +67,9 @@ const HeroSection = () => {
           transition={{
             duration: 25,
             repeat: Infinity,
-            ease: "linear"
+            ease: 'linear',
           }}
-          className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-secondary/20 rounded-full blur-3xl"
+          className="absolute bottom-1/4 right-1/4 h-96 w-96 rounded-full bg-secondary/20 blur-3xl"
         />
       </div>
 
@@ -77,18 +77,15 @@ const HeroSection = () => {
       <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center [mask-image:radial-gradient(ellipse_at_center,transparent_20%,black)]" />
 
       {/* Content */}
-      <motion.div 
-        className="relative z-10 container mx-auto px-4 text-center"
-        style={{ opacity }}
-      >
+      <motion.div className="container relative z-10 mx-auto px-4 text-center" style={{ opacity }}>
         {/* Badge */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-card mb-8"
+          className="glass-card mb-8 inline-flex items-center gap-2 rounded-full px-4 py-2"
         >
-          <Sparkles className="w-4 h-4 text-primary" />
+          <Sparkles className="h-4 w-4 text-primary" />
           <span className="text-sm font-medium text-foreground">
             AI-Powered Compliance Automation
           </span>
@@ -99,7 +96,7 @@ const HeroSection = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.1 }}
-          className="text-6xl md:text-8xl font-bold mb-6"
+          className="mb-6 text-6xl font-bold md:text-8xl"
         >
           <span className="gradient-text">Transform</span>
           <br />
@@ -111,10 +108,10 @@ const HeroSection = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.2 }}
-          className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto mb-12"
+          className="mx-auto mb-12 max-w-3xl text-xl text-muted-foreground md:text-2xl"
         >
-          Automate compliance management with AI. Cut costs by 60%, reduce audit prep by 75%, 
-          and achieve 99.9% accuracy across 50+ frameworks.
+          Automate compliance management with AI. Cut costs by 60%, reduce audit prep by 75%, and
+          achieve 99.9% accuracy across 50+ frameworks.
         </motion.p>
 
         {/* CTA Buttons */}
@@ -122,24 +119,24 @@ const HeroSection = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.3 }}
-          className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12"
+          className="mb-12 flex flex-col items-center justify-center gap-4 sm:flex-row"
         >
           <Button
             size="lg"
             className="btn-gradient group px-8 py-6 text-lg"
-            onClick={() => router.push(isAuthenticated ? "/dashboard" : "/signup")}
+            onClick={() => router.push(isAuthenticated ? '/dashboard' : '/signup')}
           >
-            {isAuthenticated ? "Go to Dashboard" : "Start Free Trial"}
-            <ArrowRight className="ml-2 w-5 h-5 transition-transform group-hover:translate-x-1" />
+            {isAuthenticated ? 'Go to Dashboard' : 'Start Free Trial'}
+            <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
           </Button>
           <Button
             size="lg"
             variant="outline"
-            className="glass-card border-glass-border hover:bg-glass-white-hover px-8 py-6 text-lg"
-            onClick={() => router.push("/demo")}
+            className="glass-card border-glass-border px-8 py-6 text-lg hover:bg-glass-white-hover"
+            onClick={() => router.push('/demo')}
           >
             Watch Demo
-            <ChevronRight className="ml-2 w-5 h-5" />
+            <ChevronRight className="ml-2 h-5 w-5" />
           </Button>
         </motion.div>
 
@@ -148,18 +145,18 @@ const HeroSection = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5, delay: 0.4 }}
-          className="flex flex-wrap gap-8 justify-center items-center"
+          className="flex flex-wrap items-center justify-center gap-8"
         >
           <div className="flex items-center gap-2 text-muted-foreground">
-            <Shield className="w-5 h-5 text-primary" />
+            <Shield className="h-5 w-5 text-primary" />
             <span className="text-sm">SOC 2 Certified</span>
           </div>
           <div className="flex items-center gap-2 text-muted-foreground">
-            <Lock className="w-5 h-5 text-primary" />
+            <Lock className="h-5 w-5 text-primary" />
             <span className="text-sm">Bank-Grade Security</span>
           </div>
           <div className="flex items-center gap-2 text-muted-foreground">
-            <Globe className="w-5 h-5 text-primary" />
+            <Globe className="h-5 w-5 text-primary" />
             <span className="text-sm">GDPR Compliant</span>
           </div>
         </motion.div>
@@ -175,9 +172,9 @@ const HeroSection = () => {
         <motion.div
           animate={{ y: [0, 10, 0] }}
           transition={{ duration: 2, repeat: Infinity }}
-          className="w-6 h-10 rounded-full border-2 border-text-secondary/30 flex items-start justify-center p-2"
+          className="flex h-10 w-6 items-start justify-center rounded-full border-2 border-text-secondary/30 p-2"
         >
-          <motion.div className="w-1 h-2 bg-text-secondary/50 rounded-full" />
+          <motion.div className="h-2 w-1 rounded-full bg-text-secondary/50" />
         </motion.div>
       </motion.div>
     </section>
@@ -199,12 +196,12 @@ const FeatureCard = ({ icon, title, description, delay = 0 }: FeatureCardProps) 
       whileInView={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay }}
       viewport={{ once: true }}
-      className="glass-card p-8 hover:border-brand-primary/50 transition-all duration-300 group"
+      className="glass-card group p-8 transition-all duration-300 hover:border-brand-primary/50"
     >
-      <div className="mb-4 p-3 rounded-lg bg-primary/10 w-fit group-hover:bg-primary/20 transition-colors">
+      <div className="mb-4 w-fit rounded-lg bg-primary/10 p-3 transition-colors group-hover:bg-primary/20">
         {icon}
       </div>
-      <h3 className="text-xl font-semibold text-foreground mb-3">{title}</h3>
+      <h3 className="mb-3 text-xl font-semibold text-foreground">{title}</h3>
       <p className="text-muted-foreground">{description}</p>
     </motion.div>
   );
@@ -213,16 +210,16 @@ const FeatureCard = ({ icon, title, description, delay = 0 }: FeatureCardProps) 
 // Stats Section with Animated Numbers
 const StatsSection = () => {
   const stats = [
-    { value: "60%", label: "Cost Reduction", suffix: "" },
-    { value: "75%", label: "Faster Audits", suffix: "" },
-    { value: "99.9%", label: "Accuracy Rate", suffix: "" },
-    { value: "50", label: "Frameworks", suffix: "+" },
+    { value: '60%', label: 'Cost Reduction', suffix: '' },
+    { value: '75%', label: 'Faster Audits', suffix: '' },
+    { value: '99.9%', label: 'Accuracy Rate', suffix: '' },
+    { value: '50', label: 'Frameworks', suffix: '+' },
   ];
 
   return (
-    <section className="py-24 relative">
+    <section className="relative py-24">
       <div className="container mx-auto px-4">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+        <div className="grid grid-cols-2 gap-8 md:grid-cols-4">
           {stats.map((stat, index) => (
             <motion.div
               key={index}
@@ -232,8 +229,9 @@ const StatsSection = () => {
               viewport={{ once: true }}
               className="text-center"
             >
-              <div className="text-5xl md:text-6xl font-bold gradient-text mb-2">
-                {stat.value}{stat.suffix}
+              <div className="gradient-text mb-2 text-5xl font-bold md:text-6xl">
+                {stat.value}
+                {stat.suffix}
               </div>
               <div className="text-muted-foreground">{stat.label}</div>
             </motion.div>
@@ -255,13 +253,13 @@ interface TestimonialProps {
 
 const TestimonialCard = ({ quote, author, role, company, rating }: TestimonialProps) => {
   return (
-    <div className="glass-card p-8 h-full">
-      <div className="flex gap-1 mb-4">
+    <div className="glass-card h-full p-8">
+      <div className="mb-4 flex gap-1">
         {[...Array(rating)].map((_, i) => (
-          <Star key={i} className="w-5 h-5 fill-primary text-primary" />
+          <Star key={i} className="h-5 w-5 fill-primary text-primary" />
         ))}
       </div>
-      <p className="text-foreground mb-6 text-lg italic">&ldquo;{quote}&rdquo;</p>
+      <p className="mb-6 text-lg italic text-foreground">&ldquo;{quote}&rdquo;</p>
       <div className="mt-auto">
         <p className="font-semibold text-foreground">{author}</p>
         <p className="text-sm text-primary">{role}</p>
@@ -281,44 +279,45 @@ interface PricingCardProps {
   onSelect: () => void;
 }
 
-const PricingCard = ({ name, price, description, features, popular = false, onSelect }: PricingCardProps) => {
+const PricingCard = ({
+  name,
+  price,
+  description,
+  features,
+  popular = false,
+  onSelect,
+}: PricingCardProps) => {
   return (
     <motion.div
       whileHover={{ scale: 1.02 }}
-      transition={{ type: "spring", stiffness: 300 }}
-      className={cn(
-        "relative glass-card p-8",
-        popular && "border-brand-primary glow-purple"
-      )}
+      transition={{ type: 'spring', stiffness: 300 }}
+      className={cn('glass-card relative p-8', popular && 'glow-purple border-brand-primary')}
     >
       {popular && (
         <div className="absolute -top-4 left-1/2 -translate-x-1/2">
-          <span className="px-4 py-1 rounded-full bg-gradient-to-r from-brand-primary to-brand-secondary text-white text-sm font-medium">
+          <span className="rounded-full bg-gradient-to-r from-brand-primary to-brand-secondary px-4 py-1 text-sm font-medium text-white">
             Most Popular
           </span>
         </div>
       )}
-      
-      <div className="text-center mb-8">
-        <h3 className="text-2xl font-bold text-foreground mb-2">{name}</h3>
-        <div className="text-4xl font-bold gradient-text mb-2">{price}</div>
+
+      <div className="mb-8 text-center">
+        <h3 className="mb-2 text-2xl font-bold text-foreground">{name}</h3>
+        <div className="gradient-text mb-2 text-4xl font-bold">{price}</div>
         <p className="text-muted-foreground">{description}</p>
       </div>
 
-      <ul className="space-y-3 mb-8">
+      <ul className="mb-8 space-y-3">
         {features.map((feature, i) => (
           <li key={i} className="flex items-start gap-3">
-            <CheckCircle className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
-            <span className="text-muted-foreground text-sm">{feature}</span>
+            <CheckCircle className="mt-0.5 h-5 w-5 flex-shrink-0 text-primary" />
+            <span className="text-sm text-muted-foreground">{feature}</span>
           </li>
         ))}
       </ul>
 
       <Button
-        className={cn(
-          "w-full",
-          popular ? "btn-gradient" : "glass-card hover:bg-glass-white-hover"
-        )}
+        className={cn('w-full', popular ? 'btn-gradient' : 'glass-card hover:bg-glass-white-hover')}
         onClick={onSelect}
       >
         Get Started
@@ -337,11 +336,11 @@ export default function HomePage() {
 
   if (!mounted) {
     return (
-      <div className="min-h-screen bg-surface-base flex items-center justify-center">
+      <div className="flex min-h-screen items-center justify-center bg-surface-base">
         <motion.div
           animate={{ rotate: 360 }}
-          transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-          className="w-16 h-16 border-4 border-brand-primary border-t-transparent rounded-full"
+          transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
+          className="h-16 w-16 rounded-full border-4 border-brand-primary border-t-transparent"
         />
       </div>
     );
@@ -350,20 +349,29 @@ export default function HomePage() {
   return (
     <div className="min-h-screen bg-surface-base">
       {/* Navigation */}
-      <header className="fixed top-0 left-0 right-0 z-50 glass-card border-b border-glass-border">
-        <div className="container mx-auto px-4 h-16 flex items-center justify-between">
-          <Link href="/" className="text-2xl font-bold gradient-text">
+      <header className="glass-card fixed left-0 right-0 top-0 z-50 border-b border-glass-border">
+        <div className="container mx-auto flex h-16 items-center justify-between px-4">
+          <Link href="/" className="gradient-text text-2xl font-bold">
             ruleIQ
           </Link>
-          
-          <nav className="hidden md:flex items-center gap-8">
-            <Link href="#features" className="text-muted-foreground hover:text-foreground transition-colors">
+
+          <nav className="hidden items-center gap-8 md:flex">
+            <Link
+              href="#features"
+              className="text-muted-foreground transition-colors hover:text-foreground"
+            >
               Features
             </Link>
-            <Link href="#pricing" className="text-muted-foreground hover:text-foreground transition-colors">
+            <Link
+              href="#pricing"
+              className="text-muted-foreground transition-colors hover:text-foreground"
+            >
               Pricing
             </Link>
-            <Link href="#testimonials" className="text-muted-foreground hover:text-foreground transition-colors">
+            <Link
+              href="#testimonials"
+              className="text-muted-foreground transition-colors hover:text-foreground"
+            >
               Testimonials
             </Link>
           </nav>
@@ -372,14 +380,11 @@ export default function HomePage() {
             <Button
               variant="ghost"
               className="text-muted-foreground hover:text-foreground"
-              onClick={() => router.push("/login")}
+              onClick={() => router.push('/login')}
             >
               Sign In
             </Button>
-            <Button
-              className="btn-gradient"
-              onClick={() => router.push("/signup")}
-            >
+            <Button className="btn-gradient" onClick={() => router.push('/signup')}>
               Get Started
             </Button>
           </div>
@@ -393,56 +398,56 @@ export default function HomePage() {
       <StatsSection />
 
       {/* Features Section */}
-      <section id="features" className="py-24 relative">
+      <section id="features" className="relative py-24">
         <div className="container mx-auto px-4">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
             viewport={{ once: true }}
-            className="text-center mb-16"
+            className="mb-16 text-center"
           >
-            <h2 className="text-4xl md:text-5xl font-bold mb-4">
+            <h2 className="mb-4 text-4xl font-bold md:text-5xl">
               <span className="gradient-text">Powerful Features</span>
             </h2>
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+            <p className="mx-auto max-w-3xl text-xl text-muted-foreground">
               Everything you need to automate compliance and reduce risk
             </p>
           </motion.div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
             <FeatureCard
-              icon={<Zap className="w-8 h-8 text-primary" />}
+              icon={<Zap className="h-8 w-8 text-primary" />}
               title="AI-Powered Analysis"
               description="Intelligent gap analysis and automated evidence collection powered by advanced AI"
               delay={0}
             />
             <FeatureCard
-              icon={<Shield className="w-8 h-8 text-primary" />}
+              icon={<Shield className="h-8 w-8 text-primary" />}
               title="Real-Time Monitoring"
               description="Continuous compliance tracking with instant alerts for any deviations"
               delay={0.1}
             />
             <FeatureCard
-              icon={<BarChart3 className="w-8 h-8 text-primary" />}
+              icon={<BarChart3 className="h-8 w-8 text-primary" />}
               title="Smart Reporting"
               description="Generate comprehensive compliance reports with a single click"
               delay={0.2}
             />
             <FeatureCard
-              icon={<Users className="w-8 h-8 text-primary" />}
+              icon={<Users className="h-8 w-8 text-primary" />}
               title="Team Collaboration"
               description="Streamline workflows and enable seamless team coordination"
               delay={0.3}
             />
             <FeatureCard
-              icon={<FileCheck className="w-8 h-8 text-primary" />}
+              icon={<FileCheck className="h-8 w-8 text-primary" />}
               title="Policy Automation"
               description="Auto-generate and maintain policies aligned with your frameworks"
               delay={0.4}
             />
             <FeatureCard
-              icon={<TrendingUp className="w-8 h-8 text-primary" />}
+              icon={<TrendingUp className="h-8 w-8 text-primary" />}
               title="Risk Assessment"
               description="Proactive risk identification and mitigation recommendations"
               delay={0.5}
@@ -452,24 +457,24 @@ export default function HomePage() {
       </section>
 
       {/* Testimonials Section */}
-      <section id="testimonials" className="py-24 relative">
+      <section id="testimonials" className="relative py-24">
         <div className="container mx-auto px-4">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
             viewport={{ once: true }}
-            className="text-center mb-16"
+            className="mb-16 text-center"
           >
-            <h2 className="text-4xl md:text-5xl font-bold mb-4">
+            <h2 className="mb-4 text-4xl font-bold md:text-5xl">
               <span className="gradient-text">Loved by Teams</span>
             </h2>
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+            <p className="mx-auto max-w-3xl text-xl text-muted-foreground">
               See what compliance professionals are saying about ruleIQ
             </p>
           </motion.div>
 
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid gap-8 md:grid-cols-3">
             <TestimonialCard
               quote="ruleIQ transformed our compliance process. What used to take weeks now takes days."
               author="Sarah Chen"
@@ -496,74 +501,74 @@ export default function HomePage() {
       </section>
 
       {/* Pricing Section */}
-      <section id="pricing" className="py-24 relative">
+      <section id="pricing" className="relative py-24">
         <div className="container mx-auto px-4">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
             viewport={{ once: true }}
-            className="text-center mb-16"
+            className="mb-16 text-center"
           >
-            <h2 className="text-4xl md:text-5xl font-bold mb-4">
+            <h2 className="mb-4 text-4xl font-bold md:text-5xl">
               <span className="gradient-text">Simple Pricing</span>
             </h2>
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+            <p className="mx-auto max-w-3xl text-xl text-muted-foreground">
               Choose the plan that fits your compliance needs
             </p>
           </motion.div>
 
-          <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+          <div className="mx-auto grid max-w-6xl gap-8 md:grid-cols-3">
             <PricingCard
               name="Starter"
               price="£149/mo"
               description="Perfect for small teams"
               features={[
-                "Up to 2 frameworks",
-                "Basic AI analysis",
-                "Monthly reports",
-                "Email support",
-                "1 user account"
+                'Up to 2 frameworks',
+                'Basic AI analysis',
+                'Monthly reports',
+                'Email support',
+                '1 user account',
               ]}
-              onSelect={() => router.push("/signup?plan=starter")}
+              onSelect={() => router.push('/signup?plan=starter')}
             />
             <PricingCard
               name="Professional"
               price="£499/mo"
               description="For growing companies"
               features={[
-                "Unlimited frameworks",
-                "Advanced AI features",
-                "Real-time monitoring",
-                "Priority support",
-                "5 user accounts",
-                "Custom policies",
-                "API access"
+                'Unlimited frameworks',
+                'Advanced AI features',
+                'Real-time monitoring',
+                'Priority support',
+                '5 user accounts',
+                'Custom policies',
+                'API access',
               ]}
               popular
-              onSelect={() => router.push("/signup?plan=professional")}
+              onSelect={() => router.push('/signup?plan=professional')}
             />
             <PricingCard
               name="Enterprise"
               price="Custom"
               description="For large organizations"
               features={[
-                "Everything in Pro",
-                "Unlimited users",
-                "Dedicated support",
-                "Custom integrations",
-                "SLA guarantees",
-                "On-premise option",
-                "White-label"
+                'Everything in Pro',
+                'Unlimited users',
+                'Dedicated support',
+                'Custom integrations',
+                'SLA guarantees',
+                'On-premise option',
+                'White-label',
               ]}
-              onSelect={() => router.push("/contact-sales")}
+              onSelect={() => router.push('/contact-sales')}
             />
           </div>
         </div>
       </section>
 
       {/* CTA Section */}
-      <section className="py-24 relative">
+      <section className="relative py-24">
         <div className="container mx-auto px-4">
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
@@ -572,63 +577,99 @@ export default function HomePage() {
             viewport={{ once: true }}
             className="gradient-bg rounded-3xl p-16 text-center"
           >
-            <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
+            <h2 className="mb-4 text-4xl font-bold text-white md:text-5xl">
               Ready to Transform Your Compliance?
             </h2>
-            <p className="text-xl text-white/90 mb-8 max-w-2xl mx-auto">
+            <p className="mx-auto mb-8 max-w-2xl text-xl text-white/90">
               Join thousands of companies automating their compliance with AI
             </p>
             <Button
               size="lg"
-              className="bg-white text-primary hover:bg-neutral-100 px-8 py-6 text-lg font-semibold"
-              onClick={() => router.push("/signup")}
+              className="bg-white px-8 py-6 text-lg font-semibold text-primary hover:bg-neutral-100"
+              onClick={() => router.push('/signup')}
             >
               Start Your Free Trial
-              <ArrowRight className="ml-2 w-5 h-5" />
+              <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
           </motion.div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="py-16 border-t border-glass-border">
+      <footer className="border-t border-glass-border py-16">
         <div className="container mx-auto px-4">
-          <div className="grid md:grid-cols-4 gap-8 mb-8">
+          <div className="mb-8 grid gap-8 md:grid-cols-4">
             <div>
-              <h3 className="text-2xl font-bold gradient-text mb-4">ruleIQ</h3>
+              <h3 className="gradient-text mb-4 text-2xl font-bold">ruleIQ</h3>
               <p className="text-muted-foreground">
                 AI-powered compliance automation for modern businesses
               </p>
             </div>
-            
+
             <div>
-              <h4 className="font-semibold text-foreground mb-4">Product</h4>
+              <h4 className="mb-4 font-semibold text-foreground">Product</h4>
               <ul className="space-y-2 text-muted-foreground">
-                <li><Link href="/features" className="hover:text-foreground transition-colors">Features</Link></li>
-                <li><Link href="/pricing" className="hover:text-foreground transition-colors">Pricing</Link></li>
-                <li><Link href="/integrations" className="hover:text-foreground transition-colors">Integrations</Link></li>
+                <li>
+                  <Link href="/features" className="transition-colors hover:text-foreground">
+                    Features
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/pricing" className="transition-colors hover:text-foreground">
+                    Pricing
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/integrations" className="transition-colors hover:text-foreground">
+                    Integrations
+                  </Link>
+                </li>
               </ul>
             </div>
-            
+
             <div>
-              <h4 className="font-semibold text-foreground mb-4">Company</h4>
+              <h4 className="mb-4 font-semibold text-foreground">Company</h4>
               <ul className="space-y-2 text-muted-foreground">
-                <li><Link href="/about" className="hover:text-foreground transition-colors">About</Link></li>
-                <li><Link href="/blog" className="hover:text-foreground transition-colors">Blog</Link></li>
-                <li><Link href="/careers" className="hover:text-foreground transition-colors">Careers</Link></li>
+                <li>
+                  <Link href="/about" className="transition-colors hover:text-foreground">
+                    About
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/blog" className="transition-colors hover:text-foreground">
+                    Blog
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/careers" className="transition-colors hover:text-foreground">
+                    Careers
+                  </Link>
+                </li>
               </ul>
             </div>
-            
+
             <div>
-              <h4 className="font-semibold text-foreground mb-4">Support</h4>
+              <h4 className="mb-4 font-semibold text-foreground">Support</h4>
               <ul className="space-y-2 text-muted-foreground">
-                <li><Link href="/help" className="hover:text-foreground transition-colors">Help Center</Link></li>
-                <li><Link href="/contact" className="hover:text-foreground transition-colors">Contact</Link></li>
-                <li><Link href="/status" className="hover:text-foreground transition-colors">Status</Link></li>
+                <li>
+                  <Link href="/help" className="transition-colors hover:text-foreground">
+                    Help Center
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/contact" className="transition-colors hover:text-foreground">
+                    Contact
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/status" className="transition-colors hover:text-foreground">
+                    Status
+                  </Link>
+                </li>
               </ul>
             </div>
           </div>
-          
+
           <div className="border-t border-glass-border pt-8 text-center text-muted-foreground">
             <p>&copy; 2025 ruleIQ. All rights reserved.</p>
           </div>

@@ -1,56 +1,55 @@
-"use client"
+'use client';
 
-import { create } from 'zustand'
-import { persist, createJSONStorage , devtools } from 'zustand/middleware'
+import { create } from 'zustand';
+import { persist, createJSONStorage, devtools } from 'zustand/middleware';
 
-import { evidenceCollectionService } from '@/lib/api/evidence-collection.service'
+import { evidenceCollectionService } from '@/lib/api/evidence-collection.service';
 
-import type { 
-  EvidenceCollectionPlan, 
-  EvidenceTask,
-  CollectionPlanSummary 
-} from '@/types/api'
+import type { EvidenceCollectionPlan, EvidenceTask, CollectionPlanSummary } from '@/types/api';
 
 interface EvidenceCollectionState {
   // Collection Plans
-  plans: CollectionPlanSummary[]
-  currentPlan: EvidenceCollectionPlan | null
-  priorityTasks: EvidenceTask[]
-  
+  plans: CollectionPlanSummary[];
+  currentPlan: EvidenceCollectionPlan | null;
+  priorityTasks: EvidenceTask[];
+
   // UI State
-  isLoading: boolean
-  isCreatingPlan: boolean
-  isUpdatingTask: boolean
-  error: string | null
-  
+  isLoading: boolean;
+  isCreatingPlan: boolean;
+  isUpdatingTask: boolean;
+  error: string | null;
+
   // Filters and Sorting
   taskFilters: {
-    priority?: string[]
-    status?: string[]
-    automationLevel?: string[]
-    evidenceType?: string[]
-  }
-  taskSortBy: 'priority' | 'dueDate' | 'effort' | 'status'
-  taskSortOrder: 'asc' | 'desc'
-  
+    priority?: string[];
+    status?: string[];
+    automationLevel?: string[];
+    evidenceType?: string[];
+  };
+  taskSortBy: 'priority' | 'dueDate' | 'effort' | 'status';
+  taskSortOrder: 'asc' | 'desc';
+
   // Actions - Plan Management
-  createPlan: (framework: string, targetWeeks?: number) => Promise<EvidenceCollectionPlan>
-  loadPlan: (planId: string) => Promise<void>
-  loadPlans: (framework?: string, status?: string) => Promise<void>
-  refreshCurrentPlan: () => Promise<void>
-  
+  createPlan: (framework: string, targetWeeks?: number) => Promise<EvidenceCollectionPlan>;
+  loadPlan: (planId: string) => Promise<void>;
+  loadPlans: (framework?: string, status?: string) => Promise<void>;
+  refreshCurrentPlan: () => Promise<void>;
+
   // Actions - Task Management
-  loadPriorityTasks: (planId: string, limit?: number) => Promise<void>
-  updateTaskStatus: (taskId: string, status: string, notes?: string) => Promise<void>
-  
+  loadPriorityTasks: (planId: string, limit?: number) => Promise<void>;
+  updateTaskStatus: (taskId: string, status: string, notes?: string) => Promise<void>;
+
   // Actions - Filtering and Sorting
-  setTaskFilters: (filters: EvidenceCollectionState['taskFilters']) => void
-  setTaskSort: (sortBy: EvidenceCollectionState['taskSortBy'], order?: EvidenceCollectionState['taskSortOrder']) => void
-  getFilteredAndSortedTasks: () => EvidenceTask[]
-  
+  setTaskFilters: (filters: EvidenceCollectionState['taskFilters']) => void;
+  setTaskSort: (
+    sortBy: EvidenceCollectionState['taskSortBy'],
+    order?: EvidenceCollectionState['taskSortOrder'],
+  ) => void;
+  getFilteredAndSortedTasks: () => EvidenceTask[];
+
   // Actions - UI
-  clearError: () => void
-  reset: () => void
+  clearError: () => void;
+  reset: () => void;
 }
 
 const initialState = {
@@ -64,7 +63,7 @@ const initialState = {
   taskFilters: {},
   taskSortBy: 'priority' as const,
   taskSortOrder: 'asc' as const,
-}
+};
 
 export const useEvidenceCollectionStore = create<EvidenceCollectionState>()(
   devtools(
@@ -74,185 +73,227 @@ export const useEvidenceCollectionStore = create<EvidenceCollectionState>()(
 
         // Plan Management Actions
         createPlan: async (framework: string, targetWeeks?: number) => {
-          set({ isCreatingPlan: true, error: null }, false, 'createPlan/start')
-          
+          set({ isCreatingPlan: true, error: null }, false, 'createPlan/start');
+
           try {
             const plan = await evidenceCollectionService.createCollectionPlan({
               framework,
               target_completion_weeks: targetWeeks,
-              include_existing_evidence: true
-            })
-            
-            set(state => ({
-              currentPlan: plan,
-              plans: [...state.plans, {
-                plan_id: plan.plan_id,
-                framework: plan.framework,
-                total_tasks: plan.total_tasks,
-                completed_tasks: 0,
-                estimated_total_hours: plan.estimated_total_hours,
-                completion_target_date: plan.completion_target_date,
-                status: 'pending',
-                created_at: plan.created_at
-              }],
-              isCreatingPlan: false
-            }), false, 'createPlan/success')
-            
-            return plan
+              include_existing_evidence: true,
+            });
+
+            set(
+              (state) => ({
+                currentPlan: plan,
+                plans: [
+                  ...state.plans,
+                  {
+                    plan_id: plan.plan_id,
+                    framework: plan.framework,
+                    total_tasks: plan.total_tasks,
+                    completed_tasks: 0,
+                    estimated_total_hours: plan.estimated_total_hours,
+                    completion_target_date: plan.completion_target_date,
+                    status: 'pending',
+                    created_at: plan.created_at,
+                  },
+                ],
+                isCreatingPlan: false,
+              }),
+              false,
+              'createPlan/success',
+            );
+
+            return plan;
           } catch (error: any) {
-            set({
-              isCreatingPlan: false,
-              error: error.detail || error.message || 'Failed to create collection plan'
-            }, false, 'createPlan/error')
-            throw error
+            set(
+              {
+                isCreatingPlan: false,
+                error: error.detail || error.message || 'Failed to create collection plan',
+              },
+              false,
+              'createPlan/error',
+            );
+            throw error;
           }
         },
 
         loadPlan: async (planId: string) => {
-          set({ isLoading: true, error: null }, false, 'loadPlan/start')
-          
+          set({ isLoading: true, error: null }, false, 'loadPlan/start');
+
           try {
-            const plan = await evidenceCollectionService.getCollectionPlan(planId)
-            set({
-              currentPlan: plan,
-              isLoading: false
-            }, false, 'loadPlan/success')
+            const plan = await evidenceCollectionService.getCollectionPlan(planId);
+            set(
+              {
+                currentPlan: plan,
+                isLoading: false,
+              },
+              false,
+              'loadPlan/success',
+            );
           } catch (error: any) {
-            set({
-              isLoading: false,
-              error: error.detail || error.message || 'Failed to load collection plan'
-            }, false, 'loadPlan/error')
+            set(
+              {
+                isLoading: false,
+                error: error.detail || error.message || 'Failed to load collection plan',
+              },
+              false,
+              'loadPlan/error',
+            );
           }
         },
 
         loadPlans: async (framework?: string, status?: string) => {
-          set({ isLoading: true, error: null }, false, 'loadPlans/start')
-          
+          set({ isLoading: true, error: null }, false, 'loadPlans/start');
+
           try {
             const plans = await evidenceCollectionService.listCollectionPlans({
               framework,
-              status
-            })
-            set({
-              plans,
-              isLoading: false
-            }, false, 'loadPlans/success')
+              status,
+            });
+            set(
+              {
+                plans,
+                isLoading: false,
+              },
+              false,
+              'loadPlans/success',
+            );
           } catch (error: any) {
-            set({
-              isLoading: false,
-              error: error.detail || error.message || 'Failed to load collection plans'
-            }, false, 'loadPlans/error')
+            set(
+              {
+                isLoading: false,
+                error: error.detail || error.message || 'Failed to load collection plans',
+              },
+              false,
+              'loadPlans/error',
+            );
           }
         },
 
         refreshCurrentPlan: async () => {
-          const { currentPlan } = get()
-          if (!currentPlan) return
-          
-          await get().loadPlan(currentPlan.plan_id)
+          const { currentPlan } = get();
+          if (!currentPlan) return;
+
+          await get().loadPlan(currentPlan.plan_id);
         },
 
         // Task Management Actions
         loadPriorityTasks: async (planId: string, limit: number = 5) => {
-          set({ isLoading: true, error: null }, false, 'loadPriorityTasks/start')
-          
+          set({ isLoading: true, error: null }, false, 'loadPriorityTasks/start');
+
           try {
-            const tasks = await evidenceCollectionService.getPriorityTasks(planId, limit)
-            set({
-              priorityTasks: tasks,
-              isLoading: false
-            }, false, 'loadPriorityTasks/success')
+            const tasks = await evidenceCollectionService.getPriorityTasks(planId, limit);
+            set(
+              {
+                priorityTasks: tasks,
+                isLoading: false,
+              },
+              false,
+              'loadPriorityTasks/success',
+            );
           } catch (error: any) {
-            set({
-              isLoading: false,
-              error: error.detail || error.message || 'Failed to load priority tasks'
-            }, false, 'loadPriorityTasks/error')
+            set(
+              {
+                isLoading: false,
+                error: error.detail || error.message || 'Failed to load priority tasks',
+              },
+              false,
+              'loadPriorityTasks/error',
+            );
           }
         },
 
         updateTaskStatus: async (taskId: string, status: string, notes?: string) => {
-          const { currentPlan } = get()
-          if (!currentPlan) return
-          
-          set({ isUpdatingTask: true, error: null }, false, 'updateTaskStatus/start')
-          
+          const { currentPlan } = get();
+          if (!currentPlan) return;
+
+          set({ isUpdatingTask: true, error: null }, false, 'updateTaskStatus/start');
+
           try {
             const updatedTask = await evidenceCollectionService.updateTaskStatus(
               currentPlan.plan_id,
               taskId,
               {
                 status: status as any,
-                completion_notes: notes
-              }
-            )
-            
+                completion_notes: notes,
+              },
+            );
+
             // Update task in current plan
-            set(state => ({
-              currentPlan: state.currentPlan ? {
-                ...state.currentPlan,
-                tasks: state.currentPlan.tasks.map(task =>
-                  task.task_id === taskId ? updatedTask : task
-                )
-              } : null,
-              priorityTasks: state.priorityTasks.map(task =>
-                task.task_id === taskId ? updatedTask : task
-              ),
-              isUpdatingTask: false
-            }), false, 'updateTaskStatus/success')
-            
+            set(
+              (state) => ({
+                currentPlan: state.currentPlan
+                  ? {
+                      ...state.currentPlan,
+                      tasks: state.currentPlan.tasks.map((task) =>
+                        task.task_id === taskId ? updatedTask : task,
+                      ),
+                    }
+                  : null,
+                priorityTasks: state.priorityTasks.map((task) =>
+                  task.task_id === taskId ? updatedTask : task,
+                ),
+                isUpdatingTask: false,
+              }),
+              false,
+              'updateTaskStatus/success',
+            );
+
             // Update plan summary if task completed
             if (status === 'completed') {
-              set(state => ({
-                plans: state.plans.map(plan =>
-                  plan.plan_id === currentPlan.plan_id
-                    ? { ...plan, completed_tasks: plan.completed_tasks + 1 }
-                    : plan
-                )
-              }), false, 'updateTaskStatus/updateSummary')
+              set(
+                (state) => ({
+                  plans: state.plans.map((plan) =>
+                    plan.plan_id === currentPlan.plan_id
+                      ? { ...plan, completed_tasks: plan.completed_tasks + 1 }
+                      : plan,
+                  ),
+                }),
+                false,
+                'updateTaskStatus/updateSummary',
+              );
             }
           } catch (error: any) {
-            set({
-              isUpdatingTask: false,
-              error: error.detail || error.message || 'Failed to update task status'
-            }, false, 'updateTaskStatus/error')
+            set(
+              {
+                isUpdatingTask: false,
+                error: error.detail || error.message || 'Failed to update task status',
+              },
+              false,
+              'updateTaskStatus/error',
+            );
           }
         },
 
         // Filtering and Sorting Actions
         setTaskFilters: (filters) => {
-          set({ taskFilters: filters }, false, 'setTaskFilters')
+          set({ taskFilters: filters }, false, 'setTaskFilters');
         },
 
         setTaskSort: (sortBy, order = 'asc') => {
-          set({ taskSortBy: sortBy, taskSortOrder: order }, false, 'setTaskSort')
+          set({ taskSortBy: sortBy, taskSortOrder: order }, false, 'setTaskSort');
         },
 
         getFilteredAndSortedTasks: () => {
-          const { currentPlan, taskFilters, taskSortBy, taskSortOrder } = get()
-          if (!currentPlan) return []
-          
+          const { currentPlan, taskFilters, taskSortBy, taskSortOrder } = get();
+          if (!currentPlan) return [];
+
           // Filter tasks
-          const filtered = evidenceCollectionService.filterTasks(
-            currentPlan.tasks,
-            taskFilters
-          )
-          
+          const filtered = evidenceCollectionService.filterTasks(currentPlan.tasks, taskFilters);
+
           // Sort tasks
-          return evidenceCollectionService.sortTasks(
-            filtered,
-            taskSortBy,
-            taskSortOrder
-          )
+          return evidenceCollectionService.sortTasks(filtered, taskSortBy, taskSortOrder);
         },
 
         // UI Actions
         clearError: () => {
-          set({ error: null }, false, 'clearError')
+          set({ error: null }, false, 'clearError');
         },
 
         reset: () => {
-          set(initialState, false, 'reset')
-        }
+          set(initialState, false, 'reset');
+        },
       }),
       {
         name: 'ruleiq-evidence-collection-storage',
@@ -262,43 +303,44 @@ export const useEvidenceCollectionStore = create<EvidenceCollectionState>()(
           taskFilters: state.taskFilters,
           taskSortBy: state.taskSortBy,
           taskSortOrder: state.taskSortOrder,
-        })
-      }
+        }),
+      },
     ),
     {
-      name: 'evidence-collection-store'
-    }
-  )
-)
+      name: 'evidence-collection-store',
+    },
+  ),
+);
 
 // Selector hooks
-export const useCollectionPlans = () => useEvidenceCollectionStore(state => state.plans)
-export const useCurrentPlan = () => useEvidenceCollectionStore(state => state.currentPlan)
-export const usePriorityTasks = () => useEvidenceCollectionStore(state => state.priorityTasks)
-export const useCollectionLoading = () => useEvidenceCollectionStore(state => ({
-  isLoading: state.isLoading,
-  isCreatingPlan: state.isCreatingPlan,
-  isUpdatingTask: state.isUpdatingTask,
-  error: state.error
-}))
+export const useCollectionPlans = () => useEvidenceCollectionStore((state) => state.plans);
+export const useCurrentPlan = () => useEvidenceCollectionStore((state) => state.currentPlan);
+export const usePriorityTasks = () => useEvidenceCollectionStore((state) => state.priorityTasks);
+export const useCollectionLoading = () =>
+  useEvidenceCollectionStore((state) => ({
+    isLoading: state.isLoading,
+    isCreatingPlan: state.isCreatingPlan,
+    isUpdatingTask: state.isUpdatingTask,
+    error: state.error,
+  }));
 
 // Helper hooks
 export const useTaskStatistics = () => {
-  const currentPlan = useEvidenceCollectionStore(state => state.currentPlan)
-  
+  const currentPlan = useEvidenceCollectionStore((state) => state.currentPlan);
+
   if (!currentPlan) {
-    return null
+    return null;
   }
-  
-  return evidenceCollectionService.getTaskStatistics(currentPlan)
-}
+
+  return evidenceCollectionService.getTaskStatistics(currentPlan);
+};
 
 export const useTimeSavings = () => {
-  const currentPlan = useEvidenceCollectionStore(state => state.currentPlan)
-  
+  const currentPlan = useEvidenceCollectionStore((state) => state.currentPlan);
+
   if (!currentPlan) {
-    return null
+    return null;
   }
-  
-  return evidenceCollectionService.calculateTimeSavings(currentPlan)
-}
+
+  return evidenceCollectionService.calculateTimeSavings(currentPlan);
+};

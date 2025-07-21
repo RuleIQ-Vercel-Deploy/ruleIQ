@@ -1,51 +1,53 @@
-import { Inter } from "next/font/google"
+import { Inter } from 'next/font/google';
 
-import { GlobalErrorBoundary } from "@/components/error-boundary-global"
-import { ThemeProvider } from "@/hooks/use-theme"
-import { QueryProvider } from "@/lib/tanstack-query/provider"
-import { cn } from "@/lib/utils"
+import { GlobalErrorBoundary } from '@/components/error-boundary-global';
+import { ThemeProvider } from '@/hooks/use-theme';
+import { QueryProvider } from '@/lib/tanstack-query/provider';
+import { cn } from '@/lib/utils';
 
-import type { Metadata } from "next"
-import type React from "react"
-import "./globals.css"
+import type { Metadata } from 'next';
+import type React from 'react';
+import './globals.css';
 
 const inter = Inter({
-  subsets: ["latin"],
-  display: "swap",
-  variable: "--font-inter",
-})
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-inter',
+});
 
 export const metadata: Metadata = {
   title: {
-    default: "ruleIQ - AI-Powered Compliance Automation",
-    template: "%s | ruleIQ",
+    default: 'ruleIQ - AI-Powered Compliance Automation',
+    template: '%s | ruleIQ',
   },
   description:
-    "Streamline compliance for UK SMBs with intelligent automation, real-time monitoring, and AI-powered insights.",
+    'Streamline compliance for UK SMBs with intelligent automation, real-time monitoring, and AI-powered insights.',
   keywords: [
-    "compliance automation",
-    "AI compliance",
-    "UK SMB",
-    "regulatory technology",
-    "compliance management",
-    "automated compliance",
+    'compliance automation',
+    'AI compliance',
+    'UK SMB',
+    'regulatory technology',
+    'compliance management',
+    'automated compliance',
   ],
-  authors: [{ name: "ruleIQ Team" }],
-  creator: "ruleIQ",
-  metadataBase: new URL("https://ruleiq.com"),
+  authors: [{ name: 'ruleIQ Team' }],
+  creator: 'ruleIQ',
+  metadataBase: new URL('https://ruleiq.com'),
   openGraph: {
-    type: "website",
-    locale: "en_GB",
-    url: "https://ruleiq.com",
-    title: "ruleIQ - AI-Powered Compliance Automation",
-    description: "Streamline compliance for UK SMBs with intelligent automation and real-time monitoring.",
-    siteName: "ruleIQ",
+    type: 'website',
+    locale: 'en_GB',
+    url: 'https://ruleiq.com',
+    title: 'ruleIQ - AI-Powered Compliance Automation',
+    description:
+      'Streamline compliance for UK SMBs with intelligent automation and real-time monitoring.',
+    siteName: 'ruleIQ',
   },
   twitter: {
-    card: "summary_large_image",
-    title: "ruleIQ - AI-Powered Compliance Automation",
-    description: "Streamline compliance for UK SMBs with intelligent automation and real-time monitoring.",
-    creator: "@ruleiq",
+    card: 'summary_large_image',
+    title: 'ruleIQ - AI-Powered Compliance Automation',
+    description:
+      'Streamline compliance for UK SMBs with intelligent automation and real-time monitoring.',
+    creator: '@ruleiq',
   },
   robots: {
     index: true,
@@ -53,21 +55,17 @@ export const metadata: Metadata = {
     googleBot: {
       index: true,
       follow: true,
-      "max-video-preview": -1,
-      "max-image-preview": "large",
-      "max-snippet": -1,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
     },
   },
-    generator: 'v0.dev'
-}
+  generator: 'v0.dev',
+};
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={cn("h-full", inter.variable)} suppressHydrationWarning>
+    <html lang="en" className={cn('h-full', inter.variable)} suppressHydrationWarning>
       <body className="h-full antialiased" suppressHydrationWarning>
         <ThemeProvider defaultTheme="dark" storageKey="ruleiq-ui-theme">
           <QueryProvider>
@@ -78,5 +76,5 @@ export default function RootLayout({
         </ThemeProvider>
       </body>
     </html>
-  )
+  );
 }

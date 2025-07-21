@@ -9,14 +9,11 @@ This module provides comprehensive token blacklisting capabilities including:
 - Bulk operations for administrative use
 """
 
-import asyncio
 import hashlib
 import json
-import time
 from dataclasses import dataclass, asdict
 from datetime import datetime, timedelta
-from typing import Dict, List, Optional, Set, Tuple
-from uuid import uuid4
+from typing import Dict, Optional
 
 from config.cache import get_cache_manager
 from config.logging_config import get_logger
@@ -35,6 +32,7 @@ DEFAULT_TOKEN_TTL = 3600 * 24 * 7  # 7 days default TTL
 @dataclass
 class BlacklistEntry:
     """Represents a blacklisted token entry."""
+
     token_hash: str
     reason: str
     blacklisted_at: datetime
@@ -46,9 +44,10 @@ class BlacklistEntry:
     metadata: Optional[Dict] = None
 
 
-@dataclass  
+@dataclass
 class BlacklistMetrics:
     """Metrics for token blacklist operations."""
+
     total_blacklisted: int = 0
     blacklisted_today: int = 0
     expired_tokens_cleaned: int = 0
@@ -59,35 +58,35 @@ class BlacklistMetrics:
 
 class EnhancedTokenBlacklist:
     """Enhanced Redis-based token blacklist with security features."""
-    
+
     def __init__(self):
         self.cache_manager = None
         self.metrics = BlacklistMetrics()
         self._initialized = False
-    
+
     async def initialize(self):
         """Initialize the blacklist manager."""
         if self._initialized:
             return
-            
+
         self.cache_manager = await get_cache_manager()
         await self._load_metrics()
         self._initialized = True
         logger.info("Enhanced token blacklist initialized")
-    
+
     async def _ensure_initialized(self):
         """Ensure the blacklist manager is initialized."""
         if not self._initialized:
             await self.initialize()
-    
+
     def _generate_token_hash(self, token: str) -> str:
         """Generate a secure hash of the token for storage."""
         return hashlib.sha256(token.encode()).hexdigest()
-    
+
     def _generate_cache_key(self, token_hash: str) -> str:
         """Generate cache key for token."""
         return f"{BLACKLIST_PREFIX}:{token_hash}"
-    
+
     async def blacklist_token(
         self,
         token: str,
@@ -97,11 +96,11 @@ class EnhancedTokenBlacklist:
         session_id: Optional[str] = None,
         ip_address: Optional[str] = None,
         user_agent: Optional[str] = None,
-        metadata: Optional[Dict] = None
+        metadata: Optional[Dict] = None,
     ) -> bool:
         """
         Add a token to the blacklist with comprehensive metadata.
-        
+
         Args:
             token: The JWT token to blacklist
             reason: Reason for blacklisting (logout, security_breach, etc.)
@@ -111,19 +110,19 @@ class EnhancedTokenBlacklist:
             ip_address: IP address of the request
             user_agent: User agent of the request
             metadata: Additional metadata
-            
+
         Returns:
             bool: True if successfully blacklisted
         """
         await self._ensure_initialized()
-        
+
         try:
             token_hash = self._generate_token_hash(token)
             cache_key = self._generate_cache_key(token_hash)
-            
+
             if ttl is None:
                 ttl = DEFAULT_TOKEN_TTL
-            
+
             # Create blacklist entry
             entry = BlacklistEntry(
                 token_hash=token_hash,
@@ -134,191 +133,195 @@ class EnhancedTokenBlacklist:
                 session_id=session_id,
                 ip_address=ip_address,
                 user_agent=user_agent,
-                metadata=metadata
+                metadata=metadata,
             )
-            
+
             # Store in Redis
             entry_data = {
                 **asdict(entry),
-                'blacklisted_at': entry.blacklisted_at.isoformat(),
-                'expires_at': entry.expires_at.isoformat()
+                "blacklisted_at": entry.blacklisted_at.isoformat(),
+                "expires_at": entry.expires_at.isoformat(),
             }
-            
+
             await self.cache_manager.set(cache_key, json.dumps(entry_data), ttl=ttl)
-            
+
             # Update metrics
             await self._update_metrics("blacklisted")
-            
+
             # Check for suspicious patterns
             await self._analyze_blacklist_patterns(entry)
-            
-            logger.info(f"Token blacklisted: hash={token_hash[:8]}..., reason={reason}, user_id={user_id}")
+
+            logger.info(
+                f"Token blacklisted: hash={token_hash[:8]}..., reason={reason}, user_id={user_id}"
+            )
             return True
-            
+
         except Exception as e:
             logger.error(f"Failed to blacklist token: {e}")
             return False
-    
+
     async def is_token_blacklisted(self, token: str) -> bool:
         """
         Check if a token is blacklisted.
-        
+
         Args:
             token: The JWT token to check
-            
+
         Returns:
             bool: True if token is blacklisted
         """
         await self._ensure_initialized()
-        
+
         try:
             token_hash = self._generate_token_hash(token)
             cache_key = self._generate_cache_key(token_hash)
-            
+
             entry_data = await self.cache_manager.get(cache_key)
             return entry_data is not None
-            
+
         except Exception as e:
             logger.error(f"Failed to check token blacklist status: {e}")
             # Fail safe - assume not blacklisted if check fails
             return False
-    
+
     async def get_blacklist_entry(self, token: str) -> Optional[BlacklistEntry]:
         """
         Get detailed blacklist entry for a token.
-        
+
         Args:
             token: The JWT token to check
-            
+
         Returns:
             BlacklistEntry if found, None otherwise
         """
         await self._ensure_initialized()
-        
+
         try:
             token_hash = self._generate_token_hash(token)
             cache_key = self._generate_cache_key(token_hash)
-            
+
             entry_data = await self.cache_manager.get(cache_key)
             if not entry_data:
                 return None
-            
+
             data = json.loads(entry_data)
-            data['blacklisted_at'] = datetime.fromisoformat(data['blacklisted_at'])
-            data['expires_at'] = datetime.fromisoformat(data['expires_at'])
-            
+            data["blacklisted_at"] = datetime.fromisoformat(data["blacklisted_at"])
+            data["expires_at"] = datetime.fromisoformat(data["expires_at"])
+
             return BlacklistEntry(**data)
-            
+
         except Exception as e:
             logger.error(f"Failed to get blacklist entry: {e}")
             return None
-    
+
     async def remove_token_from_blacklist(self, token: str) -> bool:
         """
         Remove a token from the blacklist (administrative use).
-        
+
         Args:
             token: The JWT token to remove
-            
+
         Returns:
             bool: True if successfully removed
         """
         await self._ensure_initialized()
-        
+
         try:
             token_hash = self._generate_token_hash(token)
             cache_key = self._generate_cache_key(token_hash)
-            
+
             result = await self.cache_manager.delete(cache_key)
-            
+
             if result:
                 logger.info(f"Token removed from blacklist: hash={token_hash[:8]}...")
-                
+
             return result
-            
+
         except Exception as e:
             logger.error(f"Failed to remove token from blacklist: {e}")
             return False
-    
+
     async def blacklist_user_tokens(
         self,
         user_id: str,
         reason: str = "security_action",
-        exclude_current_token: Optional[str] = None
+        exclude_current_token: Optional[str] = None,
     ) -> int:
         """
         Blacklist all tokens for a specific user (security action).
-        
+
         Args:
             user_id: User ID whose tokens should be blacklisted
             reason: Reason for mass blacklisting
             exclude_current_token: Token to exclude from blacklisting (optional)
-            
+
         Returns:
             int: Number of tokens blacklisted
         """
         await self._ensure_initialized()
-        
+
         try:
             # This would require a token registry or session store
             # For now, we'll implement a placeholder
-            logger.warning(f"Mass token blacklist requested for user {user_id} - requires token registry implementation")
+            logger.warning(
+                f"Mass token blacklist requested for user {user_id} - requires token registry implementation"
+            )
             await self._update_metrics("bulk_operation")
             return 0
-            
+
         except Exception as e:
             logger.error(f"Failed to blacklist user tokens: {e}")
             return 0
-    
+
     async def cleanup_expired_tokens(self) -> int:
         """
         Clean up expired tokens from the blacklist.
-        
+
         Returns:
             int: Number of tokens cleaned up
         """
         await self._ensure_initialized()
-        
+
         try:
             # Redis automatically handles TTL expiration, but we can scan for manual cleanup
             pattern = f"{BLACKLIST_PREFIX}:*"
             cleaned_count = 0
-            
+
             # Note: In production, use SCAN instead of KEYS for large datasets
             keys = await self.cache_manager.redis_client.keys(pattern)
-            
+
             for key in keys:
                 entry_data = await self.cache_manager.get(key)
                 if entry_data:
                     data = json.loads(entry_data)
-                    expires_at = datetime.fromisoformat(data['expires_at'])
-                    
+                    expires_at = datetime.fromisoformat(data["expires_at"])
+
                     if expires_at < datetime.utcnow():
                         await self.cache_manager.delete(key)
                         cleaned_count += 1
-            
+
             await self._update_metrics("cleanup", cleaned_count)
             logger.info(f"Cleaned up {cleaned_count} expired tokens")
             return cleaned_count
-            
+
         except Exception as e:
             logger.error(f"Failed to cleanup expired tokens: {e}")
             return 0
-    
+
     async def get_blacklist_statistics(self) -> Dict:
         """
         Get comprehensive blacklist statistics.
-        
+
         Returns:
             Dict: Statistics about the blacklist
         """
         await self._ensure_initialized()
-        
+
         try:
             # Count current blacklisted tokens
             pattern = f"{BLACKLIST_PREFIX}:*"
             current_count = len(await self.cache_manager.redis_client.keys(pattern))
-            
+
             return {
                 "current_blacklisted_tokens": current_count,
                 "total_blacklisted": self.metrics.total_blacklisted,
@@ -326,13 +329,15 @@ class EnhancedTokenBlacklist:
                 "expired_tokens_cleaned": self.metrics.expired_tokens_cleaned,
                 "suspicious_patterns_detected": self.metrics.suspicious_patterns_detected,
                 "bulk_operations_count": self.metrics.bulk_operations_count,
-                "last_cleanup": self.metrics.last_cleanup.isoformat() if self.metrics.last_cleanup else None
+                "last_cleanup": self.metrics.last_cleanup.isoformat()
+                if self.metrics.last_cleanup
+                else None,
             }
-            
+
         except Exception as e:
             logger.error(f"Failed to get blacklist statistics: {e}")
             return {}
-    
+
     async def _update_metrics(self, operation: str, count: int = 1):
         """Update blacklist metrics."""
         try:
@@ -346,39 +351,41 @@ class EnhancedTokenBlacklist:
                 self.metrics.suspicious_patterns_detected += count
             elif operation == "bulk_operation":
                 self.metrics.bulk_operations_count += count
-            
+
             # Save metrics to Redis
             await self._save_metrics()
-            
+
         except Exception as e:
             logger.error(f"Failed to update metrics: {e}")
-    
+
     async def _save_metrics(self):
         """Save metrics to Redis."""
         try:
             metrics_data = {
                 **asdict(self.metrics),
-                'last_cleanup': self.metrics.last_cleanup.isoformat() if self.metrics.last_cleanup else None
+                "last_cleanup": self.metrics.last_cleanup.isoformat()
+                if self.metrics.last_cleanup
+                else None,
             }
             await self.cache_manager.set(BLACKLIST_METRICS_KEY, json.dumps(metrics_data), ttl=86400)
-            
+
         except Exception as e:
             logger.error(f"Failed to save metrics: {e}")
-    
+
     async def _load_metrics(self):
         """Load metrics from Redis."""
         try:
             metrics_data = await self.cache_manager.get(BLACKLIST_METRICS_KEY)
             if metrics_data:
                 data = json.loads(metrics_data)
-                if data.get('last_cleanup'):
-                    data['last_cleanup'] = datetime.fromisoformat(data['last_cleanup'])
+                if data.get("last_cleanup"):
+                    data["last_cleanup"] = datetime.fromisoformat(data["last_cleanup"])
                 self.metrics = BlacklistMetrics(**data)
-                
+
         except Exception as e:
             logger.error(f"Failed to load metrics: {e}")
             self.metrics = BlacklistMetrics()
-    
+
     async def _analyze_blacklist_patterns(self, entry: BlacklistEntry):
         """Analyze blacklist patterns for security threats."""
         try:
@@ -389,13 +396,17 @@ class EnhancedTokenBlacklist:
                 recent_pattern_key = f"pattern:{entry.ip_address}:{entry.user_id}"
                 count = await self.cache_manager.get(recent_pattern_key) or 0
                 count = int(count) + 1
-                
+
                 if count > 10:  # More than 10 blacklists in time window
                     await self._update_metrics("suspicious_pattern")
-                    logger.warning(f"Suspicious blacklist pattern detected: IP={entry.ip_address}, User={entry.user_id}")
-                
-                await self.cache_manager.set(recent_pattern_key, str(count), ttl=3600)  # 1 hour window
-                
+                    logger.warning(
+                        f"Suspicious blacklist pattern detected: IP={entry.ip_address}, User={entry.user_id}"
+                    )
+
+                await self.cache_manager.set(
+                    recent_pattern_key, str(count), ttl=3600
+                )  # 1 hour window
+
         except Exception as e:
             logger.error(f"Failed to analyze blacklist patterns: {e}")
 
@@ -411,7 +422,9 @@ async def get_token_blacklist() -> EnhancedTokenBlacklist:
 
 
 # Backwards compatibility functions
-async def blacklist_token(token: str, reason: str = "logout", ttl: Optional[int] = None, **kwargs) -> bool:
+async def blacklist_token(
+    token: str, reason: str = "logout", ttl: Optional[int] = None, **kwargs
+) -> bool:
     """Backwards compatible blacklist token function."""
     blacklist = await get_token_blacklist()
     return await blacklist.blacklist_token(token, reason, ttl, **kwargs)

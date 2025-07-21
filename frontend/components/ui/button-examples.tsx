@@ -1,7 +1,7 @@
-import { Plus, Download, Edit, Trash2, Eye, Settings } from "lucide-react"
+import { Plus, Download, Edit, Trash2, Eye, Settings } from 'lucide-react';
 
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 
 export function ButtonExamples() {
   return (
@@ -9,8 +9,8 @@ export function ButtonExamples() {
       {/* Dashboard Actions */}
       <Card className="ruleiq-card">
         <CardHeader>
-          <CardTitle style={{ color: "#F0EAD6" }}>Dashboard Actions</CardTitle>
-          <CardDescription style={{ color: "#6C757D" }}>
+          <CardTitle style={{ color: '#F0EAD6' }}>Dashboard Actions</CardTitle>
+          <CardDescription style={{ color: '#6C757D' }}>
             Common button combinations used in dashboard interfaces
           </CardDescription>
         </CardHeader>
@@ -35,8 +35,10 @@ export function ButtonExamples() {
       {/* Table Actions */}
       <Card className="ruleiq-card">
         <CardHeader>
-          <CardTitle style={{ color: "#F0EAD6" }}>Table Row Actions</CardTitle>
-          <CardDescription style={{ color: "#6C757D" }}>Action buttons typically used in data tables</CardDescription>
+          <CardTitle style={{ color: '#F0EAD6' }}>Table Row Actions</CardTitle>
+          <CardDescription style={{ color: '#6C757D' }}>
+            Action buttons typically used in data tables
+          </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="flex flex-wrap items-center gap-2">
@@ -59,8 +61,8 @@ export function ButtonExamples() {
       {/* Form Actions */}
       <Card className="ruleiq-card">
         <CardHeader>
-          <CardTitle style={{ color: "#F0EAD6" }}>Form Actions</CardTitle>
-          <CardDescription style={{ color: "#6C757D" }}>
+          <CardTitle style={{ color: '#F0EAD6' }}>Form Actions</CardTitle>
+          <CardDescription style={{ color: '#6C757D' }}>
             Button combinations for form submissions and actions
           </CardDescription>
         </CardHeader>
@@ -82,8 +84,10 @@ export function ButtonExamples() {
       {/* Status Actions */}
       <Card className="ruleiq-card">
         <CardHeader>
-          <CardTitle style={{ color: "#F0EAD6" }}>Status Actions</CardTitle>
-          <CardDescription style={{ color: "#6C757D" }}>Buttons for different status-based actions</CardDescription>
+          <CardTitle style={{ color: '#F0EAD6' }}>Status Actions</CardTitle>
+          <CardDescription style={{ color: '#6C757D' }}>
+            Buttons for different status-based actions
+          </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="flex flex-wrap items-center gap-3">
@@ -103,5 +107,5 @@ export function ButtonExamples() {
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }

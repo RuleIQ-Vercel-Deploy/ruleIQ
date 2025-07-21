@@ -1,45 +1,45 @@
-"use client"
+'use client';
 
-import { Paperclip, Send } from "lucide-react"
-import { useState, type KeyboardEvent } from "react"
+import { Paperclip, Send } from 'lucide-react';
+import { useState, type KeyboardEvent } from 'react';
 
-import { Button } from "@/components/ui/button"
-import { Textarea } from "@/components/ui/textarea"
-import { useTypingIndicator } from "@/lib/hooks/use-typing-indicator"
+import { Button } from '@/components/ui/button';
+import { Textarea } from '@/components/ui/textarea';
+import { useTypingIndicator } from '@/lib/hooks/use-typing-indicator';
 
 interface ChatInputProps {
-  onSendMessage: (message: string) => void
-  disabled?: boolean
+  onSendMessage: (message: string) => void;
+  disabled?: boolean;
 }
 
 export function ChatInput({ onSendMessage, disabled = false }: ChatInputProps) {
-  const [message, setMessage] = useState("")
-  const { handleTypingStart, handleTypingStop } = useTypingIndicator()
+  const [message, setMessage] = useState('');
+  const { handleTypingStart, handleTypingStop } = useTypingIndicator();
 
   const handleSend = () => {
     if (message.trim() && !disabled) {
-      handleTypingStop()
-      onSendMessage(message.trim())
-      setMessage("")
+      handleTypingStop();
+      onSendMessage(message.trim());
+      setMessage('');
     }
-  }
+  };
 
   const handleKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault()
-      handleSend()
+      e.preventDefault();
+      handleSend();
     }
-  }
+  };
 
   return (
-    <div className="p-4 border-t">
+    <div className="border-t p-4">
       <div className="relative">
         <Textarea
           placeholder="Ask about compliance, policies, or evidence..."
           value={message}
           onChange={(e) => {
-            setMessage(e.target.value)
-            handleTypingStart(e.target.value)
+            setMessage(e.target.value);
+            handleTypingStart(e.target.value);
           }}
           onKeyDown={handleKeyDown}
           onBlur={handleTypingStop}
@@ -48,9 +48,9 @@ export function ChatInput({ onSendMessage, disabled = false }: ChatInputProps) {
           rows={3}
         />
         <div className="absolute bottom-2.5 right-3 flex items-center gap-2">
-          <Button 
-            variant="ghost" 
-            size="icon" 
+          <Button
+            variant="ghost"
+            size="icon"
             className="text-muted-foreground hover:text-foreground"
             disabled={disabled}
           >
@@ -61,14 +61,12 @@ export function ChatInput({ onSendMessage, disabled = false }: ChatInputProps) {
             size="icon"
             disabled={!message.trim() || disabled}
             onClick={handleSend}
-            className={`
-              ${message.trim() && !disabled ? "text-gold hover:bg-gold/10" : "text-muted-foreground"}
-            `}
+            className={` ${message.trim() && !disabled ? 'text-gold hover:bg-gold/10' : 'text-muted-foreground'} `}
           >
             <Send className="h-5 w-5" />
           </Button>
         </div>
       </div>
     </div>
-  )
+  );
 }

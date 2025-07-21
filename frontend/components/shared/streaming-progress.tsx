@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import { Loader2, CheckCircle, XCircle, Zap } from 'lucide-react';
 import React from 'react';
@@ -26,7 +26,7 @@ export function StreamingProgress({
   showIcon = true,
   size = 'md',
   message,
-  elapsedTime
+  elapsedTime,
 }: StreamingProgressProps) {
   const getStatusIcon = () => {
     switch (status) {
@@ -56,7 +56,7 @@ export function StreamingProgress({
 
   const getStatusMessage = () => {
     if (message) return message;
-    
+
     switch (status) {
       case 'streaming':
         return 'Generating AI response...';
@@ -78,23 +78,21 @@ export function StreamingProgress({
   const progressHeight = {
     sm: 'h-1',
     md: 'h-2',
-    lg: 'h-3'
+    lg: 'h-3',
   }[size];
 
   return (
-    <div className={cn("space-y-2", className)}>
+    <div className={cn('space-y-2', className)}>
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           {showIcon && getStatusIcon()}
-          <span className={cn(
-            "font-medium",
-            size === 'sm' && "text-sm",
-            size === 'lg' && "text-lg"
-          )}>
+          <span
+            className={cn('font-medium', size === 'sm' && 'text-sm', size === 'lg' && 'text-lg')}
+          >
             {getStatusMessage()}
           </span>
         </div>
-        
+
         <div className="flex items-center gap-2">
           {showPercentage && (
             <Badge variant="outline" className="text-xs">
@@ -108,19 +106,19 @@ export function StreamingProgress({
           )}
         </div>
       </div>
-      
-      <Progress 
-        value={progress} 
+
+      <Progress
+        value={progress}
         className={cn(progressHeight)}
         indicatorClassName={getStatusColor()}
       />
-      
+
       {status === 'streaming' && (
         <div className="flex items-center gap-1 text-xs text-muted-foreground">
           <div className="flex gap-1">
-            <div className="w-1 h-1 bg-blue-600 rounded-full animate-bounce [animation-delay:-0.3s]"></div>
-            <div className="w-1 h-1 bg-blue-600 rounded-full animate-bounce [animation-delay:-0.15s]"></div>
-            <div className="w-1 h-1 bg-blue-600 rounded-full animate-bounce"></div>
+            <div className="h-1 w-1 animate-bounce rounded-full bg-blue-600 [animation-delay:-0.3s]"></div>
+            <div className="h-1 w-1 animate-bounce rounded-full bg-blue-600 [animation-delay:-0.15s]"></div>
+            <div className="h-1 w-1 animate-bounce rounded-full bg-blue-600"></div>
           </div>
           <span>Real-time AI processing</span>
         </div>

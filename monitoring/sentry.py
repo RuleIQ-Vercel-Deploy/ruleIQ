@@ -11,6 +11,7 @@ from config.settings import settings
 
 logger = logging.getLogger(__name__)
 
+
 def init_sentry():
     """Initialize the Sentry SDK."""
     if not settings.sentry_dsn:
@@ -19,8 +20,8 @@ def init_sentry():
 
     try:
         sentry_logging = LoggingIntegration(
-            level=logging.INFO,        # Capture info and above as breadcrumbs
-            event_level=logging.ERROR  # Send errors as events
+            level=logging.INFO,  # Capture info and above as breadcrumbs
+            event_level=logging.ERROR,  # Send errors as events
         )
 
         sentry_sdk.init(
@@ -28,7 +29,7 @@ def init_sentry():
             environment=settings.sentry_environment,
             integrations=[sentry_logging],
             traces_sample_rate=1.0,  # Capture 100% of transactions for performance monitoring
-            profiles_sample_rate=1.0, # Capture 100% of profiles for performance monitoring
+            profiles_sample_rate=1.0,  # Capture 100% of profiles for performance monitoring
         )
         logger.info(f"Sentry initialized for environment: {settings.sentry_environment}")
     except Exception as e:

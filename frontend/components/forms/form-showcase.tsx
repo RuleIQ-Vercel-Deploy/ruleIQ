@@ -1,102 +1,108 @@
-"use client"
+'use client';
 
-import * as React from "react"
+import * as React from 'react';
 
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Checkbox } from "@/components/ui/checkbox"
-import { FormField } from "@/components/ui/form-field"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Textarea } from "@/components/ui/textarea"
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Checkbox } from '@/components/ui/checkbox';
+import { FormField } from '@/components/ui/form-field';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { Textarea } from '@/components/ui/textarea';
 
 export function FormShowcase() {
   const [formData, setFormData] = React.useState({
-    email: "",
-    password: "",
-    confirmPassword: "",
-    companyName: "",
-    industry: "",
-    description: "",
+    email: '',
+    password: '',
+    confirmPassword: '',
+    companyName: '',
+    industry: '',
+    description: '',
     terms: false,
     newsletter: false,
-  })
+  });
 
   const [validationState, setValidationState] = React.useState<{
-    [key: string]: { error?: string; success?: string }
-  }>({})
+    [key: string]: { error?: string; success?: string };
+  }>({});
 
   const validateField = (name: string, value: string | boolean) => {
-    let error = ""
-    let success = ""
+    let error = '';
+    let success = '';
 
     switch (name) {
-      case "email":
+      case 'email':
         if (!value) {
-          error = "Email is required"
+          error = 'Email is required';
         } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value as string)) {
-          error = "Please enter a valid email address"
+          error = 'Please enter a valid email address';
         } else {
-          success = "Valid email address"
+          success = 'Valid email address';
         }
-        break
-      case "password":
+        break;
+      case 'password':
         if (!value) {
-          error = "Password is required"
+          error = 'Password is required';
         } else if ((value as string).length < 8) {
-          error = "Password must be at least 8 characters"
+          error = 'Password must be at least 8 characters';
         } else if (!/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(value as string)) {
-          error = "Password must contain uppercase, lowercase, and number"
+          error = 'Password must contain uppercase, lowercase, and number';
         } else {
-          success = "Strong password"
+          success = 'Strong password';
         }
-        break
-      case "confirmPassword":
+        break;
+      case 'confirmPassword':
         if (!value) {
-          error = "Please confirm your password"
+          error = 'Please confirm your password';
         } else if (value !== formData.password) {
-          error = "Passwords do not match"
+          error = 'Passwords do not match';
         } else {
-          success = "Passwords match"
+          success = 'Passwords match';
         }
-        break
-      case "companyName":
+        break;
+      case 'companyName':
         if (!value) {
-          error = "Company name is required"
+          error = 'Company name is required';
         } else if ((value as string).length < 2) {
-          error = "Company name must be at least 2 characters"
+          error = 'Company name must be at least 2 characters';
         } else {
-          success = "Valid company name"
+          success = 'Valid company name';
         }
-        break
-      case "industry":
+        break;
+      case 'industry':
         if (!value) {
-          error = "Please select an industry"
+          error = 'Please select an industry';
         } else {
-          success = "Industry selected"
+          success = 'Industry selected';
         }
-        break
+        break;
     }
 
     setValidationState((prev) => ({
       ...prev,
       [name]: { error, success },
-    }))
-  }
+    }));
+  };
 
   const handleInputChange = (name: string, value: string | boolean) => {
-    setFormData((prev) => ({ ...prev, [name]: value }))
-    validateField(name, value)
-  }
+    setFormData((prev) => ({ ...prev, [name]: value }));
+    validateField(name, value);
+  };
 
   return (
     <div className="space-y-8">
       {/* Basic Form Components */}
       <Card className="ruleiq-card">
         <CardHeader>
-          <CardTitle style={{ color: "#F0EAD6" }}>Basic Form Components</CardTitle>
-          <CardDescription style={{ color: "#6C757D" }}>
+          <CardTitle style={{ color: '#F0EAD6' }}>Basic Form Components</CardTitle>
+          <CardDescription style={{ color: '#6C757D' }}>
             Individual form components with different states
           </CardDescription>
         </CardHeader>
@@ -177,8 +183,8 @@ export function FormShowcase() {
       {/* Complete Form Example */}
       <Card className="ruleiq-card">
         <CardHeader>
-          <CardTitle style={{ color: "#F0EAD6" }}>Complete Form Example</CardTitle>
-          <CardDescription style={{ color: "#6C757D" }}>
+          <CardTitle style={{ color: '#F0EAD6' }}>Complete Form Example</CardTitle>
+          <CardDescription style={{ color: '#6C757D' }}>
             A comprehensive form with validation states and real-time feedback
           </CardDescription>
         </CardHeader>
@@ -186,7 +192,7 @@ export function FormShowcase() {
           <form className="space-y-6">
             {/* Personal Information */}
             <div className="space-y-4">
-              <h3 className="text-lg font-semibold" style={{ color: "#F0EAD6" }}>
+              <h3 className="text-lg font-semibold" style={{ color: '#F0EAD6' }}>
                 Account Information
               </h3>
 
@@ -194,14 +200,16 @@ export function FormShowcase() {
                 label="Email Address"
                 required
                 {...(validationState['email']?.error && { error: validationState['email'].error })}
-                {...(validationState['email']?.success && { success: validationState['email'].success })}
+                {...(validationState['email']?.success && {
+                  success: validationState['email'].success,
+                })}
                 description="We'll use this for your account login"
               >
                 <Input
                   type="email"
                   placeholder="john.doe@company.com"
                   value={formData.email}
-                  onChange={(e) => handleInputChange("email", e.target.value)}
+                  onChange={(e) => handleInputChange('email', e.target.value)}
                 />
               </FormField>
 
@@ -209,28 +217,36 @@ export function FormShowcase() {
                 <FormField
                   label="Password"
                   required
-                  {...(validationState['password']?.error && { error: validationState['password'].error })}
-                  {...(validationState['password']?.success && { success: validationState['password'].success })}
+                  {...(validationState['password']?.error && {
+                    error: validationState['password'].error,
+                  })}
+                  {...(validationState['password']?.success && {
+                    success: validationState['password'].success,
+                  })}
                 >
                   <Input
                     type="password"
                     placeholder="Enter password..."
                     value={formData.password}
-                    onChange={(e) => handleInputChange("password", e.target.value)}
+                    onChange={(e) => handleInputChange('password', e.target.value)}
                   />
                 </FormField>
 
                 <FormField
                   label="Confirm Password"
                   required
-                  {...(validationState['confirmPassword']?.error && { error: validationState['confirmPassword'].error })}
-                  {...(validationState['confirmPassword']?.success && { success: validationState['confirmPassword'].success })}
+                  {...(validationState['confirmPassword']?.error && {
+                    error: validationState['confirmPassword'].error,
+                  })}
+                  {...(validationState['confirmPassword']?.success && {
+                    success: validationState['confirmPassword'].success,
+                  })}
                 >
                   <Input
                     type="password"
                     placeholder="Confirm password..."
                     value={formData.confirmPassword}
-                    onChange={(e) => handleInputChange("confirmPassword", e.target.value)}
+                    onChange={(e) => handleInputChange('confirmPassword', e.target.value)}
                   />
                 </FormField>
               </div>
@@ -238,31 +254,39 @@ export function FormShowcase() {
 
             {/* Company Information */}
             <div className="space-y-4">
-              <h3 className="text-lg font-semibold" style={{ color: "#F0EAD6" }}>
+              <h3 className="text-lg font-semibold" style={{ color: '#F0EAD6' }}>
                 Company Information
               </h3>
 
               <FormField
                 label="Company Name"
                 required
-                {...(validationState['companyName']?.error && { error: validationState['companyName'].error })}
-                {...(validationState['companyName']?.success && { success: validationState['companyName'].success })}
+                {...(validationState['companyName']?.error && {
+                  error: validationState['companyName'].error,
+                })}
+                {...(validationState['companyName']?.success && {
+                  success: validationState['companyName'].success,
+                })}
               >
                 <Input
                   placeholder="Your Company Ltd."
                   value={formData.companyName}
-                  onChange={(e) => handleInputChange("companyName", e.target.value)}
+                  onChange={(e) => handleInputChange('companyName', e.target.value)}
                 />
               </FormField>
 
               <FormField
                 label="Industry"
                 required
-                {...(validationState['industry']?.error && { error: validationState['industry'].error })}
-                {...(validationState['industry']?.success && { success: validationState['industry'].success })}
+                {...(validationState['industry']?.error && {
+                  error: validationState['industry'].error,
+                })}
+                {...(validationState['industry']?.success && {
+                  success: validationState['industry'].success,
+                })}
                 description="Select your primary industry"
               >
-                <Select onValueChange={(value) => handleInputChange("industry", value)}>
+                <Select onValueChange={(value) => handleInputChange('industry', value)}>
                   <SelectTrigger>
                     <SelectValue placeholder="Select industry..." />
                   </SelectTrigger>
@@ -277,19 +301,22 @@ export function FormShowcase() {
                 </Select>
               </FormField>
 
-              <FormField label="Company Description" description="Brief description of your company (optional)">
+              <FormField
+                label="Company Description"
+                description="Brief description of your company (optional)"
+              >
                 <Textarea
                   placeholder="Tell us about your company..."
                   rows={4}
                   value={formData.description}
-                  onChange={(e) => handleInputChange("description", e.target.value)}
+                  onChange={(e) => handleInputChange('description', e.target.value)}
                 />
               </FormField>
             </div>
 
             {/* Agreements */}
             <div className="space-y-4">
-              <h3 className="text-lg font-semibold" style={{ color: "#F0EAD6" }}>
+              <h3 className="text-lg font-semibold" style={{ color: '#F0EAD6' }}>
                 Agreements
               </h3>
 
@@ -298,13 +325,13 @@ export function FormShowcase() {
                   <Checkbox
                     id="terms"
                     checked={formData.terms}
-                    onCheckedChange={(checked) => handleInputChange("terms", checked as boolean)}
+                    onCheckedChange={(checked) => handleInputChange('terms', checked as boolean)}
                   />
                   <div className="space-y-1">
                     <Label htmlFor="terms" className="text-sm font-medium">
                       I agree to the Terms of Service and Privacy Policy *
                     </Label>
-                    <p className="text-xs" style={{ color: "#6C757D" }}>
+                    <p className="text-xs" style={{ color: '#6C757D' }}>
                       By checking this box, you agree to our terms and conditions
                     </p>
                   </div>
@@ -314,13 +341,15 @@ export function FormShowcase() {
                   <Checkbox
                     id="newsletter"
                     checked={formData.newsletter}
-                    onCheckedChange={(checked) => handleInputChange("newsletter", checked as boolean)}
+                    onCheckedChange={(checked) =>
+                      handleInputChange('newsletter', checked as boolean)
+                    }
                   />
                   <div className="space-y-1">
                     <Label htmlFor="newsletter" className="text-sm font-medium">
                       Subscribe to our newsletter
                     </Label>
-                    <p className="text-xs" style={{ color: "#6C757D" }}>
+                    <p className="text-xs" style={{ color: '#6C757D' }}>
                       Get updates about new features and compliance insights
                     </p>
                   </div>
@@ -329,7 +358,7 @@ export function FormShowcase() {
             </div>
 
             {/* Form Actions */}
-            <div className="flex flex-col sm:flex-row gap-3 pt-4">
+            <div className="flex flex-col gap-3 pt-4 sm:flex-row">
               <Button variant="default" size="lg" className="flex-1">
                 Create Account
               </Button>
@@ -344,8 +373,8 @@ export function FormShowcase() {
       {/* Form States Demo */}
       <Card className="ruleiq-card">
         <CardHeader>
-          <CardTitle style={{ color: "#F0EAD6" }}>Form Validation States</CardTitle>
-          <CardDescription style={{ color: "#6C757D" }}>
+          <CardTitle style={{ color: '#F0EAD6' }}>Form Validation States</CardTitle>
+          <CardDescription style={{ color: '#6C757D' }}>
             Examples of different validation states and feedback
           </CardDescription>
         </CardHeader>
@@ -353,7 +382,7 @@ export function FormShowcase() {
           <div className="grid gap-6 md:grid-cols-2">
             {/* Error Examples */}
             <div className="space-y-4">
-              <h4 className="font-semibold" style={{ color: "#F0EAD6" }}>
+              <h4 className="font-semibold" style={{ color: '#F0EAD6' }}>
                 Error States
               </h4>
 
@@ -380,7 +409,7 @@ export function FormShowcase() {
 
             {/* Success Examples */}
             <div className="space-y-4">
-              <h4 className="font-semibold" style={{ color: "#F0EAD6" }}>
+              <h4 className="font-semibold" style={{ color: '#F0EAD6' }}>
                 Success States
               </h4>
 
@@ -408,5 +437,5 @@ export function FormShowcase() {
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }

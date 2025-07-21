@@ -1,26 +1,29 @@
-"use client"
+'use client';
 
 interface ComplianceScoreGaugeProps {
-  score: number
-  className?: string
+  score: number;
+  className?: string;
 }
 
-export function ComplianceScoreGauge({ score, className = "" }: ComplianceScoreGaugeProps) {
-  const radius = 80
-  const strokeWidth = 16
-  const circumference = 2 * Math.PI * radius
-  const offset = circumference - (score / 100) * circumference
+export function ComplianceScoreGauge({ score, className = '' }: ComplianceScoreGaugeProps) {
+  const radius = 80;
+  const strokeWidth = 16;
+  const circumference = 2 * Math.PI * radius;
+  const offset = circumference - (score / 100) * circumference;
 
   const getScoreColor = (s: number) => {
-    if (s >= 90) return "hsl(var(--success))" // success
-    if (s >= 70) return "hsl(var(--warning))" // warning
-    return "hsl(var(--destructive))" // error
-  }
+    if (s >= 90) return 'hsl(var(--success))'; // success
+    if (s >= 70) return 'hsl(var(--warning))'; // warning
+    return 'hsl(var(--destructive))'; // error
+  };
 
-  const color = getScoreColor(score)
+  const color = getScoreColor(score);
 
   return (
-    <div className={`relative flex items-center justify-center ${className}`} style={{ width: 200, height: 200 }}>
+    <div
+      className={`relative flex items-center justify-center ${className}`}
+      style={{ width: 200, height: 200 }}
+    >
       <svg className="absolute inset-0" width="200" height="200" viewBox="0 0 200 200">
         {/* Background Circle */}
         <circle
@@ -54,5 +57,5 @@ export function ComplianceScoreGauge({ score, className = "" }: ComplianceScoreG
         <p className="text-sm font-medium text-muted-foreground">Compliance Score</p>
       </div>
     </div>
-  )
+  );
 }

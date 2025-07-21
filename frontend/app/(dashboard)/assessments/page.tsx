@@ -1,61 +1,60 @@
-"use client"
+'use client';
 
-import { Plus, ClipboardCheck, Shield, Clock, CheckCircle, AlertCircle } from "lucide-react"
-import { useRouter } from "next/navigation"
-import { useEffect, useState } from "react"
+import { Plus, ClipboardCheck, Shield, Clock, CheckCircle, AlertCircle } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
-import { columns } from "@/components/assessments/columns"
-import { DataTable } from "@/components/assessments/data-table"
-import { Alert, AlertDescription } from "@/components/ui/alert"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
-import { Skeleton } from "@/components/ui/skeleton"
-import { assessmentService } from "@/lib/api/assessments.service"
+import { columns } from '@/components/assessments/columns';
+import { DataTable } from '@/components/assessments/data-table';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { Skeleton } from '@/components/ui/skeleton';
+import { assessmentService } from '@/lib/api/assessments.service';
 
-
-import type { Assessment } from "@/types/api"
+import type { Assessment } from '@/types/api';
 
 export default function AssessmentsPage() {
-  const router = useRouter()
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-  const [assessments, setAssessments] = useState<Assessment[]>([])
-  
+  const router = useRouter();
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [assessments, setAssessments] = useState<Assessment[]>([]);
+
   useEffect(() => {
-    fetchAssessments()
-  }, [])
-  
+    fetchAssessments();
+  }, []);
+
   const fetchAssessments = async () => {
     try {
-      setLoading(true)
-      setError(null)
+      setLoading(true);
+      setError(null);
       const response = await assessmentService.getAssessments({
         page: 1,
-        page_size: 50
-      })
-      setAssessments(response.items)
+        page_size: 50,
+      });
+      setAssessments(response.items);
     } catch (err) {
-      console.error('Error fetching assessments:', err)
-      setError(err instanceof Error ? err.message : 'Failed to load assessments')
+      console.error('Error fetching assessments:', err);
+      setError(err instanceof Error ? err.message : 'Failed to load assessments');
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
-  
+  };
+
   // Calculate stats
-  const totalAssessments = assessments.length
-  const completedAssessments = assessments.filter(a => a.status === "completed").length
-  const inProgressAssessments = assessments.filter(a => a.status === "in_progress").length
+  const totalAssessments = assessments.length;
+  const completedAssessments = assessments.filter((a) => a.status === 'completed').length;
+  const inProgressAssessments = assessments.filter((a) => a.status === 'in_progress').length;
   const averageScore = Math.round(
     assessments
-      .filter(a => a.score !== undefined && a.score !== null)
-      .reduce((acc, a) => acc + (a.score || 0), 0) / 
-    assessments.filter(a => a.score !== undefined && a.score !== null).length || 0
-  )
-  
+      .filter((a) => a.score !== undefined && a.score !== null)
+      .reduce((acc, a) => acc + (a.score || 0), 0) /
+      assessments.filter((a) => a.score !== undefined && a.score !== null).length || 0,
+  );
+
   const handleNewAssessment = () => {
-    router.push('/assessments/new')
-  }
+    router.push('/assessments/new');
+  };
 
   return (
     <div className="flex-1 space-y-8 p-8">
@@ -66,10 +65,7 @@ export default function AssessmentsPage() {
             Track and manage your compliance assessment progress
           </p>
         </div>
-        <Button 
-          className="bg-gold hover:bg-gold-dark text-navy"
-          onClick={handleNewAssessment}
-        >
+        <Button className="bg-gold text-navy hover:bg-gold-dark" onClick={handleNewAssessment}>
           <Plus className="mr-2 h-4 w-4" />
           New Assessment
         </Button>
@@ -156,15 +152,12 @@ export default function AssessmentsPage() {
       ) : (
         <Card className="border-dashed">
           <CardContent className="flex flex-col items-center justify-center py-12">
-            <ClipboardCheck className="h-12 w-12 text-muted-foreground mb-4" />
-            <h3 className="text-lg font-semibold mb-2">No Assessments Found</h3>
-            <p className="text-sm text-muted-foreground text-center mb-4 max-w-md">
+            <ClipboardCheck className="mb-4 h-12 w-12 text-muted-foreground" />
+            <h3 className="mb-2 text-lg font-semibold">No Assessments Found</h3>
+            <p className="mb-4 max-w-md text-center text-sm text-muted-foreground">
               Get started by creating your first compliance assessment.
             </p>
-            <Button 
-              className="bg-gold hover:bg-gold-dark text-navy"
-              onClick={handleNewAssessment}
-            >
+            <Button className="bg-gold text-navy hover:bg-gold-dark" onClick={handleNewAssessment}>
               <Plus className="mr-2 h-4 w-4" />
               Start Your First Assessment
             </Button>
@@ -172,5 +165,5 @@ export default function AssessmentsPage() {
         </Card>
       )}
     </div>
-  )
+  );
 }

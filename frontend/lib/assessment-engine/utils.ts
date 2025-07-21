@@ -1,9 +1,9 @@
-import { 
-  type Question, 
-  type AssessmentFramework, 
+import {
+  type Question,
+  type AssessmentFramework,
   type AssessmentSection,
   type AssessmentResult,
-  type Gap
+  type Gap,
 } from './types';
 
 export class AssessmentUtils {
@@ -25,8 +25,8 @@ export class AssessmentUtils {
     }
 
     let totalTime = 0;
-    framework.sections.forEach(section => {
-      section.questions.forEach(question => {
+    framework.sections.forEach((section) => {
+      section.questions.forEach((question) => {
         // Estimate based on question type
         switch (question.type) {
           case 'radio':
@@ -64,26 +64,23 @@ export class AssessmentUtils {
     if (minutes < 60) {
       return `${minutes} minute${minutes !== 1 ? 's' : ''}`;
     }
-    
+
     const hours = Math.floor(minutes / 60);
     const remainingMinutes = minutes % 60;
-    
+
     if (remainingMinutes === 0) {
       return `${hours} hour${hours !== 1 ? 's' : ''}`;
     }
-    
+
     return `${hours} hour${hours !== 1 ? 's' : ''} ${remainingMinutes} minute${remainingMinutes !== 1 ? 's' : ''}`;
   }
 
   /**
    * Get question by ID from framework
    */
-  static getQuestionById(
-    framework: AssessmentFramework, 
-    questionId: string
-  ): Question | null {
+  static getQuestionById(framework: AssessmentFramework, questionId: string): Question | null {
     for (const section of framework.sections) {
-      const question = section.questions.find(q => q.id === questionId);
+      const question = section.questions.find((q) => q.id === questionId);
       if (question) return question;
     }
     return null;
@@ -94,11 +91,12 @@ export class AssessmentUtils {
    */
   static getSectionByQuestionId(
     framework: AssessmentFramework,
-    questionId: string
+    questionId: string,
   ): AssessmentSection | null {
-    return framework.sections.find(section =>
-      section.questions.some(q => q.id === questionId)
-    ) || null;
+    return (
+      framework.sections.find((section) => section.questions.some((q) => q.id === questionId)) ||
+      null
+    );
   }
 
   /**
@@ -127,7 +125,7 @@ export class AssessmentUtils {
       score: result.overallScore,
       level: result.maturityLevel || 'initial',
       date: result.completedAt.toLocaleDateString(),
-      validUntil: validUntil.toLocaleDateString()
+      validUntil: validUntil.toLocaleDateString(),
     };
   }
 
@@ -135,27 +133,27 @@ export class AssessmentUtils {
    * Group gaps by section
    */
   static groupGapsBySection(gaps: Gap[]): Record<string, Gap[]> {
-    return gaps.reduce((acc, gap) => {
-      if (!acc[gap.section]) {
-        acc[gap.section] = [];
-      }
-      acc[gap.section]!.push(gap);
-      return acc;
-    }, {} as Record<string, Gap[]>);
+    return gaps.reduce(
+      (acc, gap) => {
+        if (!acc[gap.section]) {
+          acc[gap.section] = [];
+        }
+        acc[gap.section]!.push(gap);
+        return acc;
+      },
+      {} as Record<string, Gap[]>,
+    );
   }
 
   /**
    * Calculate section completion percentage
    */
-  static calculateSectionCompletion(
-    section: AssessmentSection,
-    answers: Map<string, any>
-  ): number {
+  static calculateSectionCompletion(section: AssessmentSection, answers: Map<string, any>): number {
     const totalQuestions = section.questions.length;
     if (totalQuestions === 0) return 100;
 
-    const answeredQuestions = section.questions.filter(
-      question => answers.has(question.id)
+    const answeredQuestions = section.questions.filter((question) =>
+      answers.has(question.id),
     ).length;
 
     return Math.round((answeredQuestions / totalQuestions) * 100);
@@ -166,16 +164,13 @@ export class AssessmentUtils {
    */
   static getUnansweredRequiredQuestions(
     framework: AssessmentFramework,
-    answers: Map<string, any>
+    answers: Map<string, any>,
   ): Question[] {
     const unanswered: Question[] = [];
 
-    framework.sections.forEach(section => {
-      section.questions.forEach(question => {
-        if (
-          question.validation?.required &&
-          !answers.has(question.id)
-        ) {
+    framework.sections.forEach((section) => {
+      section.questions.forEach((question) => {
+        if (question.validation?.required && !answers.has(question.id)) {
           unanswered.push(question);
         }
       });
@@ -202,12 +197,12 @@ export class AssessmentUtils {
    */
   static formatFileSize(bytes: number): string {
     if (bytes === 0) return '0 Bytes';
-    
+
     const k = 1024;
     const sizes = ['Bytes', 'KB', 'MB', 'GB'];
     const i = Math.floor(Math.log(bytes) / Math.log(k));
-    
-    return `${parseFloat((bytes / Math.pow(k, i)).toFixed(2))  } ${  sizes[i]}`;
+
+    return `${parseFloat((bytes / Math.pow(k, i)).toFixed(2))} ${sizes[i]}`;
   }
 
   /**
@@ -242,28 +237,28 @@ export class AssessmentUtils {
       initial: {
         label: 'Initial',
         description: 'Ad-hoc processes, reactive approach',
-        color: 'red'
+        color: 'red',
       },
       developing: {
         label: 'Developing',
         description: 'Some documented processes, inconsistent implementation',
-        color: 'orange'
+        color: 'orange',
       },
       defined: {
         label: 'Defined',
         description: 'Standardized processes, regular reviews',
-        color: 'yellow'
+        color: 'yellow',
       },
       managed: {
         label: 'Managed',
         description: 'Measured and controlled processes, proactive approach',
-        color: 'blue'
+        color: 'blue',
       },
       optimized: {
         label: 'Optimized',
         description: 'Continuous improvement, industry best practices',
-        color: 'green'
-      }
+        color: 'green',
+      },
     };
 
     return levels[level as keyof typeof levels] || levels.initial;

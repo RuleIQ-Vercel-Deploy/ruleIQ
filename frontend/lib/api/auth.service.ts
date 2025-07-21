@@ -39,10 +39,10 @@ class AuthService {
         'Content-Type': 'multipart/form-data',
       },
     });
-    
+
     // Store tokens and user data
     await this.setAuthData(response.data);
-    
+
     return response.data;
   }
 
@@ -51,10 +51,10 @@ class AuthService {
    */
   async register(data: RegisterRequest): Promise<AuthResponse> {
     const response = await apiClient.post<AuthResponse>('/auth/register', data);
-    
+
     // Store tokens and user data
     await this.setAuthData(response.data);
-    
+
     return response.data;
   }
 
@@ -95,10 +95,10 @@ class AuthService {
    */
   async updateProfile(data: Partial<User>): Promise<User> {
     const response = await apiClient.patch<User>('/auth/profile', data);
-    
+
     // Update stored user data
     this.setUser(response.data);
-    
+
     return response.data;
   }
 
@@ -146,18 +146,18 @@ class AuthService {
     }
 
     const response = await apiClient.post<AuthTokens>('/auth/refresh', {
-      refresh_token: refreshToken
+      refresh_token: refreshToken,
     });
-    
+
     // Update stored tokens securely
-    const expiry = Date.now() + (8 * 60 * 60 * 1000); // 8 hours
+    const expiry = Date.now() + 8 * 60 * 60 * 1000; // 8 hours
     if (response.data.access_token) {
       await SecureStorage.setAccessToken(response.data.access_token, { expiry });
     }
     if (response.data.refresh_token) {
       SecureStorage.setRefreshToken(response.data.refresh_token, expiry);
     }
-    
+
     return response.data;
   }
 
@@ -166,8 +166,8 @@ class AuthService {
    */
   private async setAuthData(data: AuthResponse): Promise<void> {
     if (typeof window === 'undefined') return;
-    
-    const expiry = Date.now() + (8 * 60 * 60 * 1000); // 8 hours
+
+    const expiry = Date.now() + 8 * 60 * 60 * 1000; // 8 hours
     await SecureStorage.setAccessToken(data.tokens.access_token, { expiry });
     SecureStorage.setRefreshToken(data.tokens.refresh_token, expiry);
     localStorage.setItem(USER_KEY, JSON.stringify(data.user));
@@ -186,7 +186,7 @@ class AuthService {
    */
   private clearAuthData(): void {
     if (typeof window === 'undefined') return;
-    
+
     SecureStorage.clearAll();
     localStorage.removeItem(USER_KEY);
   }
@@ -196,10 +196,10 @@ class AuthService {
    */
   getStoredUser(): User | null {
     if (typeof window === 'undefined') return null;
-    
+
     const userStr = localStorage.getItem(USER_KEY);
     if (!userStr) return null;
-    
+
     try {
       return JSON.parse(userStr) as User;
     } catch {

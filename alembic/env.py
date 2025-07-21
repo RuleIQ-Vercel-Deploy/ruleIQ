@@ -4,19 +4,19 @@ import os
 import sys
 from logging.config import fileConfig
 
+# Add the project root to Python path first (needed for database import)
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 from alembic import context
 from sqlalchemy import engine_from_config, pool
 from dotenv import load_dotenv
 
-# Load environment variables
-load_dotenv()
-
-# Add the project root to Python path
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
 # Import all models from the central database package to ensure they are registered
 # with SQLAlchemy's metadata. This is the single source of truth for our models.
 from database import Base
+
+# Load environment variables
+load_dotenv()
 
 # This is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -75,9 +75,7 @@ def run_migrations_online() -> None:
     )
 
     with connectable.connect() as connection:
-        context.configure(
-            connection=connection, target_metadata=target_metadata
-        )
+        context.configure(connection=connection, target_metadata=target_metadata)
 
         with context.begin_transaction():
             context.run_migrations()

@@ -1,4 +1,4 @@
-"use client"
+'use client';
 
 import {
   LayoutDashboard,
@@ -12,11 +12,11 @@ import {
   Plug,
   ChevronDown,
   TrendingUp,
-} from "lucide-react"
-import Link from "next/link"
-import { usePathname } from "next/navigation"
+} from 'lucide-react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import {
   Sidebar,
   SidebarContent,
@@ -26,37 +26,37 @@ import {
   SidebarMenuItem,
   SidebarMenuButton,
   useSidebar,
-} from "@/components/ui/sidebar"
-import { cn } from "@/lib/utils"
+} from '@/components/ui/sidebar';
+import { cn } from '@/lib/utils';
 
-import { ThemeToggle } from "../ui/theme-toggle"
+import { ThemeToggle } from '../ui/theme-toggle';
 
 const menuItems = [
-  { href: "/", label: "Dashboard", icon: LayoutDashboard },
-  { href: "/analytics", label: "Analytics", icon: TrendingUp },
-  { href: "/assessments", label: "Assessments", icon: BookCheck },
-  { href: "/evidence", label: "Evidence", icon: FolderOpen },
-  { href: "/policies", label: "Policies", icon: FileText },
-  { href: "/reports", label: "Reports", icon: BarChart3 },
-  { href: "/chat", label: "IQ Chat", icon: MessageSquare },
-]
+  { href: '/', label: 'Dashboard', icon: LayoutDashboard },
+  { href: '/analytics', label: 'Analytics', icon: TrendingUp },
+  { href: '/assessments', label: 'Assessments', icon: BookCheck },
+  { href: '/evidence', label: 'Evidence', icon: FolderOpen },
+  { href: '/policies', label: 'Policies', icon: FileText },
+  { href: '/reports', label: 'Reports', icon: BarChart3 },
+  { href: '/chat', label: 'IQ Chat', icon: MessageSquare },
+];
 
 const settingsSubMenu = [
-  { href: "/settings/team", label: "Team Management", icon: Users },
-  { href: "/settings/integrations", label: "Integrations", icon: Plug },
-]
+  { href: '/settings/team', label: 'Team Management', icon: Users },
+  { href: '/settings/integrations', label: 'Integrations', icon: Plug },
+];
 
 export function AppSidebar() {
-  const pathname = usePathname()
-  const { } = useSidebar()
+  const pathname = usePathname();
+  const {} = useSidebar();
 
-  const isSettingsActive = settingsSubMenu.some((item) => pathname?.startsWith(item.href) ?? false)
+  const isSettingsActive = settingsSubMenu.some((item) => pathname?.startsWith(item.href) ?? false);
 
   return (
-    <Sidebar className="bg-surface-primary border-r border-glass-border">
+    <Sidebar className="border-r border-glass-border bg-surface-primary">
       <SidebarHeader className="p-4">
         <Link href="/" className="flex items-center gap-2">
-          <span className="text-2xl font-bold gradient-text">ruleIQ</span>
+          <span className="gradient-text text-2xl font-bold">ruleIQ</span>
         </Link>
       </SidebarHeader>
       <SidebarContent className="p-2">
@@ -67,8 +67,8 @@ export function AppSidebar() {
                 asChild
                 isActive={pathname === item.href}
                 className={cn(
-                  "w-full justify-start text-muted-foreground hover:text-foreground transition-colors",
-                  pathname === item.href && "bg-primary/10 text-primary hover:bg-primary/20"
+                  'w-full justify-start text-muted-foreground transition-colors hover:text-foreground',
+                  pathname === item.href && 'bg-primary/10 text-primary hover:bg-primary/20',
                 )}
               >
                 <Link href={item.href}>
@@ -81,14 +81,17 @@ export function AppSidebar() {
           <Collapsible defaultOpen={isSettingsActive}>
             <CollapsibleTrigger asChild>
               <SidebarMenuButton
-                className={cn("w-full justify-start group text-muted-foreground hover:text-foreground", isSettingsActive && "text-primary")}
+                className={cn(
+                  'group w-full justify-start text-muted-foreground hover:text-foreground',
+                  isSettingsActive && 'text-primary',
+                )}
               >
                 <Settings />
                 <span>Settings</span>
                 <ChevronDown className="ml-auto h-4 w-4 transition-transform group-data-[state=open]:rotate-180" />
               </SidebarMenuButton>
             </CollapsibleTrigger>
-            <CollapsibleContent className="pl-8 pt-1 space-y-1">
+            <CollapsibleContent className="space-y-1 pl-8 pt-1">
               <SidebarMenu>
                 {settingsSubMenu.map((item) => (
                   <SidebarMenuItem key={item.href}>
@@ -96,8 +99,9 @@ export function AppSidebar() {
                       asChild
                       isActive={pathname?.startsWith(item.href) ?? false}
                       className={cn(
-                        "w-full justify-start h-9 text-muted-foreground hover:text-foreground",
-                        pathname?.startsWith(item.href) && "bg-primary/10 text-primary hover:bg-primary/20"
+                        'h-9 w-full justify-start text-muted-foreground hover:text-foreground',
+                        pathname?.startsWith(item.href) &&
+                          'bg-primary/10 text-primary hover:bg-primary/20',
                       )}
                       size="sm"
                     >
@@ -117,5 +121,5 @@ export function AppSidebar() {
         <ThemeToggle />
       </SidebarFooter>
     </Sidebar>
-  )
+  );
 }

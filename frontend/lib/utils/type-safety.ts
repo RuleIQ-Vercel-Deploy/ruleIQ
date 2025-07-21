@@ -52,17 +52,17 @@ export function safeJsonParse<T>(json: string, fallback?: T): T | null {
 // Safe JSON parsing with validation
 export function safeJsonParseWithValidation<T>(
   json: string,
-  validator: (value: unknown) => value is T
+  validator: (value: unknown) => value is T,
 ): T | null;
 export function safeJsonParseWithValidation<T>(
   json: string,
   validator: (value: unknown) => value is T,
-  fallback: T
+  fallback: T,
 ): T;
 export function safeJsonParseWithValidation<T>(
   json: string,
   validator: (value: unknown) => value is T,
-  fallback?: T
+  fallback?: T,
 ): T | null {
   try {
     const parsed = JSON.parse(json);
@@ -78,17 +78,17 @@ export function safeJsonParseWithValidation<T>(
 // Safe localStorage operations
 export function safeGetFromStorage<T>(
   key: string,
-  validator?: (value: unknown) => value is T
+  validator?: (value: unknown) => value is T,
 ): T | null {
   try {
     const item = localStorage.getItem(key);
     if (!item) return null;
-    
+
     const parsed = JSON.parse(item);
     if (validator && !validator(parsed)) {
       return null;
     }
-    
+
     return parsed as T;
   } catch {
     return null;
@@ -107,7 +107,7 @@ export function safeSetToStorage<T>(key: string, value: T): boolean {
 // Type assertion helpers
 export function assertNonNull<T>(
   value: T | null | undefined,
-  message?: string
+  message?: string,
 ): asserts value is T {
   if (value == null) {
     throw new Error(message ?? 'Value is null or undefined');
@@ -116,24 +116,24 @@ export function assertNonNull<T>(
 
 export function assertIsString(value: unknown): asserts value is string {
   if (typeof value !== 'string') {
-    throw new Error(`Expected string but got ${  typeof value}`);
+    throw new Error(`Expected string but got ${typeof value}`);
   }
 }
 
 export function assertIsNumber(value: unknown): asserts value is number {
   if (typeof value !== 'number' || isNaN(value)) {
-    throw new Error(`Expected number but got ${  typeof value}`);
+    throw new Error(`Expected number but got ${typeof value}`);
   }
 }
 
 export function assertIsArray<T>(
   value: unknown,
-  itemValidator?: (item: unknown) => item is T
+  itemValidator?: (item: unknown) => item is T,
 ): asserts value is T[] {
   if (!Array.isArray(value)) {
-    throw new Error(`Expected array but got ${  typeof value}`);
+    throw new Error(`Expected array but got ${typeof value}`);
   }
-  
+
   if (itemValidator) {
     for (let i = 0; i < value.length; i++) {
       if (!itemValidator(value[i])) {
@@ -146,15 +146,12 @@ export function assertIsArray<T>(
 // Safe property access
 export function safeAccess<T, K extends keyof T>(
   obj: T | null | undefined,
-  key: K
+  key: K,
 ): T[K] | undefined {
   return obj?.[key];
 }
 
-export function safeAccessNested<T>(
-  obj: unknown,
-  path: string[]
-): T | undefined {
+export function safeAccessNested<T>(obj: unknown, path: string[]): T | undefined {
   let current = obj;
   for (const key of path) {
     if (current == null || typeof current !== 'object') {
@@ -170,7 +167,7 @@ export function toAppError(error: unknown): AppError {
   if (isAppError(error)) {
     return error;
   }
-  
+
   if (error instanceof Error) {
     return {
       message: error.message,
@@ -178,13 +175,13 @@ export function toAppError(error: unknown): AppError {
       details: error.stack,
     };
   }
-  
+
   if (typeof error === 'string') {
     return {
       message: error,
     };
   }
-  
+
   return {
     message: 'An unknown error occurred',
     details: error,
@@ -194,7 +191,7 @@ export function toAppError(error: unknown): AppError {
 export function toValidationError(
   error: unknown,
   field?: string,
-  value?: unknown
+  value?: unknown,
 ): ValidationError {
   const appError = toAppError(error);
   return {
@@ -204,11 +201,7 @@ export function toValidationError(
   };
 }
 
-export function toApiError(
-  error: unknown,
-  status?: number,
-  endpoint?: string
-): ApiError {
+export function toApiError(error: unknown, status?: number, endpoint?: string): ApiError {
   const appError = toAppError(error);
   return {
     ...appError,
@@ -259,9 +252,7 @@ export function isValidUrl(value: unknown): value is string {
 }
 
 // Result type for operations that can fail
-export type Result<T, E = AppError> = 
-  | { success: true; data: T }
-  | { success: false; error: E };
+export type Result<T, E = AppError> = { success: true; data: T } | { success: false; error: E };
 
 export function success<T>(data: T): Result<T> {
   return { success: true, data };

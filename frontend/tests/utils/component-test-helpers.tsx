@@ -1,12 +1,16 @@
 /**
  * Component Test Helpers
- * 
+ *
  * Utilities for testing React components with memory leak detection
  */
 
 import { render, RenderOptions, RenderResult } from '@testing-library/react';
 import React, { ReactElement } from 'react';
-import { createMemoryLeakDetector, MemoryLeakDetector, setupMemoryLeakMatchers } from './memory-leak-detector';
+import {
+  createMemoryLeakDetector,
+  MemoryLeakDetector,
+  setupMemoryLeakMatchers,
+} from './memory-leak-detector';
 
 export interface RenderWithLeakDetectionOptions extends RenderOptions {
   detectLeaks?: boolean;
@@ -22,26 +26,26 @@ export interface RenderWithLeakDetectionResult extends RenderResult {
  */
 export function renderWithLeakDetection(
   ui: ReactElement,
-  options: RenderWithLeakDetectionOptions = { detectLeaks: true }
+  options: RenderWithLeakDetectionOptions = { detectLeaks: true },
 ): RenderWithLeakDetectionResult {
   const { detectLeaks = true, ...renderOptions } = options;
-  
+
   // Create leak detector if requested
   const leakDetector = detectLeaks ? createMemoryLeakDetector() : null;
-  
+
   if (leakDetector) {
     setupMemoryLeakMatchers();
     leakDetector.setup();
   }
-  
+
   // Render component
   const renderResult = render(ui, renderOptions);
-  
+
   // Enhance unmount to check for leaks
   const originalUnmount = renderResult.unmount;
   renderResult.unmount = () => {
     originalUnmount();
-    
+
     if (leakDetector) {
       // Give a small delay for cleanup to complete
       setTimeout(() => {
@@ -52,7 +56,7 @@ export function renderWithLeakDetection(
       }, 0);
     }
   };
-  
+
   return {
     ...renderResult,
     leakDetector: leakDetector!,
@@ -60,7 +64,7 @@ export function renderWithLeakDetection(
       if (leakDetector) {
         expect(leakDetector).toHaveNoMemoryLeaks();
       }
-    }
+    },
   };
 }
 
@@ -70,26 +74,26 @@ export function renderWithLeakDetection(
 export async function testComponentMemoryLeaks(
   Component: React.ComponentType<any>,
   props: any = {},
-  testScenario?: (result: RenderResult) => void | Promise<void>
+  testScenario?: (result: RenderResult) => void | Promise<void>,
 ): Promise<void> {
   const { unmount, leakDetector, assertNoLeaks, ...rest } = renderWithLeakDetection(
-    <Component {...props} />
+    <Component {...props} />,
   );
-  
+
   // Run test scenario if provided
   if (testScenario) {
     await testScenario({ unmount, ...rest });
   }
-  
+
   // Unmount component
   unmount();
-  
+
   // Wait for async cleanup
-  await new Promise(resolve => setTimeout(resolve, 50));
-  
+  await new Promise((resolve) => setTimeout(resolve, 50));
+
   // Assert no leaks
   assertNoLeaks();
-  
+
   // Cleanup leak detector
   leakDetector.teardown();
 }
@@ -100,24 +104,24 @@ export async function testComponentMemoryLeaks(
 export async function testRapidMountUnmount(
   Component: React.ComponentType<any>,
   props: any = {},
-  cycles: number = 10
+  cycles: number = 10,
 ): Promise<void> {
   const leakDetector = createMemoryLeakDetector();
   setupMemoryLeakMatchers();
   leakDetector.setup();
-  
+
   for (let i = 0; i < cycles; i++) {
     const { unmount } = render(<Component {...props} />);
-    
+
     // Small delay to allow effects to run
-    await new Promise(resolve => setTimeout(resolve, 10));
-    
+    await new Promise((resolve) => setTimeout(resolve, 10));
+
     unmount();
   }
-  
+
   // Final check for accumulated leaks
   expect(leakDetector).toHaveNoMemoryLeaks();
-  
+
   leakDetector.teardown();
 }
 
@@ -126,7 +130,7 @@ export async function testRapidMountUnmount(
  */
 export function useMemoryLeakTest() {
   const leakDetector = createMemoryLeakDetector();
-  
+
   return {
     setup: () => {
       setupMemoryLeakMatchers();
@@ -138,6 +142,6 @@ export function useMemoryLeakTest() {
     assertNoLeaks: () => {
       expect(leakDetector).toHaveNoMemoryLeaks();
     },
-    getReport: () => leakDetector.getReport()
+    getReport: () => leakDetector.getReport(),
   };
 }

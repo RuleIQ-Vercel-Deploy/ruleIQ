@@ -4,10 +4,11 @@ import { useInView } from 'react-intersection-observer';
 
 import type { PaginatedResponse } from './base';
 
-interface UseInfiniteScrollOptions<TData> extends Omit<
-  UseInfiniteQueryOptions<PaginatedResponse<TData>>,
-  'queryKey' | 'queryFn' | 'getNextPageParam'
-> {
+interface UseInfiniteScrollOptions<TData>
+  extends Omit<
+    UseInfiniteQueryOptions<PaginatedResponse<TData>>,
+    'queryKey' | 'queryFn' | 'getNextPageParam'
+  > {
   queryKey: string[];
   queryFn: (params: { page: number; page_size: number }) => Promise<PaginatedResponse<TData>>;
   pageSize?: number;
@@ -33,8 +34,7 @@ export function useInfiniteScroll<TData>({
     refetch,
   } = useInfiniteQuery({
     queryKey,
-    queryFn: ({ pageParam = 1 }) => 
-      queryFn({ page: pageParam, page_size: pageSize }),
+    queryFn: ({ pageParam = 1 }) => queryFn({ page: pageParam, page_size: pageSize }),
     getNextPageParam: (lastPage, pages) => {
       const currentPage = pages.length;
       const totalPages = Math.ceil(lastPage.total / lastPage.page_size);
@@ -56,7 +56,7 @@ export function useInfiniteScroll<TData>({
   }, [inView, fetchNextPage, hasNextPage, isFetchingNextPage]);
 
   // Flatten all pages into a single array
-  const items = data?.pages.flatMap(page => page.items) ?? [];
+  const items = data?.pages.flatMap((page) => page.items) ?? [];
   const total = data?.pages[0]?.total ?? 0;
 
   return {

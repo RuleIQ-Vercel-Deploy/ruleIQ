@@ -320,6 +320,7 @@ class TestCacheStrategyOptimization:
     def test_disabled_optimization_features(self):
         """Test behavior when optimization features are disabled."""
         from services.ai.cached_content import GoogleCachedContentManager, CacheLifecycleConfig
+
         config = CacheLifecycleConfig(
             performance_based_ttl=False, cache_warming_enabled=False, intelligent_invalidation=False
         )
@@ -357,23 +358,23 @@ class TestCacheStrategyIntegration:
         # Mock assistant for testing since it may not have these methods yet
         assistant = Mock()
         assistant.async_db_session = async_db_session
-        
+
         # Create optimized cache config
         config = CacheLifecycleConfig(
-            performance_based_ttl=True,
-            cache_warming_enabled=True,
-            intelligent_invalidation=True
+            performance_based_ttl=True, cache_warming_enabled=True, intelligent_invalidation=True
         )
-        
+
         # Mock the cache-related methods
-        assistant.get_cache_strategy_metrics = AsyncMock(return_value={
-            "strategy_optimization": {
-                "performance_based_ttl": {"enabled": True, "total_adjustments": 0},
-                "cache_warming": {"enabled": True, "queue_size": 0},
-                "intelligent_invalidation": {"enabled": True, "recent_triggers": 0}
+        assistant.get_cache_strategy_metrics = AsyncMock(
+            return_value={
+                "strategy_optimization": {
+                    "performance_based_ttl": {"enabled": True, "total_adjustments": 0},
+                    "cache_warming": {"enabled": True, "queue_size": 0},
+                    "intelligent_invalidation": {"enabled": True, "recent_triggers": 0},
+                }
             }
-        })
-        
+        )
+
         assistant._add_to_cache_warming_queue = AsyncMock()
         assistant.process_cache_warming_queue = AsyncMock(return_value=0)
         assistant.trigger_cache_invalidation = AsyncMock()

@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import * as Sentry from '@sentry/nextjs';
 import { AlertCircle, RefreshCw, Home } from 'lucide-react';
@@ -37,7 +37,7 @@ export class GlobalErrorBoundary extends Component<Props, State> {
 
   override componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     console.error('GlobalErrorBoundary caught an error:', error, errorInfo);
-    
+
     // Log error to Sentry
     const eventId = Sentry.captureException(error, {
       contexts: {
@@ -85,10 +85,10 @@ export class GlobalErrorBoundary extends Component<Props, State> {
 
       // Default error UI
       return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
+        <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4">
           <Card className="w-full max-w-md">
             <CardHeader className="text-center">
-              <div className="flex justify-center mb-4">
+              <div className="mb-4 flex justify-center">
                 <AlertCircle className="h-12 w-12 text-red-500" />
               </div>
               <CardTitle className="text-xl font-semibold text-gray-900">
@@ -100,45 +100,35 @@ export class GlobalErrorBoundary extends Component<Props, State> {
             </CardHeader>
             <CardContent className="space-y-4">
               {process.env.NODE_ENV === 'development' && this.props.showErrorDetails && (
-                <div className="p-3 bg-red-50 border border-red-200 rounded-md">
-                  <p className="text-sm font-medium text-red-800 mb-2">Error Details:</p>
-                  <p className="text-xs text-red-700 font-mono">
-                    {this.state.error?.message}
-                  </p>
+                <div className="rounded-md border border-red-200 bg-red-50 p-3">
+                  <p className="mb-2 text-sm font-medium text-red-800">Error Details:</p>
+                  <p className="font-mono text-xs text-red-700">{this.state.error?.message}</p>
                   {this.state.errorInfo && (
                     <details className="mt-2">
-                      <summary className="text-xs text-red-600 cursor-pointer">
+                      <summary className="cursor-pointer text-xs text-red-600">
                         Component Stack
                       </summary>
-                      <pre className="text-xs text-red-600 mt-1 whitespace-pre-wrap">
+                      <pre className="mt-1 whitespace-pre-wrap text-xs text-red-600">
                         {this.state.errorInfo.componentStack}
                       </pre>
                     </details>
                   )}
                 </div>
               )}
-              
+
               <div className="flex flex-col gap-2">
-                <Button 
-                  onClick={this.handleReload}
-                  className="w-full"
-                  variant="default"
-                >
-                  <RefreshCw className="h-4 w-4 mr-2" />
+                <Button onClick={this.handleReload} className="w-full" variant="default">
+                  <RefreshCw className="mr-2 h-4 w-4" />
                   Reload Page
                 </Button>
-                
-                <Button 
-                  onClick={this.handleGoHome}
-                  className="w-full"
-                  variant="outline"
-                >
-                  <Home className="h-4 w-4 mr-2" />
+
+                <Button onClick={this.handleGoHome} className="w-full" variant="outline">
+                  <Home className="mr-2 h-4 w-4" />
                   Go to Homepage
                 </Button>
-                
+
                 {this.state.eventId && (
-                  <Button 
+                  <Button
                     onClick={this.handleReportFeedback}
                     className="w-full"
                     variant="ghost"
@@ -148,11 +138,9 @@ export class GlobalErrorBoundary extends Component<Props, State> {
                   </Button>
                 )}
               </div>
-              
+
               {this.state.eventId && (
-                <p className="text-xs text-gray-500 text-center">
-                  Error ID: {this.state.eventId}
-                </p>
+                <p className="text-center text-xs text-gray-500">Error ID: {this.state.eventId}</p>
               )}
             </CardContent>
           </Card>
@@ -169,16 +157,16 @@ export class GlobalErrorBoundary extends Component<Props, State> {
  */
 export function withErrorBoundary<P extends object>(
   Component: React.ComponentType<P>,
-  fallback?: ReactNode
+  fallback?: ReactNode,
 ) {
   const WrappedComponent = (props: P) => (
     <GlobalErrorBoundary fallback={fallback}>
       <Component {...props} />
     </GlobalErrorBoundary>
   );
-  
+
   WrappedComponent.displayName = `withErrorBoundary(${Component.displayName || Component.name})`;
-  
+
   return WrappedComponent;
 }
 
@@ -188,7 +176,7 @@ export function withErrorBoundary<P extends object>(
 export function useErrorHandler() {
   return React.useCallback((error: Error, context?: Record<string, any>) => {
     console.error('Manual error capture:', error);
-    
+
     Sentry.captureException(error, {
       tags: {
         component: 'useErrorHandler',

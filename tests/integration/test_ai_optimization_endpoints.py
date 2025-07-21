@@ -61,12 +61,14 @@ class TestAIOptimizationEndpoints:
             yield "Analysis chunk 2"
             yield "Analysis complete"
 
-        mock_compliance_assistant.analyze_assessment_results_stream = AsyncMock(return_value=mock_stream())
+        mock_compliance_assistant.analyze_assessment_results_stream = AsyncMock(
+            return_value=mock_stream()
+        )
 
         # Mock the constructor
         with patch("api.routers.ai_assessments.ComplianceAssistant") as MockAssistant:
             MockAssistant.return_value = mock_compliance_assistant
-            
+
             response = await async_test_client.post(
                 "/api/ai/assessments/analysis/stream",
                 json=request_data,
@@ -157,17 +159,16 @@ class TestAIOptimizationEndpoints:
             "model_states": {
                 "gemini-2.5-flash": {"state": "CLOSED", "failures": 0, "success_rate": 1.0}
             },
-            "metrics": {
-                "total_requests": 100,
-                "total_failures": 5,
-                "uptime_percentage": 95.0
-            }
+            "metrics": {"total_requests": 100, "total_failures": 5, "uptime_percentage": 95.0},
         }
-        
+
         with patch(
-            "api.routers.ai_optimization.ComplianceAssistant", return_value=mock_compliance_assistant
+            "api.routers.ai_optimization.ComplianceAssistant",
+            return_value=mock_compliance_assistant,
         ):
-            response = client.get("/api/ai-optimization/circuit-breaker/status", headers=authenticated_headers)
+            response = client.get(
+                "/api/ai-optimization/circuit-breaker/status", headers=authenticated_headers
+            )
 
             assert response.status_code == 200
             data = response.json()
@@ -190,7 +191,9 @@ class TestAIOptimizationEndpoints:
             mock_get_model.return_value = mock_model
 
             response = client.post(
-                "/api/ai-optimization/model-selection", json=request_data, headers=authenticated_headers
+                "/api/ai-optimization/model-selection",
+                json=request_data,
+                headers=authenticated_headers,
             )
 
             assert response.status_code == 200
@@ -248,7 +251,9 @@ class TestAIOptimizationEndpoints:
             request_data = {"task_type": "analysis", "complexity": "complex", "prefer_speed": False}
 
             response = client.post(
-                "/api/ai-optimization/model-selection", json=request_data, headers=authenticated_headers
+                "/api/ai-optimization/model-selection",
+                json=request_data,
+                headers=authenticated_headers,
             )
 
             assert response.status_code == 200

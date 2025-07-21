@@ -1,39 +1,39 @@
-import { create } from 'zustand'
-import { devtools } from 'zustand/middleware'
+import { create } from 'zustand';
+import { devtools } from 'zustand/middleware';
 
 interface AppState {
   // Sidebar state
-  sidebarOpen: boolean
-  sidebarCollapsed: boolean
-  
+  sidebarOpen: boolean;
+  sidebarCollapsed: boolean;
+
   // Theme
-  theme: 'light' | 'dark' | 'system'
-  
+  theme: 'light' | 'dark' | 'system';
+
   // Global loading states
-  globalLoading: boolean
-  loadingMessage: string | null
-  
+  globalLoading: boolean;
+  loadingMessage: string | null;
+
   // Notifications
-  notifications: Notification[]
-  
+  notifications: Notification[];
+
   // Actions
-  toggleSidebar: () => void
-  setSidebarOpen: (open: boolean) => void
-  setSidebarCollapsed: (collapsed: boolean) => void
-  setTheme: (theme: 'light' | 'dark' | 'system') => void
-  setGlobalLoading: (loading: boolean, message?: string) => void
-  addNotification: (notification: Omit<Notification, 'id' | 'timestamp'>) => void
-  removeNotification: (id: string) => void
-  clearNotifications: () => void
+  toggleSidebar: () => void;
+  setSidebarOpen: (open: boolean) => void;
+  setSidebarCollapsed: (collapsed: boolean) => void;
+  setTheme: (theme: 'light' | 'dark' | 'system') => void;
+  setGlobalLoading: (loading: boolean, message?: string) => void;
+  addNotification: (notification: Omit<Notification, 'id' | 'timestamp'>) => void;
+  removeNotification: (id: string) => void;
+  clearNotifications: () => void;
 }
 
 export interface Notification {
-  id: string
-  type: 'success' | 'error' | 'warning' | 'info'
-  title: string
-  message?: string
-  timestamp: Date
-  duration?: number // in milliseconds, 0 means persistent
+  id: string;
+  type: 'success' | 'error' | 'warning' | 'info';
+  title: string;
+  message?: string;
+  timestamp: Date;
+  duration?: number; // in milliseconds, 0 means persistent
 }
 
 export const useAppStore = create<AppState>()(
@@ -48,70 +48,87 @@ export const useAppStore = create<AppState>()(
       notifications: [],
 
       // Actions
-      toggleSidebar: () => 
-        set((state) => ({ 
-          sidebarOpen: !state.sidebarOpen 
-        }), false, 'toggleSidebar'),
+      toggleSidebar: () =>
+        set(
+          (state) => ({
+            sidebarOpen: !state.sidebarOpen,
+          }),
+          false,
+          'toggleSidebar',
+        ),
 
-      setSidebarOpen: (open) => 
-        set({ sidebarOpen: open }, false, 'setSidebarOpen'),
+      setSidebarOpen: (open) => set({ sidebarOpen: open }, false, 'setSidebarOpen'),
 
-      setSidebarCollapsed: (collapsed) => 
+      setSidebarCollapsed: (collapsed) =>
         set({ sidebarCollapsed: collapsed }, false, 'setSidebarCollapsed'),
 
       setTheme: (theme) => {
-        set({ theme }, false, 'setTheme')
-        
+        set({ theme }, false, 'setTheme');
+
         // Apply theme to document
-        if (theme === 'dark' || (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-          document.documentElement.classList.add('dark')
+        if (
+          theme === 'dark' ||
+          (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches)
+        ) {
+          document.documentElement.classList.add('dark');
         } else {
-          document.documentElement.classList.remove('dark')
+          document.documentElement.classList.remove('dark');
         }
       },
 
-      setGlobalLoading: (loading, message) => 
-        set({ 
-          globalLoading: loading, 
-          loadingMessage: message || null 
-        }, false, 'setGlobalLoading'),
+      setGlobalLoading: (loading, message) =>
+        set(
+          {
+            globalLoading: loading,
+            loadingMessage: message || null,
+          },
+          false,
+          'setGlobalLoading',
+        ),
 
       addNotification: (notification) => {
-        const id = crypto.randomUUID()
+        const id = crypto.randomUUID();
         const newNotification: Notification = {
           ...notification,
           id,
-          timestamp: new Date()
-        }
-        
-        set((state) => ({
-          notifications: [...state.notifications, newNotification]
-        }), false, 'addNotification')
-        
+          timestamp: new Date(),
+        };
+
+        set(
+          (state) => ({
+            notifications: [...state.notifications, newNotification],
+          }),
+          false,
+          'addNotification',
+        );
+
         // Auto-remove notification after duration
         if (notification.duration && notification.duration > 0) {
           setTimeout(() => {
-            get().removeNotification(id)
-          }, notification.duration)
+            get().removeNotification(id);
+          }, notification.duration);
         }
       },
 
-      removeNotification: (id) => 
-        set((state) => ({
-          notifications: state.notifications.filter(n => n.id !== id)
-        }), false, 'removeNotification'),
+      removeNotification: (id) =>
+        set(
+          (state) => ({
+            notifications: state.notifications.filter((n) => n.id !== id),
+          }),
+          false,
+          'removeNotification',
+        ),
 
-      clearNotifications: () => 
-        set({ notifications: [] }, false, 'clearNotifications')
+      clearNotifications: () => set({ notifications: [] }, false, 'clearNotifications'),
     }),
     {
-      name: 'app-store'
-    }
-  )
-)
+      name: 'app-store',
+    },
+  ),
+);
 
 // Selectors
-export const selectSidebarOpen = (state: AppState) => state.sidebarOpen
-export const selectTheme = (state: AppState) => state.theme
-export const selectNotifications = (state: AppState) => state.notifications
-export const selectGlobalLoading = (state: AppState) => state.globalLoading
+export const selectSidebarOpen = (state: AppState) => state.sidebarOpen;
+export const selectTheme = (state: AppState) => state.theme;
+export const selectNotifications = (state: AppState) => state.notifications;
+export const selectGlobalLoading = (state: AppState) => state.globalLoading;

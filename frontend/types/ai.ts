@@ -2,8 +2,8 @@
  * Shared type definitions for AI-related functionality
  */
 
-import { type AssessmentProgress } from "@/lib/assessment-engine/types";
-import { type BusinessProfile } from "@/types/api";
+import { type AssessmentProgress } from '@/lib/assessment-engine/types';
+import { type BusinessProfile } from '@/types/api';
 
 /**
  * User context for AI requests - provides business and assessment context
@@ -17,7 +17,7 @@ export interface UserContext {
 /**
  * AI service error types for better error handling
  */
-export type AIErrorType = 
+export type AIErrorType =
   | 'timeout'
   | 'quota_exceeded'
   | 'service_unavailable'
@@ -199,16 +199,17 @@ export function isAIError(error: any): error is AIError {
 }
 
 export function isAIHelpResponse(response: any): response is AIHelpResponse {
-  return response && 
-         typeof response === 'object' && 
-         'guidance' in response && 
-         'metadata' in response;
+  return (
+    response && typeof response === 'object' && 'guidance' in response && 'metadata' in response
+  );
 }
 
 export function isAIAnalysisResponse(response: any): response is AIAnalysisResponse {
-  return response && 
-         typeof response === 'object' && 
-         'gaps' in response && 
-         'recommendations' in response && 
-         'metadata' in response;
+  return (
+    response &&
+    typeof response === 'object' &&
+    'gaps' in response &&
+    'recommendations' in response &&
+    'metadata' in response
+  );
 }

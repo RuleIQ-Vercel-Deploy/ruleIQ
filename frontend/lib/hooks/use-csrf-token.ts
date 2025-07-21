@@ -17,16 +17,16 @@ export function useCsrfToken() {
     try {
       setLoading(true);
       setError(null);
-      
+
       const response = await fetch('/api/csrf-token', {
         method: 'GET',
         credentials: 'include', // Include cookies
       });
-      
+
       if (!response.ok) {
         throw new Error(`Failed to fetch CSRF token: ${response.statusText}`);
       }
-      
+
       const data: CsrfTokenResponse = await response.json();
       setToken(data.csrfToken);
     } catch (err) {
@@ -66,12 +66,12 @@ export function getCsrfHeaders(token: string) {
 export function createCsrfFormData(token: string, data: Record<string, any>) {
   const formData = new FormData();
   formData.append('_csrf', token);
-  
+
   Object.entries(data).forEach(([key, value]) => {
     if (value !== null && value !== undefined) {
       formData.append(key, value);
     }
   });
-  
+
   return formData;
 }

@@ -13,10 +13,10 @@ const FRONTEND_DIR = path.join(process.cwd());
 // Fix 1: Update comprehensive store test with valid test data
 function fixComprehensiveStoreTest() {
   const testFile = path.join(FRONTEND_DIR, 'tests/stores/comprehensive-store.test.ts');
-  
+
   // Read the file
   let content = fs.readFileSync(testFile, 'utf-8');
-  
+
   // Fix assessment mock data - add required fields
   content = content.replace(
     /const mockAssessments = \[\s*{\s*id:\s*'assess-1',\s*name:\s*'Test Assessment',\s*status:\s*'completed'\s*},\s*{\s*id:\s*'assess-2',\s*name:\s*'Test Assessment 2',\s*status:\s*'in_progress'\s*},?\s*\]/,
@@ -45,9 +45,9 @@ function fixComprehensiveStoreTest() {
           answered_questions: 15,
           score: 50
         }
-      ]`
+      ]`,
   );
-  
+
   // Fix new assessment data
   content = content.replace(
     /const newAssessment = \{\s*id:\s*'new-assess',\s*name:\s*'New Assessment',\s*status:\s*'draft',?\s*\}/,
@@ -59,9 +59,9 @@ function fixComprehensiveStoreTest() {
         business_profile_id: 'profile-1',
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString()
-      }`
+      }`,
   );
-  
+
   // Fix evidence mock data
   content = content.replace(
     /const mockEvidence = \[\s*{\s*id:\s*'ev-1',\s*name:\s*'Evidence 1',\s*status:\s*'collected'\s*},\s*{\s*id:\s*'ev-2',\s*name:\s*'Evidence 2',\s*status:\s*'pending'\s*},?\s*\]/,
@@ -86,9 +86,9 @@ function fixComprehensiveStoreTest() {
           created_at: new Date().toISOString(),
           updated_at: new Date().toISOString()
         }
-      ]`
+      ]`,
   );
-  
+
   // Fix widget mock data
   content = content.replace(
     /const mockWidgets = \[\s*{\s*id:\s*'widget-1',\s*type:\s*'compliance-score',\s*config:\s*{}\s*},\s*{\s*id:\s*'widget-2',\s*type:\s*'pending-tasks',\s*config:\s*{}\s*},?\s*\]/,
@@ -109,15 +109,27 @@ function fixComprehensiveStoreTest() {
           settings: {},
           isVisible: true
         }
-      ]`
+      ]`,
   );
-  
+
   // Remove all 'as any' casts for these mock data
-  content = content.replace(/store\.setAssessments\(mockAssessments as any\)/, 'store.setAssessments(mockAssessments)');
-  content = content.replace(/store\.addAssessment\(newAssessment as any\)/, 'store.addAssessment(newAssessment)');
-  content = content.replace(/store\.setEvidence\(mockEvidence as any\)/, 'store.setEvidence(mockEvidence)');
-  content = content.replace(/store\.setWidgets\(mockWidgets as any\)/, 'store.setWidgets(mockWidgets)');
-  
+  content = content.replace(
+    /store\.setAssessments\(mockAssessments as any\)/,
+    'store.setAssessments(mockAssessments)',
+  );
+  content = content.replace(
+    /store\.addAssessment\(newAssessment as any\)/,
+    'store.addAssessment(newAssessment)',
+  );
+  content = content.replace(
+    /store\.setEvidence\(mockEvidence as any\)/,
+    'store.setEvidence(mockEvidence)',
+  );
+  content = content.replace(
+    /store\.setWidgets\(mockWidgets as any\)/,
+    'store.setWidgets(mockWidgets)',
+  );
+
   fs.writeFileSync(testFile, content);
   console.log('✅ Fixed comprehensive store test');
 }
@@ -125,10 +137,10 @@ function fixComprehensiveStoreTest() {
 // Fix 2: Add missing mock implementations for AI integration tests
 function fixAIIntegrationTest() {
   const testFile = path.join(FRONTEND_DIR, 'tests/ai-integration.test.ts');
-  
+
   // Read the file
   let content = fs.readFileSync(testFile, 'utf-8');
-  
+
   // Ensure the test waits for the async operation
   content = content.replace(
     /engine\.answerQuestion\('q1', 'no'\);\s*\n\s*const hasMore = await engine\.nextQuestion\(\);/,
@@ -139,9 +151,9 @@ function fixAIIntegrationTest() {
       const hasMore = await engine.nextQuestion();
       
       // Wait a tick for the async operations to complete
-      await new Promise(resolve => setTimeout(resolve, 0));`
+      await new Promise(resolve => setTimeout(resolve, 0));`,
   );
-  
+
   fs.writeFileSync(testFile, content);
   console.log('✅ Fixed AI integration test');
 }
@@ -149,15 +161,15 @@ function fixAIIntegrationTest() {
 // Fix 3: Update auth flow test to handle form submission properly
 function fixAuthFlowTest() {
   const testFile = path.join(FRONTEND_DIR, 'tests/components/auth/auth-flow.test.tsx');
-  
+
   if (!fs.existsSync(testFile)) {
     console.log('⚠️  Auth flow test file not found, skipping');
     return;
   }
-  
+
   // Read the file
   let content = fs.readFileSync(testFile, 'utf-8');
-  
+
   // Fix form submission test - ensure the form is properly submitted
   content = content.replace(
     /fireEvent\.click\(screen\.getByRole\('button', { name: \/sign in\/i }\)\)/,
@@ -167,9 +179,9 @@ function fixAuthFlowTest() {
       fireEvent.submit(form);
     } else {
       fireEvent.click(screen.getByRole('button', { name: /sign in/i }));
-    }`
+    }`,
   );
-  
+
   fs.writeFileSync(testFile, content);
   console.log('✅ Fixed auth flow test');
 }
@@ -177,7 +189,7 @@ function fixAuthFlowTest() {
 // Fix 4: Create missing test utilities for assessment wizard
 function createAssessmentWizardUtils() {
   const utilsFile = path.join(FRONTEND_DIR, 'tests/utils/assessment-test-utils.ts');
-  
+
   const utilsContent = `import type { AssessmentFramework, Question } from '@/lib/assessment-engine/types';
 
 export const createMockFramework = (overrides?: Partial<AssessmentFramework>): AssessmentFramework => ({
@@ -228,13 +240,13 @@ export const createMockAssessmentContext = () => ({
   metadata: {}
 });
 `;
-  
+
   // Ensure directory exists
   const utilsDir = path.dirname(utilsFile);
   if (!fs.existsSync(utilsDir)) {
     fs.mkdirSync(utilsDir, { recursive: true });
   }
-  
+
   fs.writeFileSync(utilsFile, utilsContent);
   console.log('✅ Created assessment wizard test utilities');
 }
@@ -242,9 +254,9 @@ export const createMockAssessmentContext = () => ({
 // Fix 5: Update vitest config to handle long-running tests
 function updateVitestConfig() {
   const configFile = path.join(FRONTEND_DIR, 'vitest.config.ts');
-  
+
   let content = fs.readFileSync(configFile, 'utf-8');
-  
+
   // Add pool configuration to prevent timeouts
   if (!content.includes('pool:')) {
     content = content.replace(
@@ -256,10 +268,10 @@ function updateVitestConfig() {
       forks: {
         singleFork: true // Run tests sequentially in a single fork
       }
-    }`
+    }`,
     );
   }
-  
+
   fs.writeFileSync(configFile, content);
   console.log('✅ Updated vitest config');
 }
@@ -267,14 +279,14 @@ function updateVitestConfig() {
 // Main execution
 async function main() {
   console.log('🔧 Fixing frontend tests...\n');
-  
+
   try {
     fixComprehensiveStoreTest();
     fixAIIntegrationTest();
     fixAuthFlowTest();
     createAssessmentWizardUtils();
     updateVitestConfig();
-    
+
     console.log('\n✅ All fixes applied successfully!');
     console.log('\n📝 Next steps:');
     console.log('1. Run: pnpm test --run to verify fixes');

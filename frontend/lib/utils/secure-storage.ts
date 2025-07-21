@@ -13,7 +13,7 @@ class SecureStorage {
   private static readonly ACCESS_TOKEN_KEY = 'ruleiq_access_token';
   private static readonly SESSION_EXPIRY_KEY = 'ruleiq_session_expiry';
   private static readonly REFRESH_TOKEN_COOKIE = 'ruleiq_refresh_token';
-  
+
   private static encryptionKey: CryptoKey | null = null;
 
   /**
@@ -26,7 +26,7 @@ class SecureStorage {
 
     // Try to get existing key from sessionStorage
     const storedKey = sessionStorage.getItem(this.ENCRYPTION_KEY_NAME);
-    
+
     if (storedKey) {
       try {
         const keyData = JSON.parse(atob(storedKey));
@@ -35,7 +35,7 @@ class SecureStorage {
           new Uint8Array(keyData),
           { name: 'AES-GCM' },
           false,
-          ['encrypt', 'decrypt']
+          ['encrypt', 'decrypt'],
         );
         return this.encryptionKey;
       } catch (error) {
@@ -44,11 +44,10 @@ class SecureStorage {
     }
 
     // Generate new key
-    this.encryptionKey = await crypto.subtle.generateKey(
-      { name: 'AES-GCM', length: 256 },
-      true,
-      ['encrypt', 'decrypt']
-    );
+    this.encryptionKey = await crypto.subtle.generateKey({ name: 'AES-GCM', length: 256 }, true, [
+      'encrypt',
+      'decrypt',
+    ]);
 
     // Export and store the key
     const exportedKey = await crypto.subtle.exportKey('raw', this.encryptionKey);
@@ -66,22 +65,18 @@ class SecureStorage {
       const key = await this.getEncryptionKey();
       const encoder = new TextEncoder();
       const dataBuffer = encoder.encode(data);
-      
+
       // Generate random IV
       const iv = crypto.getRandomValues(new Uint8Array(12));
-      
+
       // Encrypt the data
-      const encryptedBuffer = await crypto.subtle.encrypt(
-        { name: 'AES-GCM', iv },
-        key,
-        dataBuffer
-      );
-      
+      const encryptedBuffer = await crypto.subtle.encrypt({ name: 'AES-GCM', iv }, key, dataBuffer);
+
       // Combine IV and encrypted data
       const combined = new Uint8Array(iv.length + encryptedBuffer.byteLength);
       combined.set(iv);
       combined.set(new Uint8Array(encryptedBuffer), iv.length);
-      
+
       // Return base64 encoded result
       return btoa(String.fromCharCode(...combined));
     } catch (error) {
@@ -96,23 +91,21 @@ class SecureStorage {
   private static async decrypt(encryptedData: string): Promise<string> {
     try {
       const key = await this.getEncryptionKey();
-      
+
       // Decode base64
       const combined = new Uint8Array(
-        atob(encryptedData).split('').map(char => char.charCodeAt(0))
+        atob(encryptedData)
+          .split('')
+          .map((char) => char.charCodeAt(0)),
       );
-      
+
       // Extract IV and encrypted data
       const iv = combined.slice(0, 12);
       const encrypted = combined.slice(12);
-      
+
       // Decrypt the data
-      const decryptedBuffer = await crypto.subtle.decrypt(
-        { name: 'AES-GCM', iv },
-        key,
-        encrypted
-      );
-      
+      const decryptedBuffer = await crypto.subtle.decrypt({ name: 'AES-GCM', iv }, key, encrypted);
+
       // Convert back to string
       const decoder = new TextDecoder();
       return decoder.decode(decryptedBuffer);
@@ -128,7 +121,7 @@ class SecureStorage {
   private static setHttpOnlyCookie(name: string, value: string, expiry?: number): void {
     const expires = expiry ? new Date(expiry).toUTCString() : '';
     const expiresStr = expires ? `; expires=${expires}` : '';
-    
+
     // Note: httpOnly can only be set server-side, but we can set secure and sameSite
     document.cookie = `${name}=${value}; path=/; secure; samesite=strict${expiresStr}`;
   }
@@ -160,14 +153,14 @@ class SecureStorage {
   public static async setAccessToken(token: string, options: StorageOptions = {}): Promise<void> {
     try {
       const encryptedToken = await this.encrypt(token);
-      
+
       if (options.useHttpOnlyCookie) {
         // Note: For production, this should be set by the server
         console.warn('httpOnly cookies must be set server-side for security');
       }
-      
+
       sessionStorage.setItem(this.ACCESS_TOKEN_KEY, encryptedToken);
-      
+
       if (options.expiry) {
         sessionStorage.setItem(this.SESSION_EXPIRY_KEY, options.expiry.toString());
       }
@@ -186,7 +179,7 @@ class SecureStorage {
       if (!encryptedToken) {
         return null;
       }
-      
+
       return await this.decrypt(encryptedToken);
     } catch (error) {
       console.error('Failed to retrieve access token:', error);
@@ -250,7 +243,7 @@ class SecureStorage {
     this.clearAccessToken();
     this.clearRefreshToken();
     sessionStorage.removeItem(this.ENCRYPTION_KEY_NAME);
-    
+
     // Also clear legacy localStorage tokens if they exist
     localStorage.removeItem('ruleiq_auth_token');
     localStorage.removeItem('ruleiq_refresh_token');
@@ -258,7 +251,7 @@ class SecureStorage {
     sessionStorage.removeItem('ruleiq_auth_token');
     sessionStorage.removeItem('ruleiq_refresh_token');
     sessionStorage.removeItem('ruleiq_session_expiry');
-    
+
     this.encryptionKey = null;
   }
 
@@ -268,16 +261,18 @@ class SecureStorage {
   public static async migrateLegacyTokens(): Promise<void> {
     try {
       // Check for legacy tokens
-      const legacyAccessToken = localStorage.getItem('ruleiq_auth_token') || 
-                               sessionStorage.getItem('ruleiq_auth_token');
-      const legacyRefreshToken = localStorage.getItem('ruleiq_refresh_token') || 
-                                sessionStorage.getItem('ruleiq_refresh_token');
-      const legacyExpiry = localStorage.getItem('ruleiq_session_expiry') || 
-                          sessionStorage.getItem('ruleiq_session_expiry');
+      const legacyAccessToken =
+        localStorage.getItem('ruleiq_auth_token') || sessionStorage.getItem('ruleiq_auth_token');
+      const legacyRefreshToken =
+        localStorage.getItem('ruleiq_refresh_token') ||
+        sessionStorage.getItem('ruleiq_refresh_token');
+      const legacyExpiry =
+        localStorage.getItem('ruleiq_session_expiry') ||
+        sessionStorage.getItem('ruleiq_session_expiry');
 
       if (legacyAccessToken) {
         await this.setAccessToken(legacyAccessToken, {
-          expiry: legacyExpiry ? parseInt(legacyExpiry) : undefined
+          expiry: legacyExpiry ? parseInt(legacyExpiry) : undefined,
         });
       }
 

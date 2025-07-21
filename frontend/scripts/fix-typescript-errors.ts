@@ -1,12 +1,10 @@
 #!/usr/bin/env node
 /**
  * TypeScript Error Fix Script for ruleIQ Frontend
- * 
+ *
  * This script fixes common TypeScript errors automatically
  * to improve type safety and prepare for production.
  */
-
-
 
 interface TypeScriptError {
   file: string;
@@ -30,7 +28,7 @@ class TypeScriptErrorFixer {
   private parseErrors(output: string): TypeScriptError[] {
     const errors: TypeScriptError[] = [];
     const lines = output.split('\n');
-    
+
     for (const line of lines) {
       const match = line.match(/^(.+?)\((\d+),(\d+)\): error (TS\d+): (.+)$/);
       if (match) {
@@ -40,11 +38,11 @@ class TypeScriptErrorFixer {
           line: parseInt(lineStr, 10),
           column: parseInt(columnStr, 10),
           code,
-          message
+          message,
         });
       }
     }
-    
+
     return errors;
   }
 
@@ -59,7 +57,7 @@ class TypeScriptErrorFixer {
       // Variable declarations
       /(?:const|let|var)\s+(\w+)/g,
       // Destructuring
-      /{\s*(\w+)(?:\s*,\s*(\w+))*\s*}/g
+      /{\s*(\w+)(?:\s*,\s*(\w+))*\s*}/g,
     ];
 
     // This is a simplified approach - in practice, you'd need more sophisticated parsing
@@ -94,12 +92,12 @@ class TypeScriptErrorFixer {
   private fixMissingProperties(filePath: string, content: string): string {
     // This would require more complex AST manipulation
     // For now, just add basic fixes
-    
+
     // Fix trendValue property issues
     if (content.includes('trendValue')) {
       content = content.replace(
         /trendValue:\s*([^,}]+)/g,
-        'trend: { value: $1, isPositive: true }'
+        'trend: { value: $1, isPositive: true }',
       );
     }
 
@@ -118,7 +116,7 @@ class TypeScriptErrorFixer {
     for (const line of lines) {
       const importMatch = line.match(/import\s+\{([^}]+)\}\s+from/);
       if (importMatch?.[1]) {
-        const importList = importMatch[1].split(',').map(s => s.trim());
+        const importList = importMatch[1].split(',').map((s) => s.trim());
         for (const imp of importList) {
           imports.add(imp);
         }

@@ -9,7 +9,7 @@ import json
 import re
 import hashlib
 from datetime import datetime
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional
 from dataclasses import dataclass
 from enum import Enum
 
@@ -21,6 +21,7 @@ logger = get_logger(__name__)
 
 class ThreatLevel(Enum):
     """Threat levels for input analysis."""
+
     CLEAN = "clean"
     SUSPICIOUS = "suspicious"
     MALICIOUS = "malicious"
@@ -30,6 +31,7 @@ class ThreatLevel(Enum):
 @dataclass
 class SecurityAnalysis:
     """Result of security analysis on input."""
+
     threat_level: ThreatLevel
     confidence: float
     threats_detected: List[str]
@@ -40,7 +42,7 @@ class SecurityAnalysis:
 
 class AdvancedPromptSanitizer:
     """Enhanced prompt sanitization with multi-layer defense."""
-    
+
     def __init__(self):
         """Initialize with comprehensive threat patterns."""
         self.injection_patterns = {
@@ -116,9 +118,9 @@ class AdvancedPromptSanitizer:
                 r"exec\s*\(",
                 r"import\s+os",
                 r"__import__",
-            ]
+            ],
         }
-        
+
         self.semantic_triggers = [
             # Context confusion
             "end of conversation",
@@ -144,7 +146,7 @@ class AdvancedPromptSanitizer:
         threats_detected = []
         threat_level = ThreatLevel.CLEAN
         confidence = 0.0
-        
+
         # Pattern-based detection
         for category, patterns in self.injection_patterns.items():
             for pattern in patterns:
@@ -155,40 +157,44 @@ class AdvancedPromptSanitizer:
                         threat_level = ThreatLevel.MALICIOUS
                         confidence = max(confidence, 0.9)
                     elif category in ["role_manipulation", "escape_attempts"]:
-                        threat_level = max(threat_level, ThreatLevel.SUSPICIOUS, key=lambda x: x.value)
+                        threat_level = max(
+                            threat_level, ThreatLevel.SUSPICIOUS, key=lambda x: x.value
+                        )
                         confidence = max(confidence, 0.7)
                     else:
-                        threat_level = max(threat_level, ThreatLevel.SUSPICIOUS, key=lambda x: x.value)
+                        threat_level = max(
+                            threat_level, ThreatLevel.SUSPICIOUS, key=lambda x: x.value
+                        )
                         confidence = max(confidence, 0.5)
-        
+
         # Semantic analysis
         for trigger in self.semantic_triggers:
             if trigger.lower() in input_string.lower():
                 threats_detected.append(f"semantic: {trigger}")
                 threat_level = max(threat_level, ThreatLevel.SUSPICIOUS, key=lambda x: x.value)
                 confidence = max(confidence, 0.6)
-        
+
         # Statistical analysis
         stats = self._analyze_statistics(input_string)
         if stats["special_char_ratio"] > 0.3:
             threats_detected.append("statistical: high special character ratio")
             confidence = max(confidence, 0.4)
-        
+
         if stats["repeated_phrases"] > 5:
             threats_detected.append("statistical: excessive repetition")
             confidence = max(confidence, 0.5)
-            
+
         # Context-specific analysis
         context_threats = self._analyze_context_specific(input_string, context)
         threats_detected.extend(context_threats)
-        
+
         if context_threats:
             threat_level = max(threat_level, ThreatLevel.SUSPICIOUS, key=lambda x: x.value)
             confidence = max(confidence, 0.6)
-        
+
         # Sanitize the content
         sanitized_content = self._sanitize_content(input_string, threat_level, context)
-        
+
         return SecurityAnalysis(
             threat_level=threat_level,
             confidence=confidence,
@@ -200,33 +206,33 @@ class AdvancedPromptSanitizer:
                 "context": context,
                 "statistics": stats,
                 "timestamp": datetime.now().isoformat(),
-            }
+            },
         )
-    
+
     def _analyze_statistics(self, text: str) -> Dict[str, Any]:
         """Statistical analysis of input text."""
         if not text:
             return {"special_char_ratio": 0, "repeated_phrases": 0}
-            
+
         special_chars = sum(1 for c in text if not c.isalnum() and not c.isspace())
         special_char_ratio = special_chars / len(text) if text else 0
-        
+
         # Count repeated 3-word phrases
         words = text.lower().split()
-        phrases = [' '.join(words[i:i+3]) for i in range(len(words)-2)]
+        phrases = [" ".join(words[i : i + 3]) for i in range(len(words) - 2)]
         repeated_phrases = len(phrases) - len(set(phrases))
-        
+
         return {
             "special_char_ratio": special_char_ratio,
             "repeated_phrases": repeated_phrases,
             "word_count": len(words),
             "avg_word_length": sum(len(w) for w in words) / len(words) if words else 0,
         }
-    
+
     def _analyze_context_specific(self, text: str, context: str) -> List[str]:
         """Context-specific threat analysis."""
         threats = []
-        
+
         if context == "code":
             # Code context - check for dangerous functions
             code_threats = [
@@ -240,7 +246,7 @@ class AdvancedPromptSanitizer:
             for pattern in code_threats:
                 if re.search(pattern, text, re.IGNORECASE):
                     threats.append(f"code_threat: {pattern}")
-        
+
         elif context == "query":
             # Database query context
             sql_threats = [
@@ -255,34 +261,34 @@ class AdvancedPromptSanitizer:
             for pattern in sql_threats:
                 if re.search(pattern, text, re.IGNORECASE):
                     threats.append(f"sql_injection: {pattern}")
-        
+
         return threats
-    
+
     def _sanitize_content(self, content: str, threat_level: ThreatLevel, context: str) -> str:
         """Sanitize content based on threat level."""
         if threat_level == ThreatLevel.BLOCKED:
             return "[CONTENT BLOCKED]"
-        
+
         sanitized = content.strip()
-        
+
         # Remove null bytes and control characters
-        sanitized = re.sub(r'[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]', '', sanitized)
-        
+        sanitized = re.sub(r"[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]", "", sanitized)
+
         # Handle different threat levels
         if threat_level == ThreatLevel.MALICIOUS:
             # Aggressive sanitization for malicious content
             for category, patterns in self.injection_patterns.items():
                 for pattern in patterns:
-                    sanitized = re.sub(pattern, '[FILTERED]', sanitized, flags=re.IGNORECASE)
-        
+                    sanitized = re.sub(pattern, "[FILTERED]", sanitized, flags=re.IGNORECASE)
+
         elif threat_level == ThreatLevel.SUSPICIOUS:
             # Moderate sanitization for suspicious content
             # Remove common injection patterns but preserve more content
             for pattern in self.injection_patterns["instruction_override"]:
-                sanitized = re.sub(pattern, '[FILTERED]', sanitized, flags=re.IGNORECASE)
+                sanitized = re.sub(pattern, "[FILTERED]", sanitized, flags=re.IGNORECASE)
             for pattern in self.injection_patterns["escape_attempts"]:
-                sanitized = re.sub(pattern, '[FILTERED]', sanitized, flags=re.IGNORECASE)
-        
+                sanitized = re.sub(pattern, "[FILTERED]", sanitized, flags=re.IGNORECASE)
+
         # Context-specific sanitization
         if context == "code":
             # Preserve more characters but escape quotes
@@ -292,10 +298,10 @@ class AdvancedPromptSanitizer:
             sanitized = sanitized.replace("{", "{{").replace("}", "}}")
             sanitized = sanitized.replace("$", "\\$")
             sanitized = sanitized.replace("%", "%%")
-        
+
         # Limit consecutive newlines
-        sanitized = re.sub(r'\n{3,}', '\n\n', sanitized)
-        
+        sanitized = re.sub(r"\n{3,}", "\n\n", sanitized)
+
         return sanitized
 
 
@@ -306,39 +312,39 @@ _sanitizer = AdvancedPromptSanitizer()
 def sanitize_input(input_string: str, context: str = "general") -> str:
     """
     Advanced sanitization using comprehensive threat analysis.
-    
+
     Args:
         input_string: The user input to sanitize
         context: The context of usage (general, code, query, etc.)
-        
+
     Returns:
         Sanitized string safe for prompt inclusion with safety fencing
     """
     if not input_string:
         return create_safety_fence("", "user")
-    
+
     # Perform comprehensive security analysis
     analysis = _sanitizer.analyze_input(input_string, context)
-    
+
     # Log security events
     if analysis.threat_level != ThreatLevel.CLEAN:
         logger.warning(
             f"Security analysis detected {analysis.threat_level.value} content "
             f"(confidence: {analysis.confidence:.2f}): {analysis.threats_detected[:3]}"
         )
-        
+
         # Log full details for high-confidence threats
         if analysis.confidence > 0.8:
             logger.error(
                 f"High-confidence threat detected: {analysis.original_hash[:8]}... "
                 f"Threats: {analysis.threats_detected}"
             )
-    
+
     # Block malicious content entirely
     if analysis.threat_level == ThreatLevel.MALICIOUS and analysis.confidence > 0.8:
         logger.critical(f"Blocking malicious input: {analysis.original_hash[:8]}...")
         return create_safety_fence("[MALICIOUS CONTENT BLOCKED]", "user")
-    
+
     # Apply safety fencing to sanitized content
     return create_safety_fence(analysis.sanitized_content, "user")
 
@@ -346,11 +352,11 @@ def sanitize_input(input_string: str, context: str = "general") -> str:
 def create_safety_fence(content: str, fence_type: str = "user") -> str:
     """
     Create enhanced safety fence around content with multiple isolation layers.
-    
+
     Args:
         content: The content to fence
         fence_type: Type of fence (user, system, output)
-        
+
     Returns:
         Multi-layer fenced content with clear boundaries
     """
@@ -361,19 +367,19 @@ def create_safety_fence(content: str, fence_type: str = "user") -> str:
             "end": "==== END USER INPUT BOUNDARY ====",
         },
         "system": {
-            "outer": "==== SYSTEM CONTEXT BOUNDARY ====", 
+            "outer": "==== SYSTEM CONTEXT BOUNDARY ====",
             "inner": "--- SYSTEM CONTENT ---",
             "end": "==== END SYSTEM BOUNDARY ====",
         },
         "output": {
             "outer": "==== AI RESPONSE BOUNDARY ====",
-            "inner": "--- AI OUTPUT ---", 
+            "inner": "--- AI OUTPUT ---",
             "end": "==== END AI RESPONSE BOUNDARY ====",
         },
     }
-    
+
     fence_config = fences.get(fence_type, fences["user"])
-    
+
     # Multi-layer fencing for maximum isolation
     return (
         f"\n{fence_config['outer']}\n"
@@ -384,14 +390,16 @@ def create_safety_fence(content: str, fence_type: str = "user") -> str:
     )
 
 
-def validate_prompt_safety(prompt_dict: Dict[str, str], context: Dict[str, Any] = None) -> Dict[str, Any]:
+def validate_prompt_safety(
+    prompt_dict: Dict[str, str], context: Dict[str, Any] = None
+) -> Dict[str, Any]:
     """
     Validate entire prompt safety including system and user components.
-    
+
     Args:
         prompt_dict: Dictionary containing system and user prompts
         context: Additional context for validation
-        
+
     Returns:
         Safety validation report
     """
@@ -402,20 +410,20 @@ def validate_prompt_safety(prompt_dict: Dict[str, str], context: Dict[str, Any] 
         "recommendations": [],
         "timestamp": datetime.now().isoformat(),
     }
-    
+
     # Validate each component
     for component, content in prompt_dict.items():
         if component in ["system", "system_instruction", "user"]:
             analysis = _sanitizer.analyze_input(content, context="prompt_validation")
-            
+
             validation_report["confidence_scores"][component] = analysis.confidence
-            
+
             if analysis.threat_level != ThreatLevel.CLEAN:
                 validation_report["safe"] = False
-                validation_report["threats_detected"].extend([
-                    f"{component}: {threat}" for threat in analysis.threats_detected
-                ])
-                
+                validation_report["threats_detected"].extend(
+                    [f"{component}: {threat}" for threat in analysis.threats_detected]
+                )
+
                 # Add specific recommendations
                 if analysis.threat_level == ThreatLevel.MALICIOUS:
                     validation_report["recommendations"].append(
@@ -425,27 +433,27 @@ def validate_prompt_safety(prompt_dict: Dict[str, str], context: Dict[str, Any] 
                     validation_report["recommendations"].append(
                         f"WARNING: {component} component contains suspicious patterns - review required"
                     )
-    
+
     # Log validation results
     if not validation_report["safe"]:
         logger.warning(f"Prompt safety validation failed: {validation_report['threats_detected']}")
-    
+
     return validation_report
 
 
 def get_security_analysis(input_text: str, context: str = "general") -> Dict[str, Any]:
     """
     Public interface for security analysis of input text.
-    
+
     Args:
         input_text: Text to analyze
         context: Context for analysis
-        
+
     Returns:
         Security analysis report
     """
     analysis = _sanitizer.analyze_input(input_text, context)
-    
+
     return {
         "threat_level": analysis.threat_level.value,
         "confidence": analysis.confidence,
@@ -480,31 +488,35 @@ class PromptTemplates:
         """Initialize prompt templates with system instruction support"""
         self._instruction_cache = {}
         self._safety_enabled = True  # Enable safety validation by default
-    
-    def _validate_and_secure_prompt(self, prompt_dict: Dict[str, str], context: Dict[str, Any], prompt_type: str = "general") -> Dict[str, str]:
+
+    def _validate_and_secure_prompt(
+        self, prompt_dict: Dict[str, str], context: Dict[str, Any], prompt_type: str = "general"
+    ) -> Dict[str, str]:
         """
         Validate prompt safety and return secured version.
-        
+
         Args:
             prompt_dict: The prompt dictionary to validate
             context: Context for validation
             prompt_type: Type of prompt for logging
-            
+
         Returns:
             Validated and secured prompt dictionary
         """
         if not self._safety_enabled:
             return prompt_dict
-            
+
         validation_result = validate_prompt_safety(prompt_dict, context)
         if not validation_result["safe"]:
             logger.error(f"{prompt_type} prompt failed safety validation: {validation_result}")
             # Return a safe fallback prompt
             return {
                 "system": "You are a helpful AI assistant. Respond safely and appropriately.",
-                "user": create_safety_fence("[UNSAFE PROMPT BLOCKED - Request contains suspicious content]", "user"),
+                "user": create_safety_fence(
+                    "[UNSAFE PROMPT BLOCKED - Request contains suspicious content]", "user"
+                ),
             }
-        
+
         return prompt_dict
 
     def get_system_instruction_for_task(
@@ -615,7 +627,7 @@ class PromptTemplates:
             "system_instruction": system_instruction,  # New format
             "user": user_prompt,
         }
-        
+
         return self._validate_and_secure_prompt(prompt_dict, context, "intent_classification")
 
     def get_evidence_query_prompt(
@@ -666,7 +678,7 @@ class PromptTemplates:
             "system_instruction": system_instruction,  # New format
             "user": user_prompt,
         }
-        
+
         return self._validate_and_secure_prompt(prompt_dict, context, "evidence_query")
 
     def get_compliance_check_prompt(self, message: str, context: Dict[str, Any]) -> Dict[str, str]:
@@ -1076,7 +1088,7 @@ If you need clarification on any aspect of their request, feel free to ask follo
             "system_instruction": system_instruction,  # New format
             "user": user_prompt,
         }
-        
+
         return self._validate_and_secure_prompt(prompt_dict, context, "main_prompt")
 
     def get_context_aware_recommendation_prompt(

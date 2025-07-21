@@ -40,7 +40,7 @@ class ChatService {
   }): Promise<{ items: ChatConversation[]; total: number }> {
     const response = await apiClient.get<{ items: ChatConversation[]; total: number }>(
       '/chat/conversations',
-      { params }
+      { params },
     );
     return response.data;
   }
@@ -79,7 +79,7 @@ class ChatService {
   async sendMessage(conversationId: string, data: SendMessageRequest): Promise<ChatMessage> {
     const response = await apiClient.post<ChatMessage>(
       `/chat/conversations/${conversationId}/messages`,
-      data
+      data,
     );
     return response.data;
   }
@@ -128,7 +128,7 @@ class ChatService {
    */
   async getContextAwareRecommendations(
     framework: string,
-    contextType: 'comprehensive' | 'guidance' = 'comprehensive'
+    contextType: 'comprehensive' | 'guidance' = 'comprehensive',
   ): Promise<any> {
     const response = await apiClient.post<any>('/chat/context-aware-recommendations', null, {
       params: { framework, context_type: contextType },
@@ -142,7 +142,7 @@ class ChatService {
   async generateEvidenceCollectionWorkflow(
     framework: string,
     controlId?: string,
-    workflowType: 'comprehensive' | 'quick' = 'comprehensive'
+    workflowType: 'comprehensive' | 'quick' = 'comprehensive',
   ): Promise<any> {
     const response = await apiClient.post<any>('/chat/evidence-collection-workflow', null, {
       params: {
@@ -160,7 +160,7 @@ class ChatService {
   async generateCustomizedPolicy(
     framework: string,
     policyType: string,
-    customRequirements?: string[]
+    customRequirements?: string[],
   ): Promise<any> {
     const response = await apiClient.post<any>('/chat/generate-policy', null, {
       params: {
@@ -177,7 +177,7 @@ class ChatService {
    */
   async getSmartComplianceGuidance(
     framework: string,
-    guidanceType: 'getting_started' | 'next_steps' | 'optimization' = 'getting_started'
+    guidanceType: 'getting_started' | 'next_steps' | 'optimization' = 'getting_started',
   ): Promise<any> {
     const response = await apiClient.get<any>('/chat/smart-compliance-guidance', {
       params: { framework, guidance_type: guidanceType },
@@ -262,7 +262,7 @@ class ChatService {
     this.ws.onclose = () => {
       console.log('WebSocket disconnected');
       this.notifyHandlers({ type: 'connection', data: { status: 'disconnected' } });
-      
+
       // Attempt to reconnect after 3 seconds
       this.reconnectTimeout = setTimeout(() => {
         this.connectWebSocket(conversationId);
@@ -286,7 +286,7 @@ class ChatService {
    */
   addMessageHandler(handler: (message: ChatWebSocketMessage) => void): () => void {
     this.messageHandlers.push(handler);
-    
+
     // Return cleanup function
     return () => {
       this.messageHandlers = this.messageHandlers.filter((h) => h !== handler);
@@ -308,12 +308,12 @@ class ChatService {
       clearTimeout(this.reconnectTimeout);
       this.reconnectTimeout = null;
     }
-    
+
     if (this.ws) {
       this.ws.close();
       this.ws = null;
     }
-    
+
     this.messageHandlers = [];
   }
 }

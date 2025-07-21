@@ -3,6 +3,7 @@
 ## Before Committing Changes
 
 ### Code Quality Checks (Required)
+
 ```bash
 # 1. Type checking (CRITICAL - build ignores TS errors)
 pnpm typecheck
@@ -18,6 +19,7 @@ pnpm test --run
 ```
 
 ### Build Verification
+
 ```bash
 # 5. Production build test
 pnpm build
@@ -27,6 +29,7 @@ pnpm start
 ```
 
 ### Feature-Specific Testing
+
 ```bash
 # For UI components
 pnpm test:visual
@@ -42,6 +45,7 @@ pnpm test:e2e:smoke
 ```
 
 ## Security & Best Practices
+
 - [ ] No secrets/API keys in code
 - [ ] Proper error boundaries implemented
 - [ ] Loading states handled
@@ -50,18 +54,21 @@ pnpm test:e2e:smoke
 - [ ] Dark mode compatibility checked
 
 ## Documentation Updates
+
 - [ ] Component props documented (if applicable)
 - [ ] README updated for new features
 - [ ] CHANGELOG entry added
 - [ ] Storybook stories updated/added
 
 ## Performance Considerations
+
 - [ ] Bundle size impact assessed (`pnpm build:analyze`)
 - [ ] Image optimization verified
 - [ ] Code splitting appropriate
 - [ ] Memory leaks checked (`pnpm test:memory-leaks`)
 
 ## Production Readiness
+
 - [ ] Error handling implemented
 - [ ] Loading states defined
 - [ ] Edge cases considered
@@ -69,6 +76,7 @@ pnpm test:e2e:smoke
 - [ ] SEO considerations (meta tags, semantic HTML)
 
 ## Git Workflow
+
 ```bash
 # Pre-commit hooks will run automatically, but manual verification:
 git add .
@@ -78,6 +86,7 @@ git push origin branch-name
 ```
 
 ## Critical Notes
+
 - **TypeScript errors are ignored in build** - Always run `pnpm typecheck`
 - **ESLint errors are ignored in build** - Always run `pnpm lint`
 - **Use pnpm** (not npm/yarn) for package management

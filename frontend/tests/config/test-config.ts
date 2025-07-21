@@ -1,6 +1,6 @@
 /**
  * Comprehensive Testing Configuration for ruleIQ
- * 
+ *
  * This file contains all testing configurations, thresholds, and utilities
  * used across different types of tests (unit, integration, E2E, performance, visual).
  */
@@ -19,23 +19,23 @@ export const TEST_CONFIG = {
   // Performance thresholds
   PERFORMANCE: {
     // Core Web Vitals (milliseconds)
-    LCP_THRESHOLD: 2500,        // Largest Contentful Paint
-    FID_THRESHOLD: 100,         // First Input Delay
-    CLS_THRESHOLD: 0.1,         // Cumulative Layout Shift
-    FCP_THRESHOLD: 1800,        // First Contentful Paint
-    TTI_THRESHOLD: 3800,        // Time to Interactive
-    
+    LCP_THRESHOLD: 2500, // Largest Contentful Paint
+    FID_THRESHOLD: 100, // First Input Delay
+    CLS_THRESHOLD: 0.1, // Cumulative Layout Shift
+    FCP_THRESHOLD: 1800, // First Contentful Paint
+    TTI_THRESHOLD: 3800, // Time to Interactive
+
     // Page load times (milliseconds)
     PAGE_LOAD_TIMEOUT: 30000,
     API_RESPONSE_TIMEOUT: 5000,
     COMPONENT_RENDER_TIMEOUT: 1000,
-    
+
     // Bundle size limits (KB)
     MAX_BUNDLE_SIZE: 800,
     MAX_CHUNK_SIZE: 250,
     MAX_CSS_SIZE: 100,
     MAX_FIRST_LOAD_JS: 300,
-    
+
     // Resource limits
     MAX_RESOURCES: 50,
     MAX_SLOW_RESOURCES: 0,
@@ -50,7 +50,7 @@ export const TEST_CONFIG = {
     LARGE_TEXT_CONTRAST_RATIO: 3.0,
     UI_COMPONENT_CONTRAST_RATIO: 3.0,
     TOUCH_TARGET_SIZE: 44, // pixels
-    
+
     // Allowed violations (for gradual improvement)
     ALLOWED_VIOLATIONS: {
       'color-contrast': 0,
@@ -62,11 +62,11 @@ export const TEST_CONFIG = {
 
   // Visual regression settings
   VISUAL: {
-    THRESHOLD: 0.2,             // Pixel difference threshold (0-1)
+    THRESHOLD: 0.2, // Pixel difference threshold (0-1)
     ANIMATION_HANDLING: 'disabled',
     FULL_PAGE: true,
     CLIP_SELECTOR: null,
-    
+
     // Viewport sizes for responsive testing
     VIEWPORTS: {
       MOBILE: { width: 375, height: 667 },
@@ -74,7 +74,7 @@ export const TEST_CONFIG = {
       DESKTOP: { width: 1920, height: 1080 },
       LARGE_DESKTOP: { width: 2560, height: 1440 },
     },
-    
+
     // Elements to mask in screenshots
     DYNAMIC_CONTENT_SELECTORS: [
       '[data-testid="current-time"]',
@@ -204,8 +204,8 @@ export const TEST_CONFIG = {
   API_MOCKING: {
     ENABLED: process.env['$1'] === 'true',
     DELAY_RANGE: [100, 500], // Random delay range for realistic testing
-    ERROR_RATE: 0.05,        // 5% error rate for resilience testing
-    
+    ERROR_RATE: 0.05, // 5% error rate for resilience testing
+
     // Mock responses
     MOCK_RESPONSES: {
       LOGIN_SUCCESS: {
@@ -235,7 +235,7 @@ export const TEST_CONFIG = {
     COVERAGE_REPORT: true,
     PERFORMANCE_BUDGET_REPORT: true,
     ACCESSIBILITY_REPORT: true,
-    
+
     // Report paths
     REPORTS_DIR: 'test-results',
     COVERAGE_DIR: 'coverage',
@@ -249,7 +249,7 @@ export const TEST_CONFIG = {
     FAIL_FAST: process.env['CI'] === 'true',
     FORBID_ONLY: process.env['CI'] === 'true',
     MAX_FAILURES: process.env['CI'] === 'true' ? 5 : undefined,
-    
+
     // Artifact retention
     ARTIFACT_RETENTION_DAYS: 30,
     VIDEO_RETENTION_DAYS: 7,
@@ -304,7 +304,9 @@ export function getTestUser(role: keyof TestConfig['TEST_DATA']['USERS'] = 'REGU
   return TEST_CONFIG.TEST_DATA.USERS[role];
 }
 
-export function getBusinessProfile(type: keyof TestConfig['TEST_DATA']['BUSINESS_PROFILES'] = 'TECH_STARTUP') {
+export function getBusinessProfile(
+  type: keyof TestConfig['TEST_DATA']['BUSINESS_PROFILES'] = 'TECH_STARTUP',
+) {
   return TEST_CONFIG.TEST_DATA.BUSINESS_PROFILES[type];
 }
 
@@ -327,7 +329,7 @@ export function getRetryCount(type: keyof TestConfig['RETRIES'] = 'DEFAULT'): nu
 // Environment-specific configurations
 export function getEnvironmentConfig() {
   const env = process.env['$1'] || 'development';
-  
+
   return {
     ...TEST_CONFIG.ENVIRONMENT,
     IS_DEVELOPMENT: env === 'development',

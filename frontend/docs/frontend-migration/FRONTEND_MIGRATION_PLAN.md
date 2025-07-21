@@ -1,7 +1,9 @@
 # Frontend Design Migration Plan
+
 ## Migrating `front-end-design-refactor` → `main`
 
 ### 🎯 Objective
+
 Safely merge the new teal-based light theme design system from the refactor branch into the main branch while maintaining stability and allowing for gradual adoption.
 
 ---
@@ -9,9 +11,11 @@ Safely merge the new teal-based light theme design system from the refactor bran
 ## 📅 Migration Timeline
 
 ### **Week 1: Foundation & Core Components**
+
 **Goal**: Establish design system infrastructure without breaking existing functionality
 
 #### Day 1-2: Design System Setup
+
 ```bash
 # 1. Create design system CSS file
 git checkout main
@@ -27,6 +31,7 @@ export const USE_NEW_THEME = process.env.NEXT_PUBLIC_USE_NEW_THEME === 'true';
 ```
 
 #### Day 3-4: Tailwind Configuration
+
 ```javascript
 // Update tailwind.config.ts to support both themes:
 const config = {
@@ -41,7 +46,7 @@ const config = {
           600: '#2C7A7B', // Primary
           700: '#285E61',
         },
-        
+
         // Keep existing colors for backward compatibility
         brand: {
           primary: process.env.NEXT_PUBLIC_USE_NEW_THEME ? '#2C7A7B' : '#7C3AED',
@@ -54,7 +59,9 @@ const config = {
 ```
 
 #### Day 5: Core Components Migration
+
 1. **Typography Component**:
+
    ```bash
    git checkout front-end-design-refactor -- frontend/components/ui/typography.tsx
    ```
@@ -62,19 +69,16 @@ const config = {
 2. **Button Component** (with theme support):
    ```typescript
    // Modify button.tsx to support both themes:
-   const buttonVariants = cva(
-     "...",
-     {
-       variants: {
-         variant: {
-           default: USE_NEW_THEME 
-             ? "bg-teal-600 text-white hover:bg-teal-700"
-             : "bg-primary text-primary-foreground hover:bg-primary/90",
-           // ... other variants
-         },
+   const buttonVariants = cva('...', {
+     variants: {
+       variant: {
+         default: USE_NEW_THEME
+           ? 'bg-teal-600 text-white hover:bg-teal-700'
+           : 'bg-primary text-primary-foreground hover:bg-primary/90',
+         // ... other variants
        },
      },
-   );
+   });
    ```
 
 ---
@@ -82,6 +86,7 @@ const config = {
 ### **Week 2: Navigation & Layout Components**
 
 #### Day 1-2: Navigation Components
+
 1. **Top Navigation Migration**:
    - Create `top-navigation-new.tsx` alongside existing
    - Use feature flag to conditionally render
@@ -92,7 +97,9 @@ const config = {
    - Ensure menu items work with both themes
 
 #### Day 3-5: Page-by-Page Migration
+
 Priority order:
+
 1. Dashboard page
 2. Assessments pages
 3. Evidence management
@@ -104,6 +111,7 @@ Priority order:
 ### **Week 3: Forms & Interactive Components**
 
 #### Components to Migrate:
+
 - Input fields
 - Select dropdowns
 - Checkboxes and radios
@@ -112,13 +120,14 @@ Priority order:
 - Toast notifications
 
 #### Migration Strategy:
+
 ```typescript
 // Create theme-aware component wrappers:
 export const ThemedInput = (props) => {
-  const className = USE_NEW_THEME 
+  const className = USE_NEW_THEME
     ? "border-neutral-200 focus:border-teal-600"
     : "border-input focus:border-primary";
-  
+
   return <Input className={className} {...props} />;
 };
 ```
@@ -128,6 +137,7 @@ export const ThemedInput = (props) => {
 ### **Week 4: Testing & Cleanup**
 
 #### Day 1-2: Comprehensive Testing
+
 - [ ] Visual regression testing
 - [ ] Accessibility audit (WCAG 2.2 AA)
 - [ ] Cross-browser testing
@@ -135,12 +145,14 @@ export const ThemedInput = (props) => {
 - [ ] Performance metrics
 
 #### Day 3-4: Gradual Rollout
+
 1. Enable new theme for internal team (10%)
 2. A/B test with 25% of users
 3. Monitor feedback and metrics
 4. Full rollout if metrics are positive
 
 #### Day 5: Cleanup
+
 - Remove feature flags
 - Delete old theme code
 - Update documentation
@@ -151,6 +163,7 @@ export const ThemedInput = (props) => {
 ## 🛠️ Implementation Commands
 
 ### 1. Cherry-pick Specific Files
+
 ```bash
 # Switch to main branch
 git checkout main
@@ -164,6 +177,7 @@ git checkout front-end-design-refactor -- frontend/components/ui/button.tsx
 ```
 
 ### 2. Create Migration Branch
+
 ```bash
 # Create a new branch for migration
 git checkout -b feature/teal-theme-migration
@@ -176,6 +190,7 @@ git commit -m "feat: add new teal-based design system"
 ```
 
 ### 3. Testing Commands
+
 ```bash
 # Run with new theme
 NEXT_PUBLIC_USE_NEW_THEME=true pnpm dev
@@ -193,22 +208,26 @@ NEXT_PUBLIC_USE_NEW_THEME=false pnpm test
 ## ⚠️ Risk Mitigation
 
 ### 1. **Feature Flags**
+
 - Use environment variables for easy rollback
 - Test both themes in parallel
 - Gradual user rollout
 
 ### 2. **Backward Compatibility**
+
 - Keep old color mappings temporarily
 - Support both theme systems during migration
 - No breaking changes to component APIs
 
 ### 3. **Monitoring**
+
 - Track user engagement metrics
 - Monitor error rates
 - Collect user feedback
 - A/B test performance
 
 ### 4. **Rollback Plan**
+
 ```bash
 # If issues arise, quickly rollback:
 NEXT_PUBLIC_USE_NEW_THEME=false pnpm build

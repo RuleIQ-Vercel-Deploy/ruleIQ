@@ -16,8 +16,6 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 
 from api.context import user_id_var
-from config.cache import get_cache_manager
-from config.settings import settings
 from core.exceptions import NotAuthenticatedException
 from database.db_setup import get_async_db
 from database.user import User
@@ -35,7 +33,7 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/token", auto_error=Fals
 async def blacklist_token(token: str, reason: str = "logout", **kwargs) -> None:
     """Add a token to the blacklist with enhanced security features."""
     from .token_blacklist import blacklist_token as enhanced_blacklist_token
-    
+
     # Use enhanced blacklist with TTL based on token type
     ttl = ACCESS_TOKEN_EXPIRE_MINUTES * 60
     await enhanced_blacklist_token(token, reason=reason, ttl=ttl, **kwargs)
@@ -44,7 +42,7 @@ async def blacklist_token(token: str, reason: str = "logout", **kwargs) -> None:
 async def is_token_blacklisted(token: str) -> bool:
     """Check if a token is blacklisted using enhanced blacklist."""
     from .token_blacklist import is_token_blacklisted as enhanced_is_blacklisted
-    
+
     return await enhanced_is_blacklisted(token)
 
 

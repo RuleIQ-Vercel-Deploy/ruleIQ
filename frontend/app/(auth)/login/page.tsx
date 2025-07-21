@@ -7,7 +7,6 @@ import { useRouter } from 'next/navigation';
 import * as React from 'react';
 import { useForm } from 'react-hook-form';
 
-
 import { SecurityBadges, TrustSignals } from '@/components/auth/security-badges';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
@@ -54,7 +53,9 @@ export default function LoginPage() {
 
   const onSubmit = async (data: LoginFormData) => {
     if (!csrfToken) {
-      setFormError('root', { message: 'Security token not available. Please refresh and try again.' });
+      setFormError('root', {
+        message: 'Security token not available. Please refresh and try again.',
+      });
       return;
     }
 
@@ -98,9 +99,7 @@ export default function LoginPage() {
     } catch (error) {
       // Handle ApiError from the API client
       const errorMessage =
-        error instanceof Error
-          ? error.message
-          : 'Login failed. Please check your credentials.';
+        error instanceof Error ? error.message : 'Login failed. Please check your credentials.';
       setFormError('root', { message: errorMessage });
     } finally {
       setIsSubmitting(false);
@@ -109,21 +108,23 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen bg-surface-base">
-      <div className="absolute inset-0 mesh-gradient opacity-20"></div>
+      <div className="mesh-gradient absolute inset-0 opacity-20"></div>
       <div className="container relative mx-auto px-4 py-12">
         <div className="grid min-h-[calc(100vh-6rem)] items-center gap-16 lg:grid-cols-2">
           {/* Left side - Login Form */}
           <div className="order-1 flex items-center justify-center lg:justify-end">
-            <Card className="glass-card w-full max-w-md border-0 bg-surface-primary/80 backdrop-blur-xl shadow-2xl">
+            <Card className="glass-card w-full max-w-md border-0 bg-surface-primary/80 shadow-2xl backdrop-blur-xl">
               <CardHeader className="space-y-6 pb-6 text-center">
                 <div className="mb-4 flex items-center justify-center gap-2">
-                  <Shield className="text-primary h-7 w-7" />
+                  <Shield className="h-7 w-7 text-primary" />
                   <span className="text-2xl font-bold">
                     <span className="gradient-text">ruleIQ</span>
                   </span>
                 </div>
                 <div>
-                  <CardTitle className="mb-2 text-2xl font-bold gradient-text">Secure Login</CardTitle>
+                  <CardTitle className="gradient-text mb-2 text-2xl font-bold">
+                    Secure Login
+                  </CardTitle>
                   <CardDescription className="text-base text-muted-foreground">
                     Access your AI-powered compliance dashboard
                   </CardDescription>
@@ -159,13 +160,19 @@ export default function LoginPage() {
                 <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                   {/* Email Field */}
                   <div className="space-y-2">
-                    <Label htmlFor="email" className="text-foreground">Email Address</Label>
+                    <Label htmlFor="email" className="text-foreground">
+                      Email Address
+                    </Label>
                     <Input
                       id="email"
                       type="email"
                       placeholder="Enter your email"
                       {...register('email')}
-                      className={errors.email ? 'border-destructive bg-surface-secondary/50' : 'bg-surface-secondary/50 border-glass-border focus:border-primary'}
+                      className={
+                        errors.email
+                          ? 'border-destructive bg-surface-secondary/50'
+                          : 'border-glass-border bg-surface-secondary/50 focus:border-primary'
+                      }
                       disabled={isSubmitting || csrfLoading || !!csrfError}
                     />
                     {errors.email && (
@@ -176,10 +183,12 @@ export default function LoginPage() {
                   {/* Password Field */}
                   <div className="space-y-2">
                     <div className="flex items-center justify-between">
-                      <Label htmlFor="password" className="text-foreground">Password</Label>
+                      <Label htmlFor="password" className="text-foreground">
+                        Password
+                      </Label>
                       <Link
                         href="/forgot-password"
-                        className="text-primary hover:text-primary/80 text-sm hover:underline transition-colors"
+                        className="text-sm text-primary transition-colors hover:text-primary/80 hover:underline"
                       >
                         Forgot password?
                       </Link>
@@ -190,14 +199,18 @@ export default function LoginPage() {
                         type={showPassword ? 'text' : 'password'}
                         placeholder="Enter your password"
                         {...register('password')}
-                        className={errors.password ? 'border-destructive pr-10 bg-surface-secondary/50' : 'pr-10 bg-surface-secondary/50 border-glass-border focus:border-primary'}
+                        className={
+                          errors.password
+                            ? 'border-destructive bg-surface-secondary/50 pr-10'
+                            : 'border-glass-border bg-surface-secondary/50 pr-10 focus:border-primary'
+                        }
                         disabled={isSubmitting || csrfLoading || !!csrfError}
                       />
                       <Button
                         type="button"
                         variant="ghost"
                         size="sm"
-                        className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent text-muted-foreground hover:text-foreground"
+                        className="absolute right-0 top-0 h-full px-3 py-2 text-muted-foreground hover:bg-transparent hover:text-foreground"
                         onClick={() => setShowPassword(!showPassword)}
                         disabled={isSubmitting || csrfLoading || !!csrfError}
                       >
@@ -220,9 +233,12 @@ export default function LoginPage() {
                       checked={rememberMe}
                       onCheckedChange={(checked) => setValue('rememberMe', !!checked)}
                       disabled={isSubmitting || csrfLoading || !!csrfError}
-                      className="border-glass-border data-[state=checked]:bg-primary data-[state=checked]:border-primary"
+                      className="border-glass-border data-[state=checked]:border-primary data-[state=checked]:bg-primary"
                     />
-                    <Label htmlFor="rememberMe" className="cursor-pointer text-sm font-normal text-muted-foreground">
+                    <Label
+                      htmlFor="rememberMe"
+                      className="cursor-pointer text-sm font-normal text-muted-foreground"
+                    >
                       Keep me signed in for 30 days
                     </Label>
                   </div>
@@ -258,7 +274,11 @@ export default function LoginPage() {
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
-                  <Button variant="outline" disabled className="bg-surface-secondary/50 border-glass-border hover:bg-surface-secondary/70 hover:border-glass-border-hover">
+                  <Button
+                    variant="outline"
+                    disabled
+                    className="border-glass-border bg-surface-secondary/50 hover:border-glass-border-hover hover:bg-surface-secondary/70"
+                  >
                     <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24">
                       <path
                         fill="currentColor"
@@ -279,7 +299,11 @@ export default function LoginPage() {
                     </svg>
                     Google
                   </Button>
-                  <Button variant="outline" disabled className="bg-surface-secondary/50 border-glass-border hover:bg-surface-secondary/70 hover:border-glass-border-hover">
+                  <Button
+                    variant="outline"
+                    disabled
+                    className="border-glass-border bg-surface-secondary/50 hover:border-glass-border-hover hover:bg-surface-secondary/70"
+                  >
                     <svg className="mr-2 h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
                       <path d="M23.554 8.623c0 .502-.045.875-.098 1.251H12.185v-2.52h6.52c-.11 1.025-.965 3.02-2.785 4.246l-.025.165 4.042 3.106.28.028C22.238 12.95 23.554 10.962 23.554 8.623M12.184 23.407c2.897 0 5.33-.952 7.106-2.589l-3.397-2.608c-.905.62-2.113 1.024-3.709 1.024-2.817 0-5.21-1.864-6.069-4.42l-.125.01-4.203 3.224-.055.152c1.754 3.456 5.363 5.207 8.452 5.207M6.116 14.814c-.229-.67-.358-1.387-.358-2.132 0-.744.13-1.462.346-2.131l-.006-.143-4.253-3.265-.139.065A11.404 11.404 0 00.63 12.682c0 1.987.378 3.889 1.076 5.474z" />
                     </svg>
@@ -292,7 +316,7 @@ export default function LoginPage() {
                   <span className="text-muted-foreground">Don&apos;t have an account? </span>
                   <Link
                     href="/register"
-                    className="text-primary hover:text-primary/80 font-medium hover:underline transition-colors"
+                    className="font-medium text-primary transition-colors hover:text-primary/80 hover:underline"
                   >
                     Create account
                   </Link>

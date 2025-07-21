@@ -2,20 +2,20 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { assessmentService } from '@/lib/api/assessments.service';
 
-import { 
-  createQueryKey, 
-  type BaseQueryOptions, 
+import {
+  createQueryKey,
+  type BaseQueryOptions,
   type BaseMutationOptions,
   type PaginationParams,
-  type PaginatedResponse 
+  type PaginatedResponse,
 } from './base';
 
-import type { 
-  Assessment, 
-  AssessmentQuestion, 
+import type {
+  Assessment,
+  AssessmentQuestion,
   CreateAssessmentRequest,
   UpdateAssessmentRequest,
-  SubmitResponseRequest 
+  SubmitResponseRequest,
 } from '@/types/api';
 
 // Query keys
@@ -35,7 +35,7 @@ export const assessmentKeys = {
 // Hook to fetch assessments list
 export function useAssessments(
   params?: PaginationParams,
-  options?: BaseQueryOptions<PaginatedResponse<Assessment>>
+  options?: BaseQueryOptions<PaginatedResponse<Assessment>>,
 ) {
   return useQuery({
     queryKey: assessmentKeys.list(params),
@@ -45,10 +45,7 @@ export function useAssessments(
 }
 
 // Hook to fetch single assessment
-export function useAssessment(
-  id: string,
-  options?: BaseQueryOptions<Assessment>
-) {
+export function useAssessment(id: string, options?: BaseQueryOptions<Assessment>) {
   return useQuery({
     queryKey: assessmentKeys.detail(id),
     queryFn: () => assessmentService.getAssessment(id),
@@ -60,7 +57,7 @@ export function useAssessment(
 // Hook to fetch assessment questions
 export function useAssessmentQuestions(
   assessmentId: string,
-  options?: BaseQueryOptions<AssessmentQuestion[]>
+  options?: BaseQueryOptions<AssessmentQuestion[]>,
 ) {
   return useQuery({
     queryKey: assessmentKeys.questions(assessmentId),
@@ -71,10 +68,7 @@ export function useAssessmentQuestions(
 }
 
 // Hook to fetch assessment results
-export function useAssessmentResults(
-  assessmentId: string,
-  options?: BaseQueryOptions<any>
-) {
+export function useAssessmentResults(assessmentId: string, options?: BaseQueryOptions<any>) {
   return useQuery({
     queryKey: assessmentKeys.results(assessmentId),
     queryFn: () => assessmentService.getAssessmentResults(assessmentId),
@@ -85,10 +79,10 @@ export function useAssessmentResults(
 
 // Hook to create assessment
 export function useCreateAssessment(
-  options?: BaseMutationOptions<Assessment, unknown, CreateAssessmentRequest>
+  options?: BaseMutationOptions<Assessment, unknown, CreateAssessmentRequest>,
 ) {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
     mutationFn: (data: CreateAssessmentRequest) => assessmentService.createAssessment(data),
     onSuccess: () => {
@@ -101,10 +95,10 @@ export function useCreateAssessment(
 
 // Hook to update assessment
 export function useUpdateAssessment(
-  options?: BaseMutationOptions<Assessment, unknown, { id: string; data: UpdateAssessmentRequest }>
+  options?: BaseMutationOptions<Assessment, unknown, { id: string; data: UpdateAssessmentRequest }>,
 ) {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
     mutationFn: ({ id, data }) => assessmentService.updateAssessment(id, data),
     onSuccess: (_, variables) => {
@@ -118,13 +112,16 @@ export function useUpdateAssessment(
 
 // Hook to submit assessment response
 export function useSubmitAssessmentResponse(
-  options?: BaseMutationOptions<any, unknown, { assessmentId: string; data: SubmitResponseRequest }>
+  options?: BaseMutationOptions<
+    any,
+    unknown,
+    { assessmentId: string; data: SubmitResponseRequest }
+  >,
 ) {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
-    mutationFn: ({ assessmentId, data }) => 
-      assessmentService.submitResponse(assessmentId, data),
+    mutationFn: ({ assessmentId, data }) => assessmentService.submitResponse(assessmentId, data),
     onSuccess: (_, variables) => {
       // Invalidate assessment details and results
       queryClient.invalidateQueries({ queryKey: assessmentKeys.detail(variables.assessmentId) });
@@ -135,11 +132,9 @@ export function useSubmitAssessmentResponse(
 }
 
 // Hook to delete assessment
-export function useDeleteAssessment(
-  options?: BaseMutationOptions<void, unknown, string>
-) {
+export function useDeleteAssessment(options?: BaseMutationOptions<void, unknown, string>) {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
     mutationFn: (id: string) => assessmentService.deleteAssessment(id),
     onSuccess: (_, id) => {
@@ -153,10 +148,10 @@ export function useDeleteAssessment(
 
 // Hook to start quick assessment
 export function useStartQuickAssessment(
-  options?: BaseMutationOptions<Assessment, unknown, { framework_id: string }>
+  options?: BaseMutationOptions<Assessment, unknown, { framework_id: string }>,
 ) {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
     mutationFn: ({ framework_id }) => assessmentService.startQuickAssessment(framework_id),
     onSuccess: () => {

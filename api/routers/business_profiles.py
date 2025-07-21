@@ -1,4 +1,3 @@
-from datetime import datetime
 from uuid import UUID, uuid4
 
 from fastapi import APIRouter, Depends, HTTPException, status
@@ -41,8 +40,13 @@ async def create_business_profile(
 
         # Update existing profile fields with validated data
         ALLOWED_FIELDS = [
-            "company_name", "industry", "company_size", "description",
-            "data_sensitivity", "geographic_scope", "target_frameworks"
+            "company_name",
+            "industry",
+            "company_size",
+            "description",
+            "data_sensitivity",
+            "geographic_scope",
+            "target_frameworks",
         ]
         for key, value in validated_data.items():
             if key in ALLOWED_FIELDS:
@@ -127,8 +131,13 @@ async def update_business_profile(
         raise HTTPException(status_code=400, detail=str(e))
 
     ALLOWED_FIELDS = [
-        "company_name", "industry", "company_size", "description",
-        "data_sensitivity", "geographic_scope", "target_frameworks"
+        "company_name",
+        "industry",
+        "company_size",
+        "description",
+        "data_sensitivity",
+        "geographic_scope",
+        "target_frameworks",
     ]
     for key, value in validated_data.items():
         if key in ALLOWED_FIELDS:
@@ -170,8 +179,13 @@ async def update_business_profile_by_id(
         raise HTTPException(status_code=400, detail=str(e))
 
     ALLOWED_FIELDS = [
-        "company_name", "industry", "company_size", "description",
-        "data_sensitivity", "geographic_scope", "target_frameworks"
+        "company_name",
+        "industry",
+        "company_size",
+        "description",
+        "data_sensitivity",
+        "geographic_scope",
+        "target_frameworks",
     ]
     for key, value in validated_data.items():
         if key in ALLOWED_FIELDS:
@@ -248,8 +262,13 @@ async def patch_business_profile(
         raise HTTPException(status_code=400, detail=str(e))
 
     ALLOWED_FIELDS = [
-        "company_name", "industry", "company_size", "description",
-        "data_sensitivity", "geographic_scope", "target_frameworks"
+        "company_name",
+        "industry",
+        "company_size",
+        "description",
+        "data_sensitivity",
+        "geographic_scope",
+        "target_frameworks",
     ]
     for key, value in validated_data.items():
         if key in ALLOWED_FIELDS:

@@ -1,17 +1,17 @@
-"use client"
+'use client';
 
-import { Plus, MessageSquare } from "lucide-react"
-import { useEffect } from "react"
+import { Plus, MessageSquare } from 'lucide-react';
+import { useEffect } from 'react';
 
-import { ChatHeader } from "@/components/chat/chat-header"
-import { ChatInput } from "@/components/chat/chat-input"
-import { ChatMessage } from "@/components/chat/chat-message"
-import { ConversationSidebar } from "@/components/chat/conversation-sidebar"
-import { TypingIndicator } from "@/components/chat/typing-indicator"
-import { Alert, AlertDescription } from "@/components/ui/alert"
-import { Button } from "@/components/ui/button"
-import { Skeleton } from "@/components/ui/skeleton"
-import { useChatStore } from "@/lib/stores/chat.store"
+import { ChatHeader } from '@/components/chat/chat-header';
+import { ChatInput } from '@/components/chat/chat-input';
+import { ChatMessage } from '@/components/chat/chat-message';
+import { ConversationSidebar } from '@/components/chat/conversation-sidebar';
+import { TypingIndicator } from '@/components/chat/typing-indicator';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Button } from '@/components/ui/button';
+import { Skeleton } from '@/components/ui/skeleton';
+import { useChatStore } from '@/lib/stores/chat.store';
 
 export default function ChatPage() {
   const {
@@ -28,62 +28,62 @@ export default function ChatPage() {
     createConversation,
     sendMessage,
     clearError,
-  } = useChatStore()
+  } = useChatStore();
 
-  const activeConversation = conversations.find(c => c.id === activeConversationId)
-  const activeMessages = activeConversationId ? messages[activeConversationId] || [] : []
+  const activeConversation = conversations.find((c) => c.id === activeConversationId);
+  const activeMessages = activeConversationId ? messages[activeConversationId] || [] : [];
 
   useEffect(() => {
-    loadConversations()
-    
+    loadConversations();
+
     // Cleanup on unmount
     return () => {
-      useChatStore.getState().disconnectWebSocket()
-    }
-  }, [])
+      useChatStore.getState().disconnectWebSocket();
+    };
+  }, []);
 
   const handleNewConversation = async () => {
-    await createConversation("New Conversation")
-  }
+    await createConversation('New Conversation');
+  };
 
   const handleSendMessage = async (message: string) => {
-    await sendMessage(message)
-  }
+    await sendMessage(message);
+  };
 
   if (isLoadingConversations) {
     return (
       <div className="flex h-[calc(100vh-4rem)]">
-        <div className="w-80 border-r p-4 space-y-4">
+        <div className="w-80 space-y-4 border-r p-4">
           <Skeleton className="h-10 w-full" />
           <Skeleton className="h-20 w-full" />
           <Skeleton className="h-20 w-full" />
           <Skeleton className="h-20 w-full" />
         </div>
-        <div className="flex-1 flex items-center justify-center">
+        <div className="flex flex-1 items-center justify-center">
           <div className="text-center text-muted-foreground">
-            <MessageSquare className="h-12 w-12 mx-auto mb-4" />
+            <MessageSquare className="mx-auto mb-4 h-12 w-12" />
             <p>Loading conversations...</p>
           </div>
         </div>
       </div>
-    )
+    );
   }
 
   return (
     <div className="flex h-[calc(100vh-4rem)]">
       {/* Conversation Sidebar */}
-      <div className="w-80 border-r flex flex-col">
-        <div className="p-4 border-b">
-          <Button 
-            onClick={handleNewConversation} 
-            className="w-full bg-gold hover:bg-gold-dark text-navy"
+      <div className="flex w-80 flex-col border-r">
+        <div className="border-b p-4">
+          <Button
+            onClick={handleNewConversation}
+            className="w-full bg-gold text-navy hover:bg-gold-dark"
           >
-            <Plus className="h-4 w-4 mr-2" />
+            <Plus className="mr-2 h-4 w-4" />
             New Conversation
           </Button>
         </div>
-        <ConversationSidebar 
-          conversations={conversations} 
+        <ConversationSidebar
+          conversations={conversations}
           activeConversationId={activeConversationId}
           onSelectConversation={setActiveConversation}
           onDeleteConversation={useChatStore.getState().deleteConversation}
@@ -93,38 +93,36 @@ export default function ChatPage() {
       {/* Chat Area */}
       {activeConversation ? (
         <div className="flex flex-1 flex-col bg-background">
-          <ChatHeader 
-            title={activeConversation.title || "AI Assistant"} 
+          <ChatHeader
+            title={activeConversation.title || 'AI Assistant'}
             isConnected={isConnected}
           />
-          
+
           {error && (
             <Alert variant="destructive" className="m-4">
               <AlertDescription className="flex items-center justify-between">
                 {error}
-                <Button 
-                  variant="ghost" 
-                  size="sm" 
-                  onClick={clearError}
-                >
+                <Button variant="ghost" size="sm" onClick={clearError}>
                   Dismiss
                 </Button>
               </AlertDescription>
             </Alert>
           )}
 
-          <div className="flex-1 overflow-y-auto p-6 space-y-6">
+          <div className="flex-1 space-y-6 overflow-y-auto p-6">
             {isLoadingMessages ? (
               <div className="space-y-4">
                 <Skeleton className="h-20 w-3/4" />
-                <Skeleton className="h-20 w-3/4 ml-auto" />
+                <Skeleton className="ml-auto h-20 w-3/4" />
                 <Skeleton className="h-20 w-3/4" />
               </div>
             ) : activeMessages.length === 0 ? (
-              <div className="text-center text-muted-foreground pt-20">
-                <MessageSquare className="h-12 w-12 mx-auto mb-4" />
+              <div className="pt-20 text-center text-muted-foreground">
+                <MessageSquare className="mx-auto mb-4 h-12 w-12" />
                 <p>Start a conversation with your AI compliance assistant</p>
-                <p className="text-sm mt-2">Ask questions about compliance, policies, or evidence collection</p>
+                <p className="mt-2 text-sm">
+                  Ask questions about compliance, policies, or evidence collection
+                </p>
               </div>
             ) : (
               <>
@@ -135,27 +133,27 @@ export default function ChatPage() {
               </>
             )}
           </div>
-          
+
           <ChatInput onSendMessage={handleSendMessage} />
         </div>
       ) : (
-        <div className="flex-1 flex items-center justify-center bg-muted/20">
+        <div className="flex flex-1 items-center justify-center bg-muted/20">
           <div className="text-center">
-            <MessageSquare className="h-16 w-16 mx-auto mb-4 text-muted-foreground" />
-            <h2 className="text-xl font-semibold mb-2">Welcome to ruleIQ AI Assistant</h2>
-            <p className="text-muted-foreground mb-4">
+            <MessageSquare className="mx-auto mb-4 h-16 w-16 text-muted-foreground" />
+            <h2 className="mb-2 text-xl font-semibold">Welcome to ruleIQ AI Assistant</h2>
+            <p className="mb-4 text-muted-foreground">
               Select a conversation or start a new one to begin
             </p>
-            <Button 
+            <Button
               onClick={handleNewConversation}
-              className="bg-gold hover:bg-gold-dark text-navy"
+              className="bg-gold text-navy hover:bg-gold-dark"
             >
-              <Plus className="h-4 w-4 mr-2" />
+              <Plus className="mr-2 h-4 w-4" />
               Start New Conversation
             </Button>
           </div>
         </div>
       )}
     </div>
-  )
+  );
 }

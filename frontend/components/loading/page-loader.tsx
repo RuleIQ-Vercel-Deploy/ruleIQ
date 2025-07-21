@@ -1,24 +1,23 @@
-"use client"
+'use client';
 
-import { motion } from "framer-motion"
-import { Loader2 } from "lucide-react"
-import * as React from "react"
+import { motion } from 'framer-motion';
+import { Loader2 } from 'lucide-react';
+import * as React from 'react';
 
-import { Body, Caption } from "@/components/ui/typography"
-import { cn } from "@/lib/utils"
-
+import { Body, Caption } from '@/components/ui/typography';
+import { cn } from '@/lib/utils';
 
 interface PageLoaderProps {
-  className?: string
-  message?: string
-  submessage?: string
-  fullScreen?: boolean
-  overlay?: boolean
+  className?: string;
+  message?: string;
+  submessage?: string;
+  fullScreen?: boolean;
+  overlay?: boolean;
 }
 
 export function PageLoader({
   className,
-  message = "Loading...",
+  message = 'Loading...',
   submessage,
   fullScreen = false,
   overlay = false,
@@ -26,11 +25,11 @@ export function PageLoader({
   return (
     <div
       className={cn(
-        "flex flex-col items-center justify-center space-y-4",
-        fullScreen && "fixed inset-0 z-50",
-        overlay && "bg-background/80 backdrop-blur-sm",
-        !fullScreen && "min-h-[400px]",
-        className
+        'flex flex-col items-center justify-center space-y-4',
+        fullScreen && 'fixed inset-0 z-50',
+        overlay && 'bg-background/80 backdrop-blur-sm',
+        !fullScreen && 'min-h-[400px]',
+        className,
       )}
     >
       <motion.div
@@ -41,11 +40,11 @@ export function PageLoader({
       >
         {/* Outer spinning ring */}
         <div className="absolute inset-0 rounded-full border-4 border-gold/20" />
-        <div className="absolute inset-0 rounded-full border-4 border-transparent border-t-gold animate-spin" />
-        
+        <div className="absolute inset-0 animate-spin rounded-full border-4 border-transparent border-t-gold" />
+
         {/* Inner logo or icon */}
-        <div className="relative h-16 w-16 flex items-center justify-center">
-          <Loader2 className="h-8 w-8 text-navy animate-pulse" />
+        <div className="relative flex h-16 w-16 items-center justify-center">
+          <Loader2 className="h-8 w-8 animate-pulse text-navy" />
         </div>
       </motion.div>
 
@@ -53,36 +52,34 @@ export function PageLoader({
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2, duration: 0.3 }}
-        className="text-center space-y-1"
+        className="space-y-1 text-center"
       >
         <Body className="font-medium">{message}</Body>
         {submessage && <Caption color="muted">{submessage}</Caption>}
       </motion.div>
     </div>
-  )
+  );
 }
 
 // Inline loader for buttons and small areas
 export function InlineLoader({ className }: { className?: string }) {
-  return (
-    <Loader2 className={cn("h-4 w-4 animate-spin", className)} />
-  )
+  return <Loader2 className={cn('h-4 w-4 animate-spin', className)} />;
 }
 
 // Progress loader with percentage
 interface ProgressLoaderProps {
-  progress: number
-  message?: string
-  className?: string
+  progress: number;
+  message?: string;
+  className?: string;
 }
 
 export function ProgressLoader({
   progress,
-  message = "Processing...",
+  message = 'Processing...',
   className,
 }: ProgressLoaderProps) {
   return (
-    <div className={cn("space-y-3", className)}>
+    <div className={cn('space-y-3', className)}>
       <div className="flex items-center justify-between">
         <Body className="text-sm">{message}</Body>
         <Caption>{Math.round(progress)}%</Caption>
@@ -92,31 +89,27 @@ export function ProgressLoader({
           className="absolute inset-y-0 left-0 bg-gold"
           initial={{ width: 0 }}
           animate={{ width: `${progress}%` }}
-          transition={{ duration: 0.3, ease: "easeOut" }}
+          transition={{ duration: 0.3, ease: 'easeOut' }}
         />
       </div>
     </div>
-  )
+  );
 }
 
 // Step loader for multi-step processes
 interface StepLoaderProps {
-  steps: string[]
-  currentStep: number
-  className?: string
+  steps: string[];
+  currentStep: number;
+  className?: string;
 }
 
-export function StepLoader({
-  steps,
-  currentStep,
-  className,
-}: StepLoaderProps) {
+export function StepLoader({ steps, currentStep, className }: StepLoaderProps) {
   return (
-    <div className={cn("space-y-4", className)}>
+    <div className={cn('space-y-4', className)}>
       {steps.map((step, index) => {
-        const isActive = index === currentStep
-        const isCompleted = index < currentStep
-        
+        const isActive = index === currentStep;
+        const isCompleted = index < currentStep;
+
         return (
           <motion.div
             key={index}
@@ -128,10 +121,10 @@ export function StepLoader({
             <div className="relative">
               <div
                 className={cn(
-                  "h-8 w-8 rounded-full border-2 flex items-center justify-center",
-                  isCompleted && "bg-success border-success",
-                  isActive && "bg-gold border-gold",
-                  !isCompleted && !isActive && "border-muted-foreground/30"
+                  'flex h-8 w-8 items-center justify-center rounded-full border-2',
+                  isCompleted && 'border-success bg-success',
+                  isActive && 'border-gold bg-gold',
+                  !isCompleted && !isActive && 'border-muted-foreground/30',
                 )}
               >
                 {isCompleted ? (
@@ -150,38 +143,38 @@ export function StepLoader({
                   <div className="h-3 w-3 rounded-full bg-muted-foreground/30" />
                 )}
               </div>
-              
+
               {index < steps.length - 1 && (
                 <div
                   className={cn(
-                    "absolute top-8 left-4 w-0.5 h-8 -translate-x-1/2",
-                    isCompleted ? "bg-success" : "bg-muted-foreground/30"
+                    'absolute left-4 top-8 h-8 w-0.5 -translate-x-1/2',
+                    isCompleted ? 'bg-success' : 'bg-muted-foreground/30',
                   )}
                 />
               )}
             </div>
-            
+
             <Body
               className={cn(
-                "transition-colors",
-                isActive && "text-gold font-medium",
-                isCompleted && "text-success",
-                !isCompleted && !isActive && "text-muted-foreground"
+                'transition-colors',
+                isActive && 'font-medium text-gold',
+                isCompleted && 'text-success',
+                !isCompleted && !isActive && 'text-muted-foreground',
               )}
             >
               {step}
             </Body>
           </motion.div>
-        )
+        );
       })}
     </div>
-  )
+  );
 }
 
 // Dots loader animation
 export function DotsLoader({ className }: { className?: string }) {
   return (
-    <div className={cn("flex space-x-1", className)}>
+    <div className={cn('flex space-x-1', className)}>
       {[0, 1, 2].map((index) => (
         <motion.div
           key={index}
@@ -198,26 +191,22 @@ export function DotsLoader({ className }: { className?: string }) {
         />
       ))}
     </div>
-  )
+  );
 }
 
 // Suspense wrapper with loading fallback
 interface SuspenseWrapperProps {
-  children: React.ReactNode
-  fallback?: React.ReactNode
-  className?: string
+  children: React.ReactNode;
+  fallback?: React.ReactNode;
+  className?: string;
 }
 
-export function SuspenseWrapper({
-  children,
-  fallback,
-  className,
-}: SuspenseWrapperProps) {
+export function SuspenseWrapper({ children, fallback, className }: SuspenseWrapperProps) {
   return (
-    <React.Suspense 
+    <React.Suspense
       fallback={
         fallback || (
-          <div className={cn("min-h-[200px] flex items-center justify-center", className)}>
+          <div className={cn('flex min-h-[200px] items-center justify-center', className)}>
             <PageLoader />
           </div>
         )
@@ -225,5 +214,5 @@ export function SuspenseWrapper({
     >
       {children}
     </React.Suspense>
-  )
+  );
 }

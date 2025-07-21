@@ -1,12 +1,14 @@
 # Code Style and Conventions - Updated for Teal Design System
 
 ## TypeScript Configuration
+
 - **Strict mode enabled** with comprehensive type checking
 - **Path mapping** for clean imports (`@/` for root, `@/components/*`, `@/lib/*`, etc.)
 - **Consistent type imports** using `import type { ... }` syntax
 - **NoEmit mode** for type checking without compilation
 
 ## Code Formatting (Prettier)
+
 - **Semi-colons**: Always required
 - **Single quotes**: Preferred for strings
 - **Trailing commas**: Always include
@@ -15,6 +17,7 @@
 - **Tailwind plugin**: Automatic class sorting
 
 ## Linting Rules (ESLint)
+
 - **TypeScript strict rules** with relaxed production settings
 - **Import ordering**: Enforced with alphabetical sorting and grouping
 - **React hooks**: Exhaustive deps warnings
@@ -22,6 +25,7 @@
 - **Consistent type imports**: Required for all type-only imports
 
 ## File Organization
+
 ```
 /app                    # Next.js App Router pages
 /components            # Reusable UI components
@@ -41,6 +45,7 @@
 ```
 
 ## Component Conventions
+
 - **Functional components only** (no class components)
 - **TypeScript interfaces** for all props with descriptive names
 - **Default exports** for page components, named exports for utilities
@@ -48,6 +53,7 @@
 - **Props destructuring** preferred over props object access
 
 ## NEW DESIGN SYSTEM INTEGRATION (Teal Theme)
+
 - **Tailwind-first approach** with teal design tokens
 - **Light mode first** design philosophy (CHANGED from dark-mode first)
 - **8px grid system** for consistent spacing
@@ -56,10 +62,11 @@
 - **Feature flag**: `NEXT_PUBLIC_USE_NEW_THEME=true` for new design system
 
 ## Design Token Usage
+
 ```tsx
 // NEW TEAL SYSTEM - Use these tokens
 - Primary: `teal-600` (#2C7A7B)
-- Hover: `teal-700` (#285E61) 
+- Hover: `teal-700` (#285E61)
 - Light: `teal-50` (#E6FFFA)
 - Backgrounds: `neutral-50` (#F9FAFB), `white`
 - Text: `neutral-900` (#111827), `neutral-700` (#374151)
@@ -74,18 +81,21 @@
 ```
 
 ## State Management Patterns
+
 - **Server state**: TanStack Query for API data
 - **Client state**: Zustand for global state, React state for local
 - **Form state**: React Hook Form with Zod validation
 - **URL state**: Next.js router for navigation state
 
 ## Error Handling
+
 - **Error boundaries** for component-level error catching
 - **Sentry integration** for production error tracking
 - **Zod validation** for runtime type checking
 - **Graceful degradation** for non-critical features
 
 ## Accessibility Standards
+
 - **WCAG 2.2 AA compliance** as minimum standard (upgraded from 2.1)
 - **Semantic HTML** structure required
 - **ARIA labels** for interactive elements
@@ -93,6 +103,7 @@
 - **Focus management** with visible focus indicators (teal focus rings)
 
 ## Migration-Specific Conventions
+
 - **Always check feature flag** when adding new UI components
 - **Use new component variants** from `@/components/ui/*`
 - **Test with both themes** during transition period

@@ -12,9 +12,9 @@ const FRONTEND_DIR = path.join(process.cwd());
 
 function fixStoreTests() {
   const testFile = path.join(FRONTEND_DIR, 'tests/stores/comprehensive-store.test.ts');
-  
+
   let content = fs.readFileSync(testFile, 'utf-8');
-  
+
   // Fix the assessment update test to work with the async method
   content = content.replace(
     /it\('should handle assessment updates',.*?\}\)/s,
@@ -49,9 +49,9 @@ function fixStoreTests() {
       const assessment = state.assessments.find(a => a.id === 'assess-1')
       expect(assessment?.name).toBe('New Name')
       expect(assessment?.status).toBe('in_progress')
-    })`
+    })`,
   );
-  
+
   // Fix the evidence update test similarly
   content = content.replace(
     /it\('should handle evidence updates',.*?\}\)/s,
@@ -81,9 +81,9 @@ function fixStoreTests() {
       const state = useEvidenceStore.getState()
       const evidence = state.evidence.find(e => e.id === 'ev-1')
       expect(evidence?.status).toBe('collected')
-    })`
+    })`,
   );
-  
+
   // Fix widget reordering test
   content = content.replace(
     /it\('should handle widget reordering',.*?\}\)/s,
@@ -119,9 +119,9 @@ function fixStoreTests() {
       const state = useDashboardStore.getState()
       expect(state.widgets[0].id).toBe('widget-2')
       expect(state.widgets[1].id).toBe('widget-1')
-    })`
+    })`,
   );
-  
+
   // Fix framework loading test
   content = content.replace(
     /it\('should handle framework loading',.*?\}\)/s,
@@ -146,9 +146,9 @@ function fixStoreTests() {
       )
       
       warnSpy.mockRestore()
-    })`
+    })`,
   );
-  
+
   // Import necessary mocks at the top
   content = content.replace(
     /vi\.mock\('@\/lib\/api\/auth\.service'/,
@@ -167,9 +167,9 @@ function fixStoreTests() {
   },
 }))
 
-vi.mock('@/lib/api/auth.service'`
+vi.mock('@/lib/api/auth.service'`,
   );
-  
+
   fs.writeFileSync(testFile, content);
   console.log('✅ Fixed store tests');
 }
@@ -177,10 +177,10 @@ vi.mock('@/lib/api/auth.service'`
 // Check and fix evidence store if it exists
 function checkEvidenceStore() {
   const storePath = path.join(FRONTEND_DIR, 'lib/stores/evidence.store.ts');
-  
+
   if (!fs.existsSync(storePath)) {
     console.log('⚠️  Evidence store not found, creating a basic implementation');
-    
+
     const evidenceStoreContent = `import { create } from 'zustand'
 import { persist, createJSONStorage, devtools } from 'zustand/middleware'
 import { EvidenceArraySchema, safeValidate } from './schemas'
@@ -265,13 +265,13 @@ export const useEvidenceStore = create<EvidenceState>()(
   )
 )
 `;
-    
+
     // Ensure directory exists
     const storeDir = path.dirname(storePath);
     if (!fs.existsSync(storeDir)) {
       fs.mkdirSync(storeDir, { recursive: true });
     }
-    
+
     fs.writeFileSync(storePath, evidenceStoreContent);
   }
 }
@@ -279,10 +279,10 @@ export const useEvidenceStore = create<EvidenceState>()(
 // Check and fix dashboard store
 function checkDashboardStore() {
   const storePath = path.join(FRONTEND_DIR, 'lib/stores/dashboard.store.ts');
-  
+
   if (!fs.existsSync(storePath)) {
     console.log('⚠️  Dashboard store not found, creating a basic implementation');
-    
+
     const dashboardStoreContent = `import { create } from 'zustand'
 import { persist, createJSONStorage, devtools } from 'zustand/middleware'
 import { WidgetsArraySchema, MetricsSchema, safeValidate } from './schemas'
@@ -369,13 +369,13 @@ export const useDashboardStore = create<DashboardState>()(
   )
 )
 `;
-    
+
     // Ensure directory exists
     const storeDir = path.dirname(storePath);
     if (!fs.existsSync(storeDir)) {
       fs.mkdirSync(storeDir, { recursive: true });
     }
-    
+
     fs.writeFileSync(storePath, dashboardStoreContent);
   }
 }
@@ -383,12 +383,12 @@ export const useDashboardStore = create<DashboardState>()(
 // Main execution
 async function main() {
   console.log('🔧 Fixing store tests...\n');
-  
+
   try {
     fixStoreTests();
     checkEvidenceStore();
     checkDashboardStore();
-    
+
     console.log('\n✅ All store fixes applied successfully!');
     console.log('\n📝 Next steps:');
     console.log('1. Run: pnpm test tests/stores/comprehensive-store.test.ts');

@@ -1,15 +1,15 @@
-"use client"
+'use client';
 
-import TextAlign from "@tiptap/extension-text-align"
-import Underline from "@tiptap/extension-underline"
-import { useEditor, EditorContent } from "@tiptap/react"
-import StarterKit from "@tiptap/starter-kit"
+import TextAlign from '@tiptap/extension-text-align';
+import Underline from '@tiptap/extension-underline';
+import { useEditor, EditorContent } from '@tiptap/react';
+import StarterKit from '@tiptap/starter-kit';
 
-import { ActionBar } from "@/components/editor/action-bar"
-import { DocumentOutline } from "@/components/editor/document-outline"
-import { RightPanel } from "@/components/editor/right-panel"
-import { Toolbar } from "@/components/editor/toolbar"
-import { editorData } from "@/lib/data/editor-data"
+import { ActionBar } from '@/components/editor/action-bar';
+import { DocumentOutline } from '@/components/editor/document-outline';
+import { RightPanel } from '@/components/editor/right-panel';
+import { Toolbar } from '@/components/editor/toolbar';
+import { editorData } from '@/lib/data/editor-data';
 
 export default function EditorPage() {
   const editor = useEditor({
@@ -17,19 +17,19 @@ export default function EditorPage() {
       StarterKit,
       Underline,
       TextAlign.configure({
-        types: ["heading", "paragraph"],
+        types: ['heading', 'paragraph'],
       }),
     ],
     content: editorData.initialContent,
     editorProps: {
       attributes: {
-        class: "prose dark:prose-invert max-w-none",
+        class: 'prose dark:prose-invert max-w-none',
       },
     },
-  })
+  });
 
   return (
-    <div className="flex h-screen w-full bg-background text-eggshell-white">
+    <div className="text-eggshell-white flex h-screen w-full bg-background">
       <DocumentOutline editor={editor} />
       <div className="flex flex-1 flex-col">
         <Toolbar editor={editor} />
@@ -40,5 +40,5 @@ export default function EditorPage() {
       </div>
       <RightPanel />
     </div>
-  )
+  );
 }

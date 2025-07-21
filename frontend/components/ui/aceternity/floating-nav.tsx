@@ -1,47 +1,45 @@
-"use client"
-import { motion, AnimatePresence, useScroll, useMotionValueEvent } from "framer-motion"
-import Link from "next/link"
-import { useState } from "react"
+'use client';
+import { motion, AnimatePresence, useScroll, useMotionValueEvent } from 'framer-motion';
+import Link from 'next/link';
+import { useState } from 'react';
 
-import { Logo } from "@/components/ui/logo"
-import { cn } from "@/lib/utils"
+import { Logo } from '@/components/ui/logo';
+import { cn } from '@/lib/utils';
 
+import { Button } from '../button';
 
-import { Button } from "../button"
-
-
-import type { JSX } from "react/jsx-runtime" // Import JSX to fix the undeclared variable error
+import type { JSX } from 'react/jsx-runtime'; // Import JSX to fix the undeclared variable error
 
 export const FloatingNav = ({
   navItems,
   className,
 }: {
   navItems: {
-    name: string
-    link: string
-    icon?: JSX.Element
-  }[]
-  className?: string
+    name: string;
+    link: string;
+    icon?: JSX.Element;
+  }[];
+  className?: string;
 }) => {
-  const { scrollYProgress } = useScroll()
+  const { scrollYProgress } = useScroll();
 
-  const [visible, setVisible] = useState(true)
+  const [visible, setVisible] = useState(true);
 
-  useMotionValueEvent(scrollYProgress, "change", (current) => {
-    if (typeof current === "number") {
-      const direction = current! - scrollYProgress.getPrevious()!
+  useMotionValueEvent(scrollYProgress, 'change', (current) => {
+    if (typeof current === 'number') {
+      const direction = current! - scrollYProgress.getPrevious()!;
 
       if (scrollYProgress.get() < 0.05) {
-        setVisible(true)
+        setVisible(true);
       } else {
         if (direction < 0) {
-          setVisible(true)
+          setVisible(true);
         } else {
-          setVisible(false)
+          setVisible(false);
         }
       }
     }
-  })
+  });
 
   return (
     <AnimatePresence mode="wait">
@@ -58,7 +56,7 @@ export const FloatingNav = ({
           duration: 0.2,
         }}
         className={cn(
-          "flex max-w-fit fixed top-10 inset-x-0 mx-auto border border-white/20 rounded-full bg-midnight-blue/80 backdrop-blur-sm z-50 pr-2 pl-8 py-2 items-center justify-center space-x-4",
+          'bg-midnight-blue/80 fixed inset-x-0 top-10 z-50 mx-auto flex max-w-fit items-center justify-center space-x-4 rounded-full border border-white/20 py-2 pl-8 pr-2 backdrop-blur-sm',
           className,
         )}
       >
@@ -67,10 +65,12 @@ export const FloatingNav = ({
           <Link
             key={`link=${idx}`}
             href={navItem.link}
-            className={cn("relative text-eggshell-white items-center flex space-x-1 hover:text-gold transition-colors")}
+            className={cn(
+              'text-eggshell-white relative flex items-center space-x-1 transition-colors hover:text-gold',
+            )}
           >
             <span className="block sm:hidden">{navItem.icon}</span>
-            <span className="hidden sm:block text-sm">{navItem.name}</span>
+            <span className="hidden text-sm sm:block">{navItem.name}</span>
           </Link>
         ))}
         <div className="flex items-center space-x-2">
@@ -83,5 +83,5 @@ export const FloatingNav = ({
         </div>
       </motion.div>
     </AnimatePresence>
-  )
-}
+  );
+};

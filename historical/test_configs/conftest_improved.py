@@ -52,7 +52,6 @@ from database.user import User
 from database.business_profile import BusinessProfile
 from database.compliance_framework import ComplianceFramework
 from database.evidence_item import EvidenceItem
-from database.generated_policy import GeneratedPolicy
 
 
 class DatabaseTestManager:
@@ -116,7 +115,7 @@ class DatabaseTestManager:
         try:
             async with self._engine.begin() as conn:
                 await conn.run_sync(Base.metadata.drop_all)
-        except Exception as e:
+        except Exception:
             # Fallback to schema recreation if table drops fail
             try:
                 async with self._engine.begin() as conn:

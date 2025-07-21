@@ -4,6 +4,7 @@ Environment Configuration Management for RuleIQ
 This module handles all environment variables and configuration settings
 using Pydantic for validation and type safety.
 """
+
 from dotenv import load_dotenv
 
 # Load .env.local file at the very top to ensure variables are available
@@ -27,13 +28,13 @@ def parse_list_from_string(v: Union[str, list]) -> list:
         return v
     if isinstance(v, str):
         # Try JSON parsing first
-        if v.startswith('[') and v.endswith(']'):
+        if v.startswith("[") and v.endswith("]"):
             try:
                 return json.loads(v)
             except json.JSONDecodeError:
                 pass
         # Otherwise split by comma
-        return [item.strip() for item in v.split(',') if item.strip()]
+        return [item.strip() for item in v.split(",") if item.strip()]
     # Return empty list for other types
     return []
 
@@ -91,15 +92,9 @@ class Settings(BaseSettings):
     @classmethod
     def validate_database_url(cls, v: str) -> str:
         """Validate database URL format"""
-        allowed_prefixes = (
-            "postgresql://",
-            "postgresql+psycopg2://",
-            "postgresql+asyncpg://"
-        )
+        allowed_prefixes = ("postgresql://", "postgresql+psycopg2://", "postgresql+asyncpg://")
         if not v.startswith(allowed_prefixes):
-            raise ValueError(
-                "Database URL must be a valid PostgreSQL connection string"
-            )
+            raise ValueError("Database URL must be a valid PostgreSQL connection string")
         return v
 
     # ===================================================================
@@ -119,9 +114,9 @@ class Settings(BaseSettings):
     # ============================================================
     jwt_secret: str = Field(
         default_factory=lambda: os.getenv("JWT_SECRET", "dev-secret-key-change-in-production"),
-        description="Secret key for signing JWT tokens. Must be set via environment variable."
+        description="Secret key for signing JWT tokens. Must be set via environment variable.",
     )
-    
+
     @field_validator("jwt_secret")
     @classmethod
     def validate_jwt_secret(cls, v: str, info: ValidationInfo) -> str:
@@ -129,15 +124,15 @@ class Settings(BaseSettings):
         # Skip validation for empty string during initialization
         if not v:
             return v
-            
+
         forbidden_values = [
             "dev-secret-key-change-in-production",
             "your-secret-key-here-change-this-in-production",
             "secret",
             "password",
-            "123456"
+            "123456",
         ]
-        
+
         if v in forbidden_values:
             env = info.data.get("environment")
             if env == Environment.PRODUCTION:
@@ -151,32 +146,22 @@ class Settings(BaseSettings):
                     "Using default JWT secret for development. "
                     "Set JWT_SECRET environment variable for security."
                 )
-        
+
         # Ensure minimum security requirements
         if len(v) < 32 and info.data.get("environment") == Environment.PRODUCTION:
             raise ValueError("JWT_SECRET must be at least 32 characters long in production")
-        
+
         return v
 
     # ===================================================================
     # CORS SETTINGS
     # ===================================================================
-    cors_origins: Union[List[str], str] = Field(
-        default=["http://localhost:3000"]
-    )
-    cors_allowed_origins: Union[List[str], str] = Field(
-        default=["http://localhost:3000"]
-    )
-    allowed_hosts: Union[List[str], str] = Field(
-        default=["localhost", "127.0.0.1"]
-    )
+    cors_origins: Union[List[str], str] = Field(default=["http://localhost:3000"])
+    cors_allowed_origins: Union[List[str], str] = Field(default=["http://localhost:3000"])
+    allowed_hosts: Union[List[str], str] = Field(default=["localhost", "127.0.0.1"])
 
     @field_validator(
-        "cors_origins",
-        "cors_allowed_origins",
-        "allowed_hosts",
-        "allowed_file_types",
-        mode="before"
+        "cors_origins", "cors_allowed_origins", "allowed_hosts", "allowed_file_types", mode="before"
     )
     @classmethod
     def parse_list_fields(cls, v: Union[str, List[str]]) -> List[str]:
@@ -185,13 +170,13 @@ class Settings(BaseSettings):
             return v
         if isinstance(v, str):
             # Handle JSON format
-            if v.startswith('[') and v.endswith(']'):
+            if v.startswith("[") and v.endswith("]"):
                 try:
                     return json.loads(v)
                 except json.JSONDecodeError:
                     pass
             # Handle comma-separated format
-            return [item.strip() for item in v.split(',') if item.strip()]
+            return [item.strip() for item in v.split(",") if item.strip()]
         # Return empty list for other types - this is reachable
         return []
 
@@ -236,8 +221,19 @@ class Settings(BaseSettings):
     max_file_size: int = Field(default=10 * 1024 * 1024)  # 10MB
     allowed_file_types: Union[List[str], str] = Field(
         default=[
-            "pdf", "doc", "docx", "xls", "xlsx", "ppt", "pptx",
-            "txt", "csv", "jpg", "jpeg", "png", "gif"
+            "pdf",
+            "doc",
+            "docx",
+            "xls",
+            "xlsx",
+            "ppt",
+            "pptx",
+            "txt",
+            "csv",
+            "jpg",
+            "jpeg",
+            "png",
+            "gif",
         ]
     )
     upload_dir: str = Field(default="uploads")
@@ -255,9 +251,7 @@ class Settings(BaseSettings):
     # MONITORING & LOGGING
     # ===================================================================
     log_level: LogLevel = Field(default=LogLevel.INFO)
-    log_format: str = Field(
-        default="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
-    )
+    log_format: str = Field(default="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
     sentry_dsn: Optional[str] = Field(default=None)
     sentry_environment: str = Field(default="development")
     enable_metrics: bool = Field(default=True)
@@ -308,10 +302,11 @@ class Settings(BaseSettings):
     # ===================================================================
     next_public_api_url: str = Field(default="http://localhost:8000")
 
-
     def model_post_init(self, __context) -> None:
         """Add diagnostic logging after model initialization."""
-        print(f"[SETTINGS INIT] JWT_SECRET loaded: {self.jwt_secret[:10] if self.jwt_secret else 'None'}...")
+        print(
+            f"[SETTINGS INIT] JWT_SECRET loaded: {self.jwt_secret[:10] if self.jwt_secret else 'None'}..."
+        )
         print(f"[SETTINGS INIT] Working directory: {os.getcwd()}")
         print(f"[SETTINGS INIT] Environment: {self.environment}")
 
@@ -321,7 +316,7 @@ class Settings(BaseSettings):
         case_sensitive=False,
         extra="ignore",
         # Disable JSON parsing for list fields - we'll handle it in validators
-        json_schema_extra={"env_parse_none_str": None}
+        json_schema_extra={"env_parse_none_str": None},
     )
 
     @property
@@ -407,6 +402,7 @@ def _create_new_settings() -> Settings:
     _settings = Settings()
     return _settings
     return _settings
+
 
 # Create default settings instance
 settings = get_settings()

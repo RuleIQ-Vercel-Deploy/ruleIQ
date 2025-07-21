@@ -30,7 +30,9 @@ class AssessmentService {
     page?: number;
     page_size?: number;
   }): Promise<{ items: Assessment[]; total: number }> {
-    const response = await apiClient.get<{ items: Assessment[]; total: number }>('/assessments', { params });
+    const response = await apiClient.get<{ items: Assessment[]; total: number }>('/assessments', {
+      params,
+    });
     return response.data;
   }
 
@@ -69,7 +71,9 @@ class AssessmentService {
    * Get assessment questions
    */
   async getAssessmentQuestions(assessmentId: string): Promise<AssessmentQuestion[]> {
-    const response = await apiClient.get<AssessmentQuestion[]>(`/assessments/${assessmentId}/questions`);
+    const response = await apiClient.get<AssessmentQuestion[]>(
+      `/assessments/${assessmentId}/questions`,
+    );
     return response.data;
   }
 
@@ -78,11 +82,11 @@ class AssessmentService {
    */
   async submitAssessmentAnswer(
     assessmentId: string,
-    data: SubmitAssessmentAnswerRequest
+    data: SubmitAssessmentAnswerRequest,
   ): Promise<AssessmentResponse> {
     const response = await apiClient.post<AssessmentResponse>(
       `/assessments/${assessmentId}/answers`,
-      data
+      data,
     );
     return response.data;
   }

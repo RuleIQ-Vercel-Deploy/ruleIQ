@@ -1,4 +1,4 @@
-"use client"
+'use client';
 
 import {
   Bold,
@@ -14,43 +14,43 @@ import {
   AlignCenter,
   AlignRight,
   AlignJustify,
-} from "lucide-react"
+} from 'lucide-react';
 
-import { Toggle } from "@/components/ui/toggle"
+import { Toggle } from '@/components/ui/toggle';
 
-import type { Editor } from "@tiptap/react"
+import type { Editor } from '@tiptap/react';
 
 interface ToolbarProps {
-  editor: Editor | null
+  editor: Editor | null;
 }
 
 export function Toolbar({ editor }: ToolbarProps) {
-  if (!editor) return null
+  if (!editor) return null;
 
   const formattingOptions = [
-    { command: "toggleBold", icon: Bold, name: "Bold" },
-    { command: "toggleItalic", icon: Italic, name: "Italic" },
-    { command: "toggleUnderline", icon: Underline, name: "Underline" },
-    { command: "toggleStrike", icon: Strikethrough, name: "Strikethrough" },
-  ]
+    { command: 'toggleBold', icon: Bold, name: 'Bold' },
+    { command: 'toggleItalic', icon: Italic, name: 'Italic' },
+    { command: 'toggleUnderline', icon: Underline, name: 'Underline' },
+    { command: 'toggleStrike', icon: Strikethrough, name: 'Strikethrough' },
+  ];
 
   const headingOptions = [
-    { level: 1, icon: Heading1, name: "H1" },
-    { level: 2, icon: Heading2, name: "H2" },
-    { level: 3, icon: Heading3, name: "H3" },
-  ]
+    { level: 1, icon: Heading1, name: 'H1' },
+    { level: 2, icon: Heading2, name: 'H2' },
+    { level: 3, icon: Heading3, name: 'H3' },
+  ];
 
   const listOptions = [
-    { command: "toggleBulletList", icon: List, name: "Bullet List" },
-    { command: "toggleOrderedList", icon: ListOrdered, name: "Ordered List" },
-  ]
+    { command: 'toggleBulletList', icon: List, name: 'Bullet List' },
+    { command: 'toggleOrderedList', icon: ListOrdered, name: 'Ordered List' },
+  ];
 
   const alignmentOptions = [
-    { align: "left", icon: AlignLeft, name: "Left" },
-    { align: "center", icon: AlignCenter, name: "Center" },
-    { align: "right", icon: AlignRight, name: "Right" },
-    { align: "justify", icon: AlignJustify, name: "Justify" },
-  ]
+    { align: 'left', icon: AlignLeft, name: 'Left' },
+    { align: 'center', icon: AlignCenter, name: 'Center' },
+    { align: 'right', icon: AlignRight, name: 'Right' },
+    { align: 'justify', icon: AlignJustify, name: 'Justify' },
+  ];
 
   return (
     <div className="flex flex-wrap items-center gap-1 border-b border-border bg-background p-2">
@@ -61,29 +61,40 @@ export function Toolbar({ editor }: ToolbarProps) {
           pressed={editor.isActive(opt.name.toLowerCase())}
           onPressedChange={() => {
             switch (opt.command) {
-              case 'toggleBold': return editor.chain().focus().toggleBold().run()
-              case 'toggleItalic': return editor.chain().focus().toggleItalic().run()
-              case 'toggleUnderline': return editor.chain().focus().toggleUnderline().run()
-              case 'toggleStrike': return editor.chain().focus().toggleStrike().run()
-              default: return
+              case 'toggleBold':
+                return editor.chain().focus().toggleBold().run();
+              case 'toggleItalic':
+                return editor.chain().focus().toggleItalic().run();
+              case 'toggleUnderline':
+                return editor.chain().focus().toggleUnderline().run();
+              case 'toggleStrike':
+                return editor.chain().focus().toggleStrike().run();
+              default:
+                return;
             }
           }}
         >
           <opt.icon className="h-4 w-4" />
         </Toggle>
       ))}
-      <div className="h-6 w-px bg-border mx-1" />
+      <div className="mx-1 h-6 w-px bg-border" />
       {headingOptions.map((opt) => (
         <Toggle
           key={opt.name}
           size="sm"
-          pressed={editor.isActive("heading", { level: opt.level })}
-          onPressedChange={() => editor.chain().focus().toggleHeading({ level: opt.level as 1 | 2 | 3 }).run()}
+          pressed={editor.isActive('heading', { level: opt.level })}
+          onPressedChange={() =>
+            editor
+              .chain()
+              .focus()
+              .toggleHeading({ level: opt.level as 1 | 2 | 3 })
+              .run()
+          }
         >
           <opt.icon className="h-4 w-4" />
         </Toggle>
       ))}
-      <div className="h-6 w-px bg-border mx-1" />
+      <div className="mx-1 h-6 w-px bg-border" />
       {listOptions.map((opt) => (
         <Toggle
           key={opt.name}
@@ -91,16 +102,19 @@ export function Toolbar({ editor }: ToolbarProps) {
           pressed={editor.isActive(opt.name.toLowerCase())}
           onPressedChange={() => {
             switch (opt.command) {
-              case 'toggleBulletList': return editor.chain().focus().toggleBulletList().run()
-              case 'toggleOrderedList': return editor.chain().focus().toggleOrderedList().run()
-              default: return
+              case 'toggleBulletList':
+                return editor.chain().focus().toggleBulletList().run();
+              case 'toggleOrderedList':
+                return editor.chain().focus().toggleOrderedList().run();
+              default:
+                return;
             }
           }}
         >
           <opt.icon className="h-4 w-4" />
         </Toggle>
       ))}
-      <div className="h-6 w-px bg-border mx-1" />
+      <div className="mx-1 h-6 w-px bg-border" />
       {alignmentOptions.map((opt) => (
         <Toggle
           key={opt.name}
@@ -112,5 +126,5 @@ export function Toolbar({ editor }: ToolbarProps) {
         </Toggle>
       ))}
     </div>
-  )
+  );
 }

@@ -17,7 +17,7 @@ from core.exceptions import (
 )
 from database.db_setup import get_async_db
 from database.business_profile import BusinessProfile
-from services.readiness_service import calculate_readiness_score
+from services.readiness_service import generate_readiness_assessment
 
 logger = get_task_logger(__name__)
 
@@ -37,7 +37,7 @@ async def _update_all_compliance_scores_async() -> Dict[str, Any]:
 
             for profile in profiles:
                 try:
-                    readiness_data = await calculate_readiness_score(profile.id, db)
+                    readiness_data = await generate_readiness_assessment(profile.id, db)
                     logger.debug(
                         f"Updated compliance score for profile {profile.id}: {readiness_data.get('overall_score', 0)}"
                     )
@@ -75,7 +75,7 @@ async def _check_compliance_alerts_async() -> Dict[str, Any]:
 
             for profile in profiles:
                 try:
-                    readiness_data = await calculate_readiness_score(profile.id, db)
+                    readiness_data = await generate_readiness_assessment(profile.id, db)
                     if readiness_data.get("overall_score", 100) < 70:
                         alert = {
                             "profile_id": str(profile.id),
@@ -103,7 +103,18 @@ async def _check_compliance_alerts_async() -> Dict[str, Any]:
 # --- Celery Tasks ---
 
 
-@celery_app.task(bind=True, max_retries=3, default_retry_delay=300)
+@celery_app.task(
+    bind=True,
+    autoretry_for=(DatabaseException, Exception),
+    retry_kwargs={
+        'max_retries': 5,
+        'countdown': 90,  # Start with 90 seconds
+    },
+    retry_backoff=True,
+    retry_backoff_max=600,
+    retry_jitter=True,
+    rate_limit='3/m',  # 3 compliance score updates per minute
+)
 def update_all_compliance_scores(self):
     """Updates compliance scores for all business profiles by running the async helper."""
     logger.info("Starting compliance score updates for all profiles")
@@ -124,7 +135,18 @@ def update_all_compliance_scores(self):
         self.retry(exc=e)
 
 
-@celery_app.task(bind=True, max_retries=3, default_retry_delay=300)
+@celery_app.task(
+    bind=True,
+    autoretry_for=(DatabaseException, Exception),
+    retry_kwargs={
+        'max_retries': 5,
+        'countdown': 60,  # Start with 60 seconds
+    },
+    retry_backoff=True,
+    retry_backoff_max=600,
+    retry_jitter=True,
+    rate_limit='5/m',  # 5 alert checks per minute
+)
 def check_compliance_alerts(self):
     """Checks for compliance issues that require immediate attention by running the async helper."""
     logger.info("Checking for compliance alerts")

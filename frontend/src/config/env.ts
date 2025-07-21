@@ -71,10 +71,7 @@ if (!!process.env['$1'] === false) {
     : clientSchema.safeParse(processEnv); // on client we can only validate the ones that are exposed
 
   if (parsed.success === false) {
-    console.error(
-      '❌ Invalid environment variables:',
-      parsed.error.flatten().fieldErrors,
-    );
+    console.error('❌ Invalid environment variables:', parsed.error.flatten().fieldErrors);
     throw new Error('Invalid environment variables');
   }
 

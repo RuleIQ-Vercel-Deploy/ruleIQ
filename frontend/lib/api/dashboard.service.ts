@@ -183,7 +183,7 @@ class DashboardService {
   async exportDashboard(format: 'pdf' | 'excel'): Promise<void> {
     await apiClient.download(
       `/dashboard/export?format=${format}`,
-      `dashboard-${new Date().toISOString().split('T')[0]}.${format}`
+      `dashboard-${new Date().toISOString().split('T')[0]}.${format}`,
     );
   }
 
@@ -210,11 +210,9 @@ class DashboardService {
    * Mock dashboard data for development
    */
 
-
   /**
    * Mock widgets data for development
    */
-
 }
 
 export const dashboardService = new DashboardService();

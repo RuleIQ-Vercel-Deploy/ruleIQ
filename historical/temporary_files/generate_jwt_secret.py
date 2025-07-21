@@ -8,12 +8,12 @@ import base64
 import string
 
 print("JWT Secret Key Generator")
-print("="*50)
+print("=" * 50)
 
 # Method 1: Using secrets (Recommended)
 print("\nMethod 1 - Cryptographically secure random bytes (Recommended):")
 secret_bytes = secrets.token_bytes(32)  # 256 bits
-secret_b64 = base64.b64encode(secret_bytes).decode('utf-8')
+secret_b64 = base64.b64encode(secret_bytes).decode("utf-8")
 print(f"JWT_SECRET={secret_b64}")
 
 # Method 2: URL-safe string
@@ -24,10 +24,10 @@ print(f"JWT_SECRET={secret_urlsafe}")
 # Method 3: Alphanumeric string
 print("\nMethod 3 - Alphanumeric string:")
 alphabet = string.ascii_letters + string.digits
-secret_alphanumeric = ''.join(secrets.choice(alphabet) for _ in range(64))
+secret_alphanumeric = "".join(secrets.choice(alphabet) for _ in range(64))
 print(f"JWT_SECRET={secret_alphanumeric}")
 
-print("\n" + "="*50)
+print("\n" + "=" * 50)
 print("\nInstructions:")
 print("1. Choose one of the generated secrets above")
 print("2. Copy the entire line (including JWT_SECRET=)")

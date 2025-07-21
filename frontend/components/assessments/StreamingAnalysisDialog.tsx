@@ -1,18 +1,18 @@
-"use client";
+'use client';
 
 import React, { useEffect, useRef } from 'react';
 
 import { StreamingProgress } from '@/components/shared/streaming-progress';
-import { StreamingResponse, type StreamingResponseRef } from '@/components/shared/streaming-response';
+import {
+  StreamingResponse,
+  type StreamingResponseRef,
+} from '@/components/shared/streaming-response';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { assessmentAIService } from '@/lib/api/assessments-ai.service';
 import { useStreaming } from '@/lib/hooks/use-streaming';
 
-import type { 
-  AIAnalysisRequest, 
-  AIRecommendationRequest 
-} from '@/lib/api/assessments-ai.service';
+import type { AIAnalysisRequest, AIRecommendationRequest } from '@/lib/api/assessments-ai.service';
 import type { AssessmentContext, Gap } from '@/lib/assessment-engine/types';
 
 interface StreamingAnalysisDialogProps {
@@ -28,7 +28,7 @@ export function StreamingAnalysisDialog({
   onOpenChange,
   assessmentContext,
   onAnalysisComplete,
-  onRecommendationsComplete
+  onRecommendationsComplete,
 }: StreamingAnalysisDialogProps) {
   const [analysisState, analysisControls] = useStreaming();
   const [recommendationsState, recommendationsControls] = useStreaming();
@@ -49,7 +49,7 @@ export function StreamingAnalysisDialog({
       business_profile: {
         id: assessmentContext.businessProfileId,
         // Add other business profile fields as needed
-      }
+      },
     };
 
     await analysisControls.start(async (options) => {
@@ -63,7 +63,7 @@ export function StreamingAnalysisDialog({
       business_profile: {
         id: assessmentContext.businessProfileId,
         // Add other business profile fields as needed
-      }
+      },
     };
 
     await recommendationsControls.start(async (options) => {
@@ -82,7 +82,7 @@ export function StreamingAnalysisDialog({
   useEffect(() => {
     if (analysisState.isComplete && !analysisState.error && analysisState.content) {
       onAnalysisComplete?.(analysisState.content);
-      
+
       // Extract gaps from analysis content (this would need proper parsing)
       // For demo purposes, we'll start recommendations with mock gaps
       const mockGaps: Gap[] = [
@@ -97,10 +97,10 @@ export function StreamingAnalysisDialog({
           impact: 'High compliance risk',
           currentState: 'No formal policies',
           targetState: 'Comprehensive retention schedule',
-          expectedAnswer: 'Yes'
-        }
+          expectedAnswer: 'Yes',
+        },
       ];
-      
+
       if (!recommendationsState.isStreaming && !recommendationsState.isComplete) {
         startRecommendations(mockGaps);
       }
@@ -120,7 +120,7 @@ export function StreamingAnalysisDialog({
       if (analysisState.metadata) {
         analysisRef.current.setMetadata(analysisState.metadata);
       }
-      analysisState.chunks.forEach(chunk => {
+      analysisState.chunks.forEach((chunk) => {
         analysisRef.current?.addChunk(chunk);
       });
       if (analysisState.error) {
@@ -137,7 +137,7 @@ export function StreamingAnalysisDialog({
       if (recommendationsState.metadata) {
         recommendationsRef.current.setMetadata(recommendationsState.metadata);
       }
-      recommendationsState.chunks.forEach(chunk => {
+      recommendationsState.chunks.forEach((chunk) => {
         recommendationsRef.current?.addChunk(chunk);
       });
       if (recommendationsState.error) {
@@ -151,10 +151,13 @@ export function StreamingAnalysisDialog({
 
   const getOverallProgress = () => {
     if (!analysisState.isStreaming && !analysisState.isComplete) return 0;
-    if (analysisState.isStreaming || (!recommendationsState.isStreaming && !recommendationsState.isComplete)) {
+    if (
+      analysisState.isStreaming ||
+      (!recommendationsState.isStreaming && !recommendationsState.isComplete)
+    ) {
       return analysisState.progress / 2;
     }
-    return 50 + (recommendationsState.progress / 2);
+    return 50 + recommendationsState.progress / 2;
   };
 
   const getOverallStatus = () => {
@@ -196,7 +199,7 @@ export function StreamingAnalysisDialog({
 
   return (
     <Dialog open={open} onOpenChange={canClose ? onOpenChange : () => {}}>
-      <DialogContent className="max-w-4xl max-h-[80vh] overflow-hidden">
+      <DialogContent className="max-h-[80vh] max-w-4xl overflow-hidden">
         <DialogHeader>
           <DialogTitle>AI-Powered Assessment Analysis</DialogTitle>
         </DialogHeader>
@@ -223,7 +226,9 @@ export function StreamingAnalysisDialog({
           />
 
           {/* Recommendations Section */}
-          {(analysisState.isComplete || recommendationsState.isStreaming || recommendationsState.isComplete) && (
+          {(analysisState.isComplete ||
+            recommendationsState.isStreaming ||
+            recommendationsState.isComplete) && (
             <StreamingResponse
               ref={recommendationsRef}
               title="Personalized Recommendations"
@@ -236,7 +241,7 @@ export function StreamingAnalysisDialog({
           )}
 
           {/* Action Buttons */}
-          <div className="flex justify-between pt-4 border-t">
+          <div className="flex justify-between border-t pt-4">
             <div>
               {(analysisState.error || recommendationsState.error) && (
                 <Button variant="outline" onClick={handleRetry}>
@@ -244,18 +249,16 @@ export function StreamingAnalysisDialog({
                 </Button>
               )}
             </div>
-            
+
             <div className="flex gap-2">
               {canClose && (
                 <Button variant="outline" onClick={handleClose}>
                   {recommendationsState.isComplete ? 'Close' : 'Cancel'}
                 </Button>
               )}
-              
+
               {recommendationsState.isComplete && (
-                <Button onClick={handleClose}>
-                  View Results
-                </Button>
+                <Button onClick={handleClose}>View Results</Button>
               )}
             </div>
           </div>

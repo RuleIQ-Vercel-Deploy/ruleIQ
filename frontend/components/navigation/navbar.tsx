@@ -1,10 +1,10 @@
-"use client"
+'use client';
 
-import React from "react"
-import Link from "next/link"
-import { Menu, Search, Bell } from "lucide-react"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Button } from "@/components/ui/button"
+import React from 'react';
+import Link from 'next/link';
+import { Menu, Search, Bell } from 'lucide-react';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,52 +12,52 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { Input } from "@/components/ui/input"
-import { useSidebar } from "@/components/ui/sidebar"
-import { cn } from "@/lib/utils"
+} from '@/components/ui/dropdown-menu';
+import { Input } from '@/components/ui/input';
+import { useSidebar } from '@/components/ui/sidebar';
+import { cn } from '@/lib/utils';
 
 interface NavbarProps {
-  className?: string
+  className?: string;
 }
 
 export function Navbar({ className }: NavbarProps) {
-  const { toggleSidebar } = useSidebar()
+  const { toggleSidebar } = useSidebar();
   const [notifications] = React.useState([
-    { id: 1, title: "New assessment available", time: "5 minutes ago", unread: true },
-    { id: 2, title: "Compliance report ready", time: "1 hour ago", unread: true },
-    { id: 3, title: "Policy update required", time: "2 hours ago", unread: false },
-  ])
+    { id: 1, title: 'New assessment available', time: '5 minutes ago', unread: true },
+    { id: 2, title: 'Compliance report ready', time: '1 hour ago', unread: true },
+    { id: 3, title: 'Policy update required', time: '2 hours ago', unread: false },
+  ]);
 
-  const unreadCount = notifications.filter(n => n.unread).length
+  const unreadCount = notifications.filter((n) => n.unread).length;
 
   return (
-    <nav className={cn("bg-white border-b border-neutral-100 sticky top-0 z-40", className)}>
-      <div className="flex items-center justify-between h-16 px-4 lg:px-6">
+    <nav className={cn('sticky top-0 z-40 border-b border-neutral-100 bg-white', className)}>
+      <div className="flex h-16 items-center justify-between px-4 lg:px-6">
         {/* Left Side */}
         <div className="flex items-center gap-4">
           <Button
             variant="ghost"
             size="icon"
             onClick={toggleSidebar}
-            className="lg:hidden text-neutral-600 hover:text-teal-600"
+            className="text-neutral-600 hover:text-teal-600 lg:hidden"
           >
             <Menu className="h-5 w-5" />
           </Button>
-          
+
           <Link href="/" className="flex items-center gap-2">
             <span className="text-2xl font-bold text-teal-600">ruleIQ</span>
           </Link>
         </div>
 
         {/* Center - Search */}
-        <div className="hidden md:flex flex-1 max-w-md mx-8">
+        <div className="mx-8 hidden max-w-md flex-1 md:flex">
           <div className="relative w-full">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-neutral-400" />
+            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-neutral-400" />
             <Input
               type="search"
               placeholder="Search assessments, policies, evidence..."
-              className="pl-10 bg-neutral-50 border-neutral-200 focus:bg-white"
+              className="border-neutral-200 bg-neutral-50 pl-10 focus:bg-white"
             />
           </div>
         </div>
@@ -67,10 +67,14 @@ export function Navbar({ className }: NavbarProps) {
           {/* Notifications */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon" className="relative text-neutral-600 hover:text-teal-600">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="relative text-neutral-600 hover:text-teal-600"
+              >
                 <Bell className="h-5 w-5" />
                 {unreadCount > 0 && (
-                  <span className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-teal-600 text-white text-xs flex items-center justify-center">
+                  <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-teal-600 text-xs text-white">
                     {unreadCount}
                   </span>
                 )}
@@ -80,9 +84,17 @@ export function Navbar({ className }: NavbarProps) {
               <DropdownMenuLabel>Notifications</DropdownMenuLabel>
               <DropdownMenuSeparator />
               {notifications.map((notification) => (
-                <DropdownMenuItem key={notification.id} className="flex flex-col items-start gap-1 p-3">
-                  <div className="flex items-center gap-2 w-full">
-                    <span className={cn("text-sm font-medium", notification.unread && "text-neutral-900")}>
+                <DropdownMenuItem
+                  key={notification.id}
+                  className="flex flex-col items-start gap-1 p-3"
+                >
+                  <div className="flex w-full items-center gap-2">
+                    <span
+                      className={cn(
+                        'text-sm font-medium',
+                        notification.unread && 'text-neutral-900',
+                      )}
+                    >
                       {notification.title}
                     </span>
                     {notification.unread && (
@@ -138,5 +150,5 @@ export function Navbar({ className }: NavbarProps) {
         </div>
       </div>
     </nav>
-  )
+  );
 }

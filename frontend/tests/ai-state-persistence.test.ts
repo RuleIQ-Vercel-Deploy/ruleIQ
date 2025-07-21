@@ -13,7 +13,7 @@ describe('AI State Persistence Tests', () => {
         getItem: (key: string) => mockStorage.get(key) || null,
         setItem: (key: string, value: string) => mockStorage.set(key, value),
         removeItem: (key: string) => mockStorage.delete(key),
-        clear: () => mockStorage.clear()
+        clear: () => mockStorage.clear(),
       };
 
       const storeBusinessContext = (context: any) => {
@@ -30,7 +30,7 @@ describe('AI State Persistence Tests', () => {
         size: '50-200',
         compliance_frameworks: ['GDPR', 'ISO 27001'],
         data_sensitivity: 'High',
-        handles_personal_data: true
+        handles_personal_data: true,
       };
 
       // Store context
@@ -48,16 +48,19 @@ describe('AI State Persistence Tests', () => {
       const localStorage = {
         getItem: (key: string) => mockStorage.get(key) || null,
         setItem: (key: string, value: string) => mockStorage.set(key, value),
-        removeItem: (key: string) => mockStorage.delete(key)
+        removeItem: (key: string) => mockStorage.delete(key),
       };
 
       const storeAIRecommendations = (assessmentId: string, recommendations: any[]) => {
         const key = `ai_recommendations_${assessmentId}`;
-        localStorage.setItem(key, JSON.stringify({
-          recommendations,
-          timestamp: new Date().toISOString(),
-          version: '1.0'
-        }));
+        localStorage.setItem(
+          key,
+          JSON.stringify({
+            recommendations,
+            timestamp: new Date().toISOString(),
+            version: '1.0',
+          }),
+        );
       };
 
       const retrieveAIRecommendations = (assessmentId: string) => {
@@ -74,7 +77,7 @@ describe('AI State Persistence Tests', () => {
           title: 'Implement Data Retention Policy',
           description: 'Create comprehensive data retention policy',
           estimatedEffort: '3-4 weeks',
-          resources: ['DPO', 'Legal Team']
+          resources: ['DPO', 'Legal Team'],
         },
         {
           id: 'rec_2',
@@ -83,8 +86,8 @@ describe('AI State Persistence Tests', () => {
           title: 'Staff Training Program',
           description: 'Implement GDPR awareness training',
           estimatedEffort: '2 weeks',
-          resources: ['HR', 'Compliance Team']
-        }
+          resources: ['HR', 'Compliance Team'],
+        },
       ];
 
       const assessmentId = 'test-assessment-123';
@@ -107,16 +110,19 @@ describe('AI State Persistence Tests', () => {
       const sessionStorage = {
         getItem: (key: string) => mockStorage.get(key) || null,
         setItem: (key: string, value: string) => mockStorage.set(key, value),
-        removeItem: (key: string) => mockStorage.delete(key)
+        removeItem: (key: string) => mockStorage.delete(key),
       };
 
       const storeAIAnalysis = (assessmentId: string, analysis: any) => {
         const key = `ai_analysis_${assessmentId}`;
-        sessionStorage.setItem(key, JSON.stringify({
-          ...analysis,
-          cached_at: new Date().toISOString(),
-          expires_at: new Date(Date.now() + 30 * 60 * 1000).toISOString() // 30 minutes
-        }));
+        sessionStorage.setItem(
+          key,
+          JSON.stringify({
+            ...analysis,
+            cached_at: new Date().toISOString(),
+            expires_at: new Date(Date.now() + 30 * 60 * 1000).toISOString(), // 30 minutes
+          }),
+        );
       };
 
       const retrieveAIAnalysis = (assessmentId: string) => {
@@ -125,7 +131,7 @@ describe('AI State Persistence Tests', () => {
         if (!stored) return null;
 
         const parsed = JSON.parse(stored);
-        
+
         // Check if expired
         if (new Date(parsed.expires_at) < new Date()) {
           sessionStorage.removeItem(key);
@@ -145,19 +151,19 @@ describe('AI State Persistence Tests', () => {
             description: 'Missing data retention policy',
             impact: 'High compliance risk',
             currentState: 'No policy',
-            targetState: 'Documented policy'
-          }
+            targetState: 'Documented policy',
+          },
         ],
         risk_assessment: {
           overall_risk_level: 'high',
           risk_score: 7.5,
-          key_risk_areas: ['Data Retention', 'Compliance Documentation']
+          key_risk_areas: ['Data Retention', 'Compliance Documentation'],
         },
         compliance_insights: {
           maturity_level: 'developing',
           score_breakdown: { data_protection: 65, security: 70 },
-          improvement_priority: ['Data Retention Policies']
-        }
+          improvement_priority: ['Data Retention Policies'],
+        },
       };
 
       const assessmentId = 'test-assessment-456';
@@ -185,7 +191,7 @@ describe('AI State Persistence Tests', () => {
         setAIContext(assessmentId: string, context: any) {
           this.state.set(`ai_context_${assessmentId}`, {
             ...context,
-            updated_at: new Date().toISOString()
+            updated_at: new Date().toISOString(),
           });
         }
 
@@ -209,8 +215,8 @@ describe('AI State Persistence Tests', () => {
       // Initial context setup
       const initialContext = {
         businessProfile: { industry: 'Healthcare', size: 'large' },
-        currentAnswers: { 'data_protection': 'No', 'staff_training': 'Yes' },
-        aiRecommendations: []
+        currentAnswers: { data_protection: 'No', staff_training: 'Yes' },
+        aiRecommendations: [],
       };
 
       stateManager.setAIContext(assessmentId, initialContext);
@@ -219,9 +225,9 @@ describe('AI State Persistence Tests', () => {
       stateManager.updateAIContext(assessmentId, {
         currentAnswers: {
           ...initialContext.currentAnswers,
-          'incident_response': 'No',
-          'regular_audits': 'Yes'
-        }
+          incident_response: 'No',
+          regular_audits: 'Yes',
+        },
       });
 
       // Add AI recommendations
@@ -231,9 +237,9 @@ describe('AI State Persistence Tests', () => {
             id: 'ai_rec_1',
             title: 'Implement Incident Response Plan',
             priority: 'immediate',
-            source: 'ai_analysis'
-          }
-        ]
+            source: 'ai_analysis',
+          },
+        ],
       });
 
       // Retrieve final state
@@ -252,7 +258,7 @@ describe('AI State Persistence Tests', () => {
       const mockStorage = new Map<string, string>();
       const localStorage = {
         getItem: (key: string) => mockStorage.get(key) || null,
-        setItem: (key: string, value: string) => mockStorage.set(key, value)
+        setItem: (key: string, value: string) => mockStorage.set(key, value),
       };
 
       const migrateAIContext = (oldContext: any, fromVersion: string, toVersion: string) => {
@@ -263,9 +269,9 @@ describe('AI State Persistence Tests', () => {
             enhanced_features: {
               industry_specific_recommendations: true,
               timeline_aware_prioritization: true,
-              context_extraction: true
+              context_extraction: true,
             },
-            migrated_at: new Date().toISOString()
+            migrated_at: new Date().toISOString(),
           };
         }
         return oldContext;
@@ -296,7 +302,7 @@ describe('AI State Persistence Tests', () => {
       const oldContext = {
         businessProfile: { industry: 'Technology' },
         recommendations: ['Basic recommendation'],
-        version: '1.0'
+        version: '1.0',
       };
 
       storeAIContextWithVersion(oldContext, '1.0');
@@ -320,11 +326,11 @@ describe('AI State Persistence Tests', () => {
         private cache = new Map<string, any>();
 
         set(key: string, value: any, ttlMinutes: number = 30) {
-          const expiresAt = Date.now() + (ttlMinutes * 60 * 1000);
+          const expiresAt = Date.now() + ttlMinutes * 60 * 1000;
           this.cache.set(key, {
             data: value,
             expiresAt,
-            createdAt: Date.now()
+            createdAt: Date.now(),
           });
         }
 
@@ -362,7 +368,7 @@ describe('AI State Persistence Tests', () => {
       // Test cache storage and retrieval
       const testResponse = {
         recommendations: ['Recommendation 1', 'Recommendation 2'],
-        confidence_score: 0.85
+        confidence_score: 0.85,
       };
 
       cache.set('ai_response_test_123', testResponse, 5); // 5 minutes TTL

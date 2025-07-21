@@ -1,6 +1,6 @@
 /**
  * Tests for AIHelpTooltip component
- * 
+ *
  * Tests AI help functionality, memory leak prevention,
  * race condition handling, and user interactions.
  */
@@ -19,13 +19,13 @@ vi.mock('@/lib/api/assessments-ai.service', () => ({
   assessmentAIService: {
     getQuestionHelp: vi.fn(),
     submitFeedback: vi.fn(),
-  }
+  },
 }));
 
 // Mock toast hook
 const mockToast = vi.fn();
 vi.mock('@/hooks/use-toast', () => ({
-  useToast: () => ({ toast: mockToast })
+  useToast: () => ({ toast: mockToast }),
 }));
 
 // Mock framer-motion
@@ -47,14 +47,14 @@ const mockQuestion: Question = {
   id: 'test-question-1',
   text: 'Do you have a data protection policy?',
   type: 'yes_no',
-  validation: { required: true }
+  validation: { required: true },
 };
 
 const mockUserContext: UserContext = {
   business_profile_id: 'test-profile-123',
   industry: 'technology',
   company_size: 'small',
-  location: 'UK'
+  location: 'UK',
 };
 
 const mockAIResponse = {
@@ -64,7 +64,7 @@ const mockAIResponse = {
   follow_up_suggestions: ['What should be included in the policy?'],
   source_references: ['GDPR Article 5'],
   request_id: 'test-request-123',
-  generated_at: new Date().toISOString()
+  generated_at: new Date().toISOString(),
 };
 
 describe('AIHelpTooltip', () => {
@@ -84,7 +84,7 @@ describe('AIHelpTooltip', () => {
         frameworkId="gdpr"
         sectionId="data-protection"
         userContext={mockUserContext}
-      />
+      />,
     );
 
     expect(screen.getByRole('button', { name: /ai help/i })).toBeInTheDocument();
@@ -94,15 +94,11 @@ describe('AIHelpTooltip', () => {
   it('shows loading state when fetching AI help', async () => {
     // Mock delayed response
     vi.mocked(assessmentAIService.getQuestionHelp).mockImplementation(
-      () => new Promise(resolve => setTimeout(() => resolve(mockAIResponse), 100))
+      () => new Promise((resolve) => setTimeout(() => resolve(mockAIResponse), 100)),
     );
 
     render(
-      <AIHelpTooltip
-        question={mockQuestion}
-        frameworkId="gdpr"
-        userContext={mockUserContext}
-      />
+      <AIHelpTooltip question={mockQuestion} frameworkId="gdpr" userContext={mockUserContext} />,
     );
 
     const helpButton = screen.getByRole('button', { name: /ai help/i });
@@ -119,22 +115,21 @@ describe('AIHelpTooltip', () => {
     vi.mocked(assessmentAIService.getQuestionHelp).mockResolvedValue(mockAIResponse);
 
     render(
-      <AIHelpTooltip
-        question={mockQuestion}
-        frameworkId="gdpr"
-        userContext={mockUserContext}
-      />
+      <AIHelpTooltip question={mockQuestion} frameworkId="gdpr" userContext={mockUserContext} />,
     );
 
     const helpButton = screen.getByRole('button', { name: /ai help/i });
-    
+
     await act(async () => {
       fireEvent.click(helpButton);
     });
 
-    await waitFor(() => {
-      expect(screen.getByText(mockAIResponse.guidance)).toBeInTheDocument();
-    }, { timeout: 3000 });
+    await waitFor(
+      () => {
+        expect(screen.getByText(mockAIResponse.guidance)).toBeInTheDocument();
+      },
+      { timeout: 3000 },
+    );
 
     expect(screen.getByText('95% Confidence')).toBeInTheDocument();
     expect(screen.getByText('GDPR')).toBeInTheDocument();
@@ -143,15 +138,11 @@ describe('AIHelpTooltip', () => {
 
   it('handles AI service errors gracefully', async () => {
     vi.mocked(assessmentAIService.getQuestionHelp).mockRejectedValue(
-      new Error('AI service unavailable')
+      new Error('AI service unavailable'),
     );
 
     render(
-      <AIHelpTooltip
-        question={mockQuestion}
-        frameworkId="gdpr"
-        userContext={mockUserContext}
-      />
+      <AIHelpTooltip question={mockQuestion} frameworkId="gdpr" userContext={mockUserContext} />,
     );
 
     const helpButton = screen.getByRole('button', { name: /ai help/i });
@@ -166,20 +157,17 @@ describe('AIHelpTooltip', () => {
     // Mock slow response
     let resolveCount = 0;
     vi.mocked(assessmentAIService.getQuestionHelp).mockImplementation(
-      () => new Promise(resolve => {
-        setTimeout(() => {
-          resolveCount++;
-          resolve({ ...mockAIResponse, request_id: `request-${resolveCount}` });
-        }, 50);
-      })
+      () =>
+        new Promise((resolve) => {
+          setTimeout(() => {
+            resolveCount++;
+            resolve({ ...mockAIResponse, request_id: `request-${resolveCount}` });
+          }, 50);
+        }),
     );
 
     render(
-      <AIHelpTooltip
-        question={mockQuestion}
-        frameworkId="gdpr"
-        userContext={mockUserContext}
-      />
+      <AIHelpTooltip question={mockQuestion} frameworkId="gdpr" userContext={mockUserContext} />,
     );
 
     const helpButton = screen.getByRole('button', { name: /ai help/i });
@@ -190,9 +178,12 @@ describe('AIHelpTooltip', () => {
     fireEvent.click(helpButton);
 
     // Wait for all requests to complete
-    await waitFor(() => {
-      expect(screen.getByText(mockAIResponse.guidance)).toBeInTheDocument();
-    }, { timeout: 200 });
+    await waitFor(
+      () => {
+        expect(screen.getByText(mockAIResponse.guidance)).toBeInTheDocument();
+      },
+      { timeout: 200 },
+    );
 
     // Should only make one API call due to race condition prevention
     expect(assessmentAIService.getQuestionHelp).toHaveBeenCalledTimes(1);
@@ -202,11 +193,7 @@ describe('AIHelpTooltip', () => {
     vi.mocked(assessmentAIService.getQuestionHelp).mockResolvedValue(mockAIResponse);
 
     render(
-      <AIHelpTooltip
-        question={mockQuestion}
-        frameworkId="gdpr"
-        userContext={mockUserContext}
-      />
+      <AIHelpTooltip question={mockQuestion} frameworkId="gdpr" userContext={mockUserContext} />,
     );
 
     // Get AI help first
@@ -225,9 +212,9 @@ describe('AIHelpTooltip', () => {
 
     expect(navigator.clipboard.writeText).toHaveBeenCalledWith(mockAIResponse.guidance);
     expect(mockToast).toHaveBeenCalledWith({
-      title: "Copied to clipboard",
-      description: "AI guidance has been copied to your clipboard.",
-      duration: 2000
+      title: 'Copied to clipboard',
+      description: 'AI guidance has been copied to your clipboard.',
+      duration: 2000,
     });
   });
 
@@ -236,11 +223,7 @@ describe('AIHelpTooltip', () => {
     vi.mocked(assessmentAIService.submitFeedback).mockResolvedValue({ status: 'success' });
 
     render(
-      <AIHelpTooltip
-        question={mockQuestion}
-        frameworkId="gdpr"
-        userContext={mockUserContext}
-      />
+      <AIHelpTooltip question={mockQuestion} frameworkId="gdpr" userContext={mockUserContext} />,
     );
 
     // Get AI help first
@@ -260,15 +243,15 @@ describe('AIHelpTooltip', () => {
     await waitFor(() => {
       expect(assessmentAIService.submitFeedback).toHaveBeenCalledWith(
         expect.stringContaining('test-question-1'),
-        { helpful: true, rating: 5 }
+        { helpful: true, rating: 5 },
       );
     });
 
     await waitFor(() => {
       expect(mockToast).toHaveBeenCalledWith({
-        title: "Feedback submitted",
-        description: "Thank you for helping us improve AI assistance.",
-        duration: 2000
+        title: 'Feedback submitted',
+        description: 'Thank you for helping us improve AI assistance.',
+        duration: 2000,
       });
     });
   });
@@ -278,11 +261,7 @@ describe('AIHelpTooltip', () => {
     vi.mocked(assessmentAIService.submitFeedback).mockResolvedValue({ status: 'success' });
 
     render(
-      <AIHelpTooltip
-        question={mockQuestion}
-        frameworkId="gdpr"
-        userContext={mockUserContext}
-      />
+      <AIHelpTooltip question={mockQuestion} frameworkId="gdpr" userContext={mockUserContext} />,
     );
 
     // Get AI help first
@@ -301,7 +280,7 @@ describe('AIHelpTooltip', () => {
 
     expect(assessmentAIService.submitFeedback).toHaveBeenCalledWith(
       expect.stringContaining('test-question-1'),
-      { helpful: false, rating: 2 }
+      { helpful: false, rating: 2 },
     );
   });
 
@@ -310,15 +289,11 @@ describe('AIHelpTooltip', () => {
 
     vi.mocked(assessmentAIService.getQuestionHelp).mockResolvedValue(mockAIResponse);
     vi.mocked(assessmentAIService.submitFeedback).mockRejectedValue(
-      new Error('Feedback service unavailable')
+      new Error('Feedback service unavailable'),
     );
 
     render(
-      <AIHelpTooltip
-        question={mockQuestion}
-        frameworkId="gdpr"
-        userContext={mockUserContext}
-      />
+      <AIHelpTooltip question={mockQuestion} frameworkId="gdpr" userContext={mockUserContext} />,
     );
 
     // Get AI help first
@@ -336,10 +311,7 @@ describe('AIHelpTooltip', () => {
     fireEvent.click(thumbsUpButton!);
 
     await waitFor(() => {
-      expect(consoleSpy).toHaveBeenCalledWith(
-        'Failed to submit feedback:',
-        expect.any(Error)
-      );
+      expect(consoleSpy).toHaveBeenCalledWith('Failed to submit feedback:', expect.any(Error));
     });
 
     consoleSpy.mockRestore();
@@ -349,11 +321,7 @@ describe('AIHelpTooltip', () => {
     vi.mocked(assessmentAIService.getQuestionHelp).mockResolvedValue(mockAIResponse);
 
     render(
-      <AIHelpTooltip
-        question={mockQuestion}
-        frameworkId="gdpr"
-        userContext={mockUserContext}
-      />
+      <AIHelpTooltip question={mockQuestion} frameworkId="gdpr" userContext={mockUserContext} />,
     );
 
     const helpButton = screen.getByRole('button', { name: /ai help/i });
@@ -367,7 +335,7 @@ describe('AIHelpTooltip', () => {
 
     // Second click - should close (no new API call)
     fireEvent.click(helpButton);
-    
+
     await waitFor(() => {
       expect(screen.queryByText(mockAIResponse.guidance)).not.toBeInTheDocument();
     });
@@ -385,7 +353,7 @@ describe('AIHelpTooltip', () => {
         frameworkId="gdpr"
         sectionId="data-protection"
         userContext={mockUserContext}
-      />
+      />,
     );
 
     const helpButton = screen.getByRole('button', { name: /ai help/i });
@@ -396,17 +364,13 @@ describe('AIHelpTooltip', () => {
       question_text: 'Do you have a data protection policy?',
       framework_id: 'gdpr',
       section_id: 'data-protection',
-      user_context: mockUserContext
+      user_context: mockUserContext,
     });
   });
 
   it('cleans up properly on unmount to prevent memory leaks', () => {
     const { unmount } = render(
-      <AIHelpTooltip
-        question={mockQuestion}
-        frameworkId="gdpr"
-        userContext={mockUserContext}
-      />
+      <AIHelpTooltip question={mockQuestion} frameworkId="gdpr" userContext={mockUserContext} />,
     );
 
     // Trigger a request

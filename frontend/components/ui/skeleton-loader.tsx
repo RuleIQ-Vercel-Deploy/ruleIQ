@@ -21,7 +21,7 @@ export function Skeleton({
   animation = true,
 }: SkeletonProps) {
   const baseClasses = 'relative overflow-hidden bg-muted';
-  
+
   const variantClasses = {
     text: 'h-4 w-full rounded',
     circular: 'rounded-full',
@@ -35,10 +35,7 @@ export function Skeleton({
   };
 
   return (
-    <div
-      className={cn(baseClasses, variantClasses[variant], className)}
-      style={style}
-    >
+    <div className={cn(baseClasses, variantClasses[variant], className)} style={style}>
       {animation && (
         <motion.div
           className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/10 to-transparent"

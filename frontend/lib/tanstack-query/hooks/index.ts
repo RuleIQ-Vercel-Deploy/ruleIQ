@@ -15,11 +15,11 @@ export * from './use-infinite-scroll';
 export * from './use-mutation-with-toast';
 
 // Re-export commonly used utilities
-export { 
-  useQuery, 
-  useMutation, 
+export {
+  useQuery,
+  useMutation,
   useQueryClient,
   useInfiniteQuery,
   useIsFetching,
-  useIsMutating 
+  useIsMutating,
 } from '@tanstack/react-query';

@@ -1,6 +1,6 @@
 /**
  * Tests for AIErrorBoundary component
- * 
+ *
  * Tests error boundary functionality, fallback rendering,
  * error recovery, and custom error handling.
  */
@@ -9,10 +9,10 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import React from 'react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
-import { 
-  AIErrorBoundary, 
-  InlineAIErrorBoundary, 
-  useAIErrorHandler 
+import {
+  AIErrorBoundary,
+  InlineAIErrorBoundary,
+  useAIErrorHandler,
 } from '@/components/assessments/AIErrorBoundary';
 
 // Mock console.error to avoid noise in tests
@@ -26,7 +26,13 @@ afterEach(() => {
 });
 
 // Test component that throws errors
-function ThrowError({ shouldThrow, errorMessage }: { shouldThrow: boolean; errorMessage?: string }) {
+function ThrowError({
+  shouldThrow,
+  errorMessage,
+}: {
+  shouldThrow: boolean;
+  errorMessage?: string;
+}) {
   if (shouldThrow) {
     throw new Error(errorMessage || 'Test error');
   }
@@ -36,12 +42,10 @@ function ThrowError({ shouldThrow, errorMessage }: { shouldThrow: boolean; error
 // Test component for useAIErrorHandler hook
 function TestErrorHandler() {
   const { captureError, resetError } = useAIErrorHandler();
-  
+
   return (
     <div>
-      <button onClick={() => captureError(new Error('Programmatic error'))}>
-        Trigger Error
-      </button>
+      <button onClick={() => captureError(new Error('Programmatic error'))}>Trigger Error</button>
       <button onClick={resetError}>Reset Error</button>
     </div>
   );
@@ -52,7 +56,7 @@ describe('AIErrorBoundary', () => {
     render(
       <AIErrorBoundary>
         <div>Test content</div>
-      </AIErrorBoundary>
+      </AIErrorBoundary>,
     );
 
     expect(screen.getByText('Test content')).toBeInTheDocument();
@@ -62,7 +66,7 @@ describe('AIErrorBoundary', () => {
     render(
       <AIErrorBoundary>
         <ThrowError shouldThrow={true} errorMessage="AI service timeout" />
-      </AIErrorBoundary>
+      </AIErrorBoundary>,
     );
 
     expect(screen.getByText('AI Service Temporarily Unavailable')).toBeInTheDocument();
@@ -74,7 +78,7 @@ describe('AIErrorBoundary', () => {
     render(
       <AIErrorBoundary>
         <ThrowError shouldThrow={true} errorMessage="Generic error" />
-      </AIErrorBoundary>
+      </AIErrorBoundary>,
     );
 
     expect(screen.getByText('AI Feature Error')).toBeInTheDocument();
@@ -83,18 +87,18 @@ describe('AIErrorBoundary', () => {
 
   it('calls custom error handler when provided', () => {
     const onError = vi.fn();
-    
+
     render(
       <AIErrorBoundary onError={onError}>
         <ThrowError shouldThrow={true} errorMessage="Test error" />
-      </AIErrorBoundary>
+      </AIErrorBoundary>,
     );
 
     expect(onError).toHaveBeenCalledWith(
       expect.any(Error),
       expect.objectContaining({
-        componentStack: expect.any(String)
-      })
+        componentStack: expect.any(String),
+      }),
     );
   });
 
@@ -132,7 +136,7 @@ describe('AIErrorBoundary', () => {
     render(
       <AIErrorBoundary fallback={CustomFallback}>
         <ThrowError shouldThrow={true} errorMessage="Custom error test" />
-      </AIErrorBoundary>
+      </AIErrorBoundary>,
     );
 
     expect(screen.getByText('Custom error: Custom error test')).toBeInTheDocument();
@@ -144,14 +148,14 @@ describe('AIErrorBoundary', () => {
       'AI service timeout',
       'Unable to get AI assistance',
       'AI model unavailable',
-      'timeout occurred'
+      'timeout occurred',
     ];
 
     aiErrorMessages.forEach((message) => {
       const { unmount } = render(
         <AIErrorBoundary>
           <ThrowError shouldThrow={true} errorMessage={message} />
-        </AIErrorBoundary>
+        </AIErrorBoundary>,
       );
 
       expect(screen.getByText('AI Service Temporarily Unavailable')).toBeInTheDocument();
@@ -165,13 +169,13 @@ describe('AIErrorBoundary', () => {
     render(
       <AIErrorBoundary>
         <ThrowError shouldThrow={true} errorMessage="Test error" />
-      </AIErrorBoundary>
+      </AIErrorBoundary>,
     );
 
     expect(consoleSpy).toHaveBeenCalledWith(
       'AI Error Boundary caught error:',
       expect.any(Error),
-      expect.any(Object)
+      expect.any(Object),
     );
 
     consoleSpy.mockRestore();
@@ -183,7 +187,7 @@ describe('InlineAIErrorBoundary', () => {
     render(
       <InlineAIErrorBoundary>
         <div>Inline content</div>
-      </InlineAIErrorBoundary>
+      </InlineAIErrorBoundary>,
     );
 
     expect(screen.getByText('Inline content')).toBeInTheDocument();
@@ -193,7 +197,7 @@ describe('InlineAIErrorBoundary', () => {
     render(
       <InlineAIErrorBoundary>
         <ThrowError shouldThrow={true} errorMessage="Inline error" />
-      </InlineAIErrorBoundary>
+      </InlineAIErrorBoundary>,
     );
 
     expect(screen.getByText('AI unavailable')).toBeInTheDocument();
@@ -226,7 +230,7 @@ describe('useAIErrorHandler', () => {
     render(
       <AIErrorBoundary>
         <TestErrorHandler />
-      </AIErrorBoundary>
+      </AIErrorBoundary>,
     );
 
     // Initially no error
@@ -245,7 +249,7 @@ describe('useAIErrorHandler', () => {
     const { rerender } = render(
       <AIErrorBoundary>
         <TestErrorHandler />
-      </AIErrorBoundary>
+      </AIErrorBoundary>,
     );
 
     // Trigger error
@@ -262,7 +266,7 @@ describe('useAIErrorHandler', () => {
     rerender(
       <AIErrorBoundary>
         <TestErrorHandler />
-      </AIErrorBoundary>
+      </AIErrorBoundary>,
     );
 
     await waitFor(() => {
@@ -276,15 +280,12 @@ describe('useAIErrorHandler', () => {
     render(
       <AIErrorBoundary>
         <TestErrorHandler />
-      </AIErrorBoundary>
+      </AIErrorBoundary>,
     );
 
     fireEvent.click(screen.getByText('Trigger Error'));
 
-    expect(consoleSpy).toHaveBeenCalledWith(
-      'AI Error captured:',
-      expect.any(Error)
-    );
+    expect(consoleSpy).toHaveBeenCalledWith('AI Error captured:', expect.any(Error));
 
     consoleSpy.mockRestore();
   });
@@ -300,24 +301,20 @@ describe('Error Boundary Edge Cases', () => {
     render(
       <AIErrorBoundary>
         <ProblematicComponent />
-      </AIErrorBoundary>
+      </AIErrorBoundary>,
     );
 
     expect(screen.getByText('AI Feature Error')).toBeInTheDocument();
-    
+
     // Multiple clicks shouldn't break anything
     fireEvent.click(screen.getByText('Retry AI Service'));
     fireEvent.click(screen.getByText('Retry AI Service'));
-    
+
     expect(screen.getByText('AI Feature Error')).toBeInTheDocument();
   });
 
   it('handles null/undefined children gracefully', () => {
-    render(
-      <AIErrorBoundary>
-        {null}
-      </AIErrorBoundary>
-    );
+    render(<AIErrorBoundary>{null}</AIErrorBoundary>);
 
     // Should not crash
     expect(document.body).toBeInTheDocument();

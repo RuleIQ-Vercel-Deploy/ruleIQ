@@ -2,19 +2,19 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { policyService } from '@/lib/api/policies.service';
 
-import { 
-  createQueryKey, 
-  type BaseQueryOptions, 
+import {
+  createQueryKey,
+  type BaseQueryOptions,
   type BaseMutationOptions,
   type PaginationParams,
-  type PaginatedResponse 
+  type PaginatedResponse,
 } from './base';
 
-import type { 
+import type {
   Policy,
   GeneratePolicyRequest,
   UpdatePolicyRequest,
-  PolicyTemplate
+  PolicyTemplate,
 } from '@/types/api';
 
 // Query keys
@@ -34,7 +34,7 @@ export const policyKeys = {
 // Hook to fetch policies list
 export function usePolicies(
   params?: PaginationParams,
-  options?: BaseQueryOptions<PaginatedResponse<Policy>>
+  options?: BaseQueryOptions<PaginatedResponse<Policy>>,
 ) {
   return useQuery({
     queryKey: policyKeys.list(params),
@@ -44,10 +44,7 @@ export function usePolicies(
 }
 
 // Hook to fetch single policy
-export function usePolicy(
-  id: string,
-  options?: BaseQueryOptions<Policy>
-) {
+export function usePolicy(id: string, options?: BaseQueryOptions<Policy>) {
   return useQuery({
     queryKey: policyKeys.detail(id),
     queryFn: () => policyService.getPolicy(id),
@@ -57,9 +54,7 @@ export function usePolicy(
 }
 
 // Hook to fetch policy templates
-export function usePolicyTemplates(
-  options?: BaseQueryOptions<PolicyTemplate[]>
-) {
+export function usePolicyTemplates(options?: BaseQueryOptions<PolicyTemplate[]>) {
   return useQuery({
     queryKey: policyKeys.templates(),
     queryFn: () => policyService.getTemplates(),
@@ -68,10 +63,7 @@ export function usePolicyTemplates(
 }
 
 // Hook to fetch policy types for a framework
-export function usePolicyTypes(
-  frameworkId?: string,
-  options?: BaseQueryOptions<string[]>
-) {
+export function usePolicyTypes(frameworkId?: string, options?: BaseQueryOptions<string[]>) {
   return useQuery({
     queryKey: policyKeys.types(frameworkId),
     queryFn: () => policyService.getPolicyTypes(frameworkId),
@@ -81,10 +73,10 @@ export function usePolicyTypes(
 
 // Hook to generate policy
 export function useGeneratePolicy(
-  options?: BaseMutationOptions<Policy, unknown, GeneratePolicyRequest>
+  options?: BaseMutationOptions<Policy, unknown, GeneratePolicyRequest>,
 ) {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
     mutationFn: (data: GeneratePolicyRequest) => policyService.generatePolicy(data),
     onSuccess: (newPolicy) => {
@@ -98,10 +90,10 @@ export function useGeneratePolicy(
 
 // Hook to update policy
 export function useUpdatePolicy(
-  options?: BaseMutationOptions<Policy, unknown, { id: string; data: UpdatePolicyRequest }>
+  options?: BaseMutationOptions<Policy, unknown, { id: string; data: UpdatePolicyRequest }>,
 ) {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
     mutationFn: ({ id, data }) => policyService.updatePolicy(id, data),
     onSuccess: (updatedPolicy, variables) => {
@@ -114,11 +106,9 @@ export function useUpdatePolicy(
 }
 
 // Hook to delete policy
-export function useDeletePolicy(
-  options?: BaseMutationOptions<void, unknown, string>
-) {
+export function useDeletePolicy(options?: BaseMutationOptions<void, unknown, string>) {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
     mutationFn: (id: string) => policyService.deletePolicy(id),
     onSuccess: (_, id) => {
@@ -133,17 +123,15 @@ export function useDeletePolicy(
 // Hook to download policy
 export function useDownloadPolicy() {
   return useMutation({
-    mutationFn: ({ id, format }: { id: string; format: 'pdf' | 'docx' | 'txt' }) => 
+    mutationFn: ({ id, format }: { id: string; format: 'pdf' | 'docx' | 'txt' }) =>
       policyService.downloadPolicy(id, format),
   });
 }
 
 // Hook to clone policy
-export function useClonePolicy(
-  options?: BaseMutationOptions<Policy, unknown, string>
-) {
+export function useClonePolicy(options?: BaseMutationOptions<Policy, unknown, string>) {
   const queryClient = useQueryClient();
-  
+
   return useMutation({
     mutationFn: (id: string) => policyService.clonePolicy(id),
     onSuccess: (newPolicy) => {

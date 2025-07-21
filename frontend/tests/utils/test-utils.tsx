@@ -1,8 +1,8 @@
-import { vi } from 'vitest'
-import { render, RenderOptions } from '@testing-library/react'
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { BrowserRouter } from 'react-router-dom'
-import { ReactElement, ReactNode } from 'react'
+import { vi } from 'vitest';
+import { render, RenderOptions } from '@testing-library/react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { BrowserRouter } from 'react-router-dom';
+import { ReactElement, ReactNode } from 'react';
 
 // Mock data generators
 export const mockUser = {
@@ -12,7 +12,7 @@ export const mockUser = {
   is_active: true,
   permissions: ['read', 'write'],
   role: 'user' as const,
-}
+};
 
 export const mockBusinessProfile = {
   id: 'profile-123',
@@ -25,7 +25,7 @@ export const mockBusinessProfile = {
   processes_payments: true,
   created_at: new Date().toISOString(),
   updated_at: new Date().toISOString(),
-}
+};
 
 export const mockAssessment = {
   id: 'assessment-123',
@@ -35,7 +35,7 @@ export const mockAssessment = {
   status: 'in_progress' as const,
   created_at: new Date().toISOString(),
   updated_at: new Date().toISOString(),
-}
+};
 
 export const mockEvidence = {
   id: 'evidence-123',
@@ -47,7 +47,7 @@ export const mockEvidence = {
   business_profile_id: 'profile-123',
   created_at: new Date().toISOString(),
   updated_at: new Date().toISOString(),
-}
+};
 
 // Query client factory
 export function createQueryClient() {
@@ -62,13 +62,13 @@ export function createQueryClient() {
         retry: false,
       },
     },
-  })
+  });
 }
 
 // Custom render function with providers
 interface CustomRenderOptions extends Omit<RenderOptions, 'wrapper'> {
-  queryClient?: QueryClient
-  initialRoute?: string
+  queryClient?: QueryClient;
+  initialRoute?: string;
 }
 
 export function renderWithProviders(
@@ -77,22 +77,20 @@ export function renderWithProviders(
     queryClient = createQueryClient(),
     initialRoute = '/',
     ...renderOptions
-  }: CustomRenderOptions = {}
+  }: CustomRenderOptions = {},
 ) {
   function Wrapper({ children }: { children: ReactNode }) {
     return (
       <BrowserRouter>
-        <QueryClientProvider client={queryClient}>
-          {children}
-        </QueryClientProvider>
+        <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
       </BrowserRouter>
-    )
+    );
   }
 
   return {
     ...render(ui, { wrapper: Wrapper, ...renderOptions }),
     queryClient,
-  }
+  };
 }
 
 // Mock chart components to avoid canvas issues in tests
@@ -119,8 +117,8 @@ export const mockChartComponents = () => {
     ),
     Pie: () => <div data-testid="pie" />,
     Cell: () => <div data-testid="cell" />,
-  }))
-}
+  }));
+};
 
 // Mock react-chartjs-2 components
 export const mockChartJs2 = () => {
@@ -134,63 +132,63 @@ export const mockChartJs2 = () => {
     Doughnut: ({ data, options }: any) => (
       <div data-testid="doughnut-chart" data-chart-data={JSON.stringify(data)} />
     ),
-  }))
-}
+  }));
+};
 
 // Local storage mock
 export const mockLocalStorage = () => {
-  const storage: Record<string, string> = {}
+  const storage: Record<string, string> = {};
 
   return {
     getItem: vi.fn((key: string) => storage[key] || null),
     setItem: vi.fn((key: string, value: string) => {
-      storage[key] = value
+      storage[key] = value;
     }),
     removeItem: vi.fn((key: string) => {
-      delete storage[key]
+      delete storage[key];
     }),
     clear: vi.fn(() => {
-      Object.keys(storage).forEach(key => delete storage[key])
+      Object.keys(storage).forEach((key) => delete storage[key]);
     }),
     length: Object.keys(storage).length,
     key: vi.fn((index: number) => Object.keys(storage)[index] || null),
-  }
-}
+  };
+};
 
 // Session storage mock
 export const mockSessionStorage = () => {
-  const storage: Record<string, string> = {}
+  const storage: Record<string, string> = {};
 
   return {
     getItem: vi.fn((key: string) => storage[key] || null),
     setItem: vi.fn((key: string, value: string) => {
-      storage[key] = value
+      storage[key] = value;
     }),
     removeItem: vi.fn((key: string) => {
-      delete storage[key]
+      delete storage[key];
     }),
     clear: vi.fn(() => {
-      Object.keys(storage).forEach(key => delete storage[key])
+      Object.keys(storage).forEach((key) => delete storage[key]);
     }),
     length: Object.keys(storage).length,
     key: vi.fn((index: number) => Object.keys(storage)[index] || null),
-  }
-}
+  };
+};
 
 // Web API mocks
 export const mockWebAPIs = () => {
   Object.defineProperty(window, 'localStorage', {
     value: mockLocalStorage(),
     writable: true,
-  })
+  });
 
   Object.defineProperty(window, 'sessionStorage', {
     value: mockSessionStorage(),
     writable: true,
-  })
+  });
 
   Object.defineProperty(window, 'matchMedia', {
-    value: vi.fn().mockImplementation(query => ({
+    value: vi.fn().mockImplementation((query) => ({
       matches: false,
       media: query,
       onchange: null,
@@ -201,60 +199,60 @@ export const mockWebAPIs = () => {
       dispatchEvent: vi.fn(),
     })),
     writable: true,
-  })
+  });
 
   // Mock IntersectionObserver
-  const mockIntersectionObserver = vi.fn()
+  const mockIntersectionObserver = vi.fn();
   mockIntersectionObserver.mockReturnValue({
     observe: vi.fn(),
     unobserve: vi.fn(),
     disconnect: vi.fn(),
-  })
-  window.IntersectionObserver = mockIntersectionObserver
+  });
+  window.IntersectionObserver = mockIntersectionObserver;
 
   // Mock ResizeObserver
-  const mockResizeObserver = vi.fn()
+  const mockResizeObserver = vi.fn();
   mockResizeObserver.mockReturnValue({
     observe: vi.fn(),
     unobserve: vi.fn(),
     disconnect: vi.fn(),
-  })
-  window.ResizeObserver = mockResizeObserver
-}
+  });
+  window.ResizeObserver = mockResizeObserver;
+};
 
 // Async test utilities
 export const waitFor = async (condition: () => boolean, timeout = 5000) => {
-  const startTime = Date.now()
+  const startTime = Date.now();
   while (!condition() && Date.now() - startTime < timeout) {
-    await new Promise(resolve => setTimeout(resolve, 10))
+    await new Promise((resolve) => setTimeout(resolve, 10));
   }
   if (!condition()) {
-    throw new Error(`Condition not met within ${timeout}ms`)
+    throw new Error(`Condition not met within ${timeout}ms`);
   }
-}
+};
 
-export const flushPromises = () => new Promise(resolve => setTimeout(resolve, 0))
+export const flushPromises = () => new Promise((resolve) => setTimeout(resolve, 0));
 
 // Test data factories
 export const createMockUser = (overrides: Partial<typeof mockUser> = {}) => ({
   ...mockUser,
   ...overrides,
-})
+});
 
 export const createMockBusinessProfile = (overrides: Partial<typeof mockBusinessProfile> = {}) => ({
   ...mockBusinessProfile,
   ...overrides,
-})
+});
 
 export const createMockAssessment = (overrides: Partial<typeof mockAssessment> = {}) => ({
   ...mockAssessment,
   ...overrides,
-})
+});
 
 export const createMockEvidence = (overrides: Partial<typeof mockEvidence> = {}) => ({
   ...mockEvidence,
   ...overrides,
-})
+});
 
 // API mock responses
 export const mockAPIResponses = {
@@ -266,7 +264,7 @@ export const mockAPIResponses = {
     page: 1,
     size: 20,
   }),
-}
+};
 
 // Default export for convenience
 export default {
@@ -285,4 +283,4 @@ export default {
   createMockEvidence,
   waitFor,
   flushPromises,
-}
+};

@@ -240,8 +240,7 @@ class TestDatabaseQueryPerformance:
                 .join(BusinessProfile, EvidenceItem.business_profile_id == BusinessProfile.id)
                 .filter(
                     EvidenceItem.user_id == sample_user.id,
-                    BusinessProfile.industry
-                    == "Technology",  # Use correct industry from fixture
+                    BusinessProfile.industry == "Technology",  # Use correct industry from fixture
                     EvidenceItem.status == "collected",
                 )
                 .limit(50)

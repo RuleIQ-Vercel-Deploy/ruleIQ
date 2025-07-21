@@ -1,8 +1,8 @@
 /// <reference types="vitest" />
-import path from 'path'
+import path from 'path';
 
-import react from '@vitejs/plugin-react'
-import { defineConfig } from 'vitest/config'
+import react from '@vitejs/plugin-react';
+import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
   plugins: [react()],
@@ -17,8 +17,8 @@ export default defineConfig({
     poolOptions: {
       forks: {
         singleFork: true, // Run tests sequentially in a single fork
-        isolate: true // Isolate each test file
-      }
+        isolate: true, // Isolate each test file
+      },
     },
     maxConcurrency: 1, // Run tests one at a time
     isolate: true, // Isolate tests to prevent memory leaks,
@@ -49,7 +49,7 @@ export default defineConfig({
       NEXT_PUBLIC_ENABLE_MOCK_DATA: 'true',
       NEXT_PUBLIC_ENV: 'test',
       NODE_ENV: 'test',
-      SKIP_ENV_VALIDATION: 'true'
+      SKIP_ENV_VALIDATION: 'true',
     },
     coverage: {
       provider: 'v8',
@@ -78,4 +78,4 @@ export default defineConfig({
       '@': path.resolve(__dirname, './'),
     },
   },
-})
+});

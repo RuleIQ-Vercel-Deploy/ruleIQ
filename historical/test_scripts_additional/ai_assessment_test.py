@@ -1,5 +1,4 @@
 import requests
-import json
 import os
 from pathlib import Path
 from datetime import datetime, timedelta
@@ -23,17 +22,16 @@ print(f"JWT_SECRET loaded: {JWT_SECRET[:10] if JWT_SECRET else 'None'}...")
 # Fallback to the default value used in settings.py if not set
 if not JWT_SECRET:
     JWT_SECRET = "dev-secret-key-change-in-production"
-    print(f"Using fallback JWT_SECRET")
+    print("Using fallback JWT_SECRET")
 
 BASE_URL = "http://localhost:8000/api/v1"
 
+
 def create_test_token():
     """Creates a JWT token for a test user."""
-    payload = {
-        "sub": "testuser@example.com",
-        "exp": datetime.utcnow() + timedelta(minutes=5)
-    }
+    payload = {"sub": "testuser@example.com", "exp": datetime.utcnow() + timedelta(minutes=5)}
     return jwt.encode(payload, JWT_SECRET, algorithm="HS256")
+
 
 def test_endpoint(endpoint, payload, token, stream=False):
     """Helper function to test an endpoint."""
@@ -55,29 +53,27 @@ def test_endpoint(endpoint, payload, token, stream=False):
         print(f"Error: {e}")
     print("-" * 20)
 
+
 if __name__ == "__main__":
     token = create_test_token()
     # Test Data
     help_payload = {
         "question_id": "test-q1",
         "question_text": "How should we implement access control?",
-        "framework_id": "soc2"
-    }
-    
-    followup_payload = {
         "framework_id": "soc2",
-        "current_answers": {"test-q1": "We use RBAC."}
     }
+
+    followup_payload = {"framework_id": "soc2", "current_answers": {"test-q1": "We use RBAC."}}
 
     analysis_payload = {
         "assessment_results": {"test-q1": "We use RBAC."},
         "framework_id": "soc2",
-        "business_profile_id": "test-profile-1"
+        "business_profile_id": "test-profile-1",
     }
 
     recommendations_payload = {
         "gaps": [{"id": "gap1", "description": "No MFA for admins"}],
-        "business_profile": {"name": "TestCo", "industry": "SaaS"}
+        "business_profile": {"name": "TestCo", "industry": "SaaS"},
     }
 
     # Test Execution

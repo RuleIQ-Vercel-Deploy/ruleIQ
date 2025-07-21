@@ -1,8 +1,8 @@
-"use client"
+'use client';
 
-import { SlidersHorizontal } from "lucide-react"
+import { SlidersHorizontal } from 'lucide-react';
 
-import { Button } from "@/components/ui/button"
+import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -10,12 +10,12 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from '@/components/ui/dropdown-menu';
 
-import type { Table } from "@tanstack/react-table"
+import type { Table } from '@tanstack/react-table';
 
 interface DataTableViewOptionsProps<TData> {
-  table: Table<TData>
+  table: Table<TData>;
 }
 
 export function DataTableViewOptions<TData>({ table }: DataTableViewOptionsProps<TData>) {
@@ -25,18 +25,18 @@ export function DataTableViewOptions<TData>({ table }: DataTableViewOptionsProps
         <Button
           variant="outline"
           size="default"
-          className="ml-auto hidden h-10 lg:flex bg-transparent border-primary/30 hover:bg-primary/10 hover:text-primary"
+          className="ml-auto hidden h-10 border-primary/30 bg-transparent hover:bg-primary/10 hover:text-primary lg:flex"
         >
           <SlidersHorizontal className="mr-2 h-4 w-4" />
           View
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-[150px] bg-popover border-border">
+      <DropdownMenuContent align="end" className="w-[150px] border-border bg-popover">
         <DropdownMenuLabel>Toggle columns</DropdownMenuLabel>
         <DropdownMenuSeparator />
         {table
           .getAllColumns()
-          .filter((column) => typeof column.accessorFn !== "undefined" && column.getCanHide())
+          .filter((column) => typeof column.accessorFn !== 'undefined' && column.getCanHide())
           .map((column) => {
             return (
               <DropdownMenuCheckboxItem
@@ -47,9 +47,9 @@ export function DataTableViewOptions<TData>({ table }: DataTableViewOptionsProps
               >
                 {column.id}
               </DropdownMenuCheckboxItem>
-            )
+            );
           })}
       </DropdownMenuContent>
     </DropdownMenu>
-  )
+  );
 }

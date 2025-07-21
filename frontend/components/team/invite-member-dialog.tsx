@@ -1,9 +1,9 @@
-"use client"
+'use client';
 
-import { PlusCircle } from "lucide-react"
-import { useState } from "react"
+import { PlusCircle } from 'lucide-react';
+import { useState } from 'react';
 
-import { Button } from "@/components/ui/button"
+import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
@@ -12,14 +12,20 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { roles } from "@/lib/data/team-data"
+} from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { roles } from '@/lib/data/team-data';
 
 export function InviteMemberDialog() {
-  const [isOpen, setIsOpen] = useState(false)
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -29,7 +35,7 @@ export function InviteMemberDialog() {
           Invite Team Member
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px] bg-eggshell-white text-oxford-blue">
+      <DialogContent className="bg-eggshell-white text-oxford-blue sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle className="text-oxford-blue">Invite Team Member</DialogTitle>
           <DialogDescription className="text-oxford-blue/80">
@@ -38,13 +44,13 @@ export function InviteMemberDialog() {
         </DialogHeader>
         <div className="grid gap-4 py-4">
           <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="email" className="text-right text-oxford-blue">
+            <Label htmlFor="email" className="text-oxford-blue text-right">
               Email
             </Label>
             <Input id="email" type="email" placeholder="name@company.com" className="col-span-3" />
           </div>
           <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="role" className="text-right text-oxford-blue">
+            <Label htmlFor="role" className="text-oxford-blue text-right">
               Role
             </Label>
             <Select defaultValue="Member">
@@ -74,5 +80,5 @@ export function InviteMemberDialog() {
         </DialogFooter>
       </DialogContent>
     </Dialog>
-  )
+  );
 }

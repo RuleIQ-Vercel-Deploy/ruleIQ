@@ -75,7 +75,9 @@ class TestAIAssessmentEndpoints:
         response = unauthenticated_test_client.post(
             "/api/ai/assessments/gdpr/help", json=request_data
         )
-        assert response.status_code == 401, f"Expected 401, got {response.status_code}. Response: {response.json() if response.status_code != 401 else 'N/A'}"
+        assert response.status_code == 401, (
+            f"Expected 401, got {response.status_code}. Response: {response.json() if response.status_code != 401 else 'N/A'}"
+        )
 
     def test_ai_help_endpoint_invalid_framework(self, client, authenticated_headers):
         """Test AI help endpoint with invalid framework"""

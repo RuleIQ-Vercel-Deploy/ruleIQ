@@ -1,28 +1,19 @@
-"use client";
+'use client';
 
-import { motion, AnimatePresence } from "framer-motion";
-import { 
-  Bot, 
-  Loader2, 
-  ThumbsUp, 
-  ThumbsDown, 
-  Copy, 
-  ExternalLink,
-  X,
-  Lightbulb
-} from "lucide-react";
-import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from 'framer-motion';
+import { Bot, Loader2, ThumbsUp, ThumbsDown, Copy, ExternalLink, X, Lightbulb } from 'lucide-react';
+import { useState, useEffect } from 'react';
 
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { useToast } from "@/hooks/use-toast";
-import { assessmentAIService, type AIHelpResponse } from "@/lib/api/assessments-ai.service";
-import { type Question } from "@/lib/assessment-engine/types";
-import { cn } from "@/lib/utils";
-import { type UserContext } from "@/types/ai";
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Separator } from '@/components/ui/separator';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { useToast } from '@/hooks/use-toast';
+import { assessmentAIService, type AIHelpResponse } from '@/lib/api/assessments-ai.service';
+import { type Question } from '@/lib/assessment-engine/types';
+import { cn } from '@/lib/utils';
+import { type UserContext } from '@/types/ai';
 
 interface AIHelpTooltipProps {
   question: Question;
@@ -37,7 +28,7 @@ export function AIHelpTooltip({
   frameworkId,
   sectionId,
   userContext,
-  className
+  className,
 }: AIHelpTooltipProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -68,9 +59,9 @@ export function AIHelpTooltip({
         question_text: question.text,
         framework_id: frameworkId,
         ...(sectionId && { section_id: sectionId }),
-        ...(userContext && { user_context: userContext })
+        ...(userContext && { user_context: userContext }),
       };
-      
+
       const response = await assessmentAIService.getQuestionHelp(helpRequest);
 
       // Check if this request is still valid
@@ -96,9 +87,9 @@ export function AIHelpTooltip({
     if (aiResponse?.guidance) {
       navigator.clipboard.writeText(aiResponse.guidance);
       toast({
-        title: "Copied to clipboard",
-        description: "AI guidance has been copied to your clipboard.",
-        duration: 2000
+        title: 'Copied to clipboard',
+        description: 'AI guidance has been copied to your clipboard.',
+        duration: 2000,
       });
     }
   };
@@ -107,13 +98,13 @@ export function AIHelpTooltip({
     try {
       await assessmentAIService.submitFeedback(`${question.id}_${Date.now()}`, {
         helpful,
-        rating: helpful ? 5 : 2
+        rating: helpful ? 5 : 2,
       });
-      
+
       toast({
-        title: "Feedback submitted",
-        description: "Thank you for helping us improve AI assistance.",
-        duration: 2000
+        title: 'Feedback submitted',
+        description: 'Thank you for helping us improve AI assistance.',
+        duration: 2000,
       });
     } catch (err) {
       console.error('Failed to submit feedback:', err);
@@ -135,7 +126,7 @@ export function AIHelpTooltip({
 
   return (
     <TooltipProvider>
-      <div className={cn("relative", className)}>
+      <div className={cn('relative', className)}>
         <Tooltip>
           <TooltipTrigger asChild>
             <Button
@@ -144,15 +135,11 @@ export function AIHelpTooltip({
               onClick={handleGetHelp}
               disabled={loading}
               className={cn(
-                "gap-2 text-primary border-primary/20 hover:bg-primary/5",
-                loading && "cursor-wait"
+                'gap-2 border-primary/20 text-primary hover:bg-primary/5',
+                loading && 'cursor-wait',
               )}
             >
-              {loading ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
-              ) : (
-                <Bot className="h-4 w-4" />
-              )}
+              {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Bot className="h-4 w-4" />}
               <span className="hidden sm:inline">AI Help</span>
             </Button>
           </TooltipTrigger>
@@ -168,12 +155,12 @@ export function AIHelpTooltip({
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 10, scale: 0.95 }}
               transition={{ duration: 0.2 }}
-              className="absolute top-12 left-0 z-50 w-80 sm:w-96"
+              className="absolute left-0 top-12 z-50 w-80 sm:w-96"
             >
-              <Card className="shadow-lg border-2 border-primary/10">
+              <Card className="border-2 border-primary/10 shadow-lg">
                 <CardHeader className="pb-3">
                   <div className="flex items-center justify-between">
-                    <CardTitle className="text-sm font-medium flex items-center gap-2">
+                    <CardTitle className="flex items-center gap-2 text-sm font-medium">
                       <Bot className="h-4 w-4 text-primary" />
                       AI Compliance Assistant
                     </CardTitle>
@@ -187,12 +174,12 @@ export function AIHelpTooltip({
                     </Button>
                   </div>
                 </CardHeader>
-                
+
                 <CardContent className="space-y-4">
                   {loading && (
                     <div className="flex items-center justify-center py-8">
                       <div className="text-center">
-                        <Loader2 className="h-8 w-8 animate-spin text-primary mx-auto mb-2" />
+                        <Loader2 className="mx-auto mb-2 h-8 w-8 animate-spin text-primary" />
                         <p className="text-sm text-muted-foreground">
                           Analyzing question and generating guidance...
                         </p>
@@ -201,13 +188,9 @@ export function AIHelpTooltip({
                   )}
 
                   {error && (
-                    <div className="text-center py-4">
-                      <p className="text-sm text-destructive mb-2">{error}</p>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={handleGetHelp}
-                      >
+                    <div className="py-4 text-center">
+                      <p className="mb-2 text-sm text-destructive">{error}</p>
+                      <Button variant="outline" size="sm" onClick={handleGetHelp}>
                         Try Again
                       </Button>
                     </div>
@@ -217,8 +200,8 @@ export function AIHelpTooltip({
                     <div className="space-y-4">
                       {/* Confidence Score */}
                       <div className="flex items-center justify-between">
-                        <Badge 
-                          variant={aiResponse.confidence_score > 0.8 ? "success" : "secondary"}
+                        <Badge
+                          variant={aiResponse.confidence_score > 0.8 ? 'success' : 'secondary'}
                           className="text-xs"
                         >
                           {Math.round(aiResponse.confidence_score * 100)}% Confidence
@@ -234,16 +217,14 @@ export function AIHelpTooltip({
                       </div>
 
                       {/* AI Guidance */}
-                      <div className="bg-muted/50 rounded-lg p-3">
-                        <p className="text-sm leading-relaxed">
-                          {aiResponse.guidance}
-                        </p>
+                      <div className="rounded-lg bg-muted/50 p-3">
+                        <p className="text-sm leading-relaxed">{aiResponse.guidance}</p>
                       </div>
 
                       {/* Related Topics */}
                       {aiResponse.related_topics && aiResponse.related_topics.length > 0 && (
                         <div>
-                          <h4 className="text-xs font-medium text-muted-foreground mb-2">
+                          <h4 className="mb-2 text-xs font-medium text-muted-foreground">
                             Related Topics
                           </h4>
                           <div className="flex flex-wrap gap-1">
@@ -257,27 +238,31 @@ export function AIHelpTooltip({
                       )}
 
                       {/* Follow-up Suggestions */}
-                      {aiResponse.follow_up_suggestions && aiResponse.follow_up_suggestions.length > 0 && (
-                        <div>
-                          <h4 className="text-xs font-medium text-muted-foreground mb-2 flex items-center gap-1">
-                            <Lightbulb className="h-3 w-3" />
-                            Suggestions
-                          </h4>
-                          <ul className="space-y-1">
-                            {aiResponse.follow_up_suggestions.map((suggestion, index) => (
-                              <li key={index} className="text-xs text-muted-foreground flex items-start gap-2">
-                                <span className="text-primary">•</span>
-                                <span>{suggestion}</span>
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                      )}
+                      {aiResponse.follow_up_suggestions &&
+                        aiResponse.follow_up_suggestions.length > 0 && (
+                          <div>
+                            <h4 className="mb-2 flex items-center gap-1 text-xs font-medium text-muted-foreground">
+                              <Lightbulb className="h-3 w-3" />
+                              Suggestions
+                            </h4>
+                            <ul className="space-y-1">
+                              {aiResponse.follow_up_suggestions.map((suggestion, index) => (
+                                <li
+                                  key={index}
+                                  className="flex items-start gap-2 text-xs text-muted-foreground"
+                                >
+                                  <span className="text-primary">•</span>
+                                  <span>{suggestion}</span>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
 
                       {/* Source References */}
                       {aiResponse.source_references && aiResponse.source_references.length > 0 && (
                         <div>
-                          <h4 className="text-xs font-medium text-muted-foreground mb-2">
+                          <h4 className="mb-2 text-xs font-medium text-muted-foreground">
                             References
                           </h4>
                           <div className="space-y-1">
@@ -295,9 +280,7 @@ export function AIHelpTooltip({
 
                       {/* Feedback */}
                       <div className="flex items-center justify-between">
-                        <span className="text-xs text-muted-foreground">
-                          Was this helpful?
-                        </span>
+                        <span className="text-xs text-muted-foreground">Was this helpful?</span>
                         <div className="flex items-center gap-2">
                           <Button
                             variant="ghost"

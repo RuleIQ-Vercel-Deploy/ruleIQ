@@ -1,15 +1,11 @@
-"use client";
+'use client';
 
-import { ChevronLeft, ChevronRight, Grid } from "lucide-react";
+import { ChevronLeft, ChevronRight, Grid } from 'lucide-react';
 
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { 
-  type AssessmentFramework, 
-  type AssessmentProgress 
-} from "@/lib/assessment-engine/types";
-import { cn } from "@/lib/utils";
-
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { type AssessmentFramework, type AssessmentProgress } from '@/lib/assessment-engine/types';
+import { cn } from '@/lib/utils';
 
 interface AssessmentNavigationProps {
   framework: AssessmentFramework;
@@ -21,7 +17,7 @@ interface AssessmentNavigationProps {
 export function AssessmentNavigation({
   framework,
   currentSectionIndex,
-  onSectionClick
+  onSectionClick,
 }: AssessmentNavigationProps) {
   const hasPreviousSection = currentSectionIndex > 0;
   const hasNextSection = currentSectionIndex < framework.sections.length - 1;
@@ -38,7 +34,7 @@ export function AssessmentNavigation({
             disabled={!hasPreviousSection}
             className="flex-1 justify-start"
           >
-            <ChevronLeft className="h-4 w-4 mr-2" />
+            <ChevronLeft className="mr-2 h-4 w-4" />
             <span className="truncate">
               {hasPreviousSection && framework.sections[currentSectionIndex - 1]?.title}
             </span>
@@ -51,10 +47,10 @@ export function AssessmentNavigation({
                 key={index}
                 onClick={() => onSectionClick(index)}
                 className={cn(
-                  "h-2 w-2 rounded-full transition-all",
+                  'h-2 w-2 rounded-full transition-all',
                   index === currentSectionIndex
-                    ? "w-6 bg-primary"
-                    : "bg-muted-foreground/30 hover:bg-muted-foreground/50"
+                    ? 'w-6 bg-primary'
+                    : 'bg-muted-foreground/30 hover:bg-muted-foreground/50',
                 )}
                 aria-label={`Go to section ${index + 1}`}
               />
@@ -72,12 +68,12 @@ export function AssessmentNavigation({
             <span className="truncate">
               {hasNextSection && framework.sections[currentSectionIndex + 1]?.title}
             </span>
-            <ChevronRight className="h-4 w-4 ml-2" />
+            <ChevronRight className="ml-2 h-4 w-4" />
           </Button>
         </div>
 
         {/* Quick Navigation */}
-        <div className="mt-4 pt-4 border-t">
+        <div className="mt-4 border-t pt-4">
           <Button
             variant="outline"
             size="sm"
@@ -87,7 +83,7 @@ export function AssessmentNavigation({
               onSectionClick(0);
             }}
           >
-            <Grid className="h-4 w-4 mr-2" />
+            <Grid className="mr-2 h-4 w-4" />
             View All Sections ({framework.sections.length})
           </Button>
         </div>

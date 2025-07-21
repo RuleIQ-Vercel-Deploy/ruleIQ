@@ -11,7 +11,7 @@ import * as path from 'path';
 
 async function verifySetup() {
   console.log('🔍 Verifying E2E test setup...\n');
-  
+
   const results = {
     playwright: false,
     browsers: false,
@@ -20,7 +20,7 @@ async function verifySetup() {
     config: false,
     helpers: false,
   };
-  
+
   // 1. Check if Playwright is installed
   try {
     const playwrightVersion = require('@playwright/test/package.json').version;
@@ -29,7 +29,7 @@ async function verifySetup() {
   } catch (error) {
     console.log('❌ Playwright not installed');
   }
-  
+
   // 2. Check if browsers are installed
   try {
     const browser = await chromium.launch();
@@ -39,22 +39,18 @@ async function verifySetup() {
   } catch (error) {
     console.log('❌ Browsers not installed. Run: pnpm exec playwright install');
   }
-  
+
   // 3. Check test directory structure
-  const testDirs = [
-    'tests/e2e',
-    'tests/e2e/fixtures',
-    'tests/e2e/utils',
-  ];
-  
-  const missingDirs = testDirs.filter(dir => !fs.existsSync(dir));
+  const testDirs = ['tests/e2e', 'tests/e2e/fixtures', 'tests/e2e/utils'];
+
+  const missingDirs = testDirs.filter((dir) => !fs.existsSync(dir));
   if (missingDirs.length === 0) {
     console.log('✅ Test directory structure exists');
     results.testDir = true;
   } else {
     console.log(`❌ Missing directories: ${missingDirs.join(', ')}`);
   }
-  
+
   // 4. Check test results directory
   if (fs.existsSync('test-results')) {
     console.log('✅ Test results directory exists');
@@ -65,7 +61,7 @@ async function verifySetup() {
     fs.mkdirSync('test-results/screenshots', { recursive: true });
     results.resultsDir = true;
   }
-  
+
   // 5. Check Playwright config
   if (fs.existsSync('playwright.config.ts')) {
     console.log('✅ Playwright config exists');
@@ -73,7 +69,7 @@ async function verifySetup() {
   } else {
     console.log('❌ Playwright config missing');
   }
-  
+
   // 6. Check test helpers and fixtures
   const requiredFiles = [
     'tests/e2e/utils/test-helpers.ts',
@@ -81,19 +77,19 @@ async function verifySetup() {
     'tests/e2e/global-setup.ts',
     'tests/e2e/global-teardown.ts',
   ];
-  
-  const missingFiles = requiredFiles.filter(file => !fs.existsSync(file));
+
+  const missingFiles = requiredFiles.filter((file) => !fs.existsSync(file));
   if (missingFiles.length === 0) {
     console.log('✅ All test helper files exist');
     results.helpers = true;
   } else {
     console.log(`❌ Missing files: ${missingFiles.join(', ')}`);
   }
-  
+
   // Summary
   console.log('\n📊 Setup Summary:');
-  const allPassed = Object.values(results).every(v => v);
-  
+  const allPassed = Object.values(results).every((v) => v);
+
   if (allPassed) {
     console.log('✅ E2E test setup is complete and ready!');
     console.log('\nYou can run tests with:');
@@ -104,7 +100,7 @@ async function verifySetup() {
   } else {
     console.log('❌ E2E test setup needs attention. Fix the issues above.');
   }
-  
+
   process.exit(allPassed ? 0 : 1);
 }
 

@@ -64,43 +64,49 @@ info: #00BCD4           /* Information (uses brand turquoise) */
 ## Component-to-Token Mapping
 
 ### Primary Buttons
+
 ```tsx
 // Recommended token usage
-className="bg-navy text-text-on-dark hover:bg-navy-dark"
+className = 'bg-navy text-text-on-dark hover:bg-navy-dark';
 // or using CSS variables
-className="bg-primary text-primary-foreground hover:bg-primary/90"
+className = 'bg-primary text-primary-foreground hover:bg-primary/90';
 ```
 
 ### Secondary Buttons
+
 ```tsx
-className="border-2 border-navy text-navy hover:bg-navy hover:text-text-on-dark"
+className = 'border-2 border-navy text-navy hover:bg-navy hover:text-text-on-dark';
 ```
 
 ### Cards
+
 ```tsx
-className="bg-surface-primary border border-outline-muted shadow-sm"
+className = 'bg-surface-primary border border-outline-muted shadow-sm';
 ```
 
 ### Form Inputs
+
 ```tsx
-className="bg-surface-primary border border-outline-muted focus:border-outline-primary"
+className = 'bg-surface-primary border border-outline-muted focus:border-outline-primary';
 ```
 
 ### Status Indicators
+
 ```tsx
 // Success state
-className="text-success bg-success/10 border border-success/20"
+className = 'text-success bg-success/10 border border-success/20';
 
-// Warning state  
-className="text-warning bg-warning/10 border border-warning/20"
+// Warning state
+className = 'text-warning bg-warning/10 border border-warning/20';
 
 // Error state
-className="text-error bg-error/10 border border-error/20"
+className = 'text-error bg-error/10 border border-error/20';
 ```
 
 ## Spacing Token Usage
 
 ### 8px Grid System
+
 ```css
 /* Base spacing units */
 0.5 = 4px    /* Half-step for fine adjustments */
@@ -113,43 +119,46 @@ className="text-error bg-error/10 border border-error/20"
 ```
 
 ### Component Spacing Patterns
+
 ```tsx
 // Card internal spacing
-className="p-6"  // 48px padding
+className = 'p-6'; // 48px padding
 
 // Button spacing
-className="px-4 py-2"  // 32px horizontal, 16px vertical
+className = 'px-4 py-2'; // 32px horizontal, 16px vertical
 
 // Form field spacing
-className="space-y-4"  // 32px vertical spacing between fields
+className = 'space-y-4'; // 32px vertical spacing between fields
 
 // Section spacing
-className="mb-8"  // 64px bottom margin for sections
+className = 'mb-8'; // 64px bottom margin for sections
 ```
 
 ## Typography Token Usage
 
 ### Heading Hierarchy
+
 ```tsx
 // H1 - Page titles
-className="text-4xl font-bold text-text-on-light"
+className = 'text-4xl font-bold text-text-on-light';
 
 // H2 - Section titles
-className="text-2xl font-semibold text-text-on-light"
+className = 'text-2xl font-semibold text-text-on-light';
 
 // H3 - Subsection titles
-className="text-lg font-medium text-text-on-light"
+className = 'text-lg font-medium text-text-on-light';
 
 // Body text
-className="text-base text-text-secondary"
+className = 'text-base text-text-secondary';
 
 // Small text / metadata
-className="text-sm text-text-muted"
+className = 'text-sm text-text-muted';
 ```
 
 ## Focus and Interaction States
 
 ### Focus Management
+
 ```css
 /* Universal focus states */
 focus-visible:ring-2 focus-visible:ring-outline-primary focus-visible:ring-offset-2
@@ -162,6 +171,7 @@ focus-visible:border-outline-primary focus-visible:ring-1 focus-visible:ring-out
 ```
 
 ### Hover States
+
 ```css
 /* Button hover */
 hover:bg-navy-dark hover:scale-[1.02]
@@ -176,6 +186,7 @@ hover:text-navy-light hover:underline
 ## Animation Token Usage
 
 ### Duration
+
 ```css
 transition-all duration-200   /* Standard transitions */
 transition-all duration-150   /* Quick feedback */
@@ -183,6 +194,7 @@ transition-all duration-500   /* Complex layout changes */
 ```
 
 ### Easing
+
 ```css
 ease-out     /* Standard easing for most interactions */
 ease-in-out  /* For reversible animations */
@@ -192,12 +204,14 @@ ease-in      /* For exit animations */
 ## Accessibility Considerations
 
 ### Contrast Ratios
+
 - **Navy on white**: 9.5:1 (AAA compliant)
 - **Gold on white**: 4.8:1 (AA compliant)
 - **Text-secondary on white**: 4.6:1 (AA compliant)
 - **Text-muted on white**: 3.2:1 (Large text only)
 
 ### Motion Preferences
+
 ```tsx
 // Respect reduced motion preferences
 className={`transition-all ${
@@ -208,6 +222,7 @@ className={`transition-all ${
 ## Token Usage Best Practices
 
 ### ✅ Do
+
 - Use semantic tokens for component states (`success`, `warning`, `error`)
 - Use surface tokens for background layers (`surface-primary`, `surface-secondary`)
 - Use text tokens for proper contrast (`text-on-light`, `text-on-dark`)
@@ -215,6 +230,7 @@ className={`transition-all ${
 - Reference tokens through CSS custom properties when possible
 
 ### ❌ Don't
+
 - Use hex values directly in components
 - Mix different color systems within the same component
 - Use arbitrary values when tokens are available
@@ -224,6 +240,7 @@ className={`transition-all ${
 ## Token Validation
 
 ### Automated Checks
+
 ```bash
 # Type check token usage
 pnpm typecheck
@@ -236,6 +253,7 @@ pnpm test:accessibility
 ```
 
 ### Manual Validation
+
 - Verify brand consistency across all components
 - Test color combinations for accessibility compliance
 - Validate focus states across all interactive elements
@@ -244,36 +262,41 @@ pnpm test:accessibility
 ## Migration Guide
 
 ### From Legacy Colors
+
 ```tsx
 // Old approach
-className="bg-[#17255A] text-white"
+className = 'bg-[#17255A] text-white';
 
 // New approach
-className="bg-navy text-text-on-dark"
+className = 'bg-navy text-text-on-dark';
 ```
 
 ### Component Updates
+
 ```tsx
 // Before
 <Button className="bg-blue-600 hover:bg-blue-700">
 
-// After  
+// After
 <Button variant="primary" className="bg-navy hover:bg-navy-dark">
 ```
 
 ## Design Token Roadmap
 
 ### Phase 1 (Current)
+
 - ✅ Color token consolidation
 - ✅ Surface and text token implementation
 - ✅ Component mapping documentation
 
 ### Phase 2 (Next Sprint)
+
 - [ ] Animation token standardization
 - [ ] Component variant alignment
 - [ ] Design tool integration
 
 ### Phase 3 (Future)
+
 - [ ] Multi-brand token support
 - [ ] Advanced theming capabilities
 - [ ] Automated token generation from design files

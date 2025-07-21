@@ -51,7 +51,10 @@ class PolicyService {
   /**
    * Update policy status
    */
-  async updatePolicyStatus(id: string, data: UpdatePolicyStatusRequest): Promise<{
+  async updatePolicyStatus(
+    id: string,
+    data: UpdatePolicyStatusRequest,
+  ): Promise<{
     id: string;
     status: string;
     approved: boolean;
@@ -88,14 +91,8 @@ class PolicyService {
   /**
    * Regenerate a specific section of a policy
    */
-  async regeneratePolicySection(
-    id: string,
-    data: RegeneratePolicySectionRequest
-  ): Promise<Policy> {
-    const response = await apiClient.post<Policy>(
-      `/policies/${id}/regenerate-section`,
-      data
-    );
+  async regeneratePolicySection(id: string, data: RegeneratePolicySectionRequest): Promise<Policy> {
+    const response = await apiClient.post<Policy>(`/policies/${id}/regenerate-section`, data);
     return response.data;
   }
 

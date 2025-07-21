@@ -23,7 +23,7 @@ export function middleware(request: NextRequest) {
             'Content-Type': 'application/json',
             ...getRateLimitHeaders(rateLimitResult),
           },
-        }
+        },
       );
       return response;
     }
@@ -55,15 +55,15 @@ export function middleware(request: NextRequest) {
   response.headers.set('X-XSS-Protection', '1; mode=block');
   response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
   response.headers.set('Permissions-Policy', 'camera=(), microphone=(), location=(), payment=()');
-  
+
   // HSTS for HTTPS enforcement
   if (process.env.NODE_ENV === 'production') {
     response.headers.set(
       'Strict-Transport-Security',
-      'max-age=31536000; includeSubDomains; preload'
+      'max-age=31536000; includeSubDomains; preload',
     );
   }
-  
+
   // Content Security Policy with enhanced security
   const csp = [
     "default-src 'self'",
@@ -77,11 +77,11 @@ export function middleware(request: NextRequest) {
     "base-uri 'self'",
     "form-action 'self'",
     "frame-ancestors 'none'",
-    "upgrade-insecure-requests"
+    'upgrade-insecure-requests',
   ].join('; ');
-  
+
   response.headers.set('Content-Security-Policy', csp);
-  
+
   // Add security headers for API routes
   if (request.nextUrl.pathname.startsWith('/api/')) {
     response.headers.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');

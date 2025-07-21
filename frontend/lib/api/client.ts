@@ -9,7 +9,6 @@ import { handleApiError, retryWithBackoff, logError } from './error-handler';
 
 import type { ApiResponse, ApiError as ApiErrorType } from '@/types/global';
 
-
 /**
  * Custom error class for API errors
  */
@@ -17,7 +16,7 @@ export class ApiError extends Error {
   constructor(
     public status: number,
     public detail: string,
-    public originalError?: AxiosError
+    public originalError?: AxiosError,
   ) {
     super(detail);
     this.name = 'ApiError';
@@ -54,15 +53,15 @@ class ApiClient {
         if (token) {
           config.headers.Authorization = `Bearer ${token}`;
         }
-        
+
         // CSRF protection will be handled at component level
         // as it requires React hooks for token management
-        
+
         return config;
       },
       (error) => {
         return Promise.reject(error);
-      }
+      },
     );
 
     // Response interceptor
@@ -88,7 +87,7 @@ class ApiClient {
         }
 
         return Promise.reject(this.handleError(error));
-      }
+      },
     );
   }
 
@@ -110,7 +109,7 @@ class ApiClient {
         return new ApiError(
           enhancedError.status || 500,
           enhancedError.userMessage || 'An unexpected error occurred',
-          error
+          error,
         );
       }
     } catch (handlingError) {
@@ -118,11 +117,7 @@ class ApiClient {
     }
 
     // Fallback error handling
-    return new ApiError(
-      error.response?.status || 500,
-      'An unexpected error occurred',
-      error
-    );
+    return new ApiError(error.response?.status || 500, 'An unexpected error occurred', error);
   }
 
   /**
@@ -184,17 +179,19 @@ class ApiClient {
     this.refreshPromise = this.post<{ access_token: string; refresh_token: string }>(
       '/auth/refresh',
       { refresh_token: refreshToken },
-      { _skipAuthRefresh: true } as any
-    ).then(async (response) => {
-      const { access_token, refresh_token } = response.data;
-      const expiry = Date.now() + (8 * 60 * 60 * 1000); // 8 hours
-      await this.setTokens(access_token, refresh_token, expiry);
-      this.refreshPromise = null;
-      return access_token;
-    }).catch((error) => {
-      this.refreshPromise = null;
-      throw error;
-    });
+      { _skipAuthRefresh: true } as any,
+    )
+      .then(async (response) => {
+        const { access_token, refresh_token } = response.data;
+        const expiry = Date.now() + 8 * 60 * 60 * 1000; // 8 hours
+        await this.setTokens(access_token, refresh_token, expiry);
+        this.refreshPromise = null;
+        return access_token;
+      })
+      .catch((error) => {
+        this.refreshPromise = null;
+        throw error;
+      });
 
     return this.refreshPromise;
   }
@@ -202,25 +199,18 @@ class ApiClient {
   /**
    * Enhanced retry with exponential backoff
    */
-  private async retryRequest<T>(
-    fn: () => Promise<T>,
-    _context?: string
-  ): Promise<T> {
+  private async retryRequest<T>(fn: () => Promise<T>, _context?: string): Promise<T> {
     try {
       return await fn();
     } catch (error) {
       const axiosError = (error as ApiError).originalError;
       if (axiosError) {
         const enhancedError = handleApiError(axiosError);
-        
+
         if (enhancedError.retryable) {
-          return retryWithBackoff(
-            fn,
-            enhancedError.type,
-            (attempt, delay) => {
-              console.log(`Retrying request (attempt ${attempt}) after ${delay}ms delay`);
-            }
-          );
+          return retryWithBackoff(fn, enhancedError.type, (attempt, delay) => {
+            console.log(`Retrying request (attempt ${attempt}) after ${delay}ms delay`);
+          });
         }
       }
       throw error;
@@ -243,7 +233,7 @@ class ApiClient {
   async post<T = any>(
     url: string,
     data?: any,
-    config?: AxiosRequestConfig
+    config?: AxiosRequestConfig,
   ): Promise<ApiResponse<T>> {
     return this.retryRequest(async () => {
       const response = await this.client.post<ApiResponse<T>>(url, data, config);
@@ -257,7 +247,7 @@ class ApiClient {
   async put<T = any>(
     url: string,
     data?: any,
-    config?: AxiosRequestConfig
+    config?: AxiosRequestConfig,
   ): Promise<ApiResponse<T>> {
     return this.retryRequest(async () => {
       const response = await this.client.put<ApiResponse<T>>(url, data, config);
@@ -271,7 +261,7 @@ class ApiClient {
   async patch<T = any>(
     url: string,
     data?: any,
-    config?: AxiosRequestConfig
+    config?: AxiosRequestConfig,
   ): Promise<ApiResponse<T>> {
     return this.retryRequest(async () => {
       const response = await this.client.patch<ApiResponse<T>>(url, data, config);
@@ -295,7 +285,7 @@ class ApiClient {
   async upload<T = any>(
     url: string,
     file: File,
-    onProgress?: (progress: number) => void
+    onProgress?: (progress: number) => void,
   ): Promise<ApiResponse<T>> {
     const formData = new FormData();
     formData.append('file', file);

@@ -385,18 +385,22 @@ class TestCachedContentEndToEnd:
 
         # Create a real assistant but mock the methods that don't exist yet
         assistant = ComplianceAssistant(async_db_session)
-        
+
         # Initialize cache manager
         assistant.cached_content_manager = GoogleCachedContentManager()
-        assistant._get_cached_content_manager = AsyncMock(return_value=assistant.cached_content_manager)
-        
+        assistant._get_cached_content_manager = AsyncMock(
+            return_value=assistant.cached_content_manager
+        )
+
         # Mock methods that may not exist yet
         assistant.context_manager = Mock()
         assistant.prompt_templates = Mock()
         assistant._generate_ai_response_with_cache = AsyncMock(return_value="Mock response")
-        assistant._parse_assessment_analysis_response = Mock(return_value={"gaps": [], "recommendations": []})
+        assistant._parse_assessment_analysis_response = Mock(
+            return_value={"gaps": [], "recommendations": []}
+        )
         assistant.analyze_assessment_results = AsyncMock()
-        
+
         return assistant
 
     @pytest.fixture
@@ -429,7 +433,7 @@ class TestCachedContentEndToEnd:
             "gaps": [],
             "recommendations": [],
             "request_id": str(uuid4()),
-            "generated_at": "2024-01-01T00:00:00Z"
+            "generated_at": "2024-01-01T00:00:00Z",
         }
         assistant_with_cache.analyze_assessment_results = AsyncMock(return_value=mock_result)
 

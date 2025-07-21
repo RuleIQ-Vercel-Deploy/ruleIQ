@@ -10,8 +10,7 @@ primarily Google Generative AI for compliance content generation.
 import os
 from dataclasses import dataclass
 from enum import Enum
-from typing import Any, Dict, List, Optional, Union, TYPE_CHECKING
-from unittest.mock import MagicMock
+from typing import Any, Dict, List, Optional, TYPE_CHECKING
 
 if TYPE_CHECKING:
     import google.generativeai as genai
@@ -20,7 +19,7 @@ else:
         import google.generativeai as genai
     except ImportError:
         genai = None
-        
+
 from dotenv import load_dotenv
 
 # Import at top level
@@ -71,7 +70,6 @@ class ModelMetadata:
 MODEL_FALLBACK_CHAIN = [
     ModelType.GEMINI_25_PRO,
     ModelType.GEMINI_25_FLASH,
-
     ModelType.GEMMA_3,
 ]
 
@@ -92,7 +90,6 @@ MODEL_METADATA = {
         capability_score=8.0,
         max_tokens=4096,
         timeout_seconds=30.0,
-
     ),
     ModelType.GEMMA_3: ModelMetadata(
         name=ModelType.GEMMA_3.value,
@@ -205,6 +202,7 @@ class AIConfig:
             "enable_request_queuing": os.getenv("AI_OFFLINE_QUEUE_REQUESTS", "true").lower()
             == "true",
         }
+
     def _initialize_google_ai(self):
         """Initialize Google Generative AI with API key"""
         # Skip actual API initialization if using mock AI in tests
@@ -223,6 +221,7 @@ class AIConfig:
         except AttributeError:
             # Alternative configuration method for newer versions
             import google.ai.generativelanguage as glm
+
             glm.configure(api_key=self.google_api_key)
             raise ValueError("GOOGLE_API_KEY environment variable is required")
 
@@ -313,7 +312,6 @@ class AIConfig:
         Args:
             schema_type: Type of response schema (gap_analysis, recommendations, etc.)
         """
-        from services.ai.response_formats import get_schema_for_response_type
 
         schema = get_schema_for_response_type(schema_type)
         return self.get_structured_output_config(schema)
@@ -488,7 +486,6 @@ class AIConfig:
             prefer_speed: Whether to prioritize speed over capability
             task_context: Context for automatic complexity calculation
         """
-        from config.logging_config import get_logger
 
         logger = get_logger(__name__)
 
@@ -558,7 +555,6 @@ class AIConfig:
                 return model_type
 
         # If no models available, raise exception
-        from services.ai.exceptions import AIServiceException
 
         raise AIServiceException(
             message="No AI models available - all circuits are open",

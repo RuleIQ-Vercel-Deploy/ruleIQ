@@ -73,7 +73,7 @@ class ImplementationService {
   }): Promise<{ plans: ImplementationPlan[]; total: number }> {
     const response = await apiClient.get<{ plans: ImplementationPlan[]; total: number }>(
       '/implementation/plans',
-      { params }
+      { params },
     );
     return response.data;
   }
@@ -90,7 +90,7 @@ class ImplementationService {
    * Create implementation plan
    */
   async createImplementationPlan(
-    data: CreateImplementationPlanRequest
+    data: CreateImplementationPlanRequest,
   ): Promise<ImplementationPlan> {
     const response = await apiClient.post<ImplementationPlan>('/implementation/plans', data);
     return response.data;
@@ -101,11 +101,11 @@ class ImplementationService {
    */
   async updateImplementationPlan(
     planId: string,
-    data: Partial<ImplementationPlan>
+    data: Partial<ImplementationPlan>,
   ): Promise<ImplementationPlan> {
     const response = await apiClient.patch<ImplementationPlan>(
       `/implementation/plans/${planId}`,
-      data
+      data,
     );
     return response.data;
   }
@@ -117,11 +117,11 @@ class ImplementationService {
     planId: string,
     taskId: string,
     progress: number,
-    notes?: string
+    notes?: string,
   ): Promise<ImplementationTask> {
     const response = await apiClient.patch<ImplementationTask>(
       `/implementation/plans/${planId}/tasks/${taskId}/progress`,
-      { progress, notes }
+      { progress, notes },
     );
     return response.data;
   }
@@ -132,11 +132,11 @@ class ImplementationService {
   async completeMilestone(
     planId: string,
     milestoneId: string,
-    evidence?: string[]
+    evidence?: string[],
   ): Promise<ImplementationMilestone> {
     const response = await apiClient.post<ImplementationMilestone>(
       `/implementation/plans/${planId}/milestones/${milestoneId}/complete`,
-      { evidence }
+      { evidence },
     );
     return response.data;
   }
@@ -146,7 +146,7 @@ class ImplementationService {
    */
   async getImplementationRecommendations(
     businessProfileId: string,
-    frameworkId: string
+    frameworkId: string,
   ): Promise<{
     recommended_approach: 'phased' | 'big_bang' | 'hybrid';
     estimated_duration: string;
@@ -212,11 +212,11 @@ class ImplementationService {
    */
   async exportImplementationPlan(
     planId: string,
-    format: 'pdf' | 'excel' | 'project'
+    format: 'pdf' | 'excel' | 'project',
   ): Promise<void> {
     await apiClient.download(
       `/implementation/plans/${planId}/export?format=${format}`,
-      `implementation-plan-${planId}.${format === 'project' ? 'mpp' : format}`
+      `implementation-plan-${planId}.${format === 'project' ? 'mpp' : format}`,
     );
   }
 

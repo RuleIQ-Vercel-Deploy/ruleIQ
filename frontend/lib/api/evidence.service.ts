@@ -46,8 +46,12 @@ class EvidenceService {
   /**
    * Get all evidence items
    */
-  async getEvidence(params?: EvidenceSearchParams): Promise<{ items: EvidenceItem[]; total: number }> {
-    const response = await apiClient.get<{ items: EvidenceItem[]; total: number }>('/evidence', { params });
+  async getEvidence(
+    params?: EvidenceSearchParams,
+  ): Promise<{ items: EvidenceItem[]; total: number }> {
+    const response = await apiClient.get<{ items: EvidenceItem[]; total: number }>('/evidence', {
+      params,
+    });
     return response.data;
   }
 
@@ -101,15 +105,26 @@ class EvidenceService {
   /**
    * Upload file for evidence
    */
-  async uploadEvidenceFile(id: string, file: File, onProgress?: (progress: number) => void): Promise<EvidenceItem> {
-    const response = await apiClient.upload<EvidenceItem>(`/evidence/${id}/upload`, file, onProgress);
+  async uploadEvidenceFile(
+    id: string,
+    file: File,
+    onProgress?: (progress: number) => void,
+  ): Promise<EvidenceItem> {
+    const response = await apiClient.upload<EvidenceItem>(
+      `/evidence/${id}/upload`,
+      file,
+      onProgress,
+    );
     return response.data;
   }
 
   /**
    * Configure evidence automation
    */
-  async configureEvidenceAutomation(id: string, config: EvidenceAutomationConfig): Promise<{
+  async configureEvidenceAutomation(
+    id: string,
+    config: EvidenceAutomationConfig,
+  ): Promise<{
     configuration_successful: boolean;
     automation_enabled: boolean;
     test_connection: boolean;
@@ -143,7 +158,10 @@ class EvidenceService {
   /**
    * Classify evidence using AI
    */
-  async classifyEvidence(id: string, request?: EvidenceClassificationRequest): Promise<{
+  async classifyEvidence(
+    id: string,
+    request?: EvidenceClassificationRequest,
+  ): Promise<{
     evidence_id: string;
     current_type: string;
     ai_classification: any;
@@ -160,7 +178,9 @@ class EvidenceService {
    * Search evidence
    */
   async searchEvidence(query: string): Promise<EvidenceItem[]> {
-    const response = await apiClient.get<EvidenceItem[]>(`/evidence/search?q=${encodeURIComponent(query)}`);
+    const response = await apiClient.get<EvidenceItem[]>(
+      `/evidence/search?q=${encodeURIComponent(query)}`,
+    );
     return response.data;
   }
 

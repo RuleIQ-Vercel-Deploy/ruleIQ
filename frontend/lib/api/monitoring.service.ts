@@ -51,7 +51,7 @@ class MonitoringService {
   }): Promise<{ alerts: SystemAlert[]; total: number }> {
     const response = await apiClient.get<{ alerts: SystemAlert[]; total: number }>(
       '/monitoring/alerts',
-      { params }
+      { params },
     );
     return response.data;
   }
@@ -184,7 +184,7 @@ class MonitoringService {
   }): Promise<void> {
     await apiClient.download(
       `/monitoring/export?${new URLSearchParams(params)}`,
-      `monitoring-${params.data_type}-${params.start_date}-${params.end_date}.${params.format}`
+      `monitoring-${params.data_type}-${params.start_date}-${params.end_date}.${params.format}`,
     );
   }
 }

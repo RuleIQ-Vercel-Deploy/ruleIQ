@@ -7,88 +7,88 @@ import { type Variants } from 'framer-motion';
 // Fade animations
 export const fadeIn: Variants = {
   hidden: { opacity: 0 },
-  visible: { 
+  visible: {
     opacity: 1,
-    transition: { duration: 0.3, ease: 'easeOut' }
+    transition: { duration: 0.3, ease: 'easeOut' },
   },
-  exit: { 
+  exit: {
     opacity: 0,
-    transition: { duration: 0.2, ease: 'easeIn' }
-  }
+    transition: { duration: 0.2, ease: 'easeIn' },
+  },
 };
 
 export const fadeInUp: Variants = {
   hidden: { opacity: 0, y: 20 },
-  visible: { 
-    opacity: 1, 
+  visible: {
+    opacity: 1,
     y: 0,
-    transition: { duration: 0.4, ease: 'easeOut' }
+    transition: { duration: 0.4, ease: 'easeOut' },
   },
-  exit: { 
-    opacity: 0, 
+  exit: {
+    opacity: 0,
     y: -10,
-    transition: { duration: 0.2, ease: 'easeIn' }
-  }
+    transition: { duration: 0.2, ease: 'easeIn' },
+  },
 };
 
 export const fadeInDown: Variants = {
   hidden: { opacity: 0, y: -20 },
-  visible: { 
-    opacity: 1, 
+  visible: {
+    opacity: 1,
     y: 0,
-    transition: { duration: 0.4, ease: 'easeOut' }
-  }
+    transition: { duration: 0.4, ease: 'easeOut' },
+  },
 };
 
 // Scale animations
 export const scaleIn: Variants = {
   hidden: { scale: 0.8, opacity: 0 },
-  visible: { 
-    scale: 1, 
+  visible: {
+    scale: 1,
     opacity: 1,
-    transition: { duration: 0.3, ease: 'easeOut' }
+    transition: { duration: 0.3, ease: 'easeOut' },
   },
-  exit: { 
-    scale: 0.9, 
+  exit: {
+    scale: 0.9,
     opacity: 0,
-    transition: { duration: 0.2, ease: 'easeIn' }
-  }
+    transition: { duration: 0.2, ease: 'easeIn' },
+  },
 };
 
 export const scaleHover: Variants = {
   initial: { scale: 1 },
-  hover: { 
+  hover: {
     scale: 1.05,
-    transition: { duration: 0.2, ease: 'easeOut' }
+    transition: { duration: 0.2, ease: 'easeOut' },
   },
-  tap: { 
+  tap: {
     scale: 0.95,
-    transition: { duration: 0.1 }
-  }
+    transition: { duration: 0.1 },
+  },
 };
 
 // Slide animations
 export const slideInRight: Variants = {
   hidden: { x: 100, opacity: 0 },
-  visible: { 
-    x: 0, 
+  visible: {
+    x: 0,
     opacity: 1,
-    transition: { duration: 0.4, ease: 'easeOut' }
+    transition: { duration: 0.4, ease: 'easeOut' },
   },
-  exit: { 
-    x: -50, 
+  exit: {
+    x: -50,
     opacity: 0,
-    transition: { duration: 0.3, ease: 'easeIn' }
-  }
+    transition: { duration: 0.3, ease: 'easeIn' },
+  },
 };
 
 export const slideInLeft: Variants = {
   hidden: { x: -100, opacity: 0 },
-  visible: { 
-    x: 0, 
+  visible: {
+    x: 0,
     opacity: 1,
-    transition: { duration: 0.4, ease: 'easeOut' }
-  }
+    transition: { duration: 0.4, ease: 'easeOut' },
+  },
 };
 
 // Stagger children animations
@@ -98,9 +98,9 @@ export const staggerContainer: Variants = {
     opacity: 1,
     transition: {
       staggerChildren: 0.1,
-      delayChildren: 0.2
-    }
-  }
+      delayChildren: 0.2,
+    },
+  },
 };
 
 export const staggerItem: Variants = {
@@ -108,91 +108,91 @@ export const staggerItem: Variants = {
   visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.3, ease: 'easeOut' }
-  }
+    transition: { duration: 0.3, ease: 'easeOut' },
+  },
 };
 
 // Card animations
 export const cardHover: Variants = {
-  initial: { 
+  initial: {
     scale: 1,
-    boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'
+    boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
   },
-  hover: { 
+  hover: {
     scale: 1.02,
     boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
-    transition: { duration: 0.3, ease: 'easeOut' }
+    transition: { duration: 0.3, ease: 'easeOut' },
   },
-  tap: { 
+  tap: {
     scale: 0.98,
-    transition: { duration: 0.1 }
-  }
+    transition: { duration: 0.1 },
+  },
 };
 
 // Button animations
 export const buttonPress: Variants = {
   initial: { scale: 1 },
-  hover: { 
+  hover: {
     scale: 1.05,
-    transition: { duration: 0.2, ease: 'easeOut' }
+    transition: { duration: 0.2, ease: 'easeOut' },
   },
-  tap: { 
+  tap: {
     scale: 0.95,
-    transition: { duration: 0.1 }
-  }
+    transition: { duration: 0.1 },
+  },
 };
 
 export const buttonGlow: Variants = {
-  initial: { 
-    boxShadow: '0 0 0 0 rgba(203, 150, 62, 0)' // Gold color
+  initial: {
+    boxShadow: '0 0 0 0 rgba(203, 150, 62, 0)', // Gold color
   },
-  hover: { 
+  hover: {
     boxShadow: '0 0 20px 0 rgba(203, 150, 62, 0.3)',
-    transition: { duration: 0.3, ease: 'easeOut' }
-  }
+    transition: { duration: 0.3, ease: 'easeOut' },
+  },
 };
 
 // Page transitions
 export const pageTransition: Variants = {
   initial: { opacity: 0, y: 20 },
-  animate: { 
-    opacity: 1, 
+  animate: {
+    opacity: 1,
     y: 0,
-    transition: { duration: 0.4, ease: 'easeOut' }
+    transition: { duration: 0.4, ease: 'easeOut' },
   },
-  exit: { 
-    opacity: 0, 
+  exit: {
+    opacity: 0,
     y: -20,
-    transition: { duration: 0.3, ease: 'easeIn' }
-  }
+    transition: { duration: 0.3, ease: 'easeIn' },
+  },
 };
 
 // Modal/Dialog animations
 export const modalOverlay: Variants = {
   hidden: { opacity: 0 },
-  visible: { 
+  visible: {
     opacity: 1,
-    transition: { duration: 0.3, ease: 'easeOut' }
-  }
+    transition: { duration: 0.3, ease: 'easeOut' },
+  },
 };
 
 export const modalContent: Variants = {
   hidden: { scale: 0.9, opacity: 0, y: 20 },
-  visible: { 
-    scale: 1, 
-    opacity: 1, 
+  visible: {
+    scale: 1,
+    opacity: 1,
     y: 0,
-    transition: { 
-      duration: 0.3, 
-      ease: [0.16, 1, 0.3, 1] // Custom easing
-    }
+    transition: {
+      duration: 0.3,
+      ease: [0.16, 1, 0.3, 1], // Custom easing
+    },
   },
-  exit: { 
-    scale: 0.95, 
-    opacity: 0, 
+  exit: {
+    scale: 0.95,
+    opacity: 0,
     y: 10,
-    transition: { duration: 0.2, ease: 'easeIn' }
-  }
+    transition: { duration: 0.2, ease: 'easeIn' },
+  },
 };
 
 // Skeleton loading animation
@@ -203,28 +203,28 @@ export const shimmer: Variants = {
     transition: {
       repeat: Infinity,
       duration: 1.5,
-      ease: 'linear'
-    }
-  }
+      ease: 'linear',
+    },
+  },
 };
 
 // Notification animations
 export const notificationSlide: Variants = {
   initial: { x: 300, opacity: 0 },
-  animate: { 
-    x: 0, 
+  animate: {
+    x: 0,
     opacity: 1,
-    transition: { 
+    transition: {
       type: 'spring',
       stiffness: 400,
-      damping: 30
-    }
+      damping: 30,
+    },
   },
-  exit: { 
-    x: 300, 
+  exit: {
+    x: 300,
     opacity: 0,
-    transition: { duration: 0.3, ease: 'easeIn' }
-  }
+    transition: { duration: 0.3, ease: 'easeIn' },
+  },
 };
 
 // Progress animations
@@ -232,11 +232,11 @@ export const progressBar: Variants = {
   initial: { scaleX: 0 },
   animate: (progress: number) => ({
     scaleX: progress,
-    transition: { 
-      duration: 0.5, 
-      ease: 'easeOut'
-    }
-  })
+    transition: {
+      duration: 0.5,
+      ease: 'easeOut',
+    },
+  }),
 };
 
 // Rotate animations
@@ -246,33 +246,33 @@ export const rotate360: Variants = {
     transition: {
       duration: 1,
       repeat: Infinity,
-      ease: 'linear'
-    }
-  }
+      ease: 'linear',
+    },
+  },
 };
 
 // Accordion animations
 export const accordionContent: Variants = {
-  closed: { 
+  closed: {
     height: 0,
     opacity: 0,
-    transition: { duration: 0.3, ease: 'easeInOut' }
+    transition: { duration: 0.3, ease: 'easeInOut' },
   },
-  open: { 
+  open: {
     height: 'auto',
     opacity: 1,
-    transition: { duration: 0.3, ease: 'easeInOut' }
-  }
+    transition: { duration: 0.3, ease: 'easeInOut' },
+  },
 };
 
 // Tab animations
 export const tabContent: Variants = {
   hidden: { opacity: 0, x: -10 },
-  visible: { 
-    opacity: 1, 
+  visible: {
+    opacity: 1,
     x: 0,
-    transition: { duration: 0.2, ease: 'easeOut' }
-  }
+    transition: { duration: 0.2, ease: 'easeOut' },
+  },
 };
 
 // Floating animation
@@ -282,9 +282,9 @@ export const floating: Variants = {
     transition: {
       duration: 3,
       repeat: Infinity,
-      ease: 'easeInOut'
-    }
-  }
+      ease: 'easeInOut',
+    },
+  },
 };
 
 // Pulse animation for attention
@@ -295,9 +295,9 @@ export const pulse: Variants = {
     transition: {
       duration: 2,
       repeat: Infinity,
-      ease: 'easeInOut'
-    }
-  }
+      ease: 'easeInOut',
+    },
+  },
 };
 
 // Error shake animation
@@ -307,7 +307,7 @@ export const shake: Variants = {
     x: [-10, 10, -10, 10, 0],
     transition: {
       duration: 0.5,
-      ease: 'easeInOut'
-    }
-  }
+      ease: 'easeInOut',
+    },
+  },
 };

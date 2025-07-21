@@ -38,7 +38,7 @@ export const FadeIn = forwardRef<HTMLDivElement, AnimatedDivProps>(
     >
       {children}
     </motion.div>
-  )
+  ),
 );
 FadeIn.displayName = 'FadeIn';
 
@@ -56,7 +56,7 @@ export const FadeInUp = forwardRef<HTMLDivElement, AnimatedDivProps>(
     >
       {children}
     </motion.div>
-  )
+  ),
 );
 FadeInUp.displayName = 'FadeInUp';
 
@@ -74,7 +74,7 @@ export const ScaleIn = forwardRef<HTMLDivElement, AnimatedDivProps>(
     >
       {children}
     </motion.div>
-  )
+  ),
 );
 ScaleIn.displayName = 'ScaleIn';
 
@@ -92,7 +92,7 @@ export const SlideInRight = forwardRef<HTMLDivElement, AnimatedDivProps>(
     >
       {children}
     </motion.div>
-  )
+  ),
 );
 SlideInRight.displayName = 'SlideInRight';
 
@@ -108,7 +108,7 @@ export const SlideInLeft = forwardRef<HTMLDivElement, AnimatedDivProps>(
     >
       {children}
     </motion.div>
-  )
+  ),
 );
 SlideInLeft.displayName = 'SlideInLeft';
 
@@ -139,7 +139,7 @@ export const StaggerContainer = forwardRef<HTMLDivElement, StaggerContainerProps
     >
       {children}
     </motion.div>
-  )
+  ),
 );
 StaggerContainer.displayName = 'StaggerContainer';
 
@@ -149,7 +149,7 @@ export const StaggerItem = forwardRef<HTMLDivElement, AnimatedDivProps>(
     <motion.div ref={ref} variants={staggerItem} {...props}>
       {children}
     </motion.div>
-  )
+  ),
 );
 StaggerItem.displayName = 'StaggerItem';
 
@@ -170,7 +170,7 @@ export const AnimatedCard = forwardRef<HTMLDivElement, AnimatedCardProps>(
     >
       {children}
     </motion.div>
-  )
+  ),
 );
 AnimatedCard.displayName = 'AnimatedCard';
 
@@ -191,7 +191,7 @@ export const AnimatedButton = forwardRef<HTMLButtonElement, AnimatedButtonProps>
     >
       {children}
     </motion.button>
-  )
+  ),
 );
 AnimatedButton.displayName = 'AnimatedButton';
 

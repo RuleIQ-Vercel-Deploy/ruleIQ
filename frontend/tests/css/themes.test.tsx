@@ -4,7 +4,13 @@ import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom';
 
 // Theme Provider Component
-const ThemeProvider = ({ children, theme = 'light' }: { children: React.ReactNode; theme?: 'light' | 'dark' }) => {
+const ThemeProvider = ({
+  children,
+  theme = 'light',
+}: {
+  children: React.ReactNode;
+  theme?: 'light' | 'dark';
+}) => {
   React.useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
     document.documentElement.classList.remove('light', 'dark');
@@ -19,15 +25,15 @@ const ThemeToggle = () => {
   const [theme, setTheme] = React.useState<'light' | 'dark'>('light');
 
   const toggleTheme = () => {
-    setTheme(prev => prev === 'light' ? 'dark' : 'light');
+    setTheme((prev) => (prev === 'light' ? 'dark' : 'light'));
   };
 
   return (
     <ThemeProvider theme={theme}>
-      <button 
-        onClick={toggleTheme} 
+      <button
+        onClick={toggleTheme}
         data-testid="theme-toggle"
-        className="bg-primary dark:bg-primary-dark text-white"
+        className="dark:bg-primary-dark bg-primary text-white"
       >
         Toggle Theme
       </button>
@@ -39,22 +45,13 @@ const ThemeToggle = () => {
 // CSS Variables Test Component
 const CSSVariablesComponent = () => (
   <div>
-    <div 
-      className="text-[var(--primary)] bg-[var(--background)]"
-      data-testid="css-var-primary"
-    >
+    <div className="bg-[var(--background)] text-[var(--primary)]" data-testid="css-var-primary">
       Primary Color
     </div>
-    <div 
-      className="text-[var(--secondary)] bg-[var(--surface)]"
-      data-testid="css-var-secondary"
-    >
+    <div className="bg-[var(--surface)] text-[var(--secondary)]" data-testid="css-var-secondary">
       Secondary Color
     </div>
-    <div 
-      className="text-[var(--accent)] border-[var(--border)]"
-      data-testid="css-var-accent"
-    >
+    <div className="border-[var(--border)] text-[var(--accent)]" data-testid="css-var-accent">
       Accent Color
     </div>
   </div>
@@ -65,12 +62,8 @@ const DarkModeComponent = () => (
   <div className="bg-white dark:bg-gray-900">
     <h1 className="text-gray-900 dark:text-white">Dark Mode Title</h1>
     <p className="text-gray-600 dark:text-gray-300">Dark Mode Text</p>
-    <button className="bg-primary dark:bg-primary-light text-white">
-      Dark Mode Button
-    </button>
-    <div className="border border-gray-200 dark:border-gray-700">
-      Dark Mode Border
-    </div>
+    <button className="dark:bg-primary-light bg-primary text-white">Dark Mode Button</button>
+    <div className="border border-gray-200 dark:border-gray-700">Dark Mode Border</div>
   </div>
 );
 
@@ -106,23 +99,26 @@ const CustomPropertiesComponent = () => {
 };
 
 // Theme Variations Component
-const ThemeVariationsComponent = ({ variant }: { variant: 'default' | 'compact' | 'comfortable' }) => {
+const ThemeVariationsComponent = ({
+  variant,
+}: {
+  variant: 'default' | 'compact' | 'comfortable';
+}) => {
   const getSpacing = () => {
     switch (variant) {
-      case 'compact': return 'p-2 gap-2';
-      case 'comfortable': return 'p-8 gap-8';
-      default: return 'p-4 gap-4';
+      case 'compact':
+        return 'p-2 gap-2';
+      case 'comfortable':
+        return 'p-8 gap-8';
+      default:
+        return 'p-4 gap-4';
     }
   };
 
   return (
     <div className={`${getSpacing()} flex flex-col`} data-testid={`theme-${variant}`}>
-      <button className={`${getSpacing()} bg-primary text-white rounded`}>
-        {variant} Button
-      </button>
-      <div className={`${getSpacing()} bg-gray-100 rounded`}>
-        {variant} Content
-      </div>
+      <button className={`${getSpacing()} rounded bg-primary text-white`}>{variant} Button</button>
+      <div className={`${getSpacing()} rounded bg-gray-100`}>{variant} Content</div>
     </div>
   );
 };
@@ -141,7 +137,10 @@ const ColorSchemeComponent = ({ scheme }: { scheme: 'primary' | 'secondary' | 'a
   };
 
   return (
-    <div className={`${getColorClasses()} p-4 rounded transition-colors`} data-testid={`scheme-${scheme}`}>
+    <div
+      className={`${getColorClasses()} rounded p-4 transition-colors`}
+      data-testid={`scheme-${scheme}`}
+    >
       {scheme} Color Scheme
     </div>
   );
@@ -162,7 +161,7 @@ const SystemPreferenceComponent = () => {
 
   return (
     <div className={prefersDark ? 'dark' : 'light'}>
-      <div className="bg-white dark:bg-gray-900 text-gray-900 dark:text-white p-4">
+      <div className="bg-white p-4 text-gray-900 dark:bg-gray-900 dark:text-white">
         System prefers: {prefersDark ? 'dark' : 'light'} mode
       </div>
     </div>
@@ -239,7 +238,7 @@ describe('Theme and Dark Mode Tests', () => {
       const { rerender } = render(
         <ThemeProvider theme="light">
           <DarkModeComponent />
-        </ThemeProvider>
+        </ThemeProvider>,
       );
 
       // Light mode
@@ -251,7 +250,7 @@ describe('Theme and Dark Mode Tests', () => {
       rerender(
         <ThemeProvider theme="dark">
           <DarkModeComponent />
-        </ThemeProvider>
+        </ThemeProvider>,
       );
 
       expect(document.documentElement).toHaveClass('dark');
@@ -370,7 +369,7 @@ describe('Theme and Dark Mode Tests', () => {
     it('should handle different color schemes', () => {
       const schemes = ['primary', 'secondary', 'accent'] as const;
 
-      schemes.forEach(scheme => {
+      schemes.forEach((scheme) => {
         const { container } = render(<ColorSchemeComponent scheme={scheme} />);
         const element = screen.getByTestId(`scheme-${scheme}`);
 
@@ -390,7 +389,7 @@ describe('Theme and Dark Mode Tests', () => {
     it('should handle theme variations', () => {
       const variants = ['default', 'compact', 'comfortable'] as const;
 
-      variants.forEach(variant => {
+      variants.forEach((variant) => {
         const { container } = render(<ThemeVariationsComponent variant={variant} />);
         const element = screen.getByTestId(`theme-${variant}`);
 
@@ -410,7 +409,7 @@ describe('Theme and Dark Mode Tests', () => {
       const { rerender } = render(
         <ThemeProvider theme="light">
           <SemanticColorsComponent />
-        </ThemeProvider>
+        </ThemeProvider>,
       );
 
       const success = screen.getByTestId('success-color');
@@ -428,7 +427,7 @@ describe('Theme and Dark Mode Tests', () => {
       rerender(
         <ThemeProvider theme="dark">
           <SemanticColorsComponent />
-        </ThemeProvider>
+        </ThemeProvider>,
       );
 
       expect(document.documentElement).toHaveClass('dark');
@@ -448,7 +447,7 @@ describe('Theme and Dark Mode Tests', () => {
 
     it('should detect system color scheme preference', () => {
       // Mock prefers-color-scheme
-      window.matchMedia = vi.fn().mockImplementation(query => ({
+      window.matchMedia = vi.fn().mockImplementation((query) => ({
         matches: query === '(prefers-color-scheme: dark)',
         media: query,
         onchange: null,
@@ -518,7 +517,7 @@ describe('Theme and Dark Mode Tests', () => {
           <div className="shadow-sm dark:shadow-white/10">Light Shadow</div>
           <div className="shadow-md dark:shadow-2xl">Medium Shadow</div>
           <div className="shadow-lg dark:shadow-none">Large Shadow</div>
-        </div>
+        </div>,
       );
 
       expect(container.querySelector('.shadow-sm')).toHaveClass('dark:shadow-white/10');
@@ -529,13 +528,13 @@ describe('Theme and Dark Mode Tests', () => {
     it('should support theme-aware gradients', () => {
       const { container } = render(
         <div>
-          <div className="bg-gradient-to-r from-primary to-primary-light dark:from-primary-dark dark:to-primary">
+          <div className="to-primary-light dark:from-primary-dark bg-gradient-to-r from-primary dark:to-primary">
             Theme Gradient
           </div>
           <div className="bg-gradient-to-br from-white to-gray-100 dark:from-gray-900 dark:to-gray-800">
             Background Gradient
           </div>
-        </div>
+        </div>,
       );
 
       const gradients = container.querySelectorAll('[class*="bg-gradient"]');
@@ -547,14 +546,12 @@ describe('Theme and Dark Mode Tests', () => {
     it('should support theme-aware borders', () => {
       const { container } = render(
         <div>
-          <div className="border border-gray-200 dark:border-gray-700">
-            Theme Border
-          </div>
+          <div className="border border-gray-200 dark:border-gray-700">Theme Border</div>
           <div className="divide-y divide-gray-200 dark:divide-gray-700">
             <div>Item 1</div>
             <div>Item 2</div>
           </div>
-        </div>
+        </div>,
       );
 
       expect(container.querySelector('.border')).toHaveClass('dark:border-gray-700');

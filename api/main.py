@@ -37,12 +37,17 @@ from api.routers import (
     readiness,
     reporting,
     security,
-    users
+    users,
 )
 from api.middleware.error_handler import error_handler_middleware
 from api.middleware.rate_limiter import rate_limit_middleware
 from api.middleware.security_headers import security_headers_middleware
-from database import init_db, test_database_connection, test_async_database_connection, cleanup_db_connections, get_db, _AsyncSessionLocal as AsyncSessionLocal
+from database import (
+    test_async_database_connection,
+    cleanup_db_connections,
+    get_db,
+    _AsyncSessionLocal as AsyncSessionLocal,
+)
 from config.settings import settings
 from monitoring.sentry import init_sentry
 from config.ai_config import ai_config
@@ -50,9 +55,10 @@ from config.ai_config import ai_config
 # Configure logging
 logging.basicConfig(
     level=getattr(logging, settings.log_level.value),
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
 )
 logger = logging.getLogger(__name__)
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
@@ -66,7 +72,7 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     logger.info("--- Lifespan Startup: Validating Configuration... ---")
     validate_configuration()
     logger.info("--- Lifespan Startup: Configuration Validated ---")
-    
+
     # Initialize Sentry
     logger.info("--- Lifespan Startup: Initializing Sentry... ---")
     init_sentry()
@@ -78,19 +84,20 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
         logger.error("--- Lifespan Startup: Async database connection verification FAILED ---")
         raise RuntimeError("Async database connection verification failed")
     logger.info("--- Lifespan Startup: Database Connection Verified (Async) ---")
-    
+
     logger.info("--- Lifespan Startup: Completed Successfully ---")
-    
+
     yield
-    
+
     # Shutdown
     logger.info("Shutting down ruleIQ API...")
-    
+
     # Close database connections
     await cleanup_db_connections()
     logger.info("Database connections closed")
-    
+
     logger.info("ruleIQ API shutdown complete")
+
 
 # Create FastAPI app
 app = FastAPI(
@@ -100,7 +107,7 @@ app = FastAPI(
     docs_url="/api/v1/docs" if settings.debug else None,
     redoc_url="/api/v1/redoc" if settings.debug else None,
     openapi_url="/api/v1/openapi.json",
-    lifespan=lifespan
+    lifespan=lifespan,
 )
 
 # Configure CORS
@@ -110,13 +117,13 @@ app.add_middleware(
     allow_credentials=True,
     allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
     allow_headers=["*"],
-    expose_headers=["X-Total-Count", "X-Rate-Limit-Remaining"]
+    expose_headers=["X-Total-Count", "X-Rate-Limit-Remaining"],
 )
 
 # Add security middleware
 app.add_middleware(
     TrustedHostMiddleware,
-    allowed_hosts=["*"]  # Allow all hosts for now, configure based on your needs
+    allowed_hosts=["*"],  # Allow all hosts for now, configure based on your needs
 )
 
 # Add compression
@@ -132,13 +139,21 @@ app.include_router(auth.router, prefix="/api/v1/auth", tags=["authentication"])
 app.include_router(users.router, prefix="/api/v1/users", tags=["users"])
 app.include_router(assessments.router, prefix="/api/v1/assessments", tags=["assessments"])
 app.include_router(ai_assessments.router, prefix="/api/v1/ai-assessments", tags=["ai-assessments"])
-app.include_router(ai_optimization.router, prefix="/api/v1/ai-optimization", tags=["ai-optimization"])
-app.include_router(business_profiles.router, prefix="/api/v1/business-profiles", tags=["business-profiles"])
+app.include_router(
+    ai_optimization.router, prefix="/api/v1/ai-optimization", tags=["ai-optimization"]
+)
+app.include_router(
+    business_profiles.router, prefix="/api/v1/business-profiles", tags=["business-profiles"]
+)
 app.include_router(chat.router, prefix="/api/v1/chat", tags=["chat"])
 app.include_router(compliance.router, prefix="/api/v1/compliance", tags=["compliance"])
 app.include_router(evidence.router, prefix="/api/v1/evidence", tags=["evidence"])
-app.include_router(evidence_collection.router, prefix="/api/v1/evidence-collection", tags=["evidence-collection"])
-app.include_router(foundation_evidence.router, prefix="/api/v1/foundation-evidence", tags=["foundation-evidence"])
+app.include_router(
+    evidence_collection.router, prefix="/api/v1/evidence-collection", tags=["evidence-collection"]
+)
+app.include_router(
+    foundation_evidence.router, prefix="/api/v1/foundation-evidence", tags=["foundation-evidence"]
+)
 app.include_router(frameworks.router, prefix="/api/v1/frameworks", tags=["frameworks"])
 app.include_router(implementation.router, prefix="/api/v1/implementation", tags=["implementation"])
 app.include_router(integrations.router, prefix="/api/v1/integrations", tags=["integrations"])
@@ -159,10 +174,11 @@ async def http_exception_handler(request: Request, exc: HTTPException) -> JSONRe
             "error": {
                 "message": exc.detail,
                 "type": "http_exception",
-                "status_code": exc.status_code
+                "status_code": exc.status_code,
             }
-        }
+        },
     )
+
 
 @app.exception_handler(SQLAlchemyError)
 async def sqlalchemy_exception_handler(request: Request, exc: SQLAlchemyError) -> JSONResponse:
@@ -174,10 +190,11 @@ async def sqlalchemy_exception_handler(request: Request, exc: SQLAlchemyError) -
             "error": {
                 "message": "Database operation failed",
                 "type": "database_error",
-                "status_code": 500
+                "status_code": 500,
             }
-        }
+        },
     )
+
 
 @app.exception_handler(Exception)
 async def general_exception_handler(request: Request, exc: Exception) -> JSONResponse:
@@ -189,30 +206,24 @@ async def general_exception_handler(request: Request, exc: Exception) -> JSONRes
             "error": {
                 "message": "Internal server error",
                 "type": "internal_error",
-                "status_code": 500
+                "status_code": 500,
             }
-        }
+        },
     )
+
 
 # Health check endpoints
 @app.get("/health")
 async def health_check() -> Dict[str, Any]:
     """Basic health check endpoint"""
-    return {
-        "status": "healthy",
-        "timestamp": time.time(),
-        "version": "1.0.0"
-    }
+    return {"status": "healthy", "timestamp": time.time(), "version": "1.0.0"}
+
 
 @app.get("/api/v1/health")
 async def api_health_check() -> Dict[str, Any]:
     """API v1 health check endpoint"""
-    return {
-        "status": "healthy",
-        "timestamp": time.time(),
-        "version": "1.0.0",
-        "api_version": "v1"
-    }
+    return {"status": "healthy", "timestamp": time.time(), "version": "1.0.0", "api_version": "v1"}
+
 
 @app.get("/api/v1/health/detailed")
 async def api_health_detailed() -> Dict[str, Any]:
@@ -235,7 +246,7 @@ async def api_health_detailed() -> Dict[str, Any]:
         ai_status = "healthy"
     except Exception as e:
         ai_status = f"unhealthy: {str(e)}"
-    
+
     overall_status = "healthy" if db_status == "healthy" and ai_status == "healthy" else "degraded"
 
     return {
@@ -247,8 +258,9 @@ async def api_health_detailed() -> Dict[str, Any]:
             "database": db_status,
             "ai_services": ai_status,
             "redis": "not_configured",
-        }
+        },
     }
+
 
 @app.get("/health/ready")
 async def readiness_check() -> Dict[str, Any]:
@@ -257,20 +269,16 @@ async def readiness_check() -> Dict[str, Any]:
     try:
         db = next(get_db())
         db.execute(text("SELECT 1"))
-        return {
-            "status": "ready",
-            "database": "connected",
-            "timestamp": time.time()
-        }
+        return {"status": "ready", "database": "connected", "timestamp": time.time()}
     except Exception as e:
         logger.error(f"Readiness check failed: {e}")
         raise HTTPException(
-            status_code=503,
-            detail="Service not ready - database connection failed"
+            status_code=503, detail="Service not ready - database connection failed"
         )
     finally:
         if db is not None:
             db.close()
+
 
 @app.get("/health/live")
 async def liveness_check() -> Dict[str, Any]:
@@ -278,8 +286,9 @@ async def liveness_check() -> Dict[str, Any]:
     return {
         "status": "alive",
         "timestamp": time.time(),
-        "uptime": time.time() - (getattr(app.state, 'start_time', time.time()))
+        "uptime": time.time() - (getattr(app.state, "start_time", time.time())),
     }
+
 
 # Root endpoint
 @app.get("/")
@@ -290,8 +299,9 @@ async def root() -> Dict[str, Any]:
         "version": "1.0.0",
         "description": "AI-powered compliance and risk management platform",
         "documentation": "/docs" if settings.debug else None,
-        "health": "/health"
+        "health": "/health",
     }
+
 
 # Startup event to set start time
 @app.on_event("startup")
@@ -299,21 +309,22 @@ async def startup_event():
     """Set application start time"""
     app.state.start_time = time.time()
 
+
 # Diagnostic endpoint for JWT configuration (remove in production)
 @app.get("/debug/config")
 async def debug_config():
     """Diagnostic endpoint - remove in production"""
     from config.settings import get_settings
-    import os
-    
+
     settings = get_settings()
     return {
         "jwt_secret_first_10": settings.jwt_secret[:10] if settings.jwt_secret else None,
         "jwt_secret_length": len(settings.jwt_secret) if settings.jwt_secret else 0,
         "working_directory": os.getcwd(),
         "env_file_exists": os.path.exists(".env.local"),
-        "JWT_SECRET_env": os.getenv("JWT_SECRET")[:10] if os.getenv("JWT_SECRET") else None
+        "JWT_SECRET_env": os.getenv("JWT_SECRET")[:10] if os.getenv("JWT_SECRET") else None,
     }
+
 
 # Configuration validation
 def validate_configuration() -> None:
@@ -322,14 +333,15 @@ def validate_configuration() -> None:
         "database_url",
         "jwt_secret",
     ]
-    
+
     missing_vars = []
     for var in required_vars:
         if not getattr(settings, var, None):
             missing_vars.append(var.upper())
-    
+
     if missing_vars:
         raise ValueError(f"Missing required environment variables: {missing_vars}")
+
 
 if __name__ == "__main__":
     uvicorn.run(
@@ -338,5 +350,5 @@ if __name__ == "__main__":
         port=int(settings.port),
         reload=bool(settings.debug),
         log_level=str(settings.log_level).lower(),
-        workers=1 if settings.debug else 4
+        workers=1 if settings.debug else 4,
     )

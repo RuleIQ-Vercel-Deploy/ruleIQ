@@ -5,7 +5,6 @@ from fastapi import APIRouter, Depends, File, HTTPException, UploadFile
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from api.dependencies.auth import get_current_active_user
-from api.dependencies.file import get_file_validator
 from api.schemas.evidence_classification import (
     BulkClassificationRequest,
     BulkClassificationResponse,
@@ -411,35 +410,43 @@ async def upload_evidence_file_route(
     """Upload a file and link it to an evidence item with enhanced security validation."""
     # Import enhanced validator
     from api.dependencies.file import EnhancedFileValidator
-    
+
     # Initialize enhanced validator with strict security for evidence files
     validator = EnhancedFileValidator(
         max_size=50 * 1024 * 1024,  # 50MB limit for evidence files
         allowed_types=[
-            "application/pdf", "image/jpeg", "image/png", "image/gif",
-            "text/csv", "text/plain", "application/json",
+            "application/pdf",
+            "image/jpeg",
+            "image/png",
+            "image/gif",
+            "text/csv",
+            "text/plain",
+            "application/json",
             "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
         ],
         security_level="strict",  # Strict validation for compliance evidence
-        enable_quarantine=True
+        enable_quarantine=True,
     )
-    
+
     # Validate and analyze file
     validated_file, analysis_report, quarantine_path = await validator.validate_and_analyze(file)
-    
+
     # Log security analysis
-    logger.info(f"Evidence file validation: {analysis_report.filename} - "
-               f"Result: {analysis_report.validation_result.value}, "
-               f"Score: {analysis_report.security_score:.2f}")
-    
+    logger.info(
+        f"Evidence file validation: {analysis_report.filename} - "
+        f"Result: {analysis_report.validation_result.value}, "
+        f"Score: {analysis_report.security_score:.2f}"
+    )
+
     # Create secure file path
     from api.dependencies.file import get_safe_upload_path
+
     secure_path = get_safe_upload_path(f"{evidence_id}_{validated_file.filename}")
-    
+
     # Save file securely
     file_content = await validated_file.read()
-    with open(secure_path, 'wb') as f:
+    with open(secure_path, "wb") as f:
         f.write(file_content)
 
         # Upload evidence with enhanced metadata
@@ -459,19 +466,21 @@ async def upload_evidence_file_route(
             "validation_time": analysis_report.validation_time,
             "quarantine_path": quarantine_path,
             "original_filename": analysis_report.original_filename,
-            "threats_detected": analysis_report.threats_detected if analysis_report.threats_detected else None
+            "threats_detected": analysis_report.threats_detected
+            if analysis_report.threats_detected
+            else None,
         },
     )
-    
+
     if not evidence:
         # Clean up uploaded file on failure
         if secure_path.exists():
             secure_path.unlink()
         raise HTTPException(status_code=404, detail="Failed to upload or link file to evidence")
-    
+
     # Return enhanced response with security information
     response = EvidenceService._convert_evidence_item_to_response(evidence)
-    
+
     # Add security metadata to response if there were any concerns
     if analysis_report.validation_result != "clean":
         response.ai_metadata = response.ai_metadata or {}
@@ -479,9 +488,9 @@ async def upload_evidence_file_route(
             "validation_result": analysis_report.validation_result.value,
             "security_score": analysis_report.security_score,
             "threats_detected": analysis_report.threats_detected,
-            "recommendations": analysis_report.recommendations
+            "recommendations": analysis_report.recommendations,
         }
-    
+
     return response
 
 
@@ -595,7 +604,8 @@ async def bulk_classify_evidence(
                             success=False,
                             current_type="unknown",
                             error=f"Evidence not found or access denied: {status}",
-                        ))
+                        )
+                    )
                     failed_count += 1
                     continue
 
@@ -651,7 +661,11 @@ async def bulk_classify_evidence(
             except Exception as e:
                 results.append(
                     ClassificationResult(
-                        evidence_id=evidence_id, success=False, current_type="unknown", error=str(e), applied=False
+                        evidence_id=evidence_id,
+                        success=False,
+                        current_type="unknown",
+                        error=str(e),
+                        applied=False,
                     )
                 )
                 failed_count += 1
@@ -930,7 +944,10 @@ async def detect_evidence_duplicates(
             evidence_id=evidence_id,
             evidence_name=evidence.evidence_name or "Unnamed Evidence",
             duplicates_found=len(duplicates),
-            duplicates=[{"evidence_id": str(d["id"]), "similarity_score": d["similarity"]} for d in duplicates],
+            duplicates=[
+                {"evidence_id": str(d["id"]), "similarity_score": d["similarity"]}
+                for d in duplicates
+            ],
             analysis_timestamp=datetime.utcnow().isoformat(),
         )
 

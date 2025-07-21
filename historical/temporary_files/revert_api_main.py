@@ -2,11 +2,12 @@
 """Revert api/main.py to simpler approach"""
 
 # Read the current main.py
-with open('api/main.py', 'r') as f:
+with open("api/main.py", "r") as f:
     content = f.read()
 
 # Remove the api_v1 sub-application approach
-content = content.replace("""# Create a sub-application for API v1 with docs
+content = content.replace(
+    """# Create a sub-application for API v1 with docs
 api_v1 = FastAPI(
     title="ruleIQ API v1",
     description="AI-powered compliance and risk management platform - API v1",
@@ -26,10 +27,15 @@ api_v1.add_middleware(
     expose_headers=["X-Total-Count", "X-Rate-Limit-Remaining"]
 )
 
-""", "")
+""",
+    "",
+)
 
 # Revert router includes back to main app
-content = content.replace("# Include all routers in API v1\napi_v1.include_router", "# Include all routers\napp.include_router")
+content = content.replace(
+    "# Include all routers in API v1\napi_v1.include_router",
+    "# Include all routers\napp.include_router",
+)
 content = content.replace("api_v1.include_router", "app.include_router")
 content = content.replace('prefix="/auth"', 'prefix="/api/v1/auth"')
 content = content.replace('prefix="/users"', 'prefix="/api/v1/users"')
@@ -52,10 +58,10 @@ content = content.replace('prefix="/reporting"', 'prefix="/api/v1/reporting"')
 content = content.replace('prefix="/security"', 'prefix="/api/v1/security"')
 
 # Remove the mount line
-content = content.replace("\n# Mount API v1 sub-application\napp.mount(\"/api/v1\", api_v1)", "")
+content = content.replace('\n# Mount API v1 sub-application\napp.mount("/api/v1", api_v1)', "")
 
 # Write back
-with open('api/main.py', 'w') as f:
+with open("api/main.py", "w") as f:
     f.write(content)
 
 print("Reverted to simpler approach")

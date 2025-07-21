@@ -1,30 +1,30 @@
-"use client";
+'use client';
 
-import { motion, AnimatePresence } from "framer-motion";
-import { 
-  Bot, 
-  ChevronDown, 
-  ChevronUp, 
-  Copy, 
+import { motion, AnimatePresence } from 'framer-motion';
+import {
+  Bot,
+  ChevronDown,
+  ChevronUp,
+  Copy,
   MessageSquare,
   Lightbulb,
   BookOpen,
   ExternalLink,
-  RefreshCw
-} from "lucide-react";
-import React, { useState } from "react";
+  RefreshCw,
+} from 'lucide-react';
+import React, { useState } from 'react';
 
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Separator } from "@/components/ui/separator";
-import { useToast } from "@/hooks/use-toast";
-import { assessmentAIService, type AIHelpResponse } from "@/lib/api/assessments-ai.service";
-import { type Question } from "@/lib/assessment-engine/types";
-import { cn } from "@/lib/utils";
-import { type UserContext } from "@/types/ai";
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { Separator } from '@/components/ui/separator';
+import { useToast } from '@/hooks/use-toast';
+import { assessmentAIService, type AIHelpResponse } from '@/lib/api/assessments-ai.service';
+import { type Question } from '@/lib/assessment-engine/types';
+import { cn } from '@/lib/utils';
+import { type UserContext } from '@/types/ai';
 
 interface AIGuidancePanelProps {
   question: Question;
@@ -41,7 +41,7 @@ export function AIGuidancePanel({
   sectionId,
   userContext,
   className,
-  defaultOpen = false
+  defaultOpen = false,
 }: AIGuidancePanelProps) {
   const [isOpen, setIsOpen] = useState(defaultOpen);
   const [loading, setLoading] = useState(false);
@@ -49,10 +49,10 @@ export function AIGuidancePanel({
   const [error, setError] = useState<string | null>(null);
   const [requestId, setRequestId] = useState<string | null>(null);
   const { toast } = useToast();
-  
+
   // Suppress TypeScript unused variable warning
   void requestId;
-  
+
   // Load guidance when defaultOpen is true
   React.useEffect(() => {
     if (defaultOpen && !aiResponse && !loading) {
@@ -73,9 +73,9 @@ export function AIGuidancePanel({
         question_text: question.text,
         framework_id: frameworkId,
         ...(sectionId && { section_id: sectionId }),
-        ...(userContext && { user_context: userContext })
+        ...(userContext && { user_context: userContext }),
       };
-      
+
       const response = await assessmentAIService.getQuestionHelp(helpRequest);
 
       // Check if this request is still valid by checking the ref
@@ -115,9 +115,9 @@ export function AIGuidancePanel({
     if (aiResponse?.guidance) {
       navigator.clipboard.writeText(aiResponse.guidance);
       toast({
-        title: "Guidance copied",
-        description: "AI guidance has been copied to your clipboard.",
-        duration: 2000
+        title: 'Guidance copied',
+        description: 'AI guidance has been copied to your clipboard.',
+        duration: 2000,
       });
     }
   };
@@ -130,35 +130,32 @@ export function AIGuidancePanel({
       '',
       aiResponse.guidance,
       '',
-      ...(aiResponse.follow_up_suggestions ? [
-        'Suggestions:',
-        ...aiResponse.follow_up_suggestions.map(s => `• ${s}`),
-        ''
-      ] : []),
-      ...(aiResponse.source_references ? [
-        'References:',
-        ...aiResponse.source_references.map(ref => `• ${ref}`)
-      ] : [])
+      ...(aiResponse.follow_up_suggestions
+        ? ['Suggestions:', ...aiResponse.follow_up_suggestions.map((s) => `• ${s}`), '']
+        : []),
+      ...(aiResponse.source_references
+        ? ['References:', ...aiResponse.source_references.map((ref) => `• ${ref}`)]
+        : []),
     ].join('\n');
 
     navigator.clipboard.writeText(fullContent);
     toast({
-      title: "Full guidance copied",
-      description: "Complete AI guidance has been copied to your clipboard.",
-      duration: 2000
+      title: 'Full guidance copied',
+      description: 'Complete AI guidance has been copied to your clipboard.',
+      duration: 2000,
     });
   };
 
   return (
-    <Card className={cn("border-l-4 border-l-primary", className)}>
+    <Card className={cn('border-l-4 border-l-primary', className)}>
       <Collapsible open={isOpen} onOpenChange={setIsOpen}>
         <CollapsibleTrigger asChild>
-          <CardHeader 
-            className="cursor-pointer hover:bg-muted/50 transition-colors"
+          <CardHeader
+            className="cursor-pointer transition-colors hover:bg-muted/50"
             onClick={handleToggle}
           >
             <div className="flex items-center justify-between">
-              <CardTitle className="text-sm font-medium flex items-center gap-2">
+              <CardTitle className="flex items-center gap-2 text-sm font-medium">
                 <Bot className="h-4 w-4 text-primary" />
                 AI Compliance Guidance
                 {aiResponse && (
@@ -167,15 +164,8 @@ export function AIGuidancePanel({
                   </Badge>
                 )}
               </CardTitle>
-              <div 
-                className="p-1"
-                onClick={(e) => e.stopPropagation()}
-              >
-                {isOpen ? (
-                  <ChevronUp className="h-4 w-4" />
-                ) : (
-                  <ChevronDown className="h-4 w-4" />
-                )}
+              <div className="p-1" onClick={(e) => e.stopPropagation()}>
+                {isOpen ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
               </div>
             </div>
           </CardHeader>
@@ -190,9 +180,9 @@ export function AIGuidancePanel({
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
-                  className="text-center py-8"
+                  className="py-8 text-center"
                 >
-                  <Bot className="h-8 w-8 animate-pulse text-primary mx-auto mb-3" />
+                  <Bot className="mx-auto mb-3 h-8 w-8 animate-pulse text-primary" />
                   <p className="text-sm text-muted-foreground">
                     Analyzing compliance requirements...
                   </p>
@@ -205,15 +195,11 @@ export function AIGuidancePanel({
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
-                  className="text-center py-6"
+                  className="py-6 text-center"
                 >
-                  <p className="text-sm text-destructive mb-3">{error}</p>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={loadGuidance}
-                  >
-                    <RefreshCw className="h-4 w-4 mr-2" />
+                  <p className="mb-3 text-sm text-destructive">{error}</p>
+                  <Button variant="outline" size="sm" onClick={loadGuidance}>
+                    <RefreshCw className="mr-2 h-4 w-4" />
                     Try Again
                   </Button>
                 </motion.div>
@@ -230,29 +216,17 @@ export function AIGuidancePanel({
                   {/* Action Buttons */}
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={handleCopyGuidance}
-                      >
-                        <Copy className="h-3 w-3 mr-2" />
+                      <Button variant="outline" size="sm" onClick={handleCopyGuidance}>
+                        <Copy className="mr-2 h-3 w-3" />
                         Copy Guidance
                       </Button>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={handleCopyAll}
-                      >
-                        <BookOpen className="h-3 w-3 mr-2" />
+                      <Button variant="outline" size="sm" onClick={handleCopyAll}>
+                        <BookOpen className="mr-2 h-3 w-3" />
                         Copy All
                       </Button>
                     </div>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={handleRefresh}
-                    >
-                      <RefreshCw className="h-3 w-3 mr-2" />
+                    <Button variant="ghost" size="sm" onClick={handleRefresh}>
+                      <RefreshCw className="mr-2 h-3 w-3" />
                       Refresh
                     </Button>
                   </div>
@@ -261,13 +235,13 @@ export function AIGuidancePanel({
 
                   {/* Main Guidance */}
                   <div className="space-y-3">
-                    <h4 className="text-sm font-medium flex items-center gap-2">
+                    <h4 className="flex items-center gap-2 text-sm font-medium">
                       <MessageSquare className="h-4 w-4" />
                       Compliance Guidance
                     </h4>
-                    <div className="bg-muted/50 rounded-lg p-4">
+                    <div className="rounded-lg bg-muted/50 p-4">
                       <ScrollArea className="max-h-40">
-                        <p className="text-sm leading-relaxed whitespace-pre-wrap">
+                        <p className="whitespace-pre-wrap text-sm leading-relaxed">
                           {aiResponse.guidance}
                         </p>
                       </ScrollArea>
@@ -289,22 +263,23 @@ export function AIGuidancePanel({
                   )}
 
                   {/* Follow-up Suggestions */}
-                  {aiResponse.follow_up_suggestions && aiResponse.follow_up_suggestions.length > 0 && (
-                    <div className="space-y-2">
-                      <h4 className="text-sm font-medium flex items-center gap-2">
-                        <Lightbulb className="h-4 w-4" />
-                        Recommended Actions
-                      </h4>
+                  {aiResponse.follow_up_suggestions &&
+                    aiResponse.follow_up_suggestions.length > 0 && (
                       <div className="space-y-2">
-                        {aiResponse.follow_up_suggestions.map((suggestion, index) => (
-                          <div key={index} className="flex items-start gap-3 text-sm">
-                            <div className="h-1.5 w-1.5 rounded-full bg-primary mt-2 flex-shrink-0" />
-                            <span className="text-muted-foreground">{suggestion}</span>
-                          </div>
-                        ))}
+                        <h4 className="flex items-center gap-2 text-sm font-medium">
+                          <Lightbulb className="h-4 w-4" />
+                          Recommended Actions
+                        </h4>
+                        <div className="space-y-2">
+                          {aiResponse.follow_up_suggestions.map((suggestion, index) => (
+                            <div key={index} className="flex items-start gap-3 text-sm">
+                              <div className="mt-2 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-primary" />
+                              <span className="text-muted-foreground">{suggestion}</span>
+                            </div>
+                          ))}
+                        </div>
                       </div>
-                    </div>
-                  )}
+                    )}
 
                   {/* Source References */}
                   {aiResponse.source_references && aiResponse.source_references.length > 0 && (
@@ -312,7 +287,10 @@ export function AIGuidancePanel({
                       <h4 className="text-sm font-medium">References</h4>
                       <div className="space-y-1">
                         {aiResponse.source_references.map((ref, index) => (
-                          <div key={index} className="flex items-center gap-2 text-sm text-muted-foreground">
+                          <div
+                            key={index}
+                            className="flex items-center gap-2 text-sm text-muted-foreground"
+                          >
                             <ExternalLink className="h-3 w-3 flex-shrink-0" />
                             <span>{ref}</span>
                           </div>

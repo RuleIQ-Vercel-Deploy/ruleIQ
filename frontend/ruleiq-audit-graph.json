@@ -88,47 +88,32 @@
     {
       "name": "Alex Persona",
       "type": "UserPersona",
-      "observations": [
-        "Power user who wants keyboard shortcuts",
-        "Values efficiency and productivity",
-        "Needs command palette (Cmd+K)",
-        "Wants quick access to common tasks"
-      ]
+      "observations": ["Power user who wants keyboard shortcuts", "Values efficiency and productivity", "Needs command palette (Cmd+K)", "Wants quick access to common tasks"]
     },
     {
       "name": "Ben Persona",
       "type": "UserPersona",
-      "observations": [
-        "Needs guided actions and confirmations",
-        "Less technical user",
-        "Requires clear visual hierarchy",
-        "Benefits from tooltips and help text"
-      ]
+      "observations": ["Needs guided actions and confirmations", "Less technical user", "Requires clear visual hierarchy", "Benefits from tooltips and help text"]
     },
     {
       "name": "Catherine Persona",
       "type": "UserPersona",
-      "observations": [
-        "Values bulk operations for compliance",
-        "Manages large datasets",
-        "Needs export functionality",
-        "Requires multi-select actions"
-      ]
+      "observations": ["Values bulk operations for compliance", "Manages large datasets", "Needs export functionality", "Requires multi-select actions"]
     }
   ],
   "relationships": [
-    {"from": "ruleIQ Frontend", "to": "shadcn/ui", "type": "uses"},
-    {"from": "ruleIQ Frontend", "to": "ruleIQ Design System", "type": "implements"},
-    {"from": "ruleIQ Design System", "to": "Core UX Principles", "type": "follows"},
-    {"from": "ruleIQ Component Architecture", "to": "shadcn/ui", "type": "based-on"},
-    {"from": "ruleIQ Frontend", "to": "Alex Persona", "type": "serves"},
-    {"from": "ruleIQ Frontend", "to": "Ben Persona", "type": "serves"},
-    {"from": "ruleIQ Frontend", "to": "Catherine Persona", "type": "serves"},
-    {"from": "Alex Persona", "to": "ruleIQ Component Architecture", "type": "requires-productivity-features"},
-    {"from": "Ben Persona", "to": "ruleIQ Design System", "type": "needs-clear-hierarchy"},
-    {"from": "Catherine Persona", "to": "ruleIQ Component Architecture", "type": "requires-bulk-operations"},
-    {"from": "ruleIQ UI Issues", "to": "ruleIQ Design System", "type": "degrades"},
-    {"from": "ruleIQ UI Issues", "to": "Core UX Principles", "type": "violates"},
-    {"from": "ruleIQ Component Architecture", "to": "ruleIQ UI Issues", "type": "contains"}
+    { "from": "ruleIQ Frontend", "to": "shadcn/ui", "type": "uses" },
+    { "from": "ruleIQ Frontend", "to": "ruleIQ Design System", "type": "implements" },
+    { "from": "ruleIQ Design System", "to": "Core UX Principles", "type": "follows" },
+    { "from": "ruleIQ Component Architecture", "to": "shadcn/ui", "type": "based-on" },
+    { "from": "ruleIQ Frontend", "to": "Alex Persona", "type": "serves" },
+    { "from": "ruleIQ Frontend", "to": "Ben Persona", "type": "serves" },
+    { "from": "ruleIQ Frontend", "to": "Catherine Persona", "type": "serves" },
+    { "from": "Alex Persona", "to": "ruleIQ Component Architecture", "type": "requires-productivity-features" },
+    { "from": "Ben Persona", "to": "ruleIQ Design System", "type": "needs-clear-hierarchy" },
+    { "from": "Catherine Persona", "to": "ruleIQ Component Architecture", "type": "requires-bulk-operations" },
+    { "from": "ruleIQ UI Issues", "to": "ruleIQ Design System", "type": "degrades" },
+    { "from": "ruleIQ UI Issues", "to": "Core UX Principles", "type": "violates" },
+    { "from": "ruleIQ Component Architecture", "to": "ruleIQ UI Issues", "type": "contains" }
   ]
 }

@@ -1,6 +1,6 @@
-import { env } from '@/config/env'
+import { env } from '@/config/env';
 
-export type DesignSystem = 'legacy' | 'teal'
+export type DesignSystem = 'legacy' | 'teal';
 
 /**
  * Theme utility functions for the design system migration
@@ -12,33 +12,33 @@ export class ThemeUtils {
   static getCurrentDesignSystem(): DesignSystem {
     // Check environment flag first
     if (env.NEXT_PUBLIC_USE_NEW_THEME) {
-      return 'teal'
+      return 'teal';
     }
-    
+
     // Check localStorage if on client
     if (typeof window !== 'undefined') {
-      const stored = localStorage.getItem('ruleiq-design-system')
+      const stored = localStorage.getItem('ruleiq-design-system');
       if (stored === 'teal' || stored === 'legacy') {
-        return stored
+        return stored;
       }
     }
-    
-    return 'legacy'
+
+    return 'legacy';
   }
 
   /**
    * Check if the new teal theme is active
    */
   static isNewTheme(): boolean {
-    return this.getCurrentDesignSystem() === 'teal'
+    return this.getCurrentDesignSystem() === 'teal';
   }
 
   /**
    * Get theme-specific CSS class names
    */
   static getThemeClasses(designSystem: DesignSystem = this.getCurrentDesignSystem()) {
-    const base = `design-${designSystem}`
-    
+    const base = `design-${designSystem}`;
+
     return {
       root: base,
       // Legacy dark theme classes
@@ -58,8 +58,8 @@ export class ThemeUtils {
         primary: 'bg-brand-primary text-white',
         secondary: 'bg-brand-secondary text-white',
         border: 'border-neutral-200',
-      }
-    }
+      },
+    };
   }
 
   /**
@@ -68,27 +68,27 @@ export class ThemeUtils {
   static cn(
     legacyClasses: string,
     tealClasses: string,
-    designSystem: DesignSystem = this.getCurrentDesignSystem()
+    designSystem: DesignSystem = this.getCurrentDesignSystem(),
   ): string {
-    return designSystem === 'teal' ? tealClasses : legacyClasses
+    return designSystem === 'teal' ? tealClasses : legacyClasses;
   }
 
   /**
    * Apply theme to document root
    */
   static applyTheme(designSystem: DesignSystem) {
-    if (typeof window === 'undefined') return
-    
-    const root = document.documentElement
-    
+    if (typeof window === 'undefined') return;
+
+    const root = document.documentElement;
+
     // Remove existing theme classes
-    root.classList.remove('design-legacy', 'design-teal')
-    
+    root.classList.remove('design-legacy', 'design-teal');
+
     // Add new theme class
-    root.classList.add(`design-${designSystem}`)
-    
+    root.classList.add(`design-${designSystem}`);
+
     // Store preference
-    localStorage.setItem('ruleiq-design-system', designSystem)
+    localStorage.setItem('ruleiq-design-system', designSystem);
   }
 
   /**
@@ -111,17 +111,17 @@ export class ThemeUtils {
         surface: '#FFFFFF',
         text: '#111827',
         border: '#E5E7EB',
-      }
-    }
-    
-    return colors[designSystem]
+      },
+    };
+
+    return colors[designSystem];
   }
 
   /**
    * Check if feature flag allows theme switching
    */
   static canSwitchTheme(): boolean {
-    return !env.NEXT_PUBLIC_USE_NEW_THEME // Allow switching only when not forced by env
+    return !env.NEXT_PUBLIC_USE_NEW_THEME; // Allow switching only when not forced by env
   }
 
   /**
@@ -132,7 +132,7 @@ export class ThemeUtils {
       'aria-label': `Switch to ${currentTheme === 'legacy' ? 'new teal' : 'legacy'} theme`,
       'data-theme': currentTheme,
       title: `Currently using ${currentTheme} theme. Click to switch.`,
-    }
+    };
   }
 }
 
@@ -140,15 +140,15 @@ export class ThemeUtils {
  * Hook-style utility for conditional classes
  */
 export function useThemeClasses() {
-  const designSystem = ThemeUtils.getCurrentDesignSystem()
-  const classes = ThemeUtils.getThemeClasses(designSystem)
-  
+  const designSystem = ThemeUtils.getCurrentDesignSystem();
+  const classes = ThemeUtils.getThemeClasses(designSystem);
+
   return {
     designSystem,
     isNewTheme: designSystem === 'teal',
     classes,
-    cn: (legacyClasses: string, tealClasses: string) => 
+    cn: (legacyClasses: string, tealClasses: string) =>
       ThemeUtils.cn(legacyClasses, tealClasses, designSystem),
     colors: ThemeUtils.getThemeColors(designSystem),
-  }
+  };
 }

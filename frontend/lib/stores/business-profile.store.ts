@@ -1,6 +1,6 @@
 /**
  * Business Profile Store
- * 
+ *
  * Zustand store for managing business profile state with:
  * - Draft saving for wizard steps
  * - API integration with field mapping
@@ -9,19 +9,19 @@
  */
 
 import { create } from 'zustand';
-import { persist, createJSONStorage , devtools } from 'zustand/middleware';
+import { persist, createJSONStorage, devtools } from 'zustand/middleware';
 
 import { businessProfileService } from '@/lib/api/business-profiles.service';
-import { 
-  validateWizardStep, 
+import {
+  validateWizardStep,
   validateCompleteProfile,
-  formatValidationErrors 
+  formatValidationErrors,
 } from '@/lib/validations/business-profile';
-import { 
-  type BusinessProfile, 
+import {
+  type BusinessProfile,
   type BusinessProfileFormData,
   WIZARD_STEPS,
-  type FrameworkRecommendation
+  type FrameworkRecommendation,
 } from '@/types/business-profile';
 
 export interface BusinessProfileState {
@@ -52,7 +52,7 @@ export interface BusinessProfileState {
   // Framework Recommendations
   recommendations: FrameworkRecommendation[];
   isLoadingRecommendations: boolean;
-  
+
   // Actions - Profile Management
   loadProfile: () => Promise<void>;
   saveProfile: (data: BusinessProfileFormData) => Promise<void>;
@@ -128,65 +128,100 @@ export const useBusinessProfileStore = create<BusinessProfileState>()(
 
           try {
             const profile = await businessProfileService.getProfile();
-            set({
-              profile,
-              isLoading: false,
-              retryCount: 0,
-              // If profile exists, populate draft for editing
-              draftProfile: profile ? { ...profile } : null
-            }, false, 'loadProfile/success');
+            set(
+              {
+                profile,
+                isLoading: false,
+                retryCount: 0,
+                // If profile exists, populate draft for editing
+                draftProfile: profile ? { ...profile } : null,
+              },
+              false,
+              'loadProfile/success',
+            );
           } catch (error: any) {
-            const errorType = error.code === 'NETWORK_ERROR' ? 'network' :
-                             error.code === 'PERMISSION_DENIED' ? 'permission' :
-                             error.code === 'TIMEOUT' ? 'timeout' : 'unknown';
+            const errorType =
+              error.code === 'NETWORK_ERROR'
+                ? 'network'
+                : error.code === 'PERMISSION_DENIED'
+                  ? 'permission'
+                  : error.code === 'TIMEOUT'
+                    ? 'timeout'
+                    : 'unknown';
 
-            set({
-              error: error.detail || error.message || 'Failed to load profile',
-              errorType,
-              isLoading: false,
-              retryCount: get().retryCount + 1
-            }, false, 'loadProfile/error');
+            set(
+              {
+                error: error.detail || error.message || 'Failed to load profile',
+                errorType,
+                isLoading: false,
+                retryCount: get().retryCount + 1,
+              },
+              false,
+              'loadProfile/error',
+            );
           }
         },
 
         saveProfile: async (data: BusinessProfileFormData) => {
-          set({ isSaving: true, error: null, errorType: null, validationErrors: [] }, false, 'saveProfile/start');
+          set(
+            { isSaving: true, error: null, errorType: null, validationErrors: [] },
+            false,
+            'saveProfile/start',
+          );
 
           try {
             // Minimal validation for test compatibility - only check company_name
             if (!data.company_name) {
-              set({
-                validationErrors: [{ field: 'company_name', message: 'Company name is required' }],
-                errorType: 'validation',
-                isSaving: false
-              }, false, 'saveProfile/validationError');
+              set(
+                {
+                  validationErrors: [
+                    { field: 'company_name', message: 'Company name is required' },
+                  ],
+                  errorType: 'validation',
+                  isSaving: false,
+                },
+                false,
+                'saveProfile/validationError',
+              );
               throw new Error('Please fix validation errors before saving');
             }
 
             const savedProfile = await businessProfileService.saveProfile(data);
 
-            set({
-              profile: savedProfile,
-              draftProfile: null, // Clear draft after successful save
-              isSaving: false,
-              completedSteps: new Set([0, 1, 2, 3]), // Mark all steps complete
-              error: null,
-              errorType: null,
-              retryCount: 0
-            }, false, 'saveProfile/success');
-
+            set(
+              {
+                profile: savedProfile,
+                draftProfile: null, // Clear draft after successful save
+                isSaving: false,
+                completedSteps: new Set([0, 1, 2, 3]), // Mark all steps complete
+                error: null,
+                errorType: null,
+                retryCount: 0,
+              },
+              false,
+              'saveProfile/success',
+            );
           } catch (error: any) {
-            const errorType = error.message?.includes('validation') ? 'validation' :
-                             error.code === 'NETWORK_ERROR' ? 'network' :
-                             error.code === 'PERMISSION_DENIED' ? 'permission' :
-                             error.code === 'TIMEOUT' ? 'timeout' : 'unknown';
+            const errorType = error.message?.includes('validation')
+              ? 'validation'
+              : error.code === 'NETWORK_ERROR'
+                ? 'network'
+                : error.code === 'PERMISSION_DENIED'
+                  ? 'permission'
+                  : error.code === 'TIMEOUT'
+                    ? 'timeout'
+                    : 'unknown';
 
-            set({
-              error: error.detail || error.message || 'Failed to save profile',
-              errorType,
-              isSaving: false,
-              retryCount: get().retryCount + 1
-            }, false, 'saveProfile/error');
+            set(
+              {
+                error: error.detail || error.message || 'Failed to save profile',
+                errorType,
+                isSaving: false,
+                retryCount: get().retryCount + 1,
+              },
+              false,
+              'saveProfile/error',
+            );
 
             // Only re-throw validation errors, handle other errors gracefully for tests
             if (errorType === 'validation') {
@@ -202,10 +237,14 @@ export const useBusinessProfileStore = create<BusinessProfileState>()(
           }
 
           const updatedProfile = { ...profile, ...updates };
-          set({
-            profile: updatedProfile,
-            formData: { ...get().formData, ...updates }
-          }, false, 'updateProfile');
+          set(
+            {
+              profile: updatedProfile,
+              formData: { ...get().formData, ...updates },
+            },
+            false,
+            'updateProfile',
+          );
         },
 
         updateProfileAsync: async (updates: Partial<BusinessProfileFormData>) => {
@@ -218,76 +257,108 @@ export const useBusinessProfileStore = create<BusinessProfileState>()(
 
           try {
             const updatedProfile = await businessProfileService.updateProfile(profile, updates);
-            set({
-              profile: updatedProfile,
-              isSaving: false
-            }, false, 'updateProfileAsync/success');
+            set(
+              {
+                profile: updatedProfile,
+                isSaving: false,
+              },
+              false,
+              'updateProfileAsync/success',
+            );
           } catch (error: any) {
-            set({
-              error: error.detail || error.message || 'Failed to update profile',
-              isSaving: false
-            }, false, 'updateProfileAsync/error');
+            set(
+              {
+                error: error.detail || error.message || 'Failed to update profile',
+                isSaving: false,
+              },
+              false,
+              'updateProfileAsync/error',
+            );
             throw error;
           }
         },
 
         deleteProfile: async () => {
           set({ isLoading: true, error: null }, false, 'deleteProfile/start');
-          
+
           try {
             await businessProfileService.deleteProfile();
-            set({ 
-              ...initialState,
-              isLoading: false 
-            }, false, 'deleteProfile/success');
+            set(
+              {
+                ...initialState,
+                isLoading: false,
+              },
+              false,
+              'deleteProfile/success',
+            );
           } catch (error: any) {
-            set({ 
-              error: error.detail || error.message || 'Failed to delete profile',
-              isLoading: false 
-            }, false, 'deleteProfile/error');
+            set(
+              {
+                error: error.detail || error.message || 'Failed to delete profile',
+                isLoading: false,
+              },
+              false,
+              'deleteProfile/error',
+            );
             throw error;
           }
         },
 
         clearProfile: () => {
-          set({
-            profile: null,
-            draftProfile: null,
-            formData: {},
-            currentStep: 1,
-            completedSteps: new Set<number>(),
-            stepValidation: {},
-            validationErrors: [],
-            error: null,
-            errorType: null,
-            retryCount: 0,
-            isComplete: false
-          }, false, 'clearProfile');
+          set(
+            {
+              profile: null,
+              draftProfile: null,
+              formData: {},
+              currentStep: 1,
+              completedSteps: new Set<number>(),
+              stepValidation: {},
+              validationErrors: [],
+              error: null,
+              errorType: null,
+              retryCount: 0,
+              isComplete: false,
+            },
+            false,
+            'clearProfile',
+          );
         },
 
         setProfile: (profile: BusinessProfile | null) => {
-          set({
-            profile,
-            formData: profile ? { ...profile } : {},
-            isComplete: profile ? true : false
-          }, false, 'setProfile');
+          set(
+            {
+              profile,
+              formData: profile ? { ...profile } : {},
+              isComplete: profile ? true : false,
+            },
+            false,
+            'setProfile',
+          );
         },
 
         // Form Data Management Actions
         updateFormData: (data: Partial<BusinessProfileFormData>) => {
           const currentFormData = get().formData;
           const updatedFormData = { ...currentFormData, ...data };
-          set({
-            formData: updatedFormData,
-            draftProfile: updatedFormData
-          }, false, 'updateFormData');
+          set(
+            {
+              formData: updatedFormData,
+              draftProfile: updatedFormData,
+            },
+            false,
+            'updateFormData',
+          );
         },
 
         clearFormData: () => {
-          set({
-            formData: {},
-            draftProfile: null
-          }, false, 'clearFormData');
+          set(
+            {
+              formData: {},
+              draftProfile: null,
+            },
+            false,
+            'clearFormData',
+          );
         },
 
         // Draft Management Actions
@@ -337,7 +408,8 @@ export const useBusinessProfileStore = create<BusinessProfileState>()(
 
         previousStep: () => {
           const { currentStep } = get();
-          if (currentStep > 1) { // Don't go below step 1 (1-based for tests)
+          if (currentStep > 1) {
+            // Don't go below step 1 (1-based for tests)
             set({ currentStep: currentStep - 1 }, false, 'previousStep');
           }
         },
@@ -359,44 +431,53 @@ export const useBusinessProfileStore = create<BusinessProfileState>()(
         validateCurrentStep: async () => {
           const { currentStep, draftProfile } = get();
           const stepId = WIZARD_STEPS[currentStep]?.id;
-          
+
           if (!stepId || !draftProfile) {
             return false;
           }
 
           set({ isValidating: true, validationErrors: [] }, false, 'validateCurrentStep/start');
-          
+
           try {
-            const validation = validateWizardStep(
-              stepId as any, 
-              draftProfile
-            );
-            
+            const validation = validateWizardStep(stepId as any, draftProfile);
+
             if (validation.success) {
               const { stepValidation, completedSteps } = get();
               const newStepValidation = { ...stepValidation, [currentStep]: true };
               const newCompletedSteps = new Set(completedSteps);
               newCompletedSteps.add(currentStep);
-              
-              set({ 
-                stepValidation: newStepValidation,
-                completedSteps: newCompletedSteps,
-                isValidating: false 
-              }, false, 'validateCurrentStep/success');
+
+              set(
+                {
+                  stepValidation: newStepValidation,
+                  completedSteps: newCompletedSteps,
+                  isValidating: false,
+                },
+                false,
+                'validateCurrentStep/success',
+              );
               return true;
             } else {
               const errors = validation.errors ? formatValidationErrors(validation.errors) : [];
-              set({ 
-                validationErrors: errors,
-                isValidating: false 
-              }, false, 'validateCurrentStep/error');
+              set(
+                {
+                  validationErrors: errors,
+                  isValidating: false,
+                },
+                false,
+                'validateCurrentStep/error',
+              );
               return false;
             }
           } catch (error: any) {
-            set({ 
-              error: error.message || 'Validation failed',
-              isValidating: false 
-            }, false, 'validateCurrentStep/exception');
+            set(
+              {
+                error: error.message || 'Validation failed',
+                isValidating: false,
+              },
+              false,
+              'validateCurrentStep/exception',
+            );
             return false;
           }
         },
@@ -406,30 +487,42 @@ export const useBusinessProfileStore = create<BusinessProfileState>()(
           if (!draftProfile) return false;
 
           set({ isValidating: true, validationErrors: [] }, false, 'validateAllSteps/start');
-          
+
           try {
             const validation = validateCompleteProfile(draftProfile);
-            
+
             if (validation.success) {
-              set({ 
-                stepValidation: { 0: true, 1: true, 2: true, 3: true },
-                completedSteps: new Set([0, 1, 2, 3]),
-                isValidating: false 
-              }, false, 'validateAllSteps/success');
+              set(
+                {
+                  stepValidation: { 0: true, 1: true, 2: true, 3: true },
+                  completedSteps: new Set([0, 1, 2, 3]),
+                  isValidating: false,
+                },
+                false,
+                'validateAllSteps/success',
+              );
               return true;
             } else {
               const errors = validation.errors ? formatValidationErrors(validation.errors) : [];
-              set({ 
-                validationErrors: errors,
-                isValidating: false 
-              }, false, 'validateAllSteps/error');
+              set(
+                {
+                  validationErrors: errors,
+                  isValidating: false,
+                },
+                false,
+                'validateAllSteps/error',
+              );
               return false;
             }
           } catch (error: any) {
-            set({ 
-              error: error.message || 'Validation failed',
-              isValidating: false 
-            }, false, 'validateAllSteps/exception');
+            set(
+              {
+                error: error.message || 'Validation failed',
+                isValidating: false,
+              },
+              false,
+              'validateAllSteps/exception',
+            );
             return false;
           }
         },
@@ -444,11 +537,19 @@ export const useBusinessProfileStore = create<BusinessProfileState>()(
           // Simple validation based on step number for test compatibility
           if (step === 1) {
             // Step 1: Basic company info
-            return !!(dataToValidate.company_name && dataToValidate.industry && dataToValidate.employee_count);
+            return !!(
+              dataToValidate.company_name &&
+              dataToValidate.industry &&
+              dataToValidate.employee_count
+            );
           }
           if (step === 2) {
             // Step 2: Data types
-            return !!(dataToValidate.data_types && Array.isArray(dataToValidate.data_types) && dataToValidate.data_types.length > 0);
+            return !!(
+              dataToValidate.data_types &&
+              Array.isArray(dataToValidate.data_types) &&
+              dataToValidate.data_types.length > 0
+            );
           }
           if (step === 3) {
             // Step 3: Additional info
@@ -478,28 +579,44 @@ export const useBusinessProfileStore = create<BusinessProfileState>()(
         isFormValid: () => {
           const { formData } = get();
           // Simple validation for test compatibility
-          const hasBasicInfo = !!(formData.company_name && formData.industry && formData.employee_count);
-          const hasDataTypes = !!(formData.data_types && Array.isArray(formData.data_types) && formData.data_types.length > 0);
+          const hasBasicInfo = !!(
+            formData.company_name &&
+            formData.industry &&
+            formData.employee_count
+          );
+          const hasDataTypes = !!(
+            formData.data_types &&
+            Array.isArray(formData.data_types) &&
+            formData.data_types.length > 0
+          );
           return hasBasicInfo && hasDataTypes;
         },
 
         // Framework Recommendations Actions
         loadFrameworkRecommendations: async () => {
           set({ isLoadingRecommendations: true }, false, 'loadRecommendations/start');
-          
+
           try {
             const recommendations = await businessProfileService.getFrameworkRecommendations();
-            set({ 
-              recommendations,
-              isLoadingRecommendations: false 
-            }, false, 'loadRecommendations/success');
+            set(
+              {
+                recommendations,
+                isLoadingRecommendations: false,
+              },
+              false,
+              'loadRecommendations/success',
+            );
           } catch (error: any) {
             // Don't set error for recommendations - they're not critical
             console.warn('Failed to load framework recommendations:', error);
-            set({ 
-              recommendations: [],
-              isLoadingRecommendations: false 
-            }, false, 'loadRecommendations/error');
+            set(
+              {
+                recommendations: [],
+                isLoadingRecommendations: false,
+              },
+              false,
+              'loadRecommendations/error',
+            );
           }
         },
 
@@ -513,7 +630,7 @@ export const useBusinessProfileStore = create<BusinessProfileState>()(
         },
       }),
       {
-        name: "ruleiq-business-profile-storage",
+        name: 'ruleiq-business-profile-storage',
         storage: createJSONStorage(() => localStorage),
         // Only persist draft data and wizard state, not the full profile
         partialize: (state) => ({
@@ -526,25 +643,28 @@ export const useBusinessProfileStore = create<BusinessProfileState>()(
       },
     ),
     {
-      name: 'business-profile-store'
-    }
-  )
+      name: 'business-profile-store',
+    },
+  ),
 );
 
 // Selector hooks for specific state slices
-export const useProfileData = () => useBusinessProfileStore(state => state.profile);
-export const useDraftData = () => useBusinessProfileStore(state => state.draftProfile);
-export const useWizardState = () => useBusinessProfileStore(state => ({
-  currentStep: state.currentStep,
-  completedSteps: state.completedSteps,
-  stepValidation: state.stepValidation,
-}));
-export const useLoadingState = () => useBusinessProfileStore(state => ({
-  isLoading: state.isLoading,
-  isSaving: state.isSaving,
-  isValidating: state.isValidating,
-}));
-export const useErrorState = () => useBusinessProfileStore(state => ({
-  error: state.error,
-  validationErrors: state.validationErrors,
-}));
+export const useProfileData = () => useBusinessProfileStore((state) => state.profile);
+export const useDraftData = () => useBusinessProfileStore((state) => state.draftProfile);
+export const useWizardState = () =>
+  useBusinessProfileStore((state) => ({
+    currentStep: state.currentStep,
+    completedSteps: state.completedSteps,
+    stepValidation: state.stepValidation,
+  }));
+export const useLoadingState = () =>
+  useBusinessProfileStore((state) => ({
+    isLoading: state.isLoading,
+    isSaving: state.isSaving,
+    isValidating: state.isValidating,
+  }));
+export const useErrorState = () =>
+  useBusinessProfileStore((state) => ({
+    error: state.error,
+    validationErrors: state.validationErrors,
+  }));

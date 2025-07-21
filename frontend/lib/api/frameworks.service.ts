@@ -32,7 +32,7 @@ class FrameworkService {
    */
   async getFrameworkRecommendations(businessProfileId: string): Promise<FrameworkRecommendation[]> {
     const response = await apiClient.get<FrameworkRecommendation[]>(
-      `/frameworks/recommendations/${businessProfileId}`
+      `/frameworks/recommendations/${businessProfileId}`,
     );
     return response.data;
   }
@@ -81,7 +81,7 @@ class FrameworkService {
    */
   async getFrameworkComplianceStatus(
     frameworkId: string,
-    businessProfileId: string
+    businessProfileId: string,
   ): Promise<{
     framework: string;
     overall_compliance: number;
@@ -131,7 +131,7 @@ class FrameworkService {
    */
   async getFrameworkMaturityAssessment(
     frameworkId: string,
-    businessProfileId: string
+    businessProfileId: string,
   ): Promise<{
     framework: string;
     maturity_level: 'initial' | 'developing' | 'defined' | 'managed' | 'optimized';

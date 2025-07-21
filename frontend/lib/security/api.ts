@@ -22,7 +22,7 @@ export class ApiSecurityError extends Error {
     public message: string,
     public code: string,
     public statusCode: number,
-    public details?: any
+    public details?: any,
   ) {
     super(message);
     this.name = 'ApiSecurityError';
@@ -52,7 +52,7 @@ export function rateLimit(options: {
     }
 
     const current = rateLimitStore.get(key);
-    
+
     if (!current) {
       rateLimitStore.set(key, { count: 1, resetTime: now + windowMs });
       return true;
@@ -78,16 +78,16 @@ export function rateLimit(options: {
 export function getClientIp(request: NextRequest): string {
   const forwarded = request.headers.get('x-forwarded-for');
   const realIp = request.headers.get('x-real-ip');
-  
+
   if (forwarded) {
     const firstIp = forwarded.split(',')[0];
     return firstIp ? firstIp.trim() : 'unknown';
   }
-  
+
   if (realIp) {
     return realIp;
   }
-  
+
   return request.ip || 'unknown';
 }
 
@@ -96,47 +96,34 @@ export function getClientIp(request: NextRequest): string {
  */
 export async function validateRequestBody<T>(
   request: NextRequest,
-  schema: ZodSchema<T>
+  schema: ZodSchema<T>,
 ): Promise<T> {
   try {
     const contentType = request.headers.get('content-type');
-    
+
     if (!contentType || !contentType.includes('application/json')) {
-      throw new ApiSecurityError(
-        'Invalid content type',
-        'INVALID_CONTENT_TYPE',
-        400
-      );
+      throw new ApiSecurityError('Invalid content type', 'INVALID_CONTENT_TYPE', 400);
     }
 
     const body = await request.json();
-    
+
     // Sanitize input
     const sanitizedBody = sanitizeObject(body);
-    
+
     // Validate with Zod
     const validatedData = schema.parse(sanitizedBody);
-    
+
     return validatedData;
   } catch (error) {
     if (error instanceof ZodError) {
-      throw new ApiSecurityError(
-        'Validation failed',
-        'VALIDATION_ERROR',
-        400,
-        error.errors
-      );
+      throw new ApiSecurityError('Validation failed', 'VALIDATION_ERROR', 400, error.errors);
     }
-    
+
     if (error instanceof ApiSecurityError) {
       throw error;
     }
-    
-    throw new ApiSecurityError(
-      'Invalid request body',
-      'INVALID_REQUEST_BODY',
-      400
-    );
+
+    throw new ApiSecurityError('Invalid request body', 'INVALID_REQUEST_BODY', 400);
   }
 }
 
@@ -153,7 +140,7 @@ export function createSecureApiRoute<T = any>(
     };
     requireAuth?: boolean;
     validateBody?: ZodSchema<T>;
-  } = {}
+  } = {},
 ) {
   const {
     methods = ['GET'],
@@ -168,7 +155,7 @@ export function createSecureApiRoute<T = any>(
       if (!methods.includes(request.method)) {
         return NextResponse.json(
           { error: 'Method not allowed', code: 'METHOD_NOT_ALLOWED' },
-          { status: 405 }
+          { status: 405 },
         );
       }
 
@@ -178,7 +165,7 @@ export function createSecureApiRoute<T = any>(
         if (!rateLimiter(request)) {
           return NextResponse.json(
             { error: 'Too many requests', code: 'RATE_LIMIT_EXCEEDED' },
-            { status: 429 }
+            { status: 429 },
           );
         }
       }
@@ -189,7 +176,7 @@ export function createSecureApiRoute<T = any>(
         if (!authHeader || !authHeader.startsWith('Bearer ')) {
           return NextResponse.json(
             { error: 'Unauthorized', code: 'UNAUTHORIZED' },
-            { status: 401 }
+            { status: 401 },
           );
         }
         // Add actual JWT validation here
@@ -204,7 +191,7 @@ export function createSecureApiRoute<T = any>(
       return await handler(request, context);
     } catch (error) {
       console.error('API Security Error:', error);
-      
+
       if (error instanceof ApiSecurityError) {
         return NextResponse.json(
           {
@@ -212,14 +199,14 @@ export function createSecureApiRoute<T = any>(
             code: error.code,
             details: error.details,
           },
-          { status: error.statusCode }
+          { status: error.statusCode },
         );
       }
 
       // Generic error response
       return NextResponse.json(
         { error: 'Internal server error', code: 'INTERNAL_ERROR' },
-        { status: 500 }
+        { status: 500 },
       );
     }
   };
@@ -246,45 +233,44 @@ export function enforceHttps(request: NextRequest): NextResponse | null {
 export function addSecurityHeaders(response: NextResponse): void {
   // Prevent XSS attacks
   response.headers.set('X-XSS-Protection', '1; mode=block');
-  
+
   // Prevent MIME type sniffing
   response.headers.set('X-Content-Type-Options', 'nosniff');
-  
+
   // Prevent clickjacking
   response.headers.set('X-Frame-Options', 'DENY');
-  
+
   // HSTS for HTTPS enforcement
   if (process.env.NODE_ENV === 'production') {
     response.headers.set(
       'Strict-Transport-Security',
-      'max-age=31536000; includeSubDomains; preload'
+      'max-age=31536000; includeSubDomains; preload',
     );
   }
-  
+
   // Referrer policy
   response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
-  
+
   // Permissions policy
-  response.headers.set(
-    'Permissions-Policy',
-    'camera=(), microphone=(), location=(), payment=()'
-  );
+  response.headers.set('Permissions-Policy', 'camera=(), microphone=(), location=(), payment=()');
 }
 
 /**
  * Content Security Policy generator
  */
-export function generateCSP(options: {
-  allowInlineStyles?: boolean;
-  allowInlineScripts?: boolean;
-  allowEval?: boolean;
-  customSources?: {
-    script?: string[];
-    style?: string[];
-    img?: string[];
-    connect?: string[];
-  };
-} = {}): string {
+export function generateCSP(
+  options: {
+    allowInlineStyles?: boolean;
+    allowInlineScripts?: boolean;
+    allowEval?: boolean;
+    customSources?: {
+      script?: string[];
+      style?: string[];
+      img?: string[];
+      connect?: string[];
+    };
+  } = {},
+): string {
   const {
     allowInlineStyles = false,
     allowInlineScripts = false,

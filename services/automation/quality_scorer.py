@@ -8,7 +8,6 @@ import re
 from datetime import datetime, timedelta
 from typing import Any, Dict, List, Optional
 
-from config.ai_config import get_ai_model
 from config.logging_config import get_logger
 from core.exceptions import BusinessLogicException
 from database.evidence_item import EvidenceItem
@@ -193,6 +192,7 @@ class QualityScorer:
     def _get_ai_model(self):
         """Lazy-load AI model to avoid initialization overhead."""
         if self.ai_model is None:
+            from config.ai_config import get_ai_model
             self.ai_model = get_ai_model()
         return self.ai_model
 

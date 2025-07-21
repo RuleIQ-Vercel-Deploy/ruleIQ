@@ -199,7 +199,9 @@ export const ErrorState: Story = {
         <CardDescription>Something went wrong while loading the content</CardDescription>
       </CardHeader>
       <CardContent>
-        <p className="text-sm text-muted-foreground">Please try again later or contact support if the problem persists.</p>
+        <p className="text-sm text-muted-foreground">
+          Please try again later or contact support if the problem persists.
+        </p>
       </CardContent>
       <CardFooter>
         <Button variant="outline">Retry</Button>
@@ -235,7 +237,9 @@ export const ComplianceCard: Story = {
         </div>
       </CardContent>
       <CardFooter className="flex justify-between">
-        <Button variant="outline" size="sm">View Details</Button>
+        <Button variant="outline" size="sm">
+          View Details
+        </Button>
         <Button size="sm">Run Assessment</Button>
       </CardFooter>
     </Card>

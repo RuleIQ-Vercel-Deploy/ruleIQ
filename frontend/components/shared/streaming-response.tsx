@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import { Loader2, CheckCircle, XCircle, Play, Pause, RotateCcw } from 'lucide-react';
 import React, { useState, useEffect } from 'react';
@@ -32,7 +32,18 @@ export interface StreamingResponseRef {
 }
 
 export const StreamingResponse = React.forwardRef<StreamingResponseRef, StreamingResponseProps>(
-  ({ title = "AI Analysis", description, className, showProgress = true, showControls = false, onRetry, onCancel }, ref) => {
+  (
+    {
+      title = 'AI Analysis',
+      description,
+      className,
+      showProgress = true,
+      showControls = false,
+      onRetry,
+      onCancel,
+    },
+    ref,
+  ) => {
     const [chunks, setChunks] = useState<StreamingChunk[]>([]);
     const [metadata, setMetadata] = useState<StreamingMetadata | null>(null);
     const [error, setError] = useState<string | null>(null);
@@ -57,9 +68,9 @@ export const StreamingResponse = React.forwardRef<StreamingResponseRef, Streamin
     React.useImperativeHandle(ref, () => ({
       addChunk: (chunk: StreamingChunk) => {
         if (!isPaused) {
-          setChunks(prev => [...prev, chunk]);
+          setChunks((prev) => [...prev, chunk]);
           // Estimate progress based on chunk count (rough estimate)
-          setProgress(prev => Math.min(prev + 5, 90));
+          setProgress((prev) => Math.min(prev + 5, 90));
         }
       },
       setMetadata: (meta: StreamingMetadata) => {
@@ -86,7 +97,7 @@ export const StreamingResponse = React.forwardRef<StreamingResponseRef, Streamin
         setElapsedTime(0);
       },
       pause: () => setIsPaused(true),
-      resume: () => setIsPaused(false)
+      resume: () => setIsPaused(false),
     }));
 
     const formatElapsedTime = (seconds: number) => {
@@ -97,43 +108,49 @@ export const StreamingResponse = React.forwardRef<StreamingResponseRef, Streamin
 
     const getStatusBadge = () => {
       if (error) {
-        return <Badge variant="destructive" className="flex items-center gap-1">
-          <XCircle className="h-3 w-3" />
-          Error
-        </Badge>;
+        return (
+          <Badge variant="destructive" className="flex items-center gap-1">
+            <XCircle className="h-3 w-3" />
+            Error
+          </Badge>
+        );
       }
       if (isComplete) {
-        return <Badge variant="default" className="flex items-center gap-1 bg-green-600">
-          <CheckCircle className="h-3 w-3" />
-          Complete
-        </Badge>;
+        return (
+          <Badge variant="default" className="flex items-center gap-1 bg-green-600">
+            <CheckCircle className="h-3 w-3" />
+            Complete
+          </Badge>
+        );
       }
       if (isPaused) {
-        return <Badge variant="secondary" className="flex items-center gap-1">
-          <Pause className="h-3 w-3" />
-          Paused
-        </Badge>;
+        return (
+          <Badge variant="secondary" className="flex items-center gap-1">
+            <Pause className="h-3 w-3" />
+            Paused
+          </Badge>
+        );
       }
-      return <Badge variant="outline" className="flex items-center gap-1">
-        <Loader2 className="h-3 w-3 animate-spin" />
-        Streaming
-      </Badge>;
+      return (
+        <Badge variant="outline" className="flex items-center gap-1">
+          <Loader2 className="h-3 w-3 animate-spin" />
+          Streaming
+        </Badge>
+      );
     };
 
     const contentText = chunks
-      .filter(chunk => chunk.chunk_type === 'content')
-      .map(chunk => chunk.content)
+      .filter((chunk) => chunk.chunk_type === 'content')
+      .map((chunk) => chunk.content)
       .join('');
 
     return (
-      <Card className={cn("w-full", className)}>
+      <Card className={cn('w-full', className)}>
         <CardHeader className="pb-3">
           <div className="flex items-center justify-between">
             <div>
               <CardTitle className="text-lg">{title}</CardTitle>
-              {description && (
-                <p className="text-sm text-muted-foreground mt-1">{description}</p>
-              )}
+              {description && <p className="mt-1 text-sm text-muted-foreground">{description}</p>}
             </div>
             <div className="flex items-center gap-2">
               {getStatusBadge()}
@@ -144,15 +161,13 @@ export const StreamingResponse = React.forwardRef<StreamingResponseRef, Streamin
               )}
             </div>
           </div>
-          
+
           {showProgress && !error && (
             <div className="space-y-2">
               <Progress value={progress} className="h-2" />
               <div className="flex justify-between text-xs text-muted-foreground">
                 <span>Progress: {progress}%</span>
-                {metadata && (
-                  <span>Type: {metadata.stream_type}</span>
-                )}
+                {metadata && <span>Type: {metadata.stream_type}</span>}
               </div>
             </div>
           )}
@@ -166,15 +181,10 @@ export const StreamingResponse = React.forwardRef<StreamingResponseRef, Streamin
                 <XCircle className="h-4 w-4" />
                 <span className="font-medium">Error occurred</span>
               </div>
-              <p className="text-sm text-red-700 mt-1">{error}</p>
+              <p className="mt-1 text-sm text-red-700">{error}</p>
               {showControls && onRetry && (
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={onRetry}
-                  className="mt-3"
-                >
-                  <RotateCcw className="h-3 w-3 mr-1" />
+                <Button variant="outline" size="sm" onClick={onRetry} className="mt-3">
+                  <RotateCcw className="mr-1 h-3 w-3" />
                   Retry
                 </Button>
               )}
@@ -186,7 +196,7 @@ export const StreamingResponse = React.forwardRef<StreamingResponseRef, Streamin
             <div className="space-y-4">
               {/* Metadata Display */}
               {metadata && (
-                <div className="text-xs text-muted-foreground border-l-2 border-blue-200 pl-3">
+                <div className="border-l-2 border-blue-200 pl-3 text-xs text-muted-foreground">
                   <div>Request ID: {metadata.request_id}</div>
                   <div>Framework: {metadata.framework_id}</div>
                   <div>Started: {new Date(metadata.started_at).toLocaleTimeString()}</div>
@@ -194,10 +204,10 @@ export const StreamingResponse = React.forwardRef<StreamingResponseRef, Streamin
               )}
 
               {/* Streaming Content */}
-              <div className="min-h-[200px] max-h-[600px] overflow-y-auto">
+              <div className="max-h-[600px] min-h-[200px] overflow-y-auto">
                 {chunks.length === 0 && !isComplete && !error ? (
-                  <div className="flex items-center justify-center h-32 text-muted-foreground">
-                    <Loader2 className="h-6 w-6 animate-spin mr-2" />
+                  <div className="flex h-32 items-center justify-center text-muted-foreground">
+                    <Loader2 className="mr-2 h-6 w-6 animate-spin" />
                     Waiting for response...
                   </div>
                 ) : (
@@ -205,7 +215,7 @@ export const StreamingResponse = React.forwardRef<StreamingResponseRef, Streamin
                     <div className="whitespace-pre-wrap text-sm leading-relaxed">
                       {contentText}
                       {!isComplete && !error && (
-                        <span className="inline-block w-2 h-4 bg-blue-600 animate-pulse ml-1" />
+                        <span className="ml-1 inline-block h-4 w-2 animate-pulse bg-blue-600" />
                       )}
                     </div>
                   </div>
@@ -214,38 +224,34 @@ export const StreamingResponse = React.forwardRef<StreamingResponseRef, Streamin
 
               {/* Controls */}
               {showControls && !error && (
-                <div className="flex items-center gap-2 pt-3 border-t">
+                <div className="flex items-center gap-2 border-t pt-3">
                   {!isComplete && (
                     <>
                       <Button
                         variant="outline"
                         size="sm"
-                        onClick={() => isPaused ? setIsPaused(false) : setIsPaused(true)}
+                        onClick={() => (isPaused ? setIsPaused(false) : setIsPaused(true))}
                       >
                         {isPaused ? (
                           <>
-                            <Play className="h-3 w-3 mr-1" />
+                            <Play className="mr-1 h-3 w-3" />
                             Resume
                           </>
                         ) : (
                           <>
-                            <Pause className="h-3 w-3 mr-1" />
+                            <Pause className="mr-1 h-3 w-3" />
                             Pause
                           </>
                         )}
                       </Button>
                       {onCancel && (
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={onCancel}
-                        >
+                        <Button variant="outline" size="sm" onClick={onCancel}>
                           Cancel
                         </Button>
                       )}
                     </>
                   )}
-                  
+
                   {isComplete && (
                     <div className="flex items-center gap-2 text-sm text-green-600">
                       <CheckCircle className="h-4 w-4" />
@@ -259,7 +265,7 @@ export const StreamingResponse = React.forwardRef<StreamingResponseRef, Streamin
         </CardContent>
       </Card>
     );
-  }
+  },
 );
 
-StreamingResponse.displayName = "StreamingResponse";
+StreamingResponse.displayName = 'StreamingResponse';

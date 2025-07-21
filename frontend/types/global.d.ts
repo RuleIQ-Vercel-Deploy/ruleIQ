@@ -11,13 +11,7 @@ declare global {
 }
 
 // Re-export common types from api.ts
-export type {
-  User,
-  AuthTokens,
-  ApiResponse,
-  ApiError,
-  PaginatedResponse,
-} from './api';
+export type { User, AuthTokens, ApiResponse, ApiError, PaginatedResponse } from './api';
 
 // Common types used across the application
 export type Status = 'idle' | 'loading' | 'success' | 'error';

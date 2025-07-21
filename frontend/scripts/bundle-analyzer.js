@@ -2,7 +2,7 @@
 
 /**
  * Bundle Size Analyzer for ruleIQ Frontend
- * 
+ *
  * This script analyzes the production build bundle sizes and generates reports
  * to help monitor and optimize the application's performance.
  */
@@ -15,19 +15,19 @@ const chalk = require('chalk');
 // Bundle size thresholds (in KB)
 const THRESHOLDS = {
   // Individual chunk thresholds
-  MAIN_CHUNK: 250,      // Main application bundle
-  VENDOR_CHUNK: 500,    // Third-party libraries
-  PAGE_CHUNK: 100,      // Individual page chunks
-  COMPONENT_CHUNK: 50,  // Component chunks
-  
+  MAIN_CHUNK: 250, // Main application bundle
+  VENDOR_CHUNK: 500, // Third-party libraries
+  PAGE_CHUNK: 100, // Individual page chunks
+  COMPONENT_CHUNK: 50, // Component chunks
+
   // Total bundle thresholds
-  TOTAL_JS: 800,        // Total JavaScript
-  TOTAL_CSS: 100,       // Total CSS
-  TOTAL_ASSETS: 1000,   // Total assets
-  
+  TOTAL_JS: 800, // Total JavaScript
+  TOTAL_CSS: 100, // Total CSS
+  TOTAL_ASSETS: 1000, // Total assets
+
   // Critical thresholds
-  FIRST_LOAD_JS: 300,   // First load JS (critical)
-  GZIP_RATIO: 0.3,      // Minimum gzip compression ratio
+  FIRST_LOAD_JS: 300, // First load JS (critical)
+  GZIP_RATIO: 0.3, // Minimum gzip compression ratio
 };
 
 // File patterns to analyze
@@ -62,23 +62,22 @@ class BundleAnalyzer {
 
       // Analyze chunks
       await this.analyzeChunks();
-      
+
       // Calculate totals
       this.calculateTotals();
-      
+
       // Check thresholds
       this.checkThresholds();
-      
+
       // Generate recommendations
       this.generateRecommendations();
-      
+
       // Generate reports
       this.generateReport();
       this.generateJSONReport();
-      
+
       // Exit with appropriate code
       process.exit(this.results.violations.length > 0 ? 1 : 0);
-      
     } catch (error) {
       console.error(chalk.red('❌ Bundle analysis failed:'), error.message);
       process.exit(1);
@@ -87,7 +86,7 @@ class BundleAnalyzer {
 
   async analyzeChunks() {
     const chunks = [];
-    
+
     // Analyze JavaScript chunks
     const jsDir = path.join(this.staticDir, 'chunks');
     if (fs.existsSync(jsDir)) {
@@ -114,31 +113,31 @@ class BundleAnalyzer {
 
   getFilesRecursively(dir, pattern) {
     const files = [];
-    
+
     if (!fs.existsSync(dir)) return files;
-    
+
     const items = fs.readdirSync(dir);
-    
+
     for (const item of items) {
       const fullPath = path.join(dir, item);
       const stat = fs.statSync(fullPath);
-      
+
       if (stat.isDirectory()) {
         files.push(...this.getFilesRecursively(fullPath, pattern));
       } else if (pattern.test(item)) {
         files.push(fullPath);
       }
     }
-    
+
     return files;
   }
 
   analyzeFiles(files, type) {
-    return files.map(filePath => {
+    return files.map((filePath) => {
       const stat = fs.statSync(filePath);
       const relativePath = path.relative(this.buildDir, filePath);
       const name = path.basename(filePath);
-      
+
       // Get gzipped size if possible
       let gzipSize = null;
       try {
@@ -152,9 +151,9 @@ class BundleAnalyzer {
         name,
         path: relativePath,
         size: stat.size,
-        sizeKB: Math.round(stat.size / 1024 * 100) / 100,
+        sizeKB: Math.round((stat.size / 1024) * 100) / 100,
         gzipSize,
-        gzipSizeKB: gzipSize ? Math.round(gzipSize / 1024 * 100) / 100 : null,
+        gzipSizeKB: gzipSize ? Math.round((gzipSize / 1024) * 100) / 100 : null,
         compressionRatio: gzipSize ? gzipSize / stat.size : null,
         type,
         isVendor: PATTERNS.VENDOR_FILES.test(relativePath),
@@ -181,15 +180,15 @@ class BundleAnalyzer {
       if (chunk.type === 'js') {
         totals.totalJS += chunk.size;
         totals.totalGzipJS += chunk.gzipSize || 0;
-        
+
         if (chunk.isVendor) {
           totals.vendorSize += chunk.size;
         }
-        
+
         if (chunk.isPage) {
           totals.pageSize += chunk.size;
         }
-        
+
         // Estimate first load JS (main + vendor chunks)
         if (chunk.name.includes('main') || chunk.name.includes('vendor')) {
           totals.firstLoadJS += chunk.size;
@@ -198,15 +197,15 @@ class BundleAnalyzer {
         totals.totalCSS += chunk.size;
         totals.totalGzipCSS += chunk.gzipSize || 0;
       }
-      
+
       totals.totalAssets += chunk.size;
       totals.chunkCount++;
     }
 
     // Convert to KB
-    Object.keys(totals).forEach(key => {
+    Object.keys(totals).forEach((key) => {
       if (key !== 'chunkCount') {
-        totals[key + 'KB'] = Math.round(totals[key] / 1024 * 100) / 100;
+        totals[key + 'KB'] = Math.round((totals[key] / 1024) * 100) / 100;
       }
     });
 
@@ -251,7 +250,7 @@ class BundleAnalyzer {
     // Check individual chunk thresholds
     for (const chunk of chunks) {
       let threshold;
-      
+
       if (chunk.isVendor) {
         threshold = THRESHOLDS.VENDOR_CHUNK;
       } else if (chunk.isPage) {
@@ -294,17 +293,17 @@ class BundleAnalyzer {
     const recommendations = [];
 
     // Large vendor chunks
-    const largeVendorChunks = chunks.filter(c => c.isVendor && c.sizeKB > 200);
+    const largeVendorChunks = chunks.filter((c) => c.isVendor && c.sizeKB > 200);
     if (largeVendorChunks.length > 0) {
       recommendations.push({
         type: 'vendor_optimization',
         message: 'Consider code splitting large vendor libraries',
-        details: largeVendorChunks.map(c => `${c.name}: ${c.sizeKB}KB`),
+        details: largeVendorChunks.map((c) => `${c.name}: ${c.sizeKB}KB`),
       });
     }
 
     // Many small chunks
-    const smallChunks = chunks.filter(c => c.sizeKB < 10);
+    const smallChunks = chunks.filter((c) => c.sizeKB < 10);
     if (smallChunks.length > 10) {
       recommendations.push({
         type: 'chunk_consolidation',
@@ -314,12 +313,12 @@ class BundleAnalyzer {
     }
 
     // Poor compression
-    const poorlyCompressed = chunks.filter(c => c.compressionRatio > 0.7);
+    const poorlyCompressed = chunks.filter((c) => c.compressionRatio > 0.7);
     if (poorlyCompressed.length > 0) {
       recommendations.push({
         type: 'compression_optimization',
         message: 'Some files have poor compression ratios',
-        details: poorlyCompressed.map(c => `${c.name}: ${Math.round(c.compressionRatio * 100)}%`),
+        details: poorlyCompressed.map((c) => `${c.name}: ${Math.round(c.compressionRatio * 100)}%`),
       });
     }
 
@@ -346,25 +345,36 @@ class BundleAnalyzer {
 
     // Summary
     console.log(chalk.bold('Summary:'));
-    console.log(`  Total JavaScript: ${chalk.cyan(totals.totalJSKB + 'KB')} (gzipped: ${totals.totalGzipJSKB}KB)`);
-    console.log(`  Total CSS: ${chalk.cyan(totals.totalCSSKB + 'KB')} (gzipped: ${totals.totalGzipCSSKB}KB)`);
+    console.log(
+      `  Total JavaScript: ${chalk.cyan(totals.totalJSKB + 'KB')} (gzipped: ${totals.totalGzipJSKB}KB)`,
+    );
+    console.log(
+      `  Total CSS: ${chalk.cyan(totals.totalCSSKB + 'KB')} (gzipped: ${totals.totalGzipCSSKB}KB)`,
+    );
     console.log(`  First Load JS: ${chalk.cyan(totals.firstLoadJSKB + 'KB')}`);
     console.log(`  Total Chunks: ${chalk.cyan(totals.chunkCount)}\n`);
 
     // Largest chunks
     console.log(chalk.bold('Largest Chunks:'));
-    chunks.slice(0, 10).forEach(chunk => {
-      const sizeColor = chunk.sizeKB > 100 ? chalk.red : chunk.sizeKB > 50 ? chalk.yellow : chalk.green;
-      console.log(`  ${chunk.name}: ${sizeColor(chunk.sizeKB + 'KB')} ${chunk.gzipSizeKB ? `(${chunk.gzipSizeKB}KB gzipped)` : ''}`);
+    chunks.slice(0, 10).forEach((chunk) => {
+      const sizeColor =
+        chunk.sizeKB > 100 ? chalk.red : chunk.sizeKB > 50 ? chalk.yellow : chalk.green;
+      console.log(
+        `  ${chunk.name}: ${sizeColor(chunk.sizeKB + 'KB')} ${chunk.gzipSizeKB ? `(${chunk.gzipSizeKB}KB gzipped)` : ''}`,
+      );
     });
     console.log();
 
     // Violations
     if (violations.length > 0) {
       console.log(chalk.bold('⚠️  Threshold Violations:'));
-      violations.forEach(violation => {
-        const color = violation.severity === 'error' ? chalk.red : 
-                     violation.severity === 'warning' ? chalk.yellow : chalk.blue;
+      violations.forEach((violation) => {
+        const color =
+          violation.severity === 'error'
+            ? chalk.red
+            : violation.severity === 'warning'
+              ? chalk.yellow
+              : chalk.blue;
         console.log(`  ${color('●')} ${violation.message}`);
       });
       console.log();
@@ -373,10 +383,10 @@ class BundleAnalyzer {
     // Recommendations
     if (recommendations.length > 0) {
       console.log(chalk.bold('💡 Recommendations:'));
-      recommendations.forEach(rec => {
+      recommendations.forEach((rec) => {
         console.log(`  ${chalk.blue('●')} ${rec.message}`);
         if (rec.details) {
-          rec.details.forEach(detail => {
+          rec.details.forEach((detail) => {
             console.log(`    - ${detail}`);
           });
         }
@@ -385,7 +395,7 @@ class BundleAnalyzer {
     }
 
     // Status
-    if (violations.filter(v => v.severity === 'error').length > 0) {
+    if (violations.filter((v) => v.severity === 'error').length > 0) {
       console.log(chalk.red('❌ Bundle analysis failed - critical thresholds exceeded'));
     } else if (violations.length > 0) {
       console.log(chalk.yellow('⚠️  Bundle analysis completed with warnings'));
@@ -396,12 +406,15 @@ class BundleAnalyzer {
 
   generateJSONReport() {
     const reportPath = path.join(process.cwd(), 'bundle-analysis.json');
-    
+
     const report = {
       timestamp: new Date().toISOString(),
       thresholds: THRESHOLDS,
       results: this.results,
-      status: this.results.violations.filter(v => v.severity === 'error').length > 0 ? 'failed' : 'passed',
+      status:
+        this.results.violations.filter((v) => v.severity === 'error').length > 0
+          ? 'failed'
+          : 'passed',
     };
 
     fs.writeFileSync(reportPath, JSON.stringify(report, null, 2));

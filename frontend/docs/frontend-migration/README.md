@@ -5,6 +5,7 @@ This folder contains all documentation related to the frontend design system mig
 ## 📚 Document Index
 
 ### 🎯 Core Migration Documents
+
 1. **[FRONTEND_MIGRATION_PLAN.md](./FRONTEND_MIGRATION_PLAN.md)**
    - Comprehensive migration strategy
    - 4-week timeline and phases
@@ -15,12 +16,13 @@ This folder contains all documentation related to the frontend design system mig
    - Phase-by-phase implementation guide
    - Success criteria and quality gates
 
-3. **[ALL_FRONTEND_PAGES.md](./ALL_FRONTEND_PAGES.md)** 
+3. **[ALL_FRONTEND_PAGES.md](./ALL_FRONTEND_PAGES.md)**
    - Complete list of all 37 frontend pages
    - Migration status for each page
    - Direct links to test each page
 
 ### 🎨 Design System Documentation
+
 4. **[DESIGN_SYSTEM.md](./DESIGN_SYSTEM.md)**
    - New teal-based design system specification
    - Component library documentation
@@ -37,6 +39,7 @@ This folder contains all documentation related to the frontend design system mig
    - Typography and shadow systems
 
 ### 🔧 Technical Guides
+
 7. **[COLOR_MIGRATION_GUIDE.md](./COLOR_MIGRATION_GUIDE.md)**
    - Color mapping from old to new theme
    - Step-by-step color replacement guide
@@ -50,12 +53,14 @@ This folder contains all documentation related to the frontend design system mig
 ## 🚀 Quick Start
 
 1. **Enable the new theme**:
+
    ```bash
    # Add to .env.local
    NEXT_PUBLIC_USE_NEW_THEME=true
    ```
 
 2. **View the design system**:
+
    ```bash
    npm run dev
    open http://localhost:3000/design-system
@@ -80,5 +85,5 @@ This folder contains all documentation related to the frontend design system mig
 
 ---
 
-*Last Updated: January 2025*
-*Migration Progress: ~60% Complete*
+_Last Updated: January 2025_
+_Migration Progress: ~60% Complete_

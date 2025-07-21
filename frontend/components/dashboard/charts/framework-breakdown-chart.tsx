@@ -1,57 +1,66 @@
-"use client"
+'use client';
 
-import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar } from "recharts"
+import {
+  PieChart,
+  Pie,
+  Cell,
+  ResponsiveContainer,
+  Tooltip,
+  RadarChart,
+  PolarGrid,
+  PolarAngleAxis,
+  PolarRadiusAxis,
+  Radar,
+} from 'recharts';
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 
 interface FrameworkBreakdownChartProps {
   data: Array<{
-    framework: string
-    score: number
-    color?: string
-  }>
-  title?: string
-  description?: string
-  chartType?: "pie" | "radar"
-  className?: string
+    framework: string;
+    score: number;
+    color?: string;
+  }>;
+  title?: string;
+  description?: string;
+  chartType?: 'pie' | 'radar';
+  className?: string;
 }
 
 const COLORS = {
-  "ISO 27001": "#17255A",
-  "GDPR": "#CB963E",
-  "Cyber Essentials": "#34FEF7",
-  "PCI DSS": "#28A745",
-  "SOC 2": "#DC3545",
-  "HIPAA": "#6B7280"
-}
+  'ISO 27001': '#17255A',
+  GDPR: '#CB963E',
+  'Cyber Essentials': '#34FEF7',
+  'PCI DSS': '#28A745',
+  'SOC 2': '#DC3545',
+  HIPAA: '#6B7280',
+};
 
 export function FrameworkBreakdownChart({
   data,
-  title = "Framework Compliance",
-  description = "Compliance scores by framework",
-  chartType = "radar",
-  className
+  title = 'Framework Compliance',
+  description = 'Compliance scores by framework',
+  chartType = 'radar',
+  className,
 }: FrameworkBreakdownChartProps) {
-  const enhancedData = data.map(item => ({
+  const enhancedData = data.map((item) => ({
     ...item,
-    color: item.color || COLORS[item.framework as keyof typeof COLORS] || "#6B7280"
-  }))
+    color: item.color || COLORS[item.framework as keyof typeof COLORS] || '#6B7280',
+  }));
 
   const CustomTooltip = ({ active, payload }: any) => {
     if (active && payload && payload.length) {
       return (
-        <div className="bg-white p-3 border border-gray-200 rounded-lg shadow-lg">
-          <p className="text-sm font-semibold text-gray-900">
-            {payload[0].payload.framework}
-          </p>
+        <div className="rounded-lg border border-gray-200 bg-white p-3 shadow-lg">
+          <p className="text-sm font-semibold text-gray-900">{payload[0].payload.framework}</p>
           <p className="text-sm text-primary">
             Score: <span className="font-semibold">{payload[0].value}%</span>
           </p>
         </div>
-      )
+      );
     }
-    return null
-  }
+    return null;
+  };
 
   return (
     <Card className={className}>
@@ -61,7 +70,7 @@ export function FrameworkBreakdownChart({
       </CardHeader>
       <CardContent>
         <ResponsiveContainer width="100%" height={300}>
-          {chartType === "pie" ? (
+          {chartType === 'pie' ? (
             <PieChart>
               <Pie
                 data={enhancedData}
@@ -82,19 +91,13 @@ export function FrameworkBreakdownChart({
           ) : (
             <RadarChart data={enhancedData}>
               <PolarGrid strokeDasharray="3 3" />
-              <PolarAngleAxis 
-                dataKey="framework" 
-                tick={{ fontSize: 12, fill: '#6B7280' }}
-              />
-              <PolarRadiusAxis 
-                domain={[0, 100]}
-                tick={{ fontSize: 10, fill: '#6B7280' }}
-              />
-              <Radar 
-                name="Score" 
-                dataKey="score" 
-                stroke="#17255A" 
-                fill="#17255A" 
+              <PolarAngleAxis dataKey="framework" tick={{ fontSize: 12, fill: '#6B7280' }} />
+              <PolarRadiusAxis domain={[0, 100]} tick={{ fontSize: 10, fill: '#6B7280' }} />
+              <Radar
+                name="Score"
+                dataKey="score"
+                stroke="#17255A"
+                fill="#17255A"
                 fillOpacity={0.6}
                 strokeWidth={2}
               />
@@ -104,5 +107,5 @@ export function FrameworkBreakdownChart({
         </ResponsiveContainer>
       </CardContent>
     </Card>
-  )
+  );
 }

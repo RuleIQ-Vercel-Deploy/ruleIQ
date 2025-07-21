@@ -2,26 +2,26 @@
 """
 Run server with JWT fix verification - bypasses sentry issues
 """
+
 import os
 import sys
-import time
-import subprocess
 
 # Set environment to disable sentry if needed
-os.environ['SENTRY_DSN'] = ''
+os.environ["SENTRY_DSN"] = ""
 
 # Bypass sentry import issue by creating a mock
-sys.path.insert(0, '.')
+sys.path.insert(0, ".")
 
 # Create a minimal sentry mock
 import types
-sentry_mock = types.ModuleType('sentry_sdk')
+
+sentry_mock = types.ModuleType("sentry_sdk")
 sentry_mock.init = lambda *args, **kwargs: None
-sys.modules['sentry_sdk'] = sentry_mock
+sys.modules["sentry_sdk"] = sentry_mock
 
 # Now run the actual verification
 print("Starting server with JWT fix...")
-print("="*60)
+print("=" * 60)
 
 # Import after mocking
 from api.main import app

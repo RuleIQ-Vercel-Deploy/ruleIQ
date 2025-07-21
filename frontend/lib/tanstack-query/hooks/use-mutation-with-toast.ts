@@ -4,7 +4,7 @@ import { useToast } from '@/hooks/use-toast';
 
 import { getErrorMessage } from './base';
 
-interface MutationWithToastOptions<TData, TError, TVariables> 
+interface MutationWithToastOptions<TData, TError, TVariables>
   extends Omit<UseMutationOptions<TData, TError, TVariables>, 'onSuccess' | 'onError'> {
   successMessage?: string | ((data: TData) => string);
   errorMessage?: string | ((error: TError) => string);
@@ -17,13 +17,9 @@ interface MutationWithToastOptions<TData, TError, TVariables>
 /**
  * Enhanced mutation hook with automatic toast notifications
  */
-export function useMutationWithToast<
-  TData = unknown,
-  TError = unknown,
-  TVariables = void
->(
+export function useMutationWithToast<TData = unknown, TError = unknown, TVariables = void>(
   mutationFn: (variables: TVariables) => Promise<TData>,
-  options?: MutationWithToastOptions<TData, TError, TVariables>
+  options?: MutationWithToastOptions<TData, TError, TVariables>,
 ) {
   const { toast } = useToast();
   const queryClient = useQueryClient();
@@ -50,17 +46,15 @@ export function useMutationWithToast<
     },
     onSuccess: (data, _variables) => {
       // Show success toast
-      const message = typeof successMessage === 'function' 
-        ? successMessage(data) 
-        : successMessage;
-      
+      const message = typeof successMessage === 'function' ? successMessage(data) : successMessage;
+
       toast({
         title: 'Success',
         description: message,
       });
 
       // Invalidate queries
-      invalidateKeys.forEach(key => {
+      invalidateKeys.forEach((key) => {
         queryClient.invalidateQueries({ queryKey: key });
       });
 
@@ -69,10 +63,9 @@ export function useMutationWithToast<
     },
     onError: (error, variables) => {
       // Show error toast
-      const message = typeof errorMessage === 'function'
-        ? errorMessage(error)
-        : getErrorMessage(error);
-      
+      const message =
+        typeof errorMessage === 'function' ? errorMessage(error) : getErrorMessage(error);
+
       toast({
         title: 'Error',
         description: message,

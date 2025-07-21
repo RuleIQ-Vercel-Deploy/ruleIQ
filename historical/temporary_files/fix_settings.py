@@ -4,7 +4,7 @@
 import re
 
 # Read the current settings file
-with open('config/settings.py', 'r') as f:
+with open("config/settings.py", "r") as f:
     content = f.read()
 
 # We need to modify how list fields are defined to prevent automatic JSON parsing
@@ -15,22 +15,22 @@ replacements = [
     # CORS fields
     (
         r'cors_origins: Annotated\[List\[str\], BeforeValidator\(parse_list_from_string\)\] = Field\(default=\["http://localhost:3000"\]\)',
-        'cors_origins: Union[List[str], str] = Field(default=["http://localhost:3000"])'
+        'cors_origins: Union[List[str], str] = Field(default=["http://localhost:3000"])',
     ),
     (
         r'cors_allowed_origins: Annotated\[List\[str\], BeforeValidator\(parse_list_from_string\)\] = Field\(default=\["http://localhost:3000"\]\)',
-        'cors_allowed_origins: Union[List[str], str] = Field(default=["http://localhost:3000"])'
+        'cors_allowed_origins: Union[List[str], str] = Field(default=["http://localhost:3000"])',
     ),
     (
         r'allowed_hosts: Annotated\[List\[str\], BeforeValidator\(parse_list_from_string\)\] = Field\(default=\["localhost", "127.0.0.1"\]\)',
-        'allowed_hosts: Union[List[str], str] = Field(default=["localhost", "127.0.0.1"])'
+        'allowed_hosts: Union[List[str], str] = Field(default=["localhost", "127.0.0.1"])',
     ),
     # File types field
     (
         r'allowed_file_types: Annotated\[List\[str\], BeforeValidator\(parse_list_from_string\)\] = Field\(\s*default=\["pdf", "doc", "docx", "xls", "xlsx", "ppt", "pptx", "txt", "csv", "jpg", "jpeg", "png", "gif"\]\s*\)',
-        '''allowed_file_types: Union[List[str], str] = Field(
+        """allowed_file_types: Union[List[str], str] = Field(
         default=["pdf", "doc", "docx", "xls", "xlsx", "ppt", "pptx", "txt", "csv", "jpg", "jpeg", "png", "gif"]
-    )'''
+    )""",
     ),
 ]
 
@@ -61,14 +61,16 @@ validator_code = '''
 # Find where to insert the validator (after the allowed_hosts field)
 if '@field_validator("cors_origins"' not in content:
     # Find the line after allowed_hosts definition
-    import_pos = content.find('allowed_hosts: Union[List[str], str] = Field(default=["localhost", "127.0.0.1"])')
+    import_pos = content.find(
+        'allowed_hosts: Union[List[str], str] = Field(default=["localhost", "127.0.0.1"])'
+    )
     if import_pos != -1:
         # Find the next line
-        next_line_pos = content.find('\n', import_pos) + 1
+        next_line_pos = content.find("\n", import_pos) + 1
         content = content[:next_line_pos] + validator_code + content[next_line_pos:]
 
 # Write the fixed content
-with open('config/settings.py', 'w') as f:
+with open("config/settings.py", "w") as f:
     f.write(content)
 
 print("Settings file has been updated to handle list parsing correctly")

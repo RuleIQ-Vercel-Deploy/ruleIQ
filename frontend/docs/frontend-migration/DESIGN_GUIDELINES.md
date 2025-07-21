@@ -7,18 +7,21 @@ This guide provides practical design implementation guidelines for developers wo
 ## Component Design Principles
 
 ### 1. Consistency First
+
 - Always use design tokens instead of arbitrary values
 - Follow established component patterns
 - Maintain consistent spacing throughout the application
 - Use standardized variant naming across all components
 
 ### 2. Accessibility by Default
+
 - Ensure WCAG 2.2 AA compliance for all components
 - Implement proper focus management
 - Provide meaningful ARIA labels and descriptions
 - Support keyboard navigation patterns
 
 ### 3. Performance Optimization
+
 - Use CSS-in-JS efficiently with design tokens
 - Implement proper loading states and skeleton screens
 - Optimize animations for reduced motion preferences
@@ -29,6 +32,7 @@ This guide provides practical design implementation guidelines for developers wo
 ### Button Components
 
 #### ✅ Recommended Pattern
+
 ```tsx
 import { Button } from "@/components/ui/button"
 
@@ -54,6 +58,7 @@ import { Button } from "@/components/ui/button"
 ```
 
 #### ❌ Avoid
+
 ```tsx
 // Don't use arbitrary values
 <button className="bg-[#17255A] px-[16px] py-[8px]">
@@ -68,31 +73,38 @@ import { Button } from "@/components/ui/button"
 ### Card Components
 
 #### ✅ Recommended Pattern
-```tsx
-import { Card, CardHeader, CardContent, CardFooter } from "@/components/ui/card"
 
-<Card className="hover:shadow-md transition-shadow">
+```tsx
+import { Card, CardHeader, CardContent, CardFooter } from '@/components/ui/card';
+
+<Card className="transition-shadow hover:shadow-md">
   <CardHeader>
     <CardTitle>Assessment Progress</CardTitle>
     <CardDescription>Track your compliance journey</CardDescription>
   </CardHeader>
   <CardContent>
-    <div className="space-y-4">
-      {/* Content with proper spacing */}
-    </div>
+    <div className="space-y-4">{/* Content with proper spacing */}</div>
   </CardContent>
   <CardFooter className="justify-between">
     <Button variant="secondary">View Details</Button>
     <Button variant="primary">Continue</Button>
   </CardFooter>
-</Card>
+</Card>;
 ```
 
 ### Form Components
 
 #### ✅ Recommended Pattern
+
 ```tsx
-import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form"
+import {
+  Form,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormControl,
+  FormMessage,
+} from '@/components/ui/form';
 
 <Form {...form}>
   <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
@@ -109,7 +121,7 @@ import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from "
         </FormItem>
       )}
     />
-    
+
     <div className="flex gap-4">
       <Button type="button" variant="secondary" className="flex-1">
         Cancel
@@ -119,37 +131,35 @@ import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from "
       </Button>
     </div>
   </form>
-</Form>
+</Form>;
 ```
 
 ## Layout Guidelines
 
 ### Page Layout Structure
+
 ```tsx
 export default function Page() {
   return (
     <div className="container mx-auto px-6 py-8">
       {/* Page Header */}
       <div className="mb-8">
-        <h1 className="text-4xl font-bold text-navy mb-2">Page Title</h1>
+        <h1 className="mb-2 text-4xl font-bold text-navy">Page Title</h1>
         <p className="text-text-secondary">Descriptive subtitle</p>
       </div>
-      
+
       {/* Main Content */}
       <div className="grid gap-6 lg:grid-cols-3">
-        <div className="lg:col-span-2">
-          {/* Primary content */}
-        </div>
-        <div>
-          {/* Sidebar content */}
-        </div>
+        <div className="lg:col-span-2">{/* Primary content */}</div>
+        <div>{/* Sidebar content */}</div>
       </div>
     </div>
-  )
+  );
 }
 ```
 
 ### Grid Systems
+
 ```tsx
 // Dashboard grid - responsive
 <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
@@ -171,11 +181,12 @@ export default function Page() {
 ## Typography Implementation
 
 ### Heading Hierarchy
+
 ```tsx
 // Page title - H1
 <h1 className="text-4xl font-bold text-navy">Assessment Results</h1>
 
-// Section title - H2  
+// Section title - H2
 <h2 className="text-2xl font-semibold text-navy mb-4">Compliance Score</h2>
 
 // Subsection title - H3
@@ -191,6 +202,7 @@ export default function Page() {
 ```
 
 ### Text Color Usage
+
 ```tsx
 // Primary text on light backgrounds
 <p className="text-text-on-light">Main content text</p>
@@ -210,6 +222,7 @@ export default function Page() {
 ## Interactive States
 
 ### Hover States
+
 ```tsx
 // Cards
 <Card className="hover:shadow-md hover:shadow-navy/10 transition-all duration-200">
@@ -222,37 +235,38 @@ export default function Page() {
 ```
 
 ### Focus States
+
 ```tsx
 // Automatic focus management (built into components)
 <Button> // Focus states automatically applied
 
 // Custom focusable elements
-<div 
+<div
   tabIndex={0}
   className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-outline-primary focus-visible:ring-offset-2"
 >
 ```
 
 ### Loading States
+
 ```tsx
 // Button loading
 <Button loading disabled>
-  {loading ? "Saving..." : "Save Changes"}
-</Button>
+  {loading ? 'Saving...' : 'Save Changes'}
+</Button>;
 
 // Skeleton loading
-import { Skeleton } from "@/components/ui/skeleton"
+import { Skeleton } from '@/components/ui/skeleton';
 
-{isLoading ? (
-  <Skeleton className="h-[200px] w-full" />
-) : (
-  <div>{content}</div>
-)}
+{
+  isLoading ? <Skeleton className="h-[200px] w-full" /> : <div>{content}</div>;
+}
 ```
 
 ## Animation Guidelines
 
 ### Micro-interactions
+
 ```tsx
 import { motion } from "framer-motion"
 
@@ -263,7 +277,7 @@ import { motion } from "framer-motion"
   transition={{ duration: 0.3 }}
 >
 
-// Slide up animation  
+// Slide up animation
 <motion.div
   initial={{ opacity: 0, y: 20 }}
   animate={{ opacity: 1, y: 0 }}
@@ -275,7 +289,7 @@ import { motion } from "framer-motion"
   variants={{
     container: {
       initial: { opacity: 0 },
-      animate: { 
+      animate: {
         opacity: 1,
         transition: { staggerChildren: 0.1 }
       }
@@ -291,6 +305,7 @@ import { motion } from "framer-motion"
 ```
 
 ### Reduced Motion Support
+
 ```tsx
 import { shouldReduceMotion } from "@/lib/styles/animations"
 
@@ -307,27 +322,20 @@ import { shouldReduceMotion } from "@/lib/styles/animations"
 ## Error Handling & Validation
 
 ### Form Validation
+
 ```tsx
 // Error states
 <FormItem>
-  <FormLabel className={error ? "text-error" : ""}>
-    Email Address
-  </FormLabel>
+  <FormLabel className={error ? 'text-error' : ''}>Email Address</FormLabel>
   <FormControl>
-    <Input 
-      className={error ? "border-error focus:border-error" : ""}
-      {...field} 
-    />
+    <Input className={error ? 'border-error focus:border-error' : ''} {...field} />
   </FormControl>
-  {error && (
-    <FormMessage className="text-error">
-      {error.message}
-    </FormMessage>
-  )}
+  {error && <FormMessage className="text-error">{error.message}</FormMessage>}
 </FormItem>
 ```
 
 ### Alert Components
+
 ```tsx
 import { Alert, AlertDescription } from "@/components/ui/alert"
 
@@ -351,6 +359,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert"
 ## Responsive Design
 
 ### Breakpoint Usage
+
 ```tsx
 // Mobile-first responsive grid
 <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
@@ -366,6 +375,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert"
 ```
 
 ### Mobile Considerations
+
 ```tsx
 // Touch-friendly sizing
 <Button size="lg" className="min-h-[44px]"> // 44px minimum touch target
@@ -383,19 +393,20 @@ import { Alert, AlertDescription } from "@/components/ui/alert"
 ## Performance Best Practices
 
 ### Component Optimization
+
 ```tsx
 import { memo, useCallback, useMemo } from "react"
 
 // Memoize expensive components
 const ExpensiveComponent = memo(({ data }) => {
-  const processedData = useMemo(() => 
+  const processedData = useMemo(() =>
     data.map(item => processItem(item)), [data]
   )
-  
+
   const handleClick = useCallback((id) => {
     onItemClick(id)
   }, [onItemClick])
-  
+
   return <div>{/* Render */}</div>
 })
 
@@ -408,51 +419,55 @@ const HeavyChart = lazy(() => import("@/components/charts/heavy-chart"))
 ```
 
 ### Bundle Optimization
+
 ```tsx
 // Dynamic imports for routes
-const AssessmentPage = lazy(() => import("@/app/assessments/page"))
+const AssessmentPage = lazy(() => import('@/app/assessments/page'));
 
 // Tree-shake libraries
-import { format } from "date-fns/format" // Specific import
+import { format } from 'date-fns/format'; // Specific import
 // not: import { format } from "date-fns" // Full library
 ```
 
 ## Testing Considerations
 
 ### Component Testing
+
 ```tsx
 // Test component variants
-test("renders all button variants", () => {
-  const variants = ["primary", "secondary", "accent", "outline"]
-  
-  variants.forEach(variant => {
-    render(<Button variant={variant}>Test</Button>)
+test('renders all button variants', () => {
+  const variants = ['primary', 'secondary', 'accent', 'outline'];
+
+  variants.forEach((variant) => {
+    render(<Button variant={variant}>Test</Button>);
     // Assert styles and accessibility
-  })
-})
+  });
+});
 
 // Test responsive behavior
-test("adapts to mobile viewport", () => {
-  global.innerWidth = 375
-  render(<ResponsiveComponent />)
+test('adapts to mobile viewport', () => {
+  global.innerWidth = 375;
+  render(<ResponsiveComponent />);
   // Assert mobile-specific behavior
-})
+});
 ```
 
 ### Accessibility Testing
-```tsx
-import { axe, toHaveNoViolations } from "jest-axe"
 
-test("has no accessibility violations", async () => {
-  const { container } = render(<Component />)
-  const results = await axe(container)
-  expect(results).toHaveNoViolations()
-})
+```tsx
+import { axe, toHaveNoViolations } from 'jest-axe';
+
+test('has no accessibility violations', async () => {
+  const { container } = render(<Component />);
+  const results = await axe(container);
+  expect(results).toHaveNoViolations();
+});
 ```
 
 ## Code Review Checklist
 
 ### ✅ Design Implementation
+
 - [ ] Uses design tokens instead of arbitrary values
 - [ ] Follows established component patterns
 - [ ] Implements proper spacing using 8px grid
@@ -460,6 +475,7 @@ test("has no accessibility violations", async () => {
 - [ ] Maintains brand color consistency
 
 ### ✅ Accessibility
+
 - [ ] Proper ARIA labels and descriptions
 - [ ] Keyboard navigation support
 - [ ] Focus management implementation
@@ -467,6 +483,7 @@ test("has no accessibility violations", async () => {
 - [ ] Reduced motion support
 
 ### ✅ Performance
+
 - [ ] Proper component memoization
 - [ ] Efficient re-rendering patterns
 - [ ] Optimized bundle imports
@@ -474,6 +491,7 @@ test("has no accessibility violations", async () => {
 - [ ] Responsive image optimization
 
 ### ✅ Responsiveness
+
 - [ ] Mobile-first implementation
 - [ ] Touch-friendly interactions
 - [ ] Proper breakpoint usage
@@ -483,6 +501,7 @@ test("has no accessibility violations", async () => {
 ## Common Patterns Library
 
 ### Data Display
+
 ```tsx
 // Stat cards
 <Card>
@@ -508,6 +527,7 @@ test("has no accessibility violations", async () => {
 ```
 
 ### Navigation Patterns
+
 ```tsx
 // Breadcrumb navigation
 <Breadcrumb>

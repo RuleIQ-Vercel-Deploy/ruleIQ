@@ -1,27 +1,22 @@
-"use client";
+'use client';
 
-import { 
-  Circle, 
+import {
+  Circle,
   Clock,
   Users,
   Calendar,
   AlertTriangle,
   ChevronDown,
-  ChevronRight
-} from "lucide-react";
-import { useState } from "react";
+  ChevronRight,
+} from 'lucide-react';
+import { useState } from 'react';
 
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
-import { 
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger 
-} from "@/components/ui/collapsible";
-import { type Recommendation, type Gap } from "@/lib/assessment-engine/types";
-import { cn } from "@/lib/utils";
-
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+import { type Recommendation, type Gap } from '@/lib/assessment-engine/types';
+import { cn } from '@/lib/utils';
 
 interface ActionItemsListProps {
   recommendations: Recommendation[];
@@ -51,16 +46,21 @@ export function ActionItemsList({ recommendations, gaps }: ActionItemsListProps)
   // Map recommendation priority to ActionItem priority
   const mapPriority = (priority: string): 'high' | 'medium' | 'low' => {
     switch (priority) {
-      case 'immediate': return 'high';
-      case 'short_term': return 'high';
-      case 'medium_term': return 'medium';
-      case 'long_term': return 'low';
-      default: return 'medium';
+      case 'immediate':
+        return 'high';
+      case 'short_term':
+        return 'high';
+      case 'medium_term':
+        return 'medium';
+      case 'long_term':
+        return 'low';
+      default:
+        return 'medium';
     }
   };
 
   // Convert recommendations to action items
-  const actionItems: ActionItem[] = recommendations.map(rec => ({
+  const actionItems: ActionItem[] = recommendations.map((rec) => ({
     id: rec.id,
     title: rec.title,
     description: rec.description,
@@ -74,8 +74,8 @@ export function ActionItemsList({ recommendations, gaps }: ActionItemsListProps)
       { id: `${rec.id}-2`, title: 'Define success criteria', completed: false },
       { id: `${rec.id}-3`, title: 'Create implementation plan', completed: false },
       { id: `${rec.id}-4`, title: 'Execute and monitor progress', completed: false },
-      { id: `${rec.id}-5`, title: 'Verify completion and effectiveness', completed: false }
-    ]
+      { id: `${rec.id}-5`, title: 'Verify completion and effectiveness', completed: false },
+    ],
   }));
 
   // Sort by priority
@@ -85,15 +85,13 @@ export function ActionItemsList({ recommendations, gaps }: ActionItemsListProps)
   });
 
   const toggleExpanded = (itemId: string) => {
-    setExpandedItems(prev => 
-      prev.includes(itemId) 
-        ? prev.filter(id => id !== itemId)
-        : [...prev, itemId]
+    setExpandedItems((prev) =>
+      prev.includes(itemId) ? prev.filter((id) => id !== itemId) : [...prev, itemId],
     );
   };
 
   const toggleCompleted = (itemId: string) => {
-    setCompletedItems(prev => {
+    setCompletedItems((prev) => {
       const newSet = new Set(prev);
       if (newSet.has(itemId)) {
         newSet.delete(itemId);
@@ -122,16 +120,16 @@ export function ActionItemsList({ recommendations, gaps }: ActionItemsListProps)
   return (
     <div className="space-y-4">
       {/* Progress Summary */}
-      <div className="bg-muted/50 rounded-lg p-4">
-        <div className="flex items-center justify-between mb-2">
+      <div className="rounded-lg bg-muted/50 p-4">
+        <div className="mb-2 flex items-center justify-between">
           <h4 className="text-sm font-medium">Overall Progress</h4>
           <span className="text-sm text-muted-foreground">
             {completedCount} of {totalCount} completed
           </span>
         </div>
-        <div className="w-full bg-muted rounded-full h-2">
-          <div 
-            className="bg-gold h-2 rounded-full transition-all duration-300"
+        <div className="h-2 w-full rounded-full bg-muted">
+          <div
+            className="h-2 rounded-full bg-gold transition-all duration-300"
             style={{ width: `${progressPercentage}%` }}
           />
         </div>
@@ -142,17 +140,19 @@ export function ActionItemsList({ recommendations, gaps }: ActionItemsListProps)
         {sortedItems.map((item) => {
           const isExpanded = expandedItems.includes(item.id);
           const isCompleted = completedItems.has(item.id);
-          
+
           return (
             <Collapsible
               key={item.id}
               open={isExpanded}
               onOpenChange={() => toggleExpanded(item.id)}
             >
-              <div className={cn(
-                "border rounded-lg transition-all",
-                isCompleted && "opacity-60 bg-muted/30"
-              )}>
+              <div
+                className={cn(
+                  'rounded-lg border transition-all',
+                  isCompleted && 'bg-muted/30 opacity-60',
+                )}
+              >
                 <div className="p-4">
                   <div className="flex items-start gap-3">
                     <Checkbox
@@ -163,15 +163,15 @@ export function ActionItemsList({ recommendations, gaps }: ActionItemsListProps)
                     <div className="flex-1 space-y-2">
                       <div className="flex items-start justify-between gap-2">
                         <div className="flex-1">
-                          <h4 className={cn(
-                            "font-medium leading-tight",
-                            isCompleted && "line-through"
-                          )}>
+                          <h4
+                            className={cn(
+                              'font-medium leading-tight',
+                              isCompleted && 'line-through',
+                            )}
+                          >
                             {item.title}
                           </h4>
-                          <p className="text-sm text-muted-foreground mt-1">
-                            {item.description}
-                          </p>
+                          <p className="mt-1 text-sm text-muted-foreground">{item.description}</p>
                         </div>
                         <CollapsibleTrigger asChild>
                           <Button variant="ghost" size="sm">
@@ -183,7 +183,7 @@ export function ActionItemsList({ recommendations, gaps }: ActionItemsListProps)
                           </Button>
                         </CollapsibleTrigger>
                       </div>
-                      
+
                       {/* Metadata */}
                       <div className="flex items-center gap-4 text-sm">
                         <div className="flex items-center gap-1">
@@ -202,13 +202,13 @@ export function ActionItemsList({ recommendations, gaps }: ActionItemsListProps)
                     </div>
                   </div>
                 </div>
-                
+
                 <CollapsibleContent>
-                  <div className="px-4 pb-4 space-y-3">
-                    <div className="pl-9 space-y-3">
+                  <div className="space-y-3 px-4 pb-4">
+                    <div className="space-y-3 pl-9">
                       {/* Subtasks */}
                       <div>
-                        <h5 className="text-sm font-medium mb-2">Implementation Steps</h5>
+                        <h5 className="mb-2 text-sm font-medium">Implementation Steps</h5>
                         <div className="space-y-2">
                           {item.subtasks?.map((subtask) => (
                             <div key={subtask.id} className="flex items-center gap-2">
@@ -217,20 +217,23 @@ export function ActionItemsList({ recommendations, gaps }: ActionItemsListProps)
                                 disabled={isCompleted}
                                 className="h-3 w-3"
                               />
-                              <span className={cn(
-                                "text-sm",
-                                (subtask.completed || isCompleted) && "line-through text-muted-foreground"
-                              )}>
+                              <span
+                                className={cn(
+                                  'text-sm',
+                                  (subtask.completed || isCompleted) &&
+                                    'text-muted-foreground line-through',
+                                )}
+                              >
                                 {subtask.title}
                               </span>
                             </div>
                           ))}
                         </div>
                       </div>
-                      
+
                       {/* Resources */}
                       <div>
-                        <h5 className="text-sm font-medium mb-2">Required Resources</h5>
+                        <h5 className="mb-2 text-sm font-medium">Required Resources</h5>
                         <div className="flex flex-wrap gap-2">
                           {item.resources.map((resource) => (
                             <Badge key={resource} variant="secondary" className="text-xs">
@@ -239,14 +242,14 @@ export function ActionItemsList({ recommendations, gaps }: ActionItemsListProps)
                           ))}
                         </div>
                       </div>
-                      
+
                       {/* Related Gaps */}
                       {item.relatedGaps.length > 0 && (
                         <div>
-                          <h5 className="text-sm font-medium mb-2">Addresses Gaps</h5>
+                          <h5 className="mb-2 text-sm font-medium">Addresses Gaps</h5>
                           <div className="space-y-1">
                             {item.relatedGaps.map((gapId) => {
-                              const gap = gaps.find(g => g.questionId === gapId);
+                              const gap = gaps.find((g) => g.questionId === gapId);
                               if (!gap) return null;
                               return (
                                 <div key={gapId} className="text-sm text-muted-foreground">
@@ -257,15 +260,15 @@ export function ActionItemsList({ recommendations, gaps }: ActionItemsListProps)
                           </div>
                         </div>
                       )}
-                      
+
                       {/* Actions */}
                       <div className="flex items-center gap-2 pt-2">
                         <Button size="sm" variant="outline">
-                          <Calendar className="h-3 w-3 mr-2" />
+                          <Calendar className="mr-2 h-3 w-3" />
                           Schedule
                         </Button>
                         <Button size="sm" variant="outline">
-                          <Users className="h-3 w-3 mr-2" />
+                          <Users className="mr-2 h-3 w-3" />
                           Assign Team
                         </Button>
                       </div>
@@ -279,7 +282,7 @@ export function ActionItemsList({ recommendations, gaps }: ActionItemsListProps)
       </div>
 
       {/* Export Actions */}
-      <div className="flex items-center justify-center gap-2 pt-4 border-t">
+      <div className="flex items-center justify-center gap-2 border-t pt-4">
         <Button variant="outline" size="sm">
           Export to Project Management
         </Button>

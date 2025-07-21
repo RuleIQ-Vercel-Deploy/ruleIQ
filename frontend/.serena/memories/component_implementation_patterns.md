@@ -3,6 +3,7 @@
 ## Component Architecture Patterns
 
 ### Button Component Variants (Teal Theme)
+
 ```tsx
 // Primary - Main actions (Teal)
 <Button variant="primary" size="default">Save Changes</Button>
@@ -21,29 +22,36 @@
 ```
 
 ### Card Component Structure
-```tsx
-import { Card, CardHeader, CardContent, CardFooter } from "@/components/ui/card"
 
-<Card className="hover:shadow-md transition-shadow">
+```tsx
+import { Card, CardHeader, CardContent, CardFooter } from '@/components/ui/card';
+
+<Card className="transition-shadow hover:shadow-md">
   <CardHeader>
     <CardTitle>Assessment Progress</CardTitle>
     <CardDescription>Track your compliance journey</CardDescription>
   </CardHeader>
   <CardContent>
-    <div className="space-y-4">
-      {/* Content with proper spacing */}
-    </div>
+    <div className="space-y-4">{/* Content with proper spacing */}</div>
   </CardContent>
   <CardFooter className="justify-between">
     <Button variant="secondary">View Details</Button>
     <Button variant="primary">Continue</Button>
   </CardFooter>
-</Card>
+</Card>;
 ```
 
 ### Form Component Patterns
+
 ```tsx
-import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form"
+import {
+  Form,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormControl,
+  FormMessage,
+} from '@/components/ui/form';
 
 <Form {...form}>
   <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
@@ -54,10 +62,10 @@ import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from "
         <FormItem>
           <FormLabel>Company Name</FormLabel>
           <FormControl>
-            <Input 
-              placeholder="Enter your company name" 
+            <Input
+              placeholder="Enter your company name"
               className="focus:border-teal-600 focus:ring-teal-600"
-              {...field} 
+              {...field}
             />
           </FormControl>
           <FormMessage />
@@ -65,37 +73,35 @@ import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from "
       )}
     />
   </form>
-</Form>
+</Form>;
 ```
 
 ## Layout Patterns
 
 ### Page Layout Structure
+
 ```tsx
 export default function Page() {
   return (
     <div className="container mx-auto px-6 py-8">
       {/* Page Header */}
       <div className="mb-8">
-        <h1 className="text-4xl font-bold text-neutral-900 mb-2">Page Title</h1>
+        <h1 className="mb-2 text-4xl font-bold text-neutral-900">Page Title</h1>
         <p className="text-neutral-600">Descriptive subtitle</p>
       </div>
-      
+
       {/* Main Content */}
       <div className="grid gap-6 lg:grid-cols-3">
-        <div className="lg:col-span-2">
-          {/* Primary content */}
-        </div>
-        <div>
-          {/* Sidebar content */}
-        </div>
+        <div className="lg:col-span-2">{/* Primary content */}</div>
+        <div>{/* Sidebar content */}</div>
       </div>
     </div>
-  )
+  );
 }
 ```
 
 ### Navigation Patterns
+
 ```tsx
 // Sidebar Navigation (Teal Theme)
 <div className="sidebar bg-white border-r border-neutral-200">
@@ -125,11 +131,12 @@ export default function Page() {
 ## Typography Implementation (Updated)
 
 ### Text Hierarchy
+
 ```tsx
 // Page title - H1
 <h1 className="text-4xl font-bold text-neutral-900">Assessment Results</h1>
 
-// Section title - H2  
+// Section title - H2
 <h2 className="text-2xl font-semibold text-neutral-900 mb-4">Compliance Score</h2>
 
 // Subsection title - H3
@@ -148,6 +155,7 @@ export default function Page() {
 ```
 
 ### Text Colors (Teal Theme)
+
 ```tsx
 // Primary text
 <p className="text-neutral-900">Main content text</p>
@@ -171,6 +179,7 @@ export default function Page() {
 ## Interactive States (Updated)
 
 ### Hover States
+
 ```tsx
 // Cards
 <Card className="hover:shadow-md hover:shadow-neutral-200 transition-all duration-200">
@@ -183,6 +192,7 @@ export default function Page() {
 ```
 
 ### Focus States (Teal Theme)
+
 ```tsx
 // Input focus
 <Input className="focus:border-teal-600 focus:ring-2 focus:ring-teal-600/20" />
@@ -191,32 +201,32 @@ export default function Page() {
 <Button variant="primary"> // Automatic teal focus ring
 
 // Custom focusable elements
-<div 
+<div
   tabIndex={0}
   className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-600 focus-visible:ring-offset-2"
 >
 ```
 
 ### Loading States
+
 ```tsx
 // Button loading with teal spinner
 <Button loading disabled variant="primary">
-  {loading ? "Saving..." : "Save Changes"}
-</Button>
+  {loading ? 'Saving...' : 'Save Changes'}
+</Button>;
 
 // Skeleton loading (neutral colors)
-import { Skeleton } from "@/components/ui/skeleton"
+import { Skeleton } from '@/components/ui/skeleton';
 
-{isLoading ? (
-  <Skeleton className="h-[200px] w-full bg-neutral-200" />
-) : (
-  <div>{content}</div>
-)}
+{
+  isLoading ? <Skeleton className="h-[200px] w-full bg-neutral-200" /> : <div>{content}</div>;
+}
 ```
 
 ## Alert and Status Components
 
 ### Alert Variants (Updated Colors)
+
 ```tsx
 import { Alert, AlertDescription } from "@/components/ui/alert"
 
@@ -256,6 +266,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert"
 ## Data Display Patterns
 
 ### Status Indicators
+
 ```tsx
 // Compliance score card
 <Card>
@@ -286,39 +297,32 @@ import { Alert, AlertDescription } from "@/components/ui/alert"
 ## Migration-Specific Patterns
 
 ### Feature Flag Usage
+
 ```tsx
 // Check if new theme is enabled
-import { useFeatureFlag } from "@/lib/feature-flags"
+import { useFeatureFlag } from '@/lib/feature-flags';
 
 export function ThemedComponent() {
-  const useNewTheme = useFeatureFlag('USE_NEW_THEME')
-  
+  const useNewTheme = useFeatureFlag('USE_NEW_THEME');
+
   return (
-    <div className={useNewTheme ? 
-      "bg-white border-neutral-200" : 
-      "bg-navy border-navy-light"
-    }>
+    <div className={useNewTheme ? 'border-neutral-200 bg-white' : 'border-navy-light bg-navy'}>
       {/* Component content */}
     </div>
-  )
+  );
 }
 ```
 
 ### Conditional Styling During Migration
+
 ```tsx
 // Support both old and new themes during transition
-<Button 
+<Button
   className={cn(
-    "transition-all duration-200",
-    useNewTheme ? [
-      "bg-teal-600 text-white",
-      "hover:bg-teal-700",
-      "focus:ring-teal-600"
-    ] : [
-      "bg-navy text-white", 
-      "hover:bg-navy-dark",
-      "focus:ring-navy"
-    ]
+    'transition-all duration-200',
+    useNewTheme
+      ? ['bg-teal-600 text-white', 'hover:bg-teal-700', 'focus:ring-teal-600']
+      : ['bg-navy text-white', 'hover:bg-navy-dark', 'focus:ring-navy'],
   )}
 >
   Action Button

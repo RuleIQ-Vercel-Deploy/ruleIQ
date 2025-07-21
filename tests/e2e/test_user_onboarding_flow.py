@@ -394,7 +394,7 @@ class TestOnboardingIntegration:
             "password": sample_user_data["password"],
             "full_name": sample_user_data["full_name"],
         }
-        
+
         # Complete onboarding
         client.post("/api/auth/register", json=user_data)
         login_response = client.post(

@@ -20,14 +20,14 @@ export const animationPresets = {
     easeInOut: [0.4, 0, 0.2, 1],
     spring: { type: 'spring', stiffness: 300, damping: 30 },
   },
-  
+
   // Duration presets
   duration: {
     fast: 0.2,
     normal: 0.3,
     slow: 0.5,
   },
-  
+
   // Delay presets for stagger
   stagger: {
     fast: 0.05,

@@ -1,6 +1,7 @@
 # Suggested Development Commands
 
 ## Package Management (Required: pnpm)
+
 ```bash
 # Install dependencies
 pnpm install
@@ -13,6 +14,7 @@ pnpm add -D <package-name>
 ```
 
 ## Development Server
+
 ```bash
 # Start development server (http://localhost:3000)
 pnpm dev
@@ -22,6 +24,7 @@ pnpm build && pnpm start
 ```
 
 ## Code Quality & Validation
+
 ```bash
 # Type checking (run manually - build ignores TS errors)
 pnpm typecheck
@@ -38,6 +41,7 @@ pnpm format:check
 ```
 
 ## Testing Commands
+
 ```bash
 # Unit tests (Vitest)
 pnpm test
@@ -64,6 +68,7 @@ pnpm test:memory-leaks:watch
 ```
 
 ## Build & Production
+
 ```bash
 # Production build
 pnpm build
@@ -79,6 +84,7 @@ pnpm build:production
 ```
 
 ## Storybook (Component Development)
+
 ```bash
 # Start Storybook dev server
 pnpm storybook
@@ -91,6 +97,7 @@ pnpm test:storybook
 ```
 
 ## CI/CD Pipeline
+
 ```bash
 # Run full CI pipeline locally
 pnpm ci
@@ -100,6 +107,7 @@ pnpm preview
 ```
 
 ## System Commands (Linux)
+
 ```bash
 # File operations
 ls -la                 # List files with details
@@ -121,6 +129,7 @@ netstat -tlnp | grep :3000  # Check port 3000
 ```
 
 ## Debugging & Analysis
+
 ```bash
 # Bundle analysis
 pnpm analyze:bundle
@@ -134,6 +143,7 @@ pnpm test:performance
 ```
 
 ## Essential Development Workflow
+
 1. `pnpm dev` - Start development
 2. `pnpm typecheck` - Verify types before committing
 3. `pnpm lint` - Check code style

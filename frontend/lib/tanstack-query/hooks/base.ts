@@ -14,44 +14,44 @@ export const getErrorMessage = (error: unknown): string => {
   // Handle AxiosError
   if (error instanceof AxiosError) {
     const responseError = error.response?.data;
-    
+
     // Check for various error message formats
     if (responseError) {
       // API error formats
       if (typeof responseError.detail === 'string') return responseError.detail;
       if (typeof responseError.message === 'string') return responseError.message;
       if (typeof responseError.error === 'string') return responseError.error;
-      
+
       // Handle validation errors
       if (responseError.errors && typeof responseError.errors === 'object') {
         const firstError = Object.values(responseError.errors).flat()[0];
         if (typeof firstError === 'string') return firstError;
       }
     }
-    
+
     // Network errors
     if (error.code === 'ECONNABORTED') return 'Request timeout';
     if (error.code === 'ERR_NETWORK') return 'Network error - please check your connection';
     if (!error.response) return 'Network error - server unreachable';
-    
+
     return error.message || 'An unexpected error occurred';
   }
-  
+
   // Handle regular Error instances
   if (error instanceof Error) {
     return error.message;
   }
-  
+
   // Handle string errors
   if (typeof error === 'string') {
     return error;
   }
-  
+
   // Handle objects with message property
   if (error && typeof error === 'object' && 'message' in error) {
     return String(error.message);
   }
-  
+
   return 'An unexpected error occurred';
 };
 
@@ -71,7 +71,7 @@ export type BaseMutationOptions<TData, TError = ApiError, TVariables = void> = O
 export const createQueryKey = (
   domain: string,
   action: string,
-  params?: Record<string, any>
+  params?: Record<string, any>,
 ): string[] => {
   const key = [domain, action];
   if (params) {

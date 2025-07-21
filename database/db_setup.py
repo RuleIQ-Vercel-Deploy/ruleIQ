@@ -8,7 +8,6 @@ import os
 import logging
 from typing import AsyncGenerator, Dict, Any
 from contextlib import contextmanager
-from typing import Generator
 
 from dotenv import load_dotenv
 from sqlalchemy import create_engine, text, MetaData, Engine
@@ -16,7 +15,7 @@ from sqlalchemy.ext.asyncio import (
     AsyncSession,
     create_async_engine,
     async_sessionmaker,
-    AsyncEngine
+    AsyncEngine,
 )
 from sqlalchemy.orm import declarative_base, sessionmaker, Session
 
@@ -40,7 +39,7 @@ naming_convention = {
     "uq": "uq_%(table_name)s_%(column_0_name)s",
     "ck": "ck_%(table_name)s_%(constraint_name)s",
     "fk": "fk_%(table_name)s_%(column_0_name)s_%(referred_table_name)s",
-    "pk": "pk_%(table_name)s"
+    "pk": "pk_%(table_name)s",
 }
 
 # Create a metadata object with the naming convention
@@ -52,17 +51,17 @@ Base = declarative_base(metadata=metadata)
 
 class DatabaseConfig:
     """Database configuration class for managing connection settings."""
-    
+
     @staticmethod
     def validate_environment() -> None:
         """Validate that required environment variables are set."""
         required_vars = ["DATABASE_URL"]
         missing_vars = []
-        
+
         for var in required_vars:
             if not os.getenv(var):
                 missing_vars.append(var)
-        
+
         if missing_vars:
             error_msg = (
                 f"Missing required environment variables: {', '.join(missing_vars)}\n"
@@ -70,7 +69,7 @@ class DatabaseConfig:
             )
             logger.error(error_msg)
             raise OSError(error_msg)
-        
+
         # Log configuration source
         if os.path.exists(".env.local"):
             logger.info("Loaded configuration from .env.local")
@@ -78,7 +77,7 @@ class DatabaseConfig:
             logger.info("Loaded configuration from .env")
         else:
             logger.info("Using system environment variables")
-    
+
     @staticmethod
     def get_database_urls() -> tuple[str, str, str]:
         """
@@ -87,7 +86,7 @@ class DatabaseConfig:
         """
         # Validate environment first
         DatabaseConfig.validate_environment()
-        
+
         db_url = os.getenv("DATABASE_URL")
         if not db_url:
             error_msg = "DATABASE_URL environment variable not set. Please set it in your .env file or environment."
@@ -95,7 +94,7 @@ class DatabaseConfig:
             raise OSError(error_msg)
 
         # Log database connection info (without password)
-        safe_url = db_url.split('@')[1] if '@' in db_url else db_url
+        safe_url = db_url.split("@")[1] if "@" in db_url else db_url
         logger.info(f"Connecting to database: {safe_url}")
 
         # Derive SYNC_DATABASE_URL
@@ -112,7 +111,10 @@ class DatabaseConfig:
         if "+asyncpg" not in async_db_url:
             # Attempt to convert to asyncpg if it's not already
             async_db_url_candidate = async_db_url.replace("+psycopg2", "+asyncpg")
-            if "postgresql://" in async_db_url_candidate and "+asyncpg" not in async_db_url_candidate:
+            if (
+                "postgresql://" in async_db_url_candidate
+                and "+asyncpg" not in async_db_url_candidate
+            ):
                 async_db_url = async_db_url_candidate.replace(
                     "postgresql://", "postgresql+asyncpg://", 1
                 )
@@ -125,19 +127,20 @@ class DatabaseConfig:
                 and "+asyncpg" not in async_db_url
             ):
                 async_db_url = async_db_url.replace("postgresql://", "postgresql+asyncpg://", 1)
-    
-            # Remove sslmode from async_db_url to avoid conflicts with connect_args
-            if "sslmode=require" in async_db_url:
-                # A more robust way to remove the parameter
-                from urllib.parse import urlparse, urlunparse, parse_qs, urlencode
-                parts = urlparse(async_db_url)
-                query_params = parse_qs(parts.query)
-                query_params.pop('sslmode', None)
-                query_params.pop('channel_binding', None)
-                new_query = urlencode(query_params, doseq=True)
-                async_db_url = urlunparse(parts._replace(query=new_query))
-    
-            return db_url, sync_db_url, async_db_url
+
+        # Remove sslmode from async_db_url to avoid conflicts with connect_args
+        if "sslmode=require" in async_db_url:
+            # A more robust way to remove the parameter
+            from urllib.parse import urlparse, urlunparse, parse_qs, urlencode
+
+            parts = urlparse(async_db_url)
+            query_params = parse_qs(parts.query)
+            query_params.pop("sslmode", None)
+            query_params.pop("channel_binding", None)
+            new_query = urlencode(query_params, doseq=True)
+            async_db_url = urlunparse(parts._replace(query=new_query))
+
+        return db_url, sync_db_url, async_db_url
 
     @staticmethod
     def get_engine_kwargs(is_async: bool = False) -> Dict[str, Any]:
@@ -160,7 +163,7 @@ class DatabaseConfig:
                 **base_kwargs,
                 "pool_reset_on_return": "commit",
             }
-            
+
             # Handle SSL configuration for asyncpg explicitly
             db_url = os.getenv("DATABASE_URL", "")
             connect_args = {
@@ -171,7 +174,7 @@ class DatabaseConfig:
             }
             if "sslmode=require" in db_url:
                 connect_args["ssl"] = True
-            
+
             async_kwargs["connect_args"] = connect_args
             return async_kwargs
         else:
@@ -196,7 +199,7 @@ def _init_sync_db():
         try:
             _, sync_db_url, _ = DatabaseConfig.get_database_urls()
             engine_kwargs = DatabaseConfig.get_engine_kwargs(is_async=False)
-            
+
             _ENGINE = create_engine(sync_db_url, **engine_kwargs)
             _SESSION_LOCAL = sessionmaker(autocommit=False, autoflush=False, bind=_ENGINE)
             logger.info("Synchronous database engine initialized successfully")
@@ -212,7 +215,7 @@ def _init_async_db():
         try:
             _, _, async_db_url = DatabaseConfig.get_database_urls()
             engine_kwargs = DatabaseConfig.get_engine_kwargs(is_async=True)
-            
+
             _ASYNC_ENGINE = create_async_engine(async_db_url, **engine_kwargs)
             _ASYNC_SESSION_LOCAL = async_sessionmaker(
                 bind=_ASYNC_ENGINE,
@@ -231,25 +234,24 @@ def init_db() -> bool:
     """
     Initialize database with proper error handling and logging.
     This function can be called during application startup.
-    
+
     Returns:
         bool: True if initialization successful, False otherwise
     """
     try:
         logger.info("Initializing database...")
-        
+
         # Initialize both sync and async engines
         _init_sync_db()
         _init_async_db()
-        
+
         # Verify database connection
         if not test_database_connection():
             return False
-            
-            
+
         logger.info("Database initialization completed successfully")
         return True
-        
+
     except Exception as e:
         logger.error(f"Database initialization failed: {e}", exc_info=True)
         return False
@@ -260,7 +262,7 @@ def test_database_connection() -> bool:
     try:
         _init_sync_db()
         from database.db_setup import _ENGINE
-        
+
         with _ENGINE.connect() as conn:
             conn.execute(text("SELECT 1"))
             logger.info("Database connection test successful")
@@ -275,7 +277,7 @@ async def test_async_database_connection() -> bool:
     try:
         _init_async_db()
         from database.db_setup import _ASYNC_ENGINE
-        
+
         async with _ASYNC_ENGINE.connect() as conn:
             await conn.execute(text("SELECT 1"))
             logger.info("Async database connection test successful")
@@ -283,8 +285,6 @@ async def test_async_database_connection() -> bool:
     except Exception as e:
         logger.error(f"Async database connection test failed: {e}")
         return False
-
-
 
 
 # --- Dependency for Synchronous Database Session (Legacy/Transition) ---

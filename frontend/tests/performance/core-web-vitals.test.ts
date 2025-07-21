@@ -4,8 +4,8 @@ import { chromium } from 'playwright';
 // Core Web Vitals thresholds
 const THRESHOLDS = {
   LCP: 2500, // 2.5s for good LCP
-  FID: 100,  // 100ms for good FID
-  CLS: 0.1,  // 0.1 for good CLS
+  FID: 100, // 100ms for good FID
+  CLS: 0.1, // 0.1 for good CLS
   BUNDLE_SIZE: 500 * 1024, // 500KB max bundle size
 };
 
@@ -51,12 +51,16 @@ test.describe('Core Web Vitals Performance Tests', () => {
     const fidMeasurement = await page.evaluate(async () => {
       return new Promise<number>((resolve) => {
         let startTime: number;
-        
+
         // Set up event listener
-        document.addEventListener('click', () => {
-          const endTime = performance.now();
-          resolve(endTime - startTime);
-        }, { once: true });
+        document.addEventListener(
+          'click',
+          () => {
+            const endTime = performance.now();
+            resolve(endTime - startTime);
+          },
+          { once: true },
+        );
 
         // Trigger click after a delay
         setTimeout(() => {
@@ -76,7 +80,7 @@ test.describe('Core Web Vitals Performance Tests', () => {
     const cls = await page.evaluate(() => {
       return new Promise<number>((resolve) => {
         let clsValue = 0;
-        
+
         new PerformanceObserver((entryList) => {
           for (const entry of entryList.getEntries()) {
             if (!(entry as any).hadRecentInput) {
@@ -95,7 +99,7 @@ test.describe('Core Web Vitals Performance Tests', () => {
 
   test('Bundle size monitoring', async ({ page }) => {
     const resourceSizes: { [key: string]: number } = {};
-    
+
     // Monitor network requests
     page.on('response', async (response) => {
       const url = response.url();
@@ -111,12 +115,12 @@ test.describe('Core Web Vitals Performance Tests', () => {
     // Check bundle sizes
     const totalSize = Object.values(resourceSizes).reduce((a, b) => a + b, 0);
     expect(totalSize).toBeLessThan(THRESHOLDS.BUNDLE_SIZE);
-    
+
     // Log bundle sizes for monitoring
     console.log('Bundle sizes:', {
       js: `${(resourceSizes.js || 0) / 1024}KB`,
       css: `${(resourceSizes.css || 0) / 1024}KB`,
-      total: `${totalSize / 1024}KB`
+      total: `${totalSize / 1024}KB`,
     });
   });
 
@@ -149,14 +153,14 @@ test.describe('Core Web Vitals Performance Tests', () => {
     // Navigate through the app to simulate usage
     await page.click('[data-testid="dashboard-link"]', { force: true }).catch(() => {});
     await page.waitForTimeout(1000);
-    
+
     // Measure memory usage
     const metrics = await page.evaluate(() => {
       if ('memory' in performance) {
         return {
           usedJSHeapSize: (performance as any).memory.usedJSHeapSize,
           totalJSHeapSize: (performance as any).memory.totalJSHeapSize,
-          jsHeapSizeLimit: (performance as any).memory.jsHeapSizeLimit
+          jsHeapSizeLimit: (performance as any).memory.jsHeapSizeLimit,
         };
       }
       return null;
@@ -170,24 +174,24 @@ test.describe('Core Web Vitals Performance Tests', () => {
 
   test('Network requests should be optimized', async ({ page }) => {
     const requests: any[] = [];
-    
+
     page.on('request', (request) => {
       requests.push({
         url: request.url(),
         method: request.method(),
-        resourceType: request.resourceType()
+        resourceType: request.resourceType(),
       });
     });
 
     await page.goto('/', { waitUntil: 'networkidle' });
 
     // Check for duplicate requests
-    const urls = requests.map(r => r.url);
+    const urls = requests.map((r) => r.url);
     const uniqueUrls = [...new Set(urls)];
     expect(urls.length).toBe(uniqueUrls.length);
 
     // Check for large images
-    const imageRequests = requests.filter(r => r.resourceType === 'image');
+    const imageRequests = requests.filter((r) => r.resourceType === 'image');
     for (const imgRequest of imageRequests) {
       const response = await page.request.fetch(imgRequest.url);
       const size = (await response.body()).length;
@@ -203,20 +207,20 @@ test.describe('Core Web Vitals Performance Tests', () => {
         preconnect: [] as string[],
         prefetch: [] as string[],
         preload: [] as string[],
-        dnsPrefetch: [] as string[]
+        dnsPrefetch: [] as string[],
       };
 
       // Check for resource hints
-      document.querySelectorAll('link[rel="preconnect"]').forEach(link => {
+      document.querySelectorAll('link[rel="preconnect"]').forEach((link) => {
         hints.preconnect.push(link.getAttribute('href') || '');
       });
-      document.querySelectorAll('link[rel="prefetch"]').forEach(link => {
+      document.querySelectorAll('link[rel="prefetch"]').forEach((link) => {
         hints.prefetch.push(link.getAttribute('href') || '');
       });
-      document.querySelectorAll('link[rel="preload"]').forEach(link => {
+      document.querySelectorAll('link[rel="preload"]').forEach((link) => {
         hints.preload.push(link.getAttribute('href') || '');
       });
-      document.querySelectorAll('link[rel="dns-prefetch"]').forEach(link => {
+      document.querySelectorAll('link[rel="dns-prefetch"]').forEach((link) => {
         hints.dnsPrefetch.push(link.getAttribute('href') || '');
       });
 
@@ -234,10 +238,11 @@ test.describe('Core Web Vitals Performance Tests', () => {
     const longTasks = await page.evaluate(() => {
       return new Promise<number[]>((resolve) => {
         const tasks: number[] = [];
-        
+
         new PerformanceObserver((list) => {
           for (const entry of list.getEntries()) {
-            if (entry.duration > 50) { // Tasks longer than 50ms
+            if (entry.duration > 50) {
+              // Tasks longer than 50ms
               tasks.push(entry.duration);
             }
           }
@@ -250,7 +255,7 @@ test.describe('Core Web Vitals Performance Tests', () => {
 
     // Should have minimal long tasks
     expect(longTasks.length).toBeLessThan(5);
-    
+
     // No task should be longer than 200ms
     for (const duration of longTasks) {
       expect(duration).toBeLessThan(200);
@@ -266,12 +271,16 @@ test.describe('Performance Metrics Across Routes', () => {
       await page.goto(route, { waitUntil: 'networkidle' });
 
       const metrics = await page.evaluate(() => {
-        const navigation = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming;
+        const navigation = performance.getEntriesByType(
+          'navigation',
+        )[0] as PerformanceNavigationTiming;
         return {
-          domContentLoaded: navigation.domContentLoadedEventEnd - navigation.domContentLoadedEventStart,
+          domContentLoaded:
+            navigation.domContentLoadedEventEnd - navigation.domContentLoadedEventStart,
           loadComplete: navigation.loadEventEnd - navigation.loadEventStart,
           firstPaint: performance.getEntriesByName('first-paint')[0]?.startTime || 0,
-          firstContentfulPaint: performance.getEntriesByName('first-contentful-paint')[0]?.startTime || 0
+          firstContentfulPaint:
+            performance.getEntriesByName('first-contentful-paint')[0]?.startTime || 0,
         };
       });
 

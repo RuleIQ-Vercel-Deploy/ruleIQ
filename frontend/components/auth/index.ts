@@ -1,1 +1,1 @@
-export * from './security-badges'
+export * from './security-badges';

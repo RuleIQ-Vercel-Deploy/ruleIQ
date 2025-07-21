@@ -65,16 +65,22 @@ class IntegrationService {
   /**
    * Sync data from integration
    */
-  async syncIntegration(integrationId: string, options?: {
-    full_sync?: boolean;
-    data_types?: string[];
-  }): Promise<{
+  async syncIntegration(
+    integrationId: string,
+    options?: {
+      full_sync?: boolean;
+      data_types?: string[];
+    },
+  ): Promise<{
     sync_id: string;
     status: 'started' | 'in_progress' | 'completed' | 'failed';
     items_synced?: number;
     errors?: string[];
   }> {
-    const response = await apiClient.post<any>(`/integrations/${integrationId}/sync`, options || {});
+    const response = await apiClient.post<any>(
+      `/integrations/${integrationId}/sync`,
+      options || {},
+    );
     return response.data;
   }
 
@@ -100,16 +106,13 @@ class IntegrationService {
    */
   async configureWebhooks(
     integrationId: string,
-    config: IntegrationWebhookConfig
+    config: IntegrationWebhookConfig,
   ): Promise<{
     webhook_id: string;
     status: 'active' | 'inactive';
     test_url: string;
   }> {
-    const response = await apiClient.post<any>(
-      `/integrations/${integrationId}/webhooks`,
-      config
-    );
+    const response = await apiClient.post<any>(`/integrations/${integrationId}/webhooks`, config);
     return response.data;
   }
 
@@ -124,7 +127,7 @@ class IntegrationService {
       event_type?: string;
       page?: number;
       page_size?: number;
-    }
+    },
   ): Promise<{
     logs: Array<{
       timestamp: string;
@@ -143,11 +146,11 @@ class IntegrationService {
    */
   async updateIntegrationConfig(
     integrationId: string,
-    config: Record<string, any>
+    config: Record<string, any>,
   ): Promise<Integration> {
     const response = await apiClient.patch<Integration>(
       `/integrations/${integrationId}/config`,
-      config
+      config,
     );
     return response.data;
   }
@@ -165,7 +168,7 @@ class IntegrationService {
   async handleOAuthCallback(
     provider: string,
     code: string,
-    state?: string
+    state?: string,
   ): Promise<{
     success: boolean;
     integration_id?: string;

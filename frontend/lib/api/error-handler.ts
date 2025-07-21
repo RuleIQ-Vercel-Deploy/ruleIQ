@@ -1,6 +1,6 @@
 /**
  * Advanced Error Handling for ruleIQ
- * 
+ *
  * Provides sophisticated error classification, retry logic with exponential backoff,
  * and user-friendly error messages for different error scenarios.
  */
@@ -37,7 +37,7 @@ export class EnhancedApiError extends Error {
     public retryable: boolean,
     public userMessage: string,
     public technicalDetails?: any,
-    public originalError?: AxiosError
+    public originalError?: AxiosError,
   ) {
     super(detail);
     this.name = 'EnhancedApiError';
@@ -61,7 +61,8 @@ export function classifyError(error: AxiosError): {
         type: ErrorType.NETWORK,
         severity: ErrorSeverity.HIGH,
         retryable: true,
-        userMessage: 'Network connection issue. Please check your internet connection and try again.',
+        userMessage:
+          'Network connection issue. Please check your internet connection and try again.',
       };
     }
     if (message.includes('timeout')) {
@@ -83,7 +84,7 @@ export function classifyError(error: AxiosError): {
         retryable: false,
         userMessage: 'Invalid data provided. Please check your input and try again.',
       };
-    
+
     case 401:
       return {
         type: ErrorType.PERMISSION,
@@ -91,15 +92,15 @@ export function classifyError(error: AxiosError): {
         retryable: false,
         userMessage: 'Your session has expired. Please log in again.',
       };
-    
+
     case 403:
       return {
         type: ErrorType.PERMISSION,
         severity: ErrorSeverity.MEDIUM,
         retryable: false,
-        userMessage: 'You don\'t have permission to perform this action.',
+        userMessage: "You don't have permission to perform this action.",
       };
-    
+
     case 404:
       return {
         type: ErrorType.NOT_FOUND,
@@ -107,7 +108,7 @@ export function classifyError(error: AxiosError): {
         retryable: false,
         userMessage: 'The requested resource was not found.',
       };
-    
+
     case 429:
       return {
         type: ErrorType.RATE_LIMIT,
@@ -115,7 +116,7 @@ export function classifyError(error: AxiosError): {
         retryable: true,
         userMessage: 'Too many requests. Please wait a moment and try again.',
       };
-    
+
     case 500:
     case 502:
     case 503:
@@ -126,7 +127,7 @@ export function classifyError(error: AxiosError): {
         retryable: true,
         userMessage: 'Server error occurred. Our team has been notified. Please try again later.',
       };
-    
+
     default:
       return {
         type: ErrorType.UNKNOWN,
@@ -154,7 +155,7 @@ export function getRetryConfig(errorType: ErrorType): RetryConfig {
         maxDelay: 30000,
         backoffMultiplier: 2,
       };
-    
+
     case ErrorType.TIMEOUT:
       return {
         maxAttempts: 3,
@@ -162,7 +163,7 @@ export function getRetryConfig(errorType: ErrorType): RetryConfig {
         maxDelay: 10000,
         backoffMultiplier: 1.5,
       };
-    
+
     case ErrorType.RATE_LIMIT:
       return {
         maxAttempts: 3,
@@ -170,7 +171,7 @@ export function getRetryConfig(errorType: ErrorType): RetryConfig {
         maxDelay: 60000,
         backoffMultiplier: 3,
       };
-    
+
     case ErrorType.SERVER:
       return {
         maxAttempts: 3,
@@ -178,7 +179,7 @@ export function getRetryConfig(errorType: ErrorType): RetryConfig {
         maxDelay: 15000,
         backoffMultiplier: 2,
       };
-    
+
     default:
       return {
         maxAttempts: 1,
@@ -190,18 +191,15 @@ export function getRetryConfig(errorType: ErrorType): RetryConfig {
 }
 
 // Calculate delay with exponential backoff and jitter
-export function calculateRetryDelay(
-  attemptNumber: number,
-  config: RetryConfig
-): number {
+export function calculateRetryDelay(attemptNumber: number, config: RetryConfig): number {
   const exponentialDelay = Math.min(
     config.baseDelay * Math.pow(config.backoffMultiplier, attemptNumber - 1),
-    config.maxDelay
+    config.maxDelay,
   );
-  
+
   // Add jitter (±20%) to prevent thundering herd
   const jitter = exponentialDelay * 0.2 * (Math.random() - 0.5);
-  
+
   return Math.round(exponentialDelay + jitter);
 }
 
@@ -210,7 +208,7 @@ export function handleApiError(error: AxiosError): EnhancedApiError {
   const classification = classifyError(error);
   const status = error.response?.status || 0;
   const detail = error.response?.data?.detail || error.message || 'Unknown error';
-  
+
   return new EnhancedApiError(
     classification.type,
     status,
@@ -224,7 +222,7 @@ export function handleApiError(error: AxiosError): EnhancedApiError {
       data: error.config?.data,
       timestamp: new Date().toISOString(),
     },
-    error
+    error,
   );
 }
 
@@ -232,31 +230,31 @@ export function handleApiError(error: AxiosError): EnhancedApiError {
 export async function retryWithBackoff<T>(
   fn: () => Promise<T>,
   errorType: ErrorType,
-  onRetry?: (attempt: number, delay: number) => void
+  onRetry?: (attempt: number, delay: number) => void,
 ): Promise<T> {
   const config = getRetryConfig(errorType);
   let lastError: Error | null = null;
-  
+
   for (let attempt = 1; attempt <= config.maxAttempts; attempt++) {
     try {
       return await fn();
     } catch (error) {
       lastError = error as Error;
-      
+
       if (attempt === config.maxAttempts) {
         break;
       }
-      
+
       const delay = calculateRetryDelay(attempt, config);
-      
+
       if (onRetry) {
         onRetry(attempt, delay);
       }
-      
-      await new Promise(resolve => setTimeout(resolve, delay));
+
+      await new Promise((resolve) => setTimeout(resolve, delay));
     }
   }
-  
+
   throw lastError;
 }
 
@@ -288,10 +286,7 @@ export const recoveryStrategies: RecoveryStrategy[] = [
 ];
 
 // User-friendly error messages based on context
-export function getContextualErrorMessage(
-  error: EnhancedApiError,
-  context?: string
-): string {
+export function getContextualErrorMessage(error: EnhancedApiError, context?: string): string {
   const contextMessages: Record<string, Record<ErrorType, string>> = {
     login: {
       [ErrorType.VALIDATION]: 'Invalid email or password. Please try again.',
@@ -311,11 +306,11 @@ export function getContextualErrorMessage(
       [ErrorType.SERVER]: 'Save failed. Please try again or contact support if the issue persists.',
     },
   };
-  
+
   if (context && contextMessages[context]?.[error.type]) {
     return contextMessages[context][error.type];
   }
-  
+
   return error.userMessage;
 }
 

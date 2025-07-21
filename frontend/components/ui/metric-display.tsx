@@ -1,40 +1,47 @@
-import { TrendingUp, TrendingDown } from "lucide-react"
+import { TrendingUp, TrendingDown } from 'lucide-react';
 
-import type * as React from "react"
+import type * as React from 'react';
 
 interface MetricDisplayProps {
-  label: string
-  value: string | number
+  label: string;
+  value: string | number;
   change?: {
-    value: number
-    isPositive: boolean
-    period?: string
-  }
-  icon?: React.ReactNode
-  className?: string
+    value: number;
+    isPositive: boolean;
+    period?: string;
+  };
+  icon?: React.ReactNode;
+  className?: string;
 }
 
-export function MetricDisplay({ label, value, change, icon, className = "" }: MetricDisplayProps) {
+export function MetricDisplay({ label, value, change, icon, className = '' }: MetricDisplayProps) {
   return (
     <div className={`space-y-2 ${className}`}>
       <div className="flex items-center justify-between">
-        <span className="text-sm font-medium" style={{ color: "#6C757D" }}>
+        <span className="text-sm font-medium" style={{ color: '#6C757D' }}>
           {label}
         </span>
-        {icon && <div style={{ color: "#6C757D" }}>{icon}</div>}
+        {icon && <div style={{ color: '#6C757D' }}>{icon}</div>}
       </div>
       <div className="flex items-end justify-between">
-        <span className="text-2xl font-bold" style={{ color: "#F0EAD6" }}>
+        <span className="text-2xl font-bold" style={{ color: '#F0EAD6' }}>
           {value}
         </span>
         {change && (
-          <div className={`flex items-center text-xs ${change.isPositive ? "text-success" : "text-error"}`}>
-            {change.isPositive ? <TrendingUp className="h-3 w-3 mr-1" /> : <TrendingDown className="h-3 w-3 mr-1" />}
-            {change.isPositive ? "+" : ""}
-            {change.value}%{change.period && <span className="ml-1 text-gray-500">{change.period}</span>}
+          <div
+            className={`flex items-center text-xs ${change.isPositive ? 'text-success' : 'text-error'}`}
+          >
+            {change.isPositive ? (
+              <TrendingUp className="mr-1 h-3 w-3" />
+            ) : (
+              <TrendingDown className="mr-1 h-3 w-3" />
+            )}
+            {change.isPositive ? '+' : ''}
+            {change.value}%
+            {change.period && <span className="ml-1 text-gray-500">{change.period}</span>}
           </div>
         )}
       </div>
     </div>
-  )
+  );
 }

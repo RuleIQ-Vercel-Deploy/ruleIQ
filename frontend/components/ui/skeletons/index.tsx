@@ -1,5 +1,5 @@
-import { Card, CardContent, CardHeader } from "@/components/ui/card"
-import { Skeleton } from "@/components/ui/skeleton"
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
+import { Skeleton } from '@/components/ui/skeleton';
 
 export const StatsCardSkeleton = () => (
   <Card>
@@ -8,21 +8,21 @@ export const StatsCardSkeleton = () => (
       <Skeleton className="h-4 w-4" />
     </CardHeader>
     <CardContent>
-      <Skeleton className="h-8 w-[120px] mb-1" />
+      <Skeleton className="mb-1 h-8 w-[120px]" />
       <Skeleton className="h-3 w-[80px]" />
     </CardContent>
   </Card>
-)
+);
 
 export const ChartSkeleton = () => (
   <div className="w-full">
-    <div className="flex items-center justify-between mb-4">
+    <div className="mb-4 flex items-center justify-between">
       <Skeleton className="h-6 w-[150px]" />
       <Skeleton className="h-8 w-[100px]" />
     </div>
     <Skeleton className="h-[300px] w-full" />
   </div>
-)
+);
 
 export const InsightsSkeleton = () => (
   <div className="space-y-4">
@@ -30,8 +30,8 @@ export const InsightsSkeleton = () => (
     <div className="space-y-3">
       {Array.from({ length: 3 }).map((_, i) => (
         <div key={i} className="flex items-start space-x-3">
-          <Skeleton className="h-5 w-5 mt-0.5 flex-shrink-0" />
-          <div className="space-y-2 flex-1">
+          <Skeleton className="mt-0.5 h-5 w-5 flex-shrink-0" />
+          <div className="flex-1 space-y-2">
             <Skeleton className="h-4 w-full" />
             <Skeleton className="h-4 w-[90%]" />
           </div>
@@ -39,7 +39,7 @@ export const InsightsSkeleton = () => (
       ))}
     </div>
   </div>
-)
+);
 
 export const DashboardSkeleton = () => (
   <div className="space-y-6">
@@ -49,7 +49,7 @@ export const DashboardSkeleton = () => (
         <StatsCardSkeleton key={i} />
       ))}
     </div>
-    
+
     {/* Charts section */}
     <div className="grid gap-6 lg:grid-cols-7">
       <Card className="lg:col-span-4">
@@ -60,7 +60,7 @@ export const DashboardSkeleton = () => (
           <ChartSkeleton />
         </CardContent>
       </Card>
-      
+
       <Card className="lg:col-span-3">
         <CardHeader>
           <Skeleton className="h-6 w-[150px]" />
@@ -71,7 +71,7 @@ export const DashboardSkeleton = () => (
       </Card>
     </div>
   </div>
-)
+);
 
 export const TableRowSkeleton = () => (
   <div className="flex items-center space-x-4 py-4">
@@ -81,7 +81,7 @@ export const TableRowSkeleton = () => (
     <Skeleton className="h-4 w-[80px]" />
     <Skeleton className="h-8 w-[60px]" />
   </div>
-)
+);
 
 export const TableSkeleton = ({ rows = 5 }: { rows?: number }) => (
   <div className="w-full">
@@ -100,4 +100,4 @@ export const TableSkeleton = ({ rows = 5 }: { rows?: number }) => (
       ))}
     </div>
   </div>
-)
+);

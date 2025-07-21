@@ -1,109 +1,105 @@
-"use client"
+'use client';
 
-import { 
-  CreditCard, 
-  Download, 
- 
-  AlertCircle,
-  CheckCircle,
-  Calendar,
-  RefreshCw
-} from "lucide-react"
-import { useEffect, useState } from "react"
+import { CreditCard, Download, AlertCircle, CheckCircle, Calendar, RefreshCw } from 'lucide-react';
+import { useEffect, useState } from 'react';
 
-import { Alert, AlertDescription } from "@/components/ui/alert"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Skeleton } from "@/components/ui/skeleton"
-import { paymentService } from "@/lib/api/payment.service"
-import { PRICING_PLANS, formatPrice } from "@/lib/stripe/client"
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Skeleton } from '@/components/ui/skeleton';
+import { paymentService } from '@/lib/api/payment.service';
+import { PRICING_PLANS, formatPrice } from '@/lib/stripe/client';
 
-import type { Subscription, PaymentMethod, Invoice } from "@/lib/api/payment.service"
+import type { Subscription, PaymentMethod, Invoice } from '@/lib/api/payment.service';
 
 export default function BillingPage() {
-  const [loading, setLoading] = useState(true)
-  const [subscription, setSubscription] = useState<Subscription | null>(null)
-  const [paymentMethods, setPaymentMethods] = useState<PaymentMethod[]>([])
-  const [invoices, setInvoices] = useState<Invoice[]>([])
-  const [upcomingInvoice, setUpcomingInvoice] = useState<Invoice | null>(null)
-  const [error, setError] = useState<string | null>(null)
+  const [loading, setLoading] = useState(true);
+  const [subscription, setSubscription] = useState<Subscription | null>(null);
+  const [paymentMethods, setPaymentMethods] = useState<PaymentMethod[]>([]);
+  const [invoices, setInvoices] = useState<Invoice[]>([]);
+  const [upcomingInvoice, setUpcomingInvoice] = useState<Invoice | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    fetchBillingData()
-  }, [])
+    fetchBillingData();
+  }, []);
 
   const fetchBillingData = async () => {
     try {
-      setLoading(true)
-      setError(null)
-      
+      setLoading(true);
+      setError(null);
+
       // Fetch all billing data in parallel
       const [sub, methods, inv, upcoming] = await Promise.all([
         paymentService.getCurrentSubscription(),
         paymentService.getPaymentMethods(),
         paymentService.getInvoices({ limit: 10 }),
-        paymentService.getUpcomingInvoice()
-      ])
-      
-      setSubscription(sub)
-      setPaymentMethods(methods)
-      setInvoices(inv)
-      setUpcomingInvoice(upcoming)
+        paymentService.getUpcomingInvoice(),
+      ]);
+
+      setSubscription(sub);
+      setPaymentMethods(methods);
+      setInvoices(inv);
+      setUpcomingInvoice(upcoming);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to load billing information')
+      setError(err instanceof Error ? err.message : 'Failed to load billing information');
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const handleManageSubscription = async () => {
     try {
-      const response = await paymentService.createPortalSession(
-        window.location.href
-      )
-      window.location.href = response.url
+      const response = await paymentService.createPortalSession(window.location.href);
+      window.location.href = response.url;
     } catch (error) {
-      console.error('Error opening customer portal:', error)
+      console.error('Error opening customer portal:', error);
     }
-  }
+  };
 
   const handleCancelSubscription = async () => {
-    if (!confirm('Are you sure you want to cancel your subscription? You will still have access until the end of your billing period.')) {
-      return
+    if (
+      !confirm(
+        'Are you sure you want to cancel your subscription? You will still have access until the end of your billing period.',
+      )
+    ) {
+      return;
     }
 
     try {
-      await paymentService.cancelSubscription(true)
-      await fetchBillingData()
+      await paymentService.cancelSubscription(true);
+      await fetchBillingData();
     } catch (error) {
-      console.error('Error cancelling subscription:', error)
+      console.error('Error cancelling subscription:', error);
     }
-  }
+  };
 
   const handleReactivateSubscription = async () => {
     try {
-      await paymentService.reactivateSubscription()
-      await fetchBillingData()
+      await paymentService.reactivateSubscription();
+      await fetchBillingData();
     } catch (error) {
-      console.error('Error reactivating subscription:', error)
+      console.error('Error reactivating subscription:', error);
     }
-  }
+  };
 
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'active':
-        return <Badge className="bg-success/20 text-success border-success/40">Active</Badge>
+        return <Badge className="border-success/40 bg-success/20 text-success">Active</Badge>;
       case 'trialing':
-        return <Badge className="bg-blue-500/20 text-blue-700 border-blue-500/40">Trial</Badge>
+        return <Badge className="border-blue-500/40 bg-blue-500/20 text-blue-700">Trial</Badge>;
       case 'past_due':
-        return <Badge className="bg-amber-500/20 text-amber-700 border-amber-500/40">Past Due</Badge>
+        return (
+          <Badge className="border-amber-500/40 bg-amber-500/20 text-amber-700">Past Due</Badge>
+        );
       case 'canceled':
-        return <Badge className="bg-gray-500/20 text-gray-700 border-gray-500/40">Canceled</Badge>
+        return <Badge className="border-gray-500/40 bg-gray-500/20 text-gray-700">Canceled</Badge>;
       default:
-        return <Badge variant="secondary">{status}</Badge>
+        return <Badge variant="secondary">{status}</Badge>;
     }
-  }
+  };
 
   if (loading) {
     return (
@@ -118,7 +114,7 @@ export default function BillingPage() {
           <Skeleton className="h-96" />
         </div>
       </div>
-    )
+    );
   }
 
   if (error) {
@@ -129,10 +125,10 @@ export default function BillingPage() {
           <AlertDescription>{error}</AlertDescription>
         </Alert>
       </div>
-    )
+    );
   }
 
-  const plan = subscription ? PRICING_PLANS[subscription.plan_id] : null
+  const plan = subscription ? PRICING_PLANS[subscription.plan_id] : null;
 
   return (
     <div className="flex-1 space-y-8 p-8">
@@ -153,9 +149,7 @@ export default function BillingPage() {
               <div className="flex items-center justify-between">
                 <div>
                   <h3 className="text-xl font-semibold">{plan?.name} Plan</h3>
-                  <p className="text-muted-foreground">
-                    {formatPrice(plan?.price || 0)}/month
-                  </p>
+                  <p className="text-muted-foreground">{formatPrice(plan?.price || 0)}/month</p>
                 </div>
                 {getStatusBadge(subscription.status)}
               </div>
@@ -164,7 +158,8 @@ export default function BillingPage() {
                 <div>
                   <p className="text-muted-foreground">Current Period</p>
                   <p className="font-medium">
-                    {new Date(subscription.current_period_start).toLocaleDateString()} - {new Date(subscription.current_period_end).toLocaleDateString()}
+                    {new Date(subscription.current_period_start).toLocaleDateString()} -{' '}
+                    {new Date(subscription.current_period_end).toLocaleDateString()}
                   </p>
                 </div>
                 {subscription.trial_end && (
@@ -181,42 +176,37 @@ export default function BillingPage() {
                 <Alert>
                   <AlertCircle className="h-4 w-4" />
                   <AlertDescription>
-                    Your subscription will end on {new Date(subscription.current_period_end).toLocaleDateString()}
+                    Your subscription will end on{' '}
+                    {new Date(subscription.current_period_end).toLocaleDateString()}
                   </AlertDescription>
                 </Alert>
               )}
 
               <div className="flex gap-3">
-                <Button 
+                <Button
                   onClick={handleManageSubscription}
-                  className="bg-gold hover:bg-gold-dark text-navy"
+                  className="bg-gold text-navy hover:bg-gold-dark"
                 >
-                  <CreditCard className="h-4 w-4 mr-2" />
+                  <CreditCard className="mr-2 h-4 w-4" />
                   Manage Subscription
                 </Button>
                 {subscription.status === 'active' && !subscription.cancel_at_period_end && (
-                  <Button 
-                    variant="outline" 
-                    onClick={handleCancelSubscription}
-                  >
+                  <Button variant="outline" onClick={handleCancelSubscription}>
                     Cancel Subscription
                   </Button>
                 )}
                 {subscription.cancel_at_period_end && (
-                  <Button 
-                    variant="outline" 
-                    onClick={handleReactivateSubscription}
-                  >
-                    <RefreshCw className="h-4 w-4 mr-2" />
+                  <Button variant="outline" onClick={handleReactivateSubscription}>
+                    <RefreshCw className="mr-2 h-4 w-4" />
                     Reactivate
                   </Button>
                 )}
               </div>
             </div>
           ) : (
-            <div className="text-center py-8">
-              <p className="text-muted-foreground mb-4">No active subscription</p>
-              <Button asChild className="bg-gold hover:bg-gold-dark text-navy">
+            <div className="py-8 text-center">
+              <p className="mb-4 text-muted-foreground">No active subscription</p>
+              <Button asChild className="bg-gold text-navy hover:bg-gold-dark">
                 <a href="/pricing">View Plans</a>
               </Button>
             </div>
@@ -234,9 +224,9 @@ export default function BillingPage() {
           {paymentMethods.length > 0 ? (
             <div className="space-y-3">
               {paymentMethods.map((method) => (
-                <div 
-                  key={method.id} 
-                  className="flex items-center justify-between p-3 border rounded-lg"
+                <div
+                  key={method.id}
+                  className="flex items-center justify-between rounded-lg border p-3"
                 >
                   <div className="flex items-center gap-3">
                     <CreditCard className="h-5 w-5 text-muted-foreground" />
@@ -249,22 +239,14 @@ export default function BillingPage() {
                       </p>
                     </div>
                   </div>
-                  {method.is_default && (
-                    <Badge variant="secondary">Default</Badge>
-                  )}
+                  {method.is_default && <Badge variant="secondary">Default</Badge>}
                 </div>
               ))}
             </div>
           ) : (
-            <p className="text-center text-muted-foreground py-4">
-              No payment methods on file
-            </p>
+            <p className="py-4 text-center text-muted-foreground">No payment methods on file</p>
           )}
-          <Button 
-            className="mt-4" 
-            variant="outline"
-            onClick={handleManageSubscription}
-          >
+          <Button className="mt-4" variant="outline" onClick={handleManageSubscription}>
             Manage Payment Methods
           </Button>
         </CardContent>
@@ -282,30 +264,29 @@ export default function BillingPage() {
               <Calendar className="h-4 w-4" />
               <AlertDescription>
                 Next invoice: {formatPrice(upcomingInvoice.amount_due / 100)} due on{' '}
-                {upcomingInvoice.due_date ? new Date(upcomingInvoice.due_date).toLocaleDateString() : 'next billing date'}
+                {upcomingInvoice.due_date
+                  ? new Date(upcomingInvoice.due_date).toLocaleDateString()
+                  : 'next billing date'}
               </AlertDescription>
             </Alert>
           )}
-          
+
           {invoices.length > 0 ? (
             <div className="space-y-2">
               {invoices.map((invoice) => (
-                <div 
+                <div
                   key={invoice.id}
-                  className="flex items-center justify-between p-3 border rounded-lg"
+                  className="flex items-center justify-between rounded-lg border p-3"
                 >
                   <div>
-                    <p className="font-medium">
-                      Invoice #{invoice.number || invoice.id.slice(-8)}
-                    </p>
+                    <p className="font-medium">Invoice #{invoice.number || invoice.id.slice(-8)}</p>
                     <p className="text-sm text-muted-foreground">
-                      {new Date(invoice.created).toLocaleDateString()} • {formatPrice(invoice.amount_paid / 100)}
+                      {new Date(invoice.created).toLocaleDateString()} •{' '}
+                      {formatPrice(invoice.amount_paid / 100)}
                     </p>
                   </div>
                   <div className="flex items-center gap-2">
-                    {invoice.status === 'paid' && (
-                      <CheckCircle className="h-4 w-4 text-success" />
-                    )}
+                    {invoice.status === 'paid' && <CheckCircle className="h-4 w-4 text-success" />}
                     <Button
                       variant="ghost"
                       size="sm"
@@ -318,12 +299,10 @@ export default function BillingPage() {
               ))}
             </div>
           ) : (
-            <p className="text-center text-muted-foreground py-4">
-              No invoices yet
-            </p>
+            <p className="py-4 text-center text-muted-foreground">No invoices yet</p>
           )}
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }

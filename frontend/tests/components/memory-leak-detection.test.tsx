@@ -1,6 +1,6 @@
 /**
  * Memory Leak Detection Tests for React Components
- * 
+ *
  * This test suite checks for common memory leak patterns in React components:
  * 1. Event listeners not removed on unmount
  * 2. Timers (setTimeout/setInterval) not cleared
@@ -24,9 +24,9 @@ vi.mock('@/lib/api/services/assessment-ai.service', () => ({
     getQuestionHelp: vi.fn().mockResolvedValue({
       help_text: 'AI help response',
       key_points: ['Point 1', 'Point 2'],
-      follow_up_questions: ['Question 1?', 'Question 2?']
-    })
-  }
+      follow_up_questions: ['Question 1?', 'Question 2?'],
+    }),
+  },
 }));
 
 describe('Memory Leak Detection Tests', () => {
@@ -37,7 +37,7 @@ describe('Memory Leak Detection Tests', () => {
   let originalClearTimeout: typeof clearTimeout;
   let originalSetInterval: typeof setInterval;
   let originalClearInterval: typeof clearInterval;
-  
+
   let eventListeners: Map<string, Set<EventListener>>;
   let activeTimers: Set<NodeJS.Timeout>;
   let activeIntervals: Set<NodeJS.Timeout>;
@@ -66,12 +66,14 @@ describe('Memory Leak Detection Tests', () => {
     });
 
     // Mock removeEventListener to track cleanup
-    document.removeEventListener = vi.fn((event: string, listener: EventListener, options?: any) => {
-      if (eventListeners.has(event)) {
-        eventListeners.get(event)!.delete(listener);
-      }
-      return originalRemoveEventListener.call(document, event, listener, options);
-    });
+    document.removeEventListener = vi.fn(
+      (event: string, listener: EventListener, options?: any) => {
+        if (eventListeners.has(event)) {
+          eventListeners.get(event)!.delete(listener);
+        }
+        return originalRemoveEventListener.call(document, event, listener, options);
+      },
+    );
 
     // Mock setTimeout to track timers
     global.setTimeout = vi.fn((callback: any, delay?: number, ...args: any[]) => {
@@ -110,8 +112,8 @@ describe('Memory Leak Detection Tests', () => {
     global.clearInterval = originalClearInterval;
 
     // Clear any remaining timers/intervals
-    activeTimers.forEach(timer => clearTimeout(timer));
-    activeIntervals.forEach(interval => clearInterval(interval));
+    activeTimers.forEach((timer) => clearTimeout(timer));
+    activeIntervals.forEach((interval) => clearInterval(interval));
   });
 
   describe('AIHelpTooltip Component', () => {
@@ -120,15 +122,10 @@ describe('Memory Leak Detection Tests', () => {
         id: 'q1',
         text: 'Test question',
         type: 'boolean' as const,
-        required: true
+        required: true,
       };
 
-      const { unmount } = render(
-        <AIHelpTooltip
-          question={mockQuestion}
-          frameworkId="gdpr"
-        />
-      );
+      const { unmount } = render(<AIHelpTooltip question={mockQuestion} frameworkId="gdpr" />);
 
       // Check that event listener was added
       expect(document.addEventListener).toHaveBeenCalledWith('keydown', expect.any(Function));
@@ -147,15 +144,10 @@ describe('Memory Leak Detection Tests', () => {
         id: 'q1',
         text: 'Test question',
         type: 'boolean' as const,
-        required: true
+        required: true,
       };
 
-      const { unmount } = render(
-        <AIHelpTooltip
-          question={mockQuestion}
-          frameworkId="gdpr"
-        />
-      );
+      const { unmount } = render(<AIHelpTooltip question={mockQuestion} frameworkId="gdpr" />);
 
       // Trigger AI help request
       const helpButton = screen.getByRole('button', { name: /ai help/i });
@@ -166,7 +158,7 @@ describe('Memory Leak Detection Tests', () => {
 
       // Wait a bit to ensure no late updates
       await act(async () => {
-        await new Promise(resolve => setTimeout(resolve, 100));
+        await new Promise((resolve) => setTimeout(resolve, 100));
       });
 
       // No assertions needed - if component tries to update after unmount,
@@ -180,15 +172,11 @@ describe('Memory Leak Detection Tests', () => {
         id: 'q1',
         text: 'Test question',
         type: 'boolean' as const,
-        required: true
+        required: true,
       };
 
       const { unmount } = render(
-        <AIGuidancePanel
-          question={mockQuestion}
-          frameworkId="gdpr"
-          defaultOpen={true}
-        />
+        <AIGuidancePanel question={mockQuestion} frameworkId="gdpr" defaultOpen={true} />,
       );
 
       // Component should start loading immediately due to defaultOpen
@@ -199,7 +187,7 @@ describe('Memory Leak Detection Tests', () => {
 
       // Wait to ensure no late updates
       await act(async () => {
-        await new Promise(resolve => setTimeout(resolve, 100));
+        await new Promise((resolve) => setTimeout(resolve, 100));
       });
     });
   });
@@ -225,7 +213,7 @@ describe('Memory Leak Detection Tests', () => {
 
       // Wait for the component to trigger its internal timer
       await act(async () => {
-        await new Promise(resolve => originalSetTimeout(resolve, 100));
+        await new Promise((resolve) => originalSetTimeout(resolve, 100));
       });
 
       // Check that timers were created
@@ -248,18 +236,18 @@ describe('Memory Leak Detection Tests', () => {
           document.addEventListener('click', handler);
           // Missing: return () => document.removeEventListener('click', handler);
         }, []);
-        
+
         return <div>Leaky Component</div>;
       };
 
       const { unmount } = render(<LeakyComponent />);
-      
+
       // Check that listener was added
       expect(eventListeners.get('click')?.size).toBe(1);
-      
+
       // Unmount
       unmount();
-      
+
       // Verify listener was NOT removed (memory leak!)
       expect(eventListeners.get('click')?.size).toBe(1);
       expect(document.removeEventListener).not.toHaveBeenCalledWith('click', expect.any(Function));
@@ -272,18 +260,18 @@ describe('Memory Leak Detection Tests', () => {
           setTimeout(() => console.log('timeout'), 5000);
           // Missing: return () => clearTimeout(timer);
         }, []);
-        
+
         return <div>Leaky Timer Component</div>;
       };
 
       const { unmount } = render(<LeakyTimerComponent />);
-      
+
       // Check that timer was created
       expect(activeTimers.size).toBe(1);
-      
+
       // Unmount
       unmount();
-      
+
       // Verify timer was NOT cleared (memory leak!)
       expect(activeTimers.size).toBe(1);
       expect(global.clearTimeout).not.toHaveBeenCalled();
@@ -296,23 +284,18 @@ describe('Memory Leak Detection Tests', () => {
         id: 'q1',
         text: 'Test question',
         type: 'boolean' as const,
-        required: true
+        required: true,
       };
 
       // Rapidly mount and unmount components
       for (let i = 0; i < 10; i++) {
-        const { unmount } = render(
-          <AIHelpTooltip
-            question={mockQuestion}
-            frameworkId="gdpr"
-          />
-        );
-        
+        const { unmount } = render(<AIHelpTooltip question={mockQuestion} frameworkId="gdpr" />);
+
         // Small delay to allow effects to run
         await act(async () => {
-          await new Promise(resolve => originalSetTimeout(resolve, 10));
+          await new Promise((resolve) => originalSetTimeout(resolve, 10));
         });
-        
+
         unmount();
       }
 
@@ -325,40 +308,41 @@ describe('Memory Leak Detection Tests', () => {
 });
 
 // Helper function to check for memory leaks in a component
-export function testComponentForMemoryLeaks(
-  Component: React.ComponentType<any>,
-  props: any = {}
-) {
+export function testComponentForMemoryLeaks(Component: React.ComponentType<any>, props: any = {}) {
   return {
     hasEventListenerLeak: () => {
       const { unmount } = render(<Component {...props} />);
-      const initialListenerCount = Array.from(eventListeners.values())
-        .reduce((sum, set) => sum + set.size, 0);
-      
+      const initialListenerCount = Array.from(eventListeners.values()).reduce(
+        (sum, set) => sum + set.size,
+        0,
+      );
+
       unmount();
-      
-      const finalListenerCount = Array.from(eventListeners.values())
-        .reduce((sum, set) => sum + set.size, 0);
-      
+
+      const finalListenerCount = Array.from(eventListeners.values()).reduce(
+        (sum, set) => sum + set.size,
+        0,
+      );
+
       return finalListenerCount > 0;
     },
-    
+
     hasTimerLeak: () => {
       const { unmount } = render(<Component {...props} />);
       const initialTimerCount = activeTimers.size;
-      
+
       unmount();
-      
+
       return activeTimers.size > initialTimerCount;
     },
-    
+
     hasIntervalLeak: () => {
       const { unmount } = render(<Component {...props} />);
       const initialIntervalCount = activeIntervals.size;
-      
+
       unmount();
-      
+
       return activeIntervals.size > initialIntervalCount;
-    }
+    },
   };
 }

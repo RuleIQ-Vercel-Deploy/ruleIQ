@@ -1,8 +1,12 @@
-"use client";
+'use client';
 
 import { useState, useCallback, useRef } from 'react';
 
-import type { StreamingChunk, StreamingMetadata, StreamingOptions } from '@/lib/api/assessments-ai.service';
+import type {
+  StreamingChunk,
+  StreamingMetadata,
+  StreamingOptions,
+} from '@/lib/api/assessments-ai.service';
 
 export interface StreamingState {
   isStreaming: boolean;
@@ -35,7 +39,7 @@ export function useStreaming(): [StreamingState, StreamingControls] {
     metadata: null,
     progress: 0,
     elapsedTime: 0,
-    content: ''
+    content: '',
   });
 
   const streamFnRef = useRef<((options: StreamingOptions) => Promise<void>) | null>(null);
@@ -44,8 +48,8 @@ export function useStreaming(): [StreamingState, StreamingControls] {
 
   const updateContent = useCallback((chunks: StreamingChunk[]) => {
     return chunks
-      .filter(chunk => chunk.chunk_type === 'content')
-      .map(chunk => chunk.content)
+      .filter((chunk) => chunk.chunk_type === 'content')
+      .map((chunk) => chunk.content)
       .join('');
   }, []);
 
@@ -54,7 +58,7 @@ export function useStreaming(): [StreamingState, StreamingControls] {
     intervalRef.current = setInterval(() => {
       if (startTimeRef.current && !state.isPaused) {
         const elapsed = Math.floor((Date.now() - startTimeRef.current.getTime()) / 1000);
-        setState(prev => ({ ...prev, elapsedTime: elapsed }));
+        setState((prev) => ({ ...prev, elapsedTime: elapsed }));
       }
     }, 1000);
   }, [state.isPaused]);
@@ -66,87 +70,90 @@ export function useStreaming(): [StreamingState, StreamingControls] {
     }
   }, []);
 
-  const start = useCallback(async (streamFn: (options: StreamingOptions) => Promise<void>) => {
-    streamFnRef.current = streamFn;
-    
-    setState(prev => ({
-      ...prev,
-      isStreaming: true,
-      isComplete: false,
-      error: null,
-      chunks: [],
-      progress: 0,
-      elapsedTime: 0,
-      content: ''
-    }));
+  const start = useCallback(
+    async (streamFn: (options: StreamingOptions) => Promise<void>) => {
+      streamFnRef.current = streamFn;
 
-    startTimer();
+      setState((prev) => ({
+        ...prev,
+        isStreaming: true,
+        isComplete: false,
+        error: null,
+        chunks: [],
+        progress: 0,
+        elapsedTime: 0,
+        content: '',
+      }));
 
-    const options: StreamingOptions = {
-      onMetadata: (metadata) => {
-        setState(prev => ({
-          ...prev,
-          metadata,
-          progress: 10
-        }));
-      },
-      
-      onChunk: (chunk) => {
-        setState(prev => {
-          const newChunks = [...prev.chunks, chunk];
-          const newContent = updateContent(newChunks);
-          const newProgress = Math.min(prev.progress + 5, 90);
-          
-          return {
+      startTimer();
+
+      const options: StreamingOptions = {
+        onMetadata: (metadata) => {
+          setState((prev) => ({
             ...prev,
-            chunks: newChunks,
-            content: newContent,
-            progress: newProgress
-          };
-        });
-      },
-      
-      onComplete: () => {
+            metadata,
+            progress: 10,
+          }));
+        },
+
+        onChunk: (chunk) => {
+          setState((prev) => {
+            const newChunks = [...prev.chunks, chunk];
+            const newContent = updateContent(newChunks);
+            const newProgress = Math.min(prev.progress + 5, 90);
+
+            return {
+              ...prev,
+              chunks: newChunks,
+              content: newContent,
+              progress: newProgress,
+            };
+          });
+        },
+
+        onComplete: () => {
+          stopTimer();
+          setState((prev) => ({
+            ...prev,
+            isStreaming: false,
+            isComplete: true,
+            progress: 100,
+          }));
+        },
+
+        onError: (error) => {
+          stopTimer();
+          setState((prev) => ({
+            ...prev,
+            isStreaming: false,
+            isComplete: true,
+            error,
+          }));
+        },
+      };
+
+      try {
+        await streamFn(options);
+      } catch (error) {
         stopTimer();
-        setState(prev => ({
+        setState((prev) => ({
           ...prev,
           isStreaming: false,
           isComplete: true,
-          progress: 100
-        }));
-      },
-      
-      onError: (error) => {
-        stopTimer();
-        setState(prev => ({
-          ...prev,
-          isStreaming: false,
-          isComplete: true,
-          error
+          error: error instanceof Error ? error.message : 'An unknown error occurred',
         }));
       }
-    };
-
-    try {
-      await streamFn(options);
-    } catch (error) {
-      stopTimer();
-      setState(prev => ({
-        ...prev,
-        isStreaming: false,
-        isComplete: true,
-        error: error instanceof Error ? error.message : 'An unknown error occurred'
-      }));
-    }
-  }, [startTimer, stopTimer, updateContent]);
+    },
+    [startTimer, stopTimer, updateContent],
+  );
 
   const pause = useCallback(() => {
-    setState(prev => ({ ...prev, isPaused: true }));
+    setState((prev) => ({ ...prev, isPaused: true }));
     stopTimer();
   }, [stopTimer]);
 
   const resume = useCallback(() => {
-    setState(prev => ({ ...prev, isPaused: false }));
+    setState((prev) => ({ ...prev, isPaused: false }));
     if (!state.isComplete && !state.error) {
       startTimer();
     }
@@ -154,10 +161,10 @@ export function useStreaming(): [StreamingState, StreamingControls] {
 
   const stop = useCallback(() => {
     stopTimer();
-    setState(prev => ({
+    setState((prev) => ({
       ...prev,
       isStreaming: false,
-      isComplete: true
+      isComplete: true,
     }));
   }, [stopTimer]);
 
@@ -172,7 +179,7 @@ export function useStreaming(): [StreamingState, StreamingControls] {
       metadata: null,
       progress: 0,
       elapsedTime: 0,
-      content: ''
+      content: '',
     });
     startTimeRef.current = null;
   }, [stopTimer]);
@@ -192,7 +199,7 @@ export function useStreaming(): [StreamingState, StreamingControls] {
       resume,
       stop,
       reset,
-      retry
-    }
+      retry,
+    },
   ];
 }

@@ -1,8 +1,8 @@
-"use client"
+'use client';
 
-import { Check, Power } from "lucide-react"
+import { Check, Power } from 'lucide-react';
 
-import { Button } from "@/components/ui/button"
+import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
@@ -10,16 +10,15 @@ import {
   DialogTitle,
   DialogDescription,
   DialogFooter,
-} from "@/components/ui/dialog"
+} from '@/components/ui/dialog';
 
-import type { Integration } from "@/lib/data/integrations-data"
-
+import type { Integration } from '@/lib/data/integrations-data';
 
 interface ConnectIntegrationDialogProps {
-  isOpen: boolean
-  onOpenChange: (isOpen: boolean) => void
-  integration: Integration | null
-  onConfirm: () => void
+  isOpen: boolean;
+  onOpenChange: (isOpen: boolean) => void;
+  integration: Integration | null;
+  onConfirm: () => void;
 }
 
 export function ConnectIntegrationDialog({
@@ -28,7 +27,7 @@ export function ConnectIntegrationDialog({
   integration,
   onConfirm,
 }: ConnectIntegrationDialogProps) {
-  if (!integration) return null
+  if (!integration) return null;
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
@@ -36,15 +35,16 @@ export function ConnectIntegrationDialog({
         <DialogHeader>
           <DialogTitle className="text-2xl text-gold">Connect to {integration.name}</DialogTitle>
           <DialogDescription className="text-grey-300">
-            By connecting, you allow ruleIQ to access the following information from your {integration.name} account.
+            By connecting, you allow ruleIQ to access the following information from your{' '}
+            {integration.name} account.
           </DialogDescription>
         </DialogHeader>
         <div className="py-4">
-          <h3 className="font-semibold mb-2 text-eggshell-white">Permissions Required:</h3>
+          <h3 className="text-eggshell-white mb-2 font-semibold">Permissions Required:</h3>
           <ul className="space-y-2">
             {(integration as any).permissions?.map((permission: string) => (
               <li key={permission} className="flex items-start gap-3">
-                <Check className="h-5 w-5 text-success mt-0.5" />
+                <Check className="mt-0.5 h-5 w-5 text-success" />
                 <span className="text-grey-300">{permission}</span>
               </li>
             ))}
@@ -61,5 +61,5 @@ export function ConnectIntegrationDialog({
         </DialogFooter>
       </DialogContent>
     </Dialog>
-  )
+  );
 }

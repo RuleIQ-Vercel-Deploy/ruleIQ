@@ -34,10 +34,9 @@ class ReportService {
     page?: number;
     page_size?: number;
   }): Promise<{ items: Report[]; total: number }> {
-    const response = await apiClient.get<{ items: Report[]; total: number }>(
-      '/reports/history',
-      { params }
-    );
+    const response = await apiClient.get<{ items: Report[]; total: number }>('/reports/history', {
+      params,
+    });
     return response.data;
   }
 
@@ -107,7 +106,7 @@ class ReportService {
    */
   async updateScheduledReport(
     scheduleId: string,
-    data: Partial<ScheduleReportRequest>
+    data: Partial<ScheduleReportRequest>,
   ): Promise<void> {
     await apiClient.patch(`/reports/scheduled/${scheduleId}`, data);
   }
@@ -184,10 +183,10 @@ class ReportService {
       report_ids: reportIds,
       format,
     });
-    
+
     await apiClient.download(
       `/reports/export-bundle/${response.data.bundle_id}/download`,
-      `report-bundle.${format === 'zip' ? 'zip' : 'pdf'}`
+      `report-bundle.${format === 'zip' ? 'zip' : 'pdf'}`,
     );
   }
 }

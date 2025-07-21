@@ -13,7 +13,6 @@ from uuid import uuid4
 
 from google.generativeai.types import HarmBlockThreshold, HarmCategory
 from config.logging_config import get_logger
-from database.user import User
 
 logger = get_logger(__name__)
 
@@ -117,6 +116,7 @@ class SafetyMetrics:
 
 def require_permission(permission: str):
     """Decorator for role-based access control."""
+
     def decorator(func):
         async def wrapper(self, *args, **kwargs):
             # Check if user has required permission
@@ -131,7 +131,9 @@ def require_permission(permission: str):
                     f"Current role: {self.user_role}"
                 )
             return await func(self, *args, **kwargs)
+
         return wrapper
+
     return decorator
 
 
@@ -147,13 +149,13 @@ class AdvancedSafetyManager:
         self.safety_profiles: Dict[str, SafetyProfile] = {}
         self.decision_history: List[SafetyDecisionRecord] = []
         self.metrics = SafetyMetrics()
-        
+
         # Role-based authorization
         self.user_context = user_context or {}
         self.user_role = self.user_context.get("role", "viewer")
         self.user_id = self.user_context.get("user_id")
         self.organization_id = self.user_context.get("organization_id")
-        
+
         # Define role permissions
         self.role_permissions = {
             "viewer": {
@@ -162,7 +164,7 @@ class AdvancedSafetyManager:
                 "can_create_profiles": False,
                 "can_modify_settings": False,
                 "can_override_safety": False,
-                "max_content_risk_level": "low"
+                "max_content_risk_level": "low",
             },
             "user": {
                 "can_view_metrics": True,
@@ -170,7 +172,7 @@ class AdvancedSafetyManager:
                 "can_create_profiles": False,
                 "can_modify_settings": False,
                 "can_override_safety": False,
-                "max_content_risk_level": "medium"
+                "max_content_risk_level": "medium",
             },
             "compliance_officer": {
                 "can_view_metrics": True,
@@ -178,7 +180,7 @@ class AdvancedSafetyManager:
                 "can_create_profiles": True,
                 "can_modify_settings": True,
                 "can_override_safety": False,
-                "max_content_risk_level": "high"
+                "max_content_risk_level": "high",
             },
             "admin": {
                 "can_view_metrics": True,
@@ -186,8 +188,8 @@ class AdvancedSafetyManager:
                 "can_create_profiles": True,
                 "can_modify_settings": True,
                 "can_override_safety": True,
-                "max_content_risk_level": "critical"
-            }
+                "max_content_risk_level": "critical",
+            },
         }
 
         # Initialize default profiles
@@ -213,8 +215,10 @@ class AdvancedSafetyManager:
             "policy",
             "procedure",
         ]
-        
-        logger.info(f"Initialized AdvancedSafetyManager for user {self.user_id} with role {self.user_role}")
+
+        logger.info(
+            f"Initialized AdvancedSafetyManager for user {self.user_id} with role {self.user_role}"
+        )
 
     def _initialize_default_profiles(self):
         """Initialize default safety profiles for different use cases."""
@@ -301,10 +305,10 @@ class AdvancedSafetyManager:
         """Check if current user has a specific permission."""
         if not self.user_role:
             return False
-        
+
         user_permissions = self.role_permissions.get(self.user_role, {})
         return user_permissions.get(permission, False)
-    
+
     def require_permission(self, permission: str, action_description: str = None) -> None:
         """Require a specific permission or raise an exception."""
         if not self.check_permission(permission):
@@ -312,16 +316,16 @@ class AdvancedSafetyManager:
             raise PermissionError(
                 f"User role '{self.user_role}' does not have permission for: {action}"
             )
-    
+
     def get_max_risk_level(self) -> str:
         """Get the maximum content risk level allowed for current user."""
         user_permissions = self.role_permissions.get(self.user_role, {})
         return user_permissions.get("max_content_risk_level", "low")
-    
+
     def can_access_content_type(self, content_type: ContentType) -> bool:
         """Check if user can access specific content type based on risk level."""
         max_risk = self.get_max_risk_level()
-        
+
         # Define content type risk levels
         content_risk_levels = {
             ContentType.GENERAL_QUESTION: "low",
@@ -331,14 +335,14 @@ class AdvancedSafetyManager:
             ContentType.ASSESSMENT_GUIDANCE: "medium",
             ContentType.COMPLIANCE_ANALYSIS: "high",
         }
-        
+
         risk_hierarchy = ["low", "medium", "high", "critical"]
         content_risk = content_risk_levels.get(content_type, "medium")
         max_risk_index = risk_hierarchy.index(max_risk)
         content_risk_index = risk_hierarchy.index(content_risk)
-        
+
         return content_risk_index <= max_risk_index
-    
+
     def get_role_specific_safety_profile(self, content_type: ContentType) -> str:
         """Get safety profile appropriate for user role and content type."""
         if self.user_role == "admin" and self.check_permission("can_override_safety"):
@@ -349,9 +353,10 @@ class AdvancedSafetyManager:
             return "strict"
         else:
             return "standard"
-    
-    def log_authorization_decision(self, action: str, permission: str, granted: bool, 
-                                 context: Optional[Dict[str, Any]] = None) -> None:
+
+    def log_authorization_decision(
+        self, action: str, permission: str, granted: bool, context: Optional[Dict[str, Any]] = None
+    ) -> None:
         """Log authorization decisions for audit purposes."""
         decision_record = SafetyDecisionRecord(
             user_id=self.user_id,
@@ -364,35 +369,37 @@ class AdvancedSafetyManager:
             metadata={
                 "permission_requested": permission,
                 "user_context": self.user_context,
-                "additional_context": context or {}
-            }
+                "additional_context": context or {},
+            },
         )
-        
+
         self.decision_history.append(decision_record)
-        
+
         logger.info(
             f"Authorization decision - User: {self.user_id}, Role: {self.user_role}, "
             f"Action: {action}, Permission: {permission}, Granted: {granted}"
         )
-    
+
     def get_content_filters_for_role(self) -> Dict[str, Any]:
         """Get content filters appropriate for user role."""
         base_filters = {
             "blocked_patterns": self.global_blocked_patterns.copy(),
-            "compliance_keywords": self.compliance_keywords.copy()
+            "compliance_keywords": self.compliance_keywords.copy(),
         }
-        
+
         if self.user_role == "viewer":
             # Most restrictive for viewers
-            base_filters["blocked_patterns"].extend([
-                r"\\b(?:internal|confidential|restricted)\\b",
-                r"\\b(?:privileged|sensitive)\\b.*(?:information|data)\\b"
-            ])
+            base_filters["blocked_patterns"].extend(
+                [
+                    r"\\b(?:internal|confidential|restricted)\\b",
+                    r"\\b(?:privileged|sensitive)\\b.*(?:information|data)\\b",
+                ]
+            )
         elif self.user_role == "user":
             # Standard restrictions
-            base_filters["blocked_patterns"].extend([
-                r"\\b(?:confidential|restricted)\\b.*(?:internal)\\b"
-            ])
+            base_filters["blocked_patterns"].extend(
+                [r"\\b(?:confidential|restricted)\\b.*(?:internal)\\b"]
+            )
         elif self.user_role == "compliance_officer":
             # Fewer restrictions, but still some safeguards
             pass
@@ -400,7 +407,7 @@ class AdvancedSafetyManager:
             # Minimal restrictions for admins
             if self.check_permission("can_override_safety"):
                 base_filters["blocked_patterns"] = []
-        
+
         return base_filters
 
     def get_safety_settings(
@@ -462,7 +469,7 @@ class AdvancedSafetyManager:
 
         Returns:
             Safety decision record
-            
+
         Raises:
             PermissionError: If user lacks authorization for content type
         """
@@ -472,20 +479,20 @@ class AdvancedSafetyManager:
                 action="evaluate_content_safety",
                 permission="access_content_type",
                 granted=False,
-                context={"content_type": content_type.value}
+                context={"content_type": content_type.value},
             )
             raise PermissionError(
                 f"User role '{self.user_role}' cannot access content type '{content_type.value}'"
             )
-        
+
         # Step 2: Log successful authorization
         self.log_authorization_decision(
             action="evaluate_content_safety",
-            permission="access_content_type", 
+            permission="access_content_type",
             granted=True,
-            context={"content_type": content_type.value}
+            context={"content_type": content_type.value},
         )
-        
+
         # Step 3: Get role-appropriate safety profile
         role_appropriate_profile = self.get_role_specific_safety_profile(content_type)
         if profile_name != role_appropriate_profile:
@@ -494,31 +501,31 @@ class AdvancedSafetyManager:
                 f"for user role '{self.user_role}'"
             )
             profile_name = role_appropriate_profile
-        
+
         # Step 4: Get role-specific content filters
         role_filters = self.get_content_filters_for_role()
         profile = self.safety_profiles.get(profile_name, self.safety_profiles["standard"])
-        
+
         # Check if user can evaluate content at this risk level
         user_permissions = self.role_permissions.get(self.user_role, {})
         max_risk_level = user_permissions.get("max_content_risk_level", "low")
-        
+
         # Map profile levels to risk levels for comparison
         risk_level_map = {
             "minimal": "low",
-            "standard": "medium", 
+            "standard": "medium",
             "strict": "high",
-            "regulatory": "critical"
+            "regulatory": "critical",
         }
-        
+
         profile_risk = risk_level_map.get(profile.level.value, "medium")
         allowed_levels = {
             "low": ["low"],
             "medium": ["low", "medium"],
             "high": ["low", "medium", "high"],
-            "critical": ["low", "medium", "high", "critical"]
+            "critical": ["low", "medium", "high", "critical"],
         }
-        
+
         if profile_risk not in allowed_levels.get(max_risk_level, ["low"]):
             logger.warning(
                 f"User {user_id or self.user_id} with role {self.user_role} attempted to use "
@@ -534,7 +541,7 @@ class AdvancedSafetyManager:
             elif max_risk_level == "high":
                 profile = self.safety_profiles["strict"]
                 profile_name = "strict"
-        
+
         decision_id = str(uuid4())
         applied_filters = []
 
@@ -756,11 +763,9 @@ class AdvancedSafetyManager:
         """Get comprehensive safety metrics with role-based access control."""
         # Check permission to view metrics
         self.require_permission("can_view_metrics", "view safety metrics")
-        
+
         self.log_authorization_decision(
-            action="get_safety_metrics",
-            permission="can_view_metrics",
-            granted=True
+            action="get_safety_metrics", permission="can_view_metrics", granted=True
         )
         if self.metrics.total_decisions == 0:
             return {
@@ -878,28 +883,33 @@ class AdvancedSafetyManager:
         logger.info(f"User {self.user_id} created custom safety profile: {name}")
 
         return profile_key
-    
-    def validate_prompt_security(self, prompt_text: str, context_type: str = "general") -> Dict[str, Any]:
+
+    def validate_prompt_security(
+        self, prompt_text: str, context_type: str = "general"
+    ) -> Dict[str, Any]:
         """
         Validate prompt text for security threats with role-based authorization.
-        
+
         Args:
             prompt_text: Text to validate
             context_type: Context for validation
-            
+
         Returns:
             Security validation report
         """
         from .prompt_templates import get_security_analysis
-        
+
         # Get security analysis
         analysis = get_security_analysis(prompt_text, context_type)
-        
+
         # Check if content should be blocked based on role permissions
-        if not self.check_permission("process_sensitive_content") and analysis["threat_level"] in ["suspicious", "malicious"]:
+        if not self.check_permission("process_sensitive_content") and analysis["threat_level"] in [
+            "suspicious",
+            "malicious",
+        ]:
             analysis["recommended_action"] = "ESCALATE_FOR_REVIEW"
             analysis["reason"] = "Insufficient permissions for handling suspicious content"
-            
+
         # Log security event
         self.log_authorization_decision(
             action="validate_prompt_security",
@@ -908,10 +918,10 @@ class AdvancedSafetyManager:
             metadata={
                 "threat_level": analysis["threat_level"],
                 "confidence": analysis["confidence"],
-                "context_type": context_type
-            }
+                "context_type": context_type,
+            },
         )
-        
+
         return analysis
 
 
@@ -924,69 +934,75 @@ _default_safety_manager = AdvancedSafetyManager()
 
 def get_safety_manager(user_context: Optional[Dict[str, Any]] = None) -> AdvancedSafetyManager:
     """Get safety manager instance for user context.
-    
+
     Args:
         user_context: Dictionary containing user_id, role, organization_id
-        
+
     Returns:
         AdvancedSafetyManager instance configured for the user
     """
     if not user_context or not user_context.get("user_id"):
         return _default_safety_manager
-        
+
     user_id = user_context["user_id"]
-    
+
     # Check if we already have a manager for this user
     if user_id not in _safety_managers:
         _safety_managers[user_id] = AdvancedSafetyManager(user_context)
-        
+
     return _safety_managers[user_id]
 
-def get_safety_manager_for_user(user: Any, organization_id: Optional[str] = None) -> AdvancedSafetyManager:
+
+def get_safety_manager_for_user(
+    user: Any, organization_id: Optional[str] = None
+) -> AdvancedSafetyManager:
     """Get a properly configured safety manager for a user with role-based authorization."""
     user_context = {
-        "user_id": str(user.id) if hasattr(user, 'id') else None,
-        "role": getattr(user, 'role', 'user'),  # Default to 'user' role
-        "organization_id": organization_id or getattr(user, 'organization_id', None),
-        "email": getattr(user, 'email', None),
-        "is_active": getattr(user, 'is_active', True)
+        "user_id": str(user.id) if hasattr(user, "id") else None,
+        "role": getattr(user, "role", "user"),  # Default to 'user' role
+        "organization_id": organization_id or getattr(user, "organization_id", None),
+        "email": getattr(user, "email", None),
+        "is_active": getattr(user, "is_active", True),
     }
-    
+
     return get_safety_manager(user_context)
 
-def validate_safety_manager_permissions(safety_manager: AdvancedSafetyManager, 
-                                       required_permissions: List[str]) -> bool:
+
+def validate_safety_manager_permissions(
+    safety_manager: AdvancedSafetyManager, required_permissions: List[str]
+) -> bool:
     """Validate that a safety manager has all required permissions."""
     return all(safety_manager.check_permission(perm) for perm in required_permissions)
 
+
 class RoleBasedSafetyMiddleware:
     """Middleware for role-based safety management in AI operations."""
-    
+
     def __init__(self, default_role: str = "user"):
         self.default_role = default_role
-    
+
     def get_safety_manager(self, user_context: Dict[str, Any]) -> AdvancedSafetyManager:
         """Get safety manager with user context."""
         return get_safety_manager(user_context)
-    
+
     def check_content_access(self, user_role: str, content_type: ContentType) -> bool:
         """Check if user role can access content type."""
         temp_manager = AdvancedSafetyManager({"role": user_role})
         return temp_manager.can_access_content_type(content_type)
-    
+
     def get_allowed_safety_profiles(self, user_role: str) -> List[str]:
         """Get list of safety profiles allowed for user role."""
         temp_manager = AdvancedSafetyManager({"role": user_role})
-        
+
         allowed_profiles = ["minimal"]  # Everyone can use minimal
-        
+
         if temp_manager.check_permission("can_view_metrics"):
             allowed_profiles.append("standard")
-        
+
         if temp_manager.check_permission("can_create_profiles"):
             allowed_profiles.extend(["balanced", "strict"])
-        
+
         if temp_manager.check_permission("can_override_safety"):
             allowed_profiles.append("permissive")
-        
+
         return allowed_profiles

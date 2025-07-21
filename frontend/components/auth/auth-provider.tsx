@@ -96,7 +96,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const refreshUser = async () => {
     try {
       const currentUser = await authService.getCurrentUser();
-          setUser(currentUser as unknown as User);
+      setUser(currentUser as unknown as User);
     } catch (error) {
       console.error('User refresh error:', error);
       setUser(null);

@@ -1,8 +1,8 @@
-"use client"
+'use client';
 
-import * as React from "react"
+import * as React from 'react';
 
-import { Button } from "@/components/ui/button"
+import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
@@ -12,19 +12,19 @@ import {
   DialogTitle,
   DialogTrigger,
   DialogClose,
-} from "@/components/ui/dialog"
+} from '@/components/ui/dialog';
 
-import type { LucideIcon } from "lucide-react"
+import type { LucideIcon } from 'lucide-react';
 
 interface ConfirmDialogProps {
-  trigger: React.ReactNode
-  title: string
-  description: string
-  onConfirm: () => void
-  confirmText?: string
-  cancelText?: string
-  icon?: LucideIcon
-  variant?: "default" | "destructive"
+  trigger: React.ReactNode;
+  title: string;
+  description: string;
+  onConfirm: () => void;
+  confirmText?: string;
+  cancelText?: string;
+  icon?: LucideIcon;
+  variant?: 'default' | 'destructive';
 }
 
 export function ConfirmDialog({
@@ -32,17 +32,17 @@ export function ConfirmDialog({
   title,
   description,
   onConfirm,
-  confirmText = "Confirm",
-  cancelText = "Cancel",
+  confirmText = 'Confirm',
+  cancelText = 'Cancel',
   icon: Icon,
-  variant = "default",
+  variant = 'default',
 }: ConfirmDialogProps) {
-  const [open, setOpen] = React.useState(false)
+  const [open, setOpen] = React.useState(false);
 
   const handleConfirm = () => {
-    onConfirm()
-    setOpen(false)
-  }
+    onConfirm();
+    setOpen(false);
+  };
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -53,10 +53,12 @@ export function ConfirmDialog({
             {Icon && (
               <div
                 className={`flex h-10 w-10 items-center justify-center rounded-full ${
-                  variant === "destructive" ? "bg-error/10" : "bg-primary/10"
+                  variant === 'destructive' ? 'bg-error/10' : 'bg-primary/10'
                 }`}
               >
-                <Icon className={`h-5 w-5 ${variant === "destructive" ? "text-error" : "text-oxford-blue"}`} />
+                <Icon
+                  className={`h-5 w-5 ${variant === 'destructive' ? 'text-error' : 'text-oxford-blue'}`}
+                />
               </div>
             )}
             <div className="flex-1">
@@ -71,11 +73,15 @@ export function ConfirmDialog({
               {cancelText}
             </Button>
           </DialogClose>
-          <Button variant={variant === "destructive" ? "destructive" : "default"} size="default" onClick={handleConfirm}>
+          <Button
+            variant={variant === 'destructive' ? 'destructive' : 'default'}
+            size="default"
+            onClick={handleConfirm}
+          >
             {confirmText}
           </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
-  )
+  );
 }

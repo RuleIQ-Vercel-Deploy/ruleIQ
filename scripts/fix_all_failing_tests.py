@@ -22,70 +22,72 @@ sys.path.insert(0, str(project_root))
 def fix_fixture_scope_in_file(file_path):
     """Fix fixtures defined inside test classes."""
     print(f"Fixing fixtures in {file_path.name}...")
-    
-    with open(file_path, 'r') as f:
+
+    with open(file_path, "r") as f:
         content = f.read()
-    
+
     # Pattern to find fixtures inside classes
     class_pattern = r'class\s+(\w+).*?:\s*""".*?"""'
     fixture_pattern = r'(\s+)@pytest\.fixture\s*\n\s+def\s+(\w+)\(self[^)]*\):\s*\n\s+"""(.*?)"""(.*?)(?=\n\s+(?:def|@|class)|$)'
-    
+
     # Find all fixtures inside classes
     fixtures_to_move = []
     for class_match in re.finditer(class_pattern, content, re.DOTALL):
-        class_content = content[class_match.start():class_match.end()]
+        class_content = content[class_match.start() : class_match.end()]
         class_name = class_match.group(1)
-        
+
         for fixture_match in re.finditer(fixture_pattern, class_content, re.DOTALL):
             fixture_name = fixture_match.group(2)
             fixture_doc = fixture_match.group(3)
             fixture_body = fixture_match.group(4)
-            
+
             # Clean up the fixture body (remove self parameter)
-            fixture_body = re.sub(r'\(self(?:,\s*)?', '(', fixture_body)
-            
-            fixtures_to_move.append({
-                'name': fixture_name,
-                'doc': fixture_doc,
-                'body': fixture_body,
-                'full_match': fixture_match.group(0)
-            })
-    
+            fixture_body = re.sub(r"\(self(?:,\s*)?", "(", fixture_body)
+
+            fixtures_to_move.append(
+                {
+                    "name": fixture_name,
+                    "doc": fixture_doc,
+                    "body": fixture_body,
+                    "full_match": fixture_match.group(0),
+                }
+            )
+
     if not fixtures_to_move:
         print(f"  No fixtures to move in {file_path.name}")
         return False
-    
+
     # Remove fixtures from inside classes
     modified_content = content
     for fixture in fixtures_to_move:
-        modified_content = modified_content.replace(fixture['full_match'], '')
-    
+        modified_content = modified_content.replace(fixture["full_match"], "")
+
     # Add fixtures before the first class or test
-    first_class_match = re.search(r'^class\s+\w+', modified_content, re.MULTILINE)
+    first_class_match = re.search(r"^class\s+\w+", modified_content, re.MULTILINE)
     if first_class_match:
         insert_pos = first_class_match.start()
-        
+
         # Build fixture definitions
         fixture_defs = []
         for fixture in fixtures_to_move:
-            fixture_def = f'''
+            fixture_def = f"""
 @pytest.fixture
-def {fixture['name']}{fixture['body'].strip()}
-'''
+def {fixture["name"]}{fixture["body"].strip()}
+"""
             fixture_defs.append(fixture_def)
-        
+
         # Insert fixtures
         modified_content = (
-            modified_content[:insert_pos] + 
-            '\n'.join(fixture_defs) + 
-            '\n\n' + 
-            modified_content[insert_pos:]
+            modified_content[:insert_pos]
+            + "\n".join(fixture_defs)
+            + "\n\n"
+            + modified_content[insert_pos:]
         )
-    
+
     # Write back
-    with open(file_path, 'w') as f:
+    with open(file_path, "w") as f:
         f.write(modified_content)
-    
+
     print(f"  Moved {len(fixtures_to_move)} fixtures outside classes")
     return True
 
@@ -93,20 +95,20 @@ def {fixture['name']}{fixture['body'].strip()}
 def fix_cache_strategy_tests():
     """Fix cache strategy and cached content tests."""
     print("\n1. Fixing Cache Strategy Tests...")
-    
+
     test_files = [
         project_root / "tests/unit/services/test_cache_strategy_optimization.py",
-        project_root / "tests/unit/services/test_cached_content.py"
+        project_root / "tests/unit/services/test_cached_content.py",
     ]
-    
+
     for test_file in test_files:
         if test_file.exists():
             # Already fixed in previous script, just verify
-            with open(test_file, 'r') as f:
+            with open(test_file, "r") as f:
                 content = f.read()
-            
+
             # Check if fixtures are outside classes
-            if '@pytest.fixture' in content and 'def optimized_cache_config():' in content:
+            if "@pytest.fixture" in content and "def optimized_cache_config():" in content:
                 print(f"  ✓ {test_file.name} already fixed")
             else:
                 fix_fixture_scope_in_file(test_file)
@@ -117,13 +119,13 @@ def fix_cache_strategy_tests():
 def fix_compliance_accuracy_tests():
     """Fix AI compliance accuracy tests."""
     print("\n2. Fixing AI Compliance Accuracy Tests...")
-    
+
     test_file = project_root / "tests/ai/test_compliance_accuracy.py"
-    
+
     if not test_file.exists():
         print(f"  ✗ {test_file.name} not found!")
         return
-    
+
     # Check if golden dataset exists
     dataset_path = project_root / "tests/ai/golden_datasets/gdpr_questions.json"
     if dataset_path.exists():
@@ -133,6 +135,7 @@ def fix_compliance_accuracy_tests():
         dataset_path.parent.mkdir(parents=True, exist_ok=True)
         # Create minimal dataset
         import json
+
         dataset = [
             {
                 "id": "gdpr_001",
@@ -142,18 +145,18 @@ def fix_compliance_accuracy_tests():
                 "category": "penalties",
                 "keywords": ["€20 million", "4%", "turnover", "fine"],
                 "difficulty": "basic",
-                "source": "GDPR Article 83"
+                "source": "GDPR Article 83",
             }
         ]
-        with open(dataset_path, 'w') as f:
+        with open(dataset_path, "w") as f:
             json.dump(dataset, f, indent=2)
-    
+
     # Check for fixture issues
-    with open(test_file, 'r') as f:
+    with open(test_file, "r") as f:
         content = f.read()
-    
+
     # Look for fixtures inside classes
-    if 'class Test' in content and '@pytest.fixture' in content and 'def ' in content:
+    if "class Test" in content and "@pytest.fixture" in content and "def " in content:
         fix_fixture_scope_in_file(test_file)
     else:
         print("  ✓ No fixture scope issues detected")
@@ -162,22 +165,22 @@ def fix_compliance_accuracy_tests():
 def fix_optimization_performance_tests():
     """Fix AI optimization performance tests."""
     print("\n3. Fixing AI Optimization Performance Tests...")
-    
+
     test_file = project_root / "tests/performance/test_ai_optimization_performance.py"
-    
+
     if not test_file.exists():
         print(f"  ✗ {test_file.name} not found!")
         return
-    
-    with open(test_file, 'r') as f:
+
+    with open(test_file, "r") as f:
         content = f.read()
-    
+
     # Check for fixture issues
-    if 'class Test' in content and '@pytest.fixture' in content:
+    if "class Test" in content and "@pytest.fixture" in content:
         fix_fixture_scope_in_file(test_file)
     else:
         print("  ✓ No fixture scope issues detected")
-    
+
     # Verify circuit breaker exists
     circuit_breaker_path = project_root / "services/ai/circuit_breaker.py"
     if circuit_breaker_path.exists():
@@ -189,37 +192,43 @@ def fix_optimization_performance_tests():
 def fix_database_performance_tests():
     """Fix database performance tests."""
     print("\n4. Fixing Database Performance Tests...")
-    
+
     test_file = project_root / "tests/performance/test_database_performance.py"
-    
+
     if not test_file.exists():
         print(f"  ✗ {test_file.name} not found!")
         return
-    
-    with open(test_file, 'r') as f:
+
+    with open(test_file, "r") as f:
         content = f.read()
-    
+
     # Check for fixture issues
-    if 'class Test' in content and '@pytest.fixture' in content:
+    if "class Test" in content and "@pytest.fixture" in content:
         fix_fixture_scope_in_file(test_file)
     else:
         print("  ✓ No fixture scope issues detected")
-    
+
     # Check database models
     evidence_model = project_root / "database/evidence_item.py"
     if evidence_model.exists():
         print("  ✓ EvidenceItem model exists")
-        
+
         # Verify required fields
-        with open(evidence_model, 'r') as f:
+        with open(evidence_model, "r") as f:
             model_content = f.read()
-        
+
         required_fields = [
-            "user_id", "business_profile_id", "framework_id",
-            "evidence_name", "evidence_type", "control_reference",
-            "description", "status", "collection_method"
+            "user_id",
+            "business_profile_id",
+            "framework_id",
+            "evidence_name",
+            "evidence_type",
+            "control_reference",
+            "description",
+            "status",
+            "collection_method",
         ]
-        
+
         missing_fields = [f for f in required_fields if f not in model_content]
         if missing_fields:
             print(f"  ✗ Missing fields: {missing_fields}")
@@ -232,7 +241,7 @@ def fix_database_performance_tests():
 def create_comprehensive_test_runner():
     """Create a comprehensive test runner."""
     print("\n5. Creating Test Runner...")
-    
+
     runner_content = '''#!/usr/bin/env python3
 """
 Comprehensive test runner for all 32 failing tests.
@@ -365,11 +374,11 @@ if __name__ == "__main__":
     success = main()
     sys.exit(0 if success else 1)
 '''
-    
+
     runner_path = project_root / "scripts/run_all_failing_tests.py"
-    with open(runner_path, 'w') as f:
+    with open(runner_path, "w") as f:
         f.write(runner_content)
-    
+
     os.chmod(runner_path, 0o755)
     print(f"  ✓ Created comprehensive test runner at {runner_path}")
 
@@ -377,16 +386,16 @@ if __name__ == "__main__":
 def main():
     """Main function to apply all fixes."""
     print("🔧 Applying Comprehensive Test Fixes")
-    print("="*60)
-    
+    print("=" * 60)
+
     # Apply all fixes
     fix_cache_strategy_tests()
     fix_compliance_accuracy_tests()
     fix_optimization_performance_tests()
     fix_database_performance_tests()
     create_comprehensive_test_runner()
-    
-    print("\n" + "="*60)
+
+    print("\n" + "=" * 60)
     print("✅ All fixes applied!")
     print("\nNext steps:")
     print("1. Run: python scripts/run_all_failing_tests.py")

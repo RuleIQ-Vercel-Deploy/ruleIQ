@@ -26,12 +26,14 @@ class LoginRequest(BaseModel):
     email: str
     password: str
 
+
 router = APIRouter()
 
 
 class RegisterResponse(BaseModel):
     user: UserResponse
     tokens: Token
+
 
 @router.post(
     "/register",
@@ -64,13 +66,9 @@ async def register(user: UserCreate, db: Session = Depends(get_db)):
             id=db_user.id,
             email=db_user.email,
             is_active=db_user.is_active,
-            created_at=db_user.created_at
+            created_at=db_user.created_at,
         ),
-        tokens=Token(
-            access_token=access_token,
-            refresh_token=refresh_token,
-            token_type="bearer"
-        )
+        tokens=Token(access_token=access_token, refresh_token=refresh_token, token_type="bearer"),
     )
 
 
@@ -157,15 +155,15 @@ async def refresh_token(refresh_token: str, db: Session = Depends(get_db)):
 async def logout(request: Request, token: str = Depends(oauth2_scheme)):
     """Logout endpoint that blacklists the current token and invalidates sessions."""
     from api.dependencies.auth import blacklist_token, decode_token
-    
+
     if token:
         # Enhanced blacklist with metadata
         await blacklist_token(
-            token, 
+            token,
             reason="user_logout",
-            ip_address=getattr(request.client, 'host', None),
-            user_agent=request.headers.get('user-agent'),
-            metadata={"logout_timestamp": datetime.utcnow().isoformat()}
+            ip_address=getattr(request.client, "host", None),
+            user_agent=request.headers.get("user-agent"),
+            metadata={"logout_timestamp": datetime.utcnow().isoformat()},
         )
 
         # Also invalidate user sessions

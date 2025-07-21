@@ -26,13 +26,14 @@ from fastapi.testclient import TestClient
 # =============================================================================
 
 # Fix event loop policy for tests
-if sys.platform.startswith('win'):
+if sys.platform.startswith("win"):
     # Windows ProactorEventLoop closes all socket connections on exit
     # which can cause issues with database connections
     asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
 # Global variable to track if cleanup has been performed
 _cleanup_done = False
+
 
 def cleanup_async_engines():
     """Cleanup async engines at exit."""
@@ -43,13 +44,16 @@ def cleanup_async_engines():
             loop = asyncio.get_event_loop()
             if not loop.is_closed():
                 from database.db_setup import cleanup_db_connections
+
                 loop.run_until_complete(cleanup_db_connections())
         except Exception:
             pass
         _cleanup_done = True
 
+
 # Register cleanup at exit
 atexit.register(cleanup_async_engines)
+
 
 @pytest.fixture(scope="session")
 def event_loop():
@@ -57,13 +61,13 @@ def event_loop():
     loop = asyncio.new_event_loop()
     asyncio.set_event_loop(loop)
     yield loop
-    
+
     # Ensure all async generators are closed
     try:
         loop.run_until_complete(loop.shutdown_asyncgens())
     except Exception:
         pass
-    
+
     # Clean up pending tasks
     try:
         pending = asyncio.all_tasks(loop)
@@ -74,9 +78,10 @@ def event_loop():
             loop.run_until_complete(asyncio.gather(*pending, return_exceptions=True))
     except Exception:
         pass
-    
+
     # Close the loop
     loop.close()
+
 
 # =============================================================================
 # ENVIRONMENT SETUP
@@ -101,6 +106,7 @@ os.environ["TESTING"] = "true"  # Flag for testing mode
 
 # Generate Fernet key
 from cryptography.fernet import Fernet
+
 os.environ["FERNET_KEY"] = Fernet.generate_key().decode()
 
 # =============================================================================
@@ -137,6 +143,7 @@ mock_model.generate_content.return_value = mock_response
 mock_model.generate_content_async = unittest.mock.AsyncMock(return_value=mock_response)
 mock_model.model_name = "gemini-2.5-flash"
 
+
 # Mock streaming
 def mock_stream_generator():
     for i in range(3):
@@ -145,6 +152,7 @@ def mock_stream_generator():
         chunk.parts = [unittest.mock.MagicMock()]
         chunk.parts[0].text = f"Stream chunk {i}"
         yield chunk
+
 
 mock_model.generate_content_stream.side_effect = lambda *args, **kwargs: mock_stream_generator()
 
@@ -184,26 +192,28 @@ sys.modules["google.generativeai.caching"] = mock_genai.caching
 # MOCK REDIS TO AVOID DEPENDENCY ISSUES
 # =============================================================================
 
+
 class MockRedis:
     """Mock Redis client for tests with async support."""
+
     def __init__(self, *args, **kwargs):
         self.data = {}
         self._closed = False
-    
+
     async def get(self, key):
         """Async get method."""
         return self.data.get(key)
-    
+
     async def set(self, key, value, ex=None):
         """Async set method."""
         self.data[key] = value
         return True
-    
+
     async def setex(self, key, ttl, value):
         """Async setex method for setting with expiration."""
         self.data[key] = value
         return True
-    
+
     async def delete(self, *keys):
         """Async delete method."""
         deleted = 0
@@ -212,22 +222,22 @@ class MockRedis:
                 del self.data[key]
                 deleted += 1
         return deleted
-    
+
     async def exists(self, key):
         """Async exists method."""
         return key in self.data
-    
+
     async def keys(self, pattern):
         """Async keys method with pattern matching."""
         # Simple pattern matching for tests
         if pattern == "*":
             return list(self.data.keys())
-        
+
         # Handle simple patterns like "prefix:*"
         if pattern.endswith("*"):
             prefix = pattern[:-1]
             return [k for k in self.data.keys() if k.startswith(prefix)]
-        
+
         # Handle patterns with * in the middle
         pattern_parts = pattern.split("*")
         matching_keys = []
@@ -244,19 +254,20 @@ class MockRedis:
             if match:
                 matching_keys.append(key)
         return matching_keys
-    
+
     async def ping(self):
         """Async ping method."""
         if self._closed:
             raise ConnectionError("Connection is closed")
         return True
-    
+
     async def close(self):
         """Async close method."""
         self._closed = True
-    
+
     def __repr__(self):
         return f"<MockRedis(data_keys={len(self.data)})>"
+
 
 # Mock redis module
 mock_redis_module = unittest.mock.MagicMock()
@@ -299,6 +310,7 @@ from database.assessment_session import AssessmentSession
 from database.chat_conversation import ChatConversation
 from database.chat_message import ChatMessage
 from database.implementation_plan import ImplementationPlan
+
 # IntegrationConfiguration was moved to database.models.integrations.Integration
 from database.readiness_assessment import ReadinessAssessment
 from database.report_schedule import ReportSchedule
@@ -342,6 +354,7 @@ TestSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 # DATABASE FIXTURES
 # =============================================================================
 
+
 @pytest.fixture(scope="session", autouse=True)
 def setup_database(event_loop):
     """Set up database for entire test session."""
@@ -349,26 +362,24 @@ def setup_database(event_loop):
     import subprocess
     import sys
     import os
-    
+
     # Change to project root directory
     original_dir = os.getcwd()
     project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     os.chdir(project_root)
-    
+
     try:
         # Run alembic upgrade to latest
         result = subprocess.run(
-            [sys.executable, "-m", "alembic", "upgrade", "head"],
-            capture_output=True,
-            text=True
+            [sys.executable, "-m", "alembic", "upgrade", "head"], capture_output=True, text=True
         )
-        
+
         if result.returncode != 0:
             print(f"Alembic migration failed: {result.stderr}")
             raise RuntimeError(f"Failed to run database migrations: {result.stderr}")
     finally:
         os.chdir(original_dir)
-    
+
     # Initialize default frameworks
     session = TestSessionLocal()
     try:
@@ -392,30 +403,31 @@ def setup_database(event_loop):
                 "category": "Security & Compliance",
             },
         ]
-        
+
         for fw_data in frameworks:
             existing = session.query(ComplianceFramework).filter_by(name=fw_data["name"]).first()
             if not existing:
                 framework = ComplianceFramework(**fw_data)
                 session.add(framework)
-        
+
         session.commit()
     except Exception as e:
         print(f"Warning: Failed to initialize frameworks: {e}")
         session.rollback()
     finally:
         session.close()
-    
+
     yield
-    
+
     # Skip cleanup of async connections for now to avoid issues
     # The engines will be cleaned up when the process exits
-    
+
     # Clean up sync engine
     engine.dispose()
-    
+
     # Clean up - optional, can be commented out to preserve test data
     # Base.metadata.drop_all(bind=engine)
+
 
 @pytest.fixture
 def db_session():
@@ -430,18 +442,20 @@ def db_session():
     finally:
         session.close()
 
+
 # Async session fixture that returns sync session for compatibility
 @pytest.fixture
 def async_db_session(db_session):
     """Provide sync session for async fixtures (compatibility)."""
     return db_session
 
+
 # Proper async database session fixture
 @pytest_asyncio.fixture
 async def real_async_db_session():
     """Provide a real async database session for tests."""
     from database.db_setup import get_async_db
-    
+
     async for session in get_async_db():
         try:
             yield session
@@ -452,12 +466,14 @@ async def real_async_db_session():
         finally:
             await session.close()
 
+
 # =============================================================================
 # USER AND AUTH FIXTURES
 # =============================================================================
 
 TEST_USER_ID = UUID("12345678-1234-5678-9012-123456789012")
 TEST_BUSINESS_PROFILE_ID = UUID("87654321-4321-8765-4321-876543218765")
+
 
 @pytest.fixture
 def sample_user(db_session):
@@ -466,10 +482,10 @@ def sample_user(db_session):
     existing = db_session.query(User).filter_by(id=TEST_USER_ID).first()
     if existing:
         return existing
-    
+
     # Create a proper bcrypt hash for testing
     from api.dependencies.auth import get_password_hash
-    
+
     user = User(
         id=TEST_USER_ID,
         email="test@example.com",
@@ -481,10 +497,12 @@ def sample_user(db_session):
     db_session.refresh(user)
     return user
 
+
 @pytest.fixture
 def async_sample_user(sample_user):
     """Async user fixture for compatibility."""
     return sample_user
+
 
 @pytest.fixture
 def sample_business_profile(db_session, sample_user):
@@ -493,7 +511,7 @@ def sample_business_profile(db_session, sample_user):
     existing = db_session.query(BusinessProfile).filter_by(id=TEST_BUSINESS_PROFILE_ID).first()
     if existing:
         return existing
-    
+
     profile = BusinessProfile(
         id=TEST_BUSINESS_PROFILE_ID,
         user_id=sample_user.id,
@@ -520,17 +538,21 @@ def sample_business_profile(db_session, sample_user):
     db_session.refresh(profile)
     return profile
 
+
 @pytest.fixture
 def async_sample_business_profile(sample_business_profile):
     """Async business profile fixture for compatibility."""
     return sample_business_profile
 
+
 @pytest.fixture
 def auth_token(sample_user):
     """Generate auth token."""
     from api.dependencies.auth import create_access_token
+
     token_data = {"sub": str(sample_user.id)}
     return create_access_token(data=token_data, expires_delta=timedelta(minutes=30))
+
 
 @pytest.fixture
 def authenticated_headers(auth_token):
@@ -552,9 +574,9 @@ def another_user(db_session):
     db_session.add(user)
     db_session.commit()
     db_session.refresh(user)
-    
+
     yield user
-    
+
     # Cleanup
     db_session.delete(user)
     db_session.commit()
@@ -564,6 +586,7 @@ def another_user(db_session):
 def another_auth_token(another_user):
     """Generate auth token for another user."""
     from api.dependencies.auth import create_access_token
+
     token_data = {"sub": str(another_user.id)}
     return create_access_token(data=token_data, expires_delta=timedelta(minutes=30))
 
@@ -572,6 +595,7 @@ def another_auth_token(another_user):
 def expired_token(sample_user):
     """Generate an expired auth token for testing."""
     from api.dependencies.auth import create_access_token
+
     token_data = {"sub": str(sample_user.id)}
     # Create a token that's already expired
     return create_access_token(data=token_data, expires_delta=timedelta(minutes=-1))
@@ -582,20 +606,22 @@ def another_authenticated_headers(another_auth_token):
     """Auth headers for another user."""
     return {"Authorization": f"Bearer {another_auth_token}"}
 
+
 # =============================================================================
 # ASYNC SESSION WRAPPER
 # =============================================================================
 
+
 class AsyncSessionWrapper:
     """Wrapper to make sync sessions work with async code in tests."""
-    
+
     def __init__(self, sync_session):
         self.sync_session = sync_session
         self._closed = False
-    
+
     async def __aenter__(self):
         return self
-    
+
     async def __aexit__(self, exc_type, exc_val, exc_tb):
         if exc_type:
             await self.rollback()
@@ -603,61 +629,63 @@ class AsyncSessionWrapper:
             await self.commit()
         # Don't close here as the sync session is managed by the fixture
         return False
-    
+
     async def execute(self, stmt):
         return self.sync_session.execute(stmt)
-    
+
     async def commit(self):
         if not self._closed:
             self.sync_session.commit()
-    
+
     async def rollback(self):
         if not self._closed:
             self.sync_session.rollback()
-    
+
     async def close(self):
         # Mark as closed but don't actually close the sync session
         # as it's managed by the fixture
         self._closed = True
-    
+
     def add(self, instance):
         self.sync_session.add(instance)
-    
+
     def delete(self, instance):
         self.sync_session.delete(instance)
-    
+
     async def refresh(self, instance):
         self.sync_session.refresh(instance)
-    
+
     async def merge(self, instance):
         return self.sync_session.merge(instance)
-    
+
     def query(self, *args, **kwargs):
         return self.sync_session.query(*args, **kwargs)
-    
+
     async def flush(self):
         self.sync_session.flush()
-    
+
     async def scalar(self, stmt):
         result = await self.execute(stmt)
         return result.scalar()
-    
+
     async def scalars(self, stmt):
         result = await self.execute(stmt)
         return result.scalars()
-    
+
     async def get(self, model, ident):
         return self.sync_session.get(model, ident)
-    
+
     def begin(self):
         return self
-    
+
     async def __aiter__(self):
         yield self
+
 
 # =============================================================================
 # TEST CLIENT FIXTURES
 # =============================================================================
+
 
 @pytest.fixture
 def client(db_session, sample_user):
@@ -665,70 +693,73 @@ def client(db_session, sample_user):
     from tests.test_app import create_test_app
     from api.dependencies.auth import get_current_active_user, get_current_user
     from database.db_setup import get_async_db, get_db
-    
+
     # Create test app
     app = create_test_app()
-    
+
     # Override dependencies
     def override_get_db():
         try:
             yield db_session
         finally:
             pass
-    
+
     def override_get_async_db():
         # For TestClient, return regular generator, not async
         yield AsyncSessionWrapper(db_session)
-    
+
     def override_get_current_user():
         return sample_user
-    
+
     def override_get_current_active_user():
         return sample_user
-    
+
     app.dependency_overrides[get_db] = override_get_db
     app.dependency_overrides[get_async_db] = override_get_async_db
     app.dependency_overrides[get_current_user] = override_get_current_user
     app.dependency_overrides[get_current_active_user] = override_get_current_active_user
-    
+
     with TestClient(app) as test_client:
         yield test_client
-    
+
     # Clear overrides
     app.dependency_overrides.clear()
+
 
 @pytest.fixture
 def unauthenticated_client(db_session):
     """Unauthenticated test client."""
     from tests.test_app import create_test_app
     from database.db_setup import get_async_db, get_db
-    
+
     # Create test app
     app = create_test_app()
-    
+
     # Override only database dependencies
     def override_get_db():
         try:
             yield db_session
         finally:
             pass
-    
+
     def override_get_async_db():
         # For TestClient, return regular generator, not async
         yield AsyncSessionWrapper(db_session)
-    
+
     app.dependency_overrides[get_db] = override_get_db
     app.dependency_overrides[get_async_db] = override_get_async_db
-    
+
     with TestClient(app) as test_client:
         yield test_client
-    
+
     # Clear overrides
     app.dependency_overrides.clear()
+
 
 # =============================================================================
 # DOMAIN FIXTURES
 # =============================================================================
+
 
 @pytest.fixture
 def sample_compliance_framework(db_session):
@@ -736,7 +767,7 @@ def sample_compliance_framework(db_session):
     existing = db_session.query(ComplianceFramework).filter_by(name="ISO27001").first()
     if existing:
         return existing
-    
+
     framework = ComplianceFramework(
         id=uuid4(),
         name="ISO27001",
@@ -748,6 +779,7 @@ def sample_compliance_framework(db_session):
     db_session.commit()
     db_session.refresh(framework)
     return framework
+
 
 @pytest.fixture
 def sample_evidence_item(db_session, sample_business_profile, sample_compliance_framework):
@@ -770,9 +802,9 @@ def sample_evidence_item(db_session, sample_business_profile, sample_compliance_
     db_session.add(evidence)
     db_session.commit()
     db_session.refresh(evidence)
-    
+
     yield evidence
-    
+
     # Cleanup
     db_session.delete(evidence)
     db_session.commit()
@@ -802,21 +834,24 @@ def sample_policy_document(db_session, sample_business_profile):
     db_session.add(policy)
     db_session.commit()
     db_session.refresh(policy)
-    
+
     yield policy
-    
+
     # Cleanup
     db_session.delete(policy)
     db_session.commit()
+
 
 # =============================================================================
 # UTILITY FIXTURES
 # =============================================================================
 
+
 @pytest.fixture(autouse=True)
 def ensure_ai_mocking():
     """Ensure AI is mocked."""
     yield mock_model
+
 
 @pytest.fixture(autouse=True)
 def reset_app_state():
@@ -824,6 +859,7 @@ def reset_app_state():
     yield
     try:
         from main import app
+
         app.dependency_overrides.clear()
         if hasattr(app, "_openapi"):
             delattr(app, "_openapi")
@@ -832,40 +868,43 @@ def reset_app_state():
     except Exception:
         pass
 
+
 @pytest.fixture(autouse=True)
 async def cleanup_async_resources():
     """Cleanup async resources after each test."""
     yield
     # Give time for any pending async operations
     await asyncio.sleep(0.01)
-    
+
     # Get current loop
     loop = asyncio.get_running_loop()
-    
+
     # Cancel any remaining tasks except the current one
     current_task = asyncio.current_task()
     tasks = [t for t in asyncio.all_tasks(loop) if t != current_task and not t.done()]
-    
+
     for task in tasks:
         task.cancel()
-    
+
     # Wait for all tasks to be cancelled
     if tasks:
         await asyncio.gather(*tasks, return_exceptions=True)
+
 
 @pytest.fixture
 def mock_ai_client():
     """Mock AI client for testing."""
     from unittest.mock import Mock, patch, AsyncMock
-    
+
     mock_client = Mock()
     mock_response = Mock()
     mock_response.text = "Mock AI response for testing compliance guidance."
     mock_client.generate_content.return_value = mock_response
     mock_client.generate_content_async = AsyncMock(return_value=mock_response)
-    
+
     with patch("config.ai_config.get_ai_model", return_value=mock_client):
         yield mock_client
+
 
 @pytest.fixture
 def mock_compliance_assistant():
@@ -873,7 +912,7 @@ def mock_compliance_assistant():
     from unittest.mock import Mock, AsyncMock
     from services.ai.assistant import ComplianceAssistant
     from services.ai.circuit_breaker import AICircuitBreaker
-    
+
     assistant = Mock(spec=ComplianceAssistant)
     assistant.circuit_breaker = Mock(spec=AICircuitBreaker)
     assistant.circuit_breaker.is_model_available.return_value = True
@@ -882,26 +921,20 @@ def mock_compliance_assistant():
         "model_states": {"gemini-2.5-flash": "CLOSED"},
         "metrics": {"success_rate": 0.95},
     }
-    
+
     # Mock async methods
-    assistant.analyze_assessment_results = AsyncMock(return_value={
-        "analysis": "Mock analysis",
-        "gaps": [],
-        "recommendations": []
-    })
+    assistant.analyze_assessment_results = AsyncMock(
+        return_value={"analysis": "Mock analysis", "gaps": [], "recommendations": []}
+    )
     assistant.analyze_assessment_results_stream = AsyncMock()
-    assistant.get_question_help = AsyncMock(return_value={
-        "guidance": "Mock guidance",
-        "confidence_score": 0.9
-    })
-    assistant.generate_followup_questions = AsyncMock(return_value={
-        "questions": []
-    })
-    assistant.get_personalized_recommendations = AsyncMock(return_value={
-        "recommendations": []
-    })
-    
+    assistant.get_question_help = AsyncMock(
+        return_value={"guidance": "Mock guidance", "confidence_score": 0.9}
+    )
+    assistant.generate_followup_questions = AsyncMock(return_value={"questions": []})
+    assistant.get_personalized_recommendations = AsyncMock(return_value={"recommendations": []})
+
     return assistant
+
 
 @pytest_asyncio.fixture
 async def async_test_client(db_session, sample_user):
@@ -909,65 +942,73 @@ async def async_test_client(db_session, sample_user):
     from httpx import ASGITransport, AsyncClient
     from api.dependencies.database import get_db, get_async_db
     from api.dependencies.auth import get_current_user, get_current_active_user
-    
+
     def override_get_db():
         try:
             yield db_session
         finally:
             pass
-    
+
     def override_get_async_db():
         # For TestClient, return regular generator, not async
         yield AsyncSessionWrapper(db_session)
-    
+
     def override_get_current_user():
         return sample_user
-    
+
     def override_get_current_active_user():
         return sample_user
-    
+
     app.dependency_overrides[get_db] = override_get_db
     app.dependency_overrides[get_async_db] = override_get_async_db
     app.dependency_overrides[get_current_user] = override_get_current_user
     app.dependency_overrides[get_current_active_user] = override_get_current_active_user
-    
+
     async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as ac:
         yield ac
-    
+
     app.dependency_overrides.clear()
+
 
 # =============================================================================
 # BACKWARD COMPATIBILITY
 # =============================================================================
+
 
 @pytest.fixture
 def sync_db_session(db_session):
     """Alias for compatibility."""
     return db_session
 
+
 @pytest.fixture
 def sync_sample_user(sample_user):
     """Alias for compatibility."""
     return sample_user
+
 
 @pytest.fixture
 def authenticated_test_client(client):
     """Alias for compatibility."""
     return client
 
+
 @pytest.fixture
 def unauthenticated_test_client(unauthenticated_client):
     """Alias for compatibility."""
     return unauthenticated_client
+
 
 @pytest.fixture
 def test_client(client):
     """Alias for compatibility."""
     return client
 
+
 # =============================================================================
 # TEST UTILITIES
 # =============================================================================
+
 
 def assert_api_response_security(response):
     """Assert API response has proper security headers."""
@@ -976,24 +1017,27 @@ def assert_api_response_security(response):
     assert response.headers["X-Content-Type-Options"] == "nosniff"
     # Additional security checks can be added here
 
+
 # =============================================================================
 # ADDITIONAL TEST FIXTURES
 # =============================================================================
+
 
 @pytest.fixture
 async def mock_cache_manager():
     """Mock cache manager for tests."""
     from config.cache import get_cache_manager
-    
+
     # Get the cache manager and ensure it uses our mock Redis
     cache_manager = await get_cache_manager()
-    
+
     # The cache manager should now use our MockRedis with async methods
     yield cache_manager
-    
+
     # Clean up cache data after test
     if cache_manager.redis_client:
         cache_manager.redis_client.data.clear()
+
 
 @pytest.fixture
 def sample_evidence_data():
@@ -1005,6 +1049,7 @@ def sample_evidence_data():
         "raw_data": '{"file_type": "pdf", "content": "Policy content..."}',
     }
 
+
 @pytest.fixture
 def sample_business_context():
     """Sample business context."""
@@ -1015,10 +1060,12 @@ def sample_business_context():
         "existing_frameworks": ["ISO27001"],
     }
 
+
 @pytest.fixture
 def optimized_cache_config():
     """Cache configuration."""
     from services.ai.cached_content import CacheLifecycleConfig
+
     return CacheLifecycleConfig(
         default_ttl_hours=2,
         max_ttl_hours=8,
@@ -1031,11 +1078,14 @@ def optimized_cache_config():
         ttl_adjustment_factor=0.2,
     )
 
+
 @pytest.fixture
 def compliance_assistant(db_session):
     """Compliance assistant for testing."""
     from services.ai.assistant import ComplianceAssistant
+
     return ComplianceAssistant(db_session)
+
 
 @pytest.fixture
 def performance_config():
@@ -1048,6 +1098,7 @@ def performance_config():
         "concurrent_users": [1, 5, 10, 20],
         "test_duration": 30,  # seconds
     }
+
 
 @pytest.fixture
 def compliance_golden_dataset():
@@ -1077,6 +1128,7 @@ def compliance_golden_dataset():
         },
     ]
 
+
 @pytest.fixture
 def sample_customization_options():
     """Sample policy customization options."""
@@ -1086,6 +1138,7 @@ def sample_customization_options():
         "industry_specific": True,
         "include_templates": True,
     }
+
 
 @pytest.fixture
 def sample_user_data():

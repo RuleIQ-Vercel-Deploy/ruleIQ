@@ -12,12 +12,14 @@ import pytest
 # Run the specific test with detailed output
 if __name__ == "__main__":
     # Run with maximum verbosity and capture turned off
-    exit_code = pytest.main([
-        "tests/integration/api/test_analytics_endpoints.py::TestAnalyticsEndpoints::test_analytics_dashboard_success",
-        "-xvs",
-        "--tb=short",
-        "--capture=no",
-        "--log-cli-level=DEBUG"
-    ])
-    
+    exit_code = pytest.main(
+        [
+            "tests/integration/api/test_analytics_endpoints.py::TestAnalyticsEndpoints::test_analytics_dashboard_success",
+            "-xvs",
+            "--tb=short",
+            "--capture=no",
+            "--log-cli-level=DEBUG",
+        ]
+    )
+
     sys.exit(exit_code)

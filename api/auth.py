@@ -16,6 +16,7 @@ from sqlalchemy.orm import Session
 from config.settings import get_settings
 from database.db_setup import get_db
 from database.user import User
+
 settings = get_settings()
 
 
@@ -73,9 +74,11 @@ async def get_current_user(
     )
 
     try:
-        print(f'[AUTH DEBUG] JWT Secret for decoding: {settings.jwt_secret[:10] if settings.jwt_secret else "None"}...')
-        print(f'[AUTH DEBUG] Token to decode: {token[:50]}...')
-        print(f'[AUTH DEBUG] Algorithm: {ALGORITHM}')
+        print(
+            f"[AUTH DEBUG] JWT Secret for decoding: {settings.jwt_secret[:10] if settings.jwt_secret else 'None'}..."
+        )
+        print(f"[AUTH DEBUG] Token to decode: {token[:50]}...")
+        print(f"[AUTH DEBUG] Algorithm: {ALGORITHM}")
         payload = jwt.decode(token, settings.jwt_secret, algorithms=[ALGORITHM])
         user_id: Optional[str] = payload.get("sub")
         if user_id is None or payload.get("type") != "access":

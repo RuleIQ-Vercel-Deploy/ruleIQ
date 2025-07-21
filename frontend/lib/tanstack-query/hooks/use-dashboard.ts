@@ -30,7 +30,7 @@ export function useDashboard(options?: BaseQueryOptions<UserDashboard>) {
 // Hook to fetch specific widget data
 export function useDashboardWidget(
   widgetType: 'insights' | 'tasks' | 'score' | 'activity',
-  options?: BaseQueryOptions<WidgetData>
+  options?: BaseQueryOptions<WidgetData>,
 ) {
   return useQuery({
     queryKey: dashboardKeys.widget(widgetType),

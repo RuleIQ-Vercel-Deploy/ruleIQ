@@ -12,9 +12,9 @@ from dotenv import load_dotenv
 # Use the same JWT library as the server
 from jose import jwt
 
-print("="*60)
+print("=" * 60)
 print("Direct JWT Authentication Test")
-print("="*60)
+print("=" * 60)
 
 # Load environment variables
 env_path = Path(__file__).parent / ".env.local"
@@ -39,12 +39,12 @@ print("\n1. Creating JWT token...")
 payload = {
     "sub": "testuser@example.com",
     "exp": datetime.utcnow() + timedelta(minutes=5),
-    "type": "access"
+    "type": "access",
 }
 
 try:
     token = jwt.encode(payload, JWT_SECRET, algorithm="HS256")
-    print(f"✓ Token created successfully")
+    print("✓ Token created successfully")
     print(f"  Token: {token[:50]}...")
 except Exception as e:
     print(f"✗ Failed to create token: {e}")
@@ -54,7 +54,7 @@ except Exception as e:
 print("\n2. Verifying JWT token...")
 try:
     decoded = jwt.decode(token, JWT_SECRET, algorithms=["HS256"])
-    print(f"✓ Token verified successfully")
+    print("✓ Token verified successfully")
     print(f"  Payload: {decoded}")
 except Exception as e:
     print(f"✗ Failed to verify token: {e}")
@@ -67,33 +67,36 @@ print("  This is what the server would do:")
 # Import server settings to verify they match
 try:
     from config.settings import get_settings
+
     settings = get_settings()
-    
+
     print(f"  Server JWT secret: {settings.jwt_secret[:10]}...")
     print(f"  Server algorithm: {settings.jwt_algorithm}")
-    
+
     # Verify token with server settings
     server_decoded = jwt.decode(token, settings.jwt_secret, algorithms=[settings.jwt_algorithm])
-    print(f"✓ Server-side verification would succeed!")
-    
+    print("✓ Server-side verification would succeed!")
+
     # Check if secrets match
     if settings.jwt_secret == JWT_SECRET:
-        print(f"✓ Client and server JWT secrets MATCH!")
+        print("✓ Client and server JWT secrets MATCH!")
     else:
-        print(f"✗ Client and server JWT secrets DO NOT MATCH!")
+        print("✗ Client and server JWT secrets DO NOT MATCH!")
         print(f"  Client: {JWT_SECRET[:20]}...")
         print(f"  Server: {settings.jwt_secret[:20]}...")
-        
+
 except Exception as e:
     print(f"✗ Server-side verification failed: {e}")
 
-print("\n" + "="*60)
+print("\n" + "=" * 60)
 print("Summary:")
-print(f"- JWT library: python-jose ✓")
-print(f"- JWT secret loaded: ✓")
-print(f"- Token creation: ✓")
-print(f"- Token verification: ✓")
-print(f"- Configuration matches: {'✓' if 'settings' in locals() and settings.jwt_secret == JWT_SECRET else '✗'}")
+print("- JWT library: python-jose ✓")
+print("- JWT secret loaded: ✓")
+print("- Token creation: ✓")
+print("- Token verification: ✓")
+print(
+    f"- Configuration matches: {'✓' if 'settings' in locals() and settings.jwt_secret == JWT_SECRET else '✗'}"
+)
 
 print("\nThe JWT configuration is working correctly!")
 print("The server startup issue is unrelated to JWT authentication.")

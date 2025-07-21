@@ -65,23 +65,26 @@ npx tsx tests/e2e/verify-setup.ts
 ### Best Practices:
 
 1. **Use Flexible Selectors**: The app doesn't use data-testid attributes consistently, so use semantic selectors:
+
    ```typescript
    // Good
-   await page.locator('input[type="email"]')
-   await page.locator('button[type="submit"]')
-   await page.locator('text=Login')
-   
+   await page.locator('input[type="email"]');
+   await page.locator('button[type="submit"]');
+   await page.locator('text=Login');
+
    // Avoid (unless data-testid exists)
-   await page.locator('[data-testid="login-form"]')
+   await page.locator('[data-testid="login-form"]');
    ```
 
 2. **Use Test Helpers**: Import and use the helper classes:
+
    ```typescript
    import { TestHelpers } from './utils/test-helpers';
    import { TestSelectors } from './fixtures/test-selectors';
    ```
 
 3. **Handle Loading States**: Always wait for content to be ready:
+
    ```typescript
    await helpers.navigateAndWait('/login');
    await helpers.waitForLoadingToComplete();
@@ -89,30 +92,36 @@ npx tsx tests/e2e/verify-setup.ts
 
 4. **Error Handling**: Filter out non-critical console errors:
    ```typescript
-   const criticalErrors = errors.filter(error => 
-     !error.includes('favicon.ico') && 
-     !error.includes('Extension context invalidated') &&
-     !error.includes('ResizeObserver')
+   const criticalErrors = errors.filter(
+     (error) =>
+       !error.includes('favicon.ico') &&
+       !error.includes('Extension context invalidated') &&
+       !error.includes('ResizeObserver'),
    );
    ```
 
 ## 🔧 Common Issues & Solutions
 
 ### Issue: Tests timing out
+
 **Solution**: Increase timeout in specific tests or globally in playwright.config.ts
 
 ### Issue: Selectors not found
+
 **Solution**: Use the browser DevTools to inspect actual element attributes and update selectors accordingly
 
 ### Issue: Flaky tests
+
 **Solution**: Add proper wait conditions and use `waitForLoadState('networkidle')`
 
 ### Issue: Authentication failures
+
 **Solution**: Ensure test user exists or mock authentication for E2E tests
 
 ## 📊 Test Results
 
 Test results are saved in:
+
 - `test-results/` - Test artifacts
 - `test-results/screenshots/` - Screenshots on failure
 - HTML report opens automatically after test run
@@ -143,17 +152,17 @@ test.describe('Login Flow', () => {
   test('should login successfully', async ({ page }) => {
     // Navigate to login page
     await helpers.navigateAndWait('/login');
-    
+
     // Fill form
     await page.locator('input[type="email"]').fill('test@example.com');
     await page.locator('input[type="password"]').fill('password123');
-    
+
     // Submit form
     await page.locator('button[type="submit"]').click();
-    
+
     // Wait for navigation
     await page.waitForURL('**/dashboard', { timeout: 10000 });
-    
+
     // Verify login success
     expect(page.url()).toContain('/dashboard');
   });

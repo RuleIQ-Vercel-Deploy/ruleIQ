@@ -6,12 +6,12 @@ This guide documents the color system migration from the old navy/gold theme to 
 
 ### Old Colors → New Colors Mapping
 
-| Old Color | Old Hex | New Color | New Hex | Usage |
-|-----------|---------|-----------|---------|--------|
-| navy | #17255A | brand-primary | #7C3AED | Primary brand color |
-| gold | #CB963E | warning / brand-secondary | #F59E0B / #06B6D4 | Warnings or secondary accents |
-| turquoise | #00BCD4 | brand-secondary | #06B6D4 | Secondary brand color |
-| midnight | #0F172A | surface-base | #0A0A0B | Base background |
+| Old Color | Old Hex | New Color                 | New Hex           | Usage                         |
+| --------- | ------- | ------------------------- | ----------------- | ----------------------------- |
+| navy      | #17255A | brand-primary             | #7C3AED           | Primary brand color           |
+| gold      | #CB963E | warning / brand-secondary | #F59E0B / #06B6D4 | Warnings or secondary accents |
+| turquoise | #00BCD4 | brand-secondary           | #06B6D4           | Secondary brand color         |
+| midnight  | #0F172A | surface-base              | #0A0A0B           | Base background               |
 
 ### New Color System
 
@@ -169,6 +169,7 @@ glass: {
 ## Common Patterns
 
 ### Hero Sections
+
 ```tsx
 <section className="bg-surface-base">
   <div className="mesh-gradient" />
@@ -178,21 +179,21 @@ glass: {
 ```
 
 ### Dashboard Cards
+
 ```tsx
 <Card className="glass-card">
   <CardHeader>
     <CardTitle className="gradient-text">Title</CardTitle>
   </CardHeader>
-  <CardContent className="text-text-secondary">
-    Content
-  </CardContent>
+  <CardContent className="text-text-secondary">Content</CardContent>
 </Card>
 ```
 
 ### Forms
+
 ```tsx
 <form className="glass-card p-8">
-  <Input className="bg-surface-secondary/50 border-glass-border" />
+  <Input className="border-glass-border bg-surface-secondary/50" />
   <Button className="btn-gradient">Submit</Button>
 </form>
 ```

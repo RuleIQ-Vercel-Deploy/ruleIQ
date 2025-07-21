@@ -8,17 +8,17 @@ test.describe('Keyboard Navigation Tests', () => {
     const tabbableElements = await page.evaluate(() => {
       const selector = 'a, button, input, select, textarea, [tabindex]:not([tabindex="-1"])';
       const elements = Array.from(document.querySelectorAll(selector));
-      
+
       return elements
-        .filter(el => {
+        .filter((el) => {
           const styles = window.getComputedStyle(el);
           return styles.display !== 'none' && styles.visibility !== 'hidden';
         })
-        .map(el => ({
+        .map((el) => ({
           tag: el.tagName,
           text: el.textContent?.trim().substring(0, 30) || '',
           tabIndex: el.getAttribute('tabindex'),
-          position: el.getBoundingClientRect()
+          position: el.getBoundingClientRect(),
         }));
     });
 
@@ -53,7 +53,9 @@ test.describe('Keyboard Navigation Tests', () => {
       if (!modal) return { modalFound: false };
 
       const focusableInModal = Array.from(
-        modal.querySelectorAll('a, button, input, select, textarea, [tabindex]:not([tabindex="-1"])')
+        modal.querySelectorAll(
+          'a, button, input, select, textarea, [tabindex]:not([tabindex="-1"])',
+        ),
       ) as HTMLElement[];
 
       if (focusableInModal.length === 0) return { modalFound: true, focusTrapped: false };
@@ -66,7 +68,7 @@ test.describe('Keyboard Navigation Tests', () => {
       for (let i = 0; i < focusableInModal.length + 1; i++) {
         const event = new KeyboardEvent('keydown', { key: 'Tab', code: 'Tab' });
         activeElement?.dispatchEvent(event);
-        await new Promise(resolve => setTimeout(resolve, 50));
+        await new Promise((resolve) => setTimeout(resolve, 50));
         activeElement = document.activeElement;
       }
 
@@ -76,7 +78,7 @@ test.describe('Keyboard Navigation Tests', () => {
       return {
         modalFound: true,
         focusTrapped: focusInModal,
-        focusableCount: focusableInModal.length
+        focusableCount: focusableInModal.length,
       };
     });
 
@@ -92,18 +94,18 @@ test.describe('Keyboard Navigation Tests', () => {
     const shortcuts = [
       { key: 'Escape', expected: 'close modal or cancel' },
       { key: 'Enter', expected: 'submit or activate' },
-      { key: ' ', expected: 'toggle for checkboxes/buttons' }
+      { key: ' ', expected: 'toggle for checkboxes/buttons' },
     ];
 
     for (const shortcut of shortcuts) {
       await page.keyboard.press(shortcut.key);
-      
+
       // Check if any action was triggered
       const actionTriggered = await page.evaluate(() => {
         // This would need to be customized based on your app's behavior
         return document.activeElement?.tagName !== 'BODY';
       });
-      
+
       // Log for debugging
       console.log(`Shortcut ${shortcut.key}: ${actionTriggered ? 'triggered' : 'no action'}`);
     }
@@ -122,19 +124,19 @@ test.describe('Keyboard Navigation Tests', () => {
 
       // Focus first menu item
       menuItems[0].focus();
-      
+
       // Test arrow key navigation
       const arrowDown = new KeyboardEvent('keydown', { key: 'ArrowDown', code: 'ArrowDown' });
       document.activeElement?.dispatchEvent(arrowDown);
-      
-      await new Promise(resolve => setTimeout(resolve, 100));
-      
-      const focusedIndex = menuItems.findIndex(item => item === document.activeElement);
-      
+
+      await new Promise((resolve) => setTimeout(resolve, 100));
+
+      const focusedIndex = menuItems.findIndex((item) => item === document.activeElement);
+
       return {
         menuFound: true,
         arrowNavWorks: focusedIndex === 1,
-        menuItemCount: menuItems.length
+        menuItemCount: menuItems.length,
       };
     });
 
@@ -148,18 +150,18 @@ test.describe('Keyboard Navigation Tests', () => {
 
     // Get all form fields
     const formFields = await page.locator('input, select, textarea, button').all();
-    
+
     if (formFields.length > 0) {
       // Focus first field
       await formFields[0].focus();
-      
+
       // Tab forward through all fields
       for (let i = 1; i < formFields.length; i++) {
         await page.keyboard.press('Tab');
         const focused = await page.evaluate(() => document.activeElement?.tagName);
         expect(['INPUT', 'SELECT', 'TEXTAREA', 'BUTTON']).toContain(focused);
       }
-      
+
       // Tab backward with Shift+Tab
       for (let i = formFields.length - 2; i >= 0; i--) {
         await page.keyboard.press('Shift+Tab');
@@ -174,28 +176,29 @@ test.describe('Keyboard Navigation Tests', () => {
 
     // Tab to reveal skip link
     await page.keyboard.press('Tab');
-    
+
     // Check if skip link is visible
     const skipLinkTest = await page.evaluate(() => {
       const activeElement = document.activeElement as HTMLAnchorElement;
-      const isSkipLink = activeElement?.textContent?.toLowerCase().includes('skip') || 
-                        activeElement?.className?.toLowerCase().includes('skip');
-      
+      const isSkipLink =
+        activeElement?.textContent?.toLowerCase().includes('skip') ||
+        activeElement?.className?.toLowerCase().includes('skip');
+
       if (isSkipLink && activeElement.href) {
         // Click the skip link
         activeElement.click();
-        
+
         // Check if focus moved to main content
         const targetId = activeElement.href.split('#')[1];
         const target = document.getElementById(targetId);
-        
+
         return {
           skipLinkFound: true,
           targetExists: !!target,
-          focusMoved: document.activeElement === target
+          focusMoved: document.activeElement === target,
         };
       }
-      
+
       return { skipLinkFound: false };
     });
 
@@ -209,7 +212,9 @@ test.describe('Keyboard Navigation Tests', () => {
 
     const dropdownTest = await page.evaluate(async () => {
       // Find dropdown triggers
-      const dropdowns = Array.from(document.querySelectorAll('[aria-haspopup="true"], [data-dropdown]'));
+      const dropdowns = Array.from(
+        document.querySelectorAll('[aria-haspopup="true"], [data-dropdown]'),
+      );
       if (dropdowns.length === 0) return { dropdownFound: false };
 
       const dropdown = dropdowns[0] as HTMLElement;
@@ -218,8 +223,8 @@ test.describe('Keyboard Navigation Tests', () => {
       // Open dropdown with Enter or Space
       const enterEvent = new KeyboardEvent('keydown', { key: 'Enter', code: 'Enter' });
       dropdown.dispatchEvent(enterEvent);
-      
-      await new Promise(resolve => setTimeout(resolve, 200));
+
+      await new Promise((resolve) => setTimeout(resolve, 200));
 
       // Check if dropdown opened
       const expanded = dropdown.getAttribute('aria-expanded') === 'true';
@@ -227,21 +232,23 @@ test.describe('Keyboard Navigation Tests', () => {
 
       if (menu) {
         // Test arrow navigation in dropdown
-        const menuItems = Array.from(menu.querySelectorAll('[role="menuitem"], a, button')) as HTMLElement[];
-        
+        const menuItems = Array.from(
+          menu.querySelectorAll('[role="menuitem"], a, button'),
+        ) as HTMLElement[];
+
         if (menuItems.length > 0) {
           menuItems[0].focus();
-          
+
           // Navigate with arrow keys
           const arrowDown = new KeyboardEvent('keydown', { key: 'ArrowDown', code: 'ArrowDown' });
           document.activeElement?.dispatchEvent(arrowDown);
-          
-          await new Promise(resolve => setTimeout(resolve, 100));
-          
+
+          await new Promise((resolve) => setTimeout(resolve, 100));
+
           return {
             dropdownFound: true,
             opened: expanded || !!menu,
-            navigationWorks: document.activeElement === menuItems[1]
+            navigationWorks: document.activeElement === menuItems[1],
           };
         }
       }
@@ -249,7 +256,7 @@ test.describe('Keyboard Navigation Tests', () => {
       return {
         dropdownFound: true,
         opened: expanded || !!menu,
-        navigationWorks: false
+        navigationWorks: false,
       };
     });
 
@@ -268,11 +275,11 @@ test.describe('Keyboard Navigation Tests', () => {
     // Check where focus is after navigation
     const focusAfterNav = await page.evaluate(() => {
       const activeElement = document.activeElement;
-      const isOnContent = activeElement?.tagName !== 'BODY' && 
-                         !activeElement?.tagName.match(/HTML/);
-      
+      const isOnContent =
+        activeElement?.tagName !== 'BODY' && !activeElement?.tagName.match(/HTML/);
+
       // Check if focus is on skip link or main heading
-      const isAccessibleFocus = 
+      const isAccessibleFocus =
         activeElement?.textContent?.toLowerCase().includes('skip') ||
         activeElement?.tagName === 'H1' ||
         activeElement?.getAttribute('role') === 'main';
@@ -281,7 +288,7 @@ test.describe('Keyboard Navigation Tests', () => {
         hasFocus: isOnContent,
         accessibleFocus: isAccessibleFocus,
         focusedElement: activeElement?.tagName,
-        focusedText: activeElement?.textContent?.substring(0, 50)
+        focusedText: activeElement?.textContent?.substring(0, 50),
       };
     });
 
@@ -297,22 +304,23 @@ test.describe('Keyboard Navigation Tests', () => {
       const helpIndicators = [
         document.querySelector('[aria-keyshortcuts]'),
         document.querySelector('[title*="keyboard"]'),
-        Array.from(document.querySelectorAll('*')).find(el => 
-          el.textContent?.toLowerCase().includes('keyboard shortcuts') ||
-          el.textContent?.toLowerCase().includes('press ? for help')
-        )
+        Array.from(document.querySelectorAll('*')).find(
+          (el) =>
+            el.textContent?.toLowerCase().includes('keyboard shortcuts') ||
+            el.textContent?.toLowerCase().includes('press ? for help'),
+        ),
       ].filter(Boolean);
 
       // Check for custom keyboard shortcuts
       const customShortcuts: string[] = [];
-      document.querySelectorAll('[aria-keyshortcuts]').forEach(el => {
+      document.querySelectorAll('[aria-keyshortcuts]').forEach((el) => {
         const shortcut = el.getAttribute('aria-keyshortcuts');
         if (shortcut) customShortcuts.push(shortcut);
       });
 
       return {
         hasHelpIndicator: helpIndicators.length > 0,
-        customShortcuts
+        customShortcuts,
       };
     });
 
@@ -326,27 +334,31 @@ test.describe('Keyboard Navigation Tests', () => {
     await page.goto('/', { waitUntil: 'networkidle' });
 
     // Get all interactive elements
-    const interactiveElements = await page.locator('a, button, input, select, textarea, [tabindex]:not([tabindex="-1"])').all();
-    
+    const interactiveElements = await page
+      .locator('a, button, input, select, textarea, [tabindex]:not([tabindex="-1"])')
+      .all();
+
     const focusIssues: string[] = [];
 
-    for (const element of interactiveElements.slice(0, 10)) { // Test first 10 to avoid timeout
+    for (const element of interactiveElements.slice(0, 10)) {
+      // Test first 10 to avoid timeout
       await element.focus();
-      
-      const hasFocusIndicator = await element.evaluate(el => {
+
+      const hasFocusIndicator = await element.evaluate((el) => {
         const styles = window.getComputedStyle(el);
         const hasOutline = styles.outline !== 'none' && styles.outline !== '';
         const hasBoxShadow = styles.boxShadow !== 'none' && styles.boxShadow !== '';
-        const hasBorderChange = styles.border !== window.getComputedStyle(el, ':not(:focus)').border;
-        
+        const hasBorderChange =
+          styles.border !== window.getComputedStyle(el, ':not(:focus)').border;
+
         return hasOutline || hasBoxShadow || hasBorderChange;
       });
 
       if (!hasFocusIndicator) {
-        const elementInfo = await element.evaluate(el => ({
+        const elementInfo = await element.evaluate((el) => ({
           tag: el.tagName,
           text: el.textContent?.substring(0, 30),
-          class: el.className
+          class: el.className,
         }));
         focusIssues.push(`${elementInfo.tag}: ${elementInfo.text || elementInfo.class}`);
       }
@@ -363,20 +375,20 @@ test.describe('Keyboard Navigation Tests', () => {
       const results = {
         modalClosed: false,
         dropdownClosed: false,
-        tooltipClosed: false
+        tooltipClosed: false,
       };
 
       // Test modal if exists
       const modalTrigger = document.querySelector('[data-modal-trigger], [onclick*="modal"]');
       if (modalTrigger) {
         (modalTrigger as HTMLElement).click();
-        await new Promise(resolve => setTimeout(resolve, 300));
-        
+        await new Promise((resolve) => setTimeout(resolve, 300));
+
         const modal = document.querySelector('[role="dialog"], .modal');
         if (modal) {
           document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
-          await new Promise(resolve => setTimeout(resolve, 300));
-          
+          await new Promise((resolve) => setTimeout(resolve, 300));
+
           results.modalClosed = window.getComputedStyle(modal).display === 'none';
         }
       }
@@ -385,11 +397,11 @@ test.describe('Keyboard Navigation Tests', () => {
       const dropdown = document.querySelector('[aria-haspopup="true"]');
       if (dropdown) {
         (dropdown as HTMLElement).click();
-        await new Promise(resolve => setTimeout(resolve, 300));
-        
+        await new Promise((resolve) => setTimeout(resolve, 300));
+
         document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
-        await new Promise(resolve => setTimeout(resolve, 300));
-        
+        await new Promise((resolve) => setTimeout(resolve, 300));
+
         results.dropdownClosed = dropdown.getAttribute('aria-expanded') !== 'true';
       }
 
@@ -397,7 +409,7 @@ test.describe('Keyboard Navigation Tests', () => {
     });
 
     // At least one escape behavior should work
-    const anyEscapeWorks = Object.values(escapeTests).some(v => v);
+    const anyEscapeWorks = Object.values(escapeTests).some((v) => v);
     expect(anyEscapeWorks).toBe(true);
   });
 
@@ -418,8 +430,8 @@ test.describe('Keyboard Navigation Tests', () => {
       // Test arrow key navigation
       const arrowRight = new KeyboardEvent('keydown', { key: 'ArrowRight', code: 'ArrowRight' });
       document.activeElement?.dispatchEvent(arrowRight);
-      
-      await new Promise(resolve => setTimeout(resolve, 100));
+
+      await new Promise((resolve) => setTimeout(resolve, 100));
 
       // Check if focus moved
       const focusMoved = document.activeElement !== cells[0];
@@ -427,7 +439,7 @@ test.describe('Keyboard Navigation Tests', () => {
       return {
         gridFound: true,
         navigationWorks: focusMoved,
-        cellCount: cells.length
+        cellCount: cells.length,
       };
     });
 
@@ -442,10 +454,11 @@ test.describe('Keyboard Navigation Tests', () => {
 
     const focusRestorationTest = await page.evaluate(async () => {
       // Find a button that might open a dialog
-      const triggers = Array.from(document.querySelectorAll('button')).filter(btn => 
-        btn.textContent?.toLowerCase().includes('add') ||
-        btn.textContent?.toLowerCase().includes('create') ||
-        btn.textContent?.toLowerCase().includes('edit')
+      const triggers = Array.from(document.querySelectorAll('button')).filter(
+        (btn) =>
+          btn.textContent?.toLowerCase().includes('add') ||
+          btn.textContent?.toLowerCase().includes('create') ||
+          btn.textContent?.toLowerCase().includes('edit'),
       );
 
       if (triggers.length === 0) return { tested: false };
@@ -456,20 +469,22 @@ test.describe('Keyboard Navigation Tests', () => {
 
       // Click to open dialog
       trigger.click();
-      await new Promise(resolve => setTimeout(resolve, 500));
+      await new Promise((resolve) => setTimeout(resolve, 500));
 
       // Find dialog close button
       const dialog = document.querySelector('[role="dialog"], .modal');
       if (!dialog) return { tested: false };
 
-      const closeButton = dialog.querySelector('[aria-label*="close"], .close, button[type="button"]') as HTMLElement;
+      const closeButton = dialog.querySelector(
+        '[aria-label*="close"], .close, button[type="button"]',
+      ) as HTMLElement;
       if (closeButton) {
         closeButton.click();
-        await new Promise(resolve => setTimeout(resolve, 500));
+        await new Promise((resolve) => setTimeout(resolve, 500));
 
         return {
           tested: true,
-          focusRestored: document.activeElement === originalFocus
+          focusRestored: document.activeElement === originalFocus,
         };
       }
 

@@ -105,10 +105,15 @@ async def _sync_evidence_status_async() -> Dict[str, int]:
 
 @celery_app.task(
     bind=True,
-    autoretry_for=(DatabaseException,),
+    autoretry_for=(DatabaseException, Exception),
+    retry_kwargs={
+        'max_retries': 5,
+        'countdown': 60,  # Start with 60 seconds
+    },
     retry_backoff=True,
-    max_retries=3,
-    default_retry_delay=300,
+    retry_backoff_max=600,  # Max 10 minutes
+    retry_jitter=True,
+    rate_limit='5/m',  # 5 tasks per minute for evidence processing
 )
 def process_evidence_item(
     self,
@@ -137,10 +142,15 @@ def process_evidence_item(
 
 @celery_app.task(
     bind=True,
-    autoretry_for=(DatabaseException,),
+    autoretry_for=(DatabaseException, Exception),
+    retry_kwargs={
+        'max_retries': 5,
+        'countdown': 120,  # Start with 2 minutes for sync tasks
+    },
     retry_backoff=True,
-    max_retries=3,
-    default_retry_delay=600,
+    retry_backoff_max=600,
+    retry_jitter=True,
+    rate_limit='3/m',  # 3 sync tasks per minute
 )
 def sync_evidence_status(self):
     """Periodically syncs the status of evidence items by running the async helper."""

@@ -5,22 +5,22 @@ Revises: 802adb6d1be8
 Create Date: 2025-07-17 12:00:00.000000
 
 """
+
 from alembic import op
-import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'add_check_constraints_data_integrity'
-down_revision = '802adb6d1be8'
+revision = "add_check_constraints_data_integrity"
+down_revision = "802adb6d1be8"
 branch_labels = None
 depends_on = None
 
 
 def upgrade():
     """Add CHECK constraints for data integrity."""
-    
+
     # ==== HIGH PRIORITY CONSTRAINTS ====
-    
+
     # 1. BUSINESS PROFILE CONSTRAINTS
     try:
         # Employee count validation
@@ -31,7 +31,7 @@ def upgrade():
         """)
     except Exception:
         pass  # Constraint may already exist
-    
+
     try:
         # Company name validation
         op.execute("""
@@ -41,7 +41,7 @@ def upgrade():
         """)
     except Exception:
         pass
-    
+
     try:
         # Data sensitivity validation
         op.execute("""
@@ -51,7 +51,7 @@ def upgrade():
         """)
     except Exception:
         pass
-    
+
     # 2. COMPLIANCE FRAMEWORK CONSTRAINTS
     try:
         # Complexity score validation (1-10 scale)
@@ -62,7 +62,7 @@ def upgrade():
         """)
     except Exception:
         pass
-    
+
     try:
         # Implementation time validation (1-260 weeks, max 5 years)
         op.execute("""
@@ -72,7 +72,7 @@ def upgrade():
         """)
     except Exception:
         pass
-    
+
     try:
         # Employee threshold validation
         op.execute("""
@@ -82,7 +82,7 @@ def upgrade():
         """)
     except Exception:
         pass
-    
+
     # 3. EVIDENCE ITEM CONSTRAINTS
     try:
         # Evidence name length validation
@@ -93,7 +93,7 @@ def upgrade():
         """)
     except Exception:
         pass
-    
+
     try:
         # Evidence type validation
         op.execute("""
@@ -103,7 +103,7 @@ def upgrade():
         """)
     except Exception:
         pass
-    
+
     try:
         # Status validation
         op.execute("""
@@ -113,7 +113,7 @@ def upgrade():
         """)
     except Exception:
         pass
-    
+
     try:
         # Priority validation
         op.execute("""
@@ -123,7 +123,7 @@ def upgrade():
         """)
     except Exception:
         pass
-    
+
     try:
         # Collection method validation
         op.execute("""
@@ -133,7 +133,7 @@ def upgrade():
         """)
     except Exception:
         pass
-    
+
     try:
         # Collection frequency validation
         op.execute("""
@@ -143,7 +143,7 @@ def upgrade():
         """)
     except Exception:
         pass
-    
+
     try:
         # Compliance score impact validation (0-100%)
         op.execute("""
@@ -153,7 +153,7 @@ def upgrade():
         """)
     except Exception:
         pass
-    
+
     try:
         # File size validation (max 5GB)
         op.execute("""
@@ -163,7 +163,7 @@ def upgrade():
         """)
     except Exception:
         pass
-    
+
     # 4. ASSESSMENT SESSION CONSTRAINTS
     try:
         # Session type validation
@@ -174,7 +174,7 @@ def upgrade():
         """)
     except Exception:
         pass
-    
+
     try:
         # Status validation
         op.execute("""
@@ -184,7 +184,7 @@ def upgrade():
         """)
     except Exception:
         pass
-    
+
     try:
         # Stage validation
         op.execute("""
@@ -194,7 +194,7 @@ def upgrade():
         """)
     except Exception:
         pass
-    
+
     try:
         # Total stages validation
         op.execute("""
@@ -204,7 +204,7 @@ def upgrade():
         """)
     except Exception:
         pass
-    
+
     try:
         # Questions validation
         op.execute("""
@@ -214,7 +214,7 @@ def upgrade():
         """)
     except Exception:
         pass
-    
+
     try:
         # Total questions validation
         op.execute("""
@@ -224,7 +224,7 @@ def upgrade():
         """)
     except Exception:
         pass
-    
+
     # 5. READINESS ASSESSMENT CONSTRAINTS
     try:
         # Overall score validation (0-100%)
@@ -235,7 +235,7 @@ def upgrade():
         """)
     except Exception:
         pass
-    
+
     try:
         # Score trend validation
         op.execute("""
@@ -245,7 +245,7 @@ def upgrade():
         """)
     except Exception:
         pass
-    
+
     # 6. INTEGRATION CONSTRAINTS
     try:
         # Integration provider validation
@@ -256,7 +256,7 @@ def upgrade():
         """)
     except Exception:
         pass
-    
+
     try:
         # Provider length validation
         op.execute("""
@@ -266,7 +266,7 @@ def upgrade():
         """)
     except Exception:
         pass
-    
+
     # 7. EVIDENCE COLLECTION CONSTRAINTS
     try:
         # Evidence collection status validation
@@ -277,7 +277,7 @@ def upgrade():
         """)
     except Exception:
         pass
-    
+
     try:
         # Progress percentage validation
         op.execute("""
@@ -287,7 +287,7 @@ def upgrade():
         """)
     except Exception:
         pass
-    
+
     try:
         # Collection mode validation
         op.execute("""
@@ -297,7 +297,7 @@ def upgrade():
         """)
     except Exception:
         pass
-    
+
     # 8. INTEGRATION EVIDENCE ITEM CONSTRAINTS
     try:
         # Source system validation
@@ -308,7 +308,7 @@ def upgrade():
         """)
     except Exception:
         pass
-    
+
     try:
         # Data classification validation
         op.execute("""
@@ -318,7 +318,7 @@ def upgrade():
         """)
     except Exception:
         pass
-    
+
     try:
         # Retention policy validation
         op.execute("""
@@ -328,7 +328,7 @@ def upgrade():
         """)
     except Exception:
         pass
-    
+
     # 9. GENERATED POLICY CONSTRAINTS
     try:
         # Policy status validation
@@ -339,7 +339,7 @@ def upgrade():
         """)
     except Exception:
         pass
-    
+
     try:
         # Policy type validation
         op.execute("""
@@ -349,7 +349,7 @@ def upgrade():
         """)
     except Exception:
         pass
-    
+
     try:
         # Generation time validation (0.1 seconds to 1 hour)
         op.execute("""
@@ -359,7 +359,7 @@ def upgrade():
         """)
     except Exception:
         pass
-    
+
     try:
         # Word count validation
         op.execute("""
@@ -369,7 +369,7 @@ def upgrade():
         """)
     except Exception:
         pass
-    
+
     try:
         # Compliance coverage validation (0-1 score)
         op.execute("""
@@ -379,7 +379,7 @@ def upgrade():
         """)
     except Exception:
         pass
-    
+
     # 10. CHAT CONVERSATION CONSTRAINTS
     try:
         # Chat conversation status validation
@@ -390,7 +390,7 @@ def upgrade():
         """)
     except Exception:
         pass
-    
+
     try:
         # Title length validation
         op.execute("""
@@ -400,9 +400,9 @@ def upgrade():
         """)
     except Exception:
         pass
-    
+
     # ==== DATE LOGIC CONSTRAINTS ====
-    
+
     # Evidence items date logic
     try:
         op.execute("""
@@ -412,7 +412,7 @@ def upgrade():
         """)
     except Exception:
         pass
-    
+
     try:
         op.execute("""
             ALTER TABLE evidence_items 
@@ -421,7 +421,7 @@ def upgrade():
         """)
     except Exception:
         pass
-    
+
     try:
         op.execute("""
             ALTER TABLE evidence_items 
@@ -430,7 +430,7 @@ def upgrade():
         """)
     except Exception:
         pass
-    
+
     # Assessment session date logic
     try:
         op.execute("""
@@ -440,7 +440,7 @@ def upgrade():
         """)
     except Exception:
         pass
-    
+
     try:
         op.execute("""
             ALTER TABLE assessment_sessions 
@@ -449,7 +449,7 @@ def upgrade():
         """)
     except Exception:
         pass
-    
+
     # Evidence collection date logic
     try:
         op.execute("""
@@ -459,7 +459,7 @@ def upgrade():
         """)
     except Exception:
         pass
-    
+
     try:
         op.execute("""
             ALTER TABLE evidence_collections 
@@ -468,7 +468,7 @@ def upgrade():
         """)
     except Exception:
         pass
-    
+
     # Generated policy date logic
     try:
         op.execute("""
@@ -478,7 +478,7 @@ def upgrade():
         """)
     except Exception:
         pass
-    
+
     try:
         op.execute("""
             ALTER TABLE generated_policies 
@@ -487,7 +487,7 @@ def upgrade():
         """)
     except Exception:
         pass
-    
+
     # Chat conversation date logic
     try:
         op.execute("""
@@ -497,89 +497,110 @@ def upgrade():
         """)
     except Exception:
         pass
-    
+
     print("✅ Successfully added CHECK constraints for data integrity")
 
 
 def downgrade():
     """Remove CHECK constraints."""
-    
+
     # Drop all constraints in reverse order
     constraint_tables = [
-        ('chat_conversations', [
-            'ck_chat_conversation_update_dates',
-            'ck_chat_conversation_title_length', 
-            'ck_chat_conversation_status_values'
-        ]),
-        ('generated_policies', [
-            'ck_generated_policy_approval_dates',
-            'ck_generated_policy_review_dates',
-            'ck_generated_policy_coverage',
-            'ck_generated_policy_word_count',
-            'ck_generated_policy_generation_time',
-            'ck_generated_policy_type',
-            'ck_generated_policy_status'
-        ]),
-        ('evidence_collections', [
-            'ck_evidence_collection_completion_dates',
-            'ck_evidence_collection_dates',
-            'ck_evidence_collection_mode',
-            'ck_evidence_collection_progress',
-            'ck_evidence_collection_status'
-        ]),
-        ('integration_evidence_items', [
-            'ck_integration_evidence_retention',
-            'ck_integration_evidence_classification',
-            'ck_integration_evidence_source'
-        ]),
-        ('integrations', [
-            'ck_integration_provider_length',
-            'ck_integration_provider'
-        ]),
-        ('readiness_assessments', [
-            'ck_readiness_assessment_trend',
-            'ck_readiness_assessment_overall_score'
-        ]),
-        ('assessment_sessions', [
-            'ck_assessment_session_completion_dates',
-            'ck_assessment_session_activity_dates',
-            'ck_assessment_session_total_questions',
-            'ck_assessment_session_questions',
-            'ck_assessment_session_total_stages',
-            'ck_assessment_session_stages',
-            'ck_assessment_session_status',
-            'ck_assessment_session_type'
-        ]),
-        ('evidence_items', [
-            'ck_evidence_item_approval_dates',
-            'ck_evidence_item_review_dates',
-            'ck_evidence_item_collection_dates',
-            'ck_evidence_item_file_size',
-            'ck_evidence_item_score_impact',
-            'ck_evidence_item_frequency',
-            'ck_evidence_item_method',
-            'ck_evidence_item_priority',
-            'ck_evidence_item_status',
-            'ck_evidence_item_type',
-            'ck_evidence_item_name_length'
-        ]),
-        ('compliance_frameworks', [
-            'ck_compliance_framework_employee_threshold',
-            'ck_compliance_framework_implementation_time',
-            'ck_compliance_framework_complexity'
-        ]),
-        ('business_profiles', [
-            'ck_business_profile_data_sensitivity',
-            'ck_business_profile_company_name_length',
-            'ck_business_profile_employee_count'
-        ])
+        (
+            "chat_conversations",
+            [
+                "ck_chat_conversation_update_dates",
+                "ck_chat_conversation_title_length",
+                "ck_chat_conversation_status_values",
+            ],
+        ),
+        (
+            "generated_policies",
+            [
+                "ck_generated_policy_approval_dates",
+                "ck_generated_policy_review_dates",
+                "ck_generated_policy_coverage",
+                "ck_generated_policy_word_count",
+                "ck_generated_policy_generation_time",
+                "ck_generated_policy_type",
+                "ck_generated_policy_status",
+            ],
+        ),
+        (
+            "evidence_collections",
+            [
+                "ck_evidence_collection_completion_dates",
+                "ck_evidence_collection_dates",
+                "ck_evidence_collection_mode",
+                "ck_evidence_collection_progress",
+                "ck_evidence_collection_status",
+            ],
+        ),
+        (
+            "integration_evidence_items",
+            [
+                "ck_integration_evidence_retention",
+                "ck_integration_evidence_classification",
+                "ck_integration_evidence_source",
+            ],
+        ),
+        ("integrations", ["ck_integration_provider_length", "ck_integration_provider"]),
+        (
+            "readiness_assessments",
+            ["ck_readiness_assessment_trend", "ck_readiness_assessment_overall_score"],
+        ),
+        (
+            "assessment_sessions",
+            [
+                "ck_assessment_session_completion_dates",
+                "ck_assessment_session_activity_dates",
+                "ck_assessment_session_total_questions",
+                "ck_assessment_session_questions",
+                "ck_assessment_session_total_stages",
+                "ck_assessment_session_stages",
+                "ck_assessment_session_status",
+                "ck_assessment_session_type",
+            ],
+        ),
+        (
+            "evidence_items",
+            [
+                "ck_evidence_item_approval_dates",
+                "ck_evidence_item_review_dates",
+                "ck_evidence_item_collection_dates",
+                "ck_evidence_item_file_size",
+                "ck_evidence_item_score_impact",
+                "ck_evidence_item_frequency",
+                "ck_evidence_item_method",
+                "ck_evidence_item_priority",
+                "ck_evidence_item_status",
+                "ck_evidence_item_type",
+                "ck_evidence_item_name_length",
+            ],
+        ),
+        (
+            "compliance_frameworks",
+            [
+                "ck_compliance_framework_employee_threshold",
+                "ck_compliance_framework_implementation_time",
+                "ck_compliance_framework_complexity",
+            ],
+        ),
+        (
+            "business_profiles",
+            [
+                "ck_business_profile_data_sensitivity",
+                "ck_business_profile_company_name_length",
+                "ck_business_profile_employee_count",
+            ],
+        ),
     ]
-    
+
     for table_name, constraints in constraint_tables:
         for constraint_name in constraints:
             try:
                 op.execute(f"ALTER TABLE {table_name} DROP CONSTRAINT {constraint_name}")
             except Exception:
                 pass  # Constraint may not exist
-    
+
     print("✅ Successfully removed CHECK constraints")

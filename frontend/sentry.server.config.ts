@@ -1,10 +1,11 @@
 import * as Sentry from '@sentry/nextjs';
 
 const SENTRY_DSN = process.env['NEXT_PUBLIC_SENTRY_DSN'];
-const isValidDsn = SENTRY_DSN && 
-  SENTRY_DSN !== "https://your-dsn@sentry.io/project-id" && 
-  SENTRY_DSN.startsWith("https://") && 
-  SENTRY_DSN.includes("@sentry.io");
+const isValidDsn =
+  SENTRY_DSN &&
+  SENTRY_DSN !== 'https://your-dsn@sentry.io/project-id' &&
+  SENTRY_DSN.startsWith('https://') &&
+  SENTRY_DSN.includes('@sentry.io');
 
 if (isValidDsn) {
   Sentry.init({

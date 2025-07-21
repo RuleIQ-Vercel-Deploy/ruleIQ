@@ -46,21 +46,21 @@ export function getClientIp(request: NextRequest): string {
   const forwarded = request.headers.get('x-forwarded-for');
   const realIp = request.headers.get('x-real-ip');
   const remoteAddress = request.headers.get('remote-addr');
-  
+
   if (forwarded) {
     // x-forwarded-for can contain multiple IPs, take the first one
     const firstIp = forwarded.split(',')[0];
     return firstIp ? firstIp.trim() : 'unknown';
   }
-  
+
   if (realIp) {
     return realIp;
   }
-  
+
   if (remoteAddress) {
     return remoteAddress;
   }
-  
+
   return 'unknown';
 }
 
@@ -75,11 +75,7 @@ function defaultKeyGenerator(request: NextRequest): string {
  * Apply rate limiting to a request
  */
 export function rateLimit(options: RateLimitOptions) {
-  const {
-    windowMs,
-    maxRequests,
-    keyGenerator = defaultKeyGenerator,
-  } = options;
+  const { windowMs, maxRequests, keyGenerator = defaultKeyGenerator } = options;
 
   return (request: NextRequest): RateLimitResult => {
     const key = keyGenerator(request);
@@ -88,7 +84,7 @@ export function rateLimit(options: RateLimitOptions) {
 
     // Get or create rate limit entry
     let entry = rateLimitStore.get(key);
-    
+
     if (!entry || entry.resetTime <= now) {
       // First request or window expired, create new entry
       entry = {
@@ -96,7 +92,7 @@ export function rateLimit(options: RateLimitOptions) {
         resetTime,
       };
       rateLimitStore.set(key, entry);
-      
+
       return {
         success: true,
         limit: maxRequests,
@@ -108,7 +104,7 @@ export function rateLimit(options: RateLimitOptions) {
 
     // Increment counter
     entry.count++;
-    
+
     const success = entry.count <= maxRequests;
     const remaining = Math.max(0, maxRequests - entry.count);
 
@@ -189,18 +185,18 @@ export const routeRateLimits: Record<string, (request: NextRequest) => RateLimit
  * Apply rate limiting based on route
  */
 export function applyRateLimit(request: NextRequest): RateLimitResult | null {
-  const {pathname} = request.nextUrl;
-  
+  const { pathname } = request.nextUrl;
+
   // Check for specific route rate limits
   const rateLimiter = routeRateLimits[pathname];
   if (rateLimiter) {
     return rateLimiter(request);
   }
-  
+
   // Apply general API rate limiting
   if (pathname.startsWith('/api/')) {
     return rateLimiters.api(request);
   }
-  
+
   return null;
 }

@@ -25,41 +25,41 @@ describe('AI Service Integration Tests', () => {
       company_name: 'TechCorp Ltd',
       industry: 'Technology',
       size: 'medium',
-      compliance_frameworks: ['GDPR', 'ISO 27001']
+      compliance_frameworks: ['GDPR', 'ISO 27001'],
     },
     {
-      id: 'test-2', 
+      id: 'test-2',
       company_name: 'HealthCare Solutions',
       industry: 'Healthcare',
       size: 'large',
-      compliance_frameworks: ['GDPR', 'HIPAA']
+      compliance_frameworks: ['GDPR', 'HIPAA'],
     },
     {
       id: 'test-3',
       company_name: 'FinanceFirst Bank',
       industry: 'Financial Services',
       size: 'large',
-      compliance_frameworks: ['GDPR', 'PCI DSS', 'FCA']
-    }
+      compliance_frameworks: ['GDPR', 'PCI DSS', 'FCA'],
+    },
   ];
 
   const testAnswers = {
-    'company_size': '50-200',
-    'industry': 'technology',
-    'handles_personal_data': 'Yes',
-    'processes_payments': 'No',
-    'data_sensitivity': 'High',
-    'implementation_timeline': '3 months',
-    'biggest_concern': 'Data protection compliance',
-    'recent_incidents': 'No',
-    'compliance_budget': '£25K-£100K'
+    company_size: '50-200',
+    industry: 'technology',
+    handles_personal_data: 'Yes',
+    processes_payments: 'No',
+    data_sensitivity: 'High',
+    implementation_timeline: '3 months',
+    biggest_concern: 'Data protection compliance',
+    recent_incidents: 'No',
+    compliance_budget: '£25K-£100K',
   };
 
   describe('Helper Methods Testing', () => {
     test('getBusinessProfileFromContext should extract context correctly', () => {
       const context = assessmentAIService.getBusinessProfileFromContext(
         testBusinessProfiles[0],
-        testAnswers
+        testAnswers,
       );
 
       expect(context).toBeDefined();
@@ -70,11 +70,11 @@ describe('AI Service Integration Tests', () => {
     test('getExistingPoliciesFromAnswers should identify policies', () => {
       const testAnswersWithPolicies = {
         ...testAnswers,
-        'privacy_policy': 'Yes',
-        'data_protection_policy': 'No',
-        'security_policy': 'Yes',
-        'regular_audits': 'Yes',
-        'staff_training': 'No'
+        privacy_policy: 'Yes',
+        data_protection_policy: 'No',
+        security_policy: 'Yes',
+        regular_audits: 'Yes',
+        staff_training: 'No',
       };
 
       const policies = assessmentAIService.getExistingPoliciesFromAnswers(testAnswersWithPolicies);
@@ -90,7 +90,7 @@ describe('AI Service Integration Tests', () => {
       // Test Technology industry
       const techContext = assessmentAIService.getIndustryContextFromAnswers(
         testBusinessProfiles[0],
-        testAnswers
+        testAnswers,
       );
 
       expect(techContext.industry).toBe('Technology');
@@ -101,7 +101,7 @@ describe('AI Service Integration Tests', () => {
       // Test Healthcare industry
       const healthContext = assessmentAIService.getIndustryContextFromAnswers(
         testBusinessProfiles[1],
-        { ...testAnswers, industry: 'healthcare' }
+        { ...testAnswers, industry: 'healthcare' },
       );
 
       expect(healthContext.industry).toBe('Healthcare');
@@ -112,7 +112,7 @@ describe('AI Service Integration Tests', () => {
       // Test Financial Services industry
       const financeContext = assessmentAIService.getIndustryContextFromAnswers(
         testBusinessProfiles[2],
-        { ...testAnswers, industry: 'financial services' }
+        { ...testAnswers, industry: 'financial services' },
       );
 
       expect(financeContext.industry).toBe('Financial Services');
@@ -125,9 +125,9 @@ describe('AI Service Integration Tests', () => {
       // Test urgent timeline
       const urgentAnswers = {
         ...testAnswers,
-        'implementation_timeline': 'immediate',
-        'recent_incidents': 'Yes',
-        'regulatory_deadline': 'Yes'
+        implementation_timeline: 'immediate',
+        recent_incidents: 'Yes',
+        regulatory_deadline: 'Yes',
       };
 
       const urgentTimeline = assessmentAIService.getTimelinePreferenceFromAnswers(urgentAnswers);
@@ -153,8 +153,8 @@ describe('AI Service Integration Tests', () => {
         framework_id: 'gdpr',
         user_context: {
           business_profile: testBusinessProfiles[0],
-          current_answers: testAnswers
-        }
+          current_answers: testAnswers,
+        },
       };
 
       const response = await assessmentAIService.getQuestionHelp(helpRequest);
@@ -173,8 +173,8 @@ describe('AI Service Integration Tests', () => {
         framework_id: 'gdpr',
         context: {
           business_profile: testBusinessProfiles[0],
-          current_answers: testAnswers
-        }
+          current_answers: testAnswers,
+        },
       };
 
       const response = await assessmentAIService.getFollowUpQuestions(followUpRequest);
@@ -190,7 +190,7 @@ describe('AI Service Integration Tests', () => {
         assessment_id: 'test-assessment',
         responses: testAnswers,
         framework_id: 'gdpr',
-        business_profile: testBusinessProfiles[0] || {}
+        business_profile: testBusinessProfiles[0] || {},
       };
 
       const response = await assessmentAIService.getAssessmentAnalysis(analysisRequest);
@@ -238,16 +238,17 @@ describe('AI Service Integration Tests', () => {
             description: 'Missing data retention policy',
             impact: 'High compliance risk',
             currentState: 'No policy',
-            targetState: 'Documented policy'
-          }
+            targetState: 'Documented policy',
+          },
         ],
         business_profile: testBusinessProfiles[0],
         existing_policies: ['Privacy Policy'],
         industry_context: 'Technology',
-        timeline_preferences: 'urgent'
+        timeline_preferences: 'urgent',
       };
 
-      const response = await assessmentAIService.getPersonalizedRecommendations(recommendationRequest);
+      const response =
+        await assessmentAIService.getPersonalizedRecommendations(recommendationRequest);
 
       expect(response).toBeDefined();
       expect(Array.isArray(response.recommendations)).toBe(true);
@@ -267,17 +268,17 @@ describe('AI Service Integration Tests', () => {
       const context = {
         businessProfile: testBusinessProfiles[0],
         currentAnswers: testAnswers,
-        assessmentType: 'gdpr'
+        assessmentType: 'gdpr',
       };
 
       const response = await assessmentAIService.getEnhancedAIResponse(
         'Provide compliance recommendations for this business',
         context,
-        5000 // 5 second timeout for testing
+        5000, // 5 second timeout for testing
       );
 
       expect(response).toBeDefined();
-      
+
       // Should have either real AI response or fallback
       if (response.fallback) {
         expect(response.analysis).toContain('Unable to generate detailed analysis');

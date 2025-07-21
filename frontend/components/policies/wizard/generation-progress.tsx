@@ -1,43 +1,43 @@
-"use client"
+'use client';
 
-import { Loader2 } from "lucide-react"
-import * as React from "react"
+import { Loader2 } from 'lucide-react';
+import * as React from 'react';
 
 export function GenerationProgress() {
-  const [progress, setProgress] = React.useState(0)
-  const [estimatedTime, setEstimatedTime] = React.useState(45)
+  const [progress, setProgress] = React.useState(0);
+  const [estimatedTime, setEstimatedTime] = React.useState(45);
 
   React.useEffect(() => {
     const progressInterval = setInterval(() => {
       setProgress((prev) => {
         if (prev >= 100) {
-          clearInterval(progressInterval)
-          return 100
+          clearInterval(progressInterval);
+          return 100;
         }
-        return prev + 1
-      })
-    }, 400)
+        return prev + 1;
+      });
+    }, 400);
 
     const timeInterval = setInterval(() => {
       setEstimatedTime((prev) => {
         if (prev <= 0) {
-          clearInterval(timeInterval)
-          return 0
+          clearInterval(timeInterval);
+          return 0;
         }
-        return prev - 1
-      })
-    }, 1000)
+        return prev - 1;
+      });
+    }, 1000);
 
     return () => {
-      clearInterval(progressInterval)
-      clearInterval(timeInterval)
-    }
-  }, [])
+      clearInterval(progressInterval);
+      clearInterval(timeInterval);
+    };
+  }, []);
 
   return (
-    <div className="flex flex-col items-center justify-center text-center h-full space-y-6 p-8 bg-oxford-blue-light rounded-lg border border-white/10">
+    <div className="bg-oxford-blue-light flex h-full flex-col items-center justify-center space-y-6 rounded-lg border border-white/10 p-8 text-center">
       <div className="relative">
-        <svg className="w-32 h-32 transform -rotate-90">
+        <svg className="h-32 w-32 -rotate-90 transform">
           <circle
             className="text-gray-700"
             strokeWidth="8"
@@ -61,17 +61,18 @@ export function GenerationProgress() {
           />
         </svg>
         <div className="absolute inset-0 flex items-center justify-center">
-          <Loader2 className="w-12 h-12 text-gold animate-spin" />
+          <Loader2 className="h-12 w-12 animate-spin text-gold" />
         </div>
       </div>
-      <h2 className="text-2xl font-bold text-eggshell-white">AI is generating your policy...</h2>
+      <h2 className="text-eggshell-white text-2xl font-bold">AI is generating your policy...</h2>
       <p className="text-grey-600">This may take a moment. Please don't close this window.</p>
-      <div className="w-full bg-gray-700 rounded-full h-2.5">
-        <div className="bg-gold h-2.5 rounded-full" style={{ width: `${progress}%` }}></div>
+      <div className="h-2.5 w-full rounded-full bg-gray-700">
+        <div className="h-2.5 rounded-full bg-gold" style={{ width: `${progress}%` }}></div>
       </div>
-      <p className="text-sm text-grey-600">
-        Estimated time remaining: <span className="font-semibold text-eggshell-white">{estimatedTime} seconds</span>
+      <p className="text-grey-600 text-sm">
+        Estimated time remaining:{' '}
+        <span className="text-eggshell-white font-semibold">{estimatedTime} seconds</span>
       </p>
     </div>
-  )
+  );
 }

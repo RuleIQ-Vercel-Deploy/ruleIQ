@@ -1,33 +1,33 @@
-import '@testing-library/jest-dom/vitest'
-import { cleanup } from '@testing-library/react'
-import { afterEach, beforeAll, afterAll, vi } from 'vitest'
-import React from 'react'
+import '@testing-library/jest-dom/vitest';
+import { cleanup } from '@testing-library/react';
+import { afterEach, beforeAll, afterAll, vi } from 'vitest';
+import React from 'react';
 
 // Mock environment variables
-process.env.NEXT_PUBLIC_API_URL = 'http://localhost:8000/api'
-process.env.NEXT_PUBLIC_WEBSOCKET_URL = 'ws://localhost:8000/api/chat/ws'
-process.env.NEXT_PUBLIC_AUTH_DOMAIN = 'localhost'
-process.env.NEXT_PUBLIC_JWT_EXPIRES_IN = '86400'
-process.env.NEXT_PUBLIC_ENABLE_ANALYTICS = 'false'
-process.env.NEXT_PUBLIC_ENABLE_SENTRY = 'false'
-process.env.NEXT_PUBLIC_ENABLE_MOCK_DATA = 'true'
-process.env.NEXT_PUBLIC_ENV = 'test'
-process.env.NODE_ENV = 'test'
-process.env.SKIP_ENV_VALIDATION = 'true'
+process.env.NEXT_PUBLIC_API_URL = 'http://localhost:8000/api';
+process.env.NEXT_PUBLIC_WEBSOCKET_URL = 'ws://localhost:8000/api/chat/ws';
+process.env.NEXT_PUBLIC_AUTH_DOMAIN = 'localhost';
+process.env.NEXT_PUBLIC_JWT_EXPIRES_IN = '86400';
+process.env.NEXT_PUBLIC_ENABLE_ANALYTICS = 'false';
+process.env.NEXT_PUBLIC_ENABLE_SENTRY = 'false';
+process.env.NEXT_PUBLIC_ENABLE_MOCK_DATA = 'true';
+process.env.NEXT_PUBLIC_ENV = 'test';
+process.env.NODE_ENV = 'test';
+process.env.SKIP_ENV_VALIDATION = 'true';
 
 // Setup MSW server for API mocking
-import { server } from './mocks/server'
+import { server } from './mocks/server';
 
 // Global test setup
 beforeAll(() => {
   // Start MSW server
   server.listen({
     onUnhandledRequest: 'warn',
-  })
+  });
   // Mock window.matchMedia (used by components with responsive behavior)
   Object.defineProperty(window, 'matchMedia', {
     writable: true,
-    value: vi.fn().mockImplementation(query => ({
+    value: vi.fn().mockImplementation((query) => ({
       matches: false,
       media: query,
       onchange: null,
@@ -37,27 +37,27 @@ beforeAll(() => {
       removeEventListener: vi.fn(),
       dispatchEvent: vi.fn(),
     })),
-  })
+  });
 
   // Mock window.ResizeObserver
   global.ResizeObserver = vi.fn().mockImplementation(() => ({
     observe: vi.fn(),
     unobserve: vi.fn(),
     disconnect: vi.fn(),
-  }))
+  }));
 
   // Mock window.IntersectionObserver
   global.IntersectionObserver = vi.fn().mockImplementation(() => ({
     observe: vi.fn(),
     unobserve: vi.fn(),
     disconnect: vi.fn(),
-  }))
+  }));
 
   // Mock window.scrollTo
   Object.defineProperty(window, 'scrollTo', {
     writable: true,
     value: vi.fn(),
-  })
+  });
 
   // Mock crypto API for secure storage tests
   Object.defineProperty(window, 'crypto', {
@@ -72,38 +72,38 @@ beforeAll(() => {
       },
       getRandomValues: vi.fn().mockImplementation((array) => {
         for (let i = 0; i < array.length; i++) {
-          array[i] = Math.floor(Math.random() * 256)
+          array[i] = Math.floor(Math.random() * 256);
         }
-        return array
+        return array;
       }),
     },
-  })
+  });
 
   // Mock localStorage with working implementation
-  const localStorageStore: Record<string, string> = {}
+  const localStorageStore: Record<string, string> = {};
   const localStorageMock = {
     getItem: vi.fn((key: string) => localStorageStore[key] || null),
     setItem: vi.fn((key: string, value: string) => {
-      localStorageStore[key] = value
+      localStorageStore[key] = value;
     }),
     removeItem: vi.fn((key: string) => {
-      delete localStorageStore[key]
+      delete localStorageStore[key];
     }),
     clear: vi.fn(() => {
-      Object.keys(localStorageStore).forEach(key => delete localStorageStore[key])
+      Object.keys(localStorageStore).forEach((key) => delete localStorageStore[key]);
     }),
     get length() {
-      return Object.keys(localStorageStore).length
+      return Object.keys(localStorageStore).length;
     },
     key: vi.fn((index: number) => {
-      const keys = Object.keys(localStorageStore)
-      return keys[index] || null
+      const keys = Object.keys(localStorageStore);
+      return keys[index] || null;
     }),
-  }
+  };
   Object.defineProperty(window, 'localStorage', {
     writable: true,
     value: localStorageMock,
-  })
+  });
 
   // Mock sessionStorage
   const sessionStorageMock = {
@@ -113,28 +113,28 @@ beforeAll(() => {
     clear: vi.fn(),
     length: 0,
     key: vi.fn(),
-  }
+  };
   Object.defineProperty(window, 'sessionStorage', {
     writable: true,
     value: sessionStorageMock,
-  })
+  });
 
   // Mock URL.createObjectURL
   Object.defineProperty(URL, 'createObjectURL', {
     writable: true,
     value: vi.fn().mockReturnValue('mock-object-url'),
-  })
+  });
 
   Object.defineProperty(URL, 'revokeObjectURL', {
     writable: true,
     value: vi.fn(),
-  })
+  });
 
   // Mock fetch
-  global.fetch = vi.fn()
+  global.fetch = vi.fn();
 
   // Use real timers for better test stability
-  vi.useRealTimers()
+  vi.useRealTimers();
 
   // Mock navigator.clipboard
   Object.defineProperty(navigator, 'clipboard', {
@@ -144,65 +144,69 @@ beforeAll(() => {
       writeText: vi.fn().mockResolvedValue(undefined),
       readText: vi.fn().mockResolvedValue(''),
     },
-  })
+  });
 
   // Fix user-event clipboard redefinition issue
-  const originalDefineProperty = Object.defineProperty
-  Object.defineProperty = function(obj: any, prop: string, descriptor: PropertyDescriptor) {
+  const originalDefineProperty = Object.defineProperty;
+  Object.defineProperty = function (obj: any, prop: string, descriptor: PropertyDescriptor) {
     if (prop === 'clipboard' && obj === navigator) {
       // Allow redefinition of clipboard property
-      return originalDefineProperty.call(this, obj, prop, { ...descriptor, configurable: true })
+      return originalDefineProperty.call(this, obj, prop, { ...descriptor, configurable: true });
     }
-    return originalDefineProperty.call(this, obj, prop, descriptor)
-  }
+    return originalDefineProperty.call(this, obj, prop, descriptor);
+  };
 
   // Mock File and FileReader
   global.File = class MockFile {
-    constructor(public bits: any[], public name: string, public options: any = {}) {
-      this.type = options.type || ''
-      this.size = bits.reduce((acc, bit) => acc + (bit.length || 0), 0)
-      this.lastModified = options.lastModified || Date.now()
+    constructor(
+      public bits: any[],
+      public name: string,
+      public options: any = {},
+    ) {
+      this.type = options.type || '';
+      this.size = bits.reduce((acc, bit) => acc + (bit.length || 0), 0);
+      this.lastModified = options.lastModified || Date.now();
     }
-    type: string
-    size: number
-    lastModified: number
-    stream = vi.fn()
-    text = vi.fn().mockResolvedValue('')
-    arrayBuffer = vi.fn().mockResolvedValue(new ArrayBuffer(0))
-    slice = vi.fn()
-  }
+    type: string;
+    size: number;
+    lastModified: number;
+    stream = vi.fn();
+    text = vi.fn().mockResolvedValue('');
+    arrayBuffer = vi.fn().mockResolvedValue(new ArrayBuffer(0));
+    slice = vi.fn();
+  };
 
   global.FileReader = class MockFileReader {
-    result: string | ArrayBuffer | null = null
-    error: any = null
-    readyState: number = 0
-    onload: ((event: any) => void) | null = null
-    onerror: ((event: any) => void) | null = null
-    onprogress: ((event: any) => void) | null = null
-    onabort: ((event: any) => void) | null = null
-    onloadstart: ((event: any) => void) | null = null
-    onloadend: ((event: any) => void) | null = null
+    result: string | ArrayBuffer | null = null;
+    error: any = null;
+    readyState: number = 0;
+    onload: ((event: any) => void) | null = null;
+    onerror: ((event: any) => void) | null = null;
+    onprogress: ((event: any) => void) | null = null;
+    onabort: ((event: any) => void) | null = null;
+    onloadstart: ((event: any) => void) | null = null;
+    onloadend: ((event: any) => void) | null = null;
 
     readAsText = vi.fn().mockImplementation(() => {
-      this.readyState = 2
-      this.result = 'mock file content'
-      if (this.onload) this.onload({ target: this })
-    })
+      this.readyState = 2;
+      this.result = 'mock file content';
+      if (this.onload) this.onload({ target: this });
+    });
 
     readAsDataURL = vi.fn().mockImplementation(() => {
-      this.readyState = 2
-      this.result = 'data:text/plain;base64,bW9jayBmaWxlIGNvbnRlbnQ='
-      if (this.onload) this.onload({ target: this })
-    })
+      this.readyState = 2;
+      this.result = 'data:text/plain;base64,bW9jayBmaWxlIGNvbnRlbnQ=';
+      if (this.onload) this.onload({ target: this });
+    });
 
     readAsArrayBuffer = vi.fn().mockImplementation(() => {
-      this.readyState = 2
-      this.result = new ArrayBuffer(8)
-      if (this.onload) this.onload({ target: this })
-    })
+      this.readyState = 2;
+      this.result = new ArrayBuffer(8);
+      if (this.onload) this.onload({ target: this });
+    });
 
-    abort = vi.fn()
-  }
+    abort = vi.fn();
+  };
 
   // Mock HTMLCanvasElement.getContext (for chart components)
   HTMLCanvasElement.prototype.getContext = vi.fn().mockReturnValue({
@@ -221,10 +225,10 @@ beforeAll(() => {
     closePath: vi.fn(),
     stroke: vi.fn(),
     fill: vi.fn(),
-  })
+  });
 
   // Mock HTMLElement.scrollIntoView
-  HTMLElement.prototype.scrollIntoView = vi.fn()
+  HTMLElement.prototype.scrollIntoView = vi.fn();
 
   // Mock WebSocket
   Object.defineProperty(global, 'WebSocket', {
@@ -240,8 +244,8 @@ beforeAll(() => {
       CLOSING: 2,
       CLOSED: 3,
     })),
-  })
-})
+  });
+});
 
 // Mock Next.js router
 vi.mock('next/navigation', () => ({
@@ -257,15 +261,15 @@ vi.mock('next/navigation', () => ({
     get: vi.fn(),
   }),
   usePathname: () => '/',
-}))
+}));
 
 // Mock Next.js image
 vi.mock('next/image', () => ({
   default: (props: any) => {
-    const { src, alt, ...rest } = props
-    return React.createElement('img', { src, alt, ...rest })
+    const { src, alt, ...rest } = props;
+    return React.createElement('img', { src, alt, ...rest });
   },
-}))
+}));
 
 // Mock Framer Motion
 vi.mock('framer-motion', () => ({
@@ -276,33 +280,33 @@ vi.mock('framer-motion', () => ({
     form: ({ children, ...props }: any) => React.createElement('form', props, children),
   },
   AnimatePresence: ({ children }: any) => children,
-}))
+}));
 
 // Cleanup after each test
 afterEach(() => {
-  cleanup()
-  vi.clearAllMocks()
+  cleanup();
+  vi.clearAllMocks();
   // Reset MSW handlers after each test
-  server.resetHandlers()
+  server.resetHandlers();
   // Clear localStorage and sessionStorage mocks
   if (window.localStorage) {
-    window.localStorage.clear() // This will actually clear our store
-    vi.mocked(window.localStorage.clear).mockClear()
-    vi.mocked(window.localStorage.getItem).mockClear()
-    vi.mocked(window.localStorage.setItem).mockClear()
-    vi.mocked(window.localStorage.removeItem).mockClear()
+    window.localStorage.clear(); // This will actually clear our store
+    vi.mocked(window.localStorage.clear).mockClear();
+    vi.mocked(window.localStorage.getItem).mockClear();
+    vi.mocked(window.localStorage.setItem).mockClear();
+    vi.mocked(window.localStorage.removeItem).mockClear();
   }
   if (window.sessionStorage) {
-    vi.mocked(window.sessionStorage.clear).mockClear()
-    vi.mocked(window.sessionStorage.getItem).mockClear()
-    vi.mocked(window.sessionStorage.setItem).mockClear()
-    vi.mocked(window.sessionStorage.removeItem).mockClear()
+    vi.mocked(window.sessionStorage.clear).mockClear();
+    vi.mocked(window.sessionStorage.getItem).mockClear();
+    vi.mocked(window.sessionStorage.setItem).mockClear();
+    vi.mocked(window.sessionStorage.removeItem).mockClear();
   }
-})
+});
 
 // Cleanup after all tests
 afterAll(() => {
-  vi.resetAllMocks()
+  vi.resetAllMocks();
   // Close MSW server
-  server.close()
-})
+  server.close();
+});

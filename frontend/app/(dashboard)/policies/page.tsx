@@ -1,97 +1,107 @@
-"use client"
+'use client';
 
-import { Shield, Plus, Edit, Eye, FileText, Download, Clock, CheckCircle, AlertCircle } from "lucide-react"
-import Link from "next/link"
-import { useRouter } from "next/navigation"
-import { useEffect, useState } from "react"
+import {
+  Shield,
+  Plus,
+  Edit,
+  Eye,
+  FileText,
+  Download,
+  Clock,
+  CheckCircle,
+  AlertCircle,
+} from 'lucide-react';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
-import { Alert, AlertDescription } from "@/components/ui/alert"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Skeleton } from "@/components/ui/skeleton"
-import { policyService } from "@/lib/api/policies.service"
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Skeleton } from '@/components/ui/skeleton';
+import { policyService } from '@/lib/api/policies.service';
 
-
-import type { Policy } from "@/types/api"
+import type { Policy } from '@/types/api';
 
 export default function PoliciesPage() {
-  const router = useRouter()
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-  const [policies, setPolicies] = useState<Policy[]>([])
-  
+  const router = useRouter();
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [policies, setPolicies] = useState<Policy[]>([]);
+
   useEffect(() => {
-    fetchPolicies()
-  }, [])
-  
+    fetchPolicies();
+  }, []);
+
   const fetchPolicies = async () => {
     try {
-      setLoading(true)
-      setError(null)
+      setLoading(true);
+      setError(null);
       const response = await policyService.getPolicies({
         page: 1,
-        page_size: 50
-      })
-      setPolicies(response.policies)
+        page_size: 50,
+      });
+      setPolicies(response.policies);
     } catch (err) {
-      console.error('Error fetching policies:', err)
-      setError(err instanceof Error ? err.message : 'Failed to load policies')
+      console.error('Error fetching policies:', err);
+      setError(err instanceof Error ? err.message : 'Failed to load policies');
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const getStatusIcon = (status: string) => {
     switch (status) {
-      case "active":
-      case "approved":
-        return <CheckCircle className="h-4 w-4" />
-      case "under_review":
-      case "draft":
-        return <Clock className="h-4 w-4" />
+      case 'active':
+      case 'approved':
+        return <CheckCircle className="h-4 w-4" />;
+      case 'under_review':
+      case 'draft':
+        return <Clock className="h-4 w-4" />;
       default:
-        return null
+        return null;
     }
-  }
+  };
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case "active":
-      case "approved":
-        return "bg-success/20 text-success border-success/40"
-      case "under_review":
-        return "bg-warning/20 text-warning border-warning/40"
-      case "draft":
-        return "bg-muted text-muted-foreground border-border"
-      case "archived":
-        return "bg-muted/50 text-muted-foreground border-border"
+      case 'active':
+      case 'approved':
+        return 'bg-success/20 text-success border-success/40';
+      case 'under_review':
+        return 'bg-warning/20 text-warning border-warning/40';
+      case 'draft':
+        return 'bg-muted text-muted-foreground border-border';
+      case 'archived':
+        return 'bg-muted/50 text-muted-foreground border-border';
       default:
-        return "bg-muted text-muted-foreground border-border"
+        return 'bg-muted text-muted-foreground border-border';
     }
-  }
+  };
 
   const formatStatus = (status: string) => {
-    return status.split('_').map(word => 
-      word.charAt(0).toUpperCase() + word.slice(1)
-    ).join(' ')
-  }
+    return status
+      .split('_')
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(' ');
+  };
 
   const handleNewPolicy = () => {
-    router.push('/policies/new')
-  }
+    router.push('/policies/new');
+  };
 
   const handleExportPolicy = async (policyId: string, format: 'pdf' | 'word') => {
     try {
       if (format === 'pdf') {
-        await policyService.exportPolicyAsPDF(policyId)
+        await policyService.exportPolicyAsPDF(policyId);
       } else {
-        await policyService.exportPolicyAsWord(policyId)
+        await policyService.exportPolicyAsWord(policyId);
       }
     } catch (err) {
-      console.error('Error exporting policy:', err)
+      console.error('Error exporting policy:', err);
     }
-  }
+  };
 
   return (
     <div className="flex-1 space-y-8 p-8">
@@ -102,10 +112,7 @@ export default function PoliciesPage() {
             Create and manage compliance policies for your organization
           </p>
         </div>
-        <Button 
-          className="bg-gold hover:bg-gold-dark text-navy"
-          onClick={handleNewPolicy}
-        >
+        <Button className="bg-gold text-navy hover:bg-gold-dark" onClick={handleNewPolicy}>
           <Plus className="mr-2 h-4 w-4" />
           Generate Policy
         </Button>
@@ -129,9 +136,9 @@ export default function PoliciesPage() {
       ) : policies.length > 0 ? (
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {policies.map((policy) => (
-            <Card key={policy.id} className="hover:shadow-lg transition-shadow">
+            <Card key={policy.id} className="transition-shadow hover:shadow-lg">
               <CardHeader>
-                <div className="flex items-center justify-between mb-2">
+                <div className="mb-2 flex items-center justify-between">
                   <Shield className="h-5 w-5 text-gold" />
                   <Badge variant="outline" className={getStatusColor(policy.status)}>
                     {getStatusIcon(policy.status)}
@@ -146,7 +153,9 @@ export default function PoliciesPage() {
               <CardContent className="space-y-4">
                 <div className="flex items-center justify-between text-sm">
                   <span className="text-muted-foreground">Framework</span>
-                  <span className="font-medium">{policy.framework_name || policy.framework_id}</span>
+                  <span className="font-medium">
+                    {policy.framework_name || policy.framework_id}
+                  </span>
                 </div>
                 {policy.version && (
                   <div className="flex items-center justify-between text-sm">
@@ -160,25 +169,15 @@ export default function PoliciesPage() {
                     {new Date(policy.updated_at).toLocaleDateString()}
                   </span>
                 </div>
-                
+
                 <div className="flex gap-2 pt-4">
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    className="flex-1"
-                    asChild
-                  >
+                  <Button size="sm" variant="outline" className="flex-1" asChild>
                     <Link href={`/policies/${policy.id}`}>
                       <Eye className="mr-2 h-4 w-4" />
                       View
                     </Link>
                   </Button>
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    className="flex-1"
-                    asChild
-                  >
+                  <Button size="sm" variant="outline" className="flex-1" asChild>
                     <Link href={`/policies/${policy.id}/edit`}>
                       <Edit className="mr-2 h-4 w-4" />
                       Edit
@@ -199,15 +198,12 @@ export default function PoliciesPage() {
       ) : (
         <Card className="border-dashed">
           <CardContent className="flex flex-col items-center justify-center py-12">
-            <FileText className="h-12 w-12 text-muted-foreground mb-4" />
-            <h3 className="text-lg font-semibold mb-2">No Policies Found</h3>
-            <p className="text-sm text-muted-foreground text-center mb-4 max-w-md">
+            <FileText className="mb-4 h-12 w-12 text-muted-foreground" />
+            <h3 className="mb-2 text-lg font-semibold">No Policies Found</h3>
+            <p className="mb-4 max-w-md text-center text-sm text-muted-foreground">
               Get started by generating your first compliance policy.
             </p>
-            <Button 
-              className="bg-gold hover:bg-gold-dark text-navy"
-              onClick={handleNewPolicy}
-            >
+            <Button className="bg-gold text-navy hover:bg-gold-dark" onClick={handleNewPolicy}>
               <Plus className="mr-2 h-4 w-4" />
               Generate Your First Policy
             </Button>
@@ -215,5 +211,5 @@ export default function PoliciesPage() {
         </Card>
       )}
     </div>
-  )
+  );
 }

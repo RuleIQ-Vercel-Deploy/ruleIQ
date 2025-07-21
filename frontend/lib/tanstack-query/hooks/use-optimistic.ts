@@ -11,7 +11,7 @@ export function useOptimisticUpdate<TData = unknown>() {
     async <TVariables = unknown>(
       queryKey: string[],
       updater: (oldData: TData | undefined, variables: TVariables) => TData,
-      variables: TVariables
+      variables: TVariables,
     ) => {
       // Cancel any outgoing refetches
       await queryClient.cancelQueries({ queryKey });
@@ -25,14 +25,14 @@ export function useOptimisticUpdate<TData = unknown>() {
       // Return a context object with a rollback function
       return { previousData };
     },
-    [queryClient]
+    [queryClient],
   );
 
   const rollback = useCallback(
     (queryKey: string[], context: { previousData: TData | undefined }) => {
       queryClient.setQueryData(queryKey, context.previousData);
     },
-    [queryClient]
+    [queryClient],
   );
 
   return { optimisticUpdate, rollback };
@@ -46,43 +46,32 @@ export function useOptimisticListUpdate<TItem = unknown>() {
 
   const addItem = useCallback(
     async (queryKey: string[], newItem: TItem) => {
-      return optimisticUpdate(
-        queryKey,
-        (oldData = [], item) => [...oldData, item],
-        newItem
-      );
+      return optimisticUpdate(queryKey, (oldData = [], item) => [...oldData, item], newItem);
     },
-    [optimisticUpdate]
+    [optimisticUpdate],
   );
 
   const updateItem = useCallback(
-    async (
-      queryKey: string[],
-      itemId: string | number,
-      updater: (item: TItem) => TItem
-    ) => {
+    async (queryKey: string[], itemId: string | number, updater: (item: TItem) => TItem) => {
       return optimisticUpdate(
         queryKey,
-        (oldData = [], { id, update }) => 
-          oldData.map((item: any) => 
-            item.id === id ? update(item) : item
-          ),
-        { id: itemId, update: updater }
+        (oldData = [], { id, update }) =>
+          oldData.map((item: any) => (item.id === id ? update(item) : item)),
+        { id: itemId, update: updater },
       );
     },
-    [optimisticUpdate]
+    [optimisticUpdate],
   );
 
   const removeItem = useCallback(
     async (queryKey: string[], itemId: string | number) => {
       return optimisticUpdate(
         queryKey,
-        (oldData = [], id) => 
-          oldData.filter((item: any) => item.id !== id),
-        itemId
+        (oldData = [], id) => oldData.filter((item: any) => item.id !== id),
+        itemId,
       );
     },
-    [optimisticUpdate]
+    [optimisticUpdate],
   );
 
   return { addItem, updateItem, removeItem, rollback };

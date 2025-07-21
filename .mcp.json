@@ -1,0 +1,185 @@
+{
+  "mcpServers": {
+    "desktop-commander": {
+      "command": "node",
+      "args": ["/home/omar/DesktopCommanderMCP/dist/index.js"]
+    },
+    "serena": {
+      "command": "/home/omar/.local/bin/uv",
+      "args": ["run", "--directory", "/home/omar/serena", "serena-mcp-server"],
+      "env": {
+        "CLAUDE_MD_PATH": "/home/omar/serena/CLAUDE.md",
+        "DOCS_PRELOAD": "true"
+      }
+    },
+    "magic-ui-component-server": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@smithery/cli@latest",
+        "run",
+        "@magicuidesign/mcp",
+        "--key",
+        "95e83c85-9a18-4524-9549-6a2c0f194f69",
+        "--profile",
+        "hungry-lemming-s64fT3"
+      ]
+    },
+    "fetch": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@smithery/cli@latest",
+        "run",
+        "@smithery-ai/fetch",
+        "--key",
+        "95e83c85-9a18-4524-9549-6a2c0f194f69",
+        "--profile",
+        "hungry-lemming-s64fT3"
+      ]
+    },
+    "cloudflare-playwright": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@smithery/cli@latest",
+        "run",
+        "@cloudflare/playwright-mcp",
+        "--key",
+        "95e83c85-9a18-4524-9549-6a2c0f194f69",
+        "--profile",
+        "hungry-lemming-s64fT3"
+      ]
+    },
+    "neon-database": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@smithery/cli@latest",
+        "run",
+        "neon",
+        "--key",
+        "95e83c85-9a18-4524-9549-6a2c0f194f69",
+        "--profile",
+        "hungry-lemming-s64fT3"
+      ]
+    },
+    "shadcn-vue-mcp-server": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@smithery/cli@latest",
+        "run",
+        "@HelloGGX/shadcn-vue-mcp",
+        "--key",
+        "95e83c85-9a18-4524-9549-6a2c0f194f69",
+        "--profile",
+        "hungry-lemming-s64fT3"
+      ]
+    },
+    "browser-tools": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@smithery/cli@latest",
+        "run",
+        "@diulela/browser-tools-mcp",
+        "--key",
+        "95e83c85-9a18-4524-9549-6a2c0f194f69",
+        "--profile",
+        "hungry-lemming-s64fT3"
+      ]
+    },
+    "mem0-memory": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@smithery/cli@latest",
+        "run",
+        "@mem0ai/mem0-memory-mcp",
+        "--key",
+        "95e83c85-9a18-4524-9549-6a2c0f194f69",
+        "--profile",
+        "hungry-lemming-s64fT3"
+      ]
+    },
+    "context-7": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@smithery/cli@latest",
+        "run",
+        "@upstash/context7-mcp",
+        "--key",
+        "95e83c85-9a18-4524-9549-6a2c0f194f69",
+        "--profile",
+        "hungry-lemming-s64fT3"
+      ]
+    },
+    "postgre-sql-database-management-server": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@smithery/cli@latest",
+        "run",
+        "@HenkDz/postgresql-mcp-server",
+        "--key",
+        "95e83c85-9a18-4524-9549-6a2c0f194f69",
+        "--profile",
+        "hungry-lemming-s64fT3"
+      ]
+    },
+    "tavily-mcp-server": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@smithery/cli@latest",
+        "run",
+        "@tavily-ai/tavily-mcp",
+        "--key",
+        "95e83c85-9a18-4524-9549-6a2c0f194f69",
+        "--profile",
+        "hungry-lemming-s64fT3"
+      ]
+    },
+    "redis": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@smithery/cli@latest",
+        "run",
+        "@redis/mcp-redis",
+        "--key",
+        "95e83c85-9a18-4524-9549-6a2c0f194f69",
+        "--profile",
+        "hungry-lemming-s64fT3"
+      ]
+    },
+    "automated-ui-debuger-and-tester": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@smithery/cli@latest",
+        "run",
+        "@samihalawa/visual-ui-debug-agent-mcp",
+        "--key",
+        "95e83c85-9a18-4524-9549-6a2c0f194f69",
+        "--profile",
+        "hungry-lemming-s64fT3"
+      ]
+    },
+    "github": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@smithery/cli@latest",
+        "run",
+        "@smithery-ai/github",
+        "--key",
+        "95e83c85-9a18-4524-9549-6a2c0f194f69",
+        "--profile",
+        "hungry-lemming-s64fT3"
+      ]
+    }
+  }
+}

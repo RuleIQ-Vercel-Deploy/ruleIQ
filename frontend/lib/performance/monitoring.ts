@@ -1,6 +1,6 @@
 /**
  * Performance Monitoring Utilities for ruleIQ
- * 
+ *
  * This module provides utilities for monitoring and measuring application performance
  * including Core Web Vitals, custom metrics, and performance budgets.
  */
@@ -9,14 +9,14 @@
 export const PERFORMANCE_THRESHOLDS = {
   // Core Web Vitals
   LCP: { good: 2500, poor: 4000 }, // Largest Contentful Paint (ms)
-  FID: { good: 100, poor: 300 },   // First Input Delay (ms)
-  CLS: { good: 0.1, poor: 0.25 },  // Cumulative Layout Shift
-  
+  FID: { good: 100, poor: 300 }, // First Input Delay (ms)
+  CLS: { good: 0.1, poor: 0.25 }, // Cumulative Layout Shift
+
   // Additional metrics
   FCP: { good: 1800, poor: 3000 }, // First Contentful Paint (ms)
   TTI: { good: 3800, poor: 7300 }, // Time to Interactive (ms)
-  TBT: { good: 200, poor: 600 },   // Total Blocking Time (ms)
-  
+  TBT: { good: 200, poor: 600 }, // Total Blocking Time (ms)
+
   // Custom metrics
   API_RESPONSE: { good: 500, poor: 2000 }, // API response time (ms)
   ROUTE_CHANGE: { good: 200, poor: 1000 }, // Route change time (ms)
@@ -83,7 +83,7 @@ class PerformanceMonitor {
 
       // First Contentful Paint (FCP)
       this.observeMetric('paint', (entries) => {
-        const fcpEntry = entries.find(entry => entry.name === 'first-contentful-paint');
+        const fcpEntry = entries.find((entry) => entry.name === 'first-contentful-paint');
         if (fcpEntry) {
           this.recordMetric('FCP', fcpEntry.startTime);
         }
@@ -91,7 +91,6 @@ class PerformanceMonitor {
 
       // Navigation timing
       this.observeNavigationTiming();
-
     } catch (error) {
       console.warn('Performance monitoring initialization failed:', error);
     }
@@ -105,7 +104,7 @@ class PerformanceMonitor {
       const observer = new PerformanceObserver((list) => {
         callback(list.getEntries());
       });
-      
+
       observer.observe({ entryTypes: [entryType] });
       this.observers.push(observer);
     } catch (error) {
@@ -120,8 +119,10 @@ class PerformanceMonitor {
     if (typeof window === 'undefined') return;
 
     window.addEventListener('load', () => {
-      const navigation = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming;
-      
+      const navigation = performance.getEntriesByType(
+        'navigation',
+      )[0] as PerformanceNavigationTiming;
+
       if (navigation) {
         // Time to First Byte (TTFB)
         const ttfb = navigation.responseStart - navigation.requestStart;
@@ -173,7 +174,10 @@ class PerformanceMonitor {
    * Get connection type information
    */
   private getConnectionType(): string | undefined {
-    const connection = (navigator as any).connection || (navigator as any).mozConnection || (navigator as any).webkitConnection;
+    const connection =
+      (navigator as any).connection ||
+      (navigator as any).mozConnection ||
+      (navigator as any).webkitConnection;
     return connection?.effectiveType;
   }
 
@@ -182,7 +186,7 @@ class PerformanceMonitor {
    */
   private getRating(name: string, value: number): 'good' | 'needs-improvement' | 'poor' {
     const threshold = PERFORMANCE_THRESHOLDS[name as keyof typeof PERFORMANCE_THRESHOLDS];
-    
+
     if (!threshold) return 'good';
 
     if (value <= threshold.good) return 'good';
@@ -196,7 +200,7 @@ class PerformanceMonitor {
   private sendToAnalytics(metric: PerformanceMetric): void {
     // In a real application, you would send this to your analytics service
     // For example: Google Analytics, DataDog, New Relic, etc.
-    
+
     if (process.env.NODE_ENV === 'development') {
       console.log('Performance metric:', metric);
     }
@@ -222,13 +226,13 @@ class PerformanceMonitor {
   public measureCustomMetric(name: string, fn: () => void | Promise<void>): Promise<number> {
     return new Promise(async (resolve) => {
       const startTime = performance.now();
-      
+
       try {
         await fn();
       } catch (error) {
         console.error(`Error in custom metric ${name}:`, error);
       }
-      
+
       const duration = performance.now() - startTime;
       this.recordMetric(name, duration);
       resolve(duration);
@@ -238,7 +242,10 @@ class PerformanceMonitor {
   /**
    * Measure API call performance
    */
-  public measureApiCall(url: string, method: string = 'GET'): {
+  public measureApiCall(
+    url: string,
+    method: string = 'GET',
+  ): {
     start: () => void;
     end: (success: boolean) => void;
   } {
@@ -258,7 +265,10 @@ class PerformanceMonitor {
   /**
    * Measure route change performance
    */
-  public measureRouteChange(from: string, to: string): {
+  public measureRouteChange(
+    from: string,
+    to: string,
+  ): {
     start: () => void;
     end: () => void;
   } {
@@ -298,7 +308,7 @@ class PerformanceMonitor {
     const summary: Record<string, { count: number; average: number; rating: string }> = {};
 
     for (const [name, metrics] of this.metrics.entries()) {
-      const values = metrics.map(m => m.value);
+      const values = metrics.map((m) => m.value);
       const average = values.reduce((sum, val) => sum + val, 0) / values.length;
       const rating = this.getRating(name, average);
 
@@ -330,7 +340,7 @@ class PerformanceMonitor {
    * Disconnect all observers
    */
   public disconnect(): void {
-    this.observers.forEach(observer => observer.disconnect());
+    this.observers.forEach((observer) => observer.disconnect());
     this.observers = [];
   }
 }
@@ -371,9 +381,9 @@ export function measurePerformance(metricName: string) {
  * Utility to check if performance API is available
  */
 export function isPerformanceSupported(): boolean {
-  return typeof window !== 'undefined' && 
-         'performance' in window && 
-         'PerformanceObserver' in window;
+  return (
+    typeof window !== 'undefined' && 'performance' in window && 'PerformanceObserver' in window
+  );
 }
 
 /**
@@ -381,12 +391,12 @@ export function isPerformanceSupported(): boolean {
  */
 export function getCurrentWebVitals(): WebVitalsMetrics {
   const metrics = performanceMonitor.getMetrics();
-  
+
   return {
-    lcp: metrics.find(m => m.name === 'LCP'),
-    fid: metrics.find(m => m.name === 'FID'),
-    cls: metrics.find(m => m.name === 'CLS'),
-    fcp: metrics.find(m => m.name === 'FCP'),
-    ttfb: metrics.find(m => m.name === 'TTFB'),
+    lcp: metrics.find((m) => m.name === 'LCP'),
+    fid: metrics.find((m) => m.name === 'FID'),
+    cls: metrics.find((m) => m.name === 'CLS'),
+    fcp: metrics.find((m) => m.name === 'FCP'),
+    ttfb: metrics.find((m) => m.name === 'TTFB'),
   };
 }

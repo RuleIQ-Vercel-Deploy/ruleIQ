@@ -1,9 +1,9 @@
-"use client"
+'use client';
 
-import { useState } from "react"
+import { useState } from 'react';
 
-import { AssessmentCard } from "@/components/ui/assessment-card"
-import { Button } from "@/components/ui/button"
+import { AssessmentCard } from '@/components/ui/assessment-card';
+import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,
@@ -11,19 +11,19 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
-import { Checkbox } from "@/components/ui/checkbox"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-import { ResponsiveTable } from "@/components/ui/responsive-table"
+} from '@/components/ui/card';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { ResponsiveTable } from '@/components/ui/responsive-table';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
+} from '@/components/ui/select';
 import {
   Table,
   TableBody,
@@ -31,50 +31,50 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table"
-import { Typography } from "@/components/ui/typography"
+} from '@/components/ui/table';
+import { Typography } from '@/components/ui/typography';
 
 export default function ComponentShowcasePage() {
-  const [selectedRow, setSelectedRow] = useState<number | null>(null)
-  
+  const [selectedRow, setSelectedRow] = useState<number | null>(null);
+
   // Sample data for tables
   const tableData = [
-    { id: 1, name: "John Doe", email: "john@example.com", role: "Admin", status: "Active" },
-    { id: 2, name: "Jane Smith", email: "jane@example.com", role: "User", status: "Active" },
-    { id: 3, name: "Bob Johnson", email: "bob@example.com", role: "User", status: "Inactive" },
-    { id: 4, name: "Alice Brown", email: "alice@example.com", role: "Manager", status: "Active" },
-  ]
+    { id: 1, name: 'John Doe', email: 'john@example.com', role: 'Admin', status: 'Active' },
+    { id: 2, name: 'Jane Smith', email: 'jane@example.com', role: 'User', status: 'Active' },
+    { id: 3, name: 'Bob Johnson', email: 'bob@example.com', role: 'User', status: 'Inactive' },
+    { id: 4, name: 'Alice Brown', email: 'alice@example.com', role: 'Manager', status: 'Active' },
+  ];
 
   const responsiveColumns = [
     {
-      key: "name",
-      header: "Name",
+      key: 'name',
+      header: 'Name',
       accessor: (row: any) => row.name,
-      priority: "high" as const,
+      priority: 'high' as const,
     },
     {
-      key: "email",
-      header: "Email",
+      key: 'email',
+      header: 'Email',
       accessor: (row: any) => row.email,
-      priority: "high" as const,
+      priority: 'high' as const,
     },
     {
-      key: "role",
-      header: "Role",
+      key: 'role',
+      header: 'Role',
       accessor: (row: any) => row.role,
-      priority: "medium" as const,
+      priority: 'medium' as const,
     },
     {
-      key: "status",
-      header: "Status",
+      key: 'status',
+      header: 'Status',
       accessor: (row: any) => (
-        <span className={row.status === "Active" ? "text-success-600" : "text-neutral-500"}>
+        <span className={row.status === 'Active' ? 'text-success-600' : 'text-neutral-500'}>
           {row.status}
         </span>
       ),
-      priority: "low" as const,
+      priority: 'low' as const,
     },
-  ]
+  ];
 
   return (
     <div className="min-h-screen bg-neutral-50 p-8">
@@ -84,7 +84,7 @@ export default function ComponentShowcasePage() {
         {/* Form Controls Section */}
         <section className="space-y-6">
           <Typography variant="h2">Form Controls</Typography>
-          
+
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {/* Input States */}
             <Card>
@@ -98,15 +98,30 @@ export default function ComponentShowcasePage() {
                 </div>
                 <div>
                   <Label htmlFor="input-error">Error</Label>
-                  <Input id="input-error" data-testid="input-error" error placeholder="Error state" />
+                  <Input
+                    id="input-error"
+                    data-testid="input-error"
+                    error
+                    placeholder="Error state"
+                  />
                 </div>
                 <div>
                   <Label htmlFor="input-success">Success</Label>
-                  <Input id="input-success" data-testid="input-success" success placeholder="Success state" />
+                  <Input
+                    id="input-success"
+                    data-testid="input-success"
+                    success
+                    placeholder="Success state"
+                  />
                 </div>
                 <div>
                   <Label htmlFor="input-disabled">Disabled</Label>
-                  <Input id="input-disabled" data-testid="input-disabled" disabled placeholder="Disabled" />
+                  <Input
+                    id="input-disabled"
+                    data-testid="input-disabled"
+                    disabled
+                    placeholder="Disabled"
+                  />
                 </div>
               </CardContent>
             </Card>
@@ -160,11 +175,16 @@ export default function ComponentShowcasePage() {
                     <Label htmlFor="checkbox-focus">Focus me</Label>
                   </div>
                   <div className="flex items-center space-x-2">
-                    <Checkbox id="checkbox-error" data-testid="checkbox-error" error defaultChecked />
+                    <Checkbox
+                      id="checkbox-error"
+                      data-testid="checkbox-error"
+                      error
+                      defaultChecked
+                    />
                     <Label htmlFor="checkbox-error">Error state</Label>
                   </div>
                 </div>
-                
+
                 <RadioGroup data-testid="radio-group" defaultValue="1">
                   <div className="flex items-center space-x-2">
                     <RadioGroupItem value="1" id="r1" data-testid="radio-option-1" />
@@ -187,7 +207,7 @@ export default function ComponentShowcasePage() {
         {/* Cards Section */}
         <section className="space-y-6">
           <Typography variant="h2">Cards</Typography>
-          
+
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             <Card data-testid="card-default">
               <CardHeader>
@@ -235,7 +255,7 @@ export default function ComponentShowcasePage() {
               dueDate="Dec 31, 2024"
               progress={0}
             />
-            
+
             <AssessmentCard
               data-testid="assessment-in-progress"
               title="GDPR Readiness"
@@ -245,7 +265,7 @@ export default function ComponentShowcasePage() {
               dueDate="Nov 15, 2024"
               progress={45}
             />
-            
+
             <AssessmentCard
               data-testid="assessment-completed"
               title="SOC 2 Type II"
@@ -254,7 +274,7 @@ export default function ComponentShowcasePage() {
               framework="SOC 2"
               progress={100}
             />
-            
+
             <AssessmentCard
               data-testid="assessment-expired"
               title="HIPAA Assessment"
@@ -270,7 +290,7 @@ export default function ComponentShowcasePage() {
         {/* Tables Section */}
         <section className="space-y-6">
           <Typography variant="h2">Tables</Typography>
-          
+
           <Card>
             <CardHeader>
               <CardTitle>Standard Table</CardTitle>
@@ -289,7 +309,7 @@ export default function ComponentShowcasePage() {
                   {tableData.map((row) => (
                     <TableRow
                       key={row.id}
-                      data-state={selectedRow === row.id ? "selected" : undefined}
+                      data-state={selectedRow === row.id ? 'selected' : undefined}
                       onClick={() => setSelectedRow(row.id)}
                       className="cursor-pointer"
                     >
@@ -297,7 +317,11 @@ export default function ComponentShowcasePage() {
                       <TableCell>{row.email}</TableCell>
                       <TableCell>{row.role}</TableCell>
                       <TableCell>
-                        <span className={row.status === "Active" ? "text-success-600" : "text-neutral-500"}>
+                        <span
+                          className={
+                            row.status === 'Active' ? 'text-success-600' : 'text-neutral-500'
+                          }
+                        >
                           {row.status}
                         </span>
                       </TableCell>
@@ -416,11 +440,11 @@ export default function ComponentShowcasePage() {
           data-testid="theme-toggle"
           variant="outline"
           className="fixed bottom-4 right-4"
-          onClick={() => document.documentElement.classList.toggle("dark")}
+          onClick={() => document.documentElement.classList.toggle('dark')}
         >
           Toggle Theme
         </Button>
       </div>
     </div>
-  )
+  );
 }

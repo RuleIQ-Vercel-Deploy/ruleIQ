@@ -1,21 +1,21 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { MetricDisplay } from "@/components/ui/metric-display"
-import { MiniChart } from "@/components/ui/mini-chart"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { MetricDisplay } from '@/components/ui/metric-display';
+import { MiniChart } from '@/components/ui/mini-chart';
 
-import type { LucideIcon } from "lucide-react"
+import type { LucideIcon } from 'lucide-react';
 
 interface EnhancedStatsCardProps {
-  title: string
-  description: string
-  value: string | number
-  icon: LucideIcon
+  title: string;
+  description: string;
+  value: string | number;
+  icon: LucideIcon;
   trend?: {
-    value: number
-    isPositive: boolean
-  }
-  chartData?: number[]
-  chartType?: "line" | "bar" | "area"
-  className?: string
+    value: number;
+    isPositive: boolean;
+  };
+  chartData?: number[];
+  chartType?: 'line' | 'bar' | 'area';
+  className?: string;
 }
 
 export function EnhancedStatsCard({
@@ -25,7 +25,7 @@ export function EnhancedStatsCard({
   icon: Icon,
   trend,
   chartData,
-  chartType = "line",
+  chartType = 'line',
   className,
 }: EnhancedStatsCardProps) {
   return (
@@ -42,8 +42,8 @@ export function EnhancedStatsCard({
             change: {
               value: trend.value,
               isPositive: trend.isPositive,
-              period: "vs last month",
-            }
+              period: 'vs last month',
+            },
           })}
         />
         <CardDescription className="mt-2 text-muted-foreground">{description}</CardDescription>
@@ -52,12 +52,12 @@ export function EnhancedStatsCard({
             <MiniChart
               data={chartData}
               type={chartType}
-              color={trend?.isPositive ? "#10B981" : "#F59E0B"}
+              color={trend?.isPositive ? '#10B981' : '#F59E0B'}
               height={32}
             />
           </div>
         )}
       </CardContent>
     </Card>
-  )
+  );
 }

@@ -1,6 +1,6 @@
 /**
  * TypeScript Schema Definitions for AI Responses
- * 
+ *
  * These schemas match the Python Pydantic models in the backend for
  * comprehensive type safety in Phase 6 implementation.
  */
@@ -9,16 +9,21 @@
 // Core Enums and Types
 // =====================================================================
 
-export type SeverityLevel = "low" | "medium" | "high" | "critical";
-export type PriorityLevel = "low" | "medium" | "high" | "urgent";
-export type ImplementationEffort = "minimal" | "low" | "medium" | "high" | "extensive";
-export type RiskLevel = "low" | "medium" | "high" | "critical";
-export type MaturityLevel = "initial" | "developing" | "defined" | "managed" | "optimized";
-export type TrendDirection = "improving" | "stable" | "declining";
-export type InsightType = "strength" | "weakness" | "opportunity" | "threat";
-export type IntentType = "evidence_query" | "compliance_check" | "guidance_request" | "general_query" | "assessment_help";
-export type ExpectedAnswerType = "text" | "boolean" | "multiple_choice" | "numeric";
-export type ValidationStatus = "valid" | "invalid" | "partially_valid";
+export type SeverityLevel = 'low' | 'medium' | 'high' | 'critical';
+export type PriorityLevel = 'low' | 'medium' | 'high' | 'urgent';
+export type ImplementationEffort = 'minimal' | 'low' | 'medium' | 'high' | 'extensive';
+export type RiskLevel = 'low' | 'medium' | 'high' | 'critical';
+export type MaturityLevel = 'initial' | 'developing' | 'defined' | 'managed' | 'optimized';
+export type TrendDirection = 'improving' | 'stable' | 'declining';
+export type InsightType = 'strength' | 'weakness' | 'opportunity' | 'threat';
+export type IntentType =
+  | 'evidence_query'
+  | 'compliance_check'
+  | 'guidance_request'
+  | 'general_query'
+  | 'assessment_help';
+export type ExpectedAnswerType = 'text' | 'boolean' | 'multiple_choice' | 'numeric';
+export type ValidationStatus = 'valid' | 'invalid' | 'partially_valid';
 
 // =====================================================================
 // Gap Analysis Schemas
@@ -35,7 +40,7 @@ export interface Gap {
   target_state: string;
   impact_description: string;
   business_impact_score: number; // 0.0 - 1.0
-  technical_complexity: number;  // 0.0 - 1.0
+  technical_complexity: number; // 0.0 - 1.0
   regulatory_requirement: boolean;
   estimated_effort: ImplementationEffort;
   dependencies: string[];
@@ -255,7 +260,7 @@ export interface EvidenceWorkflow {
   total_estimated_duration: string;
   required_roles: string[];
   automation_percentage: number;
-  complexity_level: "simple" | "moderate" | "complex";
+  complexity_level: 'simple' | 'moderate' | 'complex';
 }
 
 // =====================================================================
@@ -354,7 +359,7 @@ export interface SchemaValidationResult {
 // Union Types
 // =====================================================================
 
-export type AIResponsePayload = 
+export type AIResponsePayload =
   | GapAnalysisResponse
   | RecommendationResponse
   | AssessmentAnalysisResponse
@@ -364,77 +369,93 @@ export type AIResponsePayload =
   | PolicyDocument
   | EvidenceWorkflow;
 
-export type AIResponseType = 
-  | "gap_analysis"
-  | "recommendations"
-  | "assessment_analysis"
-  | "guidance"
-  | "followup"
-  | "intent_classification"
-  | "chat"
-  | "policy"
-  | "workflow";
+export type AIResponseType =
+  | 'gap_analysis'
+  | 'recommendations'
+  | 'assessment_analysis'
+  | 'guidance'
+  | 'followup'
+  | 'intent_classification'
+  | 'chat'
+  | 'policy'
+  | 'workflow';
 
 // =====================================================================
 // Type Guards
 // =====================================================================
 
 export function isGapAnalysisResponse(response: any): response is GapAnalysisResponse {
-  return response !== null &&
-         response !== undefined &&
-         typeof response === 'object' && 
-         'gaps' in response &&
-         'overall_risk_level' in response &&
-         'compliance_percentage' in response;
+  return (
+    response !== null &&
+    response !== undefined &&
+    typeof response === 'object' &&
+    'gaps' in response &&
+    'overall_risk_level' in response &&
+    'compliance_percentage' in response
+  );
 }
 
 export function isRecommendationResponse(response: any): response is RecommendationResponse {
-  return response && 
-         typeof response === 'object' && 
-         'recommendations' in response &&
-         'implementation_plan' in response &&
-         'prioritization_rationale' in response;
+  return (
+    response &&
+    typeof response === 'object' &&
+    'recommendations' in response &&
+    'implementation_plan' in response &&
+    'prioritization_rationale' in response
+  );
 }
 
-export function isAssessmentAnalysisResponse(response: any): response is AssessmentAnalysisResponse {
-  return response && 
-         typeof response === 'object' && 
-         'gaps' in response &&
-         'recommendations' in response &&
-         'risk_assessment' in response &&
-         'compliance_metrics' in response;
+export function isAssessmentAnalysisResponse(
+  response: any,
+): response is AssessmentAnalysisResponse {
+  return (
+    response &&
+    typeof response === 'object' &&
+    'gaps' in response &&
+    'recommendations' in response &&
+    'risk_assessment' in response &&
+    'compliance_metrics' in response
+  );
 }
 
 export function isGuidanceResponse(response: any): response is GuidanceResponse {
-  return response && 
-         typeof response === 'object' && 
-         'guidance' in response &&
-         'confidence_score' in response &&
-         'related_topics' in response;
+  return (
+    response &&
+    typeof response === 'object' &&
+    'guidance' in response &&
+    'confidence_score' in response &&
+    'related_topics' in response
+  );
 }
 
 export function isFollowUpResponse(response: any): response is FollowUpResponse {
-  return response && 
-         typeof response === 'object' && 
-         'follow_up_questions' in response &&
-         'assessment_completeness' in response;
+  return (
+    response &&
+    typeof response === 'object' &&
+    'follow_up_questions' in response &&
+    'assessment_completeness' in response
+  );
 }
 
 export function isStructuredAIResponse(response: any): response is StructuredAIResponse {
-  return response && 
-         typeof response === 'object' && 
-         'metadata' in response &&
-         'response_type' in response &&
-         'payload' in response &&
-         'validation_passed' in response;
+  return (
+    response &&
+    typeof response === 'object' &&
+    'metadata' in response &&
+    'response_type' in response &&
+    'payload' in response &&
+    'validation_passed' in response
+  );
 }
 
 export function isValidationError(error: any): error is ValidationError {
-  return error && 
-         typeof error === 'object' && 
-         'field_path' in error &&
-         'error_type' in error &&
-         'error_message' in error;
+  return (
+    error &&
+    typeof error === 'object' &&
+    'field_path' in error &&
+    'error_type' in error &&
+    'error_message' in error
+  );
 }
 
 // =====================================================================
@@ -442,15 +463,15 @@ export function isValidationError(error: any): error is ValidationError {
 // =====================================================================
 
 export const RESPONSE_TYPE_SCHEMAS = {
-  gap_analysis: "GapAnalysisResponse",
-  recommendations: "RecommendationResponse", 
-  assessment_analysis: "AssessmentAnalysisResponse",
-  guidance: "GuidanceResponse",
-  followup: "FollowUpResponse",
-  intent_classification: "IntentClassification",
-  chat: "ChatResponse",
-  policy: "PolicyDocument",
-  workflow: "EvidenceWorkflow"
+  gap_analysis: 'GapAnalysisResponse',
+  recommendations: 'RecommendationResponse',
+  assessment_analysis: 'AssessmentAnalysisResponse',
+  guidance: 'GuidanceResponse',
+  followup: 'FollowUpResponse',
+  intent_classification: 'IntentClassification',
+  chat: 'ChatResponse',
+  policy: 'PolicyDocument',
+  workflow: 'EvidenceWorkflow',
 } as const;
 
 export type ResponseTypeKeys = keyof typeof RESPONSE_TYPE_SCHEMAS;
@@ -460,7 +481,7 @@ export type ResponseTypeKeys = keyof typeof RESPONSE_TYPE_SCHEMAS;
 // =====================================================================
 
 export function getResponseTypeName(response_type: string): string {
-  return RESPONSE_TYPE_SCHEMAS[response_type as ResponseTypeKeys] || "Unknown";
+  return RESPONSE_TYPE_SCHEMAS[response_type as ResponseTypeKeys] || 'Unknown';
 }
 
 export function isValidResponseType(response_type: string): response_type is ResponseTypeKeys {
@@ -468,13 +489,13 @@ export function isValidResponseType(response_type: string): response_type is Res
 }
 
 export function validateSeverityLevel(level: string): level is SeverityLevel {
-  return ["low", "medium", "high", "critical"].includes(level);
+  return ['low', 'medium', 'high', 'critical'].includes(level);
 }
 
 export function validatePriorityLevel(level: string): level is PriorityLevel {
-  return ["low", "medium", "high", "urgent"].includes(level);
+  return ['low', 'medium', 'high', 'urgent'].includes(level);
 }
 
 export function validateMaturityLevel(level: string): level is MaturityLevel {
-  return ["initial", "developing", "defined", "managed", "optimized"].includes(level);
+  return ['initial', 'developing', 'defined', 'managed', 'optimized'].includes(level);
 }

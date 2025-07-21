@@ -6,10 +6,9 @@ Checks for common JWT configuration issues
 
 import os
 import re
-from pathlib import Path
 
 print("JWT Configuration Check")
-print("="*50)
+print("=" * 50)
 
 # Check 1: Environment files
 env_files = [".env", ".env.local", ".env.test", "env.template"]
@@ -17,16 +16,16 @@ jwt_vars_found = {}
 
 for env_file in env_files:
     if os.path.exists(env_file):
-        with open(env_file, 'r') as f:
+        with open(env_file, "r") as f:
             content = f.read()
-            
+
         # Look for any JWT-related variables
         jwt_patterns = [
-            r'^(JWT_SECRET)\s*=\s*(.*)$',
-            r'^(JWT_SECRET_KEY)\s*=\s*(.*)$',
-            r'^(SECRET_KEY)\s*=\s*(.*)$'
+            r"^(JWT_SECRET)\s*=\s*(.*)$",
+            r"^(JWT_SECRET_KEY)\s*=\s*(.*)$",
+            r"^(SECRET_KEY)\s*=\s*(.*)$",
         ]
-        
+
         for pattern in jwt_patterns:
             matches = re.findall(pattern, content, re.MULTILINE)
             if matches:
@@ -35,8 +34,9 @@ for env_file in env_files:
                         jwt_vars_found[env_file] = []
                     # Strip quotes if present
                     var_value = var_value.strip()
-                    if (var_value.startswith('"') and var_value.endswith('"')) or \
-                       (var_value.startswith("'") and var_value.endswith("'")):
+                    if (var_value.startswith('"') and var_value.endswith('"')) or (
+                        var_value.startswith("'") and var_value.endswith("'")
+                    ):
                         var_value = var_value[1:-1]
                     jwt_vars_found[env_file].append((var_name, var_value[:20] + "..."))
 
@@ -78,15 +78,15 @@ print("\n\nTesting Token Creation:")
 try:
     from jose import jwt
     from datetime import datetime, timedelta
-    
+
     # Try with current environment
     test_secret = os.getenv("JWT_SECRET", "dev-jwt-secret-key-change-for-production")
     payload = {"sub": "test", "exp": datetime.utcnow() + timedelta(minutes=5)}
-    
+
     token = jwt.encode(payload, test_secret, algorithm="HS256")
     decoded = jwt.decode(token, test_secret, algorithms=["HS256"])
-    
-    print(f"✓ Token creation/verification works with current setup")
+
+    print("✓ Token creation/verification works with current setup")
     print(f"  Using secret: {test_secret[:10]}...")
 except ImportError:
     print("✗ python-jose not installed")

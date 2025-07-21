@@ -17,16 +17,19 @@ The system detects the following common memory leak patterns:
 ## Running Memory Leak Tests
 
 ### Run All Memory Leak Tests
+
 ```bash
 pnpm test:memory-leaks
 ```
 
 ### Watch Mode
+
 ```bash
 pnpm test:memory-leaks:watch
 ```
 
 ### Generate Comprehensive Report
+
 ```bash
 pnpm test:memory-leaks:report
 ```
@@ -47,7 +50,7 @@ describe('MyComponent Memory Leaks', () => {
         // Optional: interact with component
         const button = screen.getByRole('button');
         fireEvent.click(button);
-      }
+      },
     );
   });
 });
@@ -62,20 +65,20 @@ it('should cleanup event listeners', () => {
   const { unmount, leakDetector, assertNoLeaks } = renderWithLeakDetection(
     <MyComponent />
   );
-  
+
   // Interact with component
   fireEvent.click(screen.getByRole('button'));
-  
+
   // Unmount
   unmount();
-  
+
   // Assert no leaks
   assertNoLeaks();
-  
+
   // Get detailed report if needed
   const report = leakDetector.getReport();
   console.log('Memory leak report:', report);
-  
+
   // Cleanup
   leakDetector.teardown();
 });
@@ -96,6 +99,7 @@ it('should handle rapid mount/unmount without leaks', async () => {
 ### 1. Event Listeners
 
 **❌ Bad - Memory Leak**
+
 ```typescript
 useEffect(() => {
   const handler = () => console.log('clicked');
@@ -105,11 +109,12 @@ useEffect(() => {
 ```
 
 **✅ Good - Proper Cleanup**
+
 ```typescript
 useEffect(() => {
   const handler = () => console.log('clicked');
   document.addEventListener('click', handler);
-  
+
   return () => {
     document.removeEventListener('click', handler);
   };
@@ -119,6 +124,7 @@ useEffect(() => {
 ### 2. Timers
 
 **❌ Bad - Memory Leak**
+
 ```typescript
 useEffect(() => {
   setTimeout(() => {
@@ -128,12 +134,13 @@ useEffect(() => {
 ```
 
 **✅ Good - Proper Cleanup**
+
 ```typescript
 useEffect(() => {
   const timer = setTimeout(() => {
     setData('updated');
   }, 1000);
-  
+
   return () => {
     clearTimeout(timer);
   };
@@ -143,6 +150,7 @@ useEffect(() => {
 ### 3. Intervals
 
 **❌ Bad - Memory Leak**
+
 ```typescript
 useEffect(() => {
   setInterval(() => {
@@ -152,12 +160,13 @@ useEffect(() => {
 ```
 
 **✅ Good - Proper Cleanup**
+
 ```typescript
 useEffect(() => {
   const interval = setInterval(() => {
     fetchData();
   }, 5000);
-  
+
   return () => {
     clearInterval(interval);
   };
@@ -167,28 +176,30 @@ useEffect(() => {
 ### 4. Async Operations
 
 **❌ Bad - Memory Leak**
+
 ```typescript
 useEffect(() => {
   fetch('/api/data')
-    .then(res => res.json())
-    .then(data => setData(data));
+    .then((res) => res.json())
+    .then((data) => setData(data));
 }, []);
 ```
 
 **✅ Good - Proper Cleanup**
+
 ```typescript
 useEffect(() => {
   const controller = new AbortController();
-  
+
   fetch('/api/data', { signal: controller.signal })
-    .then(res => res.json())
-    .then(data => setData(data))
-    .catch(err => {
+    .then((res) => res.json())
+    .then((data) => setData(data))
+    .catch((err) => {
       if (err.name !== 'AbortError') {
         console.error(err);
       }
     });
-  
+
   return () => {
     controller.abort();
   };
@@ -198,29 +209,31 @@ useEffect(() => {
 ### 5. Component State Updates After Unmount
 
 **❌ Bad - Memory Leak**
+
 ```typescript
 const [data, setData] = useState(null);
 
 useEffect(() => {
-  fetchData().then(result => {
+  fetchData().then((result) => {
     setData(result); // May execute after unmount!
   });
 }, []);
 ```
 
 **✅ Good - Proper Cleanup**
+
 ```typescript
 const [data, setData] = useState(null);
 
 useEffect(() => {
   let isMounted = true;
-  
-  fetchData().then(result => {
+
+  fetchData().then((result) => {
     if (isMounted) {
       setData(result);
     }
   });
-  
+
   return () => {
     isMounted = false;
   };
@@ -290,11 +303,13 @@ The leak detector generates reports with the following structure:
 ### False Positives
 
 Sometimes the detector might report false positives for:
+
 - React's internal event listeners
 - Third-party library resources
 - Browser extensions
 
 To handle these:
+
 1. Check if the leak count is consistent
 2. Verify the leak is from your code
 3. Use more specific assertions
@@ -302,22 +317,20 @@ To handle these:
 ### Async Cleanup
 
 For components with async cleanup:
+
 ```typescript
-await testComponentMemoryLeaks(
-  MyComponent,
-  {},
-  async (result) => {
-    // Wait for async operations
-    await waitFor(() => {
-      expect(screen.getByText('Loaded')).toBeInTheDocument();
-    });
-  }
-);
+await testComponentMemoryLeaks(MyComponent, {}, async (result) => {
+  // Wait for async operations
+  await waitFor(() => {
+    expect(screen.getByText('Loaded')).toBeInTheDocument();
+  });
+});
 ```
 
 ### Debugging Leaks
 
 To debug specific leaks:
+
 ```typescript
 const report = leakDetector.getReport();
 console.log('Leaked event listeners:', report.eventListeners.details);
@@ -327,14 +340,15 @@ console.log('Active timers:', report.timers.leaked);
 ## CI/CD Integration
 
 Add to your CI pipeline:
+
 ```yaml
 - name: Run Memory Leak Tests
   run: pnpm test:memory-leaks
-  
+
 - name: Generate Memory Leak Report
   if: failure()
   run: pnpm test:memory-leaks:report
-  
+
 - name: Upload Report
   if: failure()
   uses: actions/upload-artifact@v2

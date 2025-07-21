@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion';
 
-import { 
+import {
   Skeleton,
   TableRowSkeleton,
   StatCardSkeleton,
@@ -103,10 +103,10 @@ export function InlineLoader({ className }: { className?: string }) {
 }
 
 // Button loading state
-export function ButtonLoader({ 
+export function ButtonLoader({
   text = 'Loading...',
-  className 
-}: { 
+  className,
+}: {
   text?: string;
   className?: string;
 }) {
@@ -119,51 +119,38 @@ export function ButtonLoader({
 }
 
 // Content placeholder with animation
-export function ContentPlaceholder({ 
+export function ContentPlaceholder({
   lines = 3,
-  className 
-}: { 
+  className,
+}: {
   lines?: number;
   className?: string;
 }) {
   return (
     <div className={cn('space-y-2', className)}>
       {Array.from({ length: lines }).map((_, i) => (
-        <Skeleton 
-          key={i} 
-          variant="text" 
-          width={i === lines - 1 ? '60%' : '100%'} 
-        />
+        <Skeleton key={i} variant="text" width={i === lines - 1 ? '60%' : '100%'} />
       ))}
     </div>
   );
 }
 
 // Lazy loading image placeholder
-export function ImagePlaceholder({ 
+export function ImagePlaceholder({
   aspectRatio = '16/9',
-  className 
-}: { 
+  className,
+}: {
   aspectRatio?: string;
   className?: string;
 }) {
   return (
-    <div 
+    <div
       className={cn('relative overflow-hidden rounded-lg bg-muted', className)}
       style={{ aspectRatio }}
     >
-      <Skeleton 
-        variant="rectangular" 
-        width="100%" 
-        height="100%" 
-        className="absolute inset-0"
-      />
+      <Skeleton variant="rectangular" width="100%" height="100%" className="absolute inset-0" />
       <div className="absolute inset-0 flex items-center justify-center">
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.5 }}
-        >
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }}>
           <svg
             className="h-12 w-12 text-muted-foreground/50"
             fill="none"
@@ -187,7 +174,7 @@ export function ImagePlaceholder({
 export function ProgressLoader({ progress = 0 }: { progress?: number }) {
   return (
     <div className="w-full">
-      <div className="flex items-center justify-between mb-2">
+      <div className="mb-2 flex items-center justify-between">
         <span className="text-sm font-medium">Loading...</span>
         <span className="text-sm text-muted-foreground">{progress}%</span>
       </div>
@@ -209,7 +196,7 @@ export function DotsLoader({ className }: { className?: string }) {
     initial: { y: 0 },
     animate: { y: [-3, 3, -3] },
   };
-  
+
   const transition = {
     duration: 0.6,
     repeat: Infinity,

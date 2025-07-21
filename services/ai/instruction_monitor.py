@@ -951,7 +951,6 @@ class InstructionPerformanceMonitor:
             logger.error(f"Failed to save instruction data: {e}")
 
 
-
 # Global instance with file persistence for production
 instruction_monitor = InstructionPerformanceMonitor(
     persistence=FilePersistence()

@@ -52,15 +52,11 @@ class ReadinessService {
   /**
    * Get gap analysis for a specific framework
    */
-  async getGapAnalysis(
-    businessProfileId: string,
-    frameworkId?: string
-  ): Promise<GapAnalysis> {
+  async getGapAnalysis(businessProfileId: string, frameworkId?: string): Promise<GapAnalysis> {
     const params = frameworkId ? { framework_id: frameworkId } : undefined;
-    const response = await apiClient.get<GapAnalysis>(
-      `/readiness/gaps/${businessProfileId}`,
-      { params }
-    );
+    const response = await apiClient.get<GapAnalysis>(`/readiness/gaps/${businessProfileId}`, {
+      params,
+    });
     return response.data;
   }
 
@@ -69,7 +65,7 @@ class ReadinessService {
    */
   async getReadinessRoadmap(
     businessProfileId: string,
-    targetFrameworks: string[]
+    targetFrameworks: string[],
   ): Promise<{
     phases: Array<{
       phase: number;
@@ -113,7 +109,7 @@ class ReadinessService {
    */
   async performQuickAssessment(
     businessProfileId: string,
-    answers: Record<string, any>
+    answers: Record<string, any>,
   ): Promise<{
     score: number;
     interpretation: string;
@@ -132,7 +128,7 @@ class ReadinessService {
    */
   async getReadinessTrends(
     businessProfileId: string,
-    days: number = 90
+    days: number = 90,
   ): Promise<{
     trends: Array<{
       date: string;
@@ -161,7 +157,7 @@ class ReadinessService {
    */
   async getReadinessBenchmarks(
     industry: string,
-    company_size: string
+    company_size: string,
   ): Promise<{
     industry_average: number;
     top_performers: number;
@@ -185,11 +181,11 @@ class ReadinessService {
    */
   async exportReadinessReport(
     businessProfileId: string,
-    format: 'pdf' | 'word' | 'excel'
+    format: 'pdf' | 'word' | 'excel',
   ): Promise<void> {
     await apiClient.download(
       `/readiness/export/${businessProfileId}?format=${format}`,
-      `readiness-report.${format}`
+      `readiness-report.${format}`,
     );
   }
 }

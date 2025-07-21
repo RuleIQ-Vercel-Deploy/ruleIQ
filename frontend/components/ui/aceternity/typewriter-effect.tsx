@@ -1,9 +1,9 @@
-"use client"
+'use client';
 
-import { motion, useInView, AnimatePresence } from "framer-motion"
-import { useEffect, useRef, useState } from "react"
+import { motion, useInView, AnimatePresence } from 'framer-motion';
+import { useEffect, useRef, useState } from 'react';
 
-import { cn } from "@/lib/utils"
+import { cn } from '@/lib/utils';
 
 export const TypewriterEffect = ({
   words,
@@ -11,27 +11,27 @@ export const TypewriterEffect = ({
   cursorClassName,
 }: {
   words: {
-    text: string
-    className?: string
-  }[]
-  className?: string
-  cursorClassName?: string
+    text: string;
+    className?: string;
+  }[];
+  className?: string;
+  cursorClassName?: string;
 }) => {
-  const [currentWordIndex, setCurrentWordIndex] = useState(0)
-  const ref = useRef(null)
-  const isInView = useInView(ref)
+  const [currentWordIndex, setCurrentWordIndex] = useState(0);
+  const ref = useRef(null);
+  const isInView = useInView(ref);
 
   useEffect(() => {
-    if (!isInView) return
+    if (!isInView) return;
     const interval = setInterval(() => {
-      setCurrentWordIndex((prev) => (prev + 1) % words.length)
-    }, 2500)
+      setCurrentWordIndex((prev) => (prev + 1) % words.length);
+    }, 2500);
 
-    return () => clearInterval(interval)
-  }, [isInView, words.length])
+    return () => clearInterval(interval);
+  }, [isInView, words.length]);
 
-  const currentWord = words[currentWordIndex]
-  const wordsArray = currentWord.text.split("")
+  const currentWord = words[currentWordIndex];
+  const wordsArray = currentWord.text.split('');
 
   const renderWords = () => {
     return (
@@ -61,11 +61,16 @@ export const TypewriterEffect = ({
           </motion.div>
         </AnimatePresence>
       </motion.div>
-    )
-  }
+    );
+  };
 
   return (
-    <div className={cn("text-base sm:text-xl md:text-3xl lg:text-5xl font-bold text-center", className)}>
+    <div
+      className={cn(
+        'text-center text-base font-bold sm:text-xl md:text-3xl lg:text-5xl',
+        className,
+      )}
+    >
       {renderWords()}
       <motion.span
         initial={{
@@ -77,10 +82,13 @@ export const TypewriterEffect = ({
         transition={{
           duration: 0.8,
           repeat: Number.POSITIVE_INFINITY,
-          repeatType: "reverse",
+          repeatType: 'reverse',
         }}
-        className={cn("inline-block rounded-sm w-[4px] h-4 md:h-6 lg:h-10 bg-gold", cursorClassName)}
+        className={cn(
+          'inline-block h-4 w-[4px] rounded-sm bg-gold md:h-6 lg:h-10',
+          cursorClassName,
+        )}
       ></motion.span>
     </div>
-  )
-}
+  );
+};

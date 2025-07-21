@@ -1,4 +1,4 @@
-"use client"
+'use client';
 
 import {
   type ColumnDef,
@@ -13,23 +13,30 @@ import {
   getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
-} from "@tanstack/react-table"
-import * as React from "react"
+} from '@tanstack/react-table';
+import * as React from 'react';
 
-import { DataTablePagination } from "@/components/assessments/data-table-pagination"
-import { DataTableToolbar } from "@/components/assessments/data-table-toolbar"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { DataTablePagination } from '@/components/assessments/data-table-pagination';
+import { DataTableToolbar } from '@/components/assessments/data-table-toolbar';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
 
 interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[]
-  data: TData[]
+  columns: ColumnDef<TData, TValue>[];
+  data: TData[];
 }
 
 export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData, TValue>) {
-  const [rowSelection, setRowSelection] = React.useState({})
-  const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({})
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
-  const [sorting, setSorting] = React.useState<SortingState>([])
+  const [rowSelection, setRowSelection] = React.useState({});
+  const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
+  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
+  const [sorting, setSorting] = React.useState<SortingState>([]);
 
   const table = useReactTable({
     data,
@@ -51,15 +58,15 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
     getSortedRowModel: getSortedRowModel(),
     getFacetedRowModel: getFacetedRowModel(),
     getFacetedUniqueValues: getFacetedUniqueValues(),
-  })
+  });
 
   return (
     <div className="space-y-4">
       <DataTableToolbar table={table} />
       <div
-        className="rounded-lg border overflow-hidden"
+        className="overflow-hidden rounded-lg border"
         style={{
-          borderColor: "rgba(240, 234, 214, 0.2)",
+          borderColor: 'rgba(240, 234, 214, 0.2)',
         }}
       >
         <Table>
@@ -68,14 +75,16 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
               <TableRow
                 key={headerGroup.id}
                 className="hover:bg-transparent"
-                style={{ borderBottomColor: "rgba(240, 234, 214, 0.2)" }}
+                style={{ borderBottomColor: 'rgba(240, 234, 214, 0.2)' }}
               >
                 {headerGroup.headers.map((header) => {
                   return (
                     <TableHead key={header.id} className="text-eggshell-white/80 px-4">
-                      {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(header.column.columnDef.header, header.getContext())}
                     </TableHead>
-                  )
+                  );
                 })}
               </TableRow>
             ))}
@@ -85,9 +94,9 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
+                  data-state={row.getIsSelected() && 'selected'}
                   className="hover:bg-white/5"
-                  style={{ borderBottomColor: "rgba(240, 234, 214, 0.1)" }}
+                  style={{ borderBottomColor: 'rgba(240, 234, 214, 0.1)' }}
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id} className="text-eggshell-white px-4 py-3">
@@ -98,7 +107,10 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={columns.length} className="h-24 text-center text-eggshell-white">
+                <TableCell
+                  colSpan={columns.length}
+                  className="text-eggshell-white h-24 text-center"
+                >
                   No results.
                 </TableCell>
               </TableRow>
@@ -108,5 +120,5 @@ export function DataTable<TData, TValue>({ columns, data }: DataTableProps<TData
       </div>
       <DataTablePagination table={table} />
     </div>
-  )
+  );
 }

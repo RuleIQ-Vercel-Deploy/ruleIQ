@@ -4,7 +4,7 @@ const mobileDevices = [
   { name: 'iPhone 12', device: devices['iPhone 12'] },
   { name: 'Pixel 5', device: devices['Pixel 5'] },
   { name: 'iPhone SE', device: devices['iPhone SE'] },
-  { name: 'Galaxy S21', device: devices['Galaxy S21'] }
+  { name: 'Galaxy S21', device: devices['Galaxy S21'] },
 ];
 
 test.describe('Mobile Performance Tests', () => {
@@ -14,20 +14,23 @@ test.describe('Mobile Performance Tests', () => {
 
       test('Mobile page load performance', async ({ page }) => {
         const startTime = Date.now();
-        
+
         await page.goto('/', { waitUntil: 'networkidle' });
-        
+
         const loadTime = Date.now() - startTime;
         expect(loadTime).toBeLessThan(3000); // 3s on mobile
 
         // Measure mobile-specific metrics
         const metrics = await page.evaluate(() => {
-          const navigation = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming;
+          const navigation = performance.getEntriesByType(
+            'navigation',
+          )[0] as PerformanceNavigationTiming;
           return {
             domContentLoaded: navigation.domContentLoadedEventEnd - navigation.fetchStart,
             loadComplete: navigation.loadEventEnd - navigation.fetchStart,
             firstPaint: performance.getEntriesByName('first-paint')[0]?.startTime || 0,
-            firstContentfulPaint: performance.getEntriesByName('first-contentful-paint')[0]?.startTime || 0
+            firstContentfulPaint:
+              performance.getEntriesByName('first-contentful-paint')[0]?.startTime || 0,
           };
         });
 
@@ -50,38 +53,50 @@ test.describe('Mobile Performance Tests', () => {
             }
 
             let startTime: number;
-            
-            button.addEventListener('touchstart', () => {
-              startTime = performance.now();
-            }, { once: true });
 
-            button.addEventListener('click', () => {
-              const delay = performance.now() - startTime;
-              resolve(delay);
-            }, { once: true });
+            button.addEventListener(
+              'touchstart',
+              () => {
+                startTime = performance.now();
+              },
+              { once: true },
+            );
+
+            button.addEventListener(
+              'click',
+              () => {
+                const delay = performance.now() - startTime;
+                resolve(delay);
+              },
+              { once: true },
+            );
 
             // Simulate touch
             const touch = new Touch({
               identifier: 1,
               target: button,
               clientX: button.getBoundingClientRect().left + 10,
-              clientY: button.getBoundingClientRect().top + 10
+              clientY: button.getBoundingClientRect().top + 10,
             });
 
-            button.dispatchEvent(new TouchEvent('touchstart', {
-              touches: [touch],
-              targetTouches: [touch],
-              changedTouches: [touch],
-              bubbles: true
-            }));
+            button.dispatchEvent(
+              new TouchEvent('touchstart', {
+                touches: [touch],
+                targetTouches: [touch],
+                changedTouches: [touch],
+                bubbles: true,
+              }),
+            );
 
             setTimeout(() => {
-              button.dispatchEvent(new TouchEvent('touchend', {
-                touches: [],
-                targetTouches: [],
-                changedTouches: [touch],
-                bubbles: true
-              }));
+              button.dispatchEvent(
+                new TouchEvent('touchend', {
+                  touches: [],
+                  targetTouches: [],
+                  changedTouches: [touch],
+                  bubbles: true,
+                }),
+              );
               button.click();
             }, 50);
           });
@@ -98,7 +113,7 @@ test.describe('Mobile Performance Tests', () => {
           const metrics = {
             scrollEvents: 0,
             jankFrames: 0,
-            averageFrameTime: 0
+            averageFrameTime: 0,
           };
 
           let lastTime = performance.now();
@@ -110,11 +125,12 @@ test.describe('Mobile Performance Tests', () => {
             const currentTime = performance.now();
             const frameTime = currentTime - lastTime;
             frameTimes.push(frameTime);
-            
-            if (frameTime > 16.67) { // More than 60fps threshold
+
+            if (frameTime > 16.67) {
+              // More than 60fps threshold
               metrics.jankFrames++;
             }
-            
+
             lastTime = currentTime;
           };
 
@@ -123,13 +139,13 @@ test.describe('Mobile Performance Tests', () => {
           // Perform scroll
           for (let i = 0; i < 10; i++) {
             window.scrollTo(0, i * 100);
-            await new Promise(resolve => requestAnimationFrame(resolve));
+            await new Promise((resolve) => requestAnimationFrame(resolve));
           }
 
           window.removeEventListener('scroll', scrollHandler);
 
           metrics.averageFrameTime = frameTimes.reduce((a, b) => a + b, 0) / frameTimes.length;
-          
+
           return metrics;
         });
 
@@ -141,7 +157,7 @@ test.describe('Mobile Performance Tests', () => {
         const resources = {
           images: [] as { url: string; size: number }[],
           scripts: [] as { url: string; size: number }[],
-          styles: [] as { url: string; size: number }[]
+          styles: [] as { url: string; size: number }[],
         };
 
         page.on('response', async (response) => {
@@ -165,7 +181,7 @@ test.describe('Mobile Performance Tests', () => {
         }
 
         // Check total page weight
-        const totalSize = 
+        const totalSize =
           resources.images.reduce((sum, r) => sum + r.size, 0) +
           resources.scripts.reduce((sum, r) => sum + r.size, 0) +
           resources.styles.reduce((sum, r) => sum + r.size, 0);
@@ -190,7 +206,7 @@ test.describe('Mobile Performance Tests', () => {
           const results = {
             horizontalOverflow: false,
             textReadability: true,
-            touchTargetSize: true
+            touchTargetSize: true,
           };
 
           // Check for horizontal overflow
@@ -200,7 +216,7 @@ test.describe('Mobile Performance Tests', () => {
 
           // Check text readability
           const texts = document.querySelectorAll('p, span, div');
-          texts.forEach(text => {
+          texts.forEach((text) => {
             const fontSize = parseFloat(window.getComputedStyle(text).fontSize);
             if (fontSize < 12) {
               results.textReadability = false;
@@ -209,7 +225,7 @@ test.describe('Mobile Performance Tests', () => {
 
           // Check touch target sizes
           const clickables = document.querySelectorAll('button, a, input, select');
-          clickables.forEach(element => {
+          clickables.forEach((element) => {
             const rect = element.getBoundingClientRect();
             if (rect.width < 44 || rect.height < 44) {
               results.touchTargetSize = false;
@@ -228,7 +244,7 @@ test.describe('Mobile Performance Tests', () => {
         // Simulate 3G network conditions
         await context.route('**/*', async (route) => {
           // Add 100ms latency to simulate 3G
-          await new Promise(resolve => setTimeout(resolve, 100));
+          await new Promise((resolve) => setTimeout(resolve, 100));
           await route.continue();
         });
 
@@ -269,27 +285,31 @@ test.describe('Mobile Performance Tests', () => {
             identifier: 1,
             target,
             clientX: 100,
-            clientY: 100
+            clientY: 100,
           });
 
           const touchEnd = new Touch({
             identifier: 1,
             target,
             clientX: 200,
-            clientY: 100
+            clientY: 100,
           });
 
-          target.dispatchEvent(new TouchEvent('touchstart', {
-            touches: [touchStart],
-            targetTouches: [touchStart],
-            changedTouches: [touchStart]
-          }));
+          target.dispatchEvent(
+            new TouchEvent('touchstart', {
+              touches: [touchStart],
+              targetTouches: [touchStart],
+              changedTouches: [touchStart],
+            }),
+          );
 
-          target.dispatchEvent(new TouchEvent('touchend', {
-            touches: [],
-            targetTouches: [],
-            changedTouches: [touchEnd]
-          }));
+          target.dispatchEvent(
+            new TouchEvent('touchend', {
+              touches: [],
+              targetTouches: [],
+              changedTouches: [touchEnd],
+            }),
+          );
 
           return swipeDetected;
         });
@@ -308,7 +328,7 @@ test.describe('Mobile Performance Tests', () => {
           if ('memory' in performance) {
             return {
               usedJSHeapSize: (performance as any).memory.usedJSHeapSize,
-              totalJSHeapSize: (performance as any).memory.totalJSHeapSize
+              totalJSHeapSize: (performance as any).memory.totalJSHeapSize,
             };
           }
           return null;
@@ -340,7 +360,7 @@ test.describe('Mobile Performance Tests', () => {
                 const loadedFonts = Array.from((document as any).fonts);
                 resolve({
                   fontsLoaded: loadedFonts.length,
-                  fontFamilies: loadedFonts.map((font: any) => font.family)
+                  fontFamilies: loadedFonts.map((font: any) => font.family),
                 });
               });
             } else {
@@ -360,12 +380,12 @@ test.describe('Mobile Performance Tests', () => {
           const results = {
             animations: 0,
             intervals: 0,
-            highFrequencyTimers: 0
+            highFrequencyTimers: 0,
           };
 
           // Check for CSS animations
           const allElements = document.querySelectorAll('*');
-          allElements.forEach(element => {
+          allElements.forEach((element) => {
             const animation = window.getComputedStyle(element).animation;
             if (animation !== 'none' && animation !== '') {
               results.animations++;
@@ -376,7 +396,7 @@ test.describe('Mobile Performance Tests', () => {
           // This is a simplified check
           const originalSetInterval = window.setInterval;
           let intervalCount = 0;
-          window.setInterval = function(fn, delay, ...args) {
+          window.setInterval = function (fn, delay, ...args) {
             intervalCount++;
             if (delay < 100) {
               results.highFrequencyTimers++;
@@ -404,7 +424,7 @@ test.describe('Mobile Performance Tests', () => {
           return {
             registered: !!registration,
             state: registration?.active?.state,
-            scope: registration?.scope
+            scope: registration?.scope,
           };
         }
         return { registered: false };
@@ -417,17 +437,17 @@ test.describe('Mobile Performance Tests', () => {
 
     test('Offline functionality', async ({ page, context }) => {
       await page.goto('/', { waitUntil: 'networkidle' });
-      
+
       // Go offline
       await context.setOffline(true);
-      
+
       // Try to navigate
       await page.reload().catch(() => {});
-      
+
       // Check if app still works offline
       const isVisible = await page.isVisible('body');
       expect(isVisible).toBe(true);
-      
+
       // Go back online
       await context.setOffline(false);
     });

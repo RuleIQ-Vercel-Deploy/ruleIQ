@@ -1,2 +1,2 @@
 // Export all shared components
-export * from './file-upload'
+export * from './file-upload';

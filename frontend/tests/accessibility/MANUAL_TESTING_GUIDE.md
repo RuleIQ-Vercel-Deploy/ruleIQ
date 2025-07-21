@@ -13,12 +13,14 @@ This guide provides comprehensive instructions for manual accessibility testing 
 ## 🛠️ Testing Tools
 
 ### Required Tools
+
 - **Screen Readers**: NVDA (free), JAWS (trial), VoiceOver (macOS)
 - **Browser Extensions**: axe DevTools, WAVE, Lighthouse
 - **Color Tools**: Colour Contrast Analyser, Stark
 - **Keyboard Testing**: Built-in browser tools
 
 ### Browser Setup
+
 ```bash
 # Install browser extensions
 - axe DevTools (Chrome/Firefox)
@@ -32,6 +34,7 @@ This guide provides comprehensive instructions for manual accessibility testing 
 ### 1. Keyboard Navigation Testing
 
 #### Basic Navigation
+
 - [ ] **Tab Order**: Logical tab sequence through all interactive elements
 - [ ] **Focus Indicators**: Visible focus indicators on all focusable elements
 - [ ] **Skip Links**: "Skip to main content" link works and is visible on focus
@@ -39,6 +42,7 @@ This guide provides comprehensive instructions for manual accessibility testing 
 - [ ] **No Keyboard Traps**: Users can navigate away from all elements
 
 #### Specific Key Combinations
+
 ```
 Tab          - Move to next focusable element
 Shift+Tab    - Move to previous focusable element
@@ -50,6 +54,7 @@ Home/End     - Navigate to beginning/end of lists
 ```
 
 #### Testing Steps
+
 1. **Disconnect mouse** or use only keyboard
 2. **Start from page top** and tab through entire page
 3. **Verify focus order** matches visual layout
@@ -59,6 +64,7 @@ Home/End     - Navigate to beginning/end of lists
 ### 2. Screen Reader Testing
 
 #### NVDA Testing (Windows)
+
 ```bash
 # Download NVDA (free)
 https://www.nvaccess.org/download/
@@ -73,6 +79,7 @@ K              - Navigate by links
 ```
 
 #### VoiceOver Testing (macOS)
+
 ```bash
 # Enable VoiceOver
 Cmd+F5 or System Preferences > Accessibility
@@ -86,6 +93,7 @@ VO+H           - Navigate headings
 ```
 
 #### Testing Scenarios
+
 1. **Page Structure**: Navigate by headings (H1, H2, H3)
 2. **Form Fields**: Verify labels are announced correctly
 3. **Error Messages**: Check error announcements
@@ -96,22 +104,25 @@ VO+H           - Navigate headings
 ### 3. Visual Accessibility Testing
 
 #### Color Contrast Testing
+
 - [ ] **Text Contrast**: Minimum 4.5:1 for normal text
 - [ ] **Large Text Contrast**: Minimum 3:1 for large text (18pt+)
 - [ ] **UI Elements**: Minimum 3:1 for interactive elements
 - [ ] **Focus Indicators**: Minimum 3:1 contrast with background
 
 #### Color Blindness Testing
+
 ```bash
 # Browser tools for color blindness simulation
 Chrome DevTools > Rendering > Emulate vision deficiencies:
 - Protanopia (red-blind)
-- Deuteranopia (green-blind)  
+- Deuteranopia (green-blind)
 - Tritanopia (blue-blind)
 - Achromatopsia (no color)
 ```
 
 #### Testing Steps
+
 1. **Use contrast analyzer** on all text/background combinations
 2. **Simulate color blindness** and verify information is still accessible
 3. **Check focus indicators** are visible in all states
@@ -120,6 +131,7 @@ Chrome DevTools > Rendering > Emulate vision deficiencies:
 ### 4. Form Accessibility Testing
 
 #### Form Structure
+
 - [ ] **Labels**: All inputs have associated labels
 - [ ] **Required Fields**: Clearly marked and announced
 - [ ] **Error Messages**: Associated with fields via aria-describedby
@@ -127,6 +139,7 @@ Chrome DevTools > Rendering > Emulate vision deficiencies:
 - [ ] **Instructions**: Clear, accessible help text
 
 #### Testing Process
+
 1. **Navigate forms with keyboard only**
 2. **Use screen reader** to verify label announcements
 3. **Test error states** - submit invalid forms
@@ -136,12 +149,14 @@ Chrome DevTools > Rendering > Emulate vision deficiencies:
 ### 5. Dynamic Content Testing
 
 #### Live Regions
+
 - [ ] **Status Updates**: Use aria-live="polite" for non-urgent updates
 - [ ] **Error Alerts**: Use aria-live="assertive" for urgent messages
 - [ ] **Loading States**: Announce loading and completion
 - [ ] **Content Changes**: Dynamic updates are announced
 
 #### Testing Scenarios
+
 1. **Form Submission**: Success/error messages announced
 2. **Search Results**: Results count and updates announced
 3. **Assessment Progress**: Progress updates announced
@@ -150,6 +165,7 @@ Chrome DevTools > Rendering > Emulate vision deficiencies:
 ## 🧪 Component-Specific Testing
 
 ### Authentication Forms
+
 ```bash
 # Test login/register forms
 1. Navigate with keyboard only
@@ -160,6 +176,7 @@ Chrome DevTools > Rendering > Emulate vision deficiencies:
 ```
 
 ### Business Profile Wizard
+
 ```bash
 # Test multi-step wizard
 1. Check step indicators are accessible
@@ -170,6 +187,7 @@ Chrome DevTools > Rendering > Emulate vision deficiencies:
 ```
 
 ### Assessment Interface
+
 ```bash
 # Test assessment questions
 1. Navigate questions with keyboard
@@ -180,6 +198,7 @@ Chrome DevTools > Rendering > Emulate vision deficiencies:
 ```
 
 ### Evidence Management
+
 ```bash
 # Test file upload interface
 1. Check drag-and-drop accessibility
@@ -190,6 +209,7 @@ Chrome DevTools > Rendering > Emulate vision deficiencies:
 ```
 
 ### Dashboard Widgets
+
 ```bash
 # Test dashboard components
 1. Navigate widget grid with keyboard
@@ -202,18 +222,21 @@ Chrome DevTools > Rendering > Emulate vision deficiencies:
 ## 🔍 Testing Procedures
 
 ### Daily Testing Routine
+
 1. **Automated Tests**: Run jest-axe tests with every build
 2. **Keyboard Testing**: Test new features with keyboard only
 3. **Screen Reader Spot Checks**: Test critical user flows
 4. **Contrast Verification**: Check new color combinations
 
 ### Weekly Testing Routine
+
 1. **Full Screen Reader Testing**: Complete user journeys
 2. **Cross-Browser Testing**: Test in Chrome, Firefox, Safari
 3. **Mobile Accessibility**: Test on mobile devices
 4. **Performance Impact**: Check accessibility features don't slow down app
 
 ### Release Testing Routine
+
 1. **Complete Manual Testing**: All components and flows
 2. **Third-Party Audit**: Consider external accessibility audit
 3. **User Testing**: Test with actual users with disabilities
@@ -222,6 +245,7 @@ Chrome DevTools > Rendering > Emulate vision deficiencies:
 ## 📊 Testing Documentation
 
 ### Test Report Template
+
 ```markdown
 # Accessibility Test Report
 
@@ -231,12 +255,14 @@ Chrome DevTools > Rendering > Emulate vision deficiencies:
 **Testing Tools**: [Tools used]
 
 ## Test Results
+
 - [ ] Keyboard Navigation: Pass/Fail
-- [ ] Screen Reader: Pass/Fail  
+- [ ] Screen Reader: Pass/Fail
 - [ ] Color Contrast: Pass/Fail
 - [ ] WCAG Compliance: Pass/Fail
 
 ## Issues Found
+
 1. **Issue**: [Description]
    **Severity**: High/Medium/Low
    **WCAG Criterion**: [e.g., 2.1.1]
@@ -244,10 +270,12 @@ Chrome DevTools > Rendering > Emulate vision deficiencies:
    **Suggested Fix**: [Solution]
 
 ## Recommendations
+
 [Improvement suggestions]
 ```
 
 ### Issue Tracking
+
 - **High Priority**: Blocks screen reader users or keyboard navigation
 - **Medium Priority**: Reduces usability but doesn't block access
 - **Low Priority**: Minor improvements or enhancements
@@ -255,16 +283,19 @@ Chrome DevTools > Rendering > Emulate vision deficiencies:
 ## 🎓 Training Resources
 
 ### WCAG Guidelines
+
 - [WCAG 2.2 Guidelines](https://www.w3.org/WAI/WCAG22/quickref/)
 - [WebAIM Screen Reader Testing](https://webaim.org/articles/screenreader_testing/)
 - [Keyboard Accessibility](https://webaim.org/techniques/keyboard/)
 
 ### Screen Reader Guides
+
 - [NVDA User Guide](https://www.nvaccess.org/files/nvda/documentation/userGuide.html)
 - [VoiceOver User Guide](https://support.apple.com/guide/voiceover/welcome/mac)
 - [JAWS Documentation](https://support.freedomscientific.com/Teachers/Manuals/JAWS)
 
 ### Testing Tools
+
 - [axe DevTools](https://www.deque.com/axe/devtools/)
 - [WAVE Web Accessibility Evaluator](https://wave.webaim.org/)
 - [Colour Contrast Analyser](https://www.tpgi.com/color-contrast-checker/)
@@ -272,6 +303,7 @@ Chrome DevTools > Rendering > Emulate vision deficiencies:
 ## 🚀 Implementation Tips
 
 ### Quick Wins
+
 1. **Add skip links** to all pages
 2. **Ensure focus indicators** are visible
 3. **Add alt text** to all images
@@ -279,6 +311,7 @@ Chrome DevTools > Rendering > Emulate vision deficiencies:
 5. **Use semantic HTML** elements
 
 ### Common Pitfalls
+
 - **Missing focus indicators** on custom components
 - **Inadequate color contrast** on interactive elements
 - **Missing error message associations** in forms
@@ -286,6 +319,7 @@ Chrome DevTools > Rendering > Emulate vision deficiencies:
 - **Dynamic content** without live region announcements
 
 ### Best Practices
+
 - **Test early and often** during development
 - **Include accessibility** in definition of done
 - **Train team members** on accessibility basics
@@ -295,11 +329,13 @@ Chrome DevTools > Rendering > Emulate vision deficiencies:
 ## 📞 Support and Resources
 
 ### Internal Resources
+
 - Accessibility testing utilities: `tests/accessibility/utils.ts`
 - Automated tests: `tests/accessibility/accessibility.test.tsx`
 - Component documentation: Include accessibility notes
 
 ### External Support
+
 - **WebAIM**: Free accessibility resources and training
 - **Deque University**: Comprehensive accessibility courses
 - **A11y Project**: Community-driven accessibility resources

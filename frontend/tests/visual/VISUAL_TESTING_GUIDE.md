@@ -32,31 +32,37 @@ components/
 ### Local Development
 
 1. **Run all visual tests:**
+
    ```bash
    pnpm test:visual
    ```
 
 2. **Update snapshots:**
+
    ```bash
    pnpm test:visual:update
    ```
 
 3. **Run component visual tests:**
+
    ```bash
    pnpm test:visual:components
    ```
 
 4. **Run page layout tests:**
+
    ```bash
    pnpm test:visual:pages
    ```
 
 5. **Run Storybook:**
+
    ```bash
    pnpm storybook
    ```
 
 6. **Run Storybook tests:**
+
    ```bash
    pnpm test:storybook
    ```
@@ -69,11 +75,13 @@ components/
 ### CI/CD Pipeline
 
 Visual tests run automatically on:
+
 - Push to `main` or `develop` branches
 - Pull requests
 - Manual workflow dispatch
 
 The CI pipeline includes:
+
 1. Multi-browser testing (Chrome, Firefox, Safari)
 2. Responsive viewport testing
 3. Dark mode testing
@@ -85,6 +93,7 @@ The CI pipeline includes:
 ### 1. Component Visual Tests (`component-snapshots.test.tsx`)
 
 Tests individual UI components in isolation:
+
 - All component variants and states
 - Interactive states (hover, focus, active)
 - Different sizes and configurations
@@ -92,14 +101,15 @@ Tests individual UI components in isolation:
 - Responsive behavior
 
 Example:
+
 ```typescript
 test('button - primary variant - default size', async ({ page }) => {
   await helpers.navigateAndWait('/components');
   const button = page.locator('[data-testid="button-primary-default"]');
-  
+
   // Normal state
   await expect(button).toHaveScreenshot('button-primary-default-normal.png');
-  
+
   // Hover state
   await button.hover();
   await expect(button).toHaveScreenshot('button-primary-default-hover.png');
@@ -109,6 +119,7 @@ test('button - primary variant - default size', async ({ page }) => {
 ### 2. Page Layout Tests (`page-layouts.test.tsx`)
 
 Tests complete page layouts:
+
 - Full page screenshots
 - Page sections
 - Loading states
@@ -117,17 +128,16 @@ Tests complete page layouts:
 - Cross-browser consistency
 
 Example:
+
 ```typescript
 test('dashboard - complete layout', async ({ page, browserName }) => {
   await helpers.navigateAndWait('/dashboard');
   await helpers.waitForLoadingToComplete();
-  
+
   await expect(page).toHaveScreenshot(`dashboard-${browserName}.png`, {
     fullPage: true,
     animations: 'disabled',
-    mask: [
-      page.locator('[data-testid="dynamic-data"]'),
-    ],
+    mask: [page.locator('[data-testid="dynamic-data"]')],
   });
 });
 ```
@@ -135,6 +145,7 @@ test('dashboard - complete layout', async ({ page, browserName }) => {
 ### 3. Storybook Visual Tests
 
 Component stories with visual testing:
+
 - Isolated component rendering
 - All props combinations
 - Interaction states
@@ -155,11 +166,11 @@ Component stories with visual testing:
 
 ```typescript
 await expect(page).toHaveScreenshot('name.png', {
-  fullPage: true,              // Capture entire page
-  animations: 'disabled',       // Disable CSS animations
-  maxDiffPixels: 100,          // Allowed pixel difference
-  threshold: 0.2,              // Difference threshold (0-1)
-  mask: [locator1, locator2],  // Elements to mask
+  fullPage: true, // Capture entire page
+  animations: 'disabled', // Disable CSS animations
+  maxDiffPixels: 100, // Allowed pixel difference
+  threshold: 0.2, // Difference threshold (0-1)
+  mask: [locator1, locator2], // Elements to mask
   clip: { x, y, width, height }, // Specific area to capture
 });
 ```
@@ -177,7 +188,7 @@ await expect(page).toHaveScreenshot('dashboard.png', {
 });
 
 // Mock data for consistency
-await page.route('**/api/dashboard/**', route => {
+await page.route('**/api/dashboard/**', (route) => {
   route.fulfill({
     status: 200,
     body: JSON.stringify(mockDashboardData),
@@ -206,7 +217,7 @@ for (const viewport of viewports) {
 
 ```typescript
 test.describe('Cross-browser consistency', () => {
-  ['chromium', 'firefox', 'webkit'].forEach(browserName => {
+  ['chromium', 'firefox', 'webkit'].forEach((browserName) => {
     test(`renders consistently in ${browserName}`, async ({ page }) => {
       // Test implementation
     });
@@ -219,11 +230,13 @@ test.describe('Cross-browser consistency', () => {
 ### 1. Local Debugging
 
 1. **View test report:**
+
    ```bash
    npx playwright show-report
    ```
 
 2. **Update specific snapshots:**
+
    ```bash
    pnpm playwright test path/to/test.ts --update-snapshots
    ```
@@ -257,6 +270,7 @@ test.describe('Cross-browser consistency', () => {
    - Copy the project token
 
 2. **Set environment variable:**
+
    ```bash
    export CHROMATIC_PROJECT_TOKEN=your-token-here
    ```
@@ -282,11 +296,13 @@ test.describe('Cross-browser consistency', () => {
 When intentional visual changes are made:
 
 1. **Review changes locally:**
+
    ```bash
    pnpm test:visual
    ```
 
 2. **Update snapshots:**
+
    ```bash
    pnpm test:visual:update
    ```
@@ -324,15 +340,19 @@ When intentional visual changes are made:
 ## Troubleshooting
 
 ### Issue: Flaky tests
+
 **Solution:** Increase wait times, disable animations, mask dynamic content
 
 ### Issue: Different results locally vs CI
+
 **Solution:** Ensure same viewport, fonts, and browser versions
 
 ### Issue: Large snapshot files
+
 **Solution:** Use targeted screenshots instead of full page, optimize images
 
 ### Issue: Slow test execution
+
 **Solution:** Run tests in parallel, use selective testing, optimize waits
 
 ## Resources

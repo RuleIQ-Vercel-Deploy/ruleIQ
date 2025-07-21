@@ -1,36 +1,42 @@
-"use client"
+'use client';
 
-import { addDays } from "date-fns"
-import { CalendarIcon, Tag, ListFilter } from "lucide-react"
-import * as React from "react"
+import { addDays } from 'date-fns';
+import { CalendarIcon, Tag, ListFilter } from 'lucide-react';
+import * as React from 'react';
 
-import { Button } from "@/components/ui/button"
-import { Calendar } from "@/components/ui/calendar"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Checkbox } from "@/components/ui/checkbox"
-import { Label } from "@/components/ui/label"
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { statuses, types, frameworks } from "@/lib/data/evidence"
-import { cn } from "@/lib/utils"
+import { Button } from '@/components/ui/button';
+import { Calendar } from '@/components/ui/calendar';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Label } from '@/components/ui/label';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { statuses, types, frameworks } from '@/lib/data/evidence';
+import { cn } from '@/lib/utils';
 
-import type { DateRange } from "react-day-picker"
+import type { DateRange } from 'react-day-picker';
 
 export function FilterSidebar() {
   const [date, setDate] = React.useState<DateRange | undefined>({
     from: new Date(2024, 5, 1),
     to: addDays(new Date(2024, 5, 1), 30),
-  })
+  });
 
   return (
-    <Card className="ruleiq-card w-full lg:w-80 shrink-0 bg-midnight-blue border-gold/20">
+    <Card className="ruleiq-card bg-midnight-blue w-full shrink-0 border-gold/20 lg:w-80">
       <CardHeader className="border-b border-gold/20">
-        <CardTitle className="text-gold flex items-center gap-2">
+        <CardTitle className="flex items-center gap-2 text-gold">
           <ListFilter className="h-5 w-5" />
           Filters
         </CardTitle>
       </CardHeader>
-      <CardContent className="p-6 space-y-6">
+      <CardContent className="space-y-6 p-6">
         {/* Status Filter */}
         <div className="space-y-3">
           <Label className="text-eggshell-white font-semibold">Status</Label>
@@ -38,7 +44,10 @@ export function FilterSidebar() {
             {statuses.map((status) => (
               <div key={status.value} className="flex items-center space-x-2">
                 <Checkbox id={`status-${status.value}`} className="ruleiq-checkbox" />
-                <Label htmlFor={`status-${status.value}`} className="text-eggshell-white/80 font-normal">
+                <Label
+                  htmlFor={`status-${status.value}`}
+                  className="text-eggshell-white/80 font-normal"
+                >
                   {status.label}
                 </Label>
               </div>
@@ -72,17 +81,18 @@ export function FilterSidebar() {
             <PopoverTrigger asChild>
               <Button
                 id="date"
-                variant={"outline"}
+                variant={'outline'}
                 className={cn(
-                  "w-full justify-start text-left font-normal ruleiq-select-dark",
-                  !date && "text-muted-foreground",
+                  'ruleiq-select-dark w-full justify-start text-left font-normal',
+                  !date && 'text-muted-foreground',
                 )}
               >
                 <CalendarIcon className="mr-2 h-4 w-4" />
                 {date?.from ? (
                   date.to ? (
                     <>
-                      {new Date(date.from).toLocaleDateString()} - {new Date(date.to).toLocaleDateString()}
+                      {new Date(date.from).toLocaleDateString()} -{' '}
+                      {new Date(date.to).toLocaleDateString()}
                     </>
                   ) : (
                     new Date(date.from).toLocaleDateString()
@@ -107,7 +117,7 @@ export function FilterSidebar() {
 
         {/* Framework Tags Filter */}
         <div className="space-y-3">
-          <Label className="text-eggshell-white font-semibold flex items-center gap-2">
+          <Label className="text-eggshell-white flex items-center gap-2 font-semibold">
             <Tag className="h-4 w-4" />
             Framework Tags
           </Label>
@@ -126,5 +136,5 @@ export function FilterSidebar() {
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }

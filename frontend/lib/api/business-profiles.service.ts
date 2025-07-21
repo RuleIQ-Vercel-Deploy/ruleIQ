@@ -26,9 +26,9 @@ class BusinessProfileService {
     // Handle both direct array and wrapped array responses
     const profileData = Array.isArray(response.data) ? response.data : response.data.data || [];
     // Transform each profile from API format to frontend format
-    return profileData.map(profile => 
-      BusinessProfileFieldMapper.transformAPIResponseForFrontend(profile)
-    ).filter(Boolean) as BusinessProfile[];
+    return profileData
+      .map((profile) => BusinessProfileFieldMapper.transformAPIResponseForFrontend(profile))
+      .filter(Boolean) as BusinessProfile[];
   }
 
   /**
@@ -50,7 +50,7 @@ class BusinessProfileService {
     // Transform data to API format before sending
     const apiData = BusinessProfileFieldMapper.transformFormDataForAPI(data);
     const response = await apiClient.post<any>('/business-profiles', apiData);
-    
+
     // Transform response back to frontend format
     const transformed = BusinessProfileFieldMapper.transformAPIResponseForFrontend(response.data);
     if (!transformed) {
@@ -62,11 +62,14 @@ class BusinessProfileService {
   /**
    * Update an existing business profile
    */
-  async updateBusinessProfile(id: string, data: UpdateBusinessProfileRequest): Promise<BusinessProfile> {
+  async updateBusinessProfile(
+    id: string,
+    data: UpdateBusinessProfileRequest,
+  ): Promise<BusinessProfile> {
     // Transform data to API format before sending
     const apiData = BusinessProfileFieldMapper.transformFormDataForAPI(data);
     const response = await apiClient.put<any>(`/business-profiles/${id}`, apiData);
-    
+
     // Transform response back to frontend format
     const transformed = BusinessProfileFieldMapper.transformAPIResponseForFrontend(response.data);
     if (!transformed) {
@@ -110,7 +113,7 @@ class BusinessProfileService {
     try {
       // Check if user already has a profile
       const existingProfile = await this.getProfile();
-      
+
       if (existingProfile) {
         // Update existing profile
         return await this.updateProfile(existingProfile.id, data as any);
@@ -127,7 +130,10 @@ class BusinessProfileService {
   /**
    * Update profile with partial data
    */
-  async updateProfile(profile: BusinessProfile, updates: Partial<BusinessProfileFormData>): Promise<BusinessProfile> {
+  async updateProfile(
+    profile: BusinessProfile,
+    updates: Partial<BusinessProfileFormData>,
+  ): Promise<BusinessProfile> {
     // Create update payload with only changed fields
     const updatePayload = BusinessProfileFieldMapper.createUpdatePayload(profile, updates);
     return await this.updateBusinessProfile(profile.id, updatePayload);
@@ -153,7 +159,9 @@ class BusinessProfileService {
    */
   async getFrameworkRecommendations(): Promise<FrameworkRecommendation[]> {
     try {
-      const response = await apiClient.get<FrameworkRecommendation[]>('/frameworks/recommendations');
+      const response = await apiClient.get<FrameworkRecommendation[]>(
+        '/frameworks/recommendations',
+      );
       return response.data;
     } catch (error) {
       console.error('Failed to get framework recommendations:', error);

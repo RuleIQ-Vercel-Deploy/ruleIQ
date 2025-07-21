@@ -9,7 +9,6 @@ import { Input } from '@/components/ui/input';
 
 import { render } from '../utils';
 
-
 // Extend Jest matchers
 expect.extend(toHaveNoViolations);
 
@@ -24,7 +23,7 @@ describe('Accessibility Tests', () => {
           <Button disabled>Disabled Button</Button>
           <Button size="sm">Small Button</Button>
           <Button size="lg">Large Button</Button>
-        </div>
+        </div>,
       );
 
       const results = await axe(container);
@@ -36,15 +35,17 @@ describe('Accessibility Tests', () => {
         <div>
           <label htmlFor="test-input">Test Input</label>
           <Input id="test-input" placeholder="Enter text" />
-          
+
           <label htmlFor="required-input">Required Input</label>
           <Input id="required-input" required aria-describedby="required-help" />
           <div id="required-help">This field is required</div>
-          
+
           <label htmlFor="error-input">Input with Error</label>
           <Input id="error-input" aria-invalid="true" aria-describedby="error-message" />
-          <div id="error-message" role="alert">This field has an error</div>
-        </div>
+          <div id="error-message" role="alert">
+            This field has an error
+          </div>
+        </div>,
       );
 
       const results = await axe(container);
@@ -61,7 +62,7 @@ describe('Accessibility Tests', () => {
             <p>This is card content that should be accessible.</p>
             <Button>Action Button</Button>
           </CardContent>
-        </Card>
+        </Card>,
       );
 
       const results = await axe(container);
@@ -73,17 +74,17 @@ describe('Accessibility Tests', () => {
         <form>
           <fieldset>
             <legend>User Information</legend>
-            
+
             <div>
               <label htmlFor="name">Full Name</label>
               <Input id="name" required />
             </div>
-            
+
             <div>
               <label htmlFor="email">Email Address</label>
               <Input id="email" type="email" required />
             </div>
-            
+
             <fieldset>
               <legend>Preferences</legend>
               <div>
@@ -95,15 +96,15 @@ describe('Accessibility Tests', () => {
                 <label htmlFor="pref2">Option 2</label>
               </div>
             </fieldset>
-            
+
             <div>
               <input type="checkbox" id="terms" />
               <label htmlFor="terms">I agree to the terms and conditions</label>
             </div>
-            
+
             <Button type="submit">Submit</Button>
           </fieldset>
-        </form>
+        </form>,
       );
 
       const results = await axe(container);
@@ -130,12 +131,20 @@ describe('Accessibility Tests', () => {
       const { container } = render(
         <nav aria-label="Main navigation">
           <ul>
-            <li><a href="/dashboard">Dashboard</a></li>
-            <li><a href="/assessments">Assessments</a></li>
-            <li><a href="/evidence">Evidence</a></li>
-            <li><a href="/policies">Policies</a></li>
+            <li>
+              <a href="/dashboard">Dashboard</a>
+            </li>
+            <li>
+              <a href="/assessments">Assessments</a>
+            </li>
+            <li>
+              <a href="/evidence">Evidence</a>
+            </li>
+            <li>
+              <a href="/policies">Policies</a>
+            </li>
           </ul>
-        </nav>
+        </nav>,
       );
 
       const results = await axe(container);
@@ -172,7 +181,7 @@ describe('Accessibility Tests', () => {
               </td>
             </tr>
           </tbody>
-        </table>
+        </table>,
       );
 
       const results = await axe(container);
@@ -190,15 +199,13 @@ describe('Accessibility Tests', () => {
             aria-modal="true"
           >
             <h2 id="dialog-title">Confirm Action</h2>
-            <p id="dialog-description">
-              Are you sure you want to delete this item?
-            </p>
+            <p id="dialog-description">Are you sure you want to delete this item?</p>
             <div>
               <Button>Cancel</Button>
               <Button variant="destructive">Delete</Button>
             </div>
           </div>
-        </div>
+        </div>,
       );
 
       const results = await axe(container);
@@ -210,11 +217,7 @@ describe('Accessibility Tests', () => {
     it('Dropdown menus should be accessible', async () => {
       const { container } = render(
         <div>
-          <button
-            aria-haspopup="true"
-            aria-expanded="false"
-            aria-controls="dropdown-menu"
-          >
+          <button aria-haspopup="true" aria-expanded="false" aria-controls="dropdown-menu">
             Options
           </button>
           <ul id="dropdown-menu" role="menu">
@@ -228,7 +231,7 @@ describe('Accessibility Tests', () => {
               <button>Share</button>
             </li>
           </ul>
-        </div>
+        </div>,
       );
 
       const results = await axe(container);
@@ -239,47 +242,32 @@ describe('Accessibility Tests', () => {
       const { container } = render(
         <div>
           <div role="tablist" aria-label="Assessment sections">
-            <button
-              role="tab"
-              aria-selected="true"
-              aria-controls="panel1"
-              id="tab1"
-            >
+            <button role="tab" aria-selected="true" aria-controls="panel1" id="tab1">
               Overview
             </button>
-            <button
-              role="tab"
-              aria-selected="false"
-              aria-controls="panel2"
-              id="tab2"
-            >
+            <button role="tab" aria-selected="false" aria-controls="panel2" id="tab2">
               Details
             </button>
-            <button
-              role="tab"
-              aria-selected="false"
-              aria-controls="panel3"
-              id="tab3"
-            >
+            <button role="tab" aria-selected="false" aria-controls="panel3" id="tab3">
               Results
             </button>
           </div>
-          
+
           <div role="tabpanel" id="panel1" aria-labelledby="tab1">
             <h3>Overview Content</h3>
             <p>This is the overview panel content.</p>
           </div>
-          
+
           <div role="tabpanel" id="panel2" aria-labelledby="tab2" hidden>
             <h3>Details Content</h3>
             <p>This is the details panel content.</p>
           </div>
-          
+
           <div role="tabpanel" id="panel3" aria-labelledby="tab3" hidden>
             <h3>Results Content</h3>
             <p>This is the results panel content.</p>
           </div>
-        </div>
+        </div>,
       );
 
       const results = await axe(container);
@@ -291,9 +279,11 @@ describe('Accessibility Tests', () => {
         <div>
           <div>
             <label htmlFor="progress1">Assessment Progress</label>
-            <progress id="progress1" value="70" max="100">70%</progress>
+            <progress id="progress1" value="70" max="100">
+              70%
+            </progress>
           </div>
-          
+
           <div>
             <div aria-label="Upload progress">
               <div
@@ -307,7 +297,7 @@ describe('Accessibility Tests', () => {
               </div>
             </div>
           </div>
-        </div>
+        </div>,
       );
 
       const results = await axe(container);
@@ -338,7 +328,7 @@ describe('Accessibility Tests', () => {
               <p>85% compliant</p>
             </div>
           </section>
-        </main>
+        </main>,
       );
 
       const results = await axe(container);
@@ -356,7 +346,7 @@ describe('Accessibility Tests', () => {
             <li>Review results</li>
             <li>Generate action plan</li>
           </ol>
-          
+
           <h2>Required Documents</h2>
           <ul>
             <li>Privacy policy</li>
@@ -364,7 +354,7 @@ describe('Accessibility Tests', () => {
             <li>Security procedures</li>
             <li>Training records</li>
           </ul>
-        </div>
+        </div>,
       );
 
       const results = await axe(container);
@@ -374,13 +364,8 @@ describe('Accessibility Tests', () => {
     it('Images should be accessible', async () => {
       const { container } = render(
         <div>
-          <img
-            src="/logo.png"
-            alt="ruleIQ - AI Compliance Automated"
-            width={200}
-            height={50}
-          />
-          
+          <img src="/logo.png" alt="ruleIQ - AI Compliance Automated" width={200} height={50} />
+
           <figure>
             <img
               src="/chart.png"
@@ -388,20 +373,12 @@ describe('Accessibility Tests', () => {
               width={400}
               height={300}
             />
-            <figcaption>
-              Compliance score breakdown by framework
-            </figcaption>
+            <figcaption>Compliance score breakdown by framework</figcaption>
           </figure>
-          
+
           {/* Decorative image */}
-          <img
-            src="/decoration.png"
-            alt=""
-            role="presentation"
-            width={100}
-            height={100}
-          />
-        </div>
+          <img src="/decoration.png" alt="" role="presentation" width={100} height={100} />
+        </div>,
       );
 
       const results = await axe(container);
@@ -417,11 +394,11 @@ describe('Accessibility Tests', () => {
             <h2>Error</h2>
             <p>Failed to save assessment. Please try again.</p>
           </div>
-          
+
           <div role="status" aria-live="polite">
             <p>Assessment saved successfully.</p>
           </div>
-          
+
           <form>
             <div>
               <label htmlFor="email-error">Email Address</label>
@@ -436,7 +413,7 @@ describe('Accessibility Tests', () => {
               </div>
             </div>
           </form>
-        </div>
+        </div>,
       );
 
       const results = await axe(container);
@@ -452,7 +429,7 @@ describe('Accessibility Tests', () => {
               <span className="sr-only">Loading...</span>
             </div>
           </div>
-          
+
           <Button disabled aria-describedby="loading-message">
             <span aria-hidden="true">⏳</span>
             Submitting...
@@ -460,7 +437,7 @@ describe('Accessibility Tests', () => {
           <div id="loading-message" className="sr-only">
             Please wait while we process your request.
           </div>
-        </div>
+        </div>,
       );
 
       const results = await axe(container);
@@ -478,19 +455,23 @@ describe('Accessibility Tests', () => {
           <a href="#navigation" className="skip-link">
             Skip to navigation
           </a>
-          
+
           <nav id="navigation">
             <ul>
-              <li><a href="/dashboard">Dashboard</a></li>
-              <li><a href="/assessments">Assessments</a></li>
+              <li>
+                <a href="/dashboard">Dashboard</a>
+              </li>
+              <li>
+                <a href="/assessments">Assessments</a>
+              </li>
             </ul>
           </nav>
-          
+
           <main id="main-content">
             <h1>Dashboard</h1>
             <p>Welcome to your compliance dashboard.</p>
           </main>
-        </div>
+        </div>,
       );
 
       const results = await axe(container);
@@ -501,12 +482,8 @@ describe('Accessibility Tests', () => {
       const { container } = render(
         <div>
           <button>Open Modal</button>
-          
-          <div
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="modal-title"
-          >
+
+          <div role="dialog" aria-modal="true" aria-labelledby="modal-title">
             <h2 id="modal-title">Modal Title</h2>
             <p>Modal content goes here.</p>
             <div>
@@ -514,7 +491,7 @@ describe('Accessibility Tests', () => {
               <Button>Confirm</Button>
             </div>
           </div>
-        </div>
+        </div>,
       );
 
       const results = await axe(container);

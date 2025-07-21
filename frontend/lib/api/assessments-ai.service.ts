@@ -7,7 +7,7 @@ import type {
   Gap,
   Recommendation,
   Question,
-  AssessmentProgress
+  AssessmentProgress,
 } from '@/lib/assessment-engine/types';
 import type { BusinessProfile } from '@/types/api';
 
@@ -141,178 +141,203 @@ export interface StreamingOptions {
 // Mock responses for development
 const mockAIResponses = {
   help: {
-    guidance: "This question assesses your organization's data retention practices under GDPR. You should document specific retention periods for different categories of personal data, ensure you have legal basis for retention, and implement automatic deletion processes where possible.",
+    guidance:
+      "This question assesses your organization's data retention practices under GDPR. You should document specific retention periods for different categories of personal data, ensure you have legal basis for retention, and implement automatic deletion processes where possible.",
     confidence_score: 0.92,
-    related_topics: ["Data Protection by Design", "Right to Erasure", "Data Minimization"],
+    related_topics: ['Data Protection by Design', 'Right to Erasure', 'Data Minimization'],
     follow_up_suggestions: [
-      "Review your current data retention schedule",
-      "Consult with your legal team on retention requirements",
-      "Consider implementing automated deletion tools"
+      'Review your current data retention schedule',
+      'Consult with your legal team on retention requirements',
+      'Consider implementing automated deletion tools',
     ],
-    source_references: ["GDPR Article 5(1)(e)", "GDPR Recital 39"]
+    source_references: ['GDPR Article 5(1)(e)', 'GDPR Recital 39'],
   },
-  
+
   followUp: {
     questions: [
       {
-        id: "ai_follow_1",
-        type: "radio" as const,
-        text: "Do you have automated systems in place to delete data when retention periods expire?",
+        id: 'ai_follow_1',
+        type: 'radio' as const,
+        text: 'Do you have automated systems in place to delete data when retention periods expire?',
         options: [
-          { value: "yes", label: "Yes, fully automated" },
-          { value: "partial", label: "Partially automated" },
-          { value: "manual", label: "Manual process only" },
-          { value: "no", label: "No deletion process" }
+          { value: 'yes', label: 'Yes, fully automated' },
+          { value: 'partial', label: 'Partially automated' },
+          { value: 'manual', label: 'Manual process only' },
+          { value: 'no', label: 'No deletion process' },
         ],
         validation: { required: true },
         weight: 2,
         metadata: {
           ai_generated: true,
-          reasoning: "Follow-up to assess implementation maturity"
-        }
-      }
+          reasoning: 'Follow-up to assess implementation maturity',
+        },
+      },
     ],
     follow_up_questions: [
       {
-        id: "ai_follow_1",
-        type: "radio" as const,
-        text: "Do you have automated systems in place to delete data when retention periods expire?",
+        id: 'ai_follow_1',
+        type: 'radio' as const,
+        text: 'Do you have automated systems in place to delete data when retention periods expire?',
         options: [
-          { value: "yes", label: "Yes, fully automated" },
-          { value: "partial", label: "Partially automated" },
-          { value: "manual", label: "Manual process only" },
-          { value: "no", label: "No deletion process" }
+          { value: 'yes', label: 'Yes, fully automated' },
+          { value: 'partial', label: 'Partially automated' },
+          { value: 'manual', label: 'Manual process only' },
+          { value: 'no', label: 'No deletion process' },
         ],
         validation: { required: true },
         weight: 2,
         metadata: {
           ai_generated: true,
-          reasoning: "Follow-up to assess implementation maturity"
-        }
-      }
+          reasoning: 'Follow-up to assess implementation maturity',
+        },
+      },
     ],
-    reasoning: "Based on your data retention policy response, I'm asking about implementation to understand the practical compliance level.",
-    estimated_completion_time: 2
+    reasoning:
+      "Based on your data retention policy response, I'm asking about implementation to understand the practical compliance level.",
+    estimated_completion_time: 2,
   },
 
   analysis: {
     gaps: [
       {
-        id: "gap_1",
-        title: "Data Retention Policy Gap",
-        description: "Informal retention practices instead of documented policies",
-        severity: "high" as const,
-        category: "Data Protection",
-        framework_reference: "GDPR Article 5",
-        current_state: "Informal retention practices",
-        target_state: "Documented retention policies with defined periods",
-        impact_description: "Potential GDPR violation for excessive data retention",
+        id: 'gap_1',
+        title: 'Data Retention Policy Gap',
+        description: 'Informal retention practices instead of documented policies',
+        severity: 'high' as const,
+        category: 'Data Protection',
+        framework_reference: 'GDPR Article 5',
+        current_state: 'Informal retention practices',
+        target_state: 'Documented retention policies with defined periods',
+        impact_description: 'Potential GDPR violation for excessive data retention',
         business_impact_score: 0.8,
         technical_complexity: 0.6,
         regulatory_requirement: true,
-        estimated_effort: "medium" as const,
-        dependencies: ["Legal review", "Policy documentation"],
-        affected_systems: ["CRM", "Database"],
-        stakeholders: ["DPO", "Legal Team", "IT Department"]
-      }
+        estimated_effort: 'medium' as const,
+        dependencies: ['Legal review', 'Policy documentation'],
+        affected_systems: ['CRM', 'Database'],
+        stakeholders: ['DPO', 'Legal Team', 'IT Department'],
+      },
     ],
     recommendations: [
       {
-        id: "ai_rec_1",
-        title: "Implement Comprehensive Data Retention Policy",
-        description: "Create and document formal data retention policies with specific timeframes for different data categories, automated deletion processes, and regular compliance reviews.",
-        priority: "immediate" as const,
-        category: "Data Protection",
-        framework_references: ["GDPR", "ISO 27001"],
-        addresses_gaps: ["gap_1"],
-        effort_estimate: "medium" as const,
-        implementation_timeline: "3-4 weeks",
+        id: 'ai_rec_1',
+        title: 'Implement Comprehensive Data Retention Policy',
+        description:
+          'Create and document formal data retention policies with specific timeframes for different data categories, automated deletion processes, and regular compliance reviews.',
+        priority: 'immediate' as const,
+        category: 'Data Protection',
+        framework_references: ['GDPR', 'ISO 27001'],
+        addresses_gaps: ['gap_1'],
+        effort_estimate: 'medium' as const,
+        implementation_timeline: '3-4 weeks',
         impact_score: 0.85,
-        cost_estimate: "Low",
-        resource_requirements: ["Data Protection Officer", "Legal Team", "IT Department", "Compliance Manager"],
-        success_criteria: ["Documented retention policy", "Automated deletion systems", "Legal approval"],
-        potential_challenges: ["Legal complexity", "System integration"],
-        mitigation_strategies: ["Early legal consultation", "Phased implementation"],
+        cost_estimate: 'Low',
+        resource_requirements: [
+          'Data Protection Officer',
+          'Legal Team',
+          'IT Department',
+          'Compliance Manager',
+        ],
+        success_criteria: [
+          'Documented retention policy',
+          'Automated deletion systems',
+          'Legal approval',
+        ],
+        potential_challenges: ['Legal complexity', 'System integration'],
+        mitigation_strategies: ['Early legal consultation', 'Phased implementation'],
         automation_potential: 0.7,
-        roi_estimate: "High"
-      }
+        roi_estimate: 'High',
+      },
     ],
     risk_assessment: {
-      overall_risk_level: "high" as const,
+      overall_risk_level: 'high' as const,
       risk_score: 7.2,
-      key_risk_areas: ["Data Retention", "Automated Compliance", "Legal Documentation"]
+      key_risk_areas: ['Data Retention', 'Automated Compliance', 'Legal Documentation'],
     },
     compliance_insights: {
-      maturity_level: "Developing",
+      maturity_level: 'Developing',
       score_breakdown: {
-        "Data Processing": 75,
-        "Subject Rights": 82,
-        "Security Measures": 68
+        'Data Processing': 75,
+        'Subject Rights': 82,
+        'Security Measures': 68,
       },
-      improvement_priority: ["Data Retention", "Security Controls", "Documentation"]
+      improvement_priority: ['Data Retention', 'Security Controls', 'Documentation'],
     },
     evidence_requirements: [
       {
-        priority: "high" as const,
-        evidence_type: "Policy Documentation",
-        description: "Documented data retention policy with approval and review dates",
-        control_mapping: ["GDPR Article 5", "ISO 27001 A.18.1.4"]
-      }
-    ]
-  }
+        priority: 'high' as const,
+        evidence_type: 'Policy Documentation',
+        description: 'Documented data retention policy with approval and review dates',
+        control_mapping: ['GDPR Article 5', 'ISO 27001 A.18.1.4'],
+      },
+    ],
+  },
 };
 
 class AssessmentAIService {
-  private useProductionEndpoints = process.env.NODE_ENV === 'production' || process.env['NEXT_PUBLIC_USE_REAL_AI'] === 'true';
+  private useProductionEndpoints =
+    process.env.NODE_ENV === 'production' || process.env['NEXT_PUBLIC_USE_REAL_AI'] === 'true';
 
   /**
    * Get AI help for a specific assessment question
    */
   async getQuestionHelp(request: AIHelpRequest): Promise<AIHelpResponse> {
-    return withRetry(async () => {
-      try {
-        if (this.useProductionEndpoints) {
-          const aiRequest = apiClient.post<AIHelpResponse>(`/ai/assessments/${request.framework_id}/help`, request);
-          const response = await this.executeWithTimeout(aiRequest, 15000, 'Question help AI request');
-          return response.data;
-        }
+    return withRetry(
+      async () => {
+        try {
+          if (this.useProductionEndpoints) {
+            const aiRequest = apiClient.post<AIHelpResponse>(
+              `/ai/assessments/${request.framework_id}/help`,
+              request,
+            );
+            const response = await this.executeWithTimeout(
+              aiRequest,
+              15000,
+              'Question help AI request',
+            );
+            return response.data;
+          }
 
-        // Development fallback with no artificial delay
-        return mockAIResponses.help;
-      } catch (error: any) {
-        console.error('Failed to get AI help:', error);
-
-        // Handle rate limiting specifically - don't retry immediately
-        if (error.response?.status === 429) {
-          const rateLimitError = error.response.data as AIRateLimitError;
-          const retryAfter = rateLimitError.error.retry_after;
-
-          return {
-            guidance: `Rate limit exceeded for AI help requests. ${rateLimitError.suggestion}`,
-            confidence_score: 0.1,
-            related_topics: ['Rate Limiting'],
-            follow_up_suggestions: [
-              `Wait ${retryAfter} seconds before trying again`,
-              'Consider reviewing existing guidance while waiting',
-              'Contact support if you need immediate assistance'
-            ],
-            source_references: [`Rate limit: ${rateLimitError.error.limit} requests per ${rateLimitError.error.window}`]
-          };
-        }
-
-        // Enhanced error handling with fallback to mock data
-        if (this.useProductionEndpoints && error instanceof Error) {
-          console.warn('Production AI endpoint failed, falling back to mock data');
+          // Development fallback with no artificial delay
           return mockAIResponses.help;
-        }
+        } catch (error: any) {
+          console.error('Failed to get AI help:', error);
 
-        throw createAppError(error, 'AI help request');
-      }
-    }, {
-      maxAttempts: 2,
-      initialDelay: 1000,
-      retryCondition: (error) => error.type === 'network' || error.type === 'server'
-    });
+          // Handle rate limiting specifically - don't retry immediately
+          if (error.response?.status === 429) {
+            const rateLimitError = error.response.data as AIRateLimitError;
+            const retryAfter = rateLimitError.error.retry_after;
+
+            return {
+              guidance: `Rate limit exceeded for AI help requests. ${rateLimitError.suggestion}`,
+              confidence_score: 0.1,
+              related_topics: ['Rate Limiting'],
+              follow_up_suggestions: [
+                `Wait ${retryAfter} seconds before trying again`,
+                'Consider reviewing existing guidance while waiting',
+                'Contact support if you need immediate assistance',
+              ],
+              source_references: [
+                `Rate limit: ${rateLimitError.error.limit} requests per ${rateLimitError.error.window}`,
+              ],
+            };
+          }
+
+          // Enhanced error handling with fallback to mock data
+          if (this.useProductionEndpoints && error instanceof Error) {
+            console.warn('Production AI endpoint failed, falling back to mock data');
+            return mockAIResponses.help;
+          }
+
+          throw createAppError(error, 'AI help request');
+        }
+      },
+      {
+        maxAttempts: 2,
+        initialDelay: 1000,
+        retryCondition: (error) => error.type === 'network' || error.type === 'server',
+      },
+    );
   }
 
   /**
@@ -321,11 +346,12 @@ class AssessmentAIService {
   async getFollowUpQuestions(request: AIFollowUpRequest): Promise<AIFollowUpResponse> {
     try {
       if (this.useProductionEndpoints) {
-        const aiRequest = apiClient.post<AIFollowUpResponse>(
-          '/ai/assessments/followup',
-          request
+        const aiRequest = apiClient.post<AIFollowUpResponse>('/ai/assessments/followup', request);
+        const response = await this.executeWithTimeout(
+          aiRequest,
+          20000,
+          'Follow-up questions AI request',
         );
-        const response = await this.executeWithTimeout(aiRequest, 20000, 'Follow-up questions AI request');
         return response.data;
       }
 
@@ -348,8 +374,8 @@ class AssessmentAIService {
             message: `Rate limit exceeded for AI follow-up questions. ${rateLimitError.suggestion}`,
             retry_after: retryAfter,
             limit: rateLimitError.error.limit,
-            window: rateLimitError.error.window
-          }
+            window: rateLimitError.error.window,
+          },
         };
       }
 
@@ -369,7 +395,10 @@ class AssessmentAIService {
   async getAssessmentAnalysis(request: AIAnalysisRequest): Promise<AIAnalysisResponse> {
     try {
       if (this.useProductionEndpoints) {
-        const response = await apiClient.post<AIAnalysisResponse>('/ai/assessments/analysis', request);
+        const response = await apiClient.post<AIAnalysisResponse>(
+          '/ai/assessments/analysis',
+          request,
+        );
         return response.data;
       }
 
@@ -390,10 +419,15 @@ class AssessmentAIService {
   /**
    * Get AI-generated personalized recommendations
    */
-  async getPersonalizedRecommendations(request: AIRecommendationRequest): Promise<AIRecommendationResponse> {
+  async getPersonalizedRecommendations(
+    request: AIRecommendationRequest,
+  ): Promise<AIRecommendationResponse> {
     try {
       if (this.useProductionEndpoints) {
-        const response = await apiClient.post<AIRecommendationResponse>('/ai/assessments/recommendations', request);
+        const response = await apiClient.post<AIRecommendationResponse>(
+          '/ai/assessments/recommendations',
+          request,
+        );
         return response.data;
       }
 
@@ -404,35 +438,35 @@ class AssessmentAIService {
           phases: [
             {
               phase_number: 1,
-              phase_name: "Foundation & Documentation",
+              phase_name: 'Foundation & Documentation',
               duration_weeks: 4,
               tasks: [
-                "Document current data retention practices",
-                "Create formal retention policy",
-                "Get legal review and approval"
+                'Document current data retention practices',
+                'Create formal retention policy',
+                'Get legal review and approval',
               ],
-              dependencies: []
+              dependencies: [],
             },
             {
               phase_number: 2,
-              phase_name: "Implementation & Automation",
+              phase_name: 'Implementation & Automation',
               duration_weeks: 6,
               tasks: [
-                "Implement automated deletion systems",
-                "Train staff on new procedures",
-                "Conduct compliance testing"
+                'Implement automated deletion systems',
+                'Train staff on new procedures',
+                'Conduct compliance testing',
               ],
-              dependencies: ["Phase 1 completion"]
-            }
+              dependencies: ['Phase 1 completion'],
+            },
           ],
           total_timeline_weeks: 10,
-          resource_requirements: ["DPO (0.5 FTE)", "Legal Counsel", "IT Developer (0.25 FTE)"]
+          resource_requirements: ['DPO (0.5 FTE)', 'Legal Counsel', 'IT Developer (0.25 FTE)'],
         },
         success_metrics: [
-          "100% of data categories have documented retention periods",
-          "Automated deletion operational for 80% of data types",
-          "Zero retention-related compliance incidents"
-        ]
+          '100% of data categories have documented retention periods',
+          'Automated deletion operational for 80% of data types',
+          'Zero retention-related compliance incidents',
+        ],
       };
     } catch (error) {
       console.error('Failed to get AI recommendations:', error);
@@ -445,23 +479,23 @@ class AssessmentAIService {
             phases: [
               {
                 phase_number: 1,
-                phase_name: "Foundation & Documentation",
+                phase_name: 'Foundation & Documentation',
                 duration_weeks: 4,
                 tasks: [
-                  "Document current data retention practices",
-                  "Create formal retention policy",
-                  "Get legal review and approval"
+                  'Document current data retention practices',
+                  'Create formal retention policy',
+                  'Get legal review and approval',
                 ],
-                dependencies: []
-              }
+                dependencies: [],
+              },
             ],
             total_timeline_weeks: 10,
-            resource_requirements: ["DPO (0.5 FTE)", "Legal Counsel"]
+            resource_requirements: ['DPO (0.5 FTE)', 'Legal Counsel'],
           },
           success_metrics: [
-            "100% of data categories have documented retention periods",
-            "Automated deletion operational for 80% of data types"
-          ]
+            '100% of data categories have documented retention periods',
+            'Automated deletion operational for 80% of data types',
+          ],
         };
       }
 
@@ -473,12 +507,12 @@ class AssessmentAIService {
    * Connect to chat service for conversational assessment help
    */
   async getConversationalHelp(
-    conversationId: string, 
+    conversationId: string,
     questionContext: {
       question: Question;
       framework: string;
       userResponse?: any;
-    }
+    },
   ): Promise<void> {
     const helpMessage = `I need help with this assessment question:
 
@@ -490,7 +524,7 @@ ${questionContext.userResponse ? `**My current answer:** ${questionContext.userR
 Can you provide guidance on how to answer this question correctly?`;
 
     await chatService.sendMessage(conversationId, {
-      content: helpMessage
+      content: helpMessage,
     });
   }
 
@@ -504,13 +538,13 @@ Can you provide guidance on how to answer this question correctly?`;
       rating?: number;
       comments?: string;
       improvement_suggestions?: string[];
-    }
+    },
   ): Promise<void> {
     try {
       if (this.useProductionEndpoints) {
         await apiClient.post('/ai/assessments/feedback', {
           interaction_id: interactionId,
-          ...feedback
+          ...feedback,
         });
       } else {
         console.log('AI Feedback submitted:', { interactionId, feedback });
@@ -547,7 +581,7 @@ Can you provide guidance on how to answer this question correctly?`;
    */
   getBusinessProfileFromContext(
     businessProfile?: Partial<BusinessProfile>,
-    currentAnswers?: Record<string, any>
+    currentAnswers?: Record<string, any>,
   ): Partial<BusinessProfile> {
     const context: Partial<BusinessProfile> = { ...businessProfile };
 
@@ -593,36 +627,53 @@ Can you provide guidance on how to answer this question correctly?`;
     const result = {
       existing_policies: [] as string[],
       compliance_measures: [] as string[],
-      gaps_identified: [] as string[]
+      gaps_identified: [] as string[],
     };
 
     if (!currentAnswers) return result;
 
     // Check for existing policies
     const policyQuestions = [
-      'privacy_policy', 'data_protection_policy', 'security_policy',
-      'incident_response_plan', 'staff_training_policy', 'retention_policy'
+      'privacy_policy',
+      'data_protection_policy',
+      'security_policy',
+      'incident_response_plan',
+      'staff_training_policy',
+      'retention_policy',
     ];
 
-    policyQuestions.forEach(policy => {
+    policyQuestions.forEach((policy) => {
       if (currentAnswers[policy] === 'Yes' || currentAnswers[policy] === true) {
-        result.existing_policies.push(policy.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()));
+        result.existing_policies.push(
+          policy.replace(/_/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase()),
+        );
       } else if (currentAnswers[policy] === 'No' || currentAnswers[policy] === false) {
-        result.gaps_identified.push(policy.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()));
+        result.gaps_identified.push(
+          policy.replace(/_/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase()),
+        );
       }
     });
 
     // Check for compliance measures
     const complianceMeasures = [
-      'regular_audits', 'staff_training', 'access_controls', 'encryption',
-      'backup_procedures', 'incident_logging', 'vendor_assessments'
+      'regular_audits',
+      'staff_training',
+      'access_controls',
+      'encryption',
+      'backup_procedures',
+      'incident_logging',
+      'vendor_assessments',
     ];
 
-    complianceMeasures.forEach(measure => {
+    complianceMeasures.forEach((measure) => {
       if (currentAnswers[measure] === 'Yes' || currentAnswers[measure] === true) {
-        result.compliance_measures.push(measure.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()));
+        result.compliance_measures.push(
+          measure.replace(/_/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase()),
+        );
       } else if (currentAnswers[measure] === 'No' || currentAnswers[measure] === false) {
-        result.gaps_identified.push(measure.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()));
+        result.gaps_identified.push(
+          measure.replace(/_/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase()),
+        );
       }
     });
 
@@ -646,7 +697,7 @@ Can you provide guidance on how to answer this question correctly?`;
    */
   getIndustryContextFromAnswers(
     businessProfile?: Partial<BusinessProfile>,
-    currentAnswers?: Record<string, any>
+    currentAnswers?: Record<string, any>,
   ): {
     industry: string;
     applicable_regulations: string[];
@@ -658,7 +709,7 @@ Can you provide guidance on how to answer this question correctly?`;
       industry,
       applicable_regulations: ['GDPR', 'UK GDPR', 'Data Protection Act 2018'] as string[],
       risk_level: 'medium' as 'low' | 'medium' | 'high',
-      special_requirements: [] as string[]
+      special_requirements: [] as string[],
     };
 
     // Industry-specific regulations
@@ -704,7 +755,10 @@ Can you provide guidance on how to answer this question correctly?`;
     }
 
     // Additional context from answers
-    if (currentAnswers?.['handles_personal_data'] === 'Yes' || currentAnswers?.['data_sensitivity'] === 'High') {
+    if (
+      currentAnswers?.['handles_personal_data'] === 'Yes' ||
+      currentAnswers?.['data_sensitivity'] === 'High'
+    ) {
       result.risk_level = result.risk_level === 'low' ? 'medium' : result.risk_level;
     }
 
@@ -734,7 +788,7 @@ Can you provide guidance on how to answer this question correctly?`;
       urgency: 'medium' as 'low' | 'medium' | 'high' | 'critical',
       preferred_timeline: '3-6 months',
       implementation_capacity: 'moderate' as 'limited' | 'moderate' | 'high',
-      priority_areas: [] as string[]
+      priority_areas: [] as string[],
     };
 
     if (!currentAnswers) return result;
@@ -757,7 +811,10 @@ Can you provide guidance on how to answer this question correctly?`;
     }
 
     // Extract urgency indicators
-    if (currentAnswers['recent_incidents'] === 'Yes' || currentAnswers['security_breaches'] === 'Yes') {
+    if (
+      currentAnswers['recent_incidents'] === 'Yes' ||
+      currentAnswers['security_breaches'] === 'Yes'
+    ) {
       result.urgency = 'critical';
       result.priority_areas.push('Incident response', 'Security measures');
     }
@@ -808,7 +865,7 @@ Can you provide guidance on how to answer this question correctly?`;
   private async executeWithTimeout<T>(
     aiRequest: Promise<T>,
     timeoutMs: number = 30000,
-    operation: string = 'AI request'
+    operation: string = 'AI request',
   ): Promise<T> {
     const timeoutPromise = new Promise<never>((_, reject) => {
       setTimeout(() => {
@@ -839,20 +896,20 @@ Can you provide guidance on how to answer this question correctly?`;
       currentAnswers?: Record<string, any>;
       assessmentType?: string;
     },
-    timeoutMs: number = 30000
+    timeoutMs: number = 30000,
   ): Promise<any> {
     try {
       // Extract comprehensive context using helper methods
       const businessContext = this.getBusinessProfileFromContext(
         context.businessProfile,
-        context.currentAnswers
+        context.currentAnswers,
       );
 
       const existingPolicies = this.getExistingPoliciesFromAnswers(context.currentAnswers);
 
       const industryContext = this.getIndustryContextFromAnswers(
         context.businessProfile,
-        context.currentAnswers
+        context.currentAnswers,
       );
 
       const timelinePreferences = this.getTimelinePreferenceFromAnswers(context.currentAnswers);
@@ -863,18 +920,18 @@ Can you provide guidance on how to answer this question correctly?`;
         existing_policies: existingPolicies,
         industry_context: industryContext,
         timeline_preferences: timelinePreferences,
-        assessment_type: context.assessmentType || 'general'
+        assessment_type: context.assessmentType || 'general',
       };
 
       // Use mock response in test/development mode
       if (!this.useProductionEndpoints) {
         return {
-          analysis: `${mockAIResponses.analysis.compliance_insights.maturity_level  } - Based on your assessment responses, we have identified key areas for improvement.`,
+          analysis: `${mockAIResponses.analysis.compliance_insights.maturity_level} - Based on your assessment responses, we have identified key areas for improvement.`,
           recommendations: mockAIResponses.analysis.recommendations,
           confidence_score: 0.92,
           gaps: mockAIResponses.analysis.gaps,
           risk_assessment: mockAIResponses.analysis.risk_assessment,
-          compliance_insights: mockAIResponses.analysis.compliance_insights
+          compliance_insights: mockAIResponses.analysis.compliance_insights,
         };
       }
 
@@ -882,14 +939,10 @@ Can you provide guidance on how to answer this question correctly?`;
       const aiRequest = apiClient.post('/ai/assessments/enhanced-analysis', {
         prompt,
         context: enhancedContext,
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       });
 
-      const response = await this.executeWithTimeout(
-        aiRequest,
-        timeoutMs,
-        'Enhanced AI analysis'
-      );
+      const response = await this.executeWithTimeout(aiRequest, timeoutMs, 'Enhanced AI analysis');
 
       return response.data;
     } catch (error) {
@@ -897,27 +950,28 @@ Can you provide guidance on how to answer this question correctly?`;
 
       // Fallback response with basic recommendations
       return {
-        analysis: 'Unable to generate detailed analysis at this time. Please ensure all required information is provided and try again.',
+        analysis:
+          'Unable to generate detailed analysis at this time. Please ensure all required information is provided and try again.',
         recommendations: [
           {
-            id: "fallback_rec_1",
-            gapId: "unknown",
-            priority: "medium_term" as const,
-            title: "Review Current Compliance Status",
-            description: "Conduct a comprehensive review of your current compliance status",
-            estimatedEffort: "1-2 weeks"
+            id: 'fallback_rec_1',
+            gapId: 'unknown',
+            priority: 'medium_term' as const,
+            title: 'Review Current Compliance Status',
+            description: 'Conduct a comprehensive review of your current compliance status',
+            estimatedEffort: '1-2 weeks',
           },
           {
-            id: "fallback_rec_2",
-            gapId: "unknown",
-            priority: "medium_term" as const,
-            title: "Identify Priority Areas",
-            description: "Identify priority areas for improvement based on business risk",
-            estimatedEffort: "1 week"
-          }
+            id: 'fallback_rec_2',
+            gapId: 'unknown',
+            priority: 'medium_term' as const,
+            title: 'Identify Priority Areas',
+            description: 'Identify priority areas for improvement based on business risk',
+            estimatedEffort: '1 week',
+          },
         ],
         confidence_score: 0.3,
-        fallback: true
+        fallback: true,
       };
     }
   }
@@ -925,25 +979,22 @@ Can you provide guidance on how to answer this question correctly?`;
   // Streaming Methods
   async analyzeAssessmentWithStreaming(
     request: AIAnalysisRequest,
-    options: StreamingOptions
+    options: StreamingOptions,
   ): Promise<void> {
     try {
-      const eventSource = new EventSource(
-        '/api/ai/assessments/analysis/stream',
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${await this.getAuthToken()}`,
-          },
-          body: JSON.stringify(request),
-        } as any
-      );
+      const eventSource = new EventSource('/api/ai/assessments/analysis/stream', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${await this.getAuthToken()}`,
+        },
+        body: JSON.stringify(request),
+      } as any);
 
       eventSource.onmessage = (event) => {
         try {
           const chunk: StreamingChunk = JSON.parse(event.data);
-          
+
           switch (chunk.chunk_type) {
             case 'metadata':
               const metadata: StreamingMetadata = JSON.parse(chunk.content);
@@ -971,7 +1022,6 @@ Can you provide guidance on how to answer this question correctly?`;
         options.onError?.('Connection error occurred');
         eventSource.close();
       };
-
     } catch (error) {
       console.error('Error starting assessment analysis stream:', error);
       options.onError?.('Failed to start analysis stream');
@@ -980,25 +1030,22 @@ Can you provide guidance on how to answer this question correctly?`;
 
   async getRecommendationsWithStreaming(
     request: AIRecommendationRequest,
-    options: StreamingOptions
+    options: StreamingOptions,
   ): Promise<void> {
     try {
-      const eventSource = new EventSource(
-        '/api/ai/assessments/recommendations/stream',
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${await this.getAuthToken()}`,
-          },
-          body: JSON.stringify(request),
-        } as any
-      );
+      const eventSource = new EventSource('/api/ai/assessments/recommendations/stream', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${await this.getAuthToken()}`,
+        },
+        body: JSON.stringify(request),
+      } as any);
 
       eventSource.onmessage = (event) => {
         try {
           const chunk: StreamingChunk = JSON.parse(event.data);
-          
+
           switch (chunk.chunk_type) {
             case 'metadata':
               const metadata: StreamingMetadata = JSON.parse(chunk.content);
@@ -1026,7 +1073,6 @@ Can you provide guidance on how to answer this question correctly?`;
         options.onError?.('Connection error occurred');
         eventSource.close();
       };
-
     } catch (error) {
       console.error('Error starting recommendations stream:', error);
       options.onError?.('Failed to start recommendations stream');
@@ -1036,25 +1082,22 @@ Can you provide guidance on how to answer this question correctly?`;
   async getQuestionHelpWithStreaming(
     frameworkId: string,
     request: AIHelpRequest,
-    options: StreamingOptions
+    options: StreamingOptions,
   ): Promise<void> {
     try {
-      const eventSource = new EventSource(
-        `/api/ai/assessments/${frameworkId}/help/stream`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${await this.getAuthToken()}`,
-          },
-          body: JSON.stringify(request),
-        } as any
-      );
+      const eventSource = new EventSource(`/api/ai/assessments/${frameworkId}/help/stream`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${await this.getAuthToken()}`,
+        },
+        body: JSON.stringify(request),
+      } as any);
 
       eventSource.onmessage = (event) => {
         try {
           const chunk: StreamingChunk = JSON.parse(event.data);
-          
+
           switch (chunk.chunk_type) {
             case 'metadata':
               const metadata: StreamingMetadata = JSON.parse(chunk.content);
@@ -1082,7 +1125,6 @@ Can you provide guidance on how to answer this question correctly?`;
         options.onError?.('Connection error occurred');
         eventSource.close();
       };
-
     } catch (error) {
       console.error('Error starting help stream:', error);
       options.onError?.('Failed to start help stream');

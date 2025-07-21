@@ -8,21 +8,18 @@ import json
 import os
 import warnings
 import logging
-from typing import Generator, AsyncGenerator, Dict, Any, Optional
-from contextlib import asynccontextmanager
-from uuid import uuid4, UUID
+from uuid import uuid4
 from datetime import datetime, timedelta
 
 import pytest
 import pytest_asyncio
-from sqlalchemy import create_engine, text, event
+from sqlalchemy import create_engine, text
 from sqlalchemy.ext.asyncio import (
     AsyncSession,
-    AsyncEngine,
     create_async_engine,
     async_sessionmaker,
 )
-from sqlalchemy.orm import sessionmaker, Session
+from sqlalchemy.orm import sessionmaker
 from sqlalchemy.pool import NullPool
 from fastapi.testclient import TestClient
 
@@ -123,7 +120,6 @@ project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
 
 # Import database components
-from database.db_setup import Base, _get_configured_database_urls
 from database.user import User
 from database.business_profile import BusinessProfile
 from database.compliance_framework import ComplianceFramework
@@ -131,21 +127,6 @@ from database.evidence_item import EvidenceItem
 from database.generated_policy import GeneratedPolicy
 
 # Import all models to ensure they're registered with Base
-from database.assessment_question import AssessmentQuestion
-from database.assessment_session import AssessmentSession
-from database.chat_conversation import ChatConversation
-from database.chat_message import ChatMessage
-from database.implementation_plan import ImplementationPlan
-from database.integration_configuration import IntegrationConfiguration
-from database.readiness_assessment import ReadinessAssessment
-from database.report_schedule import ReportSchedule
-from database.models.integrations import (
-    Integration,
-    EvidenceCollection,
-    IntegrationEvidenceItem,
-    IntegrationHealthLog,
-    EvidenceAuditLog,
-)
 
 # =============================================================================
 # EVENT LOOP CONFIGURATION - CRITICAL FOR FIXING ASYNC ISSUES
@@ -587,7 +568,7 @@ def sample_policy_document(db_session, sample_business_profile):
 @pytest.fixture(autouse=True)
 def ensure_ai_mocking():
     """Ensure all tests use mocked AI instead of real API calls."""
-    yield mock_model
+    return mock_model
 
 
 @pytest.fixture

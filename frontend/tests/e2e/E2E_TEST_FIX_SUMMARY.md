@@ -7,6 +7,7 @@
 **Problem**: Tests were failing due to browser launch issues and timeouts.
 
 **Solution**: Updated `playwright.config.ts` with:
+
 - Added browser launch arguments for stability (`--no-sandbox`, `--disable-setuid-sandbox`)
 - Configured proper timeouts (action: 10s, navigation: 30s, test: 30s)
 - Added viewport configuration for consistent testing
@@ -17,6 +18,7 @@
 **Problem**: Global setup was not handling server readiness properly.
 
 **Solution**: Enhanced `global-setup.ts` with:
+
 - Directory creation for test results
 - Retry logic for server readiness (5 retries with 3s delay)
 - Better error handling and debugging output
@@ -28,6 +30,7 @@
 **Problem**: Tests were failing on mobile viewports because navigation was hidden.
 
 **Solution**: Updated `basic-flow.test.ts` to:
+
 - Handle responsive navigation patterns (desktop nav vs mobile menu)
 - Use flexible selectors that work across viewports
 - Check for either desktop nav or mobile menu button visibility
@@ -37,6 +40,7 @@
 **Problem**: Test selectors were not flexible enough for responsive designs.
 
 **Solution**: Created comprehensive test helpers:
+
 - Flexible selectors that handle multiple UI patterns
 - Helper functions for common operations
 - Specialized helpers for auth, business profile, assessments, and evidence
@@ -44,6 +48,7 @@
 ## Configuration Highlights
 
 ### Browser Launch Options
+
 ```typescript
 launchOptions: {
   args: [
@@ -57,6 +62,7 @@ launchOptions: {
 ```
 
 ### Smart Global Setup
+
 ```typescript
 // Retry logic for server readiness
 let retries = 5;
@@ -69,12 +75,13 @@ while (retries > 0 && !isReady) {
   } catch (err) {
     console.log(`Retry ${6 - retries}/5: Waiting for server...`);
     retries--;
-    await new Promise(resolve => setTimeout(resolve, 3000));
+    await new Promise((resolve) => setTimeout(resolve, 3000));
   }
 }
 ```
 
 ### Responsive-Aware Tests
+
 ```typescript
 // Handle both desktop and mobile navigation
 const desktopNav = page.locator('nav.md\\:flex').first();
@@ -89,6 +96,7 @@ expect(isDesktop || isMobile).toBeTruthy();
 ## Test Results
 
 ✅ All browser automation tests passing:
+
 - Chromium: ✓
 - Firefox: ✓
 - WebKit: ✓

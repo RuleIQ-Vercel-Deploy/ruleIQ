@@ -181,7 +181,9 @@ class TestAuthenticationSecurity:
                     f"Strong password should not be rejected for strength: {strong_password}"
                 )
 
-    @pytest.mark.skip(reason="Account lockout is implemented via rate limiting which is disabled in test environment")
+    @pytest.mark.skip(
+        reason="Account lockout is implemented via rate limiting which is disabled in test environment"
+    )
     def test_account_lockout_protection(self, client, sample_user_data):
         """Test account lockout after multiple failed login attempts"""
         # First register a user

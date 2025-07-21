@@ -112,7 +112,9 @@ describe('SecureStorage', () => {
       sessionStorageMock.getItem.mockReturnValue(mockEncrypted);
 
       // Mock successful decryption
-      vi.mocked(crypto.subtle.decrypt).mockResolvedValue(new TextEncoder().encode(testToken).buffer);
+      vi.mocked(crypto.subtle.decrypt).mockResolvedValue(
+        new TextEncoder().encode(testToken).buffer,
+      );
 
       const result = await SecureStorage.getAccessToken();
 

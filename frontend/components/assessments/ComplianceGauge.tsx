@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { motion } from "framer-motion";
-import { useEffect, useRef } from "react";
+import { motion } from 'framer-motion';
+import { useEffect, useRef } from 'react';
 
 interface ComplianceGaugeProps {
   score: number;
@@ -10,24 +10,24 @@ interface ComplianceGaugeProps {
 
 export function ComplianceGauge({ score, size = 200 }: ComplianceGaugeProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  
+
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-    
+
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
-    
+
     // Clear canvas
     ctx.clearRect(0, 0, size, size);
-    
+
     const centerX = size / 2;
     const centerY = size / 2;
-    const radius = (size / 2) - 20;
+    const radius = size / 2 - 20;
     const startAngle = Math.PI * 0.75;
     const endAngle = Math.PI * 2.25;
     const currentAngle = startAngle + (score / 100) * (endAngle - startAngle);
-    
+
     // Draw background arc
     ctx.beginPath();
     ctx.arc(centerX, centerY, radius, startAngle, endAngle);
@@ -35,11 +35,11 @@ export function ComplianceGauge({ score, size = 200 }: ComplianceGaugeProps) {
     ctx.lineWidth = 20;
     ctx.lineCap = 'round';
     ctx.stroke();
-    
+
     // Draw score arc
     ctx.beginPath();
     ctx.arc(centerX, centerY, radius, startAngle, currentAngle);
-    
+
     // Gradient based on score
     const gradient = ctx.createLinearGradient(0, 0, size, 0);
     if (score >= 80) {
@@ -52,29 +52,23 @@ export function ComplianceGauge({ score, size = 200 }: ComplianceGaugeProps) {
       gradient.addColorStop(0, '#DC3545');
       gradient.addColorStop(1, '#B42D3B');
     }
-    
+
     ctx.strokeStyle = gradient;
     ctx.lineWidth = 20;
     ctx.lineCap = 'round';
     ctx.stroke();
-    
+
     // Draw inner shadow
     ctx.beginPath();
     ctx.arc(centerX, centerY, radius - 10, startAngle, currentAngle);
     ctx.strokeStyle = 'rgba(0, 0, 0, 0.1)';
     ctx.lineWidth = 2;
     ctx.stroke();
-    
   }, [score, size]);
-  
+
   return (
     <div className="relative">
-      <canvas
-        ref={canvasRef}
-        width={size}
-        height={size}
-        className="transform -rotate-90"
-      />
+      <canvas ref={canvasRef} width={size} height={size} className="-rotate-90 transform" />
       <div className="absolute inset-0 flex items-center justify-center">
         <motion.div
           initial={{ opacity: 0, scale: 0.5 }}

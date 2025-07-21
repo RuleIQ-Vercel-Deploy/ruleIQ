@@ -25,7 +25,7 @@ class EvidenceService:
     def _is_async_session(db) -> bool:
         """Detect if the database session is async or sync."""
         # Check for AsyncSession or AsyncSessionWrapper from tests
-        return isinstance(db, AsyncSession) or hasattr(db, '__aenter__')
+        return isinstance(db, AsyncSession) or hasattr(db, "__aenter__")
 
     @staticmethod
     async def _execute_query(db, stmt):
@@ -362,8 +362,12 @@ class EvidenceService:
 
         # Securely update only validated and whitelisted fields
         ALLOWED_FIELDS = [
-            "evidence_name", "description", "control_reference",
-            "status", "collection_notes", "evidence_type"
+            "evidence_name",
+            "description",
+            "control_reference",
+            "status",
+            "collection_notes",
+            "evidence_type",
         ]
 
         for field, value in validated_data.items():

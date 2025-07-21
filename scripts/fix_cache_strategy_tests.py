@@ -11,17 +11,19 @@ sys.path.insert(0, project_root)
 
 def fix_cache_strategy_tests():
     """Fix fixture scope issues in cache strategy tests."""
-    
-    test_file = os.path.join(project_root, "tests/unit/services/test_cache_strategy_optimization.py")
-    
+
+    test_file = os.path.join(
+        project_root, "tests/unit/services/test_cache_strategy_optimization.py"
+    )
+
     print(f"Fixing {test_file}...")
-    
-    with open(test_file, 'r') as f:
+
+    with open(test_file, "r") as f:
         content = f.read()
-    
+
     # The issue is that fixtures are defined inside the test class
     # In pytest, this requires using them differently or moving them outside
-    
+
     # Create a fixed version
     fixed_content = '''"""
 Unit Tests for Cache Strategy Optimization
@@ -451,21 +453,21 @@ class TestCacheStrategyIntegration:
         # Should not raise exceptions
         assert True
 '''
-    
+
     # Write the fixed content
-    with open(test_file, 'w') as f:
+    with open(test_file, "w") as f:
         f.write(fixed_content)
-    
+
     print("✓ Fixed fixture scope issues")
-    
+
     # Fix the cached_content test file similarly
     cached_test_file = os.path.join(project_root, "tests/unit/services/test_cached_content.py")
     print(f"\nFixing {cached_test_file}...")
-    
+
     # Read and check if it has similar issues
-    with open(cached_test_file, 'r') as f:
+    with open(cached_test_file, "r") as f:
         content = f.read()
-    
+
     if "@pytest.fixture" in content and "class Test" in content:
         print("  This file also has fixtures inside test classes - fixing...")
         # Would need similar fix

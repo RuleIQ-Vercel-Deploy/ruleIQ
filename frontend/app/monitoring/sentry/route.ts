@@ -9,25 +9,25 @@ export async function POST(request: NextRequest) {
     const envelope = await request.text();
     const pieces = envelope.split('\n');
     const header = JSON.parse(pieces[0] || '{}');
-    
+
     // Extract the DSN from the header
     const dsn = header?.dsn;
     if (!dsn) {
       return new NextResponse('Invalid DSN', { status: 400 });
     }
-    
+
     // Validate that this is a legitimate Sentry DSN for our project
     const expectedHost = process.env['NEXT_PUBLIC_SENTRY_DSN']?.match(/https:\/\/(.+?)@(.+?)\//);
     const dsnHost = dsn.match(/https:\/\/(.+?)@(.+?)\//);
-    
+
     if (!expectedHost || !dsnHost || dsnHost[2] !== expectedHost[2]) {
       return new NextResponse('Unauthorized DSN', { status: 403 });
     }
-    
+
     // Construct the Sentry ingest URL
     const projectId = dsn.split('/').pop();
     const sentryIngestUrl = `https://${dsnHost[2]}/api/${projectId}/envelope/`;
-    
+
     // Forward the request to Sentry
     const sentryResponse = await fetch(sentryIngestUrl, {
       method: 'POST',
@@ -37,7 +37,7 @@ export async function POST(request: NextRequest) {
       },
       body: envelope,
     });
-    
+
     // Return Sentry's response
     return new NextResponse(sentryResponse.body, {
       status: sentryResponse.status,

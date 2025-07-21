@@ -55,10 +55,8 @@ describe('Authentication Flow Integration', () => {
   const renderWithProviders = (component: React.ReactElement) => {
     return render(
       <QueryClientProvider client={queryClient}>
-        <AuthProvider>
-          {component}
-        </AuthProvider>
-      </QueryClientProvider>
+        <AuthProvider>{component}</AuthProvider>
+      </QueryClientProvider>,
     );
   };
 
@@ -157,7 +155,7 @@ describe('Authentication Flow Integration', () => {
     it('should show loading state during login', async () => {
       // Mock a delayed response
       vi.mocked(authService.login).mockImplementation(
-        () => new Promise(resolve => setTimeout(resolve, 100))
+        () => new Promise((resolve) => setTimeout(resolve, 100)),
       );
 
       renderWithProviders(<LoginForm />);
@@ -338,11 +336,7 @@ describe('Authentication Flow Integration', () => {
     it('should complete logout flow', async () => {
       vi.mocked(authService.logout).mockResolvedValue();
 
-      const LogoutButton = () => (
-        <button onClick={() => authService.logout()}>
-          Logout
-        </button>
-      );
+      const LogoutButton = () => <button onClick={() => authService.logout()}>Logout</button>;
 
       renderWithProviders(<LogoutButton />);
 
@@ -383,11 +377,7 @@ describe('Authentication Flow Integration', () => {
           }
         };
 
-        return (
-          <button onClick={handleRefresh}>
-            Refresh Token
-          </button>
-        );
+        return <button onClick={handleRefresh}>Refresh Token</button>;
       };
 
       renderWithProviders(<TokenRefreshComponent />);
@@ -414,11 +404,7 @@ describe('Authentication Flow Integration', () => {
           }
         };
 
-        return (
-          <button onClick={handleGetUser}>
-            Get User
-          </button>
-        );
+        return <button onClick={handleGetUser}>Get User</button>;
       };
 
       renderWithProviders(<ProtectedComponent />);

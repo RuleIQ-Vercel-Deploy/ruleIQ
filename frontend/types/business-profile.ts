@@ -1,6 +1,6 @@
 /**
  * Business Profile Types
- * 
+ *
  * Clean, self-documenting interfaces for frontend use.
  * These use descriptive field names that are mapped to the backend's
  * truncated field names via the BusinessProfileFieldMapper.
@@ -15,10 +15,10 @@ export interface BusinessProfile {
   employee_count: number;
   annual_revenue?: string;
   country: string;
-  
+
   // Data Sensitivity Classification
   data_sensitivity: 'Low' | 'Moderate' | 'High' | 'Confidential';
-  
+
   // Business Characteristics - Using full, descriptive names
   handles_personal_data: boolean;
   processes_payments: boolean;
@@ -26,22 +26,22 @@ export interface BusinessProfile {
   provides_financial_services: boolean;
   operates_critical_infrastructure: boolean;
   has_international_operations: boolean;
-  
+
   // Technology Stack - Using full names
   cloud_providers: string[];
   saas_tools: string[];
   development_tools: string[];
-  
+
   // Current Compliance State - Using full names
   existing_frameworks: string[];
   planned_frameworks: string[];
   compliance_budget?: string;
   compliance_timeline?: string;
-  
+
   // Assessment Status
   assessment_completed: boolean;
   assessment_data: Record<string, any>;
-  
+
   // Metadata
   created_at?: string;
   updated_at?: string;
@@ -49,7 +49,7 @@ export interface BusinessProfile {
 
 // Form data type (excludes metadata fields)
 export type BusinessProfileFormData = Omit<
-  BusinessProfile, 
+  BusinessProfile,
   'id' | 'user_id' | 'created_at' | 'updated_at'
 >;
 
@@ -86,10 +86,10 @@ export interface ComplianceGoalsData {
 }
 
 // Wizard step data union type
-export type WizardStepData = 
-  | CompanyInfoData 
-  | ComplianceProfileData 
-  | TechnologyStackData 
+export type WizardStepData =
+  | CompanyInfoData
+  | ComplianceProfileData
+  | TechnologyStackData
   | ComplianceGoalsData;
 
 // Industry options
@@ -103,10 +103,10 @@ export const INDUSTRIES = [
   'Retail',
   'Professional Services',
   'Non-profit',
-  'Other'
+  'Other',
 ] as const;
 
-export type Industry = typeof INDUSTRIES[number];
+export type Industry = (typeof INDUSTRIES)[number];
 
 // Employee count ranges
 export const EMPLOYEE_COUNT_RANGES = [
@@ -114,7 +114,7 @@ export const EMPLOYEE_COUNT_RANGES = [
   { value: 25, label: '11-50 employees' },
   { value: 100, label: '51-200 employees' },
   { value: 500, label: '201-1000 employees' },
-  { value: 1001, label: '1000+ employees' }
+  { value: 1001, label: '1000+ employees' },
 ] as const;
 
 // Annual revenue ranges
@@ -123,10 +123,10 @@ export const ANNUAL_REVENUE_RANGES = [
   '£1M-£5M',
   '£5M-£25M',
   '£25M-£100M',
-  'Over £100M'
+  'Over £100M',
 ] as const;
 
-export type AnnualRevenue = typeof ANNUAL_REVENUE_RANGES[number];
+export type AnnualRevenue = (typeof ANNUAL_REVENUE_RANGES)[number];
 
 // Countries
 export const COUNTRIES = [
@@ -138,17 +138,25 @@ export const COUNTRIES = [
   'Netherlands',
   'Ireland',
   'Australia',
-  'Other'
+  'Other',
 ] as const;
 
-export type Country = typeof COUNTRIES[number];
+export type Country = (typeof COUNTRIES)[number];
 
 // Data sensitivity levels
 export const DATA_SENSITIVITY_LEVELS = [
   { value: 'Low', label: 'Low', description: 'Basic business data, no personal information' },
-  { value: 'Moderate', label: 'Moderate', description: 'Some personal data, standard business information' },
+  {
+    value: 'Moderate',
+    label: 'Moderate',
+    description: 'Some personal data, standard business information',
+  },
   { value: 'High', label: 'High', description: 'Sensitive personal data, financial information' },
-  { value: 'Confidential', label: 'Confidential', description: 'Highly sensitive data, health records, financial services' }
+  {
+    value: 'Confidential',
+    label: 'Confidential',
+    description: 'Highly sensitive data, health records, financial services',
+  },
 ] as const;
 
 // Compliance frameworks
@@ -162,10 +170,10 @@ export const COMPLIANCE_FRAMEWORKS = [
   'CQC',
   'Cyber Essentials',
   'NIST',
-  'Other'
+  'Other',
 ] as const;
 
-export type ComplianceFramework = typeof COMPLIANCE_FRAMEWORKS[number];
+export type ComplianceFramework = (typeof COMPLIANCE_FRAMEWORKS)[number];
 
 // Cloud providers
 export const CLOUD_PROVIDERS = [
@@ -176,7 +184,7 @@ export const CLOUD_PROVIDERS = [
   'Oracle Cloud',
   'DigitalOcean',
   'Linode',
-  'Other'
+  'Other',
 ] as const;
 
 // SaaS tools
@@ -190,7 +198,7 @@ export const SAAS_TOOLS = [
   'Dropbox',
   'Box',
   'Atlassian',
-  'Other'
+  'Other',
 ] as const;
 
 // Development tools
@@ -203,7 +211,7 @@ export const DEVELOPMENT_TOOLS = [
   'Docker',
   'Kubernetes',
   'Terraform',
-  'Other'
+  'Other',
 ] as const;
 
 // Compliance budget ranges
@@ -212,7 +220,7 @@ export const COMPLIANCE_BUDGET_RANGES = [
   '£5K-£25K',
   '£25K-£100K',
   '£100K-£500K',
-  'Over £500K'
+  'Over £500K',
 ] as const;
 
 // Compliance timeline options
@@ -221,7 +229,7 @@ export const COMPLIANCE_TIMELINE_OPTIONS = [
   '6 months',
   '12 months',
   '18 months',
-  '24+ months'
+  '24+ months',
 ] as const;
 
 // Wizard step configuration
@@ -238,26 +246,26 @@ export const WIZARD_STEPS: WizardStep[] = [
     id: 'company-info',
     title: 'Company Information',
     description: 'Tell us about your organization',
-    component: 'CompanyInfoStep'
+    component: 'CompanyInfoStep',
   },
   {
     id: 'compliance-profile',
     title: 'Compliance Profile',
     description: 'Define your data handling and business activities',
-    component: 'ComplianceProfileStep'
+    component: 'ComplianceProfileStep',
   },
   {
     id: 'technology-stack',
     title: 'Technology Stack',
     description: 'What tools and platforms do you use?',
-    component: 'TechnologyStackStep'
+    component: 'TechnologyStackStep',
   },
   {
     id: 'compliance-goals',
     title: 'Compliance Goals',
     description: 'What frameworks are you targeting?',
-    component: 'ComplianceGoalsStep'
-  }
+    component: 'ComplianceGoalsStep',
+  },
 ];
 
 // Validation error types

@@ -4,11 +4,7 @@ export class ValidationError extends Error {
   public questionId: string;
   public field?: string;
 
-  constructor(
-    questionId: string,
-    message: string,
-    field?: string
-  ) {
+  constructor(questionId: string, message: string, field?: string) {
     super(message);
     this.questionId = questionId;
     this.field = field;
@@ -20,17 +16,14 @@ export class QuestionValidator {
   static validate(
     question: Question,
     value: any,
-    context: AssessmentContext
+    context: AssessmentContext,
   ): ValidationError | null {
-    const {validation} = question;
+    const { validation } = question;
     if (!validation) return null;
 
     // Required validation
     if (validation.required && this.isEmpty(value)) {
-      return new ValidationError(
-        question.id,
-        'This field is required'
-      );
+      return new ValidationError(question.id, 'This field is required');
     }
 
     // Skip other validations if value is empty and not required
@@ -43,19 +36,19 @@ export class QuestionValidator {
       case 'text':
       case 'textarea':
         return this.validateText(question, value, validation);
-      
+
       case 'number':
         return this.validateNumber(question, value, validation);
-      
+
       case 'checkbox':
         return this.validateCheckbox(question, value, validation);
-      
+
       case 'date':
         return this.validateDate(question, value, validation);
-      
+
       case 'file_upload':
         return this.validateFile(question, value, validation);
-      
+
       default:
         break;
     }
@@ -82,31 +75,25 @@ export class QuestionValidator {
   private static validateText(
     question: Question,
     value: string,
-    validation: QuestionValidation
+    validation: QuestionValidation,
   ): ValidationError | null {
     const textValue = String(value);
 
     if (validation.minLength && textValue.length < validation.minLength) {
       return new ValidationError(
         question.id,
-        `Minimum ${validation.minLength} characters required`
+        `Minimum ${validation.minLength} characters required`,
       );
     }
 
     if (validation.maxLength && textValue.length > validation.maxLength) {
-      return new ValidationError(
-        question.id,
-        `Maximum ${validation.maxLength} characters allowed`
-      );
+      return new ValidationError(question.id, `Maximum ${validation.maxLength} characters allowed`);
     }
 
     if (validation.pattern) {
       const regex = new RegExp(validation.pattern);
       if (!regex.test(textValue)) {
-        return new ValidationError(
-          question.id,
-          'Invalid format'
-        );
+        return new ValidationError(question.id, 'Invalid format');
       }
     }
 
@@ -116,29 +103,20 @@ export class QuestionValidator {
   private static validateNumber(
     question: Question,
     value: any,
-    validation: QuestionValidation
+    validation: QuestionValidation,
   ): ValidationError | null {
     const numValue = Number(value);
 
     if (isNaN(numValue)) {
-      return new ValidationError(
-        question.id,
-        'Must be a valid number'
-      );
+      return new ValidationError(question.id, 'Must be a valid number');
     }
 
     if (validation.min !== undefined && numValue < validation.min) {
-      return new ValidationError(
-        question.id,
-        `Minimum value is ${validation.min}`
-      );
+      return new ValidationError(question.id, `Minimum value is ${validation.min}`);
     }
 
     if (validation.max !== undefined && numValue > validation.max) {
-      return new ValidationError(
-        question.id,
-        `Maximum value is ${validation.max}`
-      );
+      return new ValidationError(question.id, `Maximum value is ${validation.max}`);
     }
 
     return null;
@@ -147,26 +125,23 @@ export class QuestionValidator {
   private static validateCheckbox(
     question: Question,
     value: any[],
-    validation: QuestionValidation
+    validation: QuestionValidation,
   ): ValidationError | null {
     if (!Array.isArray(value)) {
-      return new ValidationError(
-        question.id,
-        'Invalid selection'
-      );
+      return new ValidationError(question.id, 'Invalid selection');
     }
 
     if (validation.min !== undefined && value.length < validation.min) {
       return new ValidationError(
         question.id,
-        `Select at least ${validation.min} option${validation.min > 1 ? 's' : ''}`
+        `Select at least ${validation.min} option${validation.min > 1 ? 's' : ''}`,
       );
     }
 
     if (validation.max !== undefined && value.length > validation.max) {
       return new ValidationError(
         question.id,
-        `Select at most ${validation.max} option${validation.max > 1 ? 's' : ''}`
+        `Select at most ${validation.max} option${validation.max > 1 ? 's' : ''}`,
       );
     }
 
@@ -176,15 +151,12 @@ export class QuestionValidator {
   private static validateDate(
     question: Question,
     value: any,
-    _validation: QuestionValidation
+    _validation: QuestionValidation,
   ): ValidationError | null {
     const dateValue = new Date(value);
 
     if (isNaN(dateValue.getTime())) {
-      return new ValidationError(
-        question.id,
-        'Invalid date'
-      );
+      return new ValidationError(question.id, 'Invalid date');
     }
 
     // Additional date validations can be added here
@@ -196,7 +168,7 @@ export class QuestionValidator {
   private static validateFile(
     question: Question,
     value: File | File[],
-    validation: QuestionValidation
+    validation: QuestionValidation,
   ): ValidationError | null {
     const files = Array.isArray(value) ? value : [value];
 
@@ -204,14 +176,14 @@ export class QuestionValidator {
     if (validation.min !== undefined && files.length < validation.min) {
       return new ValidationError(
         question.id,
-        `Upload at least ${validation.min} file${validation.min > 1 ? 's' : ''}`
+        `Upload at least ${validation.min} file${validation.min > 1 ? 's' : ''}`,
       );
     }
 
     if (validation.max !== undefined && files.length > validation.max) {
       return new ValidationError(
         question.id,
-        `Upload at most ${validation.max} file${validation.max > 1 ? 's' : ''}`
+        `Upload at most ${validation.max} file${validation.max > 1 ? 's' : ''}`,
       );
     }
 
@@ -220,10 +192,7 @@ export class QuestionValidator {
       for (const file of files) {
         if (file.size > validation.maxLength) {
           const maxSizeMB = Math.round(validation.maxLength / 1024 / 1024);
-          return new ValidationError(
-            question.id,
-            `File size must not exceed ${maxSizeMB}MB`
-          );
+          return new ValidationError(question.id, `File size must not exceed ${maxSizeMB}MB`);
         }
       }
     }
@@ -236,7 +205,7 @@ export class QuestionValidator {
         if (!extension || !allowedExtensions.includes(extension)) {
           return new ValidationError(
             question.id,
-            `Allowed file types: ${allowedExtensions.join(', ')}`
+            `Allowed file types: ${allowedExtensions.join(', ')}`,
           );
         }
       }
@@ -255,7 +224,7 @@ export const ValidationPatterns = {
   alphanumeric: '^[a-zA-Z0-9]+$',
   lettersOnly: '^[a-zA-Z\\s]+$',
   numbersOnly: '^[0-9]+$',
-  noSpecialChars: '^[a-zA-Z0-9\\s]+$'
+  noSpecialChars: '^[a-zA-Z0-9\\s]+$',
 };
 
 // Common validation rules
@@ -263,47 +232,47 @@ export const CommonValidations = {
   required: { required: true },
   email: {
     required: true,
-    pattern: ValidationPatterns.email
+    pattern: ValidationPatterns.email,
   },
   url: {
     required: true,
-    pattern: ValidationPatterns.url
+    pattern: ValidationPatterns.url,
   },
   phone: {
     required: true,
-    pattern: ValidationPatterns.phone
+    pattern: ValidationPatterns.phone,
   },
   companyName: {
     required: true,
     minLength: 2,
     maxLength: 100,
-    pattern: ValidationPatterns.noSpecialChars
+    pattern: ValidationPatterns.noSpecialChars,
   },
   description: {
     required: false,
-    maxLength: 500
+    maxLength: 500,
   },
   shortText: {
     required: true,
     minLength: 1,
-    maxLength: 50
+    maxLength: 50,
   },
   longText: {
     required: false,
-    maxLength: 2000
+    maxLength: 2000,
   },
   percentage: {
     required: true,
     min: 0,
-    max: 100
+    max: 100,
   },
   positiveNumber: {
     required: true,
-    min: 0
+    min: 0,
   },
   year: {
     required: true,
     min: 1900,
-    max: new Date().getFullYear() + 10
-  }
+    max: new Date().getFullYear() + 10,
+  },
 };

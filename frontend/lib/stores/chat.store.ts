@@ -11,26 +11,26 @@ interface ChatState {
   // Conversations
   conversations: ChatConversation[];
   activeConversationId: string | null;
-  
+
   // Messages
   messages: Record<string, ChatMessage[]>; // conversationId -> messages
-  
+
   // WebSocket state
   isConnected: boolean;
   isTyping: boolean;
   typingUsers: string[];
-  
+
   // Loading states
   isLoadingConversations: boolean;
   isLoadingMessages: boolean;
   isSendingMessage: boolean;
-  
+
   // Error handling
   error: string | null;
-  
+
   // WebSocket cleanup handlers
   cleanupHandlers: Map<string, () => void>;
-  
+
   // Actions
   loadConversations: () => Promise<void>;
   loadConversation: (conversationId: string) => Promise<void>;
@@ -38,11 +38,11 @@ interface ChatState {
   setActiveConversation: (conversationId: string | null) => void;
   sendMessage: (message: string) => Promise<void>;
   deleteConversation: (conversationId: string) => Promise<void>;
-  
+
   // WebSocket actions
   connectWebSocket: (conversationId: string) => void;
   disconnectWebSocket: () => void;
-  
+
   // Utility actions
   clearError: () => void;
   reset: () => void;
@@ -73,9 +73,9 @@ export const useChatStore = create<ChatState>()(
           const response = await chatService.getConversations();
           set({ conversations: response.items, isLoadingConversations: false });
         } catch (error: any) {
-          set({ 
+          set({
             error: error.message || 'Failed to load conversations',
-            isLoadingConversations: false 
+            isLoadingConversations: false,
           });
         }
       },
@@ -91,13 +91,13 @@ export const useChatStore = create<ChatState>()(
             },
             isLoadingMessages: false,
           }));
-          
+
           // Connect WebSocket for real-time updates
           get().connectWebSocket(conversationId);
         } catch (error: any) {
-          set({ 
+          set({
             error: error.message || 'Failed to load conversation',
-            isLoadingMessages: false 
+            isLoadingMessages: false,
           });
         }
       },
@@ -109,7 +109,7 @@ export const useChatStore = create<ChatState>()(
             title,
             initial_message: initialMessage,
           });
-          
+
           set((state) => ({
             conversations: [response.conversation, ...state.conversations],
             messages: {
@@ -118,7 +118,7 @@ export const useChatStore = create<ChatState>()(
             },
             activeConversationId: response.conversation.id,
           }));
-          
+
           // Connect WebSocket for the new conversation
           get().connectWebSocket(response.conversation.id);
         } catch (error: any) {
@@ -128,14 +128,14 @@ export const useChatStore = create<ChatState>()(
 
       setActiveConversation: (conversationId: string | null) => {
         const state = get();
-        
+
         // Disconnect from previous conversation
         if (state.activeConversationId && state.activeConversationId !== conversationId) {
           state.disconnectWebSocket();
         }
-        
+
         set({ activeConversationId: conversationId });
-        
+
         // Load conversation if not already loaded
         if (conversationId && !state.messages[conversationId]) {
           state.loadConversation(conversationId);
@@ -148,12 +148,12 @@ export const useChatStore = create<ChatState>()(
       sendMessage: async (message: string) => {
         const state = get();
         if (!state.activeConversationId) return;
-        
+
         set({ isSendingMessage: true, error: null });
-        
+
         // Get current user info
-        const {user: _user} = useAuthStore.getState();
-        
+        const { user: _user } = useAuthStore.getState();
+
         // Optimistically add message to UI
         const tempMessage: ChatMessage = {
           id: `temp-${Date.now()}`,
@@ -163,7 +163,7 @@ export const useChatStore = create<ChatState>()(
           sequence_number: (state.messages[state.activeConversationId]?.length || 0) + 1,
           created_at: new Date().toISOString(),
         };
-        
+
         set((state) => ({
           messages: {
             ...state.messages,
@@ -173,7 +173,7 @@ export const useChatStore = create<ChatState>()(
             ],
           },
         }));
-        
+
         try {
           // Send via WebSocket if connected, otherwise use REST API
           if (state.isConnected) {
@@ -182,29 +182,30 @@ export const useChatStore = create<ChatState>()(
               data: { content: message },
             });
           } else {
-            const response = await chatService.sendMessage(
-              state.activeConversationId,
-              { content: message }
-            );
-            
+            const response = await chatService.sendMessage(state.activeConversationId, {
+              content: message,
+            });
+
             // Replace temp message with real one
             set((state) => ({
               messages: {
                 ...state.messages,
-                [state.activeConversationId!]: state.messages[state.activeConversationId!] || []
-                  .map((msg) => msg.id === tempMessage.id ? response : msg),
+                [state.activeConversationId!]:
+                  state.messages[state.activeConversationId!] ||
+                  [].map((msg) => (msg.id === tempMessage.id ? response : msg)),
               },
             }));
           }
-          
+
           set({ isSendingMessage: false });
         } catch (error: any) {
           // Remove temp message on error
           set((state) => ({
             messages: {
               ...state.messages,
-              [state.activeConversationId!]: state.messages[state.activeConversationId!] || []
-                .filter((msg) => msg.id !== tempMessage.id),
+              [state.activeConversationId!]:
+                state.messages[state.activeConversationId!] ||
+                [].filter((msg) => msg.id !== tempMessage.id),
             },
             error: error.message || 'Failed to send message',
             isSendingMessage: false,
@@ -216,23 +217,23 @@ export const useChatStore = create<ChatState>()(
         set({ error: null });
         try {
           await chatService.deleteConversation(conversationId);
-          
+
           set((state) => {
             const newState: Partial<ChatState> = {
               conversations: state.conversations.filter((c) => c.id !== conversationId),
             };
-            
+
             // Clean up messages
             const newMessages = { ...state.messages };
             delete newMessages[conversationId];
             newState.messages = newMessages;
-            
+
             // Reset active conversation if it was deleted
             if (state.activeConversationId === conversationId) {
               newState.activeConversationId = null;
               state.disconnectWebSocket();
             }
-            
+
             return newState;
           });
         } catch (error: any) {
@@ -243,40 +244,37 @@ export const useChatStore = create<ChatState>()(
       connectWebSocket: (conversationId: string) => {
         const state = get();
         const authToken = useAuthStore.getState().accessToken;
-        
+
         if (!authToken) {
           set({ error: 'Authentication required for chat' });
           return;
         }
-        
+
         // Clean up any existing handler for this conversation
         const existingCleanup = state.cleanupHandlers.get(conversationId);
         if (existingCleanup) {
           existingCleanup();
         }
-        
+
         // Set up message handler
         const cleanup = chatService.addMessageHandler((message: ChatWebSocketMessage) => {
           switch (message.type) {
             case 'connection':
               set({ isConnected: message.data.status === 'connected' });
               break;
-              
+
             case 'message':
               // Add received message to the conversation
               if (message.data.conversation_id === conversationId) {
                 set((state) => ({
                   messages: {
                     ...state.messages,
-                    [conversationId]: [
-                      ...(state.messages[conversationId] || []),
-                      message.data,
-                    ],
+                    [conversationId]: [...(state.messages[conversationId] || []), message.data],
                   },
                 }));
               }
               break;
-              
+
             case 'typing':
               // Handle typing indicators
               if (message.data.action === 'start') {
@@ -289,20 +287,20 @@ export const useChatStore = create<ChatState>()(
                 }));
               }
               break;
-              
+
             case 'error':
               set({ error: message.data.message || 'WebSocket error occurred' });
               break;
           }
         });
-        
+
         // Store cleanup function
         set((state) => {
           const newHandlers = new Map(state.cleanupHandlers);
           newHandlers.set(conversationId, cleanup);
           return { cleanupHandlers: newHandlers };
         });
-        
+
         // Connect to WebSocket with auth token
         const wsUrl = `${chatService.getWebSocketUrl(conversationId)}?token=${authToken}`;
         chatService.connectWebSocketWithUrl(wsUrl);
@@ -310,16 +308,16 @@ export const useChatStore = create<ChatState>()(
 
       disconnectWebSocket: () => {
         const state = get();
-        
+
         // Clean up all message handlers
         state.cleanupHandlers.forEach((cleanup) => cleanup());
-        
-        set({ 
+
+        set({
           cleanupHandlers: new Map(),
           isConnected: false,
-          typingUsers: []
+          typingUsers: [],
         });
-        
+
         chatService.disconnectWebSocket();
       },
 
@@ -337,6 +335,6 @@ export const useChatStore = create<ChatState>()(
         activeConversationId: state.activeConversationId,
         messages: state.messages,
       }),
-    }
-  )
+    },
+  ),
 );

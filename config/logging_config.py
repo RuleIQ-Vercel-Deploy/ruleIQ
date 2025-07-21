@@ -80,9 +80,21 @@ def get_logging_config(log_level: str) -> Dict[str, Any]:
             "uvicorn": {"handlers": ["console", "file"], "level": "INFO", "propagate": False},
             "gunicorn": {"handlers": ["console", "file"], "level": "INFO", "propagate": False},
             "celery": {"handlers": ["console", "file"], "level": "INFO", "propagate": False},
-            "api": {"handlers": ["console", "file", "error_file"], "level": "DEBUG", "propagate": False},
-            "services": {"handlers": ["console", "file", "error_file"], "level": "INFO", "propagate": False},
-            "database": {"handlers": ["file", "error_file"], "level": "WARNING", "propagate": False},
+            "api": {
+                "handlers": ["console", "file", "error_file"],
+                "level": "DEBUG",
+                "propagate": False,
+            },
+            "services": {
+                "handlers": ["console", "file", "error_file"],
+                "level": "INFO",
+                "propagate": False,
+            },
+            "database": {
+                "handlers": ["file", "error_file"],
+                "level": "WARNING",
+                "propagate": False,
+            },
         },
     }
 

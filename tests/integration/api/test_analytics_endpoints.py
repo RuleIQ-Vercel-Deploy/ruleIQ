@@ -19,8 +19,8 @@ class TestAnalyticsEndpoints:
 
     def test_analytics_dashboard_success(self, client, authenticated_headers):
         """Test analytics dashboard endpoint"""
-        
-        print(f"DEBUG: Testing analytics dashboard endpoint")
+
+        print("DEBUG: Testing analytics dashboard endpoint")
         print(f"DEBUG: Authenticated headers: {authenticated_headers}")
 
         with patch("services.ai.analytics_monitor.get_analytics_monitor") as mock_monitor:
@@ -83,10 +83,10 @@ class TestAnalyticsEndpoints:
             mock_monitor.return_value = mock_instance
 
             response = client.get("/api/chat/analytics/dashboard", headers=authenticated_headers)
-            
+
             print(f"DEBUG: Response status code: {response.status_code}")
             print(f"DEBUG: Response content: {response.text[:500]}")
-            
+
             assert response.status_code == 200
             assert_api_response_security(response)
 

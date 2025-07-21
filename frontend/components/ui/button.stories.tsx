@@ -160,12 +160,24 @@ export const AllVariants: Story = {
         <Button variant="link">Link</Button>
       </div>
       <div className="flex gap-2">
-        <Button variant="default" disabled>Default Disabled</Button>
-        <Button variant="secondary" disabled>Secondary Disabled</Button>
-        <Button variant="destructive" disabled>Destructive Disabled</Button>
-        <Button variant="outline" disabled>Outline Disabled</Button>
-        <Button variant="ghost" disabled>Ghost Disabled</Button>
-        <Button variant="link" disabled>Link Disabled</Button>
+        <Button variant="default" disabled>
+          Default Disabled
+        </Button>
+        <Button variant="secondary" disabled>
+          Secondary Disabled
+        </Button>
+        <Button variant="destructive" disabled>
+          Destructive Disabled
+        </Button>
+        <Button variant="outline" disabled>
+          Outline Disabled
+        </Button>
+        <Button variant="ghost" disabled>
+          Ghost Disabled
+        </Button>
+        <Button variant="link" disabled>
+          Link Disabled
+        </Button>
       </div>
     </div>
   ),
@@ -199,7 +211,9 @@ export const InteractiveStates: Story = {
       </div>
       <div>
         <p className="mb-2 text-sm font-medium">Focus</p>
-        <Button className="focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2">Button</Button>
+        <Button className="focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2">
+          Button
+        </Button>
       </div>
     </div>
   ),
@@ -207,11 +221,7 @@ export const InteractiveStates: Story = {
 
 // Responsive Button
 export const ResponsiveButton: Story = {
-  render: () => (
-    <Button className="w-full sm:w-auto">
-      Responsive Button
-    </Button>
-  ),
+  render: () => <Button className="w-full sm:w-auto">Responsive Button</Button>,
   parameters: {
     chromatic: {
       viewports: [375, 768, 1440],

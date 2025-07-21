@@ -1,60 +1,60 @@
-"use client"
+'use client';
 
-import { Elements, PaymentElement, useStripe, useElements } from "@stripe/react-stripe-js"
-import { Loader2, Lock, CreditCard } from "lucide-react"
-import { useState } from "react"
+import { Elements, PaymentElement, useStripe, useElements } from '@stripe/react-stripe-js';
+import { Loader2, Lock, CreditCard } from 'lucide-react';
+import { useState } from 'react';
 
-import { Alert, AlertDescription } from "@/components/ui/alert"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { paymentService } from "@/lib/api/payment.service"
-import { useAuthStore } from "@/lib/stores/auth.store"
-import { getStripe, PRICING_PLANS, type PricingPlan, formatPrice } from "@/lib/stripe/client"
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { paymentService } from '@/lib/api/payment.service';
+import { useAuthStore } from '@/lib/stores/auth.store';
+import { getStripe, PRICING_PLANS, type PricingPlan, formatPrice } from '@/lib/stripe/client';
 
 interface CheckoutFormProps {
-  planId: PricingPlan
-  customerEmail?: string | undefined
-  onSuccess?: (sessionId: string) => void | undefined
-  onError?: (error: string) => void | undefined
+  planId: PricingPlan;
+  customerEmail?: string | undefined;
+  onSuccess?: (sessionId: string) => void | undefined;
+  onError?: (error: string) => void | undefined;
 }
 
 // Inner form component that uses Stripe hooks
 function CheckoutFormInner({ planId, customerEmail, onSuccess, onError }: CheckoutFormProps) {
-  const stripe = useStripe()
-  const elements = useElements()
-  const user = useAuthStore(state => state.user)
-  
-  const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-  const [email, setEmail] = useState(customerEmail || user?.email || "")
-  
-  const plan = PRICING_PLANS[planId]
+  const stripe = useStripe();
+  const elements = useElements();
+  const user = useAuthStore((state) => state.user);
+
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [email, setEmail] = useState(customerEmail || user?.email || '');
+
+  const plan = PRICING_PLANS[planId];
 
   const handleSubmit = async (event: React.FormEvent) => {
-    event.preventDefault()
-    
+    event.preventDefault();
+
     if (!stripe || !elements) {
-      setError("Payment system not ready. Please try again.")
-      return
+      setError('Payment system not ready. Please try again.');
+      return;
     }
 
     if (!email) {
-      setError("Please enter your email address.")
-      return
+      setError('Please enter your email address.');
+      return;
     }
 
-    setIsLoading(true)
-    setError(null)
+    setIsLoading(true);
+    setError(null);
 
     try {
       // Submit the payment element
-      const { error: submitError } = await elements.submit()
+      const { error: submitError } = await elements.submit();
       if (submitError) {
-        setError(submitError.message || "Payment failed")
-        setIsLoading(false)
-        return
+        setError(submitError.message || 'Payment failed');
+        setIsLoading(false);
+        return;
       }
 
       // Create checkout session via API
@@ -62,38 +62,37 @@ function CheckoutFormInner({ planId, customerEmail, onSuccess, onError }: Checko
         plan_id: planId,
         success_url: `${window.location.origin}/dashboard?payment=success`,
         cancel_url: `${window.location.origin}/pricing?payment=cancelled`,
-        trial_days: 30
-      })
+        trial_days: 30,
+      });
 
       // Redirect to Stripe Checkout
       if (response.url) {
-        window.location.href = response.url
+        window.location.href = response.url;
       } else if (response.session_id && stripe) {
         const { error: stripeError } = await stripe.redirectToCheckout({
-          sessionId: response.session_id
-        })
-        
+          sessionId: response.session_id,
+        });
+
         if (stripeError) {
-          setError(stripeError.message || "Payment failed")
+          setError(stripeError.message || 'Payment failed');
         }
       }
 
-      onSuccess?.(response.session_id)
-
+      onSuccess?.(response.session_id);
     } catch (err: any) {
-      setError(err.message || "An unexpected error occurred")
-      onError?.(err.message)
+      setError(err.message || 'An unexpected error occurred');
+      onError?.(err.message);
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       <div className="space-y-4">
         {/* Plan Summary */}
-        <div className="bg-muted/50 p-4 rounded-lg">
-          <div className="flex justify-between items-center">
+        <div className="rounded-lg bg-muted/50 p-4">
+          <div className="flex items-center justify-between">
             <div>
               <h3 className="font-semibold">{plan.name} Plan</h3>
               <p className="text-sm text-muted-foreground">
@@ -101,9 +100,7 @@ function CheckoutFormInner({ planId, customerEmail, onSuccess, onError }: Checko
               </p>
             </div>
             <div className="text-right">
-              <div className="text-2xl font-bold text-gold">
-                {formatPrice(plan.price)}
-              </div>
+              <div className="text-2xl font-bold text-gold">{formatPrice(plan.price)}</div>
               <div className="text-sm text-muted-foreground">per {plan.interval}</div>
             </div>
           </div>
@@ -125,13 +122,15 @@ function CheckoutFormInner({ planId, customerEmail, onSuccess, onError }: Checko
         {/* Payment Element */}
         <div className="space-y-2">
           <Label className="flex items-center gap-2">
-            <CreditCard className="w-4 h-4" />
+            <CreditCard className="h-4 w-4" />
             Payment Details
           </Label>
-          <div className="border border-input rounded-md p-3">
-            <PaymentElement options={{
-              layout: "tabs"
-            }} />
+          <div className="rounded-md border border-input p-3">
+            <PaymentElement
+              options={{
+                layout: 'tabs',
+              }}
+            />
           </div>
         </div>
       </div>
@@ -147,17 +146,17 @@ function CheckoutFormInner({ planId, customerEmail, onSuccess, onError }: Checko
       <Button
         type="submit"
         size="lg"
-        className="w-full bg-gold hover:bg-gold-dark text-navy"
+        className="w-full bg-gold text-navy hover:bg-gold-dark"
         disabled={!stripe || !elements || isLoading}
       >
         {isLoading ? (
           <>
-            <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
             Processing...
           </>
         ) : (
           <>
-            <Lock className="w-4 h-4 mr-2" />
+            <Lock className="mr-2 h-4 w-4" />
             Start Free Trial
           </>
         )}
@@ -166,36 +165,36 @@ function CheckoutFormInner({ planId, customerEmail, onSuccess, onError }: Checko
       {/* Security Notice */}
       <div className="text-center">
         <p className="text-xs text-muted-foreground">
-          <Lock className="w-3 h-3 inline mr-1" />
+          <Lock className="mr-1 inline h-3 w-3" />
           Secure payment powered by Stripe • No charges during trial
         </p>
       </div>
     </form>
-  )
+  );
 }
 
 // Main checkout form component with Stripe Elements wrapper
 export function CheckoutForm({ planId, customerEmail, onSuccess, onError }: CheckoutFormProps) {
-  const [loading] = useState(false)
-  const [error] = useState<string | null>(null)
+  const [loading] = useState(false);
+  const [error] = useState<string | null>(null);
 
-  const plan = PRICING_PLANS[planId]
-  const stripePromise = getStripe()
+  const plan = PRICING_PLANS[planId];
+  const stripePromise = getStripe();
 
   if (loading) {
     return (
-      <Card className="w-full max-w-md mx-auto">
+      <Card className="mx-auto w-full max-w-md">
         <CardContent className="flex items-center justify-center py-8">
-          <Loader2 className="w-6 h-6 animate-spin mr-2" />
+          <Loader2 className="mr-2 h-6 w-6 animate-spin" />
           <span>Loading payment form...</span>
         </CardContent>
       </Card>
-    )
+    );
   }
 
   if (error) {
     return (
-      <Card className="w-full max-w-md mx-auto">
+      <Card className="mx-auto w-full max-w-md">
         <CardHeader>
           <CardTitle>Payment Error</CardTitle>
         </CardHeader>
@@ -207,7 +206,7 @@ export function CheckoutForm({ planId, customerEmail, onSuccess, onError }: Chec
           </Alert>
         </CardContent>
       </Card>
-    )
+    );
   }
 
   const stripeOptions = {
@@ -223,22 +222,20 @@ export function CheckoutForm({ planId, customerEmail, onSuccess, onError }: Chec
         colorDanger: '#DC3545',
         fontFamily: 'Inter, system-ui, sans-serif',
         spacingUnit: '4px',
-        borderRadius: '6px'
-      }
-    }
-  }
+        borderRadius: '6px',
+      },
+    },
+  };
 
   return (
-    <Card className="w-full max-w-md mx-auto">
+    <Card className="mx-auto w-full max-w-md">
       <CardHeader>
         <CardTitle>Complete Your Subscription</CardTitle>
-        <CardDescription>
-          Subscribe to {plan.name} plan with a 30-day free trial
-        </CardDescription>
+        <CardDescription>Subscribe to {plan.name} plan with a 30-day free trial</CardDescription>
       </CardHeader>
       <CardContent>
         <Elements stripe={stripePromise} options={stripeOptions}>
-          <CheckoutFormInner 
+          <CheckoutFormInner
             planId={planId}
             customerEmail={customerEmail}
             onSuccess={onSuccess}
@@ -247,7 +244,7 @@ export function CheckoutForm({ planId, customerEmail, onSuccess, onError }: Chec
         </Elements>
       </CardContent>
     </Card>
-  )
+  );
 }
 
-export default CheckoutForm
+export default CheckoutForm;

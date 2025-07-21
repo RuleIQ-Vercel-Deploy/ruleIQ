@@ -19,7 +19,7 @@ load_dotenv()
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from config.logging_config import get_logger, setup_logging  # noqa: E402
-from database.db_setup import Base, _init_async_db, get_async_db  # noqa: E402
+from database.db_setup import get_async_db  # noqa: E402
 from services.framework_service import initialize_default_frameworks  # noqa: E402
 
 # Setup logging first
@@ -33,18 +33,16 @@ async def create_tables():
     try:
         import subprocess
         import sys
-        
+
         # Run alembic upgrade to latest
         result = subprocess.run(
-            [sys.executable, "-m", "alembic", "upgrade", "head"],
-            capture_output=True,
-            text=True
+            [sys.executable, "-m", "alembic", "upgrade", "head"], capture_output=True, text=True
         )
-        
+
         if result.returncode != 0:
             logger.error(f"Alembic migration failed: {result.stderr}")
             return False
-            
+
         logger.info("Database migrations applied successfully.")
         return True
     except Exception as e:

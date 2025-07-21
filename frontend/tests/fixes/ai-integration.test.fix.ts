@@ -5,21 +5,21 @@
 it('should fallback to mock questions when AI service fails', async () => {
   // Mock AI service failure
   vi.mocked(assessmentAIService.getFollowUpQuestions).mockRejectedValue(
-    new Error('AI service unavailable')
+    new Error('AI service unavailable'),
   );
 
   engine = new QuestionnaireEngine(mockFramework, mockContext, {
     enableAI: true,
-    useMockAIOnError: true
+    useMockAIOnError: true,
   });
 
   engine.answerQuestion('q1', 'no');
-  
+
   const hasMore = await engine.nextQuestion();
-  
+
   expect(hasMore).toBe(true);
   expect(engine.isInAIMode()).toBe(true);
-  
+
   // Should have mock questions
   const currentQuestion = engine.getCurrentAIQuestion();
   expect(currentQuestion).toBeTruthy();

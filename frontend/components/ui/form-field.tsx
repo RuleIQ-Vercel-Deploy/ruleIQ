@@ -1,32 +1,40 @@
-"use client"
+'use client';
 
-import { AlertCircle, CheckCircle2 } from "lucide-react"
-import * as React from "react"
+import { AlertCircle, CheckCircle2 } from 'lucide-react';
+import * as React from 'react';
 
-import { Label } from "@/components/ui/label"
-import { cn } from "@/lib/utils"
+import { Label } from '@/components/ui/label';
+import { cn } from '@/lib/utils';
 
 interface FormFieldProps {
-  children: React.ReactNode
-  label?: string
-  error?: string
-  success?: string
-  description?: string
-  required?: boolean
-  className?: string
+  children: React.ReactNode;
+  label?: string;
+  error?: string;
+  success?: string;
+  description?: string;
+  required?: boolean;
+  className?: string;
 }
 
-export function FormField({ children, label, error, success, description, required, className }: FormFieldProps) {
-  const fieldId = React.useId()
-  const hasError = Boolean(error)
-  const hasSuccess = Boolean(success)
+export function FormField({
+  children,
+  label,
+  error,
+  success,
+  description,
+  required,
+  className,
+}: FormFieldProps) {
+  const fieldId = React.useId();
+  const hasError = Boolean(error);
+  const hasSuccess = Boolean(success);
 
   return (
-    <div className={cn("space-y-2", className)}>
+    <div className={cn('space-y-2', className)}>
       {label && (
         <Label
           htmlFor={fieldId}
-          variant={hasError ? "error" : hasSuccess ? "success" : "default"}
+          variant={hasError ? 'error' : hasSuccess ? 'success' : 'default'}
           className="flex items-center gap-1"
         >
           {label}
@@ -66,5 +74,5 @@ export function FormField({ children, label, error, success, description, requir
         </div>
       )}
     </div>
-  )
+  );
 }

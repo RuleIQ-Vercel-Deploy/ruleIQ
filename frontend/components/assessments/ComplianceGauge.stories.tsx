@@ -7,7 +7,7 @@ const meta = {
   component: ComplianceGauge,
   parameters: {
     layout: 'centered',
-    chromatic: { 
+    chromatic: {
       viewports: [375, 768, 1440],
       delay: 500, // Allow animation to complete
     },

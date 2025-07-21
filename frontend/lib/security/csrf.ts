@@ -12,9 +12,8 @@ import { type NextRequest } from 'next/server';
 export function verifyCsrfToken(request: NextRequest): boolean {
   try {
     // Get token from header or body
-    const token = request.headers.get('x-csrf-token') || 
-                  request.headers.get('csrf-token');
-    
+    const token = request.headers.get('x-csrf-token') || request.headers.get('csrf-token');
+
     if (!token) {
       console.warn('CSRF token missing from request');
       return false;
@@ -22,7 +21,7 @@ export function verifyCsrfToken(request: NextRequest): boolean {
 
     // Get stored hash from cookie
     const storedHash = request.cookies.get('csrf-token-hash')?.value;
-    
+
     if (!storedHash) {
       console.warn('CSRF token hash missing from cookies');
       return false;
@@ -30,8 +29,10 @@ export function verifyCsrfToken(request: NextRequest): boolean {
 
     // Recreate hash and compare
     const secret = process.env['CSRF_SECRET'] || 'fallback-secret-change-in-production';
-    const expectedHash = createHash('sha256').update(token + secret).digest('hex');
-    
+    const expectedHash = createHash('sha256')
+      .update(token + secret)
+      .digest('hex');
+
     if (storedHash !== expectedHash) {
       console.warn('CSRF token verification failed');
       return false;
@@ -48,21 +49,21 @@ export function verifyCsrfToken(request: NextRequest): boolean {
  * Middleware wrapper for CSRF protection
  */
 export function withCsrfProtection<T>(
-  handler: (request: NextRequest, context: T) => Promise<Response>
+  handler: (request: NextRequest, context: T) => Promise<Response>,
 ) {
   return async (request: NextRequest, context: T): Promise<Response> => {
     // Only check CSRF for state-changing methods
     if (['POST', 'PUT', 'DELETE', 'PATCH'].includes(request.method)) {
       if (!verifyCsrfToken(request)) {
         return new Response(
-          JSON.stringify({ 
+          JSON.stringify({
             error: 'CSRF token verification failed',
-            code: 'CSRF_INVALID' 
+            code: 'CSRF_INVALID',
           }),
-          { 
+          {
             status: 403,
-            headers: { 'Content-Type': 'application/json' }
-          }
+            headers: { 'Content-Type': 'application/json' },
+          },
         );
       }
     }
@@ -77,7 +78,7 @@ export function withCsrfProtection<T>(
 export async function extractCsrfFromFormData(request: NextRequest): Promise<string | null> {
   try {
     const formData = await request.formData();
-    return formData.get('_csrf') as string || null;
+    return (formData.get('_csrf') as string) || null;
   } catch {
     return null;
   }
@@ -88,7 +89,7 @@ export async function extractCsrfFromFormData(request: NextRequest): Promise<str
  */
 export async function verifyCsrfFromFormData(request: NextRequest): Promise<boolean> {
   const token = await extractCsrfFromFormData(request);
-  
+
   if (!token) {
     console.warn('CSRF token missing from form data');
     return false;
@@ -104,7 +105,7 @@ export async function verifyCsrfFromFormData(request: NextRequest): Promise<bool
   });
 
   // Copy cookies
-  const {cookies} = request;
+  const { cookies } = request;
   Object.defineProperty(tempRequest, 'cookies', {
     value: cookies,
     writable: false,

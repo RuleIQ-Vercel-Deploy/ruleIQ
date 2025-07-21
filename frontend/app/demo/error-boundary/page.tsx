@@ -1,90 +1,81 @@
-"use client"
+'use client';
 
-import { AlertCircle } from "lucide-react"
-import * as React from "react"
+import { AlertCircle } from 'lucide-react';
+import * as React from 'react';
 
-import { FeatureErrorBoundary, useAsyncError } from "@/components/error-boundary"
-import { Button } from "@/components/ui/button"
-import { H1, H2, Typography } from "@/components/ui/typography"
+import { FeatureErrorBoundary, useAsyncError } from '@/components/error-boundary';
+import { Button } from '@/components/ui/button';
+import { H1, H2, Typography } from '@/components/ui/typography';
 
 // Component that throws an error
 function BrokenComponent() {
-  const [shouldError, setShouldError] = React.useState(false)
+  const [shouldError, setShouldError] = React.useState(false);
 
   if (shouldError) {
-    throw new Error("This is a test error from BrokenComponent!")
+    throw new Error('This is a test error from BrokenComponent!');
   }
 
   return (
-    <div className="space-y-4 p-6 border rounded-lg">
+    <div className="space-y-4 rounded-lg border p-6">
       <H2>Component with Error</H2>
-      <Typography variant="body">Click the button to trigger an error in this component.</Typography>
-      <Button 
-        variant="destructive" 
-        onClick={() => setShouldError(true)}
-        className="gap-2"
-      >
+      <Typography variant="body">
+        Click the button to trigger an error in this component.
+      </Typography>
+      <Button variant="destructive" onClick={() => setShouldError(true)} className="gap-2">
         <AlertCircle className="h-4 w-4" />
         Trigger Error
       </Button>
     </div>
-  )
+  );
 }
 
 // Component that throws async error
 function AsyncBrokenComponent() {
-  const throwAsyncError = useAsyncError()
-  
+  const throwAsyncError = useAsyncError();
+
   const handleAsyncError = async () => {
     try {
       // Simulate async operation that fails
       await new Promise((_, reject) => {
         setTimeout(() => {
-          reject(new Error("This is an async error!"))
-        }, 1000)
-      })
+          reject(new Error('This is an async error!'));
+        }, 1000);
+      });
     } catch (error) {
-      throwAsyncError(error as Error)
+      throwAsyncError(error as Error);
     }
-  }
+  };
 
   return (
-    <div className="space-y-4 p-6 border rounded-lg">
+    <div className="space-y-4 rounded-lg border p-6">
       <H2>Component with Async Error</H2>
       <Typography variant="body">Click the button to trigger an async error.</Typography>
-      <Button 
-        variant="destructive" 
-        onClick={handleAsyncError}
-        className="gap-2"
-      >
+      <Button variant="destructive" onClick={handleAsyncError} className="gap-2">
         <AlertCircle className="h-4 w-4" />
         Trigger Async Error
       </Button>
     </div>
-  )
+  );
 }
 
 // Component that works normally
 function WorkingComponent() {
-  const [count, setCount] = React.useState(0)
+  const [count, setCount] = React.useState(0);
 
   return (
-    <div className="space-y-4 p-6 border rounded-lg">
+    <div className="space-y-4 rounded-lg border p-6">
       <H2>Working Component</H2>
       <Typography variant="body">This component works normally. Count: {count}</Typography>
-      <Button 
-        variant="default" 
-        onClick={() => setCount(count + 1)}
-      >
+      <Button variant="default" onClick={() => setCount(count + 1)}>
         Increment Count
       </Button>
     </div>
-  )
+  );
 }
 
 export default function ErrorBoundaryDemoPage() {
   return (
-    <div className="container mx-auto p-8 space-y-8">
+    <div className="container mx-auto space-y-8 p-8">
       <div className="space-y-4">
         <H1>Error Boundary Demo</H1>
         <Typography variant="body" color="muted">
@@ -107,9 +98,9 @@ export default function ErrorBoundaryDemoPage() {
         <WorkingComponent />
       </div>
 
-      <div className="space-y-4 p-6 bg-muted/20 rounded-lg">
+      <div className="space-y-4 rounded-lg bg-muted/20 p-6">
         <H2>How Error Boundaries Work</H2>
-        <ul className="space-y-2 list-disc list-inside">
+        <ul className="list-inside list-disc space-y-2">
           <Typography as="li" variant="body">
             Click "Trigger Error" in the first component to see a synchronous error being caught
           </Typography>
@@ -128,5 +119,5 @@ export default function ErrorBoundaryDemoPage() {
         </ul>
       </div>
     </div>
-  )
+  );
 }

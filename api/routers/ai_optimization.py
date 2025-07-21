@@ -111,7 +111,6 @@ async def model_fallback_chain(
 ):
     """Test model fallback chain functionality."""
     try:
-
         # Simulate fallback chain
         primary_model = "gemini-2.5-pro"
         fallback_model = "gemini-2.5-flash"

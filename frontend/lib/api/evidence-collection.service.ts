@@ -1,10 +1,6 @@
 import { apiClient } from './client';
 
-import type { 
-  EvidenceCollectionPlan, 
-  EvidenceTask,
-  CollectionPlanSummary
-} from '@/types/api';
+import type { EvidenceCollectionPlan, EvidenceTask, CollectionPlanSummary } from '@/types/api';
 
 export interface CreateCollectionPlanRequest {
   framework: string;
@@ -37,7 +33,7 @@ class EvidenceCollectionService {
   async createCollectionPlan(data: CreateCollectionPlanRequest): Promise<EvidenceCollectionPlan> {
     const response = await apiClient.post<EvidenceCollectionPlan>(
       '/evidence-collection/plans',
-      data
+      data,
     );
     return response.data;
   }
@@ -47,7 +43,7 @@ class EvidenceCollectionService {
    */
   async getCollectionPlan(planId: string): Promise<EvidenceCollectionPlan> {
     const response = await apiClient.get<EvidenceCollectionPlan>(
-      `/evidence-collection/plans/${planId}`
+      `/evidence-collection/plans/${planId}`,
     );
     return response.data;
   }
@@ -59,10 +55,9 @@ class EvidenceCollectionService {
     framework?: string;
     status?: string;
   }): Promise<CollectionPlanSummary[]> {
-    const response = await apiClient.get<CollectionPlanSummary[]>(
-      '/evidence-collection/plans',
-      { params }
-    );
+    const response = await apiClient.get<CollectionPlanSummary[]>('/evidence-collection/plans', {
+      params,
+    });
     return response.data;
   }
 
@@ -72,7 +67,7 @@ class EvidenceCollectionService {
   async getPriorityTasks(planId: string, limit: number = 5): Promise<EvidenceTask[]> {
     const response = await apiClient.get<EvidenceTask[]>(
       `/evidence-collection/plans/${planId}/priority-tasks`,
-      { params: { limit } }
+      { params: { limit } },
     );
     return response.data;
   }
@@ -83,11 +78,11 @@ class EvidenceCollectionService {
   async updateTaskStatus(
     planId: string,
     taskId: string,
-    data: TaskStatusUpdateRequest
+    data: TaskStatusUpdateRequest,
   ): Promise<EvidenceTask> {
     const response = await apiClient.patch<EvidenceTask>(
       `/evidence-collection/plans/${planId}/tasks/${taskId}`,
-      data
+      data,
     );
     return response.data;
   }
@@ -95,9 +90,11 @@ class EvidenceCollectionService {
   /**
    * Get automation recommendations for a framework
    */
-  async getAutomationRecommendations(framework: string): Promise<AutomationRecommendationsResponse> {
+  async getAutomationRecommendations(
+    framework: string,
+  ): Promise<AutomationRecommendationsResponse> {
     const response = await apiClient.get<AutomationRecommendationsResponse>(
-      `/evidence-collection/automation-recommendations/${framework}`
+      `/evidence-collection/automation-recommendations/${framework}`,
     );
     return response.data;
   }
@@ -120,7 +117,7 @@ class EvidenceCollectionService {
       manualHours,
       automatedHours,
       savedHours,
-      savedPercentage
+      savedPercentage,
     };
   }
 
@@ -139,18 +136,18 @@ class EvidenceCollectionService {
       byStatus: {} as Record<string, number>,
       byPriority: {} as Record<string, number>,
       byAutomationLevel: {} as Record<string, number>,
-      completionPercentage: 0
+      completionPercentage: 0,
     };
 
-    plan.tasks.forEach(task => {
+    plan.tasks.forEach((task) => {
       // Count by status
       stats.byStatus[task.status] = (stats.byStatus[task.status] || 0) + 1;
-      
+
       // Count by priority
       stats.byPriority[task.priority] = (stats.byPriority[task.priority] || 0) + 1;
-      
+
       // Count by automation level
-      stats.byAutomationLevel[task.automation_level] = 
+      stats.byAutomationLevel[task.automation_level] =
         (stats.byAutomationLevel[task.automation_level] || 0) + 1;
     });
 
@@ -171,9 +168,9 @@ class EvidenceCollectionService {
       status?: string[];
       automationLevel?: string[];
       evidenceType?: string[];
-    }
+    },
   ): EvidenceTask[] {
-    return tasks.filter(task => {
+    return tasks.filter((task) => {
       if (criteria.priority && !criteria.priority.includes(task.priority)) {
         return false;
       }
@@ -196,7 +193,7 @@ class EvidenceCollectionService {
   sortTasks(
     tasks: EvidenceTask[],
     sortBy: 'priority' | 'dueDate' | 'effort' | 'status',
-    order: 'asc' | 'desc' = 'asc'
+    order: 'asc' | 'desc' = 'asc',
   ): EvidenceTask[] {
     const sorted = [...tasks].sort((a, b) => {
       let comparison = 0;
@@ -206,19 +203,25 @@ class EvidenceCollectionService {
           const priorityOrder = { critical: 0, high: 1, medium: 2, low: 3, deferred: 4 };
           comparison = priorityOrder[a.priority] - priorityOrder[b.priority];
           break;
-        
+
         case 'dueDate':
           if (!a.due_date) return 1;
           if (!b.due_date) return -1;
           comparison = new Date(a.due_date).getTime() - new Date(b.due_date).getTime();
           break;
-        
+
         case 'effort':
           comparison = a.estimated_effort_hours - b.estimated_effort_hours;
           break;
-        
+
         case 'status':
-          const statusOrder = { pending: 0, in_progress: 1, blocked: 2, completed: 3, cancelled: 4 };
+          const statusOrder = {
+            pending: 0,
+            in_progress: 1,
+            blocked: 2,
+            completed: 3,
+            cancelled: 4,
+          };
           comparison = statusOrder[a.status] - statusOrder[b.status];
           break;
       }

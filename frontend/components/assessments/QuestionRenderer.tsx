@@ -1,32 +1,32 @@
-"use client";
+'use client';
 
-import { format } from "date-fns";
-import { 
-  Info, 
-  Upload, 
-  X, 
-  FileText,
-  Calendar
-} from "lucide-react";
-import { useState } from "react";
+import { format } from 'date-fns';
+import { Info, Upload, X, FileText, Calendar } from 'lucide-react';
+import { useState } from 'react';
 
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Button } from "@/components/ui/button";
-import { Calendar as CalendarComponent } from "@/components/ui/calendar";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Slider } from "@/components/ui/slider";
-import { Textarea } from "@/components/ui/textarea";
-import { type Question } from "@/lib/assessment-engine/types";
-import { cn } from "@/lib/utils";
-import { type UserContext } from "@/types/ai";
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Button } from '@/components/ui/button';
+import { Calendar as CalendarComponent } from '@/components/ui/calendar';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { Slider } from '@/components/ui/slider';
+import { Textarea } from '@/components/ui/textarea';
+import { type Question } from '@/lib/assessment-engine/types';
+import { cn } from '@/lib/utils';
+import { type UserContext } from '@/types/ai';
 
-import { InlineAIErrorBoundary } from "./AIErrorBoundary";
-import { AIHelpTooltip } from "./AIHelpTooltip";
+import { InlineAIErrorBoundary } from './AIErrorBoundary';
+import { AIHelpTooltip } from './AIHelpTooltip';
 
 interface QuestionRendererProps {
   question: Question;
@@ -47,7 +47,7 @@ export function QuestionRenderer({
   disabled = false,
   frameworkId,
   sectionId,
-  userContext
+  userContext,
 }: QuestionRendererProps) {
   const [files, setFiles] = useState<File[]>(value || []);
 
@@ -55,26 +55,17 @@ export function QuestionRenderer({
     switch (question.type) {
       case 'radio':
         return (
-          <RadioGroup
-            value={value || ''}
-            onValueChange={onChange}
-            disabled={disabled}
-          >
+          <RadioGroup value={value || ''} onValueChange={onChange} disabled={disabled}>
             <div className="space-y-2">
               {question.options?.map((option) => (
                 <div key={option.value} className="flex items-start space-x-2">
                   <RadioGroupItem value={option.value} id={option.value} />
                   <div className="flex-1">
-                    <Label 
-                      htmlFor={option.value} 
-                      className="text-sm font-normal cursor-pointer"
-                    >
+                    <Label htmlFor={option.value} className="cursor-pointer text-sm font-normal">
                       {option.label}
                     </Label>
                     {option.description && (
-                      <p className="text-xs text-muted-foreground mt-1">
-                        {option.description}
-                      </p>
+                      <p className="mt-1 text-xs text-muted-foreground">{option.description}</p>
                     )}
                   </div>
                 </div>
@@ -101,16 +92,11 @@ export function QuestionRenderer({
                   disabled={disabled}
                 />
                 <div className="flex-1">
-                  <Label 
-                    htmlFor={option.value} 
-                    className="text-sm font-normal cursor-pointer"
-                  >
+                  <Label htmlFor={option.value} className="cursor-pointer text-sm font-normal">
                     {option.label}
                   </Label>
                   {option.description && (
-                    <p className="text-xs text-muted-foreground mt-1">
-                      {option.description}
-                    </p>
+                    <p className="mt-1 text-xs text-muted-foreground">{option.description}</p>
                   )}
                 </div>
               </div>
@@ -126,7 +112,7 @@ export function QuestionRenderer({
             onChange={(e) => onChange(e.target.value)}
             disabled={disabled}
             placeholder="Enter your answer..."
-            className={cn(error && "border-destructive")}
+            className={cn(error && 'border-destructive')}
           />
         );
 
@@ -138,7 +124,7 @@ export function QuestionRenderer({
             disabled={disabled}
             placeholder="Provide a detailed answer..."
             rows={4}
-            className={cn(error && "border-destructive")}
+            className={cn(error && 'border-destructive')}
           />
         );
 
@@ -152,7 +138,7 @@ export function QuestionRenderer({
             placeholder="Enter a number..."
             min={question.validation?.min}
             max={question.validation?.max}
-            className={cn(error && "border-destructive")}
+            className={cn(error && 'border-destructive')}
           />
         );
 
@@ -163,14 +149,14 @@ export function QuestionRenderer({
               <Button
                 variant="outline"
                 className={cn(
-                  "w-full justify-start text-left font-normal",
-                  !value && "text-muted-foreground",
-                  error && "border-destructive"
+                  'w-full justify-start text-left font-normal',
+                  !value && 'text-muted-foreground',
+                  error && 'border-destructive',
                 )}
                 disabled={disabled}
               >
                 <Calendar className="mr-2 h-4 w-4" />
-                {value ? format(new Date(value), "PPP") : "Select a date"}
+                {value ? format(new Date(value), 'PPP') : 'Select a date'}
               </Button>
             </PopoverTrigger>
             <PopoverContent className="w-auto p-0" align="start">
@@ -187,12 +173,8 @@ export function QuestionRenderer({
 
       case 'select':
         return (
-          <Select
-            value={value || ''}
-            onValueChange={onChange}
-            disabled={disabled}
-          >
-            <SelectTrigger className={cn(error && "border-destructive")}>
+          <Select value={value || ''} onValueChange={onChange} disabled={disabled}>
+            <SelectTrigger className={cn(error && 'border-destructive')}>
               <SelectValue placeholder="Select an option..." />
             </SelectTrigger>
             <SelectContent>
@@ -233,9 +215,9 @@ export function QuestionRenderer({
             <table className="w-full border-collapse">
               <thead>
                 <tr>
-                  <th className="text-left p-2 border-b"></th>
+                  <th className="border-b p-2 text-left"></th>
                   {question.columns?.map((col) => (
-                    <th key={col.id} className="text-center p-2 border-b text-sm">
+                    <th key={col.id} className="border-b p-2 text-center text-sm">
                       {col.label}
                     </th>
                   ))}
@@ -244,15 +226,15 @@ export function QuestionRenderer({
               <tbody>
                 {question.rows?.map((row) => (
                   <tr key={row.id}>
-                    <td className="p-2 border-b text-sm">{row.label}</td>
+                    <td className="border-b p-2 text-sm">{row.label}</td>
                     {question.columns?.map((col) => (
-                      <td key={col.id} className="text-center p-2 border-b">
+                      <td key={col.id} className="border-b p-2 text-center">
                         <RadioGroup
                           value={matrixValue[row.id] || ''}
                           onValueChange={(val) => {
                             onChange({
                               ...matrixValue,
-                              [row.id]: val
+                              [row.id]: val,
                             });
                           }}
                           disabled={disabled}
@@ -271,9 +253,9 @@ export function QuestionRenderer({
       case 'file_upload':
         return (
           <div className="space-y-4">
-            <div className="border-2 border-dashed rounded-lg p-6 text-center">
-              <Upload className="h-8 w-8 mx-auto mb-2 text-muted-foreground" />
-              <p className="text-sm text-muted-foreground mb-2">
+            <div className="rounded-lg border-2 border-dashed p-6 text-center">
+              <Upload className="mx-auto mb-2 h-8 w-8 text-muted-foreground" />
+              <p className="mb-2 text-sm text-muted-foreground">
                 Drop files here or click to browse
               </p>
               <Input
@@ -291,7 +273,7 @@ export function QuestionRenderer({
               />
               <Label
                 htmlFor={`file-${question.id}`}
-                className="cursor-pointer inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2"
+                className="inline-flex h-10 cursor-pointer items-center justify-center rounded-md border border-input bg-background px-4 py-2 text-sm font-medium ring-offset-background transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
               >
                 Browse Files
               </Label>
@@ -299,7 +281,7 @@ export function QuestionRenderer({
             {files.length > 0 && (
               <div className="space-y-2">
                 {files.map((file, index) => (
-                  <div key={index} className="flex items-center justify-between p-2 border rounded">
+                  <div key={index} className="flex items-center justify-between rounded border p-2">
                     <div className="flex items-center gap-2">
                       <FileText className="h-4 w-4" />
                       <span className="text-sm">{file.name}</span>
@@ -329,9 +311,7 @@ export function QuestionRenderer({
       default:
         return (
           <Alert>
-            <AlertDescription>
-              Unsupported question type: {question.type}
-            </AlertDescription>
+            <AlertDescription>Unsupported question type: {question.type}</AlertDescription>
           </Alert>
         );
     }
@@ -340,12 +320,10 @@ export function QuestionRenderer({
   return (
     <div className="space-y-4">
       <div>
-        <div className="flex items-start justify-between gap-4 mb-2">
-          <h3 className="text-lg font-medium flex-1">
+        <div className="mb-2 flex items-start justify-between gap-4">
+          <h3 className="flex-1 text-lg font-medium">
             {question.text}
-            {question.validation?.required && (
-              <span className="text-destructive ml-1">*</span>
-            )}
+            {question.validation?.required && <span className="ml-1 text-destructive">*</span>}
           </h3>
           {frameworkId && sectionId && userContext && (
             <InlineAIErrorBoundary>
@@ -360,9 +338,7 @@ export function QuestionRenderer({
           )}
         </div>
         {question.description && (
-          <p className="text-sm text-muted-foreground mb-4">
-            {question.description}
-          </p>
+          <p className="mb-4 text-sm text-muted-foreground">{question.description}</p>
         )}
       </div>
 
@@ -371,15 +347,11 @@ export function QuestionRenderer({
       {question.helpText && (
         <Alert>
           <Info className="h-4 w-4" />
-          <AlertDescription className="text-sm">
-            {question.helpText}
-          </AlertDescription>
+          <AlertDescription className="text-sm">{question.helpText}</AlertDescription>
         </Alert>
       )}
 
-      {error && (
-        <p className="text-sm text-destructive mt-2">{error}</p>
-      )}
+      {error && <p className="mt-2 text-sm text-destructive">{error}</p>}
     </div>
   );
 }

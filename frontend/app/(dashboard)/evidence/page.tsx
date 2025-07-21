@@ -1,4 +1,4 @@
-"use client"
+'use client';
 
 import {
   Search,
@@ -8,18 +8,17 @@ import {
   Download,
   Trash2,
   Eye,
-
   Shield,
   CheckCircle,
   Clock,
-  XCircle
-} from "lucide-react"
-import { useState } from "react"
+  XCircle,
+} from 'lucide-react';
+import { useState } from 'react';
 
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Checkbox } from "@/components/ui/checkbox"
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Checkbox } from '@/components/ui/checkbox';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -27,64 +26,63 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { Input } from "@/components/ui/input"
+} from '@/components/ui/dropdown-menu';
+import { Input } from '@/components/ui/input';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
-import { evidenceData, statuses, frameworks } from "@/lib/data/evidence"
-import { cn } from "@/lib/utils"
+} from '@/components/ui/select';
+import { evidenceData, statuses, frameworks } from '@/lib/data/evidence';
+import { cn } from '@/lib/utils';
 
 export default function EvidencePage() {
-  const [selectedEvidence, setSelectedEvidence] = useState<string[]>([])
-  const [searchQuery, setSearchQuery] = useState("")
-  const [statusFilter, setStatusFilter] = useState("all")
-  const [frameworkFilter, setFrameworkFilter] = useState("all")
+  const [selectedEvidence, setSelectedEvidence] = useState<string[]>([]);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [statusFilter, setStatusFilter] = useState('all');
+  const [frameworkFilter, setFrameworkFilter] = useState('all');
 
   const handleSelectionChange = (evidenceId: string) => {
-    setSelectedEvidence(prev =>
-      prev.includes(evidenceId)
-        ? prev.filter(id => id !== evidenceId)
-        : [...prev, evidenceId]
-    )
-  }
+    setSelectedEvidence((prev) =>
+      prev.includes(evidenceId) ? prev.filter((id) => id !== evidenceId) : [...prev, evidenceId],
+    );
+  };
 
-  const filteredEvidence = evidenceData.filter(evidence => {
-    const matchesSearch = evidence.name.toLowerCase().includes(searchQuery.toLowerCase())
-    const matchesStatus = statusFilter === "all" || evidence.status === statusFilter
-    const matchesFramework = frameworkFilter === "all" || evidence.frameworks.includes(frameworkFilter)
-    return matchesSearch && matchesStatus && matchesFramework
-  })
+  const filteredEvidence = evidenceData.filter((evidence) => {
+    const matchesSearch = evidence.name.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesStatus = statusFilter === 'all' || evidence.status === statusFilter;
+    const matchesFramework =
+      frameworkFilter === 'all' || evidence.frameworks.includes(frameworkFilter);
+    return matchesSearch && matchesStatus && matchesFramework;
+  });
 
   const getStatusIcon = (status: string) => {
     switch (status) {
-      case "approved":
-        return <CheckCircle className="h-4 w-4" />
-      case "pending":
-        return <Clock className="h-4 w-4" />
-      case "rejected":
-        return <XCircle className="h-4 w-4" />
+      case 'approved':
+        return <CheckCircle className="h-4 w-4" />;
+      case 'pending':
+        return <Clock className="h-4 w-4" />;
+      case 'rejected':
+        return <XCircle className="h-4 w-4" />;
       default:
-        return null
+        return null;
     }
-  }
+  };
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case "approved":
-        return "text-success border-success/20 bg-success/10"
-      case "pending":
-        return "text-warning border-warning/20 bg-warning/10"
-      case "rejected":
-        return "text-error border-error/20 bg-error/10"
+      case 'approved':
+        return 'text-success border-success/20 bg-success/10';
+      case 'pending':
+        return 'text-warning border-warning/20 bg-warning/10';
+      case 'rejected':
+        return 'text-error border-error/20 bg-error/10';
       default:
-        return ""
+        return '';
     }
-  }
+  };
 
   return (
     <div className="flex-1 space-y-8 p-8">
@@ -92,11 +90,9 @@ export default function EvidencePage() {
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-3xl font-bold tracking-tight text-navy">Evidence Library</h2>
-          <p className="text-muted-foreground">
-            Manage and organize your compliance documentation
-          </p>
+          <p className="text-muted-foreground">Manage and organize your compliance documentation</p>
         </div>
-        <Button className="bg-gold hover:bg-gold-dark text-navy">
+        <Button className="bg-gold text-navy hover:bg-gold-dark">
           <Upload className="mr-2 h-4 w-4" />
           Upload Evidence
         </Button>
@@ -111,9 +107,7 @@ export default function EvidencePage() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{evidenceData.length}</div>
-            <p className="text-xs text-muted-foreground">
-              +2 from last month
-            </p>
+            <p className="text-xs text-muted-foreground">+2 from last month</p>
           </CardContent>
         </Card>
         <Card>
@@ -123,11 +117,9 @@ export default function EvidencePage() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {evidenceData.filter(e => e.status === "approved").length}
+              {evidenceData.filter((e) => e.status === 'approved').length}
             </div>
-            <p className="text-xs text-muted-foreground">
-              Ready for audit
-            </p>
+            <p className="text-xs text-muted-foreground">Ready for audit</p>
           </CardContent>
         </Card>
         <Card>
@@ -137,11 +129,9 @@ export default function EvidencePage() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {evidenceData.filter(e => e.status === "pending").length}
+              {evidenceData.filter((e) => e.status === 'pending').length}
             </div>
-            <p className="text-xs text-muted-foreground">
-              Awaiting approval
-            </p>
+            <p className="text-xs text-muted-foreground">Awaiting approval</p>
           </CardContent>
         </Card>
         <Card>
@@ -151,9 +141,7 @@ export default function EvidencePage() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">85%</div>
-            <p className="text-xs text-muted-foreground">
-              Across all frameworks
-            </p>
+            <p className="text-xs text-muted-foreground">Across all frameworks</p>
           </CardContent>
         </Card>
       </div>
@@ -161,7 +149,7 @@ export default function EvidencePage() {
       {/* Filters and Search */}
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div className="flex flex-1 items-center gap-4">
-          <div className="relative flex-1 max-w-sm">
+          <div className="relative max-w-sm flex-1">
             <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <Input
               placeholder="Search evidence..."
@@ -176,7 +164,7 @@ export default function EvidencePage() {
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">All Status</SelectItem>
-              {statuses.map(status => (
+              {statuses.map((status) => (
                 <SelectItem key={status.value} value={status.value}>
                   {status.label}
                 </SelectItem>
@@ -189,7 +177,7 @@ export default function EvidencePage() {
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">All Frameworks</SelectItem>
-              {frameworks.map(framework => (
+              {frameworks.map((framework) => (
                 <SelectItem key={framework.value} value={framework.value}>
                   {framework.label}
                 </SelectItem>
@@ -217,11 +205,11 @@ export default function EvidencePage() {
       {/* Evidence Grid */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         {filteredEvidence.map((evidence) => (
-          <Card 
-            key={evidence.id} 
+          <Card
+            key={evidence.id}
             className={cn(
-              "hover:shadow-lg transition-all duration-200",
-              selectedEvidence.includes(evidence.id) && "ring-2 ring-gold"
+              'transition-all duration-200 hover:shadow-lg',
+              selectedEvidence.includes(evidence.id) && 'ring-2 ring-gold',
             )}
           >
             <CardHeader className="pb-3">
@@ -259,19 +247,16 @@ export default function EvidencePage() {
                   </DropdownMenuContent>
                 </DropdownMenu>
               </div>
-              <CardTitle className="text-base font-semibold text-navy mt-2">
+              <CardTitle className="mt-2 text-base font-semibold text-navy">
                 {evidence.name}
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
               {/* Status Badge */}
               <div className="flex items-center gap-2">
-                <Badge 
-                  variant="outline" 
-                  className={cn("gap-1", getStatusColor(evidence.status))}
-                >
+                <Badge variant="outline" className={cn('gap-1', getStatusColor(evidence.status))}>
                   {getStatusIcon(evidence.status)}
-                  {statuses.find(s => s.value === evidence.status)?.label}
+                  {statuses.find((s) => s.value === evidence.status)?.label}
                 </Badge>
               </div>
 
@@ -287,12 +272,12 @@ export default function EvidencePage() {
               {/* Frameworks */}
               <div className="flex flex-wrap gap-1">
                 {evidence.frameworks.map((fw) => (
-                  <Badge 
-                    key={fw} 
-                    variant="outline" 
-                    className="text-xs border-turquoise/20 text-turquoise"
+                  <Badge
+                    key={fw}
+                    variant="outline"
+                    className="border-turquoise/20 text-xs text-turquoise"
                   >
-                    {frameworks.find(f => f.value === fw)?.label}
+                    {frameworks.find((f) => f.value === fw)?.label}
                   </Badge>
                 ))}
               </div>
@@ -314,15 +299,15 @@ export default function EvidencePage() {
       {filteredEvidence.length === 0 && (
         <Card className="border-dashed">
           <CardContent className="flex flex-col items-center justify-center py-12">
-            <FileText className="h-12 w-12 text-muted-foreground mb-4" />
-            <h3 className="text-lg font-semibold mb-2">No evidence found</h3>
-            <p className="text-sm text-muted-foreground text-center mb-4">
-              {searchQuery || statusFilter !== "all" || frameworkFilter !== "all"
-                ? "Try adjusting your filters or search query"
-                : "Upload your first evidence document to get started"}
+            <FileText className="mb-4 h-12 w-12 text-muted-foreground" />
+            <h3 className="mb-2 text-lg font-semibold">No evidence found</h3>
+            <p className="mb-4 text-center text-sm text-muted-foreground">
+              {searchQuery || statusFilter !== 'all' || frameworkFilter !== 'all'
+                ? 'Try adjusting your filters or search query'
+                : 'Upload your first evidence document to get started'}
             </p>
-            {(!searchQuery && statusFilter === "all" && frameworkFilter === "all") && (
-              <Button className="bg-gold hover:bg-gold-dark text-navy">
+            {!searchQuery && statusFilter === 'all' && frameworkFilter === 'all' && (
+              <Button className="bg-gold text-navy hover:bg-gold-dark">
                 <Upload className="mr-2 h-4 w-4" />
                 Upload Evidence
               </Button>
@@ -331,5 +316,5 @@ export default function EvidencePage() {
         </Card>
       )}
     </div>
-  )
+  );
 }

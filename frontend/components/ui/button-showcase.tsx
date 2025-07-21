@@ -1,7 +1,7 @@
-import { Download, Plus, Settings, Heart, Star, ArrowRight } from "lucide-react"
+import { Download, Plus, Settings, Heart, Star, ArrowRight } from 'lucide-react';
 
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 
 export function ButtonShowcase() {
   return (
@@ -9,8 +9,8 @@ export function ButtonShowcase() {
       {/* Primary Buttons */}
       <Card className="ruleiq-card">
         <CardHeader>
-          <CardTitle style={{ color: "#F0EAD6" }}>Primary Buttons</CardTitle>
-          <CardDescription style={{ color: "#6C757D" }}>
+          <CardTitle style={{ color: '#F0EAD6' }}>Primary Buttons</CardTitle>
+          <CardDescription style={{ color: '#6C757D' }}>
             Oxford-blue background with eggshell-white text
           </CardDescription>
         </CardHeader>
@@ -48,8 +48,8 @@ export function ButtonShowcase() {
       {/* Secondary Buttons */}
       <Card className="ruleiq-card">
         <CardHeader>
-          <CardTitle style={{ color: "#F0EAD6" }}>Secondary Buttons</CardTitle>
-          <CardDescription style={{ color: "#6C757D" }}>
+          <CardTitle style={{ color: '#F0EAD6' }}>Secondary Buttons</CardTitle>
+          <CardDescription style={{ color: '#6C757D' }}>
             Eggshell-white background with oxford-blue border and text
           </CardDescription>
         </CardHeader>
@@ -87,8 +87,10 @@ export function ButtonShowcase() {
       {/* Ghost Buttons */}
       <Card className="ruleiq-card">
         <CardHeader>
-          <CardTitle style={{ color: "#F0EAD6" }}>Ghost Buttons</CardTitle>
-          <CardDescription style={{ color: "#6C757D" }}>No background or border with oxford-blue text</CardDescription>
+          <CardTitle style={{ color: '#F0EAD6' }}>Ghost Buttons</CardTitle>
+          <CardDescription style={{ color: '#6C757D' }}>
+            No background or border with oxford-blue text
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
@@ -124,8 +126,10 @@ export function ButtonShowcase() {
       {/* Additional Variants */}
       <Card className="ruleiq-card">
         <CardHeader>
-          <CardTitle style={{ color: "#F0EAD6" }}>Additional Variants</CardTitle>
-          <CardDescription style={{ color: "#6C757D" }}>Extra button variants for specific use cases</CardDescription>
+          <CardTitle style={{ color: '#F0EAD6' }}>Additional Variants</CardTitle>
+          <CardDescription style={{ color: '#6C757D' }}>
+            Extra button variants for specific use cases
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
@@ -154,14 +158,16 @@ export function ButtonShowcase() {
       {/* Usage Examples */}
       <Card className="ruleiq-card">
         <CardHeader>
-          <CardTitle style={{ color: "#F0EAD6" }}>Usage Examples</CardTitle>
-          <CardDescription style={{ color: "#6C757D" }}>Common button combinations and use cases</CardDescription>
+          <CardTitle style={{ color: '#F0EAD6' }}>Usage Examples</CardTitle>
+          <CardDescription style={{ color: '#6C757D' }}>
+            Common button combinations and use cases
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="space-y-6">
             {/* Action Group */}
             <div className="space-y-2">
-              <h4 className="text-sm font-medium" style={{ color: "#F0EAD6" }}>
+              <h4 className="text-sm font-medium" style={{ color: '#F0EAD6' }}>
                 Action Group
               </h4>
               <div className="flex flex-wrap items-center gap-3">
@@ -179,7 +185,7 @@ export function ButtonShowcase() {
 
             {/* Form Actions */}
             <div className="space-y-2">
-              <h4 className="text-sm font-medium" style={{ color: "#F0EAD6" }}>
+              <h4 className="text-sm font-medium" style={{ color: '#F0EAD6' }}>
                 Form Actions
               </h4>
               <div className="flex flex-wrap items-center gap-3">
@@ -196,7 +202,7 @@ export function ButtonShowcase() {
 
             {/* Status Actions */}
             <div className="space-y-2">
-              <h4 className="text-sm font-medium" style={{ color: "#F0EAD6" }}>
+              <h4 className="text-sm font-medium" style={{ color: '#F0EAD6' }}>
                 Status Actions
               </h4>
               <div className="flex flex-wrap items-center gap-3">
@@ -218,5 +224,5 @@ export function ButtonShowcase() {
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }

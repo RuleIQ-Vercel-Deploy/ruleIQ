@@ -1,6 +1,6 @@
 /**
  * Tests for AIGuidancePanel component
- * 
+ *
  * Tests panel functionality, collapsible behavior,
  * enhanced error handling, and user interactions.
  */
@@ -18,13 +18,13 @@ import { type UserContext } from '@/types/ai';
 vi.mock('@/lib/api/assessments-ai.service', () => ({
   assessmentAIService: {
     getQuestionHelp: vi.fn(),
-  }
+  },
 }));
 
 // Mock toast hook
 const mockToast = vi.fn();
 vi.mock('@/hooks/use-toast', () => ({
-  useToast: () => ({ toast: mockToast })
+  useToast: () => ({ toast: mockToast }),
 }));
 
 // Mock clipboard API
@@ -38,27 +38,28 @@ const mockQuestion: Question = {
   id: 'test-question-1',
   text: 'What are the key principles of GDPR?',
   type: 'textarea',
-  validation: { required: true }
+  validation: { required: true },
 };
 
 const mockUserContext: UserContext = {
   business_profile_id: 'test-profile-123',
   industry: 'technology',
   company_size: 'medium',
-  location: 'UK'
+  location: 'UK',
 };
 
 const mockAIResponse = {
-  guidance: 'The key principles of GDPR include lawfulness, fairness, transparency, purpose limitation, data minimisation, accuracy, storage limitation, integrity and confidentiality, and accountability.',
+  guidance:
+    'The key principles of GDPR include lawfulness, fairness, transparency, purpose limitation, data minimisation, accuracy, storage limitation, integrity and confidentiality, and accountability.',
   confidence_score: 0.92,
   related_topics: ['Data Protection', 'Privacy Rights', 'Lawful Basis'],
   follow_up_suggestions: [
     'How do you ensure lawful basis for processing?',
-    'What is data minimisation in practice?'
+    'What is data minimisation in practice?',
   ],
   source_references: ['GDPR Article 5', 'ICO Guidance'],
   request_id: 'test-request-456',
-  generated_at: new Date().toISOString()
+  generated_at: new Date().toISOString(),
 };
 
 describe('AIGuidancePanel', () => {
@@ -74,7 +75,7 @@ describe('AIGuidancePanel', () => {
         frameworkId="gdpr"
         sectionId="principles"
         userContext={mockUserContext}
-      />
+      />,
     );
 
     expect(screen.getByText('AI Compliance Guidance')).toBeInTheDocument();
@@ -88,11 +89,11 @@ describe('AIGuidancePanel', () => {
         frameworkId="gdpr"
         userContext={mockUserContext}
         defaultOpen={true}
-      />
+      />,
     );
 
     expect(screen.getByText('AI Compliance Guidance')).toBeInTheDocument();
-    
+
     // When defaultOpen is true, the panel is expanded but guidance is not loaded automatically
     // The CollapsibleContent should be visible
     const panel = screen.getByText('AI Compliance Guidance').closest('[data-state="open"]');
@@ -103,11 +104,7 @@ describe('AIGuidancePanel', () => {
     vi.mocked(assessmentAIService.getQuestionHelp).mockResolvedValue(mockAIResponse);
 
     render(
-      <AIGuidancePanel
-        question={mockQuestion}
-        frameworkId="gdpr"
-        userContext={mockUserContext}
-      />
+      <AIGuidancePanel question={mockQuestion} frameworkId="gdpr" userContext={mockUserContext} />,
     );
 
     // Click to expand
@@ -124,7 +121,7 @@ describe('AIGuidancePanel', () => {
         question_id: 'test-question-1',
         question_text: 'What are the key principles of GDPR?',
         framework_id: 'gdpr',
-        user_context: mockUserContext
+        user_context: mockUserContext,
       });
     });
 
@@ -132,7 +129,7 @@ describe('AIGuidancePanel', () => {
     await waitFor(() => {
       expect(screen.getByText(mockAIResponse.guidance)).toBeInTheDocument();
     });
-    
+
     // Check confidence score is displayed
     expect(screen.getByText(/92% confidence/)).toBeInTheDocument();
   });
@@ -140,15 +137,11 @@ describe('AIGuidancePanel', () => {
   it('handles loading state correctly', async () => {
     // Mock delayed response
     vi.mocked(assessmentAIService.getQuestionHelp).mockImplementation(
-      () => new Promise(resolve => setTimeout(() => resolve(mockAIResponse), 100))
+      () => new Promise((resolve) => setTimeout(() => resolve(mockAIResponse), 100)),
     );
 
     render(
-      <AIGuidancePanel
-        question={mockQuestion}
-        frameworkId="gdpr"
-        userContext={mockUserContext}
-      />
+      <AIGuidancePanel question={mockQuestion} frameworkId="gdpr" userContext={mockUserContext} />,
     );
 
     // Expand panel
@@ -159,24 +152,23 @@ describe('AIGuidancePanel', () => {
     const loadingBot = document.querySelector('.animate-pulse');
     expect(loadingBot).toBeInTheDocument();
     expect(screen.getByText(/Analyzing compliance requirements/i)).toBeInTheDocument();
-    
+
     // Wait for completion
-    await waitFor(() => {
-      expect(screen.getByText(mockAIResponse.guidance)).toBeInTheDocument();
-    }, { timeout: 200 });
+    await waitFor(
+      () => {
+        expect(screen.getByText(mockAIResponse.guidance)).toBeInTheDocument();
+      },
+      { timeout: 200 },
+    );
   });
 
   it('displays error state when AI service fails', async () => {
     vi.mocked(assessmentAIService.getQuestionHelp).mockRejectedValue(
-      new Error('AI service timeout')
+      new Error('AI service timeout'),
     );
 
     render(
-      <AIGuidancePanel
-        question={mockQuestion}
-        frameworkId="gdpr"
-        userContext={mockUserContext}
-      />
+      <AIGuidancePanel question={mockQuestion} frameworkId="gdpr" userContext={mockUserContext} />,
     );
 
     // Expand panel
@@ -191,19 +183,13 @@ describe('AIGuidancePanel', () => {
   });
 
   it('allows retry after error', async () => {
-    
-    
     // First call fails, second succeeds
     vi.mocked(assessmentAIService.getQuestionHelp)
       .mockRejectedValueOnce(new Error('Service unavailable'))
       .mockResolvedValueOnce(mockAIResponse);
 
     render(
-      <AIGuidancePanel
-        question={mockQuestion}
-        frameworkId="gdpr"
-        userContext={mockUserContext}
-      />
+      <AIGuidancePanel question={mockQuestion} frameworkId="gdpr" userContext={mockUserContext} />,
     );
 
     // Expand panel
@@ -226,8 +212,6 @@ describe('AIGuidancePanel', () => {
   });
 
   it('copies guidance to clipboard', async () => {
-    
-    
     vi.mocked(assessmentAIService.getQuestionHelp).mockResolvedValue(mockAIResponse);
 
     render(
@@ -236,7 +220,7 @@ describe('AIGuidancePanel', () => {
         frameworkId="gdpr"
         userContext={mockUserContext}
         defaultOpen={true}
-      />
+      />,
     );
 
     // Wait for guidance to load
@@ -250,15 +234,13 @@ describe('AIGuidancePanel', () => {
 
     expect(navigator.clipboard.writeText).toHaveBeenCalledWith(mockAIResponse.guidance);
     expect(mockToast).toHaveBeenCalledWith({
-      title: "Guidance copied",
-      description: "AI guidance has been copied to your clipboard.",
-      duration: 2000
+      title: 'Guidance copied',
+      description: 'AI guidance has been copied to your clipboard.',
+      duration: 2000,
     });
   });
 
   it('copies all content to clipboard', async () => {
-    
-    
     vi.mocked(assessmentAIService.getQuestionHelp).mockResolvedValue(mockAIResponse);
 
     render(
@@ -267,7 +249,7 @@ describe('AIGuidancePanel', () => {
         frameworkId="gdpr"
         userContext={mockUserContext}
         defaultOpen={true}
-      />
+      />,
     );
 
     // Wait for guidance to load
@@ -280,20 +262,18 @@ describe('AIGuidancePanel', () => {
     fireEvent.click(copyAllButton);
 
     expect(navigator.clipboard.writeText).toHaveBeenCalledWith(
-      expect.stringContaining(mockAIResponse.guidance)
+      expect.stringContaining(mockAIResponse.guidance),
     );
     expect(mockToast).toHaveBeenCalledWith({
-      title: "Full guidance copied",
-      description: "Complete AI guidance has been copied to your clipboard.",
-      duration: 2000
+      title: 'Full guidance copied',
+      description: 'Complete AI guidance has been copied to your clipboard.',
+      duration: 2000,
     });
   });
 
   it('refreshes guidance when refresh button is clicked', async () => {
-    
-    
     const updatedResponse = { ...mockAIResponse, guidance: 'Updated guidance content' };
-    
+
     vi.mocked(assessmentAIService.getQuestionHelp)
       .mockResolvedValueOnce(mockAIResponse)
       .mockResolvedValueOnce(updatedResponse);
@@ -304,7 +284,7 @@ describe('AIGuidancePanel', () => {
         frameworkId="gdpr"
         userContext={mockUserContext}
         defaultOpen={true}
-      />
+      />,
     );
 
     // Wait for initial guidance
@@ -325,8 +305,6 @@ describe('AIGuidancePanel', () => {
   });
 
   it('displays related topics as badges', async () => {
-    
-    
     vi.mocked(assessmentAIService.getQuestionHelp).mockResolvedValue(mockAIResponse);
 
     render(
@@ -335,7 +313,7 @@ describe('AIGuidancePanel', () => {
         frameworkId="gdpr"
         userContext={mockUserContext}
         defaultOpen={true}
-      />
+      />,
     );
 
     await waitFor(() => {
@@ -346,8 +324,6 @@ describe('AIGuidancePanel', () => {
   });
 
   it('displays follow-up suggestions', async () => {
-    
-    
     vi.mocked(assessmentAIService.getQuestionHelp).mockResolvedValue(mockAIResponse);
 
     render(
@@ -356,18 +332,18 @@ describe('AIGuidancePanel', () => {
         frameworkId="gdpr"
         userContext={mockUserContext}
         defaultOpen={true}
-      />
+      />,
     );
 
     await waitFor(() => {
-      expect(screen.getByText('How do you ensure lawful basis for processing?')).toBeInTheDocument();
+      expect(
+        screen.getByText('How do you ensure lawful basis for processing?'),
+      ).toBeInTheDocument();
       expect(screen.getByText('What is data minimisation in practice?')).toBeInTheDocument();
     });
   });
 
   it('displays source references', async () => {
-    
-    
     vi.mocked(assessmentAIService.getQuestionHelp).mockResolvedValue(mockAIResponse);
 
     render(
@@ -376,7 +352,7 @@ describe('AIGuidancePanel', () => {
         frameworkId="gdpr"
         userContext={mockUserContext}
         defaultOpen={true}
-      />
+      />,
     );
 
     await waitFor(() => {
@@ -386,32 +362,29 @@ describe('AIGuidancePanel', () => {
   });
 
   it('prevents race conditions with rapid expand/collapse', async () => {
-    
-    
     // Mock slow response
     vi.mocked(assessmentAIService.getQuestionHelp).mockImplementation(
-      () => new Promise(resolve => setTimeout(() => resolve(mockAIResponse), 100))
+      () => new Promise((resolve) => setTimeout(() => resolve(mockAIResponse), 100)),
     );
 
     render(
-      <AIGuidancePanel
-        question={mockQuestion}
-        frameworkId="gdpr"
-        userContext={mockUserContext}
-      />
+      <AIGuidancePanel question={mockQuestion} frameworkId="gdpr" userContext={mockUserContext} />,
     );
 
     const header = screen.getByText('AI Compliance Guidance');
-    
+
     // Rapid clicks
     fireEvent.click(header);
     fireEvent.click(header);
     fireEvent.click(header);
 
     // Should only make one API call
-    await waitFor(() => {
-      expect(assessmentAIService.getQuestionHelp).toHaveBeenCalledTimes(1);
-    }, { timeout: 200 });
+    await waitFor(
+      () => {
+        expect(assessmentAIService.getQuestionHelp).toHaveBeenCalledTimes(1);
+      },
+      { timeout: 200 },
+    );
   });
 
   it('applies custom className', () => {
@@ -421,7 +394,7 @@ describe('AIGuidancePanel', () => {
         frameworkId="gdpr"
         userContext={mockUserContext}
         className="custom-class"
-      />
+      />,
     );
 
     const panel = screen.getByText('AI Compliance Guidance').closest('.custom-class');
@@ -429,8 +402,6 @@ describe('AIGuidancePanel', () => {
   });
 
   it('calls API with correct parameters', async () => {
-    
-    
     vi.mocked(assessmentAIService.getQuestionHelp).mockResolvedValue(mockAIResponse);
 
     render(
@@ -440,7 +411,7 @@ describe('AIGuidancePanel', () => {
         sectionId="principles"
         userContext={mockUserContext}
         defaultOpen={true}
-      />
+      />,
     );
 
     await waitFor(() => {
@@ -449,7 +420,7 @@ describe('AIGuidancePanel', () => {
         question_text: 'What are the key principles of GDPR?',
         framework_id: 'gdpr',
         section_id: 'principles',
-        user_context: mockUserContext
+        user_context: mockUserContext,
       });
     });
   });

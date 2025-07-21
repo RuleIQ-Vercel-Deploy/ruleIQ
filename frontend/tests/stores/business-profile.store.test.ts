@@ -350,19 +350,23 @@ describe('Business Profile Store', () => {
       expect(validateStep(1, {})).toBe(false);
 
       // Step 1 validation - with required fields
-      expect(validateStep(1, {
-        company_name: 'Test Company',
-        industry: 'Technology',
-        employee_count: '10-50',
-      })).toBe(true);
+      expect(
+        validateStep(1, {
+          company_name: 'Test Company',
+          industry: 'Technology',
+          employee_count: '10-50',
+        }),
+      ).toBe(true);
 
       // Step 2 validation - missing data types
       expect(validateStep(2, {})).toBe(false);
 
       // Step 2 validation - with data types
-      expect(validateStep(2, {
-        data_types: ['personal_data'],
-      })).toBe(true);
+      expect(
+        validateStep(2, {
+          data_types: ['personal_data'],
+        }),
+      ).toBe(true);
     });
 
     it('should validate company name format', () => {

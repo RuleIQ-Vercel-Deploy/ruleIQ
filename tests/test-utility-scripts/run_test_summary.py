@@ -5,24 +5,20 @@ import subprocess
 import re
 
 # Run pytest and capture output
-result = subprocess.run(
-    ["python", "-m", "pytest", "--tb=no", "-q"],
-    capture_output=True,
-    text=True
-)
+result = subprocess.run(["python", "-m", "pytest", "--tb=no", "-q"], capture_output=True, text=True)
 
 # Parse output
 output = result.stdout + result.stderr
-lines = output.split('\n')
+lines = output.split("\n")
 
 # Find failures
 failures = []
 errors = []
 
 for line in lines:
-    if 'FAILED' in line:
+    if "FAILED" in line:
         failures.append(line.strip())
-    elif 'ERROR' in line and '::' in line:
+    elif "ERROR" in line and "::" in line:
         errors.append(line.strip())
 
 print(f"Total test failures: {len(failures)}")
@@ -38,6 +34,6 @@ for e in errors[:20]:  # Show first 20
 
 # Get final summary
 for line in reversed(lines):
-    if 'failed' in line and 'passed' in line:
+    if "failed" in line and "passed" in line:
         print(f"\nSummary: {line.strip()}")
         break

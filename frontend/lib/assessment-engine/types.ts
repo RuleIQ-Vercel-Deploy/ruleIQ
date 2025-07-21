@@ -1,12 +1,12 @@
-export type QuestionType = 
-  | 'radio' 
-  | 'checkbox' 
-  | 'text' 
-  | 'textarea' 
-  | 'number' 
-  | 'date' 
-  | 'select' 
-  | 'scale' 
+export type QuestionType =
+  | 'radio'
+  | 'checkbox'
+  | 'text'
+  | 'textarea'
+  | 'number'
+  | 'date'
+  | 'select'
+  | 'scale'
   | 'matrix'
   | 'file_upload';
 

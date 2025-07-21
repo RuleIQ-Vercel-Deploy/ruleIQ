@@ -7,6 +7,7 @@ This knowledge graph provides a comprehensive map of the ruleIQ compliance autom
 ## 1. System Architecture Overview
 
 ### 1.1 High-Level Architecture
+
 ```
 ┌─────────────────────────────────────────────────────────────────┐
 │                    ruleIQ Platform Architecture                  │
@@ -38,6 +39,7 @@ This knowledge graph provides a comprehensive map of the ruleIQ compliance autom
 ### 1.2 Technology Stack Mapping
 
 **Backend Technologies:**
+
 - **Framework**: FastAPI (Python 3.13)
 - **Database**: PostgreSQL with SQLAlchemy ORM
 - **AI**: Google Gemini (2.5 Pro/Flash)
@@ -47,6 +49,7 @@ This knowledge graph provides a comprehensive map of the ruleIQ compliance autom
 - **Monitoring**: Custom analytics and error tracking
 
 **Frontend Technologies:**
+
 - **Framework**: Next.js 15.2.4 with App Router
 - **Language**: TypeScript (strict mode)
 - **UI Framework**: Tailwind CSS + shadcn/ui
@@ -66,7 +69,7 @@ graph TB
     B --> D[Middleware Stack]
     B --> E[Database Setup]
     B --> F[AI Services]
-    
+
     C --> G[API Routers]
     G --> H[auth.py]
     G --> I[business_profiles.py]
@@ -76,16 +79,16 @@ graph TB
     G --> M[policies.py]
     G --> N[chat.py]
     G --> O[monitoring.py]
-    
+
     D --> P[CORS Middleware]
     D --> Q[Rate Limiting]
     D --> R[Security Headers]
     D --> S[Error Handler]
     D --> T[Request ID]
-    
+
     E --> U[Database Models]
     E --> V[Alembic Migrations]
-    
+
     F --> W[AI Assistant]
     F --> X[Circuit Breaker]
     F --> Y[Performance Optimizer]
@@ -162,6 +165,7 @@ Supporting AI Services:
 ### 2.4 API Endpoint Structure
 
 **Router Hierarchy:**
+
 ```
 /api/
 ├── /auth                     # Authentication endpoints
@@ -212,6 +216,7 @@ Supporting AI Services:
 ### 3.1 Component Hierarchy
 
 **Page Structure (App Router):**
+
 ```
 app/
 ├── (auth)/                 # Authentication pages
@@ -231,6 +236,7 @@ app/
 ```
 
 **Component Dependencies:**
+
 ```
 components/
 ├── ui/                     # Base UI components (shadcn/ui)
@@ -266,6 +272,7 @@ components/
 ### 3.2 State Management Architecture
 
 **Zustand Store Structure:**
+
 ```
 lib/stores/
 ├── index.ts               # Store exports
@@ -280,6 +287,7 @@ lib/stores/
 ```
 
 **Store Dependencies:**
+
 ```
 AuthStore
 ├── User authentication state
@@ -309,6 +317,7 @@ AssessmentStore
 ### 3.3 API Integration Layer
 
 **Service Layer Structure:**
+
 ```
 lib/api/
 ├── client.ts              # Base API client with interceptors
@@ -325,6 +334,7 @@ lib/api/
 ```
 
 **TanStack Query Integration:**
+
 ```
 lib/tanstack-query/
 ├── client.ts              # Query client configuration
@@ -348,7 +358,7 @@ sequenceDiagram
     participant F as Frontend
     participant B as Backend
     participant DB as Database
-    
+
     U->>F: Login Request
     F->>B: POST /api/auth/login
     B->>DB: Validate Credentials
@@ -358,7 +368,7 @@ sequenceDiagram
     F->>F: Store Token (httpOnly)
     F->>F: Update Auth Store
     F-->>U: Redirect to Dashboard
-    
+
     Note over F,B: All subsequent requests include JWT token
     F->>B: API Request + Bearer Token
     B->>B: Validate Token
@@ -374,7 +384,7 @@ sequenceDiagram
     participant S as Store
     participant B as Backend
     participant DB as Database
-    
+
     U->>F: Open Business Profile
     F->>B: GET /api/business-profiles/
     B->>DB: Query User's Profile
@@ -383,7 +393,7 @@ sequenceDiagram
     F->>S: Update Store State
     S-->>F: Reactive State Update
     F-->>U: Render Profile Form
-    
+
     U->>F: Submit Profile Changes
     F->>F: Validate with Zod Schema
     F->>B: PUT /api/business-profiles/{id}
@@ -406,7 +416,7 @@ sequenceDiagram
     participant AI as AI Service
     participant Cache as Redis Cache
     participant DB as Database
-    
+
     U->>F: Request AI Help
     F->>B: POST /api/ai/assessments/help
     B->>Cache: Check Cache
@@ -432,7 +442,7 @@ sequenceDiagram
     participant FS as File System
     participant AI as AI Service
     participant DB as Database
-    
+
     U->>F: Upload Evidence File
     F->>F: Validate File Type/Size
     F->>B: POST /api/evidence/upload
@@ -451,6 +461,7 @@ sequenceDiagram
 ### 5.1 Frontend ↔ Backend Communication
 
 **API Client Integration:**
+
 - **Base URL**: `http://localhost:8000/api` (development)
 - **Authentication**: Bearer token in Authorization header
 - **Error Handling**: Automatic retry with exponential backoff
@@ -458,6 +469,7 @@ sequenceDiagram
 - **Rate Limiting**: AI endpoints have specific rate limits
 
 **Key Integration Files:**
+
 - `frontend/lib/api/client.ts` - Base API client
 - `frontend/lib/api/error-handler.ts` - Enhanced error handling
 - `frontend/lib/api/business-profile/field-mapper.ts` - Field mapping for backend compatibility
@@ -465,12 +477,14 @@ sequenceDiagram
 ### 5.2 Backend ↔ Database Integration
 
 **Database Connection:**
+
 - **ORM**: SQLAlchemy with async support
 - **Connection Pool**: Optimized for concurrent requests
 - **Migrations**: Alembic for schema versioning
 - **Monitoring**: Database performance monitoring
 
 **Key Integration Files:**
+
 - `database/db_setup.py` - Database initialization
 - `database/models.py` - Model definitions
 - `alembic/` - Database migrations
@@ -478,12 +492,14 @@ sequenceDiagram
 ### 5.3 AI Service Integration
 
 **Google Gemini Integration:**
+
 - **Models**: Gemini 2.5 Pro/Flash with dynamic selection
 - **Circuit Breaker**: Automatic failover and recovery
 - **Performance Optimization**: Response caching and model selection
 - **Monitoring**: Error rate tracking and analytics
 
 **Key Integration Files:**
+
 - `services/ai/assistant.py` - Main AI service
 - `services/ai/circuit_breaker.py` - Circuit breaker implementation
 - `services/ai/performance_optimizer.py` - Performance optimization
@@ -492,12 +508,14 @@ sequenceDiagram
 ### 5.4 Testing Integration
 
 **Backend Testing:**
+
 - **Framework**: pytest with asyncio support
 - **Database**: Isolated test database
 - **AI Mocking**: Mock AI responses for testing
 - **Coverage**: 597 tests with ~98% pass rate
 
 **Frontend Testing:**
+
 - **Framework**: Vitest + Testing Library
 - **Component Testing**: 159 tests
 - **E2E Testing**: Playwright for end-to-end flows
@@ -508,6 +526,7 @@ sequenceDiagram
 ### 6.1 Backend Dependencies
 
 **Core Dependencies:**
+
 ```python
 # Web Framework
 fastapi==0.104.1
@@ -534,6 +553,7 @@ pytest-asyncio==0.21.1
 ```
 
 **Service Dependencies:**
+
 ```
 ComplianceAssistant
 ├── google-generativeai (AI models)
@@ -552,6 +572,7 @@ API Routers
 ### 6.2 Frontend Dependencies
 
 **Core Dependencies:**
+
 ```json
 {
   "next": "15.2.4",
@@ -569,6 +590,7 @@ API Routers
 ```
 
 **Component Dependencies:**
+
 ```
 UI Components (shadcn/ui)
 ├── @radix-ui/react-* (primitive components)
@@ -590,11 +612,13 @@ API Integration
 ### 6.3 Circular Dependency Detection
 
 **Potential Circular Dependencies:**
+
 1. **Database Models**: All models import from `db_setup.py` which imports all models
 2. **AI Services**: Some services have circular imports through the assistant
 3. **Frontend Stores**: Store dependencies are well-isolated
 
 **Mitigation Strategies:**
+
 - Use dependency injection for services
 - Lazy loading for heavy dependencies
 - Interface-based design for loose coupling
@@ -604,32 +628,39 @@ API Integration
 ### 7.1 High-Risk Integration Points
 
 **1. AI Service Dependency**
+
 - **Risk**: Google API downtime or rate limiting
 - **Mitigation**: Circuit breaker pattern, fallback responses, caching
 
 **2. Database Connection Pool**
+
 - **Risk**: Connection exhaustion under load
 - **Mitigation**: Connection pooling, monitoring, graceful degradation
 
 **3. Authentication Token Management**
+
 - **Risk**: Token expiration, refresh token rotation
 - **Mitigation**: Automatic token refresh, secure storage
 
 **4. File Upload Processing**
+
 - **Risk**: Large file uploads, storage limits
 - **Mitigation**: File size limits, streaming uploads, cleanup jobs
 
 ### 7.2 Performance Bottlenecks
 
 **1. AI Response Times**
+
 - **Current**: ~2-5 seconds for complex queries
 - **Optimization**: Model selection, caching, streaming responses
 
 **2. Database Query Performance**
+
 - **Current**: Optimized with indexes and query optimization
 - **Monitoring**: Query performance tracking
 
 **3. Frontend Bundle Size**
+
 - **Current**: Optimized with dynamic imports
 - **Monitoring**: Bundle analysis and code splitting
 
@@ -638,6 +669,7 @@ API Integration
 ### 8.1 Backend Test Coverage
 
 **Test Categories:**
+
 ```
 Unit Tests (services/*)
 ├── AI Service Tests (85% coverage)
@@ -667,6 +699,7 @@ Performance Tests
 ### 8.2 Frontend Test Coverage
 
 **Test Categories:**
+
 ```
 Component Tests
 ├── UI Components (90% coverage)
@@ -698,18 +731,21 @@ Accessibility Tests
 ### 9.1 Backend Monitoring
 
 **AI Service Monitoring:**
+
 - Error rate tracking
 - Response time monitoring
 - Model performance metrics
 - Circuit breaker state monitoring
 
 **Database Monitoring:**
+
 - Connection pool utilization
 - Query performance metrics
 - Index usage statistics
 - Lock contention monitoring
 
 **API Monitoring:**
+
 - Endpoint response times
 - Error rates by endpoint
 - Rate limiting statistics
@@ -718,12 +754,14 @@ Accessibility Tests
 ### 9.2 Frontend Monitoring
 
 **Performance Monitoring:**
+
 - Page load times
 - Bundle size analysis
 - Core Web Vitals tracking
 - API response times
 
 **Error Monitoring:**
+
 - JavaScript error tracking
 - API error rates
 - Failed user actions
@@ -734,12 +772,14 @@ Accessibility Tests
 ### 10.1 Current Deployment Status
 
 **Backend:**
+
 - **Status**: Production ready
 - **Docker**: Containerized with Docker Compose
 - **Database**: PostgreSQL with Alembic migrations
 - **Environment**: Production configuration complete
 
 **Frontend:**
+
 - **Status**: Production ready
 - **Build**: Next.js static export (36 pages)
 - **Environment**: Production optimization enabled
@@ -748,6 +788,7 @@ Accessibility Tests
 ### 10.2 Infrastructure Dependencies
 
 **External Services:**
+
 - **Google AI API**: For AI-powered features
 - **Redis**: For caching and session management
 - **PostgreSQL**: Primary database
@@ -759,12 +800,14 @@ Accessibility Tests
 ### 11.1 Git Workflow
 
 **Branch Strategy:**
+
 - `main` - Production branch
 - `develop` - Development branch
 - `feature/*` - Feature branches
 - `fix/*` - Bug fix branches
 
 **Current Status:**
+
 - Active development on AI optimization
 - Business profile features complete
 - Assessment workflows in progress
@@ -772,12 +815,14 @@ Accessibility Tests
 ### 11.2 Code Quality
 
 **Backend:**
+
 - **Linting**: ruff for Python code quality
 - **Testing**: pytest with comprehensive coverage
 - **Type Checking**: mypy for static type analysis
 - **Security**: bandit for security scanning
 
 **Frontend:**
+
 - **Linting**: ESLint with Next.js configuration
 - **Type Checking**: TypeScript strict mode
 - **Testing**: Vitest with Testing Library
@@ -788,18 +833,21 @@ Accessibility Tests
 ### 12.1 Current Development Focus
 
 **Week 1 (Current): AI Integration Optimization**
+
 - Multi-model AI strategy implementation
 - Streaming response capabilities
 - Function calling for structured interactions
 - Advanced caching and performance optimization
 
 **Week 2-3: Assessment Workflow Completion**
+
 - Complete assessment UI components
 - AI-powered assessment assistance
 - Real-time scoring and recommendations
 - Evidence collection integration
 
 **Week 4-6: Production Deployment**
+
 - Security hardening
 - Performance optimization
 - Monitoring setup
@@ -808,12 +856,14 @@ Accessibility Tests
 ### 12.2 Technical Debt
 
 **High Priority:**
+
 - Resolve remaining TypeScript errors (build ignores enabled)
 - Complete E2E test coverage
 - Optimize bundle size
 - Implement proper error boundaries
 
 **Medium Priority:**
+
 - Refactor duplicate code in database models
 - Improve AI response caching
 - Add more comprehensive logging
@@ -824,6 +874,7 @@ Accessibility Tests
 The ruleIQ compliance automation platform represents a sophisticated, production-ready application with comprehensive full-stack architecture. The knowledge graph reveals:
 
 **Strengths:**
+
 - Well-architected separation of concerns
 - Comprehensive test coverage (756 total tests)
 - Production-ready infrastructure
@@ -831,6 +882,7 @@ The ruleIQ compliance automation platform represents a sophisticated, production
 - Modern frontend with optimal user experience
 
 **Key Success Factors:**
+
 - Robust error handling and monitoring
 - Scalable architecture with proper caching
 - Security-first design with comprehensive authentication
@@ -838,6 +890,7 @@ The ruleIQ compliance automation platform represents a sophisticated, production
 - Modern development practices and tooling
 
 **Risk Mitigation:**
+
 - Circuit breaker patterns for AI services
 - Comprehensive error handling
 - Automatic retry mechanisms
@@ -848,4 +901,4 @@ The platform is positioned for successful production deployment with minimal tec
 
 ---
 
-*This knowledge graph represents the complete technical architecture of the ruleIQ platform as of January 2025. For specific implementation details, refer to the individual component documentation and code comments.*
+_This knowledge graph represents the complete technical architecture of the ruleIQ platform as of January 2025. For specific implementation details, refer to the individual component documentation and code comments._

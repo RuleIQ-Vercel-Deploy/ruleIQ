@@ -1,6 +1,6 @@
 /**
  * Memory Leak Detector Utility
- * 
+ *
  * This utility helps detect common memory leaks in React components:
  * - Event listeners not removed
  * - Timers not cleared
@@ -57,7 +57,7 @@ export function createMemoryLeakDetector(): MemoryLeakDetector {
   const activeTimers = new Set<NodeJS.Timeout>();
   const activeIntervals = new Set<NodeJS.Timeout>();
   const activeAbortControllers = new WeakSet<AbortController>();
-  
+
   let eventListenersAdded = 0;
   let eventListenersRemoved = 0;
   let timersCreated = 0;
@@ -79,11 +79,11 @@ export function createMemoryLeakDetector(): MemoryLeakDetector {
       originalAbortController = global.AbortController;
 
       // Mock addEventListener
-      EventTarget.prototype.addEventListener = vi.fn(function(
+      EventTarget.prototype.addEventListener = vi.fn(function (
         this: EventTarget,
         type: string,
         listener: EventListenerOrEventListenerObject,
-        options?: boolean | AddEventListenerOptions
+        options?: boolean | AddEventListenerOptions,
       ) {
         if (!eventListeners.has(this)) {
           eventListeners.set(this, new Map());
@@ -94,16 +94,16 @@ export function createMemoryLeakDetector(): MemoryLeakDetector {
         }
         targetListeners.get(type)!.add(listener as EventListener);
         eventListenersAdded++;
-        
+
         return originalAddEventListener.call(this, type, listener, options);
       }) as any;
 
       // Mock removeEventListener
-      EventTarget.prototype.removeEventListener = vi.fn(function(
+      EventTarget.prototype.removeEventListener = vi.fn(function (
         this: EventTarget,
         type: string,
         listener: EventListenerOrEventListenerObject,
-        options?: boolean | EventListenerOptions
+        options?: boolean | EventListenerOptions,
       ) {
         if (eventListeners.has(this)) {
           const targetListeners = eventListeners.get(this)!;
@@ -118,7 +118,7 @@ export function createMemoryLeakDetector(): MemoryLeakDetector {
             eventListeners.delete(this);
           }
         }
-        
+
         return originalRemoveEventListener.call(this, type, listener, options);
       }) as any;
 
@@ -182,8 +182,8 @@ export function createMemoryLeakDetector(): MemoryLeakDetector {
       global.AbortController = originalAbortController;
 
       // Clear any remaining timers/intervals
-      activeTimers.forEach(timer => clearTimeout(timer));
-      activeIntervals.forEach(interval => clearInterval(interval));
+      activeTimers.forEach((timer) => clearTimeout(timer));
+      activeIntervals.forEach((interval) => clearInterval(interval));
 
       // Reset counters
       eventListenersAdded = 0;
@@ -207,7 +207,7 @@ export function createMemoryLeakDetector(): MemoryLeakDetector {
       eventListeners.forEach((targetListeners, target) => {
         targetListeners.forEach((listeners, event) => {
           if (listeners.size > 0) {
-            const existing = leakedListenerDetails.find(d => d.event === event);
+            const existing = leakedListenerDetails.find((d) => d.event === event);
             if (existing) {
               existing.count += listeners.size;
             } else {
@@ -222,23 +222,23 @@ export function createMemoryLeakDetector(): MemoryLeakDetector {
           added: eventListenersAdded,
           removed: eventListenersRemoved,
           leaked: eventListenersAdded - eventListenersRemoved,
-          details: leakedListenerDetails
+          details: leakedListenerDetails,
         },
         timers: {
           created: timersCreated,
           cleared: timersCleared,
-          leaked: activeTimers.size
+          leaked: activeTimers.size,
         },
         intervals: {
           created: intervalsCreated,
           cleared: intervalsCleared,
-          leaked: activeIntervals.size
+          leaked: activeIntervals.size,
         },
         abortControllers: {
           created: abortControllersCreated,
           aborted: abortControllersAborted,
-          leaked: abortControllersCreated - abortControllersAborted
-        }
+          leaked: abortControllersCreated - abortControllersAborted,
+        },
       };
     },
 
@@ -250,7 +250,7 @@ export function createMemoryLeakDetector(): MemoryLeakDetector {
         report.intervals.leaked > 0 ||
         report.abortControllers.leaked > 0
       );
-    }
+    },
   };
 }
 
@@ -266,7 +266,7 @@ export function setupMemoryLeakMatchers() {
       if (!hasLeaks) {
         return {
           pass: true,
-          message: () => 'No memory leaks detected'
+          message: () => 'No memory leaks detected',
         };
       }
 
@@ -293,9 +293,9 @@ export function setupMemoryLeakMatchers() {
 
       return {
         pass: false,
-        message: () => `Memory leaks detected:\n${leakDetails.join('\n')}`
+        message: () => `Memory leaks detected:\n${leakDetails.join('\n')}`,
       };
-    }
+    },
   });
 }
 

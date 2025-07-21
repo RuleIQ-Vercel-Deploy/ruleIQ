@@ -1,19 +1,19 @@
-import { cn } from "@/lib/utils"
+import { cn } from '@/lib/utils';
 
-import type React from "react"
+import type React from 'react';
 
 function Skeleton({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
   return (
     <div
       className={cn(
-        "animate-pulse rounded-lg",
+        'animate-pulse rounded-lg',
         // New design system skeleton
-        "bg-neutral-200",
+        'bg-neutral-200',
         className,
       )}
       {...props}
     />
-  )
+  );
 }
 
-export { Skeleton }
+export { Skeleton };
