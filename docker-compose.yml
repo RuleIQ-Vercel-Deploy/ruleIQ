@@ -5,15 +5,9 @@ services:
     build: .
     ports:
       - "8000:8000"
-    environment:
-      - ENV=development
-      - DATABASE_URL=postgresql+psycopg2://postgres:postgres@db:5432/compliancegpt
-      - REDIS_URL=redis://redis:6379/0
-      - GOOGLE_API_KEY=${GOOGLE_API_KEY}
-      - ALLOWED_ORIGINS=http://localhost:3000,http://localhost:8080
+    env_file:
+      - .env.local
     depends_on:
-      db:
-        condition: service_healthy
       redis:
         condition: service_healthy
     volumes:
@@ -25,16 +19,12 @@ services:
   celery_worker:
     build: .
     command: celery -A celery_app worker --loglevel=debug --concurrency=2 --pool=solo --traceback --queues=evidence,compliance,notifications,reports
+    env_file:
+      - .env.local
     environment:
-      - ENV=development
-      - DATABASE_URL=postgresql+psycopg2://postgres:postgres@db:5432/compliancegpt
-      - REDIS_URL=redis://redis:6379/0
-      - GOOGLE_API_KEY=${GOOGLE_API_KEY}
       - PYTHONUNBUFFERED=1
       - PYTHONPATH=/app:$PYTHONPATH
     depends_on:
-      db:
-        condition: service_healthy
       redis:
         condition: service_healthy
     volumes:
@@ -51,39 +41,17 @@ services:
   celery_beat:
     build: .
     command: celery -A celery_app beat --loglevel=debug
+    env_file:
+      - .env.local
     environment:
-      - ENV=development
-      - DATABASE_URL=postgresql+psycopg2://postgres:postgres@db:5432/compliancegpt
-      - REDIS_URL=redis://redis:6379/0
-      - GOOGLE_API_KEY=${GOOGLE_API_KEY}
       - PYTHONUNBUFFERED=1
       - PYTHONPATH=/app:$PYTHONPATH
     depends_on:
-      db:
-        condition: service_healthy
       redis:
         condition: service_healthy
     volumes:
       - .:/app
     restart: unless-stopped
-    networks:
-      - compliancegpt-network
-
-  db:
-    image: postgres:15-alpine
-    environment:
-      - POSTGRES_DB=compliancegpt
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-    ports:
-      - "5433:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
     networks:
       - compliancegpt-network
 
@@ -103,7 +71,6 @@ services:
       - compliancegpt-network
 
 volumes:
-  postgres_data:
   redis_data:
 
 networks:
