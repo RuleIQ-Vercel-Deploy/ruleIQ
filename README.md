@@ -1,5 +1,7 @@
 # ruleIQ - AI-Powered Compliance Automation Platform
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/45c3aa94a5004fd4b046a05f6230a831)](https://app.codacy.com/gh/OmarA1-Bakri/Experiment?utm_source=github.com&utm_medium=referral&utm_content=OmarA1-Bakri/Experiment&utm_campaign=Badge_Grade)
+
 <div align="center">
 
 ![ruleIQ](https://img.shields.io/badge/ruleIQ-Compliance_Automation-blue)
