@@ -5,15 +5,19 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import BaseModel
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from api.dependencies.auth import get_current_active_user
 from api.dependencies.database import get_async_db
+from api.dependencies.rbac_auth import (
+    get_current_user_with_roles, 
+    UserWithRoles, 
+    require_permission,
+    check_framework_access_permission
+)
 from api.schemas.models import (
     AssessmentQuestion,
     AssessmentResponseUpdate,
     AssessmentSessionCreate,
     AssessmentSessionResponse,
 )
-from database.user import User
 from services.assessment_service import AssessmentService
 
 
@@ -42,7 +46,10 @@ router = APIRouter()
 
 
 @router.post("/quick", response_model=QuickAssessmentResponse)
-async def quick_assessment(request: QuickAssessmentRequest):
+async def quick_assessment(
+    request: QuickAssessmentRequest,
+    current_user: UserWithRoles = Depends(require_permission("assessment_create"))
+):
     """Generate quick compliance recommendations based on business profile."""
 
     # For now, return basic recommendations based on industry standards
@@ -88,7 +95,8 @@ async def quick_assessment(request: QuickAssessmentRequest):
 
 @router.get("/", response_model=List[AssessmentSessionResponse])
 async def list_assessments(
-    current_user: User = Depends(get_current_active_user), db: AsyncSession = Depends(get_async_db)
+    current_user: UserWithRoles = Depends(require_permission("assessment_list")), 
+    db: AsyncSession = Depends(get_async_db)
 ):
     """List all assessment sessions for the current user"""
     assessment_service = AssessmentService()
@@ -99,7 +107,7 @@ async def list_assessments(
 @router.post("/", response_model=AssessmentSessionResponse, status_code=status.HTTP_201_CREATED)
 async def create_assessment(
     session_data: AssessmentSessionCreate,
-    current_user: User = Depends(get_current_active_user),
+    current_user: UserWithRoles = Depends(require_permission("assessment_create")),
     db: AsyncSession = Depends(get_async_db),
 ):
     """Create a new assessment session - alias for /start endpoint for compatibility"""
@@ -115,7 +123,7 @@ async def create_assessment(
 )
 async def start_assessment(
     session_data: AssessmentSessionCreate,
-    current_user: User = Depends(get_current_active_user),
+    current_user: UserWithRoles = Depends(require_permission("assessment_create")),
     db: AsyncSession = Depends(get_async_db),
 ):
     assessment_service = AssessmentService()
@@ -127,7 +135,8 @@ async def start_assessment(
 
 @router.get("/current", response_model=AssessmentSessionResponse)
 async def get_current_session(
-    current_user: User = Depends(get_current_active_user), db: AsyncSession = Depends(get_async_db)
+    current_user: UserWithRoles = Depends(require_permission("assessment_list")), 
+    db: AsyncSession = Depends(get_async_db)
 ):
     assessment_service = AssessmentService()
     session = await assessment_service.get_current_assessment_session(db, current_user)
@@ -139,7 +148,10 @@ async def get_current_session(
 
 
 @router.get("/questions/{stage}", response_model=List[AssessmentQuestion])
-async def get_questions(stage: int, current_user: User = Depends(get_current_active_user)):
+async def get_questions(
+    stage: int, 
+    current_user: UserWithRoles = Depends(require_permission("assessment_list"))
+):
     assessment_service = AssessmentService()
     questions = assessment_service.get_assessment_questions(current_user, stage)
     return questions
@@ -149,7 +161,7 @@ async def get_questions(stage: int, current_user: User = Depends(get_current_act
 async def update_response(
     session_id: UUID,
     response_data: AssessmentResponseUpdate,
-    current_user: User = Depends(get_current_active_user),
+    current_user: UserWithRoles = Depends(require_permission("assessment_update")),
     db: AsyncSession = Depends(get_async_db),
 ):
     assessment_service = AssessmentService()
@@ -163,7 +175,7 @@ async def update_response(
 async def update_responses(
     session_id: UUID,
     response_data: dict,
-    current_user: User = Depends(get_current_active_user),
+    current_user: UserWithRoles = Depends(require_permission("assessment_update")),
     db: AsyncSession = Depends(get_async_db),
 ):
     """Update assessment responses - alias for compatibility"""
@@ -186,7 +198,7 @@ async def update_responses(
 @router.get("/{session_id}", response_model=AssessmentSessionResponse)
 async def get_assessment_session(
     session_id: UUID,
-    current_user: User = Depends(get_current_active_user),
+    current_user: UserWithRoles = Depends(require_permission("assessment_list")),
     db: AsyncSession = Depends(get_async_db),
 ):
     """Get a specific assessment session by ID."""
@@ -202,7 +214,7 @@ async def get_assessment_session(
 @router.get("/{session_id}/recommendations")
 async def get_assessment_recommendations(
     session_id: UUID,
-    current_user: User = Depends(get_current_active_user),
+    current_user: UserWithRoles = Depends(require_permission("assessment_list")),
     db: AsyncSession = Depends(get_async_db),
 ):
     """Get recommendations for an assessment session."""
@@ -249,7 +261,7 @@ async def get_assessment_recommendations(
 @router.post("/{session_id}/complete", response_model=AssessmentSessionResponse)
 async def complete_assessment(
     session_id: UUID,
-    current_user: User = Depends(get_current_active_user),
+    current_user: UserWithRoles = Depends(require_permission("assessment_update")),
     db: AsyncSession = Depends(get_async_db),
 ):
     assessment_service = AssessmentService()

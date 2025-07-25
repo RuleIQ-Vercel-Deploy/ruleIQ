@@ -15,6 +15,10 @@ from sqlalchemy.dialects.postgresql import JSONB as PG_JSONB, UUID as PG_UUID
 from .db_setup import Base
 
 # Import existing models from their dedicated files to avoid duplication
+from .rbac import (
+    Role, Permission, UserRole, RolePermission, FrameworkAccess,
+    UserSession, AuditLog, DataAccess
+)
 
 
 class Policy(Base):

@@ -3,12 +3,18 @@ from uuid import UUID, uuid4
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import Session
 
-from api.dependencies.auth import get_current_active_user
 from api.dependencies.database import get_async_db
+from api.dependencies.rbac_auth import (
+    get_current_user_with_roles, 
+    UserWithRoles, 
+    require_permission
+)
+from services.data_access_service import DataAccessService
+from database.db_setup import get_db
 from api.schemas.models import BusinessProfileCreate, BusinessProfileResponse, BusinessProfileUpdate
 from database.business_profile import BusinessProfile
-from database.user import User
 from utils.input_validation import validate_business_profile_update, ValidationError
 
 router = APIRouter()
@@ -19,7 +25,7 @@ router = APIRouter()
 @router.post("/", response_model=BusinessProfileResponse, status_code=status.HTTP_201_CREATED)
 async def create_business_profile(
     profile: BusinessProfileCreate,
-    current_user: User = Depends(get_current_active_user),
+    current_user: UserWithRoles = Depends(require_permission("user_create")),
     db: AsyncSession = Depends(get_async_db),
 ):
     # Check if profile already exists
@@ -75,7 +81,8 @@ async def create_business_profile(
 
 @router.get("/", response_model=BusinessProfileResponse)
 async def get_business_profile(
-    current_user: User = Depends(get_current_active_user), db: AsyncSession = Depends(get_async_db)
+    current_user: UserWithRoles = Depends(require_permission("user_list")), 
+    db: AsyncSession = Depends(get_async_db)
 ):
     stmt = select(BusinessProfile).where(BusinessProfile.user_id == current_user.id)
     result = await db.execute(stmt)
@@ -90,26 +97,38 @@ async def get_business_profile(
 @router.get("/{profile_id}", response_model=BusinessProfileResponse)
 async def get_business_profile_by_id(
     profile_id: UUID,
-    current_user: User = Depends(get_current_active_user),
+    current_user: UserWithRoles = Depends(require_permission("user_list")),
     db: AsyncSession = Depends(get_async_db),
+    sync_db: Session = Depends(get_db),
 ):
-    """Get a specific business profile by ID - only accessible by the profile owner."""
-    stmt = select(BusinessProfile).where(
-        BusinessProfile.id == profile_id, BusinessProfile.user_id == current_user.id
-    )
+    """Get a specific business profile by ID - access controlled by RBAC data visibility."""
+    # First get the profile to check ownership
+    stmt = select(BusinessProfile).where(BusinessProfile.id == profile_id)
     result = await db.execute(stmt)
     profile = result.scalars().first()
+    
     if not profile:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Business profile not found"
         )
+    
+    # Check data access permissions
+    data_access_service = DataAccessService(sync_db)
+    if not data_access_service.can_access_business_profile(
+        current_user, profile_id, profile.user_id
+    ):
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN, 
+            detail="Access denied: Insufficient permissions to view this profile"
+        )
+    
     return profile
 
 
 @router.put("/", response_model=BusinessProfileResponse)
 async def update_business_profile(
     profile_update: BusinessProfileUpdate,
-    current_user: User = Depends(get_current_active_user),
+    current_user: UserWithRoles = Depends(require_permission("user_update")),
     db: AsyncSession = Depends(get_async_db),
 ):
     stmt = select(BusinessProfile).where(BusinessProfile.user_id == current_user.id)
@@ -154,18 +173,29 @@ async def update_business_profile(
 async def update_business_profile_by_id(
     profile_id: UUID,
     profile_update: BusinessProfileUpdate,
-    current_user: User = Depends(get_current_active_user),
+    current_user: UserWithRoles = Depends(require_permission("user_update")),
     db: AsyncSession = Depends(get_async_db),
+    sync_db: Session = Depends(get_db),
 ):
-    """Update a specific business profile by ID - only accessible by the profile owner."""
-    stmt = select(BusinessProfile).where(
-        BusinessProfile.id == profile_id, BusinessProfile.user_id == current_user.id
-    )
+    """Update a specific business profile by ID - access controlled by RBAC data visibility."""
+    # First get the profile to check ownership
+    stmt = select(BusinessProfile).where(BusinessProfile.id == profile_id)
     result = await db.execute(stmt)
     profile = result.scalars().first()
+    
     if not profile:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Business profile not found"
+        )
+    
+    # Check data access permissions
+    data_access_service = DataAccessService(sync_db)
+    if not data_access_service.can_access_business_profile(
+        current_user, profile_id, profile.user_id
+    ):
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN, 
+            detail="Access denied: Insufficient permissions to update this profile"
         )
 
     update_data = profile_update.model_dump(exclude_unset=True)
@@ -201,18 +231,29 @@ async def update_business_profile_by_id(
 @router.delete("/{profile_id}")
 async def delete_business_profile_by_id(
     profile_id: UUID,
-    current_user: User = Depends(get_current_active_user),
+    current_user: UserWithRoles = Depends(require_permission("user_delete")),
     db: AsyncSession = Depends(get_async_db),
+    sync_db: Session = Depends(get_db),
 ):
-    """Delete a specific business profile by ID - only accessible by the profile owner."""
-    stmt = select(BusinessProfile).where(
-        BusinessProfile.id == profile_id, BusinessProfile.user_id == current_user.id
-    )
+    """Delete a specific business profile by ID - access controlled by RBAC data visibility."""
+    # First get the profile to check ownership
+    stmt = select(BusinessProfile).where(BusinessProfile.id == profile_id)
     result = await db.execute(stmt)
     profile = result.scalars().first()
+    
     if not profile:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Business profile not found"
+        )
+    
+    # Check data access permissions
+    data_access_service = DataAccessService(sync_db)
+    if not data_access_service.can_access_business_profile(
+        current_user, profile_id, profile.user_id
+    ):
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN, 
+            detail="Access denied: Insufficient permissions to delete this profile"
         )
 
     await db.delete(profile)
@@ -225,18 +266,29 @@ async def delete_business_profile_by_id(
 async def patch_business_profile(
     profile_id: UUID,
     profile_update: BusinessProfileUpdate,
-    current_user: User = Depends(get_current_active_user),
+    current_user: UserWithRoles = Depends(require_permission("user_update")),
     db: AsyncSession = Depends(get_async_db),
+    sync_db: Session = Depends(get_db),
 ):
-    """Update a specific business profile by ID with partial data."""
-    stmt = select(BusinessProfile).where(
-        BusinessProfile.id == profile_id, BusinessProfile.user_id == current_user.id
-    )
+    """Update a specific business profile by ID with partial data - access controlled by RBAC."""
+    # First get the profile to check ownership
+    stmt = select(BusinessProfile).where(BusinessProfile.id == profile_id)
     result = await db.execute(stmt)
     profile = result.scalars().first()
+    
     if not profile:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Business profile not found"
+        )
+    
+    # Check data access permissions
+    data_access_service = DataAccessService(sync_db)
+    if not data_access_service.can_access_business_profile(
+        current_user, profile_id, profile.user_id
+    ):
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN, 
+            detail="Access denied: Insufficient permissions to update this profile"
         )
 
     update_data = profile_update.model_dump(exclude_unset=True)

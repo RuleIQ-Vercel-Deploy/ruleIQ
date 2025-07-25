@@ -30,6 +30,8 @@ from api.routers import (
     security,
     users,
 )
+from api.routers.admin import admin_router
+from api.routers import rbac_auth
 from api.schemas import APIInfoResponse, HealthCheckResponse
 from config.logging_config import get_logger, setup_logging
 from config.settings import settings
@@ -96,6 +98,11 @@ app.add_middleware(
 app.add_middleware(RequestIDMiddleware)
 app.middleware("http")(error_handler_middleware)
 
+# RBAC middleware for role-based access control
+from api.middleware.rbac_middleware import RBACMiddleware
+
+app.add_middleware(RBACMiddleware, enable_audit_logging=True)
+
 # Rate limiting
 from api.middleware.rate_limiter import rate_limit_middleware
 
@@ -108,6 +115,7 @@ app.middleware("http")(security_headers_middleware)
 
 # Include routers
 app.include_router(auth.router, prefix="/api/auth", tags=["Authentication"])
+app.include_router(rbac_auth.router, tags=["RBAC Authentication"])
 app.include_router(users.router, prefix="/api/users", tags=["Users"])
 app.include_router(
     business_profiles.router, prefix="/api/business-profiles", tags=["Business Profiles"]
@@ -132,6 +140,7 @@ app.include_router(
 app.include_router(monitoring.router, prefix="/api/monitoring", tags=["Monitoring"])
 app.include_router(security.router, prefix="/api/security", tags=["Security"])
 app.include_router(chat.router, prefix="/api", tags=["AI Assistant"])
+app.include_router(admin_router)
 
 
 @app.get("/api/dashboard")

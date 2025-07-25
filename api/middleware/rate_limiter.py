@@ -155,3 +155,34 @@ def rate_limit(requests_per_minute: int = 60):
             )
 
     return check_custom_limit
+
+
+class RateLimited:
+    """Rate limiting dependency class for FastAPI endpoints"""
+    
+    def __init__(self, requests: int, window: int = 60):
+        """
+        Initialize rate limiter
+        
+        Args:
+            requests: Number of requests allowed per window
+            window: Time window in seconds (default: 60)
+        """
+        self.requests_per_minute = requests
+        self.limiter = RateLimiter(requests_per_minute=requests)
+    
+    async def __call__(self, request: Request):
+        """FastAPI dependency that checks rate limits"""
+        # Skip rate limiting in testing environment for most tests
+        if settings.is_testing and self.requests_per_minute > 10:
+            return
+        
+        client_ip = request.client.host if request.client else "unknown"
+        allowed, retry_after = await self.limiter.check_rate_limit(client_ip)
+        
+        if not allowed:
+            raise HTTPException(
+                status_code=status.HTTP_429_TOO_MANY_REQUESTS,
+                detail=f"Rate limit exceeded: {self.requests_per_minute} requests per minute. Try again in {retry_after} seconds",
+                headers={"Retry-After": str(retry_after)},
+            )

@@ -42,6 +42,16 @@ from .models.integrations import (
     IntegrationHealthLog,
     EvidenceAuditLog,
 )
+from .rbac import (
+    Role,
+    Permission,
+    UserRole,
+    RolePermission,
+    FrameworkAccess,
+    UserSession,
+    AuditLog,
+    DataAccess,
+)
 
 
 __all__ = [
@@ -79,4 +89,13 @@ __all__ = [
     "IntegrationEvidenceItem",
     "IntegrationHealthLog",
     "EvidenceAuditLog",
+    # RBAC models
+    "Role",
+    "Permission",
+    "UserRole",
+    "RolePermission",
+    "FrameworkAccess",
+    "UserSession",
+    "AuditLog",
+    "DataAccess",
 ]
