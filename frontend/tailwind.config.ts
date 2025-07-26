@@ -19,33 +19,33 @@ const config = {
     },
     extend: {
       colors: {
-        // Modern ruleIQ Brand Colors - Premium Dark Theme
+        // Modern ruleIQ Brand Colors - Professional Teal Theme
         brand: {
-          primary: '#7C3AED', // Vibrant purple - main brand color
-          secondary: '#06B6D4', // Cyan - secondary accent
-          tertiary: '#10B981', // Emerald - success/positive states
-          dark: '#5B21B6', // Darker purple for hover states
-          light: '#A78BFA', // Lighter purple for backgrounds
+          primary: '#2C7A7B', // teal-600 - main brand color
+          secondary: '#319795', // teal-500 - secondary accent
+          tertiary: '#4FD1C5', // teal-300 - bright accent
+          dark: '#285E61', // teal-700 - darker for hover states
+          light: '#E6FFFA', // teal-50 - light backgrounds
         },
 
-        // Gradient colors for modern effects
+        // Gradient colors for modern teal effects
         gradient: {
-          from: '#7C3AED', // Purple
-          via: '#06B6D4', // Cyan
-          to: '#10B981', // Emerald
-          'from-dark': '#5B21B6', // Dark purple
-          'via-dark': '#0891B2', // Dark cyan
-          'to-dark': '#059669', // Dark emerald
+          from: '#2C7A7B', // teal-600
+          via: '#319795', // teal-500
+          to: '#4FD1C5', // teal-300
+          'from-dark': '#285E61', // teal-700
+          'via-dark': '#234E52', // teal-800
+          'to-dark': '#1D4044', // teal-900
         },
 
-        // Surface colors (Dark Mode First)
+        // Surface colors (Light Mode Professional)
         surface: {
-          base: '#0A0A0B', // Near black base
-          primary: '#111113', // Primary surface
-          secondary: '#18181B', // Secondary surface
-          tertiary: '#27272A', // Tertiary surface
-          elevated: '#2D2D30', // Elevated components
-          overlay: 'rgba(0,0,0,0.8)', // Modal overlays
+          base: '#FFFFFF', // Clean white base
+          primary: '#FFFFFF', // Primary surface - white
+          secondary: '#F9FAFB', // Secondary surface - neutral-50
+          tertiary: '#F3F4F6', // Tertiary surface - neutral-100
+          elevated: '#FFFFFF', // Elevated components - white with shadow
+          overlay: 'rgba(0,0,0,0.5)', // Modal overlays
         },
 
         // Neutral colors (Modern grayscale)
@@ -63,36 +63,50 @@ const config = {
           950: '#0A0A0B',
         },
 
-        // Text colors (Optimized for dark surfaces)
+        // Teal color scale (Primary brand colors)
+        teal: {
+          50: '#E6FFFA',
+          100: '#B2F5EA',
+          200: '#81E6D9',
+          300: '#4FD1C5',
+          400: '#38B2AC',
+          500: '#319795',
+          600: '#2C7A7B',
+          700: '#285E61',
+          800: '#234E52',
+          900: '#1D4044',
+        },
+
+        // Text colors (Optimized for light surfaces)
         text: {
-          primary: '#FAFAFA', // High contrast white
-          secondary: '#A1A1AA', // Muted gray
-          tertiary: '#71717A', // Even more muted
-          inverse: '#0A0A0B', // For light backgrounds
-          brand: '#A78BFA', // Brand purple text
-          accent: '#67E8F9', // Cyan accent text
+          primary: '#111827', // High contrast dark - neutral-900
+          secondary: '#4B5563', // Muted gray - neutral-600
+          tertiary: '#6B7280', // Even more muted - neutral-500
+          inverse: '#FFFFFF', // For dark backgrounds
+          brand: '#2C7A7B', // Brand teal text - teal-600
+          accent: '#319795', // Teal accent text - teal-500
         },
 
         // Semantic colors
         success: '#10B981',
         warning: '#F59E0B',
         error: '#EF4444',
-        info: '#06B6D4',
+        info: '#319795', // teal-500 instead of cyan
 
-        // Glass morphism effects
+        // Glass morphism effects (light theme)
         glass: {
-          white: 'rgba(255, 255, 255, 0.05)',
-          'white-hover': 'rgba(255, 255, 255, 0.08)',
-          border: 'rgba(255, 255, 255, 0.1)',
-          'border-hover': 'rgba(255, 255, 255, 0.2)',
+          white: 'rgba(255, 255, 255, 0.8)',
+          'white-hover': 'rgba(255, 255, 255, 0.9)',
+          border: 'rgba(229, 231, 235, 0.5)', // neutral-200 with transparency
+          'border-hover': 'rgba(209, 213, 219, 0.8)', // neutral-300 with transparency
         },
 
         // Legacy color mappings (for gradual migration)
-        navy: '#7C3AED', // Map to brand primary
+        navy: '#2C7A7B', // Map to teal-600 (brand primary)
         gold: '#F59E0B', // Map to warning
         'gold-dark': '#D97706', // Darker gold for hover states
-        turquoise: '#06B6D4', // Map to brand secondary
-        midnight: '#0A0A0B', // Map to surface base
+        turquoise: '#319795', // Map to teal-500 (brand secondary)
+        midnight: '#FFFFFF', // Map to white surface base
 
         // shadcn/ui CSS variables (keep for compatibility)
         border: 'hsl(var(--border))',
@@ -133,8 +147,8 @@ const config = {
       ringColor: {
         gold: '#F59E0B',
         'gold-dark': '#D97706',
-        navy: '#7C3AED',
-        turquoise: '#06B6D4',
+        navy: '#2C7A7B', // teal-600
+        turquoise: '#319795', // teal-500
       },
       // 8px grid system spacing
       spacing: {

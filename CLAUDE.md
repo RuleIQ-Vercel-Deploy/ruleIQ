@@ -1,262 +1,233 @@
-# CLAUDE.md
+# CLAUDE.md - Claude Code Optimization Guide
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+**Purpose**: Maximize Claude Code's performance when working with the ruleIQ codebase.
 
-## Project Overview
+## 🚀 QUICK START - CRITICAL CONTEXT
 
-ruleIQ is an AI-powered compliance automation platform for UK SMBs. It's a full-stack application built with:
-- **Backend**: FastAPI (Python) with PostgreSQL, Redis, Celery
-- **Frontend**: Next.js 15 (React) with TypeScript, TanStack Query, Zustand
-- **AI Services**: Google Gemini integration with multi-model strategy
+**Project**: ruleIQ - AI-powered compliance automation for UK SMBs (98% production-ready)  
+**Stack**: FastAPI (Python) + Next.js 15 (TypeScript) + Neon PostgreSQL + Redis + Celery  
+**Status**: 671+ tests passing | <200ms API response | 8.5/10 security score
 
-## Development Commands
+### ⚡ IMMEDIATE ACTIONS FOR ANY TASK
 
-### Backend (Python/FastAPI)
+1. **Activate Environment**: `source /home/omar/Documents/ruleIQ/.venv/bin/activate`
+2. **Check Serena MCP**: Already activated for enhanced code intelligence
+3. **Read Relevant Memories**: Use `mcp__serena__read_memory` for context:
+   - Frontend: `FRONTEND_CONDENSED_2025`
+   - Backend: `BACKEND_CONDENSED_2025`
+   - Critical: `ALWAYS_READ_FIRST`
 
+### 🎯 TASK COMPLETION CHECKLIST
+
+Before marking any task complete, ensure:
+- [ ] Code compiles without errors
+- [ ] Tests pass: `make test-fast` (backend) or `pnpm test` (frontend)
+- [ ] Linting clean: `ruff check .` (backend) or `pnpm lint` (frontend)
+- [ ] Type checking: `ruff check .` (backend) or `pnpm typecheck` (frontend)
+- [ ] No hardcoded values or secrets
+- [ ] Field mappers used for truncated DB columns
+- [ ] Rate limiting considered for new endpoints
+
+## 🛠️ ESSENTIAL COMMANDS
+
+### Backend Commands (Python/FastAPI)
 ```bash
-# Activate virtual environment
+# ALWAYS START WITH:
 source /home/omar/Documents/ruleIQ/.venv/bin/activate
 
-# Start backend server
-python main.py  # Runs on http://localhost:8000
-# Alternative: uvicorn main:app --reload  # Development with auto-reload
-# Production: uvicorn main:app --host 0.0.0.0 --port 8000
+# Development
+python main.py                    # Start server (http://localhost:8000)
+make test-fast                    # Quick tests (2-5 min) - RUN BEFORE COMMITS
+ruff check . && ruff format .     # Lint & format - MUST BE CLEAN
 
-# Run backend tests
-make test-fast        # Quick unit tests (2-5 min)
-make test-integration # Integration tests (5-10 min)
-make test-full        # Complete test suite
-make test-ci          # CI-optimized execution
+# Database
+alembic upgrade head              # Apply migrations
+python database/init_db.py        # Initialize database
 
-# Single test execution
-python -m pytest tests/test_specific.py -v
-
-# Test with specific markers
-pytest -m unit          # Unit tests only
-pytest -m api           # API tests only
-pytest -m security      # Security tests only
-
-# Linting and formatting
-ruff check .           # Linting
-ruff format .          # Formatting
-ruff check --fix .     # Auto-fix linting issues
-
-# Database migrations
-alembic upgrade head   # Apply migrations
-alembic revision --autogenerate -m "description"  # Create new migration
-alembic downgrade -1   # Rollback one migration
-
-# Database utilities
-python database/init_db.py  # Initialize database
+# Testing by type
+pytest -m unit                    # Unit tests only
+pytest -m api                     # API tests only
+pytest -m security                # Security tests only
 ```
 
-### Frontend (Next.js/React)
-
+### Frontend Commands (Next.js/TypeScript)
 ```bash
 cd frontend
 
-# Install dependencies (pnpm required)
-pnpm install
-
 # Development
-pnpm dev              # Runs on http://localhost:3000
+pnpm dev                          # Start dev server (http://localhost:3000)
+pnpm test                         # Run tests - RUN BEFORE COMMITS
+pnpm lint && pnpm typecheck       # Lint & type check - MUST BE CLEAN
 
-# Production build
-pnpm build            # Build for production
-pnpm start            # Start production server
+# Build & Deploy
+pnpm build                        # Production build
+pnpm test:e2e                     # E2E tests with Playwright
 
-# Testing
-pnpm test             # Run tests with vitest
-pnpm test:coverage    # With coverage report
-pnpm test:e2e         # End-to-end tests with Playwright
-pnpm test:visual      # Visual regression tests
-
-# Code quality
-pnpm lint             # ESLint
-pnpm typecheck        # TypeScript checking
-pnpm format           # Prettier formatting
+# Theme Testing (Active Migration)
+NEXT_PUBLIC_USE_NEW_THEME=true pnpm dev  # Test teal theme
 ```
 
-### Docker Development
+## 🏗️ ARCHITECTURE QUICK REFERENCE
 
+### Critical Patterns to Follow
+- **AI Services**: Circuit breaker with fallback (see `services/ai/`)
+- **Auth**: JWT + AES-GCM encryption + RBAC middleware
+- **State**: Zustand (client) + TanStack Query (server) - DON'T MIX
+- **Database**: Field mappers for truncated columns
+- **Rate Limits**: General 100/min, AI 20/min, Auth 5/min
+
+### Key Files & Locations
+```
+Backend:
+- API Routes: api/routers/*.py
+- Business Logic: services/*.py
+- AI Services: services/ai/*.py (circuit breaker, fallback, optimizer)
+- RBAC: api/middleware/rbac_*.py
+- Models: database/models.py
+
+Frontend:
+- Pages: frontend/app/(dashboard)/
+- Components: frontend/components/ui/ (shadcn/ui based)
+- API Clients: frontend/lib/api/
+- State: frontend/lib/stores/ (Zustand)
+- Hooks: frontend/lib/tanstack-query/hooks/
+```
+
+## ⚠️ CRITICAL KNOWN ISSUES
+
+### 1. Database Column Truncation
+**Problem**: Legacy columns truncated to 16 chars  
+**Examples**: `handles_persona` → `handles_personal_data`  
+**SOLUTION**: ALWAYS use field mappers: `frontend/lib/api/business-profile/field-mapper.ts`
+
+### 2. Frontend Teal Migration (65% Complete)
+**Problem**: Mixed purple/cyan legacy colors  
+**SOLUTION**: Check `FRONTEND_CONDENSED_2025` memory for migration tasks
+
+### 3. Celery Worker Rate Limiting
+**Problem**: 529 API overload errors  
+**SOLUTION**: Rate limits already configured (see `celery_app.py`)
+
+## 📋 COMMON WORKFLOWS
+
+### Adding New API Endpoint
 ```bash
-# Start all services
-docker-compose up -d
-
-# View logs
-docker-compose logs -f app
-docker-compose logs -f celery_worker
-
-# Rebuild after changes
-docker-compose down && docker-compose up --build
+1. Create router: api/routers/new_feature.py
+2. Add service: services/new_feature_service.py  
+3. Define schemas: api/schemas/new_feature.py
+4. Add tests: tests/test_new_feature.py
+5. Add rate limiting in api/middleware/rate_limiter.py
+6. RUN: make test-fast
 ```
 
-## Architecture Overview
-
-### Backend Structure
-
-```
-api/
-├── routers/          # FastAPI route handlers
-│   ├── ai_assessments.py    # AI-powered assessments
-│   ├── auth.py              # JWT authentication
-│   └── business_profiles.py # Business profile management
-├── middleware/       # Request/response processing
-│   ├── rate_limiter.py      # Rate limiting
-│   └── security_headers.py  # Security headers
-└── dependencies/     # Dependency injection
-
-services/
-├── ai/              # AI service modules
-│   ├── circuit_breaker.py   # Fault tolerance
-│   ├── fallback_system.py   # Graceful degradation
-│   └── performance_optimizer.py # Cost optimization
-└── assessment_service.py     # Business logic
-
-database/
-├── models.py        # SQLAlchemy models
-└── db_setup.py      # Database configuration
-```
-
-### Frontend Structure
-
-```
-frontend/
-├── app/             # Next.js app router pages
-│   ├── (auth)/      # Authentication pages
-│   ├── (dashboard)/ # Protected dashboard pages
-│   └── api/         # API routes
-├── components/      # React components
-│   ├── ui/          # Base UI components (shadcn/ui)
-│   └── features/    # Feature-specific components
-├── lib/
-│   ├── api/         # API service clients
-│   ├── stores/      # Zustand state management
-│   └── tanstack-query/ # React Query hooks
-└── types/           # TypeScript definitions
-```
-
-### Key Architectural Patterns
-
-1. **AI Services**: Circuit breaker pattern with fallback mechanisms
-2. **Authentication**: JWT with secure Web Crypto API storage
-3. **State Management**: Zustand stores + TanStack Query for server state
-4. **Database**: PostgreSQL with SQLAlchemy ORM, Redis for caching
-5. **Background Tasks**: Celery with Redis broker for async processing
-6. **Security**: Rate limiting, CORS, input validation, OWASP compliance
-
-## Current Development Context
-
-The project is 98% production-ready with:
-- 671+ backend tests passing
-- Enterprise-grade security (8.5/10 score)
-- Sub-200ms API response times
-- 40-60% AI cost optimization achieved
-
-### Active Areas
-
-1. **AI Optimization**: Multi-model strategy for cost reduction
-2. **Database**: Column name mappings for legacy truncation issues
-3. **Frontend**: Design system migration with new color palette
-
-### Known Issues
-
-1. **Database Column Names**: Some columns truncated (handled via mappers)
-   - `handles_persona` → `handles_personal_data`
-   - `processes_payme` → `processes_payments`
-   - Solution: Field mappers in `frontend/lib/api/business-profile/field-mapper.ts`
-
-## Testing Strategy
-
-- **Unit Tests**: Fast, isolated component testing
-- **Integration Tests**: API endpoints, database operations
-- **E2E Tests**: Complete user workflows with Playwright
-- **AI Tests**: Accuracy validation, circuit breaker testing
-- **Performance Tests**: Load testing, response time validation
-
-Run tests in parallel chunks for optimal performance:
+### Adding New Frontend Page
 ```bash
-make test-groups-parallel  # Run all test groups in parallel
+1. Create page: frontend/app/(dashboard)/new-page/page.tsx
+2. Add API client: frontend/lib/api/new-feature.ts
+3. Add store (if needed): frontend/lib/stores/new-feature-store.ts
+4. Add hooks: frontend/lib/tanstack-query/hooks/use-new-feature.ts
+5. Add tests: frontend/tests/new-feature.test.tsx
+6. RUN: cd frontend && pnpm test
 ```
-
-## Environment Variables
-
-Key environment variables (see `.env.template`):
-- `DATABASE_URL`: PostgreSQL connection string
-- `REDIS_URL`: Redis connection string
-- `GOOGLE_API_KEY`: Google Gemini API key
-- `JWT_SECRET_KEY`: JWT signing key (generate with `python generate_jwt_secret.py`)
-- `ALLOWED_ORIGINS`: CORS allowed origins
-
-## MCP Integration
-
-The project integrates with Serena MCP Server for enhanced code intelligence:
-- Semantic code analysis and symbol-level operations
-- Multi-language support (Python, TypeScript)
-- Context-aware assistance
-
-## Security Considerations
-
-- All API endpoints have input validation and rate limiting
-- JWT tokens stored with AES-GCM encryption in frontend
-- OWASP Top 10 compliance verified
-- Regular security audits (see `scripts/security_audit.py`)
-
-## Common Development Workflows
-
-### Adding a New API Endpoint
-
-1. Create router in `api/routers/`
-2. Add service logic in `services/`
-3. Define schemas in `api/schemas/`
-4. Add tests in `tests/test_*.py`
-5. Update API documentation
-
-### Adding a New Frontend Page
-
-1. Create page in `frontend/app/(dashboard)/` or appropriate route group
-2. Add API service client in `frontend/lib/api/`
-3. Create Zustand store if needed in `frontend/lib/stores/`
-4. Add TanStack Query hooks in `frontend/lib/tanstack-query/hooks/`
-5. Write tests in `frontend/tests/`
 
 ### Working with AI Services
+- ALWAYS use circuit breaker pattern (see `services/ai/circuit_breaker.py`)
+- ALWAYS provide fallback responses
+- ALWAYS implement caching for similar requests
+- Test with: `pytest -m ai`
 
-- AI services use circuit breaker pattern for reliability
-- Fallback responses configured for all AI endpoints
-- Cost optimization through caching and model selection
-- See `services/ai/` for implementation details
+## 🔐 SECURITY & ENVIRONMENT
 
-## Important Notes
+### Environment Variables
+```bash
+# Generate JWT secret
+python generate_jwt_secret.py
 
-1. **Database Column Naming**: Some columns are truncated due to legacy issues. Always use field mappers when working with:
-   - Business profiles
-   - Assessment sessions
-   - Any table with truncated column names
+# Required vars (see .env.template)
+DATABASE_URL=postgresql://...@ep-*-pooler.eastus2.azure.neon.tech/neondb?sslmode=require
+REDIS_URL=redis://...
+GOOGLE_API_KEY=...
+JWT_SECRET_KEY=...
+ALLOWED_ORIGINS=http://localhost:3000
+```
 
-2. **Testing**: Always run relevant tests before committing:
-   ```bash
-   # Backend
-   make test-fast  # Quick check
-   
-   # Frontend
-   cd frontend && pnpm test
-   ```
+### Security Checklist
+- [ ] Input validation on ALL endpoints
+- [ ] Rate limiting configured
+- [ ] No secrets in code
+- [ ] Field mappers for DB columns
+- [ ] RBAC permissions checked
 
-3. **Environment Variables**: Never commit `.env` files. Use `.env.template` as reference.
+## 🧠 SERENA MCP INTEGRATION
 
-4. **API Rate Limiting**: Default limits are:
-   - General endpoints: 100 requests/minute
-   - AI endpoints: 20 requests/minute
-   - Authentication: 5 requests/minute
+### Quick Reference
+```bash
+# Already activated for this project!
+# Access memories with: mcp__serena__read_memory
+# Key memories:
+- ALWAYS_READ_FIRST          # Critical coding guidelines
+- FRONTEND_CONDENSED_2025    # Frontend tasks & status
+- BACKEND_CONDENSED_2025     # Backend reference
+- MEMORY_CATEGORIES_2025     # Memory organization
+```
 
-5. **Frontend State Management**:
-   - Use Zustand for client state
-   - Use TanStack Query for server state
-   - Don't mix the two patterns
+### Serena Tools You'll Use Most
+- `mcp__serena__find_symbol` - Find classes, functions, methods
+- `mcp__serena__replace_symbol_body` - Edit code precisely
+- `mcp__serena__search_for_pattern` - Search across codebase
+- `mcp__serena__get_symbols_overview` - Understand file structure
 
-6. **Code Style**:
-   - Python: Follow PEP 8, enforced by ruff
-   - TypeScript: Follow project ESLint rules
-   - Use descriptive variable names
-   - Comment complex logic
+### Memory Best Practices
+1. Read `ALWAYS_READ_FIRST` at session start
+2. Check condensed memories for area-specific work
+3. Don't read same memory multiple times
+4. Write new memories for significant discoveries
+
+## 🚨 TROUBLESHOOTING
+
+### Common Issues & Solutions
+
+**Backend Won't Start**
+```bash
+# Check environment
+source /home/omar/Documents/ruleIQ/.venv/bin/activate
+# Check Redis (Neon is cloud-based)
+docker-compose ps
+# Initialize DB if needed
+python database/init_db.py
+```
+
+**Frontend Build Errors**
+```bash
+cd frontend
+pnpm install  # Reinstall dependencies
+rm -rf .next  # Clear build cache
+pnpm dev      # Restart
+```
+
+**Test Failures**
+```bash
+# Backend: Run specific test
+pytest tests/test_specific.py::test_name -v
+# Frontend: Debug mode
+cd frontend && pnpm test -- --reporter=verbose
+```
+
+**Celery Worker Issues**
+```bash
+# Check worker logs
+docker-compose logs celery_worker
+# Restart worker
+docker-compose restart celery_worker
+```
+
+## 📚 QUICK LINKS
+
+- **Full Plan**: `frontend/FRONTEND_DESIGN_COMPLIANCE_PLAN.md`
+- **API Docs**: http://localhost:8000/docs (when running)
+- **Frontend Preview**: http://localhost:3000
+- **Test Coverage**: Run `make test-coverage` or `pnpm test:coverage`
+
+---
+
+**Remember**: This file is optimized for Claude Code performance. Keep it updated with critical patterns and always run tests before marking tasks complete!

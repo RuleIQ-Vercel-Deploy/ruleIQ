@@ -20,7 +20,7 @@
     --popover: 0 0% 9%; /* Secondary surface #18181B */
     --popover-foreground: 0 0% 98%;
 
-    --primary: 262 83% 58%; /* Vibrant purple #7C3AED */
+    --primary: 186 37% 32%; /* teal-600 #2C7A7B */
     --primary-foreground: 0 0% 100%;
 
     --secondary: 0 0% 15%; /* Dark neutral #27272A */
@@ -29,7 +29,7 @@
     --muted: 0 0% 15%; /* Muted backgrounds */
     --muted-foreground: 240 5% 64%; /* Muted text #A1A1AA */
 
-    --accent: 188 95% 43%; /* Cyan accent #06B6D4 */
+    --accent: 180 25% 65%; /* teal-300 #4FD1C5 */
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84% 60%; /* Error red */
@@ -37,7 +37,7 @@
 
     --border: 0 0% 15%; /* Subtle borders for dark theme #27272A */
     --input: 0 0% 15%;
-    --ring: 262 83% 58%; /* Purple focus ring */
+    --ring: 186 37% 32%; /* teal-600 focus ring */
 
     --radius: 0.5rem;
 
@@ -57,7 +57,7 @@
     --popover: 0 0% 100%;
     --popover-foreground: 0 0% 4%;
 
-    --primary: 262 83% 58%; /* Purple primary */
+    --primary: 186 37% 32%; /* teal-600 primary */
     --primary-foreground: 0 0% 100%;
 
     --secondary: 0 0% 96%; /* Light gray */
@@ -66,7 +66,7 @@
     --muted: 0 0% 96%;
     --muted-foreground: 240 4% 46%;
 
-    --accent: 188 95% 43%; /* Cyan accent */
+    --accent: 180 25% 65%; /* teal-300 accent */
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84% 60%;
@@ -74,7 +74,7 @@
 
     --border: 0 0% 91%;
     --input: 0 0% 91%;
-    --ring: 262 83% 58%;
+    --ring: 186 37% 32%; /* teal-600 focus ring */
   }
 }
 

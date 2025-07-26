@@ -10,6 +10,7 @@ from api.dependencies.auth import get_current_active_user
 from api.middleware.error_handler import error_handler_middleware
 from api.request_id_middleware import RequestIDMiddleware
 from api.routers import (
+    agentic_rag,
     ai_assessments,
     ai_optimization,
     assessments,
@@ -63,9 +64,16 @@ async def lifespan(app: FastAPI):
 
     # Initialize cache manager
     from config.cache import get_cache_manager
-
     await get_cache_manager()
     logger.info("Cache manager initialized.")
+
+    # Initialize agentic integration service
+    from services.agentic_integration import initialize_agentic_service
+    try:
+        await initialize_agentic_service()
+        logger.info("Agentic RAG service initialized.")
+    except Exception as e:
+        logger.warning(f"Failed to initialize agentic RAG service: {e}")
 
     logger.info(f"Environment: {settings.environment}")
     logger.info(f"Debug mode: {settings.debug}")
@@ -140,6 +148,7 @@ app.include_router(
 app.include_router(monitoring.router, prefix="/api/monitoring", tags=["Monitoring"])
 app.include_router(security.router, prefix="/api/security", tags=["Security"])
 app.include_router(chat.router, prefix="/api", tags=["AI Assistant"])
+app.include_router(agentic_rag.router, prefix="/api", tags=["Agentic RAG"])
 app.include_router(admin_router)
 
 
