@@ -1,36 +1,26 @@
 'use client';
+
 import { motion } from 'framer-motion';
 import { ShieldCheck, FileText, BrainCircuit, CheckCircle, BarChart, Users } from 'lucide-react';
 import Image from 'next/image';
 
-import { BackgroundGradient } from '@/components/ui/aceternity/background-gradient';
-import { CardSpotlight } from '@/components/ui/aceternity/card-spotlight';
-import { ContainerScroll } from '@/components/ui/aceternity/container-scroll-animation';
-import { FloatingNav } from '@/components/ui/aceternity/floating-nav';
-import { HoverEffect } from '@/components/ui/aceternity/hover-effect';
-import { InfiniteMovingCards } from '@/components/ui/aceternity/infinite-moving-cards';
-import { LampContainer } from '@/components/ui/aceternity/lamp';
-import { SparklesCore } from '@/components/ui/aceternity/sparkles';
-import { TextGenerateEffect } from '@/components/ui/aceternity/text-generate-effect';
-import { TypewriterEffect } from '@/components/ui/aceternity/typewriter-effect';
-import { WavyBackground } from '@/components/ui/aceternity/wavy-background';
-import { BeamsBackground } from '@/components/ui/beams-background';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { Logo } from '@/components/ui/logo';
+import { TextEffect } from '@/components/ui/text-effect';
+import { TypewriterEffect } from '@/components/ui/typewriter-effect';
+import { InfiniteSlider } from '@/components/ui/infinite-slider';
+import { SparklesBackground } from '@/components/ui/sparkles-background';
+import { GradientBackground } from '@/components/ui/gradient-background';
+import { AnimatedGrid } from '@/components/ui/animated-grid';
+import { FloatingElements } from '@/components/ui/floating-elements';
+import { HeroSpotlight } from '@/components/ui/hero-spotlight';
 
 export default function MarketingPage() {
-  const navItems = [
-    { name: 'Features', link: '#features' },
-    { name: 'Pricing', link: '#pricing' },
-    { name: 'About', link: '#about' },
-    { name: 'Blog', link: '#blog' },
-  ];
-
   const typewriterWords = [
-    { text: 'For UK SMBs', className: 'text-gold' },
-    { text: 'AI-Powered', className: 'text-gold' },
-    { text: 'Stay Compliant', className: 'text-gold' },
+    { text: 'For UK SMBs', className: 'text-teal-600' },
+    { text: 'AI-Powered', className: 'text-teal-600' },
+    { text: 'Stay Compliant', className: 'text-teal-600' },
   ];
 
   const clientLogos = [
@@ -68,19 +58,19 @@ export default function MarketingPage() {
 
   const features = [
     {
-      icon: <BrainCircuit size={48} className="text-gold" />,
+      icon: <BrainCircuit size={48} className="mx-auto text-teal-600" />,
       title: 'AI-Powered Assessments',
       description:
         'Leverage artificial intelligence to conduct comprehensive compliance assessments, identifying gaps and risks with unparalleled accuracy.',
     },
     {
-      icon: <FileText size={48} className="text-gold" />,
+      icon: <FileText size={48} className="mx-auto text-teal-600" />,
       title: 'Evidence Management',
       description:
         'A centralized, secure repository for all your compliance evidence. Link documents to controls and automate collection.',
     },
     {
-      icon: <ShieldCheck size={48} className="text-gold" />,
+      icon: <ShieldCheck size={48} className="mx-auto text-teal-600" />,
       title: 'Policy Generation',
       description:
         'Automatically generate, customize, and manage compliance policies based on industry standards and your specific business needs.',
@@ -92,22 +82,19 @@ export default function MarketingPage() {
       title: 'Connect Your Systems',
       description:
         'Integrate seamlessly with your existing tools and platforms. ruleIQ pulls data from your cloud services, code repositories, and HR systems.',
-      link: '#',
-      icon: <Users size={32} />,
+      icon: <Users size={32} className="text-teal-600" />,
     },
     {
       title: 'AI Analyzes Compliance',
       description:
         'Our intelligent engine analyzes your data against hundreds of controls from various frameworks like ISO 27001, GDPR, and SOC 2.',
-      link: '#',
-      icon: <BarChart size={32} />,
+      icon: <BarChart size={32} className="text-teal-600" />,
     },
     {
       title: 'Get Actionable Insights',
       description:
         'Receive a clear, prioritized list of actions. The dashboard visualizes your compliance posture, making it easy to track progress and report to stakeholders.',
-      link: '#',
-      icon: <CheckCircle size={32} />,
+      icon: <CheckCircle size={32} className="text-teal-600" />,
     },
   ];
 
@@ -129,37 +116,88 @@ export default function MarketingPage() {
   ];
 
   return (
-    <div className="bg-midnight-blue text-eggshell-white relative min-h-screen overflow-x-hidden">
-      <FloatingNav navItems={navItems} />
-
+    <div className="relative min-h-screen overflow-x-hidden bg-background text-foreground">
       {/* Hero Section */}
-      <section className="relative h-screen w-full">
-        <BeamsBackground intensity="strong" className="absolute inset-0 z-0" />
-        <div className="bg-midnight-blue/85 absolute inset-0 z-10" />
+      <section className="relative h-screen w-full overflow-hidden">
+        {/* Background layers */}
+        <div className="absolute inset-0 bg-gradient-to-br from-background via-teal-50/40 to-background" />
+        <AnimatedGrid className="z-5" gridSize={25} animationDuration={6} />
+        <HeroSpotlight className="z-10" size={600} intensity={0.15} />
+        <FloatingElements className="z-10" density={20} />
+        
         <div className="relative z-20 flex h-full flex-col items-center justify-center px-4">
           <div className="space-y-8 text-center">
-            <TextGenerateEffect
-              words="Automate Compliance, Eliminate Risk"
-              className="text-4xl font-bold md:text-6xl lg:text-7xl"
-            />
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, ease: "easeOut" }}
+              className="text-sm font-semibold text-teal-600 uppercase tracking-widest mb-4"
+            >
+              AI-Powered Compliance Platform
+            </motion.div>
+            
+            <TextEffect
+              per="word"
+              preset="fade-in-blur"
+              className="text-5xl font-bold md:text-7xl lg:text-8xl leading-tight bg-gradient-to-r from-foreground via-teal-800 to-foreground bg-clip-text text-transparent"
+            >
+              Automate Compliance, Eliminate Risk
+            </TextEffect>
+            
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.3 }}
+              className="text-xl md:text-2xl text-muted-foreground max-w-4xl mx-auto leading-relaxed font-medium"
+            >
+              Transform your compliance workflow with intelligent automation. 
+              Built specifically for UK SMBs navigating ISO 27001, GDPR, and SOC 2.
+            </motion.p>
+            
             <TypewriterEffect words={typewriterWords} />
             <div className="relative flex items-center justify-center space-x-4">
-              <SparklesCore
+              <SparklesBackground
                 id="hero-sparkles"
                 background="transparent"
                 minSize={0.6}
                 maxSize={1.4}
                 particleDensity={100}
                 className="absolute h-full w-full"
-                particleColor="#FFD700"
+                particleColor="#2C7A7B"
               />
-              <Button variant="default" size="lg" className="z-10">
+              <Button 
+                variant="default" 
+                size="lg" 
+                className="z-10 bg-teal-600 hover:bg-teal-700 text-lg px-8 py-4 h-auto rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 group"
+              >
                 Start Free Trial
+                <motion.span
+                  className="ml-2 group-hover:translate-x-1 transition-transform duration-200"
+                  initial={{ x: 0 }}
+                  animate={{ x: [0, 3, 0] }}
+                  transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                >
+                  →
+                </motion.span>
               </Button>
-              <Button variant="outline" size="lg" className="z-10 bg-transparent">
-                Watch Demo
+              <Button 
+                variant="outline" 
+                size="lg" 
+                className="z-10 border-2 border-teal-600 text-teal-600 hover:bg-teal-50 hover:border-teal-700 text-lg px-8 py-4 h-auto rounded-xl transition-all duration-300"
+              >
+                Watch 2-min Demo
               </Button>
             </div>
+            
+            {/* Trust indicators */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.9 }}
+              className="text-sm text-muted-foreground font-medium"
+            >
+              No credit card required • 14-day free trial • Setup in 5 minutes
+            </motion.div>
           </div>
           <div className="absolute bottom-10 flex space-x-8">
             {['ISO 27001', 'GDPR', 'SOC 2'].map((badge, i) => (
@@ -170,13 +208,13 @@ export default function MarketingPage() {
                 transition={{
                   duration: 0.5,
                   delay: 1 + i * 0.2,
-                  repeat: Number.POSITIVE_INFINITY,
+                  repeat: Infinity,
                   repeatType: 'mirror',
                   ease: 'easeInOut',
                 }}
-                className="flex items-center gap-2 rounded-full border border-gold/30 bg-white/5 px-4 py-2 text-sm"
+                className="flex items-center gap-2 rounded-full border border-teal-600/30 bg-teal-50/50 px-4 py-2 text-sm"
               >
-                <CheckCircle className="text-green-success h-4 w-4" />
+                <CheckCircle className="h-4 w-4 text-green-500" />
                 {badge}
               </motion.div>
             ))}
@@ -186,14 +224,14 @@ export default function MarketingPage() {
 
       {/* Social Proof Section */}
       <section className="py-20">
-        <BackgroundGradient containerClassName="max-w-5xl mx-auto rounded-[22px]">
-          <div className="bg-midnight-blue/90 rounded-[22px] p-8">
-            <h3 className="text-eggshell-white mb-8 text-center text-2xl font-semibold">
+        <GradientBackground containerClassName="max-w-5xl mx-auto rounded-[22px]">
+          <div className="p-8">
+            <h3 className="mb-8 text-center text-2xl font-semibold">
               Trusted by 500+ UK businesses
             </h3>
-            <InfiniteMovingCards items={clientLogos} direction="right" speed="slow" />
+            <InfiniteSlider items={clientLogos} direction="right" speed="slow" />
           </div>
-        </BackgroundGradient>
+        </GradientBackground>
       </section>
 
       {/* Features Section */}
@@ -203,43 +241,55 @@ export default function MarketingPage() {
         </h2>
         <div className="mx-auto grid max-w-6xl grid-cols-1 gap-8 md:grid-cols-3">
           {features.map((feature, i) => (
-            <CardSpotlight key={i}>
-              <div className="text-center">
-                {feature.icon}
-                <h3 className="text-eggshell-white mt-4 text-2xl font-bold">{feature.title}</h3>
-                <p className="text-eggshell-white/80 mt-2">{feature.description}</p>
-              </div>
-            </CardSpotlight>
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: i * 0.1 }}
+              viewport={{ once: true }}
+            >
+              <Card className="p-6 text-center transition-shadow hover:shadow-lg border-teal-100 hover:border-teal-300">
+                <CardContent className="space-y-4">
+                  {feature.icon}
+                  <h3 className="text-xl font-bold">{feature.title}</h3>
+                  <p className="text-muted-foreground">{feature.description}</p>
+                </CardContent>
+              </Card>
+            </motion.div>
           ))}
         </div>
       </section>
 
       {/* Product Demo Section */}
-      <section>
-        <ContainerScroll
-          titleComponent={
-            <h2 className="text-eggshell-white text-4xl font-semibold">
-              Your Compliance Command Center <br />
-              <span className="mt-1 text-4xl font-bold leading-none text-gold md:text-[6rem]">
-                One Dashboard
-              </span>
-            </h2>
-          }
-        >
-          <Image
-            src={`/placeholder.svg?width=1200&height=800&query=modern+dark+theme+compliance+dashboard+UI`}
-            alt="Product demo"
-            height={800}
-            width={1200}
-            className="mx-auto h-full rounded-2xl object-cover object-left-top"
-            draggable={false}
-          />
-        </ContainerScroll>
+      <section className="py-20">
+        <div className="container mx-auto px-4 text-center">
+          <TextEffect per="word" preset="slide" className="mb-8 text-4xl font-semibold">
+            Your Compliance Command Center
+          </TextEffect>
+          <TextEffect
+            per="word"
+            preset="scale"
+            className="mb-12 text-4xl font-bold leading-none text-teal-600 md:text-[6rem]"
+            delay={1000}
+          >
+            One Dashboard
+          </TextEffect>
+          <div className="relative">
+            <Image
+              src="/placeholder.svg?width=1200&height=800&query=modern+dark+theme+compliance+dashboard+UI"
+              alt="Product demo"
+              height={800}
+              width={1200}
+              className="mx-auto h-full rounded-2xl object-cover object-left-top shadow-2xl"
+              draggable={false}
+            />
+          </div>
+        </div>
       </section>
 
       {/* How It Works Section */}
-      <section id="how-it-works">
-        <LampContainer>
+      <section id="how-it-works" className="py-20">
+        <div className="container mx-auto px-4">
           <motion.h1
             initial={{ opacity: 0.5, y: 100 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -248,29 +298,50 @@ export default function MarketingPage() {
               duration: 0.8,
               ease: 'easeInOut',
             }}
-            className="from-eggshell-white to-eggshell-white/50 bg-gradient-to-br bg-clip-text py-4 text-center text-4xl font-medium tracking-tight text-transparent md:text-7xl"
+            className="mb-12 text-center text-4xl font-medium tracking-tight md:text-7xl"
           >
-            Simple Steps to Full Compliance
+            <span className="bg-gradient-to-br from-teal-600 to-teal-700 bg-clip-text text-transparent">
+              Simple Steps to Full Compliance
+            </span>
           </motion.h1>
-        </LampContainer>
-        <div className="bg-midnight-blue -mt-48">
-          <HoverEffect items={howItWorksItems} />
+          <div className="mx-auto grid max-w-6xl gap-8 md:grid-cols-3">
+            {howItWorksItems.map((item, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: i * 0.1 }}
+                viewport={{ once: true }}
+                className="text-center"
+              >
+                <Card className="p-6 transition-shadow hover:shadow-lg border-teal-100 hover:border-teal-300">
+                  <CardContent className="space-y-4">
+                    {item.icon}
+                    <h3 className="text-xl font-bold">{item.title}</h3>
+                    <p className="text-muted-foreground">{item.description}</p>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            ))}
+          </div>
         </div>
       </section>
 
       {/* Testimonials Section */}
-      <section id="testimonials" className="relative">
-        <WavyBackground className="mx-auto max-w-4xl pb-40">
-          <h2 className="inter-var text-center text-2xl font-bold text-white md:text-4xl lg:text-7xl">
-            Don't just take our word for it.
-          </h2>
-          <p className="inter-var mt-4 text-center text-base font-normal text-white md:text-lg">
-            Hear from leaders who transformed their compliance with ruleIQ.
-          </p>
-          <div className="mt-12 grid grid-cols-1 gap-8 md:grid-cols-2">
+      <section id="testimonials" className="relative py-20 bg-teal-50/30">
+        <div className="container mx-auto px-4">
+          <div className="mb-12 text-center">
+            <h2 className="mb-4 text-2xl font-bold md:text-4xl lg:text-7xl">
+              Don't just take our word for it.
+            </h2>
+            <p className="text-base font-normal text-muted-foreground md:text-lg">
+              Hear from leaders who transformed their compliance with ruleIQ.
+            </p>
+          </div>
+          <div className="mx-auto grid max-w-4xl grid-cols-1 gap-8 md:grid-cols-2">
             {testimonials.map((t, i) => (
-              <BackgroundGradient key={i} containerClassName="rounded-2xl">
-                <div className="bg-midnight-blue/80 space-y-4 rounded-2xl p-8 backdrop-blur-sm">
+              <GradientBackground key={i} containerClassName="rounded-2xl">
+                <div className="space-y-4 p-8">
                   <p className="text-lg">"{t.quote}"</p>
                   <div className="flex items-center gap-4">
                     <Image
@@ -282,116 +353,121 @@ export default function MarketingPage() {
                     />
                     <div>
                       <p className="font-semibold">{t.name}</p>
-                      <p className="text-eggshell-white/70 text-sm">{t.title}</p>
+                      <p className="text-sm text-muted-foreground">{t.title}</p>
                     </div>
                   </div>
                 </div>
-              </BackgroundGradient>
+              </GradientBackground>
             ))}
           </div>
-        </WavyBackground>
+        </div>
       </section>
 
       {/* CTA Section */}
-      <section className="from-midnight-blue bg-gradient-to-b to-[#10162c] py-20">
-        <div className="mx-auto max-w-3xl text-center">
-          <TextGenerateEffect
-            words="Ready to Automate Your Compliance?"
-            className="text-4xl font-bold md:text-5xl"
-          />
-          <p className="text-eggshell-white/80 mt-4">
+      <section className="bg-gradient-to-b from-background to-teal-50 py-20">
+        <div className="mx-auto max-w-3xl px-4 text-center">
+          <TextEffect
+            per="word"
+            preset="fade-in-blur"
+            className="mb-4 text-4xl font-bold md:text-5xl"
+          >
+            Ready to Automate Your Compliance?
+          </TextEffect>
+          <p className="mb-8 mt-4 text-muted-foreground">
             Join hundreds of UK businesses securing their operations with ruleIQ. Get started today.
           </p>
-          <div className="mx-auto mt-8 max-w-md">
+          <div className="mx-auto max-w-md">
             <div className="flex flex-col gap-4 sm:flex-row">
               <Input
                 type="email"
                 placeholder="Enter your email"
-                className="bg-midnight-blue/50 border-gold/30 focus:border-gold focus:ring-gold"
+                className="border-teal-300 bg-background/50 focus:border-teal-600 focus:ring-teal-600"
               />
-              <Button variant="default" className="w-full sm:w-auto">
+              <Button variant="default" className="w-full sm:w-auto bg-teal-600 hover:bg-teal-700">
                 Get Started Free
               </Button>
             </div>
-            <p className="text-eggshell-white/60 mt-2 text-xs">No credit card required.</p>
+            <p className="mt-2 text-xs text-muted-foreground">No credit card required.</p>
           </div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="text-eggshell-white/70 bg-[#10162c] px-4 py-12">
+      <footer className="bg-muted/50 px-4 py-12">
         <div className="mx-auto grid max-w-6xl grid-cols-1 gap-8 md:grid-cols-4">
           <div className="space-y-4">
-            <Logo />
-            <p className="text-sm">Automated compliance for the modern business.</p>
+            <div className="text-xl font-bold">ruleIQ</div>
+            <p className="text-sm text-muted-foreground">
+              Automated compliance for the modern business.
+            </p>
           </div>
           <div>
-            <h4 className="text-eggshell-white mb-4 font-semibold">Product</h4>
+            <h4 className="mb-4 font-semibold">Product</h4>
             <ul className="space-y-2 text-sm">
               <li>
-                <a href="#features" className="hover:text-gold">
+                <a href="#features" className="hover:text-teal-600">
                   Features
                 </a>
               </li>
               <li>
-                <a href="#pricing" className="hover:text-gold">
+                <a href="#pricing" className="hover:text-teal-600">
                   Pricing
                 </a>
               </li>
               <li>
-                <a href="#integrations" className="hover:text-gold">
+                <a href="#integrations" className="hover:text-teal-600">
                   Integrations
                 </a>
               </li>
               <li>
-                <a href="#demo" className="hover:text-gold">
+                <a href="#demo" className="hover:text-teal-600">
                   Request a Demo
                 </a>
               </li>
             </ul>
           </div>
           <div>
-            <h4 className="text-eggshell-white mb-4 font-semibold">Company</h4>
+            <h4 className="mb-4 font-semibold">Company</h4>
             <ul className="space-y-2 text-sm">
               <li>
-                <a href="#about" className="hover:text-gold">
+                <a href="#about" className="hover:text-teal-600">
                   About Us
                 </a>
               </li>
               <li>
-                <a href="#blog" className="hover:text-gold">
+                <a href="#blog" className="hover:text-teal-600">
                   Blog
                 </a>
               </li>
               <li>
-                <a href="#careers" className="hover:text-gold">
+                <a href="#careers" className="hover:text-teal-600">
                   Careers
                 </a>
               </li>
               <li>
-                <a href="#contact" className="hover:text-gold">
+                <a href="#contact" className="hover:text-teal-600">
                   Contact
                 </a>
               </li>
             </ul>
           </div>
           <div>
-            <h4 className="text-eggshell-white mb-4 font-semibold">Legal</h4>
+            <h4 className="mb-4 font-semibold">Legal</h4>
             <ul className="space-y-2 text-sm">
               <li>
-                <a href="#privacy" className="hover:text-gold">
+                <a href="#privacy" className="hover:text-teal-600">
                   Privacy Policy
                 </a>
               </li>
               <li>
-                <a href="#terms" className="hover:text-gold">
+                <a href="#terms" className="hover:text-teal-600">
                   Terms of Service
                 </a>
               </li>
             </ul>
           </div>
         </div>
-        <div className="mt-12 border-t border-white/10 pt-8 text-center text-sm">
+        <div className="mt-12 border-t border-border pt-8 text-center text-sm">
           <p>&copy; {new Date().getFullYear()} ruleIQ. All rights reserved.</p>
         </div>
       </footer>

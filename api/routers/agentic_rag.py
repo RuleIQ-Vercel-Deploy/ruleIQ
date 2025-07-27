@@ -394,3 +394,130 @@ async def find_code_examples(
     except Exception as e:
         logger.error(f"Error finding examples: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Failed to find examples: {str(e)}")
+
+@router.post("/fact-check", 
+    response_model=Dict[str, Any],
+    summary="Fact-check a RAG response",
+    description="Run fact-checking and self-criticism analysis on a RAG response")
+async def fact_check_response(
+    request: DocumentationQueryRequest,
+    quick_check: bool = Query(True, description="Use quick fact-check for faster response"),
+    rag_system: AgenticRAGSystem = Depends(get_rag_system),
+    current_user: User = Depends(get_current_user)
+):
+    """
+    Fact-check a RAG response using the self-critic system
+    
+    Args:
+        request: The query and optional source filter
+        quick_check: Whether to use quick fact-checking (default: True)
+        
+    Returns:
+        Fact-check results with validation and quality scores
+    """
+    try:
+        logger.info(f"Fact-checking request for query: {request.query}")
+        
+        # Get agentic integration service
+        from services.agentic_integration import get_agentic_service
+        agentic_service = await get_agentic_service()
+        
+        # Get RAG response first
+        rag_response = await agentic_service.query_documentation(
+            query=request.query,
+            source_filter=request.source_filter,
+            query_type=getattr(request, 'query_type', 'documentation')
+        )
+        
+        # Run fact-checking
+        fact_check_result = await agentic_service.fact_check_response(
+            response_text=rag_response["answer"],
+            sources=rag_response["sources"],
+            original_query=request.query,
+            quick_check=quick_check
+        )
+        
+        return {
+            "success": True,
+            "rag_response": rag_response,
+            "fact_check": fact_check_result,
+            "analysis": {
+                "query": request.query,
+                "fact_check_type": fact_check_result.get("fact_check_type", "quick"),
+                "approved": fact_check_result["approved"],
+                "confidence": fact_check_result["confidence"],
+                "recommendations": fact_check_result.get("recommendations", [])
+            }
+        }
+        
+    except Exception as e:
+        logger.error(f"Error in fact-check endpoint: {e}")
+        raise HTTPException(
+            status_code=500,
+            detail=f"Fact-checking failed: {str(e)}"
+        )
+
+@router.post("/query-with-validation",
+    response_model=Dict[str, Any], 
+    summary="Query documentation with automatic validation",
+    description="Query RAG system with built-in fact-checking and validation")
+async def query_with_validation(
+    request: DocumentationQueryRequest,
+    enable_fact_check: bool = Query(True, description="Enable fact-checking validation"),
+    quick_validation: bool = Query(True, description="Use quick validation for better performance"),
+    rag_system: AgenticRAGSystem = Depends(get_rag_system),
+    current_user: User = Depends(get_current_user)
+):
+    """
+    Query documentation with automatic fact-checking validation
+    
+    This endpoint combines RAG querying with validation to provide
+    high-quality, fact-checked responses suitable for production use.
+    
+    Args:
+        request: The query parameters
+        enable_fact_check: Whether to run fact-checking (default: True)
+        quick_validation: Use quick validation for better performance (default: True)
+        
+    Returns:
+        RAG response with validation results and trust scores
+    """
+    try:
+        logger.info(f"Validated query request: {request.query}")
+        
+        # Get agentic integration service
+        from services.agentic_integration import get_agentic_service
+        agentic_service = await get_agentic_service()
+        
+        # Query with validation
+        result = await agentic_service.query_documentation_with_validation(
+            query=request.query,
+            source_filter=request.source_filter,
+            query_type=getattr(request, 'query_type', 'documentation'),
+            enable_fact_check=enable_fact_check,
+            quick_validation=quick_validation
+        )
+        
+        return {
+            "success": True,
+            "query": request.query,
+            "answer": result["answer"],
+            "confidence": result["confidence"],
+            "trust_score": result["trust_score"],
+            "approved_for_use": result["approved_for_use"],
+            "sources": result["sources"],
+            "processing_time": result["processing_time"],
+            "validation": result["validation"],
+            "metadata": {
+                "query_type": result["query_type"],
+                "fact_check_enabled": enable_fact_check,
+                "validation_type": "quick" if quick_validation else "comprehensive"
+            }
+        }
+        
+    except Exception as e:
+        logger.error(f"Error in validated query endpoint: {e}")
+        raise HTTPException(
+            status_code=500,
+            detail=f"Validated query failed: {str(e)}"
+        )

@@ -46,34 +46,34 @@
     --focus-offset: 2px;
   }
 
-  /* Light theme (optional override) */
+  /* Light theme (corrected for proper contrast) */
   .light {
     --background: 0 0% 100%; /* White background */
-    --foreground: 0 0% 4%; /* Near black text */
+    --foreground: 27 20% 20%; /* Dark charcoal text #1D4044 (teal-900) */
 
-    --card: 0 0% 100%;
-    --card-foreground: 0 0% 4%;
+    --card: 0 0% 100%; /* White cards */
+    --card-foreground: 27 20% 20%; /* Dark text on cards */
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 4%;
+    --popover: 0 0% 100%; /* White popover */
+    --popover-foreground: 27 20% 20%; /* Dark text */
 
-    --primary: 186 37% 32%; /* teal-600 primary */
-    --primary-foreground: 0 0% 100%;
+    --primary: 186 37% 32%; /* teal-600 #2C7A7B - main brand */
+    --primary-foreground: 0 0% 100%; /* White text on teal */
 
-    --secondary: 0 0% 96%; /* Light gray */
-    --secondary-foreground: 0 0% 4%;
+    --secondary: 0 0% 97%; /* Very light gray #F9FAFB */
+    --secondary-foreground: 27 20% 20%; /* Dark text */
 
-    --muted: 0 0% 96%;
-    --muted-foreground: 240 4% 46%;
+    --muted: 0 0% 97%; /* Light backgrounds #F9FAFB */
+    --muted-foreground: 240 9% 40%; /* Medium gray text #6B7280 */
 
-    --accent: 180 25% 65%; /* teal-300 accent */
-    --accent-foreground: 0 0% 100%;
+    --accent: 186 70% 85%; /* teal-100 #B2F5EA - light accent */
+    --accent-foreground: 186 40% 25%; /* Dark teal text #234E52 */
 
-    --destructive: 0 84% 60%;
+    --destructive: 0 84% 60%; /* Error red */
     --destructive-foreground: 0 0% 100%;
 
-    --border: 0 0% 91%;
-    --input: 0 0% 91%;
+    --border: 240 6% 90%; /* Light gray borders #E5E7EB */
+    --input: 240 6% 90%; /* Input borders */
     --ring: 186 37% 32%; /* teal-600 focus ring */
   }
 }

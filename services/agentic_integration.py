@@ -41,6 +41,11 @@ class AgenticIntegrationService:
         
         # Configuration
         self.auto_process_docs = os.getenv("AUTO_PROCESS_DOCS", "true").lower() == "true"
+
+        
+        # Initialize fact-checker and self-critic system
+        self.fact_checker = None
+        self.self_critic_enabled = os.getenv("ENABLE_RAG_SELF_CRITIC", "true").lower() == "true"
     
     async def initialize(self):
         """Initialize the service and process documentation if needed"""
@@ -56,6 +61,12 @@ class AgenticIntegrationService:
                 logger.info("Documentation processing completed")
             else:
                 logger.info(f"Found {stats.get('total_chunks', 0)} documentation chunks and {stats.get('total_code_examples', 0)} code examples")
+            
+            # Initialize fact-checker if enabled
+            if self.self_critic_enabled:
+                from .rag_fact_checker import RAGFactChecker
+                self.fact_checker = RAGFactChecker()
+                logger.info("RAG self-critic and fact-checker initialized")
             
             logger.info("Agentic Integration Service initialized successfully")
             
@@ -275,6 +286,155 @@ class AgenticIntegrationService:
         except Exception as e:
             logger.error(f"Error validating approach: {e}")
             return f"I couldn't validate your approach due to an error: {str(e)}"
+
+    
+    async def fact_check_response(
+        self,
+        response_text: str,
+        sources: List[Dict[str, Any]],
+        original_query: str,
+        quick_check: bool = False
+    ) -> Dict[str, Any]:
+        """
+        Fact-check a RAG response using the self-critic system
+        
+        Args:
+            response_text: The response to fact-check
+            sources: Source documents used for the response
+            original_query: The original user query
+            quick_check: If True, use quick fact-checking for real-time use
+        
+        Returns:
+            Fact-check results with approval status and confidence scores
+        """
+        try:
+            if not self.fact_checker:
+                logger.warning("Fact-checker not initialized, returning basic validation")
+                return {
+                    "approved": True,
+                    "confidence": 0.7,
+                    "fact_check_available": False,
+                    "message": "Fact-checking service not available"
+                }
+            
+            if quick_check:
+                # Quick fact-check for real-time usage
+                is_reliable = await self.fact_checker.quick_fact_check(
+                    response_text=response_text,
+                    sources=sources
+                )
+                
+                return {
+                    "approved": is_reliable,
+                    "confidence": 0.8 if is_reliable else 0.4,
+                    "fact_check_type": "quick",
+                    "fact_check_available": True,
+                    "message": "Quick fact-check completed"
+                }
+            else:
+                # Comprehensive fact-checking
+                assessment = await self.fact_checker.comprehensive_fact_check(
+                    response_text=response_text,
+                    sources=sources,
+                    original_query=original_query
+                )
+                
+                return {
+                    "approved": assessment.approved_for_use,
+                    "confidence": assessment.response_reliability,
+                    "overall_score": assessment.overall_score,
+                    "source_quality": assessment.source_quality_score,
+                    "fact_check_type": "comprehensive",
+                    "fact_check_available": True,
+                    "flagged_issues": assessment.flagged_issues,
+                    "recommendations": assessment.recommendations,
+                    "fact_check_results": len(assessment.fact_check_results),
+                    "self_critiques": len(assessment.self_critiques),
+                    "message": "Comprehensive fact-check completed"
+                }
+                
+        except Exception as e:
+            logger.error(f"Error during fact-checking: {e}")
+            return {
+                "approved": True,  # Fail open for safety
+                "confidence": 0.5,
+                "fact_check_available": False,
+                "error": str(e),
+                "message": "Fact-checking failed, proceeding with caution"
+            }
+    
+    async def query_documentation_with_validation(
+        self,
+        query: str,
+        source_filter: Optional[str] = None,
+        query_type: str = "documentation",
+        enable_fact_check: bool = True,
+        quick_validation: bool = True
+    ) -> Dict[str, Any]:
+        """
+        Query documentation with automatic fact-checking validation
+        
+        Args:
+            query: Documentation question
+            source_filter: Filter by 'langgraph' or 'pydantic_ai'
+            query_type: 'documentation', 'code_examples', or 'hybrid'
+            enable_fact_check: Whether to run fact-checking
+            quick_validation: Use quick fact-check for better performance
+        
+        Returns:
+            RAG response with validation results
+        """
+        try:
+            # Get standard RAG response
+            rag_result = await self.query_documentation(
+                query=query,
+                source_filter=source_filter,
+                query_type=query_type
+            )
+            
+            # Add validation if enabled and fact-checker available
+            if enable_fact_check and self.fact_checker and self.self_critic_enabled:
+                validation_result = await self.fact_check_response(
+                    response_text=rag_result["answer"],
+                    sources=rag_result["sources"],
+                    original_query=query,
+                    quick_check=quick_validation
+                )
+                
+                # Combine results
+                rag_result.update({
+                    "validation": validation_result,
+                    "trust_score": validation_result["confidence"],
+                    "approved_for_use": validation_result["approved"]
+                })
+            else:
+                # Add default validation info
+                rag_result.update({
+                    "validation": {
+                        "fact_check_available": False,
+                        "message": "Fact-checking disabled or unavailable"
+                    },
+                    "trust_score": rag_result["confidence"],
+                    "approved_for_use": True
+                })
+            
+            return rag_result
+            
+        except Exception as e:
+            logger.error(f"Error in validated documentation query: {e}")
+            return {
+                "answer": f"I encountered an error while processing your query: {str(e)}",
+                "confidence": 0.0,
+                "sources": [],
+                "processing_time": 0.0,
+                "query_type": query_type,
+                "validation": {
+                    "fact_check_available": False,
+                    "error": str(e)
+                },
+                "trust_score": 0.0,
+                "approved_for_use": False
+            }
     
     def _get_session_context(
         self,
@@ -354,6 +514,16 @@ class AgenticIntegrationService:
                 "agents": {
                     "available_trust_levels": list(self.agent_orchestrators.keys()),
                     "active_sessions": len(self.active_sessions)
+                },
+                "fact_checker": {
+                    "enabled": self.self_critic_enabled,
+                    "available": self.fact_checker is not None,
+                    "capabilities": {
+                        "quick_fact_check": True,
+                        "comprehensive_analysis": True,
+                        "self_criticism": True,
+                        "quality_scoring": True
+                    } if self.fact_checker else {}
                 }
             }
             

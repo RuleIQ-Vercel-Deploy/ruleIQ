@@ -10,6 +10,7 @@ from api.dependencies.auth import get_current_active_user
 from api.middleware.error_handler import error_handler_middleware
 from api.request_id_middleware import RequestIDMiddleware
 from api.routers import (
+    agentic_assessments,
     agentic_rag,
     ai_assessments,
     ai_optimization,
@@ -75,11 +76,37 @@ async def lifespan(app: FastAPI):
     except Exception as e:
         logger.warning(f"Failed to initialize agentic RAG service: {e}")
 
+    # Initialize database monitoring service
+    from monitoring.database_monitor import get_database_monitor
+    import asyncio
+    
+    try:
+        # Start the database monitoring background task
+        monitor = get_database_monitor()
+        monitoring_task = asyncio.create_task(monitor.start_monitoring_loop(interval_seconds=30))
+        logger.info("Database monitoring service started with 30s interval")
+        
+        # Store the task reference for cleanup
+        app.state.monitoring_task = monitoring_task
+    except Exception as e:
+        logger.warning(f"Failed to start database monitoring: {e}")
+
     logger.info(f"Environment: {settings.environment}")
     logger.info(f"Debug mode: {settings.debug}")
     yield
+    
     # Shutdown
     logger.info("Shutting down ComplianceGPT API...")
+    
+    # Cancel monitoring task if it exists
+    if hasattr(app.state, 'monitoring_task'):
+        try:
+            app.state.monitoring_task.cancel()
+            await app.state.monitoring_task
+        except asyncio.CancelledError:
+            logger.info("Database monitoring task cancelled successfully")
+        except Exception as e:
+            logger.warning(f"Error cancelling monitoring task: {e}")
 
 
 app = FastAPI(
@@ -148,6 +175,7 @@ app.include_router(
 app.include_router(monitoring.router, prefix="/api/monitoring", tags=["Monitoring"])
 app.include_router(security.router, prefix="/api/security", tags=["Security"])
 app.include_router(chat.router, prefix="/api", tags=["AI Assistant"])
+app.include_router(agentic_assessments.router, prefix="/api", tags=["Agentic Assessments"])
 app.include_router(agentic_rag.router, prefix="/api", tags=["Agentic RAG"])
 app.include_router(admin_router)
 
@@ -172,19 +200,26 @@ async def root():
 async def health_check():
     """Check API health status with database monitoring"""
     try:
+        from datetime import datetime
         from database.db_setup import get_engine_info
-        from services.monitoring.database_monitor import database_monitor
+        from monitoring.database_monitor import get_database_monitor
+        
+        # Get database monitoring status from the new enhanced monitor
+        monitor = get_database_monitor()
+        monitoring_summary = monitor.get_monitoring_summary()
 
         # Get basic database engine info
         engine_info = get_engine_info()
 
-        # Get database monitoring status
-        db_status = database_monitor.get_current_status()
+        # Extract key metrics from monitoring summary
+        current_metrics = monitoring_summary.get("current_metrics", {})
+        alerts = monitoring_summary.get("alerts", [])
+        
+        # Count alerts by severity
+        critical_alerts = len([a for a in alerts if a.get("severity") == "critical"])
+        warning_alerts = len([a for a in alerts if a.get("severity") == "warning"])
 
-        # Determine overall health
-        critical_alerts = db_status["alert_counts"]["critical"]
-        warning_alerts = db_status["alert_counts"]["warning"]
-
+        # Determine overall health based on new monitoring system
         if critical_alerts > 0:
             status = "degraded"
             message = f"Critical database issues detected ({critical_alerts} alerts)"
@@ -198,19 +233,36 @@ async def health_check():
             status = "healthy"
             message = "All systems operational"
 
-        # Include basic monitoring data in health response
+        # Get pool utilization from either sync or async pool
+        pool_utilization = 0
+        active_sessions = 0
+        
+        for pool_type, metrics in current_metrics.items():
+            if metrics:
+                pool_utilization = max(pool_utilization, metrics.get("utilization_percent", 0))
+        
+        # Get session metrics if available
+        recent_averages = monitoring_summary.get("recent_averages", {})
+        for key, value in recent_averages.items():
+            if "active_sessions" in key:
+                active_sessions = value
+                break
+
+        # Include enhanced monitoring data in health response
         health_data = {
             "status": status,
             "message": message,
             "database": {
                 "engine_initialized": engine_info.get("async_engine_initialized", False),
-                "pool_utilization": db_status["pool_metrics"]["utilization_percent"]
-                if db_status["pool_metrics"]
-                else 0,
-                "active_sessions": db_status["session_metrics"]["active_sessions"],
-                "recent_alerts": db_status["alert_counts"],
+                "pool_utilization": pool_utilization,
+                "active_sessions": active_sessions,
+                "recent_alerts": {
+                    "critical": critical_alerts,
+                    "warning": warning_alerts,
+                    "total": len(alerts)
+                },
             },
-            "timestamp": db_status["timestamp"],
+            "timestamp": monitoring_summary.get("timestamp", datetime.utcnow().isoformat()),
         }
 
         return HealthCheckResponse(**health_data)

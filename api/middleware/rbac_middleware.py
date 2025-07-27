@@ -41,11 +41,13 @@ class RBACMiddleware(BaseHTTPMiddleware):
         
         # Public routes that don't require authentication
         self.public_routes = {
-            "/api/v1/auth/login",
-            "/api/v1/auth/login-form", 
-            "/api/v1/auth/register",
-            "/api/v1/auth/refresh",
-            "/api/v1/health",
+            "/api/auth/login",
+            "/api/auth/login-form", 
+            "/api/auth/register",
+            "/api/auth/refresh",
+            "/health",
+            "/api/monitoring/health",  # Public health check for load balancers
+            "/api/monitoring/prometheus",  # Public metrics for Prometheus scraping
             "/docs",
             "/redoc",
             "/openapi.json"
@@ -53,10 +55,10 @@ class RBACMiddleware(BaseHTTPMiddleware):
         
         # Routes that require authentication but no specific permissions
         self.authenticated_only_routes = {
-            "/api/v1/auth/me",
-            "/api/v1/auth/logout",
-            "/api/v1/auth/permissions",
-            "/api/v1/auth/framework-access"
+            "/api/auth/me",
+            "/api/auth/logout",
+            "/api/auth/permissions",
+            "/api/auth/framework-access"
         }
     
     def _configure_route_permissions(self) -> Dict[Pattern, Dict[str, List[str]]]:
@@ -68,7 +70,7 @@ class RBACMiddleware(BaseHTTPMiddleware):
         """
         route_config = {
             # Admin routes - require admin permissions
-            r"/api/v1/admin/.*": {
+            r"/api/admin/.*": {
                 "GET": ["admin_roles", "admin_permissions", "admin_audit"],
                 "POST": ["admin_roles", "admin_permissions"],
                 "PUT": ["admin_roles", "admin_permissions"],
@@ -76,12 +78,21 @@ class RBACMiddleware(BaseHTTPMiddleware):
                 "PATCH": ["admin_roles", "admin_permissions"]
             },
             
+            # Monitoring routes - tiered access
+            r"/api/monitoring/database.*": {
+                "GET": ["admin_roles", "monitoring_view"],  # Database monitoring requires elevated access
+                "POST": ["admin_roles", "monitoring_admin"]  # Testing endpoints require admin
+            },
+            r"/api/monitoring/status.*": {
+                "GET": ["admin_roles", "monitoring_view"]  # Status overview requires monitoring access
+            },
+            
             # User management routes
-            r"/api/v1/users/?$": {
+            r"/api/users/?$": {
                 "GET": ["user_list"],
                 "POST": ["user_create"]
             },
-            r"/api/v1/users/[^/]+/?$": {
+            r"/api/users/[^/]+/?$": {
                 "GET": ["user_list"],
                 "PUT": ["user_update"],
                 "DELETE": ["user_delete"],
@@ -89,11 +100,11 @@ class RBACMiddleware(BaseHTTPMiddleware):
             },
             
             # Framework routes
-            r"/api/v1/frameworks/?$": {
+            r"/api/frameworks/?$": {
                 "GET": ["framework_list"],
                 "POST": ["framework_create"]
             },
-            r"/api/v1/frameworks/[^/]+/?$": {
+            r"/api/frameworks/[^/]+/?$": {
                 "GET": ["framework_list"],
                 "PUT": ["framework_update"],
                 "DELETE": ["framework_delete"],
@@ -101,11 +112,11 @@ class RBACMiddleware(BaseHTTPMiddleware):
             },
             
             # Assessment routes
-            r"/api/v1/assessments/?$": {
+            r"/api/assessments/?$": {
                 "GET": ["assessment_list"],
                 "POST": ["assessment_create"]
             },
-            r"/api/v1/assessments/[^/]+/?$": {
+            r"/api/assessments/[^/]+/?$": {
                 "GET": ["assessment_list"],
                 "PUT": ["assessment_update"],
                 "DELETE": ["assessment_delete"],
@@ -113,7 +124,7 @@ class RBACMiddleware(BaseHTTPMiddleware):
             },
             
             # AI Policy routes
-            r"/api/v1/policies.*": {
+            r"/api/policies.*": {
                 "GET": ["policy_generate"],
                 "POST": ["policy_generate", "policy_refine"],
                 "PUT": ["policy_refine"],
@@ -121,17 +132,17 @@ class RBACMiddleware(BaseHTTPMiddleware):
             },
             
             # Report routes
-            r"/api/v1/reports.*": {
+            r"/api/reports.*": {
                 "GET": ["report_view"],
                 "POST": ["report_export", "report_schedule"]
             },
             
             # Business profile routes - users can access their own, admins can access any
-            r"/api/v1/business-profiles/?$": {
+            r"/api/business-profiles/?$": {
                 "GET": ["user_list"],  # Admin level for listing all
                 "POST": []  # No special permission - users can create their own
             },
-            r"/api/v1/business-profiles/[^/]+/?$": {
+            r"/api/business-profiles/[^/]+/?$": {
                 "GET": [],  # Will check ownership or admin permission
                 "PUT": [],  # Will check ownership or admin permission  
                 "DELETE": ["user_delete"],  # Admin only

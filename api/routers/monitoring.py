@@ -1,299 +1,437 @@
 """
-Monitoring endpoints for database and system health.
+Monitoring API Endpoints
+
+Provides API endpoints for system monitoring including:
+- Database connection pool metrics
+- System health checks
+- Performance metrics
+- Alert status
 """
 
-from datetime import datetime, timedelta
-from typing import Any, Dict
+from typing import Dict, Any
+from fastapi import APIRouter, HTTPException
+from datetime import datetime
 
-from fastapi import APIRouter, Depends, HTTPException, Query
-
-from api.dependencies.auth import get_current_active_user
-from config.logging_config import get_logger
+from monitoring.database_monitor import get_database_monitor, get_database_health_status
 from database.db_setup import get_engine_info
-from database.user import User
-from services.monitoring.database_monitor import database_monitor
-
-logger = get_logger(__name__)
-
-router = APIRouter()
 
 
-@router.get("/database/status")
-async def get_database_status(
-    current_user: User = Depends(get_current_active_user),
-) -> Dict[str, Any]:
+"""
+Monitoring API Endpoints
+
+Provides API endpoints for system monitoring including:
+- Database connection pool metrics
+- System health checks
+- Performance metrics
+- Alert status
+"""
+
+from typing import Dict, Any
+from fastapi import APIRouter, HTTPException, Depends
+from datetime import datetime
+
+from monitoring.database_monitor import get_database_monitor, get_database_health_status
+from database.db_setup import get_engine_info
+from api.dependencies.auth import get_current_active_user
+from database import User
+
+router = APIRouter(prefix="/monitoring", tags=["monitoring"])
+
+
+@router.get("/health")
+async def health_check() -> Dict[str, Any]:
     """
-    Get current database monitoring status including pool metrics and alerts.
-
-    Requires authentication to prevent information disclosure.
+    Basic health check endpoint.
+    Returns overall system health status.
     """
     try:
-        status = database_monitor.get_current_status()
-        return {"status": "success", "data": status}
+        monitor = get_database_monitor()
+        
+        # Perform quick health checks
+        health_checks = monitor.check_connection_health()
+        async_health = await monitor.check_async_connection_health()
+        
+        # Determine overall health
+        all_healthy = all(check.success for check in health_checks.values())
+        if async_health:
+            all_healthy = all_healthy and async_health.success
+        
+        return {
+            "status": "healthy" if all_healthy else "unhealthy",
+            "timestamp": datetime.utcnow().isoformat(),
+            "database": {
+                "sync": health_checks.get("sync", {}).success if "sync" in health_checks else False,
+                "async": async_health.success if async_health else False,
+            }
+        }
     except Exception as e:
-        logger.error(f"Error getting database status: {e}")
-        raise HTTPException(status_code=500, detail="Failed to get database status")
+        raise HTTPException(status_code=500, detail=f"Health check failed: {str(e)}")
+
+
+@router.get("/database")
+async def database_status(
+    current_user: User = Depends(get_current_active_user)
+) -> Dict[str, Any]:
+    """
+    Get comprehensive database monitoring status.
+    Includes pool metrics, health checks, and alerts.
+    Requires authentication for detailed monitoring data.
+    """
+    try:
+        return get_database_health_status()
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Database monitoring failed: {str(e)}")
 
 
 @router.get("/database/pool")
-async def get_pool_metrics(
-    current_user: User = Depends(get_current_active_user),
-    hours: int = Query(default=1, ge=1, le=24, description="Hours of history to return"),
+async def database_pool_metrics(
+    current_user: User = Depends(get_current_active_user)
 ) -> Dict[str, Any]:
     """
-    Get database connection pool metrics for the specified time period.
+    Get current database connection pool metrics.
+    Requires authentication for detailed pool information.
     """
     try:
-        cutoff = datetime.utcnow() - timedelta(hours=hours)
-
-        recent_metrics = [
-            m.to_dict() for m in database_monitor.pool_metrics_history if m.timestamp > cutoff
-        ]
-
-        # Calculate summary statistics
-        if recent_metrics:
-            utilizations = [m["utilization_percent"] for m in recent_metrics]
-            overflows = [m["overflow"] for m in recent_metrics]
-
-            summary = {
-                "avg_utilization": sum(utilizations) / len(utilizations),
-                "max_utilization": max(utilizations),
-                "total_overflow_events": sum(1 for o in overflows if o > 0),
-                "max_overflow": max(overflows),
-                "metrics_count": len(recent_metrics),
-            }
-        else:
-            summary = {
-                "avg_utilization": 0,
-                "max_utilization": 0,
-                "total_overflow_events": 0,
-                "max_overflow": 0,
-                "metrics_count": 0,
-            }
-
+        monitor = get_database_monitor()
+        metrics = monitor.get_pool_metrics()
+        
         return {
-            "status": "success",
-            "data": {"summary": summary, "metrics": recent_metrics, "period_hours": hours},
+            "timestamp": datetime.utcnow().isoformat(),
+            "pools": {k: v.to_dict() for k, v in metrics.items()}
         }
     except Exception as e:
-        logger.error(f"Error getting pool metrics: {e}")
-        raise HTTPException(status_code=500, detail="Failed to get pool metrics")
-
-
-@router.get("/database/sessions")
-async def get_session_metrics(
-    current_user: User = Depends(get_current_active_user),
-    hours: int = Query(default=1, ge=1, le=24, description="Hours of history to return"),
-) -> Dict[str, Any]:
-    """
-    Get database session lifecycle metrics for the specified time period.
-    """
-    try:
-        cutoff = datetime.utcnow() - timedelta(hours=hours)
-
-        recent_metrics = [
-            m.to_dict() for m in database_monitor.session_metrics_history if m.timestamp > cutoff
-        ]
-
-        # Get current session tracker stats
-        current_stats = database_monitor.session_tracker.get_stats()
-
-        return {
-            "status": "success",
-            "data": {
-                "current_stats": current_stats,
-                "metrics": recent_metrics,
-                "period_hours": hours,
-            },
-        }
-    except Exception as e:
-        logger.error(f"Error getting session metrics: {e}")
-        raise HTTPException(status_code=500, detail="Failed to get session metrics")
+        raise HTTPException(status_code=500, detail=f"Pool metrics failed: {str(e)}")
 
 
 @router.get("/database/alerts")
-async def get_database_alerts(
-    current_user: User = Depends(get_current_active_user),
-    hours: int = Query(default=24, ge=1, le=168, description="Hours of alert history to return"),
-    level: str = Query(default=None, description="Filter by alert level (info, warning, critical)"),
+async def database_alerts(
+    current_user: User = Depends(get_current_active_user)
 ) -> Dict[str, Any]:
     """
-    Get database monitoring alerts for the specified time period.
+    Get current database alerts.
+    Requires authentication for alert information.
     """
     try:
-        cutoff = datetime.utcnow() - timedelta(hours=hours)
-
-        alerts = [a.to_dict() for a in database_monitor.alerts if a.timestamp > cutoff]
-
-        # Filter by level if specified
-        if level:
-            level = level.lower()
-            if level not in ["info", "warning", "critical"]:
-                raise HTTPException(status_code=400, detail="Invalid alert level")
-            alerts = [a for a in alerts if a["level"] == level]
-
-        # Group alerts by level for summary
-        alert_summary = {
-            "critical": len([a for a in alerts if a["level"] == "critical"]),
-            "warning": len([a for a in alerts if a["level"] == "warning"]),
-            "info": len([a for a in alerts if a["level"] == "info"]),
-            "total": len(alerts),
-        }
-
+        monitor = get_database_monitor()
+        metrics = monitor.get_pool_metrics()
+        alerts = monitor.check_alerts(metrics)
+        
+        # Group alerts by severity
+        alert_counts = {"critical": 0, "warning": 0, "info": 0}
+        for alert in alerts:
+            severity = alert.get("severity", "info")
+            alert_counts[severity] = alert_counts.get(severity, 0) + 1
+        
         return {
-            "status": "success",
-            "data": {
-                "summary": alert_summary,
-                "alerts": alerts,
-                "period_hours": hours,
-                "filter_level": level,
-            },
+            "timestamp": datetime.utcnow().isoformat(),
+            "alert_counts": alert_counts,
+            "alerts": alerts,
+            "thresholds": monitor.alert_thresholds.__dict__
         }
     except Exception as e:
-        logger.error(f"Error getting database alerts: {e}")
-        raise HTTPException(status_code=500, detail="Failed to get database alerts")
+        raise HTTPException(status_code=500, detail=f"Database alerts failed: {str(e)}")
 
 
 @router.get("/database/engine-info")
-async def get_engine_info_endpoint(
-    current_user: User = Depends(get_current_active_user),
+async def database_engine_info(
+    current_user: User = Depends(get_current_active_user)
 ) -> Dict[str, Any]:
     """
-    Get raw database engine information for debugging.
+    Get detailed database engine information.
+    Requires authentication for engine details.
     """
     try:
         engine_info = get_engine_info()
-        return {"status": "success", "data": engine_info}
-    except Exception as e:
-        logger.error(f"Error getting engine info: {e}")
-        raise HTTPException(status_code=500, detail="Failed to get engine info")
-
-
-@router.post("/database/collect-metrics")
-async def trigger_metrics_collection(
-    current_user: User = Depends(get_current_active_user),
-) -> Dict[str, Any]:
-    """
-    Manually trigger database metrics collection.
-
-    Useful for testing or immediate monitoring needs.
-    """
-    try:
-        pool_metrics = database_monitor.collect_pool_metrics()
-        session_metrics = database_monitor.collect_session_metrics()
-
         return {
-            "status": "success",
-            "data": {
-                "pool_metrics": pool_metrics.to_dict() if pool_metrics else None,
-                "session_metrics": session_metrics.to_dict(),
-                "timestamp": datetime.utcnow().isoformat(),
-            },
+            "timestamp": datetime.utcnow().isoformat(),
+            "engine_info": engine_info
         }
     except Exception as e:
-        logger.error(f"Error collecting metrics: {e}")
-        raise HTTPException(status_code=500, detail="Failed to collect metrics")
+        raise HTTPException(status_code=500, detail=f"Engine info failed: {str(e)}")
 
 
-@router.get("/database/health")
-async def get_database_health(
-    current_user: User = Depends(get_current_active_user),
-) -> Dict[str, Any]:
+@router.get("/prometheus")
+async def prometheus_metrics() -> str:
     """
-    Get overall database health status with recommendations.
+    Prometheus-compatible metrics endpoint.
+    Public endpoint for metrics scraping.
     """
     try:
-        status = database_monitor.get_current_status()
+        monitor = get_database_monitor()
+        metrics = monitor.get_pool_metrics()
+        health_checks = monitor.check_connection_health()
+        async_health = await monitor.check_async_connection_health()
+        
+        # Generate Prometheus format metrics
+        prometheus_metrics = []
+        
+        # Help and type declarations
+        prometheus_metrics.append("# HELP ruleiq_db_pool_size Database connection pool size")
+        prometheus_metrics.append("# TYPE ruleiq_db_pool_size gauge")
+        prometheus_metrics.append("# HELP ruleiq_db_pool_checked_out Database connections checked out")
+        prometheus_metrics.append("# TYPE ruleiq_db_pool_checked_out gauge")
+        prometheus_metrics.append("# HELP ruleiq_db_pool_utilization Database pool utilization percentage")
+        prometheus_metrics.append("# TYPE ruleiq_db_pool_utilization gauge")
+        prometheus_metrics.append("# HELP ruleiq_db_pool_overflow Database pool overflow connections")
+        prometheus_metrics.append("# TYPE ruleiq_db_pool_overflow gauge")
+        prometheus_metrics.append("# HELP ruleiq_db_health Database health check status")
+        prometheus_metrics.append("# TYPE ruleiq_db_health gauge")
+        prometheus_metrics.append("# HELP ruleiq_db_response_time Database response time in milliseconds")
+        prometheus_metrics.append("# TYPE ruleiq_db_response_time gauge")
+        
+        # Pool metrics
+        for pool_type, metric in metrics.items():
+            labels = f'pool_type="{pool_type}"'
+            prometheus_metrics.append(f'ruleiq_db_pool_size{{{labels}}} {metric.pool_size}')
+            prometheus_metrics.append(f'ruleiq_db_pool_checked_out{{{labels}}} {metric.checked_out}')
+            prometheus_metrics.append(f'ruleiq_db_pool_utilization{{{labels}}} {metric.utilization_percent}')
+            prometheus_metrics.append(f'ruleiq_db_pool_overflow{{{labels}}} {metric.overflow}')
+        
+        # Health check metrics
+        for pool_type, health in health_checks.items():
+            labels = f'pool_type="{pool_type}"'
+            health_value = 1 if health.success else 0
+            prometheus_metrics.append(f'ruleiq_db_health{{{labels}}} {health_value}')
+            prometheus_metrics.append(f'ruleiq_db_response_time{{{labels}}} {health.response_time_ms}')
+        
+        if async_health:
+            labels = f'pool_type="async"'
+            health_value = 1 if async_health.success else 0
+            prometheus_metrics.append(f'ruleiq_db_health{{{labels}}} {health_value}')
+            prometheus_metrics.append(f'ruleiq_db_response_time{{{labels}}} {async_health.response_time_ms}')
+        
+        return "\n".join(prometheus_metrics) + "\n"
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Prometheus metrics failed: {str(e)}")
 
+
+@router.post("/database/test-connection")
+async def test_database_connection(
+    current_user: User = Depends(get_current_active_user)
+) -> Dict[str, Any]:
+    """
+    Manually trigger database connection test.
+    Requires authentication for connection testing.
+    """
+    try:
+        monitor = get_database_monitor()
+        
+        # Perform health checks
+        sync_health = monitor.check_connection_health()
+        async_health = await monitor.check_async_connection_health()
+        
+        results = {
+            "timestamp": datetime.utcnow().isoformat(),
+            "sync_health": {k: v.to_dict() for k, v in sync_health.items()},
+        }
+        
+        if async_health:
+            results["async_health"] = async_health.to_dict()
+        
+        return results
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Connection test failed: {str(e)}")
+
+
+@router.get("/status")
+async def get_monitoring_status(
+    current_user: User = Depends(get_current_active_user)
+) -> Dict[str, Any]:
+    """
+    Get comprehensive monitoring status including all metrics and alerts.
+    Requires authentication for full monitoring data.
+    """
+    try:
+        monitor = get_database_monitor()
+        summary = monitor.get_monitoring_summary()
+        
+        return {
+            "service_status": "active",
+            "monitoring_summary": summary,
+            "endpoints": {
+                "health": "/api/monitoring/health",
+                "database": "/api/monitoring/database", 
+                "alerts": "/api/monitoring/database/alerts",
+                "metrics": "/api/monitoring/prometheus",
+                "pool_metrics": "/api/monitoring/database/pool"
+            }
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Monitoring status failed: {str(e)}")
+
+
+@router.get("/health")
+async def health_check() -> Dict[str, Any]:
+    """
+    Basic health check endpoint.
+    Returns overall system health status.
+    """
+    try:
+        monitor = get_database_monitor()
+        
+        # Perform quick health checks
+        health_checks = monitor.check_connection_health()
+        async_health = await monitor.check_async_connection_health()
+        
         # Determine overall health
-        critical_alerts = status["alert_counts"]["critical"]
-        warning_alerts = status["alert_counts"]["warning"]
-
-        if critical_alerts > 0:
-            health_status = "critical"
-            health_message = f"{critical_alerts} critical database issues detected"
-        elif warning_alerts > 0:
-            health_status = "warning"
-            health_message = f"{warning_alerts} database warnings detected"
-        else:
-            health_status = "healthy"
-            health_message = "Database is operating normally"
-
-        # Generate recommendations
-        recommendations = []
-
-        if status["pool_metrics"]:
-            pool_util = status["pool_metrics"]["utilization_percent"]
-            if pool_util > 80:
-                recommendations.append("Consider increasing database connection pool size")
-            if status["pool_metrics"]["overflow"] > 0:
-                recommendations.append("Pool overflow detected - monitor for connection leaks")
-
-        if status["session_metrics"]["long_running_sessions"] > 0:
-            recommendations.append("Long-running sessions detected - review query performance")
-
-        if status["session_metrics"]["active_sessions"] > 50:
-            recommendations.append("High number of active sessions - check for session leaks")
-
+        all_healthy = all(check.success for check in health_checks.values())
+        if async_health:
+            all_healthy = all_healthy and async_health.success
+        
         return {
-            "status": "success",
-            "data": {
-                "health_status": health_status,
-                "health_message": health_message,
-                "recommendations": recommendations,
-                "metrics_summary": {
-                    "pool_utilization": status["pool_metrics"]["utilization_percent"]
-                    if status["pool_metrics"]
-                    else 0,
-                    "active_sessions": status["session_metrics"]["active_sessions"],
-                    "recent_alerts": status["alert_counts"],
-                },
-                "timestamp": status["timestamp"],
-            },
+            "status": "healthy" if all_healthy else "unhealthy",
+            "timestamp": datetime.utcnow().isoformat(),
+            "database": {
+                "sync": health_checks.get("sync", {}).success if "sync" in health_checks else False,
+                "async": async_health.success if async_health else False,
+            }
         }
     except Exception as e:
-        logger.error(f"Error getting database health: {e}")
-        raise HTTPException(status_code=500, detail="Failed to get database health")
+        raise HTTPException(status_code=500, detail=f"Health check failed: {str(e)}")
 
 
-@router.get("/system/metrics")
-async def get_system_metrics(
-    current_user: User = Depends(get_current_active_user),
-) -> Dict[str, Any]:
+@router.get("/database")
+async def database_status() -> Dict[str, Any]:
     """
-    Get basic system metrics for monitoring dashboard.
+    Get comprehensive database monitoring status.
+    Includes pool metrics, health checks, and alerts.
     """
     try:
-        import psutil
+        return get_database_health_status()
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Database monitoring failed: {str(e)}")
 
-        # CPU and memory metrics
-        cpu_percent = psutil.cpu_percent(interval=1)
-        memory = psutil.virtual_memory()
-        disk = psutil.disk_usage("/")
 
-        # Database metrics
-        db_status = database_monitor.get_current_status()
-
+@router.get("/database/pool")
+async def database_pool_metrics() -> Dict[str, Any]:
+    """
+    Get current database connection pool metrics.
+    """
+    try:
+        monitor = get_database_monitor()
+        metrics = monitor.get_pool_metrics()
+        
         return {
-            "status": "success",
-            "data": {
-                "system": {
-                    "cpu_percent": cpu_percent,
-                    "memory_percent": memory.percent,
-                    "memory_available_gb": memory.available / (1024**3),
-                    "disk_free_gb": disk.free / (1024**3),
-                    "disk_percent": (disk.used / disk.total) * 100,
-                },
-                "database": {
-                    "pool_utilization": db_status["pool_metrics"]["utilization_percent"]
-                    if db_status["pool_metrics"]
-                    else 0,
-                    "active_sessions": db_status["session_metrics"]["active_sessions"],
-                    "alert_counts": db_status["alert_counts"],
-                },
-                "timestamp": datetime.utcnow().isoformat(),
-            },
+            "timestamp": datetime.utcnow().isoformat(),
+            "pools": {k: v.to_dict() for k, v in metrics.items()}
         }
     except Exception as e:
-        logger.error(f"Error getting system metrics: {e}")
-        raise HTTPException(status_code=500, detail="Failed to get system metrics")
+        raise HTTPException(status_code=500, detail=f"Pool metrics failed: {str(e)}")
+
+
+@router.get("/database/alerts")
+async def database_alerts() -> Dict[str, Any]:
+    """
+    Get current database alerts.
+    """
+    try:
+        monitor = get_database_monitor()
+        metrics = monitor.get_pool_metrics()
+        alerts = monitor.check_alerts(metrics)
+        
+        return {
+            "timestamp": datetime.utcnow().isoformat(),
+            "alert_count": len(alerts),
+            "alerts": alerts,
+            "thresholds": monitor.alert_thresholds.__dict__
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Database alerts failed: {str(e)}")
+
+
+@router.get("/database/engine-info")
+async def database_engine_info() -> Dict[str, Any]:
+    """
+    Get detailed database engine information.
+    """
+    try:
+        engine_info = get_engine_info()
+        return {
+            "timestamp": datetime.utcnow().isoformat(),
+            "engine_info": engine_info
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Engine info failed: {str(e)}")
+
+
+@router.get("/prometheus")
+async def prometheus_metrics() -> str:
+    """
+    Prometheus-compatible metrics endpoint.
+    """
+    try:
+        monitor = get_database_monitor()
+        metrics = monitor.get_pool_metrics()
+        health_checks = monitor.check_connection_health()
+        async_health = await monitor.check_async_connection_health()
+        
+        # Generate Prometheus format metrics
+        prometheus_metrics = []
+        
+        # Help and type declarations
+        prometheus_metrics.append("# HELP ruleiq_db_pool_size Database connection pool size")
+        prometheus_metrics.append("# TYPE ruleiq_db_pool_size gauge")
+        prometheus_metrics.append("# HELP ruleiq_db_pool_checked_out Database connections checked out")
+        prometheus_metrics.append("# TYPE ruleiq_db_pool_checked_out gauge")
+        prometheus_metrics.append("# HELP ruleiq_db_pool_utilization Database pool utilization percentage")
+        prometheus_metrics.append("# TYPE ruleiq_db_pool_utilization gauge")
+        prometheus_metrics.append("# HELP ruleiq_db_pool_overflow Database pool overflow connections")
+        prometheus_metrics.append("# TYPE ruleiq_db_pool_overflow gauge")
+        prometheus_metrics.append("# HELP ruleiq_db_health Database health check status")
+        prometheus_metrics.append("# TYPE ruleiq_db_health gauge")
+        prometheus_metrics.append("# HELP ruleiq_db_response_time Database response time in milliseconds")
+        prometheus_metrics.append("# TYPE ruleiq_db_response_time gauge")
+        
+        # Pool metrics
+        for pool_type, metric in metrics.items():
+            labels = f'pool_type="{pool_type}"'
+            prometheus_metrics.append(f'ruleiq_db_pool_size{{{labels}}} {metric.pool_size}')
+            prometheus_metrics.append(f'ruleiq_db_pool_checked_out{{{labels}}} {metric.checked_out}')
+            prometheus_metrics.append(f'ruleiq_db_pool_utilization{{{labels}}} {metric.utilization_percent}')
+            prometheus_metrics.append(f'ruleiq_db_pool_overflow{{{labels}}} {metric.overflow}')
+        
+        # Health check metrics
+        for pool_type, health in health_checks.items():
+            labels = f'pool_type="{pool_type}"'
+            health_value = 1 if health.success else 0
+            prometheus_metrics.append(f'ruleiq_db_health{{{labels}}} {health_value}')
+            prometheus_metrics.append(f'ruleiq_db_response_time{{{labels}}} {health.response_time_ms}')
+        
+        if async_health:
+            labels = f'pool_type="async"'
+            health_value = 1 if async_health.success else 0
+            prometheus_metrics.append(f'ruleiq_db_health{{{labels}}} {health_value}')
+            prometheus_metrics.append(f'ruleiq_db_response_time{{{labels}}} {async_health.response_time_ms}')
+        
+        return "\n".join(prometheus_metrics) + "\n"
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Prometheus metrics failed: {str(e)}")
+
+
+@router.post("/database/test-connection")
+async def test_database_connection() -> Dict[str, Any]:
+    """
+    Manually trigger database connection test.
+    """
+    try:
+        monitor = get_database_monitor()
+        
+        # Perform health checks
+        sync_health = monitor.check_connection_health()
+        async_health = await monitor.check_async_connection_health()
+        
+        results = {
+            "timestamp": datetime.utcnow().isoformat(),
+            "sync_health": {k: v.to_dict() for k, v in sync_health.items()},
+        }
+        
+        if async_health:
+            results["async_health"] = async_health.to_dict()
+        
+        return results
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Connection test failed: {str(e)}")

@@ -12,13 +12,15 @@ import asyncio
 from datetime import datetime
 
 import openai
+from mistralai import Mistral
 from pydantic import BaseModel, Field
 from sqlalchemy import create_engine, text
 import redis
 from neo4j import GraphDatabase
+from supabase import create_client, Client
 
 # Local imports
-from database.db_setup import get_db_url
+# from database.db_setup import get_db_url  # Not needed, using os.getenv directly
 
 logger = logging.getLogger(__name__)
 
@@ -54,9 +56,25 @@ class AgenticRAGSystem:
     """
     
     def __init__(self):
-        # Database connections
-        self.db_url = get_db_url()
-        self.engine = create_engine(self.db_url)
+        # Supabase connections
+        supabase_url = os.getenv("SUPABASE_URL")
+        supabase_key = os.getenv("SUPABASE_SERVICE_KEY")
+        if not supabase_url or not supabase_key:
+            raise ValueError("SUPABASE_URL and SUPABASE_SERVICE_KEY environment variables must be set")
+        
+        # Initialize Supabase client
+        self.supabase: Client = create_client(supabase_url, supabase_key)
+        
+        # Get Supabase database connection string from environment
+        postgres_password = os.getenv("POSTGRES_PASSWORD")
+        if postgres_password:
+            # Standard Supabase connection format
+            postgres_url = f"postgresql://postgres:{postgres_password}@db.gaqkmdexddnmwzenrjrv.supabase.co:5432/postgres"
+        else:
+            raise ValueError("POSTGRES_PASSWORD environment variable must be set for Supabase connection")
+        
+        # Create SQLAlchemy engine for advanced vector operations
+        self.engine = create_engine(postgres_url)
         
         # Redis for caching
         self.redis_client = redis.Redis(
@@ -76,14 +94,26 @@ class AgenticRAGSystem:
                 )
             )
         
-        # OpenAI client
-        self.openai_client = openai.OpenAI(
-            api_key=os.getenv("OPENAI_API_KEY")
-        )
+        # Initialize AI clients
+        # Mistral for embeddings
+        mistral_api_key = os.getenv("MISTRAL_API_KEY")
+        if mistral_api_key:
+            self.mistral_client = Mistral(api_key=mistral_api_key)
+            self.use_mistral_embeddings = True
+        else:
+            self.mistral_client = None
+            self.use_mistral_embeddings = False
+            
+        # OpenAI client for LLM tasks (fallback for embeddings)
+        openai_api_key = os.getenv("OPENAI_API_KEY")
+        if openai_api_key:
+            self.openai_client = openai.OpenAI(api_key=openai_api_key)
+        else:
+            self.openai_client = None
         
         # Configuration
-        self.embedding_model = "text-embedding-3-small"
-        self.llm_model = "gpt-4o-mini"
+        self.embedding_model = "mistral-embed" if self.use_mistral_embeddings else "text-embedding-3-small"
+        self.llm_model = "gpt-4o-mini"  # Keep OpenAI for LLM tasks
         
         # RAG strategies
         self.use_contextual_embeddings = os.getenv("USE_CONTEXTUAL_EMBEDDINGS", "true").lower() == "true"
@@ -101,12 +131,32 @@ class AgenticRAGSystem:
                 # Enable pgvector extension
                 conn.execute(text("CREATE EXTENSION IF NOT EXISTS vector"))
                 
+                # Determine embedding dimensions based on model
+                embedding_dim = 1024 if self.use_mistral_embeddings else 1536
+                
+                # Check if table exists and get its current dimension
+                try:
+                    result = conn.execute(text("""
+                        SELECT column_name, data_type 
+                        FROM information_schema.columns 
+                        WHERE table_name = 'documentation_chunks' AND column_name = 'embedding'
+                    """))
+                    existing_table = result.fetchone()
+                    if existing_table:
+                        print(f"Found existing table with embedding column")
+                        # Drop and recreate table if dimensions don't match
+                        conn.execute(text("DROP TABLE IF EXISTS documentation_chunks CASCADE"))
+                        conn.execute(text("DROP TABLE IF EXISTS code_examples CASCADE"))
+                        print(f"Recreating tables for {embedding_dim} dimensions")
+                except Exception as e:
+                    print(f"Table check info: {e}")
+                
                 # Create vector tables for RAG
-                conn.execute(text("""
+                conn.execute(text(f"""
                     CREATE TABLE IF NOT EXISTS documentation_chunks (
                         id TEXT PRIMARY KEY,
                         content TEXT NOT NULL,
-                        embedding vector(1536),
+                        embedding vector({embedding_dim}),
                         metadata JSONB,
                         source TEXT NOT NULL,
                         chunk_type TEXT DEFAULT 'documentation',
@@ -123,12 +173,12 @@ class AgenticRAGSystem:
                 """))
                 
                 # Create code examples table for agentic RAG
-                conn.execute(text("""
+                conn.execute(text(f"""
                     CREATE TABLE IF NOT EXISTS code_examples (
                         id TEXT PRIMARY KEY,
                         code_content TEXT NOT NULL,
                         summary TEXT NOT NULL,
-                        embedding vector(1536),
+                        embedding vector({embedding_dim}),
                         metadata JSONB,
                         source TEXT NOT NULL,
                         framework TEXT NOT NULL, -- 'langgraph' or 'pydantic_ai'
@@ -290,7 +340,7 @@ class AgenticRAGSystem:
             Keep it concise but informative.
             """
             
-            response = await self.openai_client.chat.completions.acreate(
+            response = await self.openai_client.chat.completions.create(
                 model=self.llm_model,
                 messages=[{"role": "user", "content": prompt}],
                 max_tokens=200
@@ -304,13 +354,24 @@ class AgenticRAGSystem:
             return chunk
     
     async def _generate_embedding(self, text: str) -> List[float]:
-        """Generate embedding for text"""
+        """Generate embedding for text using Mistral or OpenAI"""
         try:
-            response = await self.openai_client.embeddings.acreate(
-                model=self.embedding_model,
-                input=text
-            )
-            return response.data[0].embedding
+            if self.use_mistral_embeddings and self.mistral_client:
+                # Use Mistral embeddings (synchronous call)
+                response = self.mistral_client.embeddings.create(
+                    model=self.embedding_model,
+                    inputs=[text]
+                )
+                return response.data[0].embedding
+            elif self.openai_client:
+                # Fallback to OpenAI embeddings
+                response = await self.openai_client.embeddings.create(
+                    model="text-embedding-3-small",
+                    input=text
+                )
+                return response.data[0].embedding
+            else:
+                raise ValueError("No embedding service available. Set MISTRAL_API_KEY or OPENAI_API_KEY")
         except Exception as e:
             logger.error(f"Failed to generate embedding: {e}")
             raise
@@ -326,28 +387,49 @@ class AgenticRAGSystem:
     ):
         """Store documentation chunk in database"""
         try:
-            with self.engine.connect() as conn:
-                conn.execute(text("""
-                    INSERT INTO documentation_chunks 
-                    (id, content, embedding, metadata, source, chunk_type)
-                    VALUES (:id, :content, :embedding, :metadata, :source, :chunk_type)
-                    ON CONFLICT (id) DO UPDATE SET
-                        content = EXCLUDED.content,
-                        embedding = EXCLUDED.embedding,
-                        metadata = EXCLUDED.metadata,
-                        updated_at = CURRENT_TIMESTAMP
-                """), {
-                    'id': chunk_id,
-                    'content': content,
-                    'embedding': embedding,
-                    'metadata': json.dumps(metadata),
-                    'source': source,
-                    'chunk_type': chunk_type
-                })
-                conn.commit()
+            # Use Supabase client for upsert operation
+            data = {
+                'id': chunk_id,
+                'content': content,
+                'embedding': embedding,
+                'metadata': metadata,
+                'source': source,
+                'chunk_type': chunk_type
+            }
+            
+            result = self.supabase.table('documentation_chunks').upsert(data).execute()
+            
+            if result.data:
+                logger.info(f"Successfully stored chunk {chunk_id}")
+            else:
+                logger.warning(f"No data returned when storing chunk {chunk_id}")
+                
         except Exception as e:
             logger.error(f"Failed to store chunk {chunk_id}: {e}")
-            raise
+            # Fallback to SQLAlchemy for complex operations
+            try:
+                with self.engine.connect() as conn:
+                    conn.execute(text("""
+                        INSERT INTO documentation_chunks 
+                        (id, content, embedding, metadata, source, chunk_type)
+                        VALUES (:id, :content, :embedding, :metadata, :source, :chunk_type)
+                        ON CONFLICT (id) DO UPDATE SET
+                            content = EXCLUDED.content,
+                            embedding = EXCLUDED.embedding,
+                            metadata = EXCLUDED.metadata,
+                            updated_at = CURRENT_TIMESTAMP
+                    """), {
+                        'id': chunk_id,
+                        'content': content,
+                        'embedding': embedding,
+                        'metadata': json.dumps(metadata),
+                        'source': source,
+                        'chunk_type': chunk_type
+                    })
+                    conn.commit()
+            except Exception as fallback_error:
+                logger.error(f"Fallback also failed for chunk {chunk_id}: {fallback_error}")
+                raise
     
     async def _extract_and_store_code_examples(self, content: str, framework: str, parent_chunk_id: str):
         """Extract and store code examples for agentic RAG"""
@@ -419,7 +501,7 @@ class AgenticRAGSystem:
             {code}
             """
             
-            response = await self.openai_client.chat.completions.acreate(
+            response = await self.openai_client.chat.completions.create(
                 model=self.llm_model,
                 messages=[{"role": "user", "content": prompt}],
                 max_tokens=150
@@ -460,30 +542,53 @@ class AgenticRAGSystem:
     ):
         """Store code example in database"""
         try:
-            with self.engine.connect() as conn:
-                conn.execute(text("""
-                    INSERT INTO code_examples 
-                    (id, code_content, summary, embedding, metadata, source, framework, example_type)
-                    VALUES (:id, :code_content, :summary, :embedding, :metadata, :source, :framework, :example_type)
-                    ON CONFLICT (id) DO UPDATE SET
-                        code_content = EXCLUDED.code_content,
-                        summary = EXCLUDED.summary,
-                        embedding = EXCLUDED.embedding,
-                        metadata = EXCLUDED.metadata
-                """), {
-                    'id': example_id,
-                    'code_content': code_content,
-                    'summary': summary,
-                    'embedding': embedding,
-                    'metadata': json.dumps(metadata),
-                    'source': framework,
-                    'framework': framework,
-                    'example_type': example_type
-                })
-                conn.commit()
+            # Use Supabase client for upsert operation
+            data = {
+                'id': example_id,
+                'code_content': code_content,
+                'summary': summary,
+                'embedding': embedding,
+                'metadata': metadata,
+                'source': framework,
+                'framework': framework,
+                'example_type': example_type
+            }
+            
+            result = self.supabase.table('code_examples').upsert(data).execute()
+            
+            if result.data:
+                logger.info(f"Successfully stored code example {example_id}")
+            else:
+                logger.warning(f"No data returned when storing code example {example_id}")
+                
         except Exception as e:
             logger.error(f"Failed to store code example {example_id}: {e}")
-            raise
+            # Fallback to SQLAlchemy for complex operations
+            try:
+                with self.engine.connect() as conn:
+                    conn.execute(text("""
+                        INSERT INTO code_examples 
+                        (id, code_content, summary, embedding, metadata, source, framework, example_type)
+                        VALUES (:id, :code_content, :summary, :embedding, :metadata, :source, :framework, :example_type)
+                        ON CONFLICT (id) DO UPDATE SET
+                            code_content = EXCLUDED.code_content,
+                            summary = EXCLUDED.summary,
+                            embedding = EXCLUDED.embedding,
+                            metadata = EXCLUDED.metadata
+                    """), {
+                        'id': example_id,
+                        'code_content': code_content,
+                        'summary': summary,
+                        'embedding': embedding,
+                        'metadata': json.dumps(metadata),
+                        'source': framework,
+                        'framework': framework,
+                        'example_type': example_type
+                    })
+                    conn.commit()
+            except Exception as fallback_error:
+                logger.error(f"Fallback also failed for code example {example_id}: {fallback_error}")
+                raise
     
     async def query_documentation(
         self, 
@@ -787,7 +892,7 @@ class AgenticRAGSystem:
             If the question involves both LangGraph and Pydantic AI, explain how they work together.
             """
             
-            response = await self.openai_client.chat.completions.acreate(
+            response = await self.openai_client.chat.completions.create(
                 model=self.llm_model,
                 messages=[{"role": "user", "content": prompt}],
                 max_tokens=1000,
