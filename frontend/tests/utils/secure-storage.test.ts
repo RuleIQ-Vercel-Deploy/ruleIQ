@@ -51,27 +51,9 @@ global.TextDecoder = class {
 global.atob = (str: string) => Buffer.from(str, 'base64').toString('utf-8');
 global.btoa = (str: string) => Buffer.from(str, 'utf-8').toString('base64');
 
-// Mock sessionStorage
-const sessionStorageMock = {
-  getItem: vi.fn(),
-  setItem: vi.fn(),
-  removeItem: vi.fn(),
-  clear: vi.fn(),
-};
-Object.defineProperty(window, 'sessionStorage', {
-  value: sessionStorageMock,
-});
-
-// Mock localStorage
-const localStorageMock = {
-  getItem: vi.fn(),
-  setItem: vi.fn(),
-  removeItem: vi.fn(),
-  clear: vi.fn(),
-};
-Object.defineProperty(window, 'localStorage', {
-  value: localStorageMock,
-});
+// Use the sessionStorage and localStorage mocks from setup.ts
+const sessionStorageMock = window.sessionStorage as any;
+const localStorageMock = window.localStorage as any;
 
 // Mock document.cookie
 Object.defineProperty(document, 'cookie', {

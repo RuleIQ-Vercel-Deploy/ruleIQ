@@ -230,6 +230,11 @@ beforeAll(() => {
   // Mock HTMLElement.scrollIntoView
   HTMLElement.prototype.scrollIntoView = vi.fn();
 
+  // Mock hasPointerCapture for Radix UI components
+  HTMLElement.prototype.hasPointerCapture = vi.fn().mockReturnValue(false);
+  HTMLElement.prototype.setPointerCapture = vi.fn();
+  HTMLElement.prototype.releasePointerCapture = vi.fn();
+
   // Mock WebSocket
   Object.defineProperty(global, 'WebSocket', {
     writable: true,
@@ -271,6 +276,86 @@ vi.mock('next/image', () => ({
   },
 }));
 
+// Mock Lucide React icons
+vi.mock('lucide-react', () => {
+  const createMockIcon = (name: string) => (props: any) => 
+    React.createElement('svg', {
+      'data-testid': `${name}-icon`,
+      ...props,
+      children: React.createElement('path', { d: 'M0 0h24v24H0z' })
+    });
+
+  return {
+    ArrowRight: createMockIcon('arrow-right'),
+    Sparkles: createMockIcon('sparkles'),
+    Shield: createMockIcon('shield'),
+    Zap: createMockIcon('zap'),
+    BarChart3: createMockIcon('bar-chart-3'),
+    Lock: createMockIcon('lock'),
+    Globe: createMockIcon('globe'),
+    CheckCircle: createMockIcon('check-circle'),
+    Star: createMockIcon('star'),
+    TrendingUp: createMockIcon('trending-up'),
+    Users: createMockIcon('users'),
+    FileCheck: createMockIcon('file-check'),
+    ChevronRight: createMockIcon('chevron-right'),
+    ChevronDown: createMockIcon('chevron-down'),
+    ChevronUp: createMockIcon('chevron-up'),
+    ChevronLeft: createMockIcon('chevron-left'),
+    Circle: createMockIcon('circle'),
+    Loader2: createMockIcon('loader-2'),
+    Save: createMockIcon('save'),
+    Check: createMockIcon('check'),
+    X: createMockIcon('x'),
+    Menu: createMockIcon('menu'),
+    Plus: createMockIcon('plus'),
+    Minus: createMockIcon('minus'),
+    Search: createMockIcon('search'),
+    Download: createMockIcon('download'),
+    Edit: createMockIcon('edit'),
+    Trash: createMockIcon('trash'),
+    Eye: createMockIcon('eye'),
+    EyeOff: createMockIcon('eye-off'),
+    Settings: createMockIcon('settings'),
+    Calendar: createMockIcon('calendar'),
+    Clock: createMockIcon('clock'),
+    Mail: createMockIcon('mail'),
+    Phone: createMockIcon('phone'),
+    MapPin: createMockIcon('map-pin'),
+    Home: createMockIcon('home'),
+    Building: createMockIcon('building'),
+    User: createMockIcon('user'),
+    AlertTriangle: createMockIcon('alert-triangle'),
+    AlertCircle: createMockIcon('alert-circle'),
+    Info: createMockIcon('info'),
+    HelpCircle: createMockIcon('help-circle'),
+    ExternalLink: createMockIcon('external-link'),
+    Bot: createMockIcon('bot'),
+    RefreshCw: createMockIcon('refresh-cw'),
+    Upload: createMockIcon('upload'),
+    Download2: createMockIcon('download-2'),
+    FileText: createMockIcon('file-text'),
+    Database: createMockIcon('database'),
+    Cpu: createMockIcon('cpu'),
+    Activity: createMockIcon('activity'),
+    TrendingDown: createMockIcon('trending-down'),
+    PieChart: createMockIcon('pie-chart'),
+    BarChart: createMockIcon('bar-chart'),
+    LineChart: createMockIcon('line-chart'),
+    Target: createMockIcon('target'),
+    Filter: createMockIcon('filter'),
+    Sort: createMockIcon('sort'),
+    Grid: createMockIcon('grid'),
+    List: createMockIcon('list'),
+    Card: createMockIcon('card'),
+    Table: createMockIcon('table'),
+    Copy: createMockIcon('copy'),
+    MessageSquare: createMockIcon('message-square'),
+    Lightbulb: createMockIcon('lightbulb'),
+    BookOpen: createMockIcon('book-open'),
+  };
+});
+
 // Mock Framer Motion
 vi.mock('framer-motion', () => ({
   motion: {
@@ -280,6 +365,16 @@ vi.mock('framer-motion', () => ({
     form: ({ children, ...props }: any) => React.createElement('form', props, children),
   },
   AnimatePresence: ({ children }: any) => children,
+  useScroll: () => ({
+    scrollY: { current: 0 },
+    scrollYProgress: { current: 0 },
+  }),
+  useTransform: () => ({ current: 0 }),
+  useAnimation: () => ({
+    start: vi.fn(),
+    stop: vi.fn(),
+    set: vi.fn(),
+  }),
 }));
 
 // Cleanup after each test

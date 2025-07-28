@@ -42,9 +42,9 @@ export function AssessmentNavigation({
 
           {/* Section Grid */}
           <div className="flex items-center gap-1 px-4">
-            {framework.sections.map((_, index) => (
+            {framework.sections.map((section, index) => (
               <button
-                key={index}
+                key={`section-${section.id || index}`}
                 onClick={() => onSectionClick(index)}
                 className={cn(
                   'h-2 w-2 rounded-full transition-all',

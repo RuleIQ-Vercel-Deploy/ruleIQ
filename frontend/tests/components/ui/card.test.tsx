@@ -53,10 +53,10 @@ describe('Card Components', () => {
     const content = screen.getByTestId('content');
     const footer = screen.getByTestId('footer');
 
-    expect(card).toHaveClass('rounded-xl', 'border', 'bg-white');
+    expect(card).toHaveClass('rounded-lg', 'border', 'bg-card');
     expect(header).toHaveClass('flex', 'flex-col', 'space-y-1.5', 'p-6');
     expect(title).toHaveClass('text-2xl', 'font-semibold');
-    expect(description).toHaveClass('text-sm', 'text-neutral-600');
+    expect(description).toHaveClass('text-sm', 'text-muted-foreground');
     expect(content).toHaveClass('p-6', 'pt-0');
     expect(footer).toHaveClass('flex', 'items-center', 'p-6', 'pt-0');
   });

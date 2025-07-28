@@ -37,12 +37,15 @@ import {
 } from '@/components/ui/select';
 import { evidenceData, statuses, frameworks } from '@/lib/data/evidence';
 import { cn } from '@/lib/utils';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { FileUploader } from '@/components/evidence/upload/file-uploader';
 
 export default function EvidencePage() {
   const [selectedEvidence, setSelectedEvidence] = useState<string[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [frameworkFilter, setFrameworkFilter] = useState('all');
+  const [uploadDialogOpen, setUploadDialogOpen] = useState(false);
 
   const handleSelectionChange = (evidenceId: string) => {
     setSelectedEvidence((prev) =>
@@ -92,10 +95,20 @@ export default function EvidencePage() {
           <h2 className="text-3xl font-bold tracking-tight text-navy">Evidence Library</h2>
           <p className="text-muted-foreground">Manage and organize your compliance documentation</p>
         </div>
-        <Button className="bg-gold text-navy hover:bg-gold-dark">
-          <Upload className="mr-2 h-4 w-4" />
-          Upload Evidence
-        </Button>
+        <Dialog open={uploadDialogOpen} onOpenChange={setUploadDialogOpen}>
+          <DialogTrigger asChild>
+            <Button className="bg-gold text-navy hover:bg-gold-dark">
+              <Upload className="mr-2 h-4 w-4" />
+              Upload Evidence
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="max-w-2xl">
+            <DialogHeader>
+              <DialogTitle>Upload Evidence</DialogTitle>
+            </DialogHeader>
+            <FileUploader />
+          </DialogContent>
+        </Dialog>
       </div>
 
       {/* Stats Cards */}
@@ -307,7 +320,10 @@ export default function EvidencePage() {
                 : 'Upload your first evidence document to get started'}
             </p>
             {!searchQuery && statusFilter === 'all' && frameworkFilter === 'all' && (
-              <Button className="bg-gold text-navy hover:bg-gold-dark">
+              <Button 
+                className="bg-gold text-navy hover:bg-gold-dark"
+                onClick={() => setUploadDialogOpen(true)}
+              >
                 <Upload className="mr-2 h-4 w-4" />
                 Upload Evidence
               </Button>

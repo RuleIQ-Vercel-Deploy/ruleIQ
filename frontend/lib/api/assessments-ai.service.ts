@@ -201,14 +201,16 @@ const mockAIResponses = {
     gaps: [
       {
         id: 'gap_1',
+        questionId: 'q1',
+        section: 'Data Protection',
         title: 'Data Retention Policy Gap',
         description: 'Informal retention practices instead of documented policies',
         severity: 'high' as const,
         category: 'Data Protection',
         framework_reference: 'GDPR Article 5',
-        current_state: 'Informal retention practices',
-        target_state: 'Documented retention policies with defined periods',
-        impact_description: 'Potential GDPR violation for excessive data retention',
+        currentState: 'Informal retention practices',
+        targetState: 'Documented retention policies with defined periods',
+        impact: 'Potential GDPR violation for excessive data retention',
         business_impact_score: 0.8,
         technical_complexity: 0.6,
         regulatory_requirement: true,
@@ -221,6 +223,7 @@ const mockAIResponses = {
     recommendations: [
       {
         id: 'ai_rec_1',
+        gapId: 'gap_1',
         title: 'Implement Comprehensive Data Retention Policy',
         description:
           'Create and document formal data retention policies with specific timeframes for different data categories, automated deletion processes, and regular compliance reviews.',
@@ -229,6 +232,7 @@ const mockAIResponses = {
         framework_references: ['GDPR', 'ISO 27001'],
         addresses_gaps: ['gap_1'],
         effort_estimate: 'medium' as const,
+        estimatedEffort: '3-4 weeks',
         implementation_timeline: '3-4 weeks',
         impact_score: 0.85,
         cost_estimate: 'Low',

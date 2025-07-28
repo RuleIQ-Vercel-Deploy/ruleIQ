@@ -36,7 +36,7 @@ export function AnimatedGrid({
         {gridItems.map((i) => (
           <motion.div
             key={i}
-            className="bg-teal-600"
+            className="bg-primary"
             initial={{ opacity: 0 }}
             animate={{ 
               opacity: [0, 0.3, 0],

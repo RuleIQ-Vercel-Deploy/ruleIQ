@@ -30,7 +30,7 @@ const RadioGroupItem = React.forwardRef<
         // Focus state with visible ring
         'focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-500/20 focus-visible:ring-offset-2',
         // Checked state with teal
-        'data-[state=checked]:border-teal-600 data-[state=checked]:bg-teal-600 data-[state=checked]:text-white',
+        'data-[state=checked]:border-primary data-[state=checked]:bg-primary data-[state=checked]:text-white',
         className,
       )}
       {...props}

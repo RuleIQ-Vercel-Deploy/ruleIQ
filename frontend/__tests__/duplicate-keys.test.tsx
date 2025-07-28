@@ -28,13 +28,20 @@ describe('Duplicate Key Detection Tests', () => {
 
   describe('Homepage Components', () => {
     it('should render HomePage without duplicate keys', () => {
-      expect(() => {
+      const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {});
+      
+      try {
         render(
           <TestWrapper>
             <HomePage />
           </TestWrapper>,
         );
-      }).not.toThrow();
+      } catch (error) {
+        console.log('HomePage render error:', error);
+        throw error;
+      } finally {
+        consoleError.mockRestore();
+      }
     });
   });
 

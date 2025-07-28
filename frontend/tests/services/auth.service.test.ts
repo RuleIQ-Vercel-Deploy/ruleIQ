@@ -33,23 +33,30 @@ describe('AuthService', () => {
 
   describe('login', () => {
     it('should login successfully with valid credentials', async () => {
-      const mockResponse = {
+      const mockTokenResponse = {
         data: {
-          tokens: {
-            access_token: 'mock-access-token',
-            refresh_token: 'mock-refresh-token',
-          },
-          user: {
-            id: '1',
-            email: 'test@example.com',
-            full_name: 'Test User',
-            is_active: true,
-          },
+          access_token: 'mock-access-token',
+          refresh_token: 'mock-refresh-token',
+          token_type: 'bearer',
         },
         status: 200,
       };
 
-      vi.mocked(apiClient.post).mockResolvedValue(mockResponse as any);
+      const mockUserResponse = {
+        data: {
+          id: '1',
+          email: 'test@example.com',
+          full_name: 'Test User',
+          is_active: true,
+          created_at: '2024-01-01T00:00:00Z',
+        },
+        status: 200,
+      };
+
+      // Mock the token endpoint call
+      vi.mocked(apiClient.post).mockResolvedValueOnce(mockTokenResponse as any);
+      // Mock the user endpoint call
+      vi.mocked(apiClient.get).mockResolvedValueOnce(mockUserResponse as any);
 
       const credentials = {
         email: 'test@example.com',
@@ -58,16 +65,31 @@ describe('AuthService', () => {
 
       const result = await authService.login(credentials);
 
+      // Check token endpoint call
       expect(apiClient.post).toHaveBeenCalledWith(
-        '/auth/login',
-        expect.any(FormData),
+        '/auth/token',
+        expect.any(URLSearchParams),
         expect.objectContaining({
           headers: {
-            'Content-Type': 'multipart/form-data',
+            'Content-Type': 'application/x-www-form-urlencoded',
           },
         }),
       );
-      expect(result).toEqual(mockResponse.data);
+
+      // Check user endpoint call
+      expect(apiClient.get).toHaveBeenCalledWith(
+        '/auth/me',
+        expect.objectContaining({
+          headers: {
+            'Authorization': 'Bearer mock-access-token',
+          },
+        }),
+      );
+
+      expect(result).toEqual({
+        user: mockUserResponse.data,
+        tokens: mockTokenResponse.data,
+      });
     });
 
     it('should throw error for invalid credentials', async () => {

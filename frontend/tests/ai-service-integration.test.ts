@@ -4,15 +4,15 @@
  */
 
 // Mock the environment and dependencies
-process.env['$1'] = 'http://localhost:8000';
-process.env['$1'] = 'ws://localhost:8000/ws';
-process.env['$1'] = 'localhost';
-process.env['$1'] = '24h';
-process.env['$1'] = 'false';
-process.env['$1'] = 'false';
-process.env['$1'] = 'true';
-process.env['$1'] = 'false';
-process.env['$1'] = 'test';
+process.env['NEXT_PUBLIC_API_URL'] = 'http://localhost:8000';
+process.env['NEXT_PUBLIC_WS_URL'] = 'ws://localhost:8000/ws';
+process.env['REDIS_HOST'] = 'localhost';
+process.env['JWT_EXPIRES_IN'] = '24h';
+process.env['NEXT_PUBLIC_ENABLE_AI'] = 'false';
+process.env['NEXT_PUBLIC_USE_REAL_AI'] = 'false';
+process.env['NEXT_PUBLIC_ENABLE_STREAMING'] = 'true';
+process.env['NEXT_PUBLIC_MONITORING_ENABLED'] = 'false';
+process.env['NODE_ENV'] = 'test';
 
 import { assessmentAIService } from '@/lib/api/assessments-ai.service';
 import type { BusinessProfile } from '@/types/api';

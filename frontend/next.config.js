@@ -12,6 +12,11 @@ try {
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // Port 3000 reserved for TestSprite - Frontend uses 3001
+  env: {
+    PORT: '3001',
+    NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3001',
+  },
   experimental: {
     optimizePackageImports: ['@radix-ui/react-icons', 'lucide-react'],
   },

@@ -1,4 +1,7 @@
+import axios from 'axios';
+
 import { USER_KEY } from '@/config/constants';
+import { env } from '@/config/env';
 import SecureStorage from '@/lib/utils/secure-storage';
 
 import { apiClient } from './client';
@@ -29,21 +32,89 @@ class AuthService {
    * Login user
    */
   async login(credentials: LoginRequest): Promise<AuthResponse> {
-    // Backend expects FormData for login
-    const formData = new FormData();
-    formData.append('username', credentials.email);
+    // Backend /token endpoint expects OAuth2PasswordRequestForm (application/x-www-form-urlencoded)
+    const formData = new URLSearchParams();
+    formData.append('username', credentials.email); // OAuth2 uses 'username' field
     formData.append('password', credentials.password);
+    formData.append('grant_type', 'password'); // Required for OAuth2
 
-    const response = await apiClient.post<AuthResponse>('/auth/login', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
+    try {
+      // Call the token endpoint directly using axios (not through apiClient wrapper)
+      // because /auth/token returns raw token response, not wrapped in ApiResponse
+      const axiosResponse = await axios.post<AuthTokens>(`${env.NEXT_PUBLIC_API_URL}/api/v1/auth/token`, formData, {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+      });
 
-    // Store tokens and user data
-    await this.setAuthData(response.data);
+      console.log('Raw axios response:', axiosResponse);
+      console.log('Response data:', axiosResponse.data);
+      console.log('Response status:', axiosResponse.status);
 
-    return response.data;
+      // Extract token from direct response (OAuth2 format)
+      // The /auth/token endpoint returns tokens directly, not wrapped in a "tokens" object
+      const tokens = axiosResponse.data;
+      
+      // Add detailed validation with better error messaging
+      if (!tokens) {
+        console.error('No response data received from auth endpoint');
+        throw new Error('No response data received from authentication server');
+      }
+
+      if (typeof tokens !== 'object') {
+        console.error('Invalid response type received:', typeof tokens, tokens);
+        throw new Error('Invalid response format from authentication server');
+      }
+      
+      if (!tokens.access_token) {
+        console.error('No access token in response. Response keys:', Object.keys(tokens || {}));
+        console.error('Full response data:', tokens);
+        throw new Error('No access token received from server');
+      }
+
+      console.log('Token extracted successfully:', {
+        hasAccessToken: !!tokens.access_token,
+        hasRefreshToken: !!tokens.refresh_token,
+        tokenType: tokens.token_type
+      });
+
+      // Get user data using the token (use direct axios call like the token endpoint)
+      const userResponse = await axios.get<User>(`${env.NEXT_PUBLIC_API_URL}/api/v1/auth/me`, {
+        headers: {
+          'Authorization': `Bearer ${tokens.access_token}`,
+        },
+      });
+
+      const authResponse: AuthResponse = {
+        user: userResponse.data,
+        tokens,
+      };
+
+      // Store tokens and user data
+      await this.setAuthData(authResponse);
+
+      return authResponse;
+    } catch (error) {
+      console.error('Login error:', error);
+      
+      // Enhanced error logging
+      if (axios.isAxiosError(error)) {
+        console.error('Axios error details:', {
+          status: error.response?.status,
+          statusText: error.response?.statusText,
+          data: error.response?.data,
+          url: error.config?.url,
+          method: error.config?.method
+        });
+      }
+      
+      // Re-throw with better error message
+      if (error instanceof Error) {
+        throw error;
+      }
+      
+      throw new Error('Login failed');
+    }
   }
 
   /**
@@ -86,7 +157,17 @@ class AuthService {
    * Get current user
    */
   async getCurrentUser(): Promise<User> {
-    const response = await apiClient.get<User>('/auth/me');
+    // Use direct axios call to ensure correct endpoint path
+    const token = await this.getAccessToken();
+    if (!token) {
+      throw new Error('No access token available');
+    }
+    
+    const response = await axios.get<User>(`${env.NEXT_PUBLIC_API_URL}/api/v1/auth/me`, {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
+    });
     return response.data;
   }
 

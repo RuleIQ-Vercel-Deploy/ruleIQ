@@ -142,7 +142,29 @@ export const useAuthStore = create<AuthState>()(
             const { authService } = await import('@/lib/api/auth.service');
             const response = await authService.login(credentials);
 
+            // Validate response structure
+            if (!response || !response.tokens || !response.user) {
+              console.error('Invalid auth response structure:', response);
+              throw new Error('Invalid response from authentication server');
+            }
+
             const { tokens, user } = response;
+            
+            // Validate tokens with detailed logging
+            if (!tokens || typeof tokens !== 'object') {
+              console.error('Tokens object is invalid:', tokens);
+              throw new Error('Invalid tokens object received');
+            }
+            
+            if (!tokens.access_token || !tokens.refresh_token) {
+              console.error('Missing required tokens:', {
+                hasAccessToken: !!tokens.access_token,
+                hasRefreshToken: !!tokens.refresh_token,
+                tokens: tokens
+              });
+              throw new Error('Authentication tokens not received');
+            }
+
             const expiryTime = Date.now() + 8 * 60 * 60 * 1000; // 8 hours
 
             // Store tokens securely using Web Crypto API
@@ -174,15 +196,25 @@ export const useAuthStore = create<AuthState>()(
               'login/success',
             );
           } catch (error: any) {
+            console.error('Login error details:', error);
+            
+            const errorMessage = error.detail || error.message || 'Login failed. Please check your credentials and try again.';
+            
             set(
               {
                 isLoading: false,
-                error: error.detail || error.message || 'Login failed. Please try again.',
+                error: errorMessage,
+                // Ensure we're not in an authenticated state on error
+                isAuthenticated: false,
+                user: null,
+                tokens: { access: null, refresh: null },
+                accessToken: null,
+                refreshToken: null,
               },
               false,
               'login/error',
             );
-            throw error;
+            throw new Error(errorMessage);
           }
         },
 

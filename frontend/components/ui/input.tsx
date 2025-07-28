@@ -25,6 +25,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
           // Remove hardcoded colors - let theme handle it
           className,
         )}
+        aria-invalid={error ? 'true' : undefined}
         ref={ref}
         {...props}
       />

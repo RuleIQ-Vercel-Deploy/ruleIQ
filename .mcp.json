@@ -180,6 +180,14 @@
         "--profile",
         "hungry-lemming-s64fT3"
       ]
+    },
+    "testsprite": {
+      "command": "npx",
+      "args": ["-y", "@testsprite/testsprite-mcp@latest"],
+      "env": {
+        "API_KEY": "sk-user-2SWDwFm_hx7slBw-7-nkDNWfQoQWsxtc5vb-vxp1PAwhCSJ2DYP0_qDT0Y8xjQtm4UUdnuHLj9C5gmoICNzk8gk9QL1PuiTgQ6OjvOipfCUHQh5vErimgYef0fx1dltSXRM"
+      }
     }
-  }
+  },
+  "inputs": []
 }

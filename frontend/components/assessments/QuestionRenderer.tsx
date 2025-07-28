@@ -281,7 +281,7 @@ export function QuestionRenderer({
             {files.length > 0 && (
               <div className="space-y-2">
                 {files.map((file, index) => (
-                  <div key={index} className="flex items-center justify-between rounded border p-2">
+                  <div key={`file-${index}-${file.name}-${file.size}-${file.lastModified || Date.now()}-${index}`} className="flex items-center justify-between rounded border p-2">
                     <div className="flex items-center gap-2">
                       <FileText className="h-4 w-4" />
                       <span className="text-sm">{file.name}</span>

@@ -31,19 +31,27 @@ export function ThemeProvider({
   defaultTheme = 'dark',
   storageKey = 'ruleiq-ui-theme',
 }: ThemeProviderProps) {
-  const [theme, setTheme] = useState<Theme>(() => {
+  const [theme, setTheme] = useState<Theme>(defaultTheme);
+  const [mounted, setMounted] = useState(false);
+
+  // Hydration-safe theme initialization
+  useEffect(() => {
+    setMounted(true);
     if (typeof window !== 'undefined') {
       const stored = localStorage.getItem(storageKey);
-      return (stored as Theme) || defaultTheme;
+      if (stored && (stored === 'light' || stored === 'dark')) {
+        setTheme(stored as Theme);
+      }
     }
-    return defaultTheme;
-  });
+  }, [storageKey]);
 
   useEffect(() => {
+    if (!mounted) return;
+    
     const root = window.document.documentElement;
     root.classList.remove('light', 'dark');
     root.classList.add(theme);
-  }, [theme]);
+  }, [theme, mounted]);
 
   const value = {
     theme,

@@ -14,7 +14,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { authService } from '@/lib/api/auth.service';
 import { useCsrfToken } from '@/lib/hooks/use-csrf-token';
 import { authSchemas } from '@/lib/security/validation';
 import { useAppStore } from '@/lib/stores/app.store';
@@ -27,7 +26,7 @@ type LoginFormData = z.infer<typeof authSchemas.login>;
 
 export default function LoginPage() {
   const router = useRouter();
-  const { error, clearError } = useAuthStore();
+  const { login, error, clearError, isLoading } = useAuthStore();
   const { addNotification } = useAppStore();
   const [showPassword, setShowPassword] = React.useState(false);
   const [isSubmitting, setIsSubmitting] = React.useState(false);
@@ -63,10 +62,11 @@ export default function LoginPage() {
     clearError();
 
     try {
-      // Use auth service
-      await authService.login({
+      // Use auth store login method for proper state management
+      await login({
         email: data.email,
         password: data.password,
+        rememberMe: data.rememberMe,
       });
 
       addNotification({
@@ -76,31 +76,29 @@ export default function LoginPage() {
         duration: 3000,
       });
 
-      // Check if user has a business profile
-      try {
-        const response = await fetch('/api/business-profiles/', {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('auth_token')}`,
-          },
-        });
-        const profiles = await response.json();
+      // Get redirect URL from query params
+      const searchParams = new URLSearchParams(window.location.search);
+      const redirectTo = searchParams.get('redirect') || '/dashboard';
 
-        if (!profiles || profiles.length === 0) {
-          // No business profile, redirect to setup
-          router.push('/business-profile');
-        } else {
-          // Has profile, go to dashboard
-          router.push('/dashboard');
-        }
-      } catch {
-        // If error checking profile, go to dashboard anyway
+      // Navigate with proper error handling
+      try {
+        router.push(redirectTo);
+      } catch (navError) {
+        console.error('Navigation error:', navError);
+        // Fallback to dashboard
         router.push('/dashboard');
       }
     } catch (error) {
-      // Handle ApiError from the API client
-      const errorMessage =
-        error instanceof Error ? error.message : 'Login failed. Please check your credentials.';
+      // Handle authentication errors properly - don't navigate on error
+      const errorMessage = error instanceof Error 
+        ? error.message 
+        : 'Login failed. Please check your credentials and try again.';
+      
+      console.error('Login error:', error);
       setFormError('root', { message: errorMessage });
+      
+      // The auth store already has the error, but we also set it in the form
+      // to ensure it's displayed. Don't navigate on error.
     } finally {
       setIsSubmitting(false);
     }
@@ -173,7 +171,7 @@ export default function LoginPage() {
                           ? 'border-destructive bg-surface-secondary/50'
                           : 'border-glass-border bg-surface-secondary/50 focus:border-primary'
                       }
-                      disabled={isSubmitting || csrfLoading || !!csrfError}
+                      disabled={isSubmitting || isLoading || csrfLoading || !!csrfError}
                     />
                     {errors.email && (
                       <p className="text-sm text-destructive">{errors.email.message}</p>
@@ -204,7 +202,7 @@ export default function LoginPage() {
                             ? 'border-destructive bg-surface-secondary/50 pr-10'
                             : 'border-glass-border bg-surface-secondary/50 pr-10 focus:border-primary'
                         }
-                        disabled={isSubmitting || csrfLoading || !!csrfError}
+                        disabled={isSubmitting || isLoading || csrfLoading || !!csrfError}
                       />
                       <Button
                         type="button"
@@ -212,7 +210,7 @@ export default function LoginPage() {
                         size="sm"
                         className="absolute right-0 top-0 h-full px-3 py-2 text-muted-foreground hover:bg-transparent hover:text-foreground"
                         onClick={() => setShowPassword(!showPassword)}
-                        disabled={isSubmitting || csrfLoading || !!csrfError}
+                        disabled={isSubmitting || isLoading || csrfLoading || !!csrfError}
                       >
                         {showPassword ? (
                           <EyeOff className="h-4 w-4" />
@@ -232,7 +230,7 @@ export default function LoginPage() {
                       id="rememberMe"
                       checked={rememberMe}
                       onCheckedChange={(checked) => setValue('rememberMe', !!checked)}
-                      disabled={isSubmitting || csrfLoading || !!csrfError}
+                      disabled={isSubmitting || isLoading || csrfLoading || !!csrfError}
                       className="border-glass-border data-[state=checked]:border-primary data-[state=checked]:bg-primary"
                     />
                     <Label
@@ -248,7 +246,7 @@ export default function LoginPage() {
                     type="submit"
                     className="btn-gradient w-full"
                     size="lg"
-                    disabled={isSubmitting || csrfLoading || !!csrfError}
+                    disabled={isSubmitting || isLoading || csrfLoading || !!csrfError}
                   >
                     {isSubmitting ? (
                       <>
