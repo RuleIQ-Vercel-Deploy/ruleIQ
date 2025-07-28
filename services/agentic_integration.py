@@ -5,7 +5,7 @@ Combines RAG system with Pydantic AI agents for seamless Claude integration
 
 import os
 import logging
-from typing import Dict, Any, Optional
+from typing import Dict, Any, Optional, List
 import asyncio
 from datetime import datetime
 

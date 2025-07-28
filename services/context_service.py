@@ -30,7 +30,7 @@ from database.db_setup import get_async_db
 from database import User, BusinessProfile
 from database.assessment_session import AssessmentSession as Assessment
 # from services.cache_service import CacheService  # TODO: Implement cache service
-from api.schemas.base import TimestampedSchema
+from api.schemas.base import TimestampMixin
 
 logger = logging.getLogger(__name__)
 

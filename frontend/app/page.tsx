@@ -19,6 +19,7 @@ import {
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import React, { useState, useEffect, useRef } from 'react';
+import Image from 'next/image';
 
 import { Button } from '@/components/ui/button';
 import { useAuthStore } from '@/lib/stores/auth.store';
@@ -42,36 +43,9 @@ const HeroSection = () => {
       ref={containerRef}
       className="relative flex min-h-screen items-center justify-center overflow-hidden"
     >
-      {/* Animated Mesh Gradient Background */}
-      <motion.div className="mesh-gradient absolute inset-0" style={{ y }} />
+      {/* Clean Background */}
+      <div className="absolute inset-0 bg-surface-base" />
 
-      {/* Floating Orbs */}
-      <div className="absolute inset-0">
-        <motion.div
-          animate={{
-            x: [0, 100, 0],
-            y: [0, -100, 0],
-          }}
-          transition={{
-            duration: 20,
-            repeat: Infinity,
-            ease: 'linear',
-          }}
-          className="absolute left-1/4 top-1/4 h-96 w-96 rounded-full bg-primary/20 blur-3xl"
-        />
-        <motion.div
-          animate={{
-            x: [0, -100, 0],
-            y: [0, 100, 0],
-          }}
-          transition={{
-            duration: 25,
-            repeat: Infinity,
-            ease: 'linear',
-          }}
-          className="absolute bottom-1/4 right-1/4 h-96 w-96 rounded-full bg-secondary/20 blur-3xl"
-        />
-      </div>
 
       {/* Grid Pattern Overlay */}
       <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center [mask-image:radial-gradient(ellipse_at_center,transparent_20%,black)]" />
@@ -351,11 +325,17 @@ export default function HomePage() {
       {/* Navigation */}
       <header className="glass-card fixed left-0 right-0 top-0 z-50 border-b border-glass-border">
         <div className="container mx-auto flex h-16 items-center justify-between px-4">
-          <Link href="/" className="gradient-text text-2xl font-bold">
-            ruleIQ
+          <Link href="/" className="flex items-center">
+            <Image
+              src="/assets/logo.svg"
+              alt="ruleIQ"
+              width={540}
+              height={150}
+              className="h-36 w-auto"
+            />
           </Link>
 
-          <nav className="hidden items-center gap-8 md:flex">
+          <nav className="hidden items-center justify-center gap-8 md:flex">
             <Link
               href="#features"
               className="text-muted-foreground transition-colors hover:text-foreground"

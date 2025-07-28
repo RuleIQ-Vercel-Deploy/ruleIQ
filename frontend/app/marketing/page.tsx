@@ -14,7 +14,7 @@ import { SparklesBackground } from '@/components/ui/sparkles-background';
 import { GradientBackground } from '@/components/ui/gradient-background';
 import { AnimatedGrid } from '@/components/ui/animated-grid';
 import { FloatingElements } from '@/components/ui/floating-elements';
-import { HeroSpotlight } from '@/components/ui/hero-spotlight';
+
 
 export default function MarketingPage() {
   const typewriterWords = [
@@ -58,19 +58,19 @@ export default function MarketingPage() {
 
   const features = [
     {
-      icon: <BrainCircuit size={48} className="mx-auto text-teal-600" />,
+      icon: <BrainCircuit size={24} className="text-white" />,
       title: 'AI-Powered Assessments',
       description:
         'Leverage artificial intelligence to conduct comprehensive compliance assessments, identifying gaps and risks with unparalleled accuracy.',
     },
     {
-      icon: <FileText size={48} className="mx-auto text-teal-600" />,
+      icon: <FileText size={24} className="text-white" />,
       title: 'Evidence Management',
       description:
         'A centralized, secure repository for all your compliance evidence. Link documents to controls and automate collection.',
     },
     {
-      icon: <ShieldCheck size={48} className="mx-auto text-teal-600" />,
+      icon: <ShieldCheck size={24} className="text-white" />,
       title: 'Policy Generation',
       description:
         'Automatically generate, customize, and manage compliance policies based on industry standards and your specific business needs.',
@@ -82,19 +82,19 @@ export default function MarketingPage() {
       title: 'Connect Your Systems',
       description:
         'Integrate seamlessly with your existing tools and platforms. ruleIQ pulls data from your cloud services, code repositories, and HR systems.',
-      icon: <Users size={32} className="text-teal-600" />,
+      icon: <Users size={20} className="text-white" />,
     },
     {
       title: 'AI Analyzes Compliance',
       description:
         'Our intelligent engine analyzes your data against hundreds of controls from various frameworks like ISO 27001, GDPR, and SOC 2.',
-      icon: <BarChart size={32} className="text-teal-600" />,
+      icon: <BarChart size={20} className="text-white" />,
     },
     {
       title: 'Get Actionable Insights',
       description:
         'Receive a clear, prioritized list of actions. The dashboard visualizes your compliance posture, making it easy to track progress and report to stakeholders.',
-      icon: <CheckCircle size={32} className="text-teal-600" />,
+      icon: <CheckCircle size={20} className="text-white" />,
     },
   ];
 
@@ -119,11 +119,8 @@ export default function MarketingPage() {
     <div className="relative min-h-screen overflow-x-hidden bg-background text-foreground">
       {/* Hero Section */}
       <section className="relative h-screen w-full overflow-hidden">
-        {/* Background layers */}
-        <div className="absolute inset-0 bg-gradient-to-br from-background via-teal-50/40 to-background" />
-        <AnimatedGrid className="z-5" gridSize={25} animationDuration={6} />
-        <HeroSpotlight className="z-10" size={600} intensity={0.15} />
-        <FloatingElements className="z-10" density={20} />
+        {/* Clean background for optimal text readability */}
+        <div className="absolute inset-0 bg-gradient-to-br from-white via-teal-50/10 to-white" />
         
         <div className="relative z-20 flex h-full flex-col items-center justify-center px-4">
           <div className="space-y-8 text-center">
@@ -139,7 +136,7 @@ export default function MarketingPage() {
             <TextEffect
               per="word"
               preset="fade-in-blur"
-              className="text-5xl font-bold md:text-7xl lg:text-8xl leading-tight bg-gradient-to-r from-foreground via-teal-800 to-foreground bg-clip-text text-transparent"
+              className="text-5xl font-bold md:text-7xl lg:text-8xl leading-tight text-foreground"
             >
               Automate Compliance, Eliminate Risk
             </TextEffect>
@@ -148,23 +145,14 @@ export default function MarketingPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.3 }}
-              className="text-xl md:text-2xl text-muted-foreground max-w-4xl mx-auto leading-relaxed font-medium"
+              className="text-xl md:text-2xl text-muted-foreground max-w-4xl mx-auto leading-relaxed"
             >
               Transform your compliance workflow with intelligent automation. 
               Built specifically for UK SMBs navigating ISO 27001, GDPR, and SOC 2.
             </motion.p>
             
             <TypewriterEffect words={typewriterWords} />
-            <div className="relative flex items-center justify-center space-x-4">
-              <SparklesBackground
-                id="hero-sparkles"
-                background="transparent"
-                minSize={0.6}
-                maxSize={1.4}
-                particleDensity={100}
-                className="absolute h-full w-full"
-                particleColor="#2C7A7B"
-              />
+            <div className="relative flex items-center justify-center space-x-4">{/* Clean CTA area without distracting effects */}
               <Button 
                 variant="default" 
                 size="lg" 
@@ -248,9 +236,11 @@ export default function MarketingPage() {
               transition={{ duration: 0.5, delay: i * 0.1 }}
               viewport={{ once: true }}
             >
-              <Card className="p-6 text-center transition-shadow hover:shadow-lg border-teal-100 hover:border-teal-300">
+              <Card className="p-6 text-center transition-shadow hover:shadow-lg bg-white border border-teal-100 hover:border-teal-300">
                 <CardContent className="space-y-4">
-                  {feature.icon}
+                  <div className="mx-auto w-16 h-16 bg-teal-600 rounded-lg flex items-center justify-center mb-4">
+                    {feature.icon}
+                  </div>
                   <h3 className="text-xl font-bold">{feature.title}</h3>
                   <p className="text-muted-foreground">{feature.description}</p>
                 </CardContent>
@@ -300,9 +290,7 @@ export default function MarketingPage() {
             }}
             className="mb-12 text-center text-4xl font-medium tracking-tight md:text-7xl"
           >
-            <span className="bg-gradient-to-br from-teal-600 to-teal-700 bg-clip-text text-transparent">
-              Simple Steps to Full Compliance
-            </span>
+            Simple Steps to Full Compliance
           </motion.h1>
           <div className="mx-auto grid max-w-6xl gap-8 md:grid-cols-3">
             {howItWorksItems.map((item, i) => (
@@ -314,9 +302,11 @@ export default function MarketingPage() {
                 viewport={{ once: true }}
                 className="text-center"
               >
-                <Card className="p-6 transition-shadow hover:shadow-lg border-teal-100 hover:border-teal-300">
+                <Card className="p-6 transition-shadow hover:shadow-lg bg-white border border-teal-100 hover:border-teal-300">
                   <CardContent className="space-y-4">
-                    {item.icon}
+                    <div className="w-12 h-12 bg-teal-600 rounded-lg flex items-center justify-center mb-4">
+                      {item.icon}
+                    </div>
                     <h3 className="text-xl font-bold">{item.title}</h3>
                     <p className="text-muted-foreground">{item.description}</p>
                   </CardContent>
@@ -328,7 +318,7 @@ export default function MarketingPage() {
       </section>
 
       {/* Testimonials Section */}
-      <section id="testimonials" className="relative py-20 bg-teal-50/30">
+      <section id="testimonials" className="relative py-20 bg-gray-50">
         <div className="container mx-auto px-4">
           <div className="mb-12 text-center">
             <h2 className="mb-4 text-2xl font-bold md:text-4xl lg:text-7xl">

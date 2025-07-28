@@ -7,7 +7,6 @@
 ```bash
 # Status verification (auto-run at session start)
 serena /check_onboarding_performed
-serena /get_current_config
 serena /mcp-serena-initial-instruction
 
 # Expected indicators:

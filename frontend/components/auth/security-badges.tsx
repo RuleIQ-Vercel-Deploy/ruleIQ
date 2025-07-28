@@ -41,7 +41,7 @@ export function SecurityBadges({ className, variant = 'default' }: SecurityBadge
             <Badge
               key={index}
               variant="secondary"
-              className="flex items-center gap-1.5 border-turquoise/20 bg-turquoise/5 px-3 py-1.5 text-xs text-turquoise"
+              className="flex items-center gap-1.5 border-teal-500/20 bg-teal-500/5 px-3 py-1.5 text-xs text-teal-600"
             >
               <Icon className="h-3 w-3" />
               {badge.text}
@@ -58,7 +58,7 @@ export function SecurityBadges({ className, variant = 'default' }: SecurityBadge
         const Icon = badge.icon;
         return (
           <div key={index} className="flex items-center gap-3 text-sm">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-turquoise/20 bg-turquoise/10">
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-teal-500/20 bg-teal-500/10">
               <Icon className="h-5 w-5 text-navy" />
             </div>
             <div>

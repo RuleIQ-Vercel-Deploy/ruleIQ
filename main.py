@@ -10,8 +10,8 @@ from api.dependencies.auth import get_current_active_user
 from api.middleware.error_handler import error_handler_middleware
 from api.request_id_middleware import RequestIDMiddleware
 from api.routers import (
-    agentic_assessments,
-    agentic_rag,
+    # agentic_assessments,
+    # agentic_rag,
     ai_assessments,
     ai_optimization,
     assessments,
@@ -175,8 +175,8 @@ app.include_router(
 app.include_router(monitoring.router, prefix="/api/monitoring", tags=["Monitoring"])
 app.include_router(security.router, prefix="/api/security", tags=["Security"])
 app.include_router(chat.router, prefix="/api", tags=["AI Assistant"])
-app.include_router(agentic_assessments.router, prefix="/api", tags=["Agentic Assessments"])
-app.include_router(agentic_rag.router, prefix="/api", tags=["Agentic RAG"])
+# app.include_router(agentic_assessments.router, prefix="/api", tags=["Agentic Assessments"])
+# app.include_router(agentic_rag.router, prefix="/api", tags=["Agentic RAG"])
 app.include_router(admin_router)
 
 

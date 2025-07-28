@@ -29,9 +29,10 @@ from services.context_service import (
     CommunicationStyle
 )
 from services.assessment_service import AssessmentService
-from services.ai.llm_service import LLMService
-from database.models import Assessment, BusinessProfile
-from api.schemas.assessment_schemas import AssessmentCreate, AssessmentResponse
+from services.ai import ComplianceAssistant
+from database.assessment_session import AssessmentSession
+from database.business_profile import BusinessProfile
+from api.schemas.models import AssessmentSessionCreate, AssessmentSessionResponse
 
 logger = logging.getLogger(__name__)
 
@@ -96,7 +97,7 @@ class AgenticAssessmentService:
     def __init__(self):
         self.context_service = None
         self.assessment_service = AssessmentService()
-        self.llm_service = LLMService()
+        self.llm_service = ComplianceAssistant()
         self._conversation_templates = self._load_conversation_templates()
         
     async def initialize(self):

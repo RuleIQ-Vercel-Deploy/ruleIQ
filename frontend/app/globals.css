@@ -10,33 +10,33 @@
     /* Base font size - 112.5% = 18px on 16px browser default */
     font-size: 112.5%;
 
-    /* Modern Dark Theme - Purple & Cyan Gradient */
-    --background: 0 0% 4%; /* Near black background #0A0A0B */
-    --foreground: 0 0% 98%; /* High contrast white text #FAFAFA */
+    /* LIGHT THEME - Professional Teal Design (Default) - High Contrast */
+    --background: 0 0% 100%; /* Pure white background #FFFFFF */
+    --foreground: 220 13% 18%; /* Dark charcoal text #1F2937 for high contrast */
 
-    --card: 0 0% 7%; /* Primary surface #111113 */
-    --card-foreground: 0 0% 98%;
+    --card: 0 0% 100%; /* White cards */
+    --card-foreground: 220 13% 18%; /* Dark text on white cards */
 
-    --popover: 0 0% 9%; /* Secondary surface #18181B */
-    --popover-foreground: 0 0% 98%;
+    --popover: 0 0% 100%; /* White popover */
+    --popover-foreground: 220 13% 18%; /* Dark text */
 
-    --primary: 186 37% 32%; /* teal-600 #2C7A7B */
-    --primary-foreground: 0 0% 100%;
+    --primary: 186 37% 32%; /* teal-600 #2C7A7B - main brand */
+    --primary-foreground: 0 0% 100%; /* White text on teal */
 
-    --secondary: 0 0% 15%; /* Dark neutral #27272A */
-    --secondary-foreground: 0 0% 98%;
+    --secondary: 210 40% 98%; /* Very light gray-blue #F8FAFC */
+    --secondary-foreground: 220 13% 18%; /* Dark text */
 
-    --muted: 0 0% 15%; /* Muted backgrounds */
-    --muted-foreground: 240 5% 64%; /* Muted text #A1A1AA */
+    --muted: 210 40% 96%; /* Light gray-blue background #F1F5F9 */
+    --muted-foreground: 215 16% 47%; /* Medium gray text #64748B - WCAG AA compliant */
 
-    --accent: 180 25% 65%; /* teal-300 #4FD1C5 */
-    --accent-foreground: 0 0% 100%;
+    --accent: 186 100% 94%; /* Very light teal #E6FFFA */
+    --accent-foreground: 186 40% 25%; /* Dark teal text #234E52 */
 
-    --destructive: 0 84% 60%; /* Error red */
+    --destructive: 0 84% 60%; /* Error red #EF4444 */
     --destructive-foreground: 0 0% 100%;
 
-    --border: 0 0% 15%; /* Subtle borders for dark theme #27272A */
-    --input: 0 0% 15%;
+    --border: 214 32% 91%; /* Light gray borders #E2E8F0 */
+    --input: 214 32% 91%; /* Input borders */
     --ring: 186 37% 32%; /* teal-600 focus ring */
 
     --radius: 0.5rem;
@@ -46,34 +46,34 @@
     --focus-offset: 2px;
   }
 
-  /* Light theme (corrected for proper contrast) */
+  /* Light theme (default - no class needed) */
   .light {
     --background: 0 0% 100%; /* White background */
-    --foreground: 27 20% 20%; /* Dark charcoal text #1D4044 (teal-900) */
+    --foreground: 220 13% 18%; /* Dark charcoal text #1F2937 */
 
     --card: 0 0% 100%; /* White cards */
-    --card-foreground: 27 20% 20%; /* Dark text on cards */
+    --card-foreground: 220 13% 18%; /* Dark text on cards */
 
     --popover: 0 0% 100%; /* White popover */
-    --popover-foreground: 27 20% 20%; /* Dark text */
+    --popover-foreground: 220 13% 18%; /* Dark text */
 
     --primary: 186 37% 32%; /* teal-600 #2C7A7B - main brand */
     --primary-foreground: 0 0% 100%; /* White text on teal */
 
-    --secondary: 0 0% 97%; /* Very light gray #F9FAFB */
-    --secondary-foreground: 27 20% 20%; /* Dark text */
+    --secondary: 210 40% 98%; /* Very light gray-blue #F8FAFC */
+    --secondary-foreground: 220 13% 18%; /* Dark text */
 
-    --muted: 0 0% 97%; /* Light backgrounds #F9FAFB */
-    --muted-foreground: 240 9% 40%; /* Medium gray text #6B7280 */
+    --muted: 210 40% 96%; /* Light backgrounds #F1F5F9 */
+    --muted-foreground: 215 16% 47%; /* Medium gray text #64748B */
 
-    --accent: 186 70% 85%; /* teal-100 #B2F5EA - light accent */
+    --accent: 186 100% 94%; /* teal-100 #E6FFFA - light accent */
     --accent-foreground: 186 40% 25%; /* Dark teal text #234E52 */
 
     --destructive: 0 84% 60%; /* Error red */
     --destructive-foreground: 0 0% 100%;
 
-    --border: 240 6% 90%; /* Light gray borders #E5E7EB */
-    --input: 240 6% 90%; /* Input borders */
+    --border: 214 32% 91%; /* Light gray borders #E2E8F0 */
+    --input: 214 32% 91%; /* Input borders */
     --ring: 186 37% 32%; /* teal-600 focus ring */
   }
 }
@@ -216,7 +216,7 @@
 
   /* Glass Morphism Cards */
   .glass-card {
-    @apply rounded-xl border border-glass-border bg-glass-white backdrop-blur-md;
+    @apply rounded-xl border border-glass-border bg-glass-white;
   }
 
   .glass-card:hover {
@@ -226,9 +226,9 @@
   /* Neon Glow Effects */
   .glow-purple {
     box-shadow:
-      0 0 20px rgba(124, 58, 237, 0.5),
-      0 0 40px rgba(124, 58, 237, 0.3),
-      0 0 60px rgba(124, 58, 237, 0.1);
+      0 0 20px rgba(25, 39, 52, 0.5),
+      0 0 40px rgba(25, 39, 52, 0.3),
+      0 0 60px rgba(25, 39, 52, 0.1);
   }
 
   .glow-cyan {

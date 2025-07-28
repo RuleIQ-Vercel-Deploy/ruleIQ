@@ -61,6 +61,7 @@ export default function TraditionalSignupPage() {
     handleSubmit,
     formState: { errors },
     watch,
+    setValue,
   } = useForm<SignupFormData>({
     resolver: zodResolver(signupSchema),
     defaultValues: {
@@ -218,9 +219,7 @@ export default function TraditionalSignupPage() {
                 <Checkbox
                   id="agreeToTerms"
                   checked={watchedAgreeToTerms}
-                  onCheckedChange={(checked) =>
-                    register('agreeToTerms').onChange({ target: { value: checked } })
-                  }
+                  onCheckedChange={(checked) => setValue('agreeToTerms', checked === true)}
                   disabled={isLoading}
                 />
                 <Label htmlFor="agreeToTerms" className="cursor-pointer text-sm font-normal">

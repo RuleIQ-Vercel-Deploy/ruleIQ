@@ -19,8 +19,8 @@ const buttonVariants = cva(
         link: 'text-primary underline-offset-4 hover:underline',
         destructive: 'bg-destructive text-destructive-foreground shadow hover:bg-destructive/90',
         success: 'bg-success text-success-foreground shadow hover:bg-success/90',
-        // Brand-specific variant using CSS variables
-        turquoise: 'bg-accent text-accent-foreground shadow hover:bg-accent/90',
+        // Brand-specific variant using CSS variables (teal accent)
+        accent: 'bg-accent text-accent-foreground shadow hover:bg-accent/90',
       },
       size: {
         default: 'h-10 px-4 py-2 text-sm',

@@ -515,18 +515,32 @@ const getNextQuestion = (
 
   // Check if current question exists and has custom next logic
   if (current?.nextQuestion && answer !== undefined) {
-    const nextId = current.nextQuestion(data, answer);
-    // Validate that the returned question ID exists
-    if (nextId && questionBank[nextId]) {
-      return nextId;
+    try {
+      const nextId = current.nextQuestion(data, answer);
+      // Validate that the returned question ID exists and is different from current
+      if (nextId && questionBank[nextId] && nextId !== currentId) {
+        return nextId;
+      }
+      // If invalid ID or same as current, fall through to default flow
+      if (nextId === currentId) {
+        console.warn(`Question ${currentId} is trying to loop to itself`);
+      } else {
+        console.warn(`Invalid question ID returned: ${nextId}`);
+      }
+    } catch (error) {
+      console.error(`Error in nextQuestion logic for ${currentId}:`, error);
     }
-    // If invalid ID, fall through to default flow
-    console.warn(`Invalid question ID returned: ${nextId}`);
   }
 
   // Get base flow
   const flow = getQuestionFlow();
   const currentIndex = flow.findIndex((id) => id === currentId);
+
+  // If current question not in flow, return null
+  if (currentIndex === -1) {
+    console.warn(`Current question ${currentId} not found in flow`);
+    return null;
+  }
 
   // Find next unskipped question
   for (let i = currentIndex + 1; i < flow.length; i++) {
@@ -927,8 +941,27 @@ export default function AIGuidedSignupPage() {
     return frameworks;
   };
 
-  const totalQuestions = 15; // Approximate, will vary based on answers
-  const progress = (questionsAnswered / totalQuestions) * 100;
+  // Dynamic calculation of total questions based on current flow
+  const calculateTotalQuestions = (): number => {
+    const baseFlow = getQuestionFlow();
+    let total = baseFlow.length;
+    
+    // Add dynamic questions based on current data
+    if (formData.industry === 'Healthcare') total += 1;
+    if (formData.industry === 'Financial Services') total += 1;
+    if (formData.industry === 'E-commerce/Retail') total += 1;
+    if (formData.companySize === 'Just me' || formData.companySize === '2-10') total += 1;
+    if (formData.companySize && formData.companySize !== 'Just me' && formData.companySize !== '2-10') total += 2;
+    if (formData.regions?.includes('EU') || formData.regions?.includes('UK')) total += 1;
+    if (formData.regions?.includes('USA')) total += 1;
+    if (formData.dataTypes?.includes('Payment/financial')) total += 1;
+    if (formData.dataTypes?.includes('Health records')) total += 1;
+    
+    return Math.max(total, questionsAnswered + 1); // Ensure progress never exceeds 100%
+  };
+  
+  const totalQuestions = calculateTotalQuestions();
+  const progress = Math.min((questionsAnswered / totalQuestions) * 100, 100);
   const currentQuestion = questionBank[currentQuestionId];
 
   return (
