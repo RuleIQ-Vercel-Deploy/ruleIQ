@@ -4,7 +4,7 @@ from uuid import UUID
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from api.dependencies.auth import get_current_active_user
+from api.dependencies.stack_auth import get_current_stack_user
 from api.dependencies.database import get_async_db
 from api.dependencies.rbac_auth import get_current_user_with_roles, UserWithRoles, require_permission
 from api.schemas.models import ComplianceFrameworkResponse, FrameworkRecommendation

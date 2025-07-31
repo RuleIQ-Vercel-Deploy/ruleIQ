@@ -15,7 +15,7 @@ from api.schemas.compliance import (
     FrameworkLoadRequest, FrameworkLoadResponse, FrameworkQueryParams
 )
 from services.compliance_loader import UKComplianceLoader, GeographicValidator
-from api.dependencies.auth import get_current_user
+from api.dependencies.stack_auth import get_current_stack_user
 from api.middleware.rate_limiter import RateLimited
 
 
@@ -137,7 +137,7 @@ async def get_framework(
     "/frameworks/load",
     response_model=FrameworkLoadResponse,
     dependencies=[
-        Depends(get_current_user),
+        Depends(get_current_stack_user),
         Depends(RateLimited(requests=10, window=60))
     ]
 )
@@ -208,7 +208,7 @@ async def load_frameworks(
     "/frameworks/{framework_id}",
     response_model=FrameworkResponse,
     dependencies=[
-        Depends(get_current_user),
+        Depends(get_current_stack_user),
         Depends(RateLimited(requests=50, window=60))
     ]
 )
@@ -283,7 +283,7 @@ async def update_framework(
 @router.delete(
     "/frameworks/{framework_id}",
     dependencies=[
-        Depends(get_current_user),
+        Depends(get_current_stack_user),
         Depends(RateLimited(requests=20, window=60))
     ]
 )

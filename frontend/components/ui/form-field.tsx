@@ -44,6 +44,7 @@ export function FormField({
 
       <div className="relative">
         {React.cloneElement(children as React.ReactElement, {
+          ...(children as React.ReactElement).props,
           id: fieldId,
           error: hasError,
           success: hasSuccess,

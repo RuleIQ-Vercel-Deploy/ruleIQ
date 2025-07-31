@@ -9,7 +9,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from datetime import datetime
 from pydantic import BaseModel
 
-from api.dependencies.auth import get_current_active_user
+from api.dependencies.stack_auth import get_current_stack_user
 from database.db_setup import get_async_db
 from database.user import User
 from database.services.integration_service import (
@@ -105,7 +105,7 @@ class CollectedEvidence(BaseModel):
 @router.post("/aws/configure")
 async def configure_aws_integration(
     config: AWSConfigurationRequest,
-    current_user: User = Depends(get_current_active_user),
+    current_user: dict = Depends(get_current_stack_user),
     db: AsyncSession = Depends(get_async_db),
 ):
     """Configure AWS integration for evidence collection"""
@@ -153,7 +153,7 @@ async def configure_aws_integration(
 
         # Store encrypted configuration in database
         integration_config = await store_integration_config(
-            user_id=current_user.id,
+            user_id=current_user["id"],
             provider="aws",
             credentials=credentials,
             health_info=health_check,
@@ -176,14 +176,14 @@ async def configure_aws_integration(
     except HTTPException:
         raise
     except Exception as e:
-        logger.error(f"Error configuring AWS integration for user {current_user.id}: {e}")
+        logger.error(f"Error configuring AWS integration for user {current_user["id"]}: {e}")
         raise HTTPException(status_code=500, detail=f"Configuration failed: {str(e)}")
 
 
 @router.post("/okta/configure")
 async def configure_okta_integration(
     config: OktaConfigurationRequest,
-    current_user: User = Depends(get_current_active_user),
+    current_user: dict = Depends(get_current_stack_user),
     db: AsyncSession = Depends(get_async_db),
 ):
     """Configure Okta integration for evidence collection"""
@@ -206,7 +206,7 @@ async def configure_okta_integration(
 
         # Store configuration
         integration_config = await store_integration_config(
-            user_id=current_user.id,
+            user_id=current_user["id"],
             provider="okta",
             credentials=credentials,
             health_info=health_check,
@@ -227,14 +227,14 @@ async def configure_okta_integration(
     except HTTPException:
         raise
     except Exception as e:
-        logger.error(f"Error configuring Okta integration for user {current_user.id}: {e}")
+        logger.error(f"Error configuring Okta integration for user {current_user["id"]}: {e}")
         raise HTTPException(status_code=500, detail=f"Configuration failed: {str(e)}")
 
 
 @router.post("/google/configure")
 async def configure_google_workspace_integration(
     config: GoogleWorkspaceConfigurationRequest,
-    current_user: User = Depends(get_current_active_user),
+    current_user: dict = Depends(get_current_stack_user),
     db: AsyncSession = Depends(get_async_db),
 ):
     """Configure Google Workspace integration for evidence collection"""
@@ -263,7 +263,7 @@ async def configure_google_workspace_integration(
 
         # Store configuration
         integration_config = await store_integration_config(
-            user_id=current_user.id,
+            user_id=current_user["id"],
             provider="google_workspace",
             credentials=credentials,
             health_info={"domain": config.domain, "status": "connected"},
@@ -285,7 +285,7 @@ async def configure_google_workspace_integration(
         raise
     except Exception as e:
         logger.error(
-            f"Error configuring Google Workspace integration for user {current_user.id}: {e}"
+            f"Error configuring Google Workspace integration for user {current_user["id"]}: {e}"
         )
         raise HTTPException(status_code=500, detail=f"Configuration failed: {str(e)}")
 
@@ -293,7 +293,7 @@ async def configure_google_workspace_integration(
 @router.post("/microsoft/configure")
 async def configure_microsoft_integration(
     config: MicrosoftConfigurationRequest,
-    current_user: User = Depends(get_current_active_user),
+    current_user: dict = Depends(get_current_stack_user),
     db: AsyncSession = Depends(get_async_db),
 ):
     """Configure Microsoft 365/Azure AD integration for evidence collection"""
@@ -322,7 +322,7 @@ async def configure_microsoft_integration(
 
         # Store configuration
         integration_config = await store_integration_config(
-            user_id=current_user.id,
+            user_id=current_user["id"],
             provider="microsoft_365",
             credentials=credentials,
             health_info={"tenant_id": config.tenant_id, "status": "connected"},
@@ -343,7 +343,7 @@ async def configure_microsoft_integration(
     except HTTPException:
         raise
     except Exception as e:
-        logger.error(f"Error configuring Microsoft 365 integration for user {current_user.id}: {e}")
+        logger.error(f"Error configuring Microsoft 365 integration for user {current_user["id"]}: {e}")
         raise HTTPException(status_code=500, detail=f"Configuration failed: {str(e)}")
 
 
@@ -352,14 +352,14 @@ async def configure_microsoft_integration(
 async def start_foundation_evidence_collection(
     request: FoundationEvidenceRequest,
     background_tasks: BackgroundTasks,
-    current_user: User = Depends(get_current_active_user),
+    current_user: dict = Depends(get_current_stack_user),
     db: AsyncSession = Depends(get_async_db),
 ):
     """Start foundation evidence collection from AWS and Okta"""
 
     try:
         # Validate user has required integrations
-        user_integrations = await get_user_integrations(current_user.id, db)
+        user_integrations = await get_user_integrations(current_user["id"], db)
         integration_map = {i.provider: i for i in user_integrations}
 
         # Check for any available integrations
@@ -401,7 +401,7 @@ async def start_foundation_evidence_collection(
 
         collection_record = await evidence_service.create_evidence_collection(
             integration_id=str(first_integration.id),
-            user_id=current_user.id,
+            user_id=current_user["id"],
             framework_id=request.framework_id,
             evidence_types_requested=evidence_types,
             business_profile=request.business_profile,
@@ -412,7 +412,7 @@ async def start_foundation_evidence_collection(
         background_tasks.add_task(
             execute_foundation_evidence_collection,
             collection_id=str(collection_record.id),
-            user_id=current_user.id,
+            user_id=current_user["id"],
             integration_map=integration_map,
             evidence_types=evidence_types,
         )
@@ -429,21 +429,21 @@ async def start_foundation_evidence_collection(
     except HTTPException:
         raise
     except Exception as e:
-        logger.error(f"Error starting evidence collection for user {current_user.id}: {e}")
+        logger.error(f"Error starting evidence collection for user {current_user["id"]}: {e}")
         raise HTTPException(status_code=500, detail=f"Failed to start collection: {str(e)}")
 
 
 @router.get("/collect/{collection_id}/status", response_model=EvidenceCollectionStatus)
 async def get_collection_status(
     collection_id: str,
-    current_user: User = Depends(get_current_active_user),
+    current_user: dict = Depends(get_current_stack_user),
     db: AsyncSession = Depends(get_async_db),
 ):
     """Get status of evidence collection"""
 
     try:
         evidence_service = EvidenceCollectionService(db)
-        collection = await evidence_service.get_collection_status(collection_id, current_user.id)
+        collection = await evidence_service.get_collection_status(collection_id, current_user["id"])
 
         if not collection:
             raise HTTPException(status_code=404, detail="Collection not found")
@@ -487,14 +487,14 @@ async def get_collection_results(
     evidence_type: Optional[str] = Query(None, description="Filter by evidence type"),
     page: int = Query(1, ge=1, description="Page number"),
     page_size: int = Query(50, ge=1, le=200, description="Page size"),
-    current_user: User = Depends(get_current_active_user),
+    current_user: dict = Depends(get_current_stack_user),
     db: AsyncSession = Depends(get_async_db),
 ):
     """Get collected evidence results"""
 
     try:
         evidence_service = EvidenceCollectionService(db)
-        collection = await evidence_service.get_collection_status(collection_id, current_user.id)
+        collection = await evidence_service.get_collection_status(collection_id, current_user["id"])
 
         if not collection:
             raise HTTPException(status_code=404, detail="Collection not found")
@@ -537,12 +537,12 @@ async def get_collection_results(
 
 @router.get("/health")
 async def check_foundation_integrations_health(
-    current_user: User = Depends(get_current_active_user), db: AsyncSession = Depends(get_async_db)
+    current_user: dict = Depends(get_current_stack_user), db: AsyncSession = Depends(get_async_db)
 ):
     """Check health of foundation integrations (AWS + Okta)"""
 
     try:
-        user_integrations = await get_user_integrations(current_user.id, db)
+        user_integrations = await get_user_integrations(current_user["id"], db)
         health_results = []
 
         for integration in user_integrations:

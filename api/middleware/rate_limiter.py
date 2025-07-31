@@ -69,14 +69,19 @@ else:
 strict_test_limiter = RateLimiter(requests_per_minute=4)  # Very strict for testing
 
 
+
 async def rate_limit_middleware(request: Request, call_next):
     """General rate limiting middleware"""
     # Skip rate limiting for docs and testing environment
     if request.url.path in ["/docs", "/redoc", "/openapi.json"] or settings.is_testing:
         return await call_next(request)
-
+    
     # Get client identifier (IP address)
     client_ip = request.client.host if request.client else "unknown"
+    
+    # Emergency bypass for localhost during testing - remove in production
+    if client_ip in ["127.0.0.1", "::1", "localhost"] and settings.is_testing:
+        return await call_next(request)
 
     # Check rate limit
     allowed, retry_after = await general_limiter.check_rate_limit(client_ip)
@@ -120,8 +125,13 @@ def auth_rate_limit():
         # Skip rate limiting in testing environment
         if settings.is_testing:
             return
-
+        
         client_ip = request.client.host if request.client else "unknown"
+        
+        # Emergency bypass for localhost during testing - remove in production
+        if client_ip in ["127.0.0.1", "::1", "localhost"] and settings.is_testing:
+            return
+            
         allowed, retry_after = await auth_limiter.check_rate_limit(client_ip)
 
         if not allowed:

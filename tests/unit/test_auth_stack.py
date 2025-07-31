@@ -1,0 +1,79 @@
+"""
+Tests for Stack Auth implementation
+"""
+import pytest
+from unittest.mock import Mock, patch
+from fastapi import HTTPException
+
+from api.auth_stack import verify_stack_token, get_current_user
+
+
+@pytest.mark.asyncio
+async def test_verify_stack_token_success():
+    """Test successful token verification"""
+    with patch('api.auth_stack.httpx.AsyncClient') as mock_client:
+        # Mock successful response
+        mock_response = Mock()
+        mock_response.status_code = 200
+        mock_response.json.return_value = {
+            "id": "user123",
+            "primaryEmail": "test@example.com",
+            "displayName": "Test User"
+        }
+        
+        mock_client.return_value.__aenter__.return_value.get.return_value = mock_response
+        
+        result = await verify_stack_token("valid-token")
+        
+        assert result is not None
+        assert result["id"] == "user123"
+        assert result["primaryEmail"] == "test@example.com"
+
+
+@pytest.mark.asyncio
+async def test_verify_stack_token_invalid():
+    """Test invalid token verification"""
+    with patch('api.auth_stack.httpx.AsyncClient') as mock_client:
+        # Mock failed response
+        mock_response = Mock()
+        mock_response.status_code = 401
+        
+        mock_client.return_value.__aenter__.return_value.get.return_value = mock_response
+        
+        result = await verify_stack_token("invalid-token")
+        
+        assert result is None
+
+
+@pytest.mark.asyncio
+async def test_get_current_user_success():
+    """Test successful user retrieval"""
+    with patch('api.auth_stack.verify_stack_token') as mock_verify:
+        mock_verify.return_value = {
+            "id": "user123",
+            "primaryEmail": "test@example.com"
+        }
+        
+        mock_credentials = Mock()
+        mock_credentials.credentials = "valid-token"
+        
+        user = await get_current_user(mock_credentials)
+        
+        assert user["id"] == "user123"
+        assert user["primaryEmail"] == "test@example.com"
+
+
+@pytest.mark.asyncio
+async def test_get_current_user_unauthorized():
+    """Test unauthorized user access"""
+    with patch('api.auth_stack.verify_stack_token') as mock_verify:
+        mock_verify.return_value = None
+        
+        mock_credentials = Mock()
+        mock_credentials.credentials = "invalid-token"
+        
+        with pytest.raises(HTTPException) as exc_info:
+            await get_current_user(mock_credentials)
+        
+        assert exc_info.value.status_code == 401
+        assert exc_info.value.detail == "Invalid authentication credentials"

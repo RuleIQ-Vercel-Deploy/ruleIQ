@@ -14,7 +14,7 @@ from fastapi import APIRouter, WebSocket, WebSocketDisconnect, Depends, Query, H
 from fastapi.websockets import WebSocketState
 from pydantic import BaseModel
 
-from api.dependencies.auth import get_current_user_websocket
+# WebSocket auth will be implemented with Stack Auth in future iteration
 from api.middleware.cost_tracking_middleware import real_time_monitor
 from services.ai.cost_management import AICostManager, CostTrackingService
 from database.user import User
@@ -598,7 +598,7 @@ async def broadcast_cost_updates():
 
 
 # Start background task when module is imported
-asyncio.create_task(broadcast_cost_updates())
+# TODO: Move to application startup - asyncio.create_task(broadcast_cost_updates())
 
 
 # HTTP endpoints for WebSocket management

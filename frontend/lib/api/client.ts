@@ -32,7 +32,7 @@ class ApiClient {
 
   constructor() {
     this.client = axios.create({
-      baseURL: `${env.NEXT_PUBLIC_API_URL}/api/v1`,
+      baseURL: `${env.NEXT_PUBLIC_API_URL}/api`,
       timeout: API_TIMEOUT,
       headers: {
         'Content-Type': 'application/json',
@@ -177,7 +177,7 @@ class ApiClient {
     }
 
     this.refreshPromise = this.post<{ access_token: string; refresh_token: string }>(
-      '/auth/refresh',
+      '/v1/auth/refresh',
       { refresh_token: refreshToken },
       { _skipAuthRefresh: true } as any,
     )

@@ -9,7 +9,7 @@ from typing import Dict, Any, Optional
 import logging
 
 from services.agentic_rag import AgenticRAGSystem, AgenticRAGResponse
-from api.dependencies.auth import get_current_user, User
+from api.dependencies.stack_auth import get_current_stack_user, User
 from api.middleware.rate_limiter import rate_limit
 from api.schemas.base import StandardResponse
 
@@ -61,7 +61,7 @@ def get_rag_system() -> AgenticRAGSystem:
 )
 async def find_code_examples(
     request: FrameworkGuidanceRequest,
-    current_user: User = Depends(get_current_user),
+    current_user: dict = Depends(get_current_stack_user),
     rag_system: AgenticRAGSystem = Depends(get_rag_system)
 ) -> StandardResponse[AgenticRAGResponse]:
     """
@@ -110,7 +110,7 @@ async def find_code_examples(
 async def fact_check_response(
     request: DocumentationQueryRequest,
     quick_check: bool = Query(True, description="Use quick fact-check for faster response"),
-    current_user: User = Depends(get_current_user)
+    current_user: dict = Depends(get_current_stack_user)
 ) -> Dict[str, Any]:
     """
     Fact-check a RAG response using the self-critic system
@@ -176,7 +176,7 @@ async def query_with_validation(
     quick_validation: bool = Query(
         True, description="Use quick validation for better performance"
     ),
-    current_user: User = Depends(get_current_user)
+    current_user: dict = Depends(get_current_stack_user)
 ) -> Dict[str, Any]:
     """
     Query documentation with automatic fact-checking validation

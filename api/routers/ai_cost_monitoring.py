@@ -13,7 +13,7 @@ from fastapi import APIRouter, Depends, HTTPException, Query, status, Background
 from pydantic import BaseModel, Field
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from api.dependencies.auth import get_current_user
+from api.dependencies.stack_auth import get_current_stack_user
 from api.middleware.rate_limiter import RateLimited
 from database.db_setup import get_async_db
 from database.user import User
@@ -151,13 +151,13 @@ optimization_service = CostOptimizationService()
     response_model=CostTrackingResponse,
     status_code=status.HTTP_201_CREATED,
     dependencies=[
-        Depends(get_current_user),
+        Depends(get_current_stack_user),
         Depends(RateLimited(requests=100, window=60))
     ]
 )
 async def track_ai_usage(
     request: CostTrackingRequest,
-    current_user: User = Depends(get_current_user)
+    current_user: dict = Depends(get_current_stack_user)
 ):
     """
     Track AI usage and calculate costs.
@@ -173,7 +173,7 @@ async def track_ai_usage(
             response_content="",  # Not stored for tracking
             input_tokens=request.input_tokens,
             output_tokens=request.output_tokens,
-            user_id=str(current_user.id),
+            user_id=str(current_user["id"]),
             session_id=request.session_id,
             request_id=request.request_id,
             response_quality_score=request.response_quality_score,
@@ -203,7 +203,7 @@ async def track_ai_usage(
     "/analytics/daily",
     response_model=CostAnalyticsResponse,
     dependencies=[
-        Depends(get_current_user),
+        Depends(get_current_stack_user),
         Depends(RateLimited(requests=20, window=60))
     ]
 )
@@ -250,7 +250,7 @@ async def get_daily_cost_analytics(
     "/analytics/trends",
     response_model=CostTrendsResponse,
     dependencies=[
-        Depends(get_current_user),
+        Depends(get_current_stack_user),
         Depends(RateLimited(requests=20, window=60))
     ]
 )
@@ -309,13 +309,13 @@ async def get_cost_trends(
     "/budget/configure",
     status_code=status.HTTP_200_OK,
     dependencies=[
-        Depends(get_current_user),
+        Depends(get_current_stack_user),
         Depends(RateLimited(requests=10, window=60))
     ]
 )
 async def configure_budget(
     config: BudgetConfigRequest,
-    current_user: User = Depends(get_current_user)
+    current_user: dict = Depends(get_current_stack_user)
 ):
     """
     Configure budget limits and constraints.
@@ -333,7 +333,7 @@ async def configure_budget(
             for service_name, limit in config.service_limits.items():
                 await budget_service.set_service_budget(service_name, limit)
         
-        logger.info(f"Budget configured by user {current_user.id}")
+        logger.info(f"Budget configured by user {current_user["id"]}")
         return {"message": "Budget configuration updated successfully"}
         
     except Exception as e:
@@ -348,7 +348,7 @@ async def configure_budget(
     "/budget/status",
     response_model=BudgetStatusResponse,
     dependencies=[
-        Depends(get_current_user),
+        Depends(get_current_stack_user),
         Depends(RateLimited(requests=30, window=60))
     ]
 )
@@ -416,7 +416,7 @@ async def get_budget_status():
     "/alerts",
     response_model=List[AlertResponse],
     dependencies=[
-        Depends(get_current_user),
+        Depends(get_current_stack_user),
         Depends(RateLimited(requests=30, window=60))
     ]
 )
@@ -454,7 +454,7 @@ async def get_budget_alerts():
     "/optimization/recommendations",
     response_model=List[OptimizationResponse],
     dependencies=[
-        Depends(get_current_user),
+        Depends(get_current_stack_user),
         Depends(RateLimited(requests=10, window=60))
     ]
 )
@@ -491,7 +491,7 @@ async def get_optimization_recommendations():
     "/routing/select-model",
     response_model=ModelRoutingResponse,
     dependencies=[
-        Depends(get_current_user),
+        Depends(get_current_stack_user),
         Depends(RateLimited(requests=50, window=60))
     ]
 )
@@ -536,7 +536,7 @@ async def select_optimal_model(request: ModelRoutingRequest):
 @router.get(
     "/reports/monthly",
     dependencies=[
-        Depends(get_current_user),
+        Depends(get_current_stack_user),
         Depends(RateLimited(requests=5, window=60))
     ]
 )
@@ -573,7 +573,7 @@ async def generate_monthly_report(
 @router.get(
     "/usage/by-service",
     dependencies=[
-        Depends(get_current_user),
+        Depends(get_current_stack_user),
         Depends(RateLimited(requests=30, window=60))
     ]
 )
@@ -674,7 +674,7 @@ async def cost_monitoring_health():
 @router.delete(
     "/cache/clear",
     dependencies=[
-        Depends(get_current_user),
+        Depends(get_current_stack_user),
         Depends(RateLimited(requests=5, window=3600))  # 5 per hour
     ]
 )

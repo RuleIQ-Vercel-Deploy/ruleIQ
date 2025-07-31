@@ -1,2 +1,0 @@
-{"asctime": "2025-06-16 22:37:12,416", "name": "config.logging_config", "levelname": "INFO", "message": "Logging initialized from YAML - Environment: development", "module": "logging_config", "funcName": "setup_logging", "lineno": 39}
-{"asctime": "2025-06-16 22:37:12,416", "name": "config.logging_config", "levelname": "INFO", "message": "Log level: INFO", "module": "logging_config", "funcName": "setup_logging", "lineno": 40}

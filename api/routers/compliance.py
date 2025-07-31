@@ -5,7 +5,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from api.dependencies.auth import get_current_active_user
+from api.dependencies.stack_auth import get_current_stack_user
 from api.dependencies.database import get_async_db
 from api.schemas.models import ComplianceStatusResponse
 from database.business_profile import BusinessProfile
@@ -20,7 +20,7 @@ router = APIRouter()
 
 @router.get("/status", response_model=ComplianceStatusResponse)
 async def get_compliance_status(
-    current_user: User = Depends(get_current_active_user), db: AsyncSession = Depends(get_async_db)
+    current_user: dict = Depends(get_current_stack_user), db: AsyncSession = Depends(get_async_db)
 ) -> Dict[str, Any]:
     """
     Get overall compliance status for the current user.
@@ -33,7 +33,7 @@ async def get_compliance_status(
     """
     try:
         # Get user's business profile
-        profile_stmt = select(BusinessProfile).where(BusinessProfile.user_id == current_user.id)
+        profile_stmt = select(BusinessProfile).where(BusinessProfile.user_id == current_user["id"])
         profile_result = await db.execute(profile_stmt)
         profile = profile_result.scalars().first()
 
@@ -54,7 +54,7 @@ async def get_compliance_status(
             }
 
         # Get evidence statistics
-        evidence_stats = await EvidenceService.get_evidence_statistics(db, current_user.id)
+        evidence_stats = await EvidenceService.get_evidence_statistics(db, current_user["id"])
 
         # Get all frameworks and calculate scores
         frameworks_stmt = select(ComplianceFramework)
@@ -69,7 +69,7 @@ async def get_compliance_status(
         for framework in all_frameworks:
             # Get evidence for this framework
             framework_evidence_stmt = select(EvidenceItem).where(
-                EvidenceItem.user_id == current_user.id, EvidenceItem.framework_id == framework.id
+                EvidenceItem.user_id == current_user["id"], EvidenceItem.framework_id == framework["id"]
             )
             framework_evidence_result = await db.execute(framework_evidence_stmt)
             framework_evidence = framework_evidence_result.scalars().all()
@@ -78,7 +78,7 @@ async def get_compliance_status(
             assessment_stmt = (
                 select(ReadinessAssessment)
                 .where(
-                    ReadinessAssessment.user_id == current_user.id,
+                    ReadinessAssessment.user_id == current_user["id"],
                     ReadinessAssessment.framework_id == framework.id,
                 )
                 .order_by(ReadinessAssessment.created_at.desc())
@@ -128,7 +128,7 @@ async def get_compliance_status(
         recent_evidence_stmt = (
             select(EvidenceItem)
             .where(
-                EvidenceItem.user_id == current_user.id, EvidenceItem.updated_at >= recent_cutoff
+                EvidenceItem.user_id == current_user["id"], EvidenceItem.updated_at >= recent_cutoff
             )
             .order_by(EvidenceItem.updated_at.desc())
             .limit(10)
@@ -198,7 +198,7 @@ async def get_compliance_status(
 @router.post("/query")
 async def query_compliance(
     request: dict,
-    current_user: User = Depends(get_current_active_user),
+    current_user: dict = Depends(get_current_stack_user),
     db: AsyncSession = Depends(get_async_db),
 ):
     """

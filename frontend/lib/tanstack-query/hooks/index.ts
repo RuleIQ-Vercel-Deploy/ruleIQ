@@ -2,7 +2,7 @@
 export * from './base';
 
 // Domain-specific hooks
-export * from './use-auth';
+
 export * from './use-dashboard';
 export * from './use-assessments';
 export * from './use-policies';

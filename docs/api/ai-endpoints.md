@@ -48,8 +48,13 @@ When rate limited, endpoints return HTTP 429 with detailed information:
 
 ## Authentication
 
-All AI endpoints require authentication via Bearer token:
+All AI endpoints require authentication via Bearer token.
 
+**Base URL**: `http://localhost:8000/api`
+
+For authentication details, see [Authentication Endpoints](./auth-endpoints.md).
+
+### Usage
 ```
 Authorization: Bearer <your_access_token>
 ```

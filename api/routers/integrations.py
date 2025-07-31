@@ -11,7 +11,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 
-from api.dependencies.auth import get_current_active_user
+from api.dependencies.stack_auth import get_current_stack_user
 from api.integrations.base.base_integration import (
     BaseIntegration,
     IntegrationConfig,
@@ -81,7 +81,7 @@ AVAILABLE_PROVIDERS = {
 )
 async def connect_integration(
     payload: IntegrationCredentials,
-    current_user: User = Depends(get_current_active_user),
+    current_user: dict = Depends(get_current_stack_user),
     db: AsyncSession = Depends(get_async_db),
 ):
     provider = payload.provider.lower()
@@ -92,14 +92,14 @@ async def connect_integration(
 
     try:
         # Use a generic integration instance to access encryption methods
-        temp_config = IntegrationConfig(user_id=current_user.id, provider=provider, credentials={})
+        temp_config = IntegrationConfig(user_id=current_user["id"], provider=provider, credentials={})
         integration_handler = GenericIntegration(temp_config)
 
         # Encrypt the credentials
         encrypted_creds = integration_handler.encrypt_credentials_to_str(payload.credentials)
         if not encrypted_creds:
             logger.error(
-                f"Credential encryption failed for user {current_user.id}, provider {provider}. Aborting connection."
+                f"Credential encryption failed for user {current_user["id"]}, provider {provider}. Aborting connection."
             )
             raise HTTPException(
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
@@ -108,7 +108,7 @@ async def connect_integration(
 
         # Check if integration already exists
         stmt = select(Integration).where(
-            Integration.user_id == current_user.id,
+            Integration.user_id == current_user["id"],
             Integration.provider == provider,
         )
         result = await db.execute(stmt)
@@ -122,11 +122,11 @@ async def connect_integration(
             config.is_enabled = True
             config.updated_at = datetime.utcnow()
             message = f"Successfully updated and reconnected {provider} integration."
-            logger.info(f"Integration updated for user {current_user.id}, provider {provider}")
+            logger.info(f"Integration updated for user {current_user["id"]}, provider {provider}")
         else:
             # Create new configuration
             config = Integration(
-                user_id=current_user.id,
+                user_id=current_user["id"],
                 provider=provider,
                 credentials=encrypted_creds,
                 settings=payload.settings,
@@ -135,7 +135,7 @@ async def connect_integration(
             )
             db.add(config)
             message = f"Successfully connected {provider} integration."
-            logger.info(f"New integration created for user {current_user.id}, provider {provider}")
+            logger.info(f"New integration created for user {current_user["id"]}, provider {provider}")
 
         await db.commit()
         await db.refresh(config)
@@ -146,7 +146,7 @@ async def connect_integration(
     except SQLAlchemyError as e:
         await db.rollback()
         logger.error(
-            f"Database error connecting integration for user {current_user.id}, provider {provider}: {e}",
+            f"Database error connecting integration for user {current_user["id"]}, provider {provider}: {e}",
             exc_info=True,
         )
         raise HTTPException(
@@ -155,7 +155,7 @@ async def connect_integration(
     except Exception as e:
         await db.rollback()
         logger.error(
-            f"Error connecting integration for user {current_user.id}, provider {provider}: {e}",
+            f"Error connecting integration for user {current_user["id"]}, provider {provider}: {e}",
             exc_info=True,
         )
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
@@ -166,7 +166,7 @@ async def connect_integration(
 )
 async def disconnect_integration(
     provider: str,
-    current_user: User = Depends(get_current_active_user),
+    current_user: dict = Depends(get_current_stack_user),
     db: AsyncSession = Depends(get_async_db),
 ):
     provider_key = provider.lower()
@@ -177,7 +177,7 @@ async def disconnect_integration(
 
     try:
         stmt = select(Integration).where(
-            Integration.user_id == current_user.id,
+            Integration.user_id == current_user["id"],
             Integration.provider == provider_key,
         )
         result = await db.execute(stmt)
@@ -191,11 +191,11 @@ async def disconnect_integration(
 
         await db.delete(config)
         await db.commit()
-        logger.info(f"Integration {provider_key} disconnected for user {current_user.id}")
+        logger.info(f"Integration {provider_key} disconnected for user {current_user["id"]}")
     except SQLAlchemyError as e:
         await db.rollback()
         logger.error(
-            f"Database error disconnecting {provider_key} for user {current_user.id}: {e}",
+            f"Database error disconnecting {provider_key} for user {current_user["id"]}: {e}",
             exc_info=True,
         )
         raise HTTPException(
@@ -208,7 +208,7 @@ async def disconnect_integration(
 )
 async def get_integration_status(
     provider: str,
-    current_user: User = Depends(get_current_active_user),
+    current_user: dict = Depends(get_current_stack_user),
     db: AsyncSession = Depends(get_async_db),
 ):
     provider_key = provider.lower()
@@ -219,7 +219,7 @@ async def get_integration_status(
 
     try:
         stmt = select(Integration).where(
-            Integration.user_id == current_user.id,
+            Integration.user_id == current_user["id"],
             Integration.provider == provider_key,
         )
         result = await db.execute(stmt)
@@ -239,7 +239,7 @@ async def get_integration_status(
         )
     except SQLAlchemyError as e:
         logger.error(
-            f"Database error fetching status for {provider_key}, user {current_user.id}: {e}",
+            f"Database error fetching status for {provider_key}, user {current_user["id"]}: {e}",
             exc_info=True,
         )
         raise HTTPException(

@@ -41,10 +41,10 @@ class RBACMiddleware(BaseHTTPMiddleware):
         
         # Public routes that don't require authentication
         self.public_routes = {
-            "/api/auth/login",
-            "/api/auth/login-form", 
-            "/api/auth/register",
-            "/api/auth/refresh",
+            "/api/v1/auth/login",
+            "/api/v1/auth/login-form", 
+            "/api/v1/auth/register",
+            "/api/v1/auth/refresh",
             "/health",
             "/api/monitoring/health",  # Public health check for load balancers
             "/api/monitoring/prometheus",  # Public metrics for Prometheus scraping
@@ -55,10 +55,10 @@ class RBACMiddleware(BaseHTTPMiddleware):
         
         # Routes that require authentication but no specific permissions
         self.authenticated_only_routes = {
-            "/api/auth/me",
-            "/api/auth/logout",
-            "/api/auth/permissions",
-            "/api/auth/framework-access"
+            "/api/v1/auth/me",
+            "/api/v1/auth/logout",
+            "/api/v1/auth/permissions",
+            "/api/v1/auth/framework-access"
         }
     
     def _configure_route_permissions(self) -> Dict[Pattern, Dict[str, List[str]]]:

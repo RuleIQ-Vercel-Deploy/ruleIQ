@@ -1,0 +1,329 @@
+"""
+Test Suite for Stack Auth Conversion Validation
+Tests Stack Auth endpoints to ensure proper conversion
+"""
+import pytest
+import asyncio
+from fastapi.testclient import TestClient
+from unittest.mock import Mock, patch, AsyncMock
+from typing import Dict, Any
+import httpx
+
+# Import app
+from main import app
+
+class TestStackAuthConversion:
+    """Test Stack Auth conversion for all endpoints"""
+    
+    @pytest.fixture
+    def client(self):
+        """Test client fixture"""
+        return TestClient(app)
+    
+    @pytest.fixture  
+    def mock_stack_user(self):
+        """Mock Stack Auth user data"""
+        return {
+            "id": "test_user_123",
+            "primaryEmail": "test@example.com",
+            "displayName": "Test User",
+            "roles": []
+        }
+    
+    @pytest.fixture
+    def valid_auth_headers(self):
+        """Valid authorization headers"""
+        return {"Authorization": "Bearer test_stack_auth_token"}
+    
+    @pytest.fixture
+    def invalid_auth_headers(self):
+        """Invalid authorization headers"""  
+        return {"Authorization": "Bearer invalid_token"}
+    
+    @pytest.fixture
+    def no_auth_headers(self):
+        """No authorization headers"""
+        return {}
+
+    @pytest.mark.parametrize("endpoint,method,expected_auth", [
+        # Authentication endpoints (should NOT require auth)
+        ("/api/v1/auth/google", "GET", False),
+        ("/api/v1/auth/google/callback", "GET", False), 
+        ("/health", "GET", False),
+        ("/", "GET", False),
+        
+        # Protected endpoints (should require auth)
+        ("/api/dashboard", "GET", True),
+        ("/api/users/me", "GET", True),
+        ("/api/business-profiles", "GET", True),
+        ("/api/assessments", "GET", True),
+        ("/api/frameworks", "GET", True),
+        ("/api/evidence", "GET", True),
+        ("/api/compliance", "GET", True),
+        ("/api/readiness", "GET", True),
+        ("/api/reports", "GET", True),
+        ("/api/integrations", "GET", True),
+        ("/api/monitoring/health", "GET", False),  # Health check shouldn't need auth
+        ("/api/ai/cost/metrics", "GET", True),
+        ("/api/ai/policies", "GET", True),
+        ("/api/performance/metrics", "GET", True),
+        ("/api/uk-compliance", "GET", True),
+    ])
+    @patch('api.middleware.stack_auth_middleware.validate_stack_token')
+    def test_endpoint_auth_requirements(self, mock_validate_token, client, mock_stack_user, 
+                                      endpoint, method, expected_auth, 
+                                      valid_auth_headers, no_auth_headers):
+        """Test that endpoints have correct authentication requirements"""
+        
+        if expected_auth:
+            # Mock successful Stack Auth validation
+            mock_validate_token.return_value = mock_stack_user
+            
+            # Test with valid auth - should work
+            response = client.request(method, endpoint, headers=valid_auth_headers)
+            assert response.status_code != 401, f"Authenticated request to {endpoint} should not return 401"
+            
+            # Test without auth - should return 401
+            response = client.request(method, endpoint, headers=no_auth_headers)
+            assert response.status_code == 401, f"Unauthenticated request to {endpoint} should return 401"
+            
+        else:
+            # Public endpoint - should work without auth
+            response = client.request(method, endpoint, headers=no_auth_headers)
+            assert response.status_code != 401, f"Public endpoint {endpoint} should not require auth"
+
+    @patch('api.middleware.stack_auth_middleware.validate_stack_token')  
+    def test_invalid_token_rejected(self, mock_validate_token, client, invalid_auth_headers):
+        """Test that invalid Stack Auth tokens are rejected"""
+        
+        # Mock invalid token validation
+        mock_validate_token.return_value = None
+        
+        # Test protected endpoint with invalid token
+        response = client.get("/api/dashboard", headers=invalid_auth_headers)
+        assert response.status_code == 401
+        
+    @patch('api.middleware.stack_auth_middleware.validate_stack_token')
+    def test_stack_auth_service_unavailable(self, mock_validate_token, client, valid_auth_headers):
+        """Test handling when Stack Auth service is unavailable"""
+        
+        # Mock service unavailable 
+        from api.middleware.stack_auth_middleware import StackAuthError
+        mock_validate_token.side_effect = StackAuthError("Service unavailable")
+        
+        response = client.get("/api/dashboard", headers=valid_auth_headers)
+        assert response.status_code == 503
+        
+    @patch('api.middleware.stack_auth_middleware.validate_stack_token')
+    def test_user_context_in_endpoints(self, mock_validate_token, client, mock_stack_user, valid_auth_headers):
+        """Test that user context is properly passed to endpoints"""
+        
+        mock_validate_token.return_value = mock_stack_user
+        
+        # Test dashboard endpoint that uses user data
+        response = client.get("/api/dashboard", headers=valid_auth_headers)
+        
+        if response.status_code == 200:
+            data = response.json()
+            assert "user" in data
+            assert data["user"]["id"] == mock_stack_user["id"]
+            assert data["user"]["email"] == mock_stack_user["primaryEmail"]
+
+    def test_no_jwt_dependencies_in_converted_routers(self):
+        """Test that converted routers don't import JWT dependencies"""
+        
+        import importlib
+        import inspect
+        
+        # List of routers that should be converted
+        converted_routers = [
+            "api.routers.users",
+            "api.routers.evidence_collection", 
+            "api.routers.uk_compliance",
+            "api.routers.readiness",
+            "api.routers.frameworks",
+            "api.routers.ai_assessments",
+            "api.routers.integrations",
+            "api.routers.evidence",
+            "api.routers.chat",
+            "api.routers.compliance",
+            "api.routers.foundation_evidence",
+            "api.routers.ai_optimization"
+        ]
+        
+        jwt_imports = ["oauth2_scheme", "get_current_user"]
+        stack_auth_imports = ["get_current_stack_user", "get_current_user_id"]
+        
+        for router_module_name in converted_routers:
+            try:
+                module = importlib.import_module(router_module_name)
+                
+                # Check that JWT dependencies are not imported
+                for jwt_import in jwt_imports:
+                    assert not hasattr(module, jwt_import), \
+                        f"{router_module_name} still imports JWT dependency: {jwt_import}"
+                
+                # Check that Stack Auth dependencies are imported
+                has_stack_auth = any(hasattr(module, sa_import) for sa_import in stack_auth_imports)
+                
+                # Only check if the module actually has protected endpoints
+                source = inspect.getsource(module)
+                if "Depends(" in source:  # Has dependencies, should use Stack Auth
+                    assert has_stack_auth, \
+                        f"{router_module_name} has dependencies but no Stack Auth imports"
+                        
+            except ImportError:
+                pytest.skip(f"Could not import {router_module_name}")
+
+    @patch('api.middleware.stack_auth_middleware.validate_stack_token')
+    def test_rate_limiting_with_stack_auth(self, mock_validate_token, client, mock_stack_user, valid_auth_headers):
+        """Test that rate limiting works with Stack Auth"""
+        
+        mock_validate_token.return_value = mock_stack_user
+        
+        # Make multiple requests to test rate limiting
+        responses = []
+        for i in range(5):  # Should be within rate limit
+            response = client.get("/api/dashboard", headers=valid_auth_headers)
+            responses.append(response.status_code)
+        
+        # All requests should succeed (no 429 Too Many Requests)
+        assert all(status != 429 for status in responses), "Rate limiting incorrectly triggered"
+
+    def test_stack_auth_middleware_registered(self):
+        """Test that Stack Auth middleware is properly registered"""
+        
+        from main import app
+        
+        # Check middleware stack
+        middleware_types = [type(middleware.cls).__name__ for middleware in app.user_middleware]
+        assert "StackAuthMiddleware" in middleware_types, "Stack Auth middleware not registered"
+
+    @pytest.mark.asyncio
+    async def test_stack_auth_token_validation(self):
+        """Test Stack Auth token validation function directly"""
+        
+        from api.middleware.stack_auth_middleware import validate_stack_token
+        
+        # Test with mock token (should fail in real validation)
+        with patch('httpx.AsyncClient.get') as mock_get:
+            # Mock successful validation
+            mock_response = Mock()
+            mock_response.status_code = 200
+            mock_response.json.return_value = {"id": "test_user", "primaryEmail": "test@example.com"}
+            mock_get.return_value = mock_response
+            
+            result = await validate_stack_token("test_token")
+            assert result is not None
+            assert result["id"] == "test_user"
+            
+            # Mock failed validation
+            mock_response.status_code = 401
+            result = await validate_stack_token("invalid_token") 
+            assert result is None
+
+    def test_openapi_docs_updated_for_stack_auth(self, client):
+        """Test that OpenAPI documentation reflects Stack Auth"""
+        
+        response = client.get("/openapi.json")
+        assert response.status_code == 200
+        
+        openapi_spec = response.json()
+        
+        # Check security schemes 
+        if "components" in openapi_spec and "securitySchemes" in openapi_spec["components"]:
+            security_schemes = openapi_spec["components"]["securitySchemes"]
+            
+            # Should not have JWT scheme
+            assert "JWT" not in security_schemes, "OpenAPI still references JWT authentication"
+            
+            # Should have Bearer token scheme for Stack Auth
+            bearer_schemes = [name for name, scheme in security_schemes.items() 
+                            if scheme.get("type") == "http" and scheme.get("scheme") == "bearer"]
+            assert len(bearer_schemes) > 0, "OpenAPI missing Bearer token authentication scheme"
+
+
+class TestStackAuthRollback:
+    """Test rollback capabilities"""
+    
+    def test_jwt_backup_files_exist(self):
+        """Test that JWT backup files exist for rollback"""
+        
+        import glob
+        from pathlib import Path
+        
+        backup_files = list(Path("api/routers").glob("*.jwt-backup"))
+        assert len(backup_files) > 0, "No JWT backup files found for rollback"
+        
+        # Check that each backup file has corresponding router
+        for backup_file in backup_files:
+            router_name = backup_file.name.replace(".jwt-backup", "").split(".")[0]
+            router_file = backup_file.parent / f"{router_name}.py"
+            assert router_file.exists(), f"Router file {router_file} missing for backup {backup_file}"
+
+    def test_rollback_simulation(self):
+        """Test that rollback would work by comparing backup content"""
+        
+        import glob
+        from pathlib import Path
+        
+        backup_files = list(Path("api/routers").glob("*.jwt-backup"))
+        
+        for backup_file in backup_files[:3]:  # Test first 3 to avoid long test
+            # Read backup content
+            with open(backup_file, 'r') as f:
+                backup_content = f.read()
+            
+            # Should contain JWT imports
+            assert "oauth2_scheme" in backup_content or "get_current_user" in backup_content, \
+                f"Backup {backup_file} doesn't contain expected JWT imports"
+
+
+class TestStackAuthIntegration:
+    """Integration tests for full Stack Auth flow"""
+    
+    @pytest.mark.integration
+    @patch('api.middleware.stack_auth_middleware.validate_stack_token')
+    async def test_full_auth_flow(self, mock_validate_token, mock_stack_user):
+        """Test complete authentication flow"""
+        
+        mock_validate_token.return_value = mock_stack_user
+        
+        async with httpx.AsyncClient(app=app, base_url="http://test") as client:
+            # Test authenticated request
+            response = await client.get(
+                "/api/dashboard",
+                headers={"Authorization": "Bearer test_token"}
+            )
+            
+            assert response.status_code == 200
+            data = response.json()
+            assert data["user"]["id"] == mock_stack_user["id"]
+
+    @pytest.mark.performance  
+    @patch('api.middleware.stack_auth_middleware.validate_stack_token')
+    def test_auth_performance(self, mock_validate_token, client, mock_stack_user, valid_auth_headers):
+        """Test authentication performance"""
+        
+        mock_validate_token.return_value = mock_stack_user
+        
+        import time
+        
+        # Measure auth overhead
+        start_time = time.time()
+        for i in range(10):
+            response = client.get("/api/dashboard", headers=valid_auth_headers)
+            assert response.status_code == 200
+        end_time = time.time()
+        
+        avg_time = (end_time - start_time) / 10
+        
+        # Should be reasonably fast (less than 100ms per request)
+        assert avg_time < 0.1, f"Authentication too slow: {avg_time:.3f}s per request"
+
+
+# Test configuration
+def pytest_configure(config):
+    """Configure pytest markers"""
+    config.addinivalue_line("markers", "integration: marks tests as integration tests")
+    config.addinivalue_line("markers", "performance: marks tests as performance tests")

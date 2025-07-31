@@ -1,6 +1,6 @@
 // Export API client and services
 export { apiClient } from './client';
-export { authService } from './auth.service';
+// Stack Auth handles authentication now
 export { businessProfileService } from './business-profiles.service';
 export { assessmentService } from './assessments.service';
 export { evidenceService } from './evidence.service';

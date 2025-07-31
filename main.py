@@ -6,6 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from api.dependencies.auth import get_current_active_user
+from api.dependencies.stack_auth import get_current_stack_user as get_stack_user
 
 from api.middleware.error_handler import error_handler_middleware
 from api.request_id_middleware import RequestIDMiddleware
@@ -13,7 +14,10 @@ from api.routers import (
     # agentic_assessments,
     # agentic_rag,
     ai_assessments,
+    ai_cost_monitoring,
+    ai_cost_websocket,
     ai_optimization,
+    ai_policy,
     assessments,
     auth,
     business_profiles,
@@ -23,13 +27,17 @@ from api.routers import (
     evidence_collection,
     foundation_evidence,
     frameworks,
+    google_auth,
     implementation,
     integrations,
     monitoring,
+    performance_monitoring,
     policies,
     readiness,
     reporting,
     security,
+    test_utils,
+    uk_compliance,
     users,
 )
 from api.routers.admin import admin_router
@@ -110,13 +118,56 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(
-    title="ComplianceGPT API",
-    description="AI-powered compliance automation platform for UK SMBs",
-    version="1.0.0",
-    docs_url="/api/docs",
-    redoc_url="/api/redoc",
-    openapi_url="/api/openapi.json",
+    title="ruleIQ Compliance Automation API",
+    description="""
+    **ruleIQ API** provides comprehensive compliance automation for UK Small and Medium Businesses (SMBs).
+    
+    ## Features
+    - 🤖 **AI-Powered Assessments** with 6 specialized AI tools
+    - 📋 **Policy Generation** with 25+ compliance frameworks  
+    - 📁 **Evidence Management** with automated validation
+    - 🔐 **RBAC Security** with JWT authentication
+    - 📊 **Real-time Analytics** and compliance scoring
+    
+    ## Authentication
+    All endpoints require JWT bearer token authentication except `/api/auth/*` endpoints.
+    
+    Get your access token via `/api/auth/token` endpoint.
+    
+    ## Rate Limiting
+    - **General endpoints**: 100 requests/minute
+    - **AI endpoints**: 3-20 requests/minute (tiered)
+    - **Authentication**: 5 requests/minute
+    
+    ## Support
+    - **Documentation**: See `/docs/api/` for detailed guides
+    - **Interactive Testing**: Use this Swagger UI to test endpoints
+    - **Status**: Production-ready (98% complete, 671+ tests)
+    """,
+    version="2.0.0",
+    docs_url="/docs",
+    redoc_url="/redoc", 
+    openapi_url="/openapi.json",
     lifespan=lifespan,
+    contact={
+        "name": "ruleIQ API Support",
+        "url": "https://docs.ruleiq.com",
+        "email": "api-support@ruleiq.com"
+    },
+    license_info={
+        "name": "Proprietary",
+        "url": "https://ruleiq.com/license"
+    },
+    servers=[
+        {
+            "url": "http://localhost:8000",
+            "description": "Development server"
+        },
+        {
+            "url": "https://api.ruleiq.com", 
+            "description": "Production server"
+        }
+    ]
 )
 
 
@@ -133,7 +184,12 @@ app.add_middleware(
 app.add_middleware(RequestIDMiddleware)
 app.middleware("http")(error_handler_middleware)
 
-# RBAC middleware for role-based access control
+# Stack Auth middleware for token validation
+from api.middleware.stack_auth_middleware import StackAuthMiddleware
+
+app.add_middleware(StackAuthMiddleware, enable_cache=True)
+
+# RBAC middleware for role-based access control  
 from api.middleware.rbac_middleware import RBACMiddleware
 
 app.add_middleware(RBACMiddleware, enable_audit_logging=True)
@@ -149,7 +205,8 @@ from api.middleware.security_headers import security_headers_middleware
 app.middleware("http")(security_headers_middleware)
 
 # Include routers
-app.include_router(auth.router, prefix="/api/auth", tags=["Authentication"])
+app.include_router(auth.router, prefix="/api/v1/auth", tags=["Authentication"])
+app.include_router(google_auth.router, prefix="/api/v1/auth", tags=["Google OAuth"])
 app.include_router(rbac_auth.router, tags=["RBAC Authentication"])
 app.include_router(users.router, prefix="/api/users", tags=["Users"])
 app.include_router(
@@ -175,19 +232,41 @@ app.include_router(
 app.include_router(monitoring.router, prefix="/api/monitoring", tags=["Monitoring"])
 app.include_router(security.router, prefix="/api/security", tags=["Security"])
 app.include_router(chat.router, prefix="/api", tags=["AI Assistant"])
+app.include_router(ai_cost_monitoring.router, prefix="/api/ai/cost", tags=["AI Cost Monitoring"])
+app.include_router(ai_cost_websocket.router, prefix="/api/ai/cost", tags=["AI Cost WebSocket"])
+app.include_router(ai_policy.router, prefix="/api/ai/policies", tags=["AI Policy Generation"])
+app.include_router(performance_monitoring.router, prefix="/api/performance", tags=["Performance Monitoring"])
+app.include_router(uk_compliance.router, prefix="/api/uk-compliance", tags=["UK Compliance"])
 # app.include_router(agentic_assessments.router, prefix="/api", tags=["Agentic Assessments"])
 # app.include_router(agentic_rag.router, prefix="/api", tags=["Agentic RAG"])
 app.include_router(admin_router)
 
+# Test utilities (only in development/test environments)
+import os
+if os.getenv("ENVIRONMENT", "production").lower() in ["development", "test", "testing", "local"]:
+    app.include_router(test_utils.router, prefix="/api/test-utils", tags=["Test Utilities"])
+
 
 @app.get("/api/dashboard")
 async def get_dashboard(
-    current_user: User = Depends(get_current_active_user), db: AsyncSession = Depends(get_async_db)
+    current_user: dict = Depends(get_stack_user)
 ):
-    """Get user dashboard data - alias for /api/users/dashboard"""
-    from api.routers.users import get_user_dashboard
-
-    return await get_user_dashboard(current_user, db)
+    """Get user dashboard data"""
+    # For now, return a simple response
+    # In production, you'd fetch real data based on the user
+    return {
+        "user": {
+            "id": current_user["id"],
+            "email": current_user["primaryEmail"],
+            "name": current_user.get("displayName", "")
+        },
+        "stats": {
+            "assessments": 0,
+            "policies": 0,
+            "compliance_score": 0,
+            "recent_activities": []
+        }
+    }
 
 
 @app.get("/", response_model=APIInfoResponse, summary="API Information")

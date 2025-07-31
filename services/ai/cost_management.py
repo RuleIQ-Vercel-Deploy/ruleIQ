@@ -23,7 +23,8 @@ from redis.asyncio import Redis
 
 from config.logging_config import get_logger
 from config.ai_config import ModelType
-from core.redis_connection import get_redis
+import redis
+from config.settings import settings
 
 
 logger = get_logger(__name__)
@@ -276,10 +277,19 @@ class CostTrackingService:
     """Core service for tracking AI usage and costs."""
     
     def __init__(self, redis_client: Optional[Redis] = None):
-        self.redis = redis_client or get_redis()
+        self.redis = redis_client or self._get_redis_client()
         self.model_configs = self._load_model_configs()
         self.usage_buffer: List[AIUsageMetrics] = []
         self.buffer_size = 100
+        
+    def _get_redis_client(self) -> Optional[Redis]:
+        """Get Redis client connection."""
+        try:
+            redis_url = settings.redis_url or "redis://localhost:6379/0"
+            return redis.from_url(redis_url, decode_responses=True)
+        except Exception as e:
+            logger.warning(f"Failed to connect to Redis: {e}")
+            return None
         
     def _load_model_configs(self) -> Dict[str, ModelCostConfig]:
         """Load model cost configurations."""
@@ -606,9 +616,18 @@ class BudgetAlertService:
     """Service for managing budgets and generating alerts."""
     
     def __init__(self, redis_client: Optional[Redis] = None):
-        self.redis = redis_client or get_redis()
+        self.redis = redis_client or self._get_redis_client()
         self.cost_tracker = CostTrackingService(self.redis)
-    
+        
+    def _get_redis_client(self) -> Optional[Redis]:
+        """Get Redis client connection."""
+        try:
+            redis_url = settings.redis_url or "redis://localhost:6379/0"
+            return redis.from_url(redis_url, decode_responses=True)
+        except Exception as e:
+            logger.warning(f"Failed to connect to Redis: {e}")
+            return None
+        
     async def set_daily_budget(self, amount: Decimal) -> None:
         """Set daily budget limit."""
         await self.redis.set("budget:daily_limit", str(amount))
@@ -733,9 +752,18 @@ class CostOptimizationService:
     """Service for analyzing usage patterns and recommending optimizations."""
     
     def __init__(self, redis_client: Optional[Redis] = None):
-        self.redis = redis_client or get_redis()
+        self.redis = redis_client or self._get_redis_client()
         self.cost_tracker = CostTrackingService(self.redis)
-    
+        
+    def _get_redis_client(self) -> Optional[Redis]:
+        """Get Redis client connection."""
+        try:
+            redis_url = settings.redis_url or "redis://localhost:6379/0"
+            return redis.from_url(redis_url, decode_responses=True)
+        except Exception as e:
+            logger.warning(f"Failed to connect to Redis: {e}")
+            return None
+        
     async def analyze_model_efficiency(
         self,
         usage_data: List[AIUsageMetrics]
@@ -942,10 +970,19 @@ class AICostManager:
     """Main orchestrator for AI cost management."""
     
     def __init__(self, redis_client: Optional[Redis] = None):
-        self.redis = redis_client or get_redis()
+        self.redis = redis_client or self._get_redis_client()
         self.cost_tracker = CostTrackingService(self.redis)
         self.budget_service = BudgetAlertService(self.redis)
         self.optimization_service = CostOptimizationService(self.redis)
+        
+    def _get_redis_client(self) -> Optional[Redis]:
+        """Get Redis client connection."""
+        try:
+            redis_url = settings.redis_url or "redis://localhost:6379/0"
+            return redis.from_url(redis_url, decode_responses=True)
+        except Exception as e:
+            logger.warning(f"Failed to connect to Redis: {e}")
+            return None
         
     async def track_ai_request(
         self,
