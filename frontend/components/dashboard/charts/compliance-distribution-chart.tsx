@@ -38,8 +38,8 @@ export function ComplianceDistributionChart({
   ]);
 
   const COLORS = {
-    compliant: '#28A745',
-    'non-compliant': '#DC3545',
+    compliant: '#10B981', // emerald-600 - success
+    'non-compliant': '#EF4444', // red-600 - error
   };
 
   const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent }: any) => {

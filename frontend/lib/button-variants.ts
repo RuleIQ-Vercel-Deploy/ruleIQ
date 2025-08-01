@@ -1,43 +1,43 @@
-// Button variant configuration for easy customization
+// Button variant configuration for teal design system
 export const ruleIQButtonConfig = {
   colors: {
     primary: {
-      background: '#002147', // oxford-blue
-      text: '#F0EAD6', // eggshell-white
-      hover: 'rgba(0, 33, 71, 0.9)',
+      background: '#2C7A7B', // teal-600
+      text: '#FFFFFF', // white
+      hover: '#285E61', // teal-700
     },
     secondary: {
-      background: '#F0EAD6', // eggshell-white
-      text: '#002147', // oxford-blue
-      border: '#002147', // oxford-blue
+      background: '#FFFFFF', // white
+      text: '#2C7A7B', // teal-600
+      border: '#2C7A7B', // teal-600
       hover: {
-        background: '#002147', // oxford-blue
-        text: '#F0EAD6', // eggshell-white
+        background: '#E6FFFA', // teal-50
+        text: '#285E61', // teal-700
       },
     },
     ghost: {
-      text: '#002147', // oxford-blue
-      hover: 'rgba(0, 33, 71, 0.1)',
+      text: '#4B5563', // neutral-600
+      hover: '#F3F4F6', // neutral-100
     },
     accent: {
-      background: '#FFD700', // gold
-      text: '#002147', // oxford-blue
-      hover: 'rgba(255, 215, 0, 0.9)',
+      background: '#319795', // teal-500
+      text: '#FFFFFF', // white
+      hover: '#2C7A7B', // teal-600
     },
     success: {
-      background: '#28A745',
+      background: '#10B981', // emerald-600
       text: '#FFFFFF',
-      hover: 'rgba(40, 167, 69, 0.9)',
+      hover: '#059669', // emerald-700
     },
     warning: {
-      background: '#FFC107',
-      text: '#002147', // oxford-blue
-      hover: 'rgba(255, 193, 7, 0.9)',
+      background: '#F59E0B', // amber-600
+      text: '#FFFFFF',
+      hover: '#D97706', // amber-700
     },
     error: {
-      background: '#DC3545',
+      background: '#EF4444', // red-600
       text: '#FFFFFF',
-      hover: 'rgba(220, 53, 69, 0.9)',
+      hover: '#DC2626', // red-700
     },
   },
   sizes: {
