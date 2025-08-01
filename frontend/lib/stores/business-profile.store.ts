@@ -25,6 +25,8 @@ import {
   type FrameworkRecommendation
 } from '@/types/business-profile';
 
+import type { UnknownRecord } from '@/types/common';
+
 export interface BusinessProfileState {
   // Profile Data
   profile: BusinessProfile | null;
@@ -117,13 +119,13 @@ export const useBusinessProfileStore = create<BusinessProfileState>()(
               // If profile exists, populate draft for editing
               draftProfile: profile ? { ...profile } : null
             }, false, 'loadProfile/success');
-          } catch (error: any) {
-            const errorType = error.code === 'NETWORK_ERROR' ? 'network' :
-                             error.code === 'PERMISSION_DENIED' ? 'permission' :
-                             error.code === 'TIMEOUT' ? 'timeout' : 'unknown';
+          } catch (error: unknown) {
+            const errorType = (error as UnknownRecord)?.code === 'NETWORK_ERROR' ? 'network' :
+                             (error as UnknownRecord)?.code === 'PERMISSION_DENIED' ? 'permission' :
+                             (error as UnknownRecord)?.code === 'TIMEOUT' ? 'timeout' : 'unknown';
 
             set({
-              error: error.detail || error.message || 'Failed to load profile',
+              error: (error as UnknownRecord)?.detail || (error as UnknownRecord)?.message || 'Failed to load profile',
               errorType,
               isLoading: false,
               retryCount: get().retryCount + 1

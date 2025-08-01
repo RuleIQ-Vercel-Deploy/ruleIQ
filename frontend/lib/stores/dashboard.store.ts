@@ -5,13 +5,15 @@ import { persist, createJSONStorage , devtools } from 'zustand/middleware'
 
 import { dashboardService } from '@/lib/api/dashboard.service'
 
+import type { UnknownRecord } from '@/types/common'
+
 // Widget Configuration Types
 export interface WidgetConfig {
   id: string
   type: WidgetType
   position: { x: number; y: number }
   size: { w: number; h: number }
-  settings: Record<string, any>
+  settings: UnknownRecord
   isVisible: boolean
 }
 
@@ -65,7 +67,7 @@ export interface Activity {
   action: string
   target: string
   timestamp: Date
-  metadata?: Record<string, any>
+  metadata?: UnknownRecord
 }
 
 export interface Framework {

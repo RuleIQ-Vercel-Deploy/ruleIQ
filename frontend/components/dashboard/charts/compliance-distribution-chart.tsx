@@ -4,6 +4,8 @@ import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from "recha
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 
+import type { UnknownRecord } from '@/types/common'
+
 interface ComplianceDistributionChartProps {
   data: Array<{
     category: string
@@ -42,7 +44,7 @@ export function ComplianceDistributionChart({
     'non-compliant': '#DC3545'
   }
 
-  const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent }: any) => {
+  const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent }: UnknownRecord) => {
     if (percent < 0.05) return null // Don't show labels for very small slices
     
     const RADIAN = Math.PI / 180

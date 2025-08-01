@@ -4,6 +4,8 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContaine
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 
+import type { UnknownRecord } from '@/types/common'
+
 interface AdvancedMetricsChartProps {
   data: Array<{
     metric: string
@@ -47,7 +49,7 @@ export function AdvancedMetricsChart({
             />
             <YAxis tick={{ fontSize: 12 }} />
             <Tooltip 
-              formatter={(value: number, name: string, props: any) => [
+              formatter={(value: number, name: string, props: UnknownRecord) => [
                 formatValue(value, props.payload.unit),
                 name
               ]}
