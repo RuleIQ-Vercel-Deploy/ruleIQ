@@ -91,10 +91,10 @@ export function TopNavigation({ isDarkMode = false, onThemeToggle }: TopNavigati
           <div className="flex min-w-fit items-center space-x-2">
             <Link href="/" className="flex items-center space-x-1">
               <div className="flex items-center space-x-1">
-                <span className="text-xl font-bold" style={{ color: '#F0EAD6' }}>
+                <span className="text-xl font-bold text-neutral-700">
                   rule
                 </span>
-                <span className="text-xl font-bold" style={{ color: '#FFD700' }}>
+                <span className="text-xl font-bold text-teal-600">
                   IQ
                 </span>
               </div>
@@ -358,38 +358,38 @@ export function TopNavigation({ isDarkMode = false, onThemeToggle }: TopNavigati
                       <User className="h-5 w-5" style={{ color: '#FFD700' }} />
                     </div>
                     <div className="flex flex-col">
-                      <p className="text-sm font-medium leading-none" style={{ color: '#002147' }}>
+                      <p className="text-sm font-medium leading-none text-neutral-900">
                         John Doe
                       </p>
-                      <p className="mt-1 text-xs leading-none" style={{ color: '#6C757D' }}>
+                      <p className="mt-1 text-xs leading-none text-neutral-600">
                         Compliance Manager
                       </p>
                     </div>
                   </div>
-                  <div className="text-xs" style={{ color: '#6C757D' }}>
+                  <div className="text-xs text-neutral-600">
                     john.doe@company.com
                   </div>
                   <div className="flex items-center justify-between text-xs">
-                    <span style={{ color: '#6C757D' }}>Last login:</span>
-                    <span style={{ color: '#002147' }}>Today, 9:15 AM</span>
+                    <span className="text-neutral-600">Last login:</span>
+                    <span className="text-neutral-900">Today, 9:15 AM</span>
                   </div>
                 </div>
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem style={{ color: '#002147' }}>
+              <DropdownMenuItem className="text-neutral-700 hover:text-neutral-900">
                 <User className="mr-2 h-4 w-4" />
                 <span>View Profile</span>
               </DropdownMenuItem>
-              <DropdownMenuItem style={{ color: '#002147' }}>
+              <DropdownMenuItem className="text-neutral-700 hover:text-neutral-900">
                 <Settings className="mr-2 h-4 w-4" />
                 <span>Account Settings</span>
               </DropdownMenuItem>
-              <DropdownMenuItem style={{ color: '#002147' }}>
+              <DropdownMenuItem className="text-neutral-700 hover:text-neutral-900">
                 <Bell className="mr-2 h-4 w-4" />
                 <span>Notification Preferences</span>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem style={{ color: '#DC3545' }}>
+              <DropdownMenuItem className="text-red-600 hover:text-red-700 hover:bg-red-50">
                 <LogOut className="mr-2 h-4 w-4" />
                 <span>Sign Out</span>
               </DropdownMenuItem>
