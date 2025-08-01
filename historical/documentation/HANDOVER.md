@@ -12,7 +12,7 @@
 
 - **Backend API**: FastAPI-based REST API with comprehensive endpoints
 - **Database**: PostgreSQL with SQLAlchemy ORM and Alembic migrations
-- **Authentication**: JWT-based auth with role-based access control
+- **Authentication**: JWT-only authentication system (Stack Auth removed August 2025)
 - **AI Integration**: Google Gemini AI with circuit breaker patterns
 - **Testing**: Comprehensive test suite with 597 tests
 

@@ -9,7 +9,8 @@ from fastapi import APIRouter, Depends, HTTPException, Query, status
 from pydantic import BaseModel
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from api.dependencies.stack_auth import get_current_stack_user
+from api.dependencies.auth import get_current_active_user
+from database.user import User
 from api.dependencies.database import get_async_db
 from database.user import User
 from services.ai.assistant import ComplianceAssistant
@@ -45,7 +46,7 @@ circuit_breaker = AICircuitBreaker()
 
 @router.post("/model-selection")
 async def model_selection(
-    request: ModelSelectionRequest, current_user: dict = Depends(get_current_stack_user)
+    request: ModelSelectionRequest, current_user: User = Depends(get_current_active_user)
 ):
     """Select the optimal AI model based on task requirements."""
     try:
@@ -69,7 +70,7 @@ async def model_selection(
 
 
 @router.get("/model-health")
-async def model_health_check(current_user: dict = Depends(get_current_stack_user)):
+async def model_health_check(current_user: User = Depends(get_current_active_user)):
     """Check health status of all AI models."""
     try:
         health_statuses = circuit_breaker.get_all_model_health()
@@ -83,7 +84,7 @@ async def model_health_check(current_user: dict = Depends(get_current_stack_user
 
 
 @router.get("/performance-metrics")
-async def performance_metrics(current_user: dict = Depends(get_current_stack_user)):
+async def performance_metrics(current_user: User = Depends(get_current_active_user)):
     """Get AI performance metrics."""
     try:
         assistant = ComplianceAssistant()
@@ -107,7 +108,7 @@ async def performance_metrics(current_user: dict = Depends(get_current_stack_use
 
 @router.post("/model-fallback-chain")
 async def model_fallback_chain(
-    request: ModelSelectionRequest, current_user: dict = Depends(get_current_stack_user)
+    request: ModelSelectionRequest, current_user: User = Depends(get_current_active_user)
 ):
     """Test model fallback chain functionality."""
     try:
@@ -136,7 +137,7 @@ async def model_fallback_chain(
 
 @router.get("/circuit-breaker/status")
 async def get_circuit_breaker_status(
-    current_user: dict = Depends(get_current_stack_user), db: AsyncSession = Depends(get_async_db)
+    current_user: User = Depends(get_current_active_user), db: AsyncSession = Depends(get_async_db)
 ) -> Dict[str, Any]:
     """
     Get circuit breaker status for all AI models.
@@ -171,7 +172,7 @@ async def get_circuit_breaker_status(
 @router.post("/circuit-breaker/reset")
 async def reset_circuit_breaker(
     model_name: str = Query(..., description="Model name to reset circuit breaker for"),
-    current_user: dict = Depends(get_current_stack_user),
+    current_user: User = Depends(get_current_active_user),
     db: AsyncSession = Depends(get_async_db),
 ) -> Dict[str, Any]:
     """

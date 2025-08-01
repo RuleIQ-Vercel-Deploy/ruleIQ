@@ -7,8 +7,8 @@ from typing import Dict, List, Any
 from fastapi import APIRouter, HTTPException, Depends, Query
 from pydantic import BaseModel
 from services.performance_monitor import get_performance_monitor, monitor_performance
-from api.middleware.rbac_middleware import require_permission
-from api.dependencies import get_current_user
+from api.middleware.rbac_middleware import require_permissions
+from api.dependencies.auth import get_current_active_user
 from database.user import User
 from config.logging_config import get_logger
 
@@ -77,7 +77,7 @@ class PerformanceTrendsResponse(BaseModel):
 @router.get("/overview", response_model=PerformanceOverview)
 @monitor_performance("performance_overview")
 async def get_performance_overview(
-    current_user: User = Depends(get_current_user)
+    current_user: User = Depends(get_current_active_user)
 ) -> PerformanceOverview:
     """
     Get overall performance overview with key metrics.
@@ -90,7 +90,7 @@ async def get_performance_overview(
     """
     try:
         # Require admin or performance monitoring permission
-        await require_permission(current_user, "performance:read")
+        await require_permissions(current_user, "performance:read")
         
         monitor = await get_performance_monitor()
         metrics = await monitor.collect_comprehensive_metrics()
@@ -124,7 +124,7 @@ async def get_performance_overview(
 @router.get("/database", response_model=DatabasePerformanceResponse)
 @monitor_performance("database_performance")
 async def get_database_performance(
-    current_user: User = Depends(get_current_user)
+    current_user: User = Depends(get_current_active_user)
 ) -> DatabasePerformanceResponse:
     """
     Get detailed database performance metrics.
@@ -135,7 +135,7 @@ async def get_database_performance(
     - Slow query analysis
     """
     try:
-        await require_permission(current_user, "performance:read")
+        await require_permissions(current_user, "performance:read")
         
         monitor = await get_performance_monitor()
         db_metrics = await monitor.get_database_metrics()
@@ -166,7 +166,7 @@ async def get_database_performance(
 @router.get("/cache", response_model=CachePerformanceResponse)
 @monitor_performance("cache_performance")
 async def get_cache_performance(
-    current_user: User = Depends(get_current_user)
+    current_user: User = Depends(get_current_active_user)
 ) -> CachePerformanceResponse:
     """
     Get cache performance metrics.
@@ -177,7 +177,7 @@ async def get_cache_performance(
     - Response times
     """
     try:
-        await require_permission(current_user, "performance:read")
+        await require_permissions(current_user, "performance:read")
         
         monitor = await get_performance_monitor()
         cache_metrics = await monitor.get_cache_metrics()
@@ -208,7 +208,7 @@ async def get_cache_performance(
 @router.get("/api", response_model=APIPerformanceResponse)
 @monitor_performance("api_performance")
 async def get_api_performance(
-    current_user: User = Depends(get_current_user)
+    current_user: User = Depends(get_current_active_user)
 ) -> APIPerformanceResponse:
     """
     Get API performance metrics.
@@ -219,7 +219,7 @@ async def get_api_performance(
     - Slowest endpoints
     """
     try:
-        await require_permission(current_user, "performance:read")
+        await require_permissions(current_user, "performance:read")
         
         monitor = await get_performance_monitor()
         api_metrics = await monitor.get_api_metrics()
@@ -250,7 +250,7 @@ async def get_api_performance(
 @router.get("/system", response_model=SystemMetricsResponse)
 @monitor_performance("system_metrics")
 async def get_system_metrics(
-    current_user: User = Depends(get_current_user)
+    current_user: User = Depends(get_current_active_user)
 ) -> SystemMetricsResponse:
     """
     Get system resource metrics.
@@ -262,7 +262,7 @@ async def get_system_metrics(
     - Load average
     """
     try:
-        await require_permission(current_user, "performance:read")
+        await require_permissions(current_user, "performance:read")
         
         monitor = await get_performance_monitor()
         system_metrics = monitor.get_system_metrics()
@@ -294,7 +294,7 @@ async def get_system_metrics(
 @router.get("/recommendations", response_model=List[OptimizationRecommendation])
 @monitor_performance("performance_recommendations")
 async def get_optimization_recommendations(
-    current_user: User = Depends(get_current_user)
+    current_user: User = Depends(get_current_active_user)
 ) -> List[OptimizationRecommendation]:
     """
     Get performance optimization recommendations.
@@ -302,7 +302,7 @@ async def get_optimization_recommendations(
     Returns prioritized list of actionable performance improvements.
     """
     try:
-        await require_permission(current_user, "performance:read")
+        await require_permissions(current_user, "performance:read")
         
         monitor = await get_performance_monitor()
         recommendations = await monitor.generate_optimization_recommendations()
@@ -317,7 +317,7 @@ async def get_optimization_recommendations(
 @monitor_performance("performance_trends")
 async def get_performance_trends(
     hours: int = Query(24, ge=1, le=168, description="Number of hours to analyze (1-168)"),
-    current_user: User = Depends(get_current_user)
+    current_user: User = Depends(get_current_active_user)
 ) -> PerformanceTrendsResponse:
     """
     Get performance trends over time.
@@ -329,7 +329,7 @@ async def get_performance_trends(
         Performance trends and statistics
     """
     try:
-        await require_permission(current_user, "performance:read")
+        await require_permissions(current_user, "performance:read")
         
         monitor = await get_performance_monitor()
         trends = await monitor.get_performance_trends(hours=hours)
@@ -344,7 +344,7 @@ async def get_performance_trends(
 @monitor_performance("configure_performance_alerts")
 async def configure_performance_alerts(
     alerts_config: Dict[str, Any],
-    current_user: User = Depends(get_current_user)
+    current_user: User = Depends(get_current_active_user)
 ):
     """
     Configure performance alerting thresholds.
@@ -353,7 +353,7 @@ async def configure_performance_alerts(
         alerts_config: Alert configuration with thresholds
     """
     try:
-        await require_permission(current_user, "performance:admin")
+        await require_permissions(current_user, "performance:admin")
         
         # Validate configuration
         required_fields = ["response_time_threshold", "cache_hit_rate_threshold", "cpu_threshold"]
@@ -403,7 +403,7 @@ async def performance_monitoring_health():
 @router.post("/monitoring/start")
 async def start_performance_monitoring(
     interval: int = Query(60, ge=10, le=300, description="Monitoring interval in seconds"),
-    current_user: User = Depends(get_current_user)
+    current_user: User = Depends(get_current_active_user)
 ):
     """
     Start continuous performance monitoring.
@@ -412,7 +412,7 @@ async def start_performance_monitoring(
         interval: Monitoring interval in seconds (10-300)
     """
     try:
-        await require_permission(current_user, "performance:admin")
+        await require_permissions(current_user, "performance:admin")
         
         monitor = await get_performance_monitor()
         
@@ -433,13 +433,13 @@ async def start_performance_monitoring(
 
 @router.post("/monitoring/stop")
 async def stop_performance_monitoring(
-    current_user: User = Depends(get_current_user)
+    current_user: User = Depends(get_current_active_user)
 ):
     """
     Stop continuous performance monitoring.
     """
     try:
-        await require_permission(current_user, "performance:admin")
+        await require_permissions(current_user, "performance:admin")
         
         monitor = await get_performance_monitor()
         monitor.stop_monitoring()

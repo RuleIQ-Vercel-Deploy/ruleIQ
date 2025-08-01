@@ -14,9 +14,10 @@ The API layer provides the REST interface for the ruleIQ compliance automation p
 ### **API Structure**
 ```
 Base URL: /api/v1
-Authentication: JWT Bearer tokens with refresh mechanism
+Authentication: JWT-only Bearer tokens (Stack Auth removed August 2025)
+Token Lifecycle: 30min access, 7day refresh, Redis blacklisting
 Documentation: Auto-generated OpenAPI/Swagger at /docs
-Rate Limiting: Tiered limits by endpoint category
+Rate Limiting: Tiered limits by endpoint category (5/min auth, 100/min general, 20/min AI)
 Content-Type: application/json (primary), multipart/form-data (uploads)
 ```
 
@@ -41,14 +42,14 @@ Content-Type: application/json (primary), multipart/form-data (uploads)
 
 ### **API Router Organization**
 
-#### **Authentication & Users** (`/api/auth/*`, `/api/users/*`)
+#### **Authentication & Users** (`/api/v1/auth/*`, `/api/users/*`)
 ```python
-POST /api/auth/register          # User registration
-POST /api/auth/login            # User authentication
-POST /api/auth/token            # OAuth2-compatible token endpoint
-POST /api/auth/refresh          # Token refresh
-POST /api/auth/logout           # Session termination
-GET  /api/users/me              # Current user profile
+# JWT Authentication (Stack Auth removed August 2025)
+POST /api/v1/auth/register      # User registration with JWT tokens
+POST /api/v1/auth/login         # User authentication with JWT tokens
+GET  /api/v1/auth/me            # Current user profile
+POST /api/v1/auth/refresh       # JWT token refresh
+POST /api/v1/auth/logout        # Session termination with token blacklisting
 PUT  /api/users/me              # Update user profile
 ```
 

@@ -13,7 +13,8 @@ from sqlalchemy import desc, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import Session
 
-from api.dependencies.stack_auth import get_current_stack_user, get_current_user
+from api.dependencies.auth import get_current_active_user
+from database.user import User
 from api.schemas.chat import (
     ComplianceAnalysisRequest,
     ComplianceAnalysisResponse,
@@ -43,14 +44,14 @@ router = APIRouter(tags=["Chat Assistant"])
 async def create_conversation(
     request: CreateConversationRequest,
     db: AsyncSession = Depends(get_async_db),
-    current_user: dict = Depends(get_current_stack_user),
+    current_user: User = Depends(get_current_active_user),
 ):
     """Create a new chat conversation."""
     try:
         from sqlalchemy import func, select
 
         # Get the user's business profile
-        stmt = select(BusinessProfile).where(BusinessProfile.user_id == str(current_user["id"]))
+        stmt = select(BusinessProfile).where(BusinessProfile.user_id == str(str(current_user.id)))
         result = await db.execute(stmt)
         business_profile = result.scalars().first()
 
@@ -62,14 +63,14 @@ async def create_conversation(
 
         # Get conversation count for title
         count_stmt = select(func.count(ChatConversation.id)).where(
-            ChatConversation.user_id == current_user["id"]
+            ChatConversation.user_id == str(current_user.id)
         )
         count_result = await db.execute(count_stmt)
         conversation_count = count_result.scalar() or 0
 
         # Create new conversation
         conversation = ChatConversation(
-            user_id=current_user["id"],
+            user_id=str(current_user.id),
             business_profile_id=business_profile.id,
             title=request.title or f"Chat {conversation_count + 1}",
             status=ConversationStatus.ACTIVE,
@@ -135,7 +136,7 @@ async def list_conversations(
     page: int = Query(1, ge=1),
     per_page: int = Query(20, ge=1, le=100),
     db: Session = Depends(get_db),
-    current_user: dict = Depends(get_current_stack_user),
+    current_user: User = Depends(get_current_active_user),
 ):
     """List user's chat conversations."""
     try:
@@ -143,7 +144,7 @@ async def list_conversations(
         total = (
             db.query(ChatConversation)
             .filter(
-                ChatConversation.user_id == current_user["id"],
+                ChatConversation.user_id == str(current_user.id),
                 ChatConversation.status != ConversationStatus.DELETED,
             )
             .count()
@@ -153,7 +154,7 @@ async def list_conversations(
         conversations = (
             db.query(ChatConversation)
             .filter(
-                ChatConversation.user_id == current_user["id"],
+                ChatConversation.user_id == str(current_user.id),
                 ChatConversation.status != ConversationStatus.DELETED,
             )
             .order_by(desc(ChatConversation.updated_at))
@@ -200,14 +201,14 @@ async def list_conversations(
 async def get_conversation(
     conversation_id: UUID,
     db: Session = Depends(get_db),
-    current_user: dict = Depends(get_current_stack_user),
+    current_user: User = Depends(get_current_active_user),
 ):
     """Get a specific conversation with all messages."""
     try:
         conversation = (
             db.query(ChatConversation)
             .filter(
-                ChatConversation["id"] == conversation_id, ChatConversation.user_id == current_user["id"]
+                ChatConversation["id"] == conversation_id, ChatConversation.user_id == str(current_user.id)
             )
             .first()
         )
@@ -243,7 +244,7 @@ async def send_message(
     conversation_id: UUID,
     request: SendMessageRequest,
     db: AsyncSession = Depends(get_async_db),
-    current_user: dict = Depends(get_current_stack_user),
+    current_user: User = Depends(get_current_active_user),
 ):
     """Send a message in a conversation."""
     try:
@@ -252,7 +253,7 @@ async def send_message(
         # Verify conversation exists and belongs to user
         conv_stmt = select(ChatConversation).where(
             ChatConversation.id == conversation_id,
-            ChatConversation.user_id == current_user["id"],
+            ChatConversation.user_id == str(current_user.id),
             ChatConversation.status == ConversationStatus.ACTIVE,
         )
         conv_result = await db.execute(conv_stmt)
@@ -262,7 +263,7 @@ async def send_message(
             raise HTTPException(status_code=404, detail="Conversation not found or inactive")
 
         # Get business profile
-        bp_stmt = select(BusinessProfile).where(BusinessProfile.user_id == str(current_user["id"]))
+        bp_stmt = select(BusinessProfile).where(BusinessProfile.user_id == str(str(current_user.id)))
         bp_result = await db.execute(bp_stmt)
         business_profile = bp_result.scalars().first()
 
@@ -330,14 +331,14 @@ async def send_message(
 async def delete_conversation(
     conversation_id: UUID,
     db: Session = Depends(get_db),
-    current_user: dict = Depends(get_current_stack_user),
+    current_user: User = Depends(get_current_active_user),
 ):
     """Delete (archive) a conversation."""
     try:
         conversation = (
             db.query(ChatConversation)
             .filter(
-                ChatConversation["id"] == conversation_id, ChatConversation.user_id == current_user["id"]
+                ChatConversation["id"] == conversation_id, ChatConversation.user_id == str(current_user.id)
             )
             .first()
         )
@@ -362,12 +363,12 @@ async def delete_conversation(
 async def get_evidence_recommendations(
     request: EvidenceRecommendationRequest,
     db: AsyncSession = Depends(get_async_db),
-    current_user: dict = Depends(get_current_stack_user),
+    current_user: User = Depends(get_current_active_user),
 ):
     """Get AI-powered evidence collection recommendations."""
     try:
         # Use async query for business profile
-        stmt = select(BusinessProfile).where(BusinessProfile.user_id == str(current_user["id"]))
+        stmt = select(BusinessProfile).where(BusinessProfile.user_id == str(str(current_user.id)))
         result = await db.execute(stmt)
         business_profile = result.scalars().first()
 
@@ -394,14 +395,14 @@ async def get_evidence_recommendations(
 async def analyze_compliance_gap(
     request: ComplianceAnalysisRequest,
     db: AsyncSession = Depends(get_async_db),
-    current_user: dict = Depends(get_current_stack_user),
+    current_user: User = Depends(get_current_active_user),
 ):
     """Analyze compliance gaps for a specific framework."""
     try:
         from sqlalchemy import select
 
         # Use async query for business profile
-        stmt = select(BusinessProfile).where(BusinessProfile.user_id == str(current_user["id"]))
+        stmt = select(BusinessProfile).where(BusinessProfile.user_id == str(str(current_user.id)))
         result = await db.execute(stmt)
         business_profile = result.scalars().first()
 
@@ -427,7 +428,7 @@ async def get_context_aware_recommendations(
     framework: str = Query(..., min_length=1, description="Framework to get recommendations for"),
     context_type: str = Query(default="comprehensive", description="Type of context analysis"),
     db: AsyncSession = Depends(get_async_db),
-    current_user: dict = Depends(get_current_stack_user),
+    current_user: User = Depends(get_current_active_user),
 ):
     """
     Get enhanced context-aware evidence recommendations that consider:
@@ -439,7 +440,7 @@ async def get_context_aware_recommendations(
     """
     try:
         # Use async query for business profile
-        stmt = select(BusinessProfile).where(BusinessProfile.user_id == str(current_user["id"]))
+        stmt = select(BusinessProfile).where(BusinessProfile.user_id == str(str(current_user.id)))
         result = await db.execute(stmt)
         business_profile = result.scalars().first()
 
@@ -469,7 +470,7 @@ async def generate_evidence_collection_workflow(
     control_id: Optional[str] = Query(None, description="Specific control ID (optional)"),
     workflow_type: str = Query(default="comprehensive", description="Type of workflow"),
     db: AsyncSession = Depends(get_async_db),
-    current_user: dict = Depends(get_current_stack_user),
+    current_user: User = Depends(get_current_active_user),
 ):
     """
     Generate intelligent, step-by-step evidence collection workflows
@@ -477,7 +478,7 @@ async def generate_evidence_collection_workflow(
     """
     try:
         # Use async query for business profile
-        stmt = select(BusinessProfile).where(BusinessProfile.user_id == str(current_user["id"]))
+        stmt = select(BusinessProfile).where(BusinessProfile.user_id == str(str(current_user.id)))
         result = await db.execute(stmt)
         business_profile = result.scalars().first()
 
@@ -513,7 +514,7 @@ async def generate_customized_policy(
     include_templates: bool = Query(default=True, description="Include implementation templates"),
     geographic_scope: str = Query(default="Single location", description="Geographic scope"),
     db: Session = Depends(get_db),
-    current_user: dict = Depends(get_current_stack_user),
+    current_user: User = Depends(get_current_active_user),
 ):
     """
     Generate AI-powered, customized compliance policies based on:
@@ -526,7 +527,7 @@ async def generate_customized_policy(
     try:
         business_profile = (
             db.query(BusinessProfile)
-            .filter(BusinessProfile.user_id == str(current_user["id"]))
+            .filter(BusinessProfile.user_id == str(str(current_user.id)))
             .first()
         )
 
@@ -564,7 +565,7 @@ async def get_smart_compliance_guidance(
     framework: str,
     guidance_type: str = Query(default="getting_started", description="Type of guidance needed"),
     db: AsyncSession = Depends(get_async_db),
-    current_user: dict = Depends(get_current_stack_user),
+    current_user: User = Depends(get_current_active_user),
 ):
     """
     Get intelligent, context-aware compliance guidance based on:
@@ -575,7 +576,7 @@ async def get_smart_compliance_guidance(
     """
     try:
         # Use async query for business profile
-        stmt = select(BusinessProfile).where(BusinessProfile.user_id == str(current_user["id"]))
+        stmt = select(BusinessProfile).where(BusinessProfile.user_id == str(str(current_user.id)))
         result = await db.execute(stmt)
         business_profile = result.scalars().first()
 
@@ -634,7 +635,7 @@ async def get_smart_compliance_guidance(
 
 
 @router.get("/cache/metrics")
-async def get_ai_cache_metrics(current_user: dict = Depends(get_current_stack_user)):
+async def get_ai_cache_metrics(current_user: User = Depends(get_current_active_user)):
     """
     Get AI response cache performance metrics including:
     - Cache hit rate and performance statistics
@@ -661,7 +662,7 @@ async def get_ai_cache_metrics(current_user: dict = Depends(get_current_stack_us
 @router.delete("/cache/clear")
 async def clear_ai_cache(
     pattern: str = Query(default="*", description="Cache pattern to clear"),
-    current_user: dict = Depends(get_current_stack_user),
+    current_user: User = Depends(get_current_active_user),
 ):
     """
     Clear AI response cache entries matching a pattern.
@@ -685,7 +686,7 @@ async def clear_ai_cache(
 
 
 @router.get("/performance/metrics")
-async def get_ai_performance_metrics(current_user: dict = Depends(get_current_stack_user)):
+async def get_ai_performance_metrics(current_user: User = Depends(get_current_active_user)):
     """
     Get comprehensive AI performance metrics including:
     - Response time statistics
@@ -722,7 +723,7 @@ async def optimize_ai_performance(
     enable_batching: bool = Query(default=True, description="Enable request batching"),
     enable_compression: bool = Query(default=True, description="Enable prompt compression"),
     max_concurrent: int = Query(default=10, description="Maximum concurrent requests"),
-    current_user: dict = Depends(get_current_stack_user),
+    current_user: User = Depends(get_current_active_user),
 ):
     """
     Configure AI performance optimization settings.
@@ -758,7 +759,7 @@ async def optimize_ai_performance(
 
 
 @router.get("/analytics/dashboard")
-async def get_analytics_dashboard(current_user: dict = Depends(get_current_stack_user)):
+async def get_analytics_dashboard(current_user: User = Depends(get_current_active_user)):
     """
     Get comprehensive analytics dashboard data including:
     - Real-time performance metrics
@@ -783,7 +784,7 @@ async def get_analytics_dashboard(current_user: dict = Depends(get_current_stack
 @router.get("/analytics/usage")
 async def get_usage_analytics(
     days: int = Query(default=7, description="Number of days to analyze"),
-    current_user: dict = Depends(get_current_stack_user),
+    current_user: User = Depends(get_current_active_user),
 ):
     """
     Get detailed usage analytics including:
@@ -808,7 +809,7 @@ async def get_usage_analytics(
 @router.get("/analytics/cost")
 async def get_cost_analytics(
     days: int = Query(default=30, description="Number of days to analyze"),
-    current_user: dict = Depends(get_current_stack_user),
+    current_user: User = Depends(get_current_active_user),
 ):
     """
     Get comprehensive cost analytics including:
@@ -833,7 +834,7 @@ async def get_cost_analytics(
 @router.get("/analytics/alerts")
 async def get_system_alerts(
     resolved: Optional[bool] = Query(default=None, description="Filter by resolution status"),
-    current_user: dict = Depends(get_current_stack_user),
+    current_user: User = Depends(get_current_active_user),
 ):
     """
     Get system alerts and notifications.
@@ -857,7 +858,7 @@ async def get_system_alerts(
 
 
 @router.post("/analytics/alerts/{alert_id}/resolve")
-async def resolve_system_alert(alert_id: str, current_user: dict = Depends(get_current_stack_user)):
+async def resolve_system_alert(alert_id: str, current_user: User = Depends(get_current_active_user)):
     """
     Mark a system alert as resolved.
     """
@@ -888,7 +889,7 @@ async def create_smart_evidence_plan(
     framework: str = Query(..., description="Compliance framework"),
     target_weeks: int = Query(default=12, description="Target completion weeks"),
     db: Session = Depends(get_db),
-    current_user: dict = Depends(get_current_stack_user),
+    current_user: User = Depends(get_current_active_user),
 ):
     """
     Create an intelligent evidence collection plan with AI-driven prioritization.
@@ -902,7 +903,7 @@ async def create_smart_evidence_plan(
     try:
         business_profile = (
             db.query(BusinessProfile)
-            .filter(BusinessProfile.user_id == str(current_user["id"]))
+            .filter(BusinessProfile.user_id == str(str(current_user.id)))
             .first()
         )
 
@@ -960,7 +961,7 @@ async def create_smart_evidence_plan(
 
 
 @router.get("/smart-evidence/plan/{plan_id}")
-async def get_smart_evidence_plan(plan_id: str, current_user: dict = Depends(get_current_stack_user)):
+async def get_smart_evidence_plan(plan_id: str, current_user: User = Depends(get_current_active_user)):
     """
     Get details of a smart evidence collection plan.
     """
@@ -1009,7 +1010,7 @@ async def get_smart_evidence_plan(plan_id: str, current_user: dict = Depends(get
 async def get_next_priority_tasks(
     plan_id: str,
     limit: int = Query(default=5, description="Number of tasks to return"),
-    current_user: dict = Depends(get_current_stack_user),
+    current_user: User = Depends(get_current_active_user),
 ):
     """
     Get the next priority tasks for execution from a collection plan.
@@ -1051,7 +1052,7 @@ async def update_evidence_task_status(
     task_id: str,
     status: str = Query(..., description="New task status"),
     completion_notes: Optional[str] = Query(None, description="Completion notes"),
-    current_user: dict = Depends(get_current_stack_user),
+    current_user: User = Depends(get_current_active_user),
 ):
     """
     Update the status of an evidence collection task.
@@ -1094,7 +1095,7 @@ async def update_evidence_task_status(
 @router.get("/quality/trends")
 async def get_quality_trends(
     days: int = Query(default=30, description="Number of days to analyze"),
-    current_user: dict = Depends(get_current_stack_user),
+    current_user: User = Depends(get_current_active_user),
 ):
     """
     Get AI response quality trends and analytics.
@@ -1124,7 +1125,7 @@ async def submit_quality_feedback(
     feedback_type: str = Query(..., description="Type of feedback"),
     rating: Optional[float] = Query(None, description="Rating (1-5 scale)"),
     text_feedback: Optional[str] = Query(None, description="Text feedback"),
-    current_user: dict = Depends(get_current_stack_user),
+    current_user: User = Depends(get_current_active_user),
 ):
     """
     Submit user feedback for AI response quality improvement.
@@ -1153,7 +1154,7 @@ async def submit_quality_feedback(
         feedback = ResponseFeedback(
             feedback_id=f"fb_{response_id}_{int(datetime.utcnow().timestamp())}",
             response_id=response_id,
-            user_id=str(current_user["id"]),
+            user_id=str(str(current_user.id)),
             feedback_type=feedback_type_enum,
             rating=rating,
             text_feedback=text_feedback,
@@ -1179,7 +1180,7 @@ async def submit_quality_feedback(
 
 
 @router.get("/quality/assessment/{response_id}")
-async def get_quality_assessment(response_id: str, current_user: dict = Depends(get_current_stack_user)):
+async def get_quality_assessment(response_id: str, current_user: User = Depends(get_current_active_user)):
     """
     Get detailed quality assessment for a specific AI response.
     """
@@ -1221,7 +1222,7 @@ async def get_quality_assessment(response_id: str, current_user: dict = Depends(
 
 
 @router.get("/quality/metrics")
-async def get_quality_metrics(current_user: dict = Depends(get_current_stack_user)):
+async def get_quality_metrics(current_user: User = Depends(get_current_active_user)):
     """
     Get comprehensive quality metrics and performance indicators.
     """

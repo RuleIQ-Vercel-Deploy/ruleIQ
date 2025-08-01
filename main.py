@@ -6,7 +6,6 @@ from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from api.dependencies.auth import get_current_active_user
-from api.dependencies.stack_auth import get_current_stack_user as get_stack_user
 
 from api.middleware.error_handler import error_handler_middleware
 from api.request_id_middleware import RequestIDMiddleware
@@ -47,6 +46,7 @@ from config.logging_config import get_logger, setup_logging
 from config.settings import settings
 from database.db_setup import init_db, get_async_db
 from database import User  # Import all models through the database package
+from api.dependencies.auth import get_current_active_user
 
 # Setup logging
 setup_logging()
@@ -184,10 +184,6 @@ app.add_middleware(
 app.add_middleware(RequestIDMiddleware)
 app.middleware("http")(error_handler_middleware)
 
-# Stack Auth middleware for token validation
-from api.middleware.stack_auth_middleware import StackAuthMiddleware
-
-app.add_middleware(StackAuthMiddleware, enable_cache=True)
 
 # RBAC middleware for role-based access control  
 from api.middleware.rbac_middleware import RBACMiddleware
@@ -249,7 +245,7 @@ if os.getenv("ENVIRONMENT", "production").lower() in ["development", "test", "te
 
 @app.get("/api/dashboard")
 async def get_dashboard(
-    current_user: dict = Depends(get_stack_user)
+    current_user: User = Depends(get_current_active_user)
 ):
     """Get user dashboard data"""
     # For now, return a simple response

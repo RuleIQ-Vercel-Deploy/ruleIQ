@@ -4,7 +4,8 @@ from uuid import UUID
 from fastapi import APIRouter, Depends, File, HTTPException, UploadFile
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from api.dependencies.stack_auth import get_current_stack_user
+from api.dependencies.auth import get_current_active_user
+from database.user import User
 from api.schemas.evidence_classification import (
     BulkClassificationRequest,
     BulkClassificationResponse,
@@ -53,7 +54,7 @@ router = APIRouter()
 async def create_new_evidence(
     evidence_data: EvidenceCreate,
     db: AsyncSession = Depends(get_async_db),
-    current_user: dict = Depends(get_current_stack_user),
+    current_user: User = Depends(get_current_active_user),
 ):
     """Create a new evidence item."""
     from sqlalchemy import select
@@ -61,7 +62,7 @@ async def create_new_evidence(
     from database.business_profile import BusinessProfile
 
     # Get user's business profile automatically
-    profile_stmt = select(BusinessProfile).where(BusinessProfile.user_id == current_user["id"])
+    profile_stmt = select(BusinessProfile).where(BusinessProfile.user_id == str(current_user.id))
     profile_result = await db.execute(profile_stmt)
     profile = profile_result.scalars().first()
     if not profile:
@@ -91,7 +92,7 @@ async def list_evidence(
     sort_by: Optional[str] = None,
     sort_order: Optional[str] = "asc",
     db: AsyncSession = Depends(get_async_db),
-    current_user: dict = Depends(get_current_stack_user),
+    current_user: User = Depends(get_current_active_user),
 ):
     """List all evidence items for a user with optional filtering and pagination."""
     # Use the optimized paginated method for better performance
@@ -134,10 +135,10 @@ async def list_evidence(
 @router.get("/stats", response_model=EvidenceStatisticsResponse)
 async def get_evidence_statistics(
     db: AsyncSession = Depends(get_async_db),
-    current_user: dict = Depends(get_current_stack_user),
+    current_user: User = Depends(get_current_active_user),
 ):
     """Get evidence statistics for the current user."""
-    stats = await EvidenceService.get_evidence_statistics(db=db, user_id=UUID(str(current_user["id"])))
+    stats = await EvidenceService.get_evidence_statistics(db=db, user_id=UUID(str(str(current_user.id))))
     return stats
 
 
@@ -150,7 +151,7 @@ async def search_evidence_items(
     page: int = 1,
     page_size: int = 20,
     db: AsyncSession = Depends(get_async_db),
-    current_user: dict = Depends(get_current_stack_user),
+    current_user: User = Depends(get_current_active_user),
 ):
     """Search evidence items with various filters."""
     # Use the EvidenceService to get evidence items with filtering
@@ -191,7 +192,7 @@ async def search_evidence_items(
 async def validate_evidence_quality(
     evidence_data: dict,
     db: AsyncSession = Depends(get_async_db),
-    current_user: dict = Depends(get_current_stack_user),
+    current_user: User = Depends(get_current_active_user),
 ):
     """Validate evidence quality."""
     # Placeholder implementation
@@ -210,7 +211,7 @@ async def validate_evidence_quality(
 async def get_evidence_requirements(
     framework_id: UUID,
     db: AsyncSession = Depends(get_async_db),
-    current_user: dict = Depends(get_current_stack_user),
+    current_user: User = Depends(get_current_active_user),
 ):
     """Get evidence requirements for a framework."""
     # Placeholder implementation
@@ -237,7 +238,7 @@ async def get_evidence_requirements(
 async def identify_evidence_requirements(
     request_data: dict,
     db: AsyncSession = Depends(get_async_db),
-    current_user: dict = Depends(get_current_stack_user),
+    current_user: User = Depends(get_current_active_user),
 ):
     """Identify evidence requirements for controls."""
     # Placeholder implementation
@@ -266,11 +267,11 @@ async def identify_evidence_requirements(
 async def get_evidence_details(
     evidence_id: UUID,
     db: AsyncSession = Depends(get_async_db),
-    current_user: dict = Depends(get_current_stack_user),
+    current_user: User = Depends(get_current_active_user),
 ):
     """Retrieve the details of a specific evidence item."""
     evidence, status = await EvidenceService.get_evidence_item_with_auth_check(
-        db=db, user_id=UUID(str(current_user["id"])), evidence_id=evidence_id
+        db=db, user_id=UUID(str(str(current_user.id))), evidence_id=evidence_id
     )
 
     if status == "not_found":
@@ -287,7 +288,7 @@ async def update_evidence_item(
     evidence_id: UUID,
     evidence_update: EvidenceUpdate,
     db: AsyncSession = Depends(get_async_db),
-    current_user: dict = Depends(get_current_stack_user),
+    current_user: User = Depends(get_current_active_user),
 ):
     """Update an evidence item with full or partial data."""
     evidence, status = await EvidenceService.update_evidence_item(
@@ -313,7 +314,7 @@ async def update_evidence_status(
     evidence_id: UUID,
     evidence_update: EvidenceUpdate,
     db: AsyncSession = Depends(get_async_db),
-    current_user: dict = Depends(get_current_stack_user),
+    current_user: User = Depends(get_current_active_user),
 ):
     """Update an evidence item status and other fields."""
     evidence, status = await EvidenceService.update_evidence_item(
@@ -338,7 +339,7 @@ async def update_evidence_status(
 async def delete_evidence_item(
     evidence_id: UUID,
     db: AsyncSession = Depends(get_async_db),
-    current_user: dict = Depends(get_current_stack_user),
+    current_user: User = Depends(get_current_active_user),
 ):
     """Delete an evidence item."""
     success, status = await EvidenceService.delete_evidence_item(
@@ -355,7 +356,7 @@ async def delete_evidence_item(
 async def bulk_update_evidence_status(
     bulk_update: EvidenceBulkUpdate,
     db: AsyncSession = Depends(get_async_db),
-    current_user: dict = Depends(get_current_stack_user),
+    current_user: User = Depends(get_current_active_user),
 ):
     """Bulk update evidence status for multiple items."""
     updated_count, failed_count, failed_ids = await EvidenceService.bulk_update_evidence_status(
@@ -378,12 +379,12 @@ async def configure_evidence_automation(
     evidence_id: UUID,
     automation_config: dict,
     db: AsyncSession = Depends(get_async_db),
-    current_user: dict = Depends(get_current_stack_user),
+    current_user: User = Depends(get_current_active_user),
 ):
     """Configure automation for evidence collection."""
     # Verify evidence exists and user has access
     evidence, status = await EvidenceService.get_evidence_item_with_auth_check(
-        db=db, user_id=UUID(str(current_user["id"])), evidence_id=evidence_id
+        db=db, user_id=UUID(str(str(current_user.id))), evidence_id=evidence_id
     )
 
     if status == "not_found":
@@ -405,7 +406,7 @@ async def upload_evidence_file_route(
     evidence_id: UUID,
     file: UploadFile = File(...),
     db: AsyncSession = Depends(get_async_db),
-    current_user: dict = Depends(get_current_stack_user),
+    current_user: User = Depends(get_current_active_user),
 ):
     """Upload a file and link it to an evidence item with enhanced security validation."""
     # Import enhanced validator
@@ -498,7 +499,7 @@ async def upload_evidence_file_route(
 async def get_evidence_dashboard(
     framework_id: UUID,
     db: AsyncSession = Depends(get_async_db),
-    current_user: dict = Depends(get_current_stack_user),
+    current_user: User = Depends(get_current_active_user),
 ):
     """Get dashboard data for evidence collection status."""
     dashboard_data = await EvidenceService.get_evidence_dashboard(
@@ -515,13 +516,13 @@ async def classify_evidence_with_ai(
     evidence_id: UUID,
     request: EvidenceClassificationRequest,
     db: AsyncSession = Depends(get_async_db),
-    current_user: dict = Depends(get_current_stack_user),
+    current_user: User = Depends(get_current_active_user),
 ):
     """Classify evidence using AI and suggest control mappings."""
     try:
         # Verify evidence exists and user has access
         evidence, status = await EvidenceService.get_evidence_item_with_auth_check(
-            db=db, user_id=UUID(str(current_user["id"])), evidence_id=evidence_id
+            db=db, user_id=UUID(str(str(current_user.id))), evidence_id=evidence_id
         )
 
         if status == "not_found":
@@ -578,7 +579,7 @@ async def classify_evidence_with_ai(
 async def bulk_classify_evidence(
     request: BulkClassificationRequest,
     db: AsyncSession = Depends(get_async_db),
-    current_user: dict = Depends(get_current_stack_user),
+    current_user: User = Depends(get_current_active_user),
 ):
     """Bulk classify multiple evidence items using AI."""
     try:
@@ -594,7 +595,7 @@ async def bulk_classify_evidence(
             try:
                 # Verify evidence exists and user has access
                 evidence, status = await EvidenceService.get_evidence_item_with_auth_check(
-                    db=db, user_id=UUID(str(current_user["id"])), evidence_id=evidence_id
+                    db=db, user_id=UUID(str(str(current_user.id))), evidence_id=evidence_id
                 )
 
                 if status != "success":
@@ -692,7 +693,7 @@ async def get_control_mapping_suggestions(
     evidence_id: UUID,
     request: ControlMappingRequest,
     db: AsyncSession = Depends(get_async_db),
-    current_user: dict = Depends(get_current_stack_user),
+    current_user: User = Depends(get_current_active_user),
 ):
     """Get AI-powered control mapping suggestions for evidence."""
     try:
@@ -700,7 +701,7 @@ async def get_control_mapping_suggestions(
 
         # Verify evidence exists and user has access
         evidence, status = await EvidenceService.get_evidence_item_with_auth_check(
-            db=db, user_id=UUID(str(current_user["id"])), evidence_id=evidence_id
+            db=db, user_id=UUID(str(str(current_user.id))), evidence_id=evidence_id
         )
 
         if status == "not_found":
@@ -762,7 +763,7 @@ async def get_control_mapping_suggestions(
 @router.get("/classification/stats", response_model=ClassificationStatsResponse)
 async def get_classification_statistics(
     db: AsyncSession = Depends(get_async_db),
-    current_user: dict = Depends(get_current_stack_user),
+    current_user: User = Depends(get_current_active_user),
 ):
     """Get classification statistics for the current user."""
     try:
@@ -838,7 +839,7 @@ async def get_classification_statistics(
 async def get_evidence_quality_analysis(
     evidence_id: UUID,
     db: AsyncSession = Depends(get_async_db),
-    current_user: dict = Depends(get_current_stack_user),
+    current_user: User = Depends(get_current_active_user),
 ):
     """Get detailed AI-powered quality analysis for evidence item."""
     try:
@@ -851,7 +852,7 @@ async def get_evidence_quality_analysis(
 
         # Verify evidence exists and user has access
         evidence, status = await EvidenceService.get_evidence_item_with_auth_check(
-            db=db, user_id=UUID(str(current_user["id"])), evidence_id=evidence_id
+            db=db, user_id=UUID(str(str(current_user.id))), evidence_id=evidence_id
         )
 
         if status == "not_found":
@@ -910,7 +911,7 @@ async def detect_evidence_duplicates(
     evidence_id: UUID,
     request: DuplicateDetectionRequest,
     db: AsyncSession = Depends(get_async_db),
-    current_user: dict = Depends(get_current_stack_user),
+    current_user: User = Depends(get_current_active_user),
 ):
     """Detect semantic duplicates for a specific evidence item."""
     try:
@@ -920,7 +921,7 @@ async def detect_evidence_duplicates(
 
         # Verify evidence exists and user has access
         evidence, status = await EvidenceService.get_evidence_item_with_auth_check(
-            db=db, user_id=UUID(str(current_user["id"])), evidence_id=evidence_id
+            db=db, user_id=UUID(str(str(current_user.id))), evidence_id=evidence_id
         )
 
         if status == "not_found":
@@ -960,7 +961,7 @@ async def detect_evidence_duplicates(
 async def batch_duplicate_detection(
     request: BatchDuplicateDetectionRequest,
     db: AsyncSession = Depends(get_async_db),
-    current_user: dict = Depends(get_current_stack_user),
+    current_user: User = Depends(get_current_active_user),
 ):
     """Perform batch duplicate detection across multiple evidence items."""
     try:
@@ -972,7 +973,7 @@ async def batch_duplicate_detection(
         evidence_items = []
         for evidence_id in request.evidence_ids:
             evidence, status = await EvidenceService.get_evidence_item_with_auth_check(
-                db=db, user_id=UUID(str(current_user["id"])), evidence_id=evidence_id
+                db=db, user_id=UUID(str(str(current_user.id))), evidence_id=evidence_id
             )
             if status == "success":
                 evidence_items.append(evidence)
@@ -1004,7 +1005,7 @@ async def batch_duplicate_detection(
 async def get_quality_benchmark(
     request: QualityBenchmarkRequest = Depends(),
     db: AsyncSession = Depends(get_async_db),
-    current_user: dict = Depends(get_current_stack_user),
+    current_user: User = Depends(get_current_active_user),
 ):
     """Get quality benchmarking data comparing user's evidence to platform averages."""
     try:
@@ -1087,7 +1088,7 @@ async def get_quality_benchmark(
 async def get_quality_trends(
     request: QualityTrendRequest = Depends(),
     db: AsyncSession = Depends(get_async_db),
-    current_user: dict = Depends(get_current_stack_user),
+    current_user: User = Depends(get_current_active_user),
 ):
     """Get quality trend analysis over time."""
     try:

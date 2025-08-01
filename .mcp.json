@@ -185,10 +185,11 @@
       "command": "npx",
       "args": ["@testsprite/testsprite-mcp@latest"],
       "env": {
-        "API_KEY": "sk-user-krTkRSp_Hlw7nC8LTueByu3-f6YErdFVr9SOXSvtitLl1Y9Vz0s4rl8VxCF9cxatYR8WsDgR0PY4eGMRsOOjoJillGXwsmXNpB3uJ78ClqwaJPeeBtHZB2tdzYhs1sg1Lik"
+        "API_KEY": "sk-user-b-dOi1HbRc33E1UXQrAsQac8Lw1jPX-T6HFKcweaEaC7avLKnobKlFyScXbEMaZHzGP_BXKmYmwwtnj-8qVO7jrTAw0oWcnWqXqecgMnLVzOgJgHOfckcXNn4sB2ySyjZwE"
       }
     }
   },
   "inputs": []
 }
 
+ 

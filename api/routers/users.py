@@ -4,7 +4,8 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import Session
 
-from api.dependencies.stack_auth import get_current_stack_user
+from api.dependencies.auth import get_current_active_user
+from database.user import User
 from api.dependencies.database import get_async_db
 from api.schemas.models import UserResponse
 from database.business_profile import BusinessProfile
@@ -15,32 +16,32 @@ router = APIRouter()
 
 
 @router.get("/me", response_model=UserResponse)
-async def get_current_user(current_user: dict = Depends(get_current_stack_user)):
+async def get_current_user(current_user: User = Depends(get_current_active_user)):
     return current_user
 
 
 @router.get("/profile", response_model=UserResponse)
-async def get_user_profile(current_user: dict = Depends(get_current_stack_user)):
+async def get_user_profile(current_user: User = Depends(get_current_active_user)):
     """Get user profile - alias for /me endpoint for compatibility"""
     return current_user
 
 
 @router.get("/dashboard")
 async def get_user_dashboard(
-    current_user: dict = Depends(get_current_stack_user), db: AsyncSession = Depends(get_async_db)
+    current_user: User = Depends(get_current_active_user), db: AsyncSession = Depends(get_async_db)
 ) -> Dict[str, Any]:
     """Get user dashboard data"""
     from sqlalchemy import select
 
     # Get user's business profile
-    stmt = select(BusinessProfile).where(BusinessProfile.user_id == current_user["id"])
+    stmt = select(BusinessProfile).where(BusinessProfile.user_id == str(current_user.id))
     result = await db.execute(stmt)
     business_profile = result.scalars().first()
 
     # Enhanced dashboard data with expected sections
     dashboard_data = {
         "user": {
-            "id": str(current_user["id"]),
+            "id": str(str(current_user.id)),
             "email": current_user.get("primaryEmail", current_user.get("email", "")),
             "full_name": getattr(current_user, "full_name", None),
         },
@@ -127,7 +128,7 @@ async def get_user_dashboard(
 
 @router.put("/me/deactivate")
 async def deactivate_account(
-    current_user: dict = Depends(get_current_stack_user), db: Session = Depends(get_db)
+    current_user: User = Depends(get_current_active_user), db: Session = Depends(get_db)
 ):
     # Note: Stack Auth doesn't support direct user deactivation via API
     # This would need to be implemented via Stack Auth admin API or webhooks

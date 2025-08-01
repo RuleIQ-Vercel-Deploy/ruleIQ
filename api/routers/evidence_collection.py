@@ -9,7 +9,8 @@ from typing import List, Optional
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from api.dependencies.stack_auth import get_current_stack_user
+from api.dependencies.auth import get_current_active_user
+from database.user import User
 from api.schemas.evidence_collection import (
     AutomationOpportunities,
     CollectionPlanCreate,
@@ -36,7 +37,7 @@ router = APIRouter(prefix="/evidence-collection", tags=["evidence-collection"])
 async def create_collection_plan(
     plan_request: CollectionPlanCreate,
     db: AsyncSession = Depends(get_async_db),
-    current_user: dict = Depends(get_current_stack_user),
+    current_user: User = Depends(get_current_active_user),
 ):
     """
     Create an AI-driven evidence collection plan.
@@ -123,7 +124,7 @@ async def create_collection_plan(
 async def get_collection_plan(
     plan_id: str,
     db: AsyncSession = Depends(get_async_db),
-    current_user: dict = Depends(get_current_stack_user),
+    current_user: User = Depends(get_current_active_user),
 ):
     """Get a specific collection plan by ID."""
     plan = await smart_evidence_collector.get_collection_plan(plan_id)
@@ -174,7 +175,7 @@ async def list_collection_plans(
     framework: Optional[str] = Query(None, description="Filter by framework"),
     status: Optional[str] = Query(None, description="Filter by status"),
     db: AsyncSession = Depends(get_async_db),
-    current_user: dict = Depends(get_current_stack_user),
+    current_user: User = Depends(get_current_active_user),
 ):
     """List all collection plans for the current user."""
     # Get user's business profile
@@ -223,7 +224,7 @@ async def get_priority_tasks(
     plan_id: str,
     limit: int = Query(5, ge=1, le=20, description="Number of tasks to return"),
     db: AsyncSession = Depends(get_async_db),
-    current_user: dict = Depends(get_current_stack_user),
+    current_user: User = Depends(get_current_active_user),
 ):
     """Get the next priority tasks for a collection plan."""
     # Verify plan ownership
@@ -267,7 +268,7 @@ async def update_task_status(
     task_id: str,
     status_update: TaskStatusUpdate,
     db: AsyncSession = Depends(get_async_db),
-    current_user: dict = Depends(get_current_stack_user),
+    current_user: User = Depends(get_current_active_user),
 ):
     """Update the status of a specific task."""
     # Verify plan ownership
@@ -318,7 +319,7 @@ async def update_task_status(
 async def get_automation_recommendations(
     framework: str,
     db: AsyncSession = Depends(get_async_db),
-    current_user: dict = Depends(get_current_stack_user),
+    current_user: User = Depends(get_current_active_user),
 ):
     """Get automation recommendations for a specific framework."""
     # Get user's business profile

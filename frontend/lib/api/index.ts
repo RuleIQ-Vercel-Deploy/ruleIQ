@@ -16,4 +16,4 @@ export { implementationService } from './implementation.service';
 export { dashboardService } from './dashboard.service';
 
 // Export types
-export type { ApiError } from './client';
+export type { APIError } from './client';

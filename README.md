@@ -194,11 +194,25 @@ pnpm test:coverage
 
 ruleIQ implements enterprise-grade security measures:
 
-- **Authentication**: JWT with secure Web Crypto API storage
+- **Authentication**: JWT-only system with HS256 algorithm (Stack Auth removed)
+  - 30-minute access tokens with 7-day refresh tokens
+  - bcrypt password hashing with automatic salt generation
+  - Redis-based token blacklisting for secure logout
+- **Authorization**: Role-based access control (RBAC) with granular permissions
 - **Encryption**: AES-GCM for sensitive data, TLS 1.3 for transport
-- **Input Validation**: Comprehensive whitelist-based validation
-- **Rate Limiting**: Configurable per-endpoint rate limits
+- **Input Validation**: Comprehensive whitelist-based validation on all endpoints
+- **Rate Limiting**: Multi-tier protection (5/min auth, 100/min general, 20/min AI)
 - **OWASP Compliance**: Regular security audits and penetration testing
+
+### Authentication Endpoints
+
+- `POST /api/v1/auth/register` - User registration
+- `POST /api/v1/auth/login` - User login
+- `GET /api/v1/auth/me` - Get current user
+- `POST /api/v1/auth/refresh` - Token refresh
+- `POST /api/v1/auth/logout` - Secure logout
+
+**Note**: Stack Auth has been completely removed as of August 2025. All authentication now uses JWT tokens.
 - **GDPR Compliant**: Data privacy and user rights management
 
 Security Score: **8.5/10** (Enterprise-grade)

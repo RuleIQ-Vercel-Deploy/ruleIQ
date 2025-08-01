@@ -12,7 +12,8 @@ from fastapi.responses import StreamingResponse
 from pydantic import BaseModel, Field
 from sqlalchemy.orm import Session
 
-from api.dependencies.stack_auth import get_current_stack_user
+from api.dependencies.auth import get_current_active_user
+from database.user import User
 from database.db_setup import get_db
 from database.business_profile import BusinessProfile
 from database.user import User
@@ -100,7 +101,7 @@ class UpdateScheduleRequest(BaseModel):
 
 
 @router.get("/templates", response_model=TemplateListResponse)
-async def list_report_templates(current_user: dict = Depends(get_current_stack_user)):
+async def list_report_templates(current_user: User = Depends(get_current_active_user)):
     """List available report templates"""
     template_manager = TemplateManager()
     templates = template_manager.list_templates()
@@ -111,7 +112,7 @@ async def list_report_templates(current_user: dict = Depends(get_current_stack_u
 @router.post("/generate", response_model=ReportResponse)
 async def generate_report(
     request: ReportRequest,
-    current_user: dict = Depends(get_current_stack_user),
+    current_user: User = Depends(get_current_active_user),
     db: Session = Depends(get_db),
 ):
     """Generate a compliance report"""
@@ -166,7 +167,7 @@ async def generate_report(
 @router.post("/generate/pdf")
 async def generate_pdf_report(
     request: ReportRequest,
-    current_user: dict = Depends(get_current_stack_user),
+    current_user: User = Depends(get_current_active_user),
     db: Session = Depends(get_db),
 ):
     """Generate a PDF report and return it directly"""
@@ -207,7 +208,7 @@ async def generate_pdf_report(
 
 @router.get("/preview/{report_type}")
 async def preview_report_structure(
-    report_type: str, current_user: dict = Depends(get_current_stack_user)
+    report_type: str, current_user: User = Depends(get_current_active_user)
 ):
     """Preview the structure of a report type"""
     template_manager = TemplateManager()
@@ -227,7 +228,7 @@ async def preview_report_structure(
 async def customize_report_template(
     template_name: str,
     customizations: Dict[str, Any],
-    current_user: dict = Depends(get_current_stack_user),
+    current_user: User = Depends(get_current_active_user),
 ):
     """Customize a report template"""
     try:
@@ -324,7 +325,7 @@ def _get_supported_parameters(report_type: str) -> Dict[str, Any]:
 @router.post("/schedules", response_model=ScheduleResponse)
 async def create_schedule(
     request: CreateScheduleRequest,
-    current_user: dict = Depends(get_current_stack_user),
+    current_user: User = Depends(get_current_active_user),
     db: Session = Depends(get_db),
 ):
     """Create a new scheduled report"""
@@ -334,7 +335,7 @@ async def create_schedule(
             db.query(BusinessProfile)
             .filter(
                 BusinessProfile.id == str(request.business_profile_id),
-                BusinessProfile.user_id == str(current_user["id"]),
+                BusinessProfile.user_id == str(str(current_user.id)),
             )
             .first()
         )
@@ -345,7 +346,7 @@ async def create_schedule(
         # Create the schedule
         scheduler = ReportScheduler(db)
         schedule_id = scheduler.create_schedule(
-            user_id=str(current_user["id"]),
+            user_id=str(str(current_user.id)),
             business_profile_id=str(request.business_profile_id),
             report_type=request.report_type,
             frequency=request.frequency,
@@ -377,12 +378,12 @@ async def create_schedule(
 
 @router.get("/schedules")
 async def list_schedules(
-    current_user: dict = Depends(get_current_stack_user), db: Session = Depends(get_db)
+    current_user: User = Depends(get_current_active_user), db: Session = Depends(get_db)
 ):
     """List all report schedules for the current user"""
     try:
         scheduler = ReportScheduler(db)
-        schedules = scheduler.list_user_schedules(str(current_user["id"]))
+        schedules = scheduler.list_user_schedules(str(str(current_user.id)))
 
         schedule_responses = [
             ScheduleResponse(
@@ -407,14 +408,14 @@ async def list_schedules(
 
 @router.delete("/schedules/{schedule_id}")
 async def delete_schedule(
-    schedule_id: str, current_user: dict = Depends(get_current_stack_user), db: Session = Depends(get_db)
+    schedule_id: str, current_user: User = Depends(get_current_active_user), db: Session = Depends(get_db)
 ):
     """Delete a report schedule"""
     try:
         scheduler = ReportScheduler(db)
         schedule = scheduler.get_schedule(schedule_id)
 
-        if not schedule or schedule.user_id != str(current_user["id"]):
+        if not schedule or schedule.user_id != str(str(current_user.id)):
             raise HTTPException(status_code=404, detail="Schedule not found")
 
         success = scheduler.delete_schedule(schedule_id)
@@ -433,14 +434,14 @@ async def delete_schedule(
 
 @router.post("/schedules/{schedule_id}/execute")
 async def execute_schedule(
-    schedule_id: str, current_user: dict = Depends(get_current_stack_user), db: Session = Depends(get_db)
+    schedule_id: str, current_user: User = Depends(get_current_active_user), db: Session = Depends(get_db)
 ):
     """Manually execute a scheduled report"""
     try:
         scheduler = ReportScheduler(db)
         schedule = scheduler.get_schedule(schedule_id)
 
-        if not schedule or schedule.user_id != str(current_user["id"]):
+        if not schedule or schedule.user_id != str(str(current_user.id)):
             raise HTTPException(status_code=404, detail="Schedule not found")
 
         # Execute the schedule

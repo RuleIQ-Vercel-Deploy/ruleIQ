@@ -58,7 +58,7 @@ class UKFrameworkSchema(BaseModel):
     evidence_templates: Dict[str, Any] = Field(default_factory=dict)
     
     # Metadata
-    version: str = Field(default="1.0", regex=r"^\d+\.\d+(\.\d+)?$")
+    version: str = Field(default="1.0", pattern=r"^\d+\.\d+(\.\d+)?$")
     is_active: bool = Field(default=True)
     
     @validator('geographic_scope')

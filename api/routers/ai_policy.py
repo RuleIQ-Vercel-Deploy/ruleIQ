@@ -17,7 +17,8 @@ from api.schemas.ai_policy import (
     AIProviderMetrics, PolicyGenerationMetrics
 )
 from services.ai.policy_generator import PolicyGenerator, TemplateProcessor
-from api.dependencies.stack_auth import get_current_stack_user
+from api.dependencies.auth import get_current_active_user
+from database.user import User
 from api.middleware.rate_limiter import RateLimited
 
 
@@ -29,7 +30,7 @@ router = APIRouter(prefix="/api/v1/ai", tags=["AI Policy Generation"])
     response_model=PolicyGenerationResponse,
     status_code=status.HTTP_201_CREATED,
     dependencies=[
-        Depends(get_current_stack_user),
+        Depends(get_current_active_user),
         Depends(RateLimited(requests=20, window=60))  # AI endpoint rate limiting
     ]
 )
@@ -89,7 +90,7 @@ async def generate_policy(
     "/refine-policy",
     response_model=PolicyRefinementResponse,
     dependencies=[
-        Depends(get_current_stack_user),
+        Depends(get_current_active_user),
         Depends(RateLimited(requests=30, window=60))
     ]
 )
@@ -236,7 +237,7 @@ async def get_policy_templates(
     "/metrics",
     response_model=PolicyGenerationMetrics,
     dependencies=[
-        Depends(get_current_stack_user),
+        Depends(get_current_active_user),
         Depends(RateLimited(requests=50, window=60))
     ]
 )
@@ -297,7 +298,7 @@ async def get_ai_metrics():
 @router.post(
     "/validate-policy",
     dependencies=[
-        Depends(get_current_stack_user),
+        Depends(get_current_active_user),
         Depends(RateLimited(requests=50, window=60))
     ]
 )
@@ -364,7 +365,7 @@ async def _log_generation_metrics(
 @router.post(
     "/analytics/export",
     dependencies=[
-        Depends(get_current_stack_user),
+        Depends(get_current_active_user),
         Depends(RateLimited(requests=5, window=3600))  # 5 per hour
     ]
 )

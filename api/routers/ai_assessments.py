@@ -20,7 +20,8 @@ from pydantic import BaseModel, Field
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 
-from api.dependencies.stack_auth import get_current_stack_user
+from api.dependencies.auth import get_current_active_user
+from database.user import User
 from api.dependencies.database import get_async_db
 from api.middleware.ai_rate_limiter import (
     ai_analysis_rate_limit,
@@ -229,7 +230,7 @@ async def get_user_business_profile(
 async def get_question_help(
     framework_id: str,
     request: AIHelpRequest,
-    current_user: dict = Depends(get_current_stack_user),
+    current_user: User = Depends(get_current_active_user),
     db: AsyncSession = Depends(get_async_db),
     _: None = Depends(ai_help_rate_limit),
 ):
@@ -316,7 +317,7 @@ async def get_question_help(
 async def get_question_help_stream(
     framework_id: str,
     request: AIHelpRequest,
-    current_user: dict = Depends(get_current_stack_user),
+    current_user: User = Depends(get_current_active_user),
     db: AsyncSession = Depends(get_async_db),
     _: None = Depends(ai_help_rate_limit),
 ):
@@ -404,7 +405,7 @@ async def get_question_help_stream(
 @router.post("/followup", response_model=AIFollowUpResponse)
 async def generate_followup_questions(
     request: AIFollowUpRequest,
-    current_user: dict = Depends(get_current_stack_user),
+    current_user: User = Depends(get_current_active_user),
     db: AsyncSession = Depends(get_async_db),
     _: None = Depends(ai_followup_rate_limit),
 ):
@@ -502,7 +503,7 @@ async def generate_followup_questions(
 @router.post("/analysis", response_model=AIAnalysisResponse)
 async def analyze_assessment_results(
     request: AIAnalysisRequest,
-    current_user: dict = Depends(get_current_stack_user),
+    current_user: User = Depends(get_current_active_user),
     db: AsyncSession = Depends(get_async_db),
     _: None = Depends(ai_analysis_rate_limit),
 ):
@@ -585,7 +586,7 @@ async def analyze_assessment_results(
 @router.post("/analysis/stream")
 async def analyze_assessment_results_stream(
     request: AIAnalysisRequest,
-    current_user: dict = Depends(get_current_stack_user),
+    current_user: User = Depends(get_current_active_user),
     db: AsyncSession = Depends(get_async_db),
     _: None = Depends(ai_analysis_rate_limit),
 ):
@@ -672,7 +673,7 @@ async def analyze_assessment_results_stream(
 @router.post("/recommendations", response_model=AIRecommendationResponse)
 async def generate_personalized_recommendations(
     request: AIRecommendationRequest,
-    current_user: dict = Depends(get_current_stack_user),
+    current_user: User = Depends(get_current_active_user),
     db: AsyncSession = Depends(get_async_db),
     _: None = Depends(ai_recommendations_rate_limit),
 ):
@@ -754,7 +755,7 @@ async def generate_personalized_recommendations(
 @router.post("/recommendations/stream")
 async def generate_personalized_recommendations_stream(
     request: AIRecommendationRequest,
-    current_user: dict = Depends(get_current_stack_user),
+    current_user: User = Depends(get_current_active_user),
     db: AsyncSession = Depends(get_async_db),
     _: None = Depends(ai_recommendations_rate_limit),
 ):
@@ -844,7 +845,7 @@ async def generate_personalized_recommendations_stream(
 @router.post("/feedback")
 async def submit_ai_feedback(
     request: AIFeedbackRequest,
-    current_user: dict = Depends(get_current_stack_user),
+    current_user: User = Depends(get_current_active_user),
     db: AsyncSession = Depends(get_async_db),
 ):
     """
@@ -876,7 +877,7 @@ async def submit_ai_feedback(
 
 @router.get("/metrics", response_model=AIMetricsResponse)
 async def get_ai_metrics(
-    current_user: dict = Depends(get_current_stack_user),
+    current_user: User = Depends(get_current_active_user),
     db: AsyncSession = Depends(get_async_db),
     days: int = Query(default=30, ge=1, le=365, description="Number of days to include in metrics"),
 ):
@@ -916,7 +917,7 @@ async def get_ai_metrics(
 
 
 @router.get("/rate-limit-stats")
-async def get_rate_limit_statistics(current_user: dict = Depends(get_current_stack_user)):
+async def get_rate_limit_statistics(current_user: User = Depends(get_current_active_user)):
     """
     Get AI rate limiting statistics.
 
@@ -1009,7 +1010,7 @@ async def _get_mock_followup_response(framework: str, answers: Dict[str, Any]) -
 
 @router.get("/health")
 async def get_ai_service_health(
-    current_user: dict = Depends(get_current_stack_user), db: AsyncSession = Depends(get_async_db)
+    current_user: User = Depends(get_current_active_user), db: AsyncSession = Depends(get_async_db)
 ) -> Dict[str, Any]:
     """
     Get comprehensive AI service health status including circuit breaker states.
@@ -1043,7 +1044,7 @@ async def get_ai_service_health(
 
 @router.get("/circuit-breaker/status")
 async def get_circuit_breaker_status(
-    current_user: dict = Depends(get_current_stack_user), db: AsyncSession = Depends(get_async_db)
+    current_user: User = Depends(get_current_active_user), db: AsyncSession = Depends(get_async_db)
 ) -> Dict[str, Any]:
     """
     Get detailed circuit breaker status for all AI models.
@@ -1069,7 +1070,7 @@ async def get_circuit_breaker_status(
 @router.post("/circuit-breaker/reset")
 async def reset_circuit_breaker(
     model_name: str = Query(..., description="Model name to reset circuit breaker for"),
-    current_user: dict = Depends(get_current_stack_user),
+    current_user: User = Depends(get_current_active_user),
     db: AsyncSession = Depends(get_async_db),
 ) -> Dict[str, Any]:
     """
@@ -1096,7 +1097,7 @@ async def reset_circuit_breaker(
 @router.get("/models/{model_name}/health")
 async def get_model_health(
     model_name: str,
-    current_user: dict = Depends(get_current_stack_user),
+    current_user: User = Depends(get_current_active_user),
     db: AsyncSession = Depends(get_async_db),
 ) -> Dict[str, Any]:
     """
@@ -1224,7 +1225,7 @@ async def _get_mock_recommendations_response(gaps: List[Dict[str, Any]]) -> Dict
 
 @router.get("/cache/metrics")
 async def get_ai_cache_metrics(
-    current_user: dict = Depends(get_current_stack_user), db: AsyncSession = Depends(get_async_db)
+    current_user: User = Depends(get_current_active_user), db: AsyncSession = Depends(get_async_db)
 ) -> Dict[str, Any]:
     """
     Get AI caching performance metrics and status.

@@ -6,7 +6,8 @@ from fastapi import APIRouter, Depends, HTTPException
 from fastapi.responses import StreamingResponse
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from api.dependencies.stack_auth import get_current_stack_user
+from api.dependencies.auth import get_current_active_user
+from database.user import User
 from api.dependencies.database import get_async_db
 from api.schemas.models import ComplianceReport
 from database.user import User
@@ -22,7 +23,7 @@ router = APIRouter()
 @router.get("/assessment")
 async def get_readiness_assessment(
     framework_id: Optional[UUID] = None,
-    current_user: dict = Depends(get_current_stack_user),
+    current_user: User = Depends(get_current_active_user),
     db: AsyncSession = Depends(get_async_db),
 ):
     from sqlalchemy import select
@@ -83,7 +84,7 @@ async def get_readiness_assessment(
 async def get_assessment_history(
     framework_id: Optional[UUID] = None,
     limit: int = 10,
-    current_user: dict = Depends(get_current_stack_user),
+    current_user: User = Depends(get_current_active_user),
 ):
     history = get_historical_assessments(current_user, framework_id, limit)
     return history
@@ -91,7 +92,7 @@ async def get_assessment_history(
 
 @router.post("/report")
 async def generate_report(
-    report_config: ComplianceReport, current_user: dict = Depends(get_current_stack_user)
+    report_config: ComplianceReport, current_user: User = Depends(get_current_active_user)
 ):
     report_data = await generate_compliance_report(
         current_user,
@@ -115,7 +116,7 @@ async def generate_report(
 @router.post("/reports", status_code=201)
 async def generate_compliance_report_endpoint(
     report_request: ComplianceReport,
-    current_user: dict = Depends(get_current_stack_user),
+    current_user: User = Depends(get_current_active_user),
     db: AsyncSession = Depends(get_async_db),
 ):
     """Generate compliance reports."""
@@ -143,7 +144,7 @@ async def generate_compliance_report_endpoint(
 
 @router.get("/reports/{report_id}/download")
 async def download_compliance_report(
-    report_id: str, current_user: dict = Depends(get_current_stack_user)
+    report_id: str, current_user: User = Depends(get_current_active_user)
 ):
     """Download a generated compliance report."""
     # For now, return a simple response indicating the report is available
