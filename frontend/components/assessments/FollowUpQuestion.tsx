@@ -9,13 +9,14 @@ import { Card, CardContent } from "@/components/ui/card";
 import { type Question } from "@/lib/assessment-engine/types";
 import { cn } from "@/lib/utils";
 import { type UserContext } from "@/types/ai";
+import type { UnknownRecord } from '@/types/common';
 
 import { QuestionRenderer } from "./QuestionRenderer";
 
 interface FollowUpQuestionProps {
   question: Question;
-  value: any;
-  onChange: (value: any) => void;
+  value: UnknownRecord;
+  onChange: (_value: UnknownRecord) => void;
   error?: string | null;
   disabled?: boolean;
   frameworkId?: string;

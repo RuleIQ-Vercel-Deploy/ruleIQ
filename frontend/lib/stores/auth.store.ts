@@ -4,6 +4,7 @@ import { create } from 'zustand'
 import { persist, createJSONStorage , devtools } from 'zustand/middleware'
 
 import type { User } from '@/types/api'
+import type { UnknownRecord } from '@/types/common'
 
 // Enhanced User interface for auth
 export interface AuthUser extends User {
@@ -153,10 +154,10 @@ export const useAuthStore = create<AuthState>()(
               permissions: user.permissions || [],
               role: user.role || null,
             }, false, 'login/success')
-          } catch (error: any) {
+          } catch (error: unknown) {
             set({
               isLoading: false,
-              error: error.detail || error.message || 'Login failed. Please try again.',
+              error: (error as UnknownRecord)?.detail || (error as UnknownRecord)?.message || 'Login failed. Please try again.',
             }, false, 'login/error')
             throw error
           }
@@ -211,10 +212,10 @@ export const useAuthStore = create<AuthState>()(
               permissions: user.permissions || [],
               role: user.role || null,
             }, false, 'register/success')
-          } catch (error: any) {
+          } catch (error: unknown) {
             set({
               isLoading: false,
-              error: error.detail || error.message || 'Registration failed. Please try again.',
+              error: (error as UnknownRecord)?.detail || (error as UnknownRecord)?.message || 'Registration failed. Please try again.',
             }, false, 'register/error')
             throw error
           }
