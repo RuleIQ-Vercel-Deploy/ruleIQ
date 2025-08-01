@@ -6,6 +6,7 @@ import { persist, createJSONStorage , devtools } from 'zustand/middleware'
 import { assessmentService, type CreateAssessmentRequest, type UpdateAssessmentRequest, type SubmitAssessmentAnswerRequest } from '@/lib/api/assessments.service'
 
 import type { Assessment, AssessmentQuestion } from '@/types/api'
+import type { UnknownRecord } from '@/types/common'
 
 interface AssessmentState {
   // Data
@@ -96,10 +97,10 @@ export const useAssessmentStore = create<AssessmentState>()(
               total,
               isLoading: false,
             }, false, 'loadAssessments/success')
-          } catch (error: any) {
+          } catch (error: unknown) {
             set({
               isLoading: false,
-              error: error.detail || error.message || 'Failed to load assessments',
+              error: (error as UnknownRecord)?.detail || (error as UnknownRecord)?.message || 'Failed to load assessments',
             }, false, 'loadAssessments/error')
           }
         },
@@ -113,10 +114,10 @@ export const useAssessmentStore = create<AssessmentState>()(
               currentAssessment: assessment,
               isLoading: false,
             }, false, 'loadAssessment/success')
-          } catch (error: any) {
+          } catch (error: unknown) {
             set({
               isLoading: false,
-              error: error.detail || error.message || 'Failed to load assessment',
+              error: (error as UnknownRecord)?.detail || (error as UnknownRecord)?.message || 'Failed to load assessment',
             }, false, 'loadAssessment/error')
           }
         },

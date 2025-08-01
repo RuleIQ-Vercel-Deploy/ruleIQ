@@ -103,7 +103,7 @@ class EvidenceService {
    * Upload file for evidence
    */
   async uploadEvidenceFile(id: string, file: File, _onProgress?: (progress: number) => void): Promise<EvidenceItem> {
-    const response = await apiClient.upload<EvidenceItem>(`/evidence/${id}/upload`, file, onProgress);
+    const response = await apiClient.upload<EvidenceItem>(`/evidence/${id}/upload`, file, _onProgress);
     return response.data;
   }
 
@@ -135,9 +135,9 @@ class EvidenceService {
     approved_evidence: number;
     coverage_percentage: number;
     by_type: Record<string, number>;
-    recent_activity: any[];
+    recent_activity: UnknownRecord[];
   }> {
-    const response = await apiClient.get<any>(`/evidence/dashboard/${frameworkId}`);
+    const response = await apiClient.get<UnknownRecord>(`/evidence/dashboard/${frameworkId}`);
     return response.data;
   }
 
@@ -147,13 +147,13 @@ class EvidenceService {
   async classifyEvidence(id: string, request?: EvidenceClassificationRequest): Promise<{
     evidence_id: string;
     current_type: string;
-    ai_classification: any;
+    ai_classification: UnknownRecord;
     apply_suggestion: boolean;
     confidence: number;
     suggested_controls: string[];
     reasoning: string;
   }> {
-    const response = await apiClient.post<any>(`/evidence/${id}/classify`, request || {});
+    const response = await apiClient.post<UnknownRecord>(`/evidence/${id}/classify`, request || {});
     return response.data;
   }
 
@@ -179,7 +179,7 @@ class EvidenceService {
       description: string;
     }>;
   }> {
-    const response = await apiClient.get<any>(`/evidence/requirements/${frameworkId}`);
+    const response = await apiClient.get<UnknownRecord>(`/evidence/requirements/${frameworkId}`);
     return response.data;
   }
 
@@ -193,7 +193,7 @@ class EvidenceService {
     recency: number;
     suggestions: string[];
   }> {
-    const response = await apiClient.get<any>(`/evidence/${id}/quality`);
+    const response = await apiClient.get<UnknownRecord>(`/evidence/${id}/quality`);
     return response.data;
   }
 }
