@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import { motion } from "framer-motion";
 import { 
   Shield, 
@@ -20,8 +21,10 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { AssessmentUtils } from "@/lib/assessment-engine/utils";
+
+import type { UnknownRecord } from '@/types/common';
 
 export interface Framework {
   id: string;
@@ -40,7 +43,7 @@ export interface Framework {
 
 interface FrameworkSelectorProps {
   frameworks: Framework[];
-  onSelect: (frameworkId: string, mode: 'quick' | 'comprehensive') => void;
+  onSelect: (_frameworkId: string, _mode: 'quick' | 'comprehensive') => void;
   onCancel: () => void;
 }
 
@@ -228,7 +231,7 @@ export function FrameworkSelector({
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-            <RadioGroup value={assessmentMode} onValueChange={(v) => setAssessmentMode(v as any)}>
+            <RadioGroup value={assessmentMode} onValueChange={(v) => setAssessmentMode(v as string)}>
               <div className="grid gap-4 md:grid-cols-2">
                 <div className="flex items-start space-x-2">
                   <RadioGroupItem value="quick" id="quick" />
