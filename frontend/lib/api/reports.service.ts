@@ -1,6 +1,7 @@
 import { apiClient } from './client';
 
 import type { Report } from '@/types/api';
+import type { UnknownRecord } from '@/types/common';
 
 export interface GenerateReportRequest {
   report_type: 'compliance' | 'assessment' | 'evidence' | 'executive' | 'audit';
@@ -80,7 +81,7 @@ class ReportService {
     message: string;
     next_run: string;
   }> {
-    const response = await apiClient.post<any>('/reports/schedule', data);
+    const response = await apiClient.post<UnknownRecord>('/reports/schedule', data);
     return response.data;
   }
 
@@ -91,7 +92,7 @@ class ReportService {
     schedules: Array<{
       id: string;
       report_config: GenerateReportRequest;
-      schedule: any;
+      schedule: UnknownRecord;
       recipients: string[];
       active: boolean;
       last_run?: string;

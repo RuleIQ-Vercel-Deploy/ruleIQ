@@ -1,5 +1,7 @@
 import { apiClient } from './client';
 
+import type { UnknownRecord } from '@/types/common';
+
 export interface ReadinessScore {
   overall_score: number;
   category_scores: {
@@ -101,7 +103,7 @@ class ReadinessService {
       tools_required: string[];
     };
   }> {
-    const response = await apiClient.post<any>('/readiness/roadmap', {
+    const response = await apiClient.post<UnknownRecord>('/readiness/roadmap', {
       business_profile_id: businessProfileId,
       target_frameworks: targetFrameworks,
     });
@@ -113,14 +115,14 @@ class ReadinessService {
    */
   async performQuickAssessment(
     businessProfileId: string,
-    answers: Record<string, any>
+    answers: UnknownRecord
   ): Promise<{
     score: number;
     interpretation: string;
     next_steps: string[];
     detailed_report_available: boolean;
   }> {
-    const response = await apiClient.post<any>('/readiness/quick-assessment', {
+    const response = await apiClient.post<UnknownRecord>('/readiness/quick-assessment', {
       business_profile_id: businessProfileId,
       answers,
     });
@@ -150,7 +152,7 @@ class ReadinessService {
       risk_areas: string[];
     };
   }> {
-    const response = await apiClient.get<any>(`/readiness/trends/${businessProfileId}`, {
+    const response = await apiClient.get<UnknownRecord>(`/readiness/trends/${businessProfileId}`, {
       params: { days },
     });
     return response.data;
@@ -174,7 +176,7 @@ class ReadinessService {
       gap: number;
     }[];
   }> {
-    const response = await apiClient.get<any>('/readiness/benchmarks', {
+    const response = await apiClient.get<UnknownRecord>('/readiness/benchmarks', {
       params: { industry, company_size },
     });
     return response.data;

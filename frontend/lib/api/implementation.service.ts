@@ -1,5 +1,7 @@
 import { apiClient } from './client';
 
+import type { UnknownRecord } from '@/types/common';
+
 export interface ImplementationPlan {
   id: string;
   business_profile_id: string;
@@ -165,7 +167,7 @@ class ImplementationService {
     risk_factors: string[];
     success_factors: string[];
   }> {
-    const response = await apiClient.get<any>('/implementation/recommendations', {
+    const response = await apiClient.get<UnknownRecord>('/implementation/recommendations', {
       params: { business_profile_id: businessProfileId, framework_id: frameworkId },
     });
     return response.data;
@@ -203,7 +205,7 @@ class ImplementationService {
       url: string;
     }>;
   }> {
-    const response = await apiClient.get<any>(`/implementation/resources/${frameworkId}`);
+    const response = await apiClient.get<UnknownRecord>(`/implementation/resources/${frameworkId}`);
     return response.data;
   }
 
@@ -246,7 +248,7 @@ class ImplementationService {
       risks: string[];
     };
   }> {
-    const response = await apiClient.get<any>(`/implementation/plans/${planId}/analytics`);
+    const response = await apiClient.get<UnknownRecord>(`/implementation/plans/${planId}/analytics`);
     return response.data;
   }
 }

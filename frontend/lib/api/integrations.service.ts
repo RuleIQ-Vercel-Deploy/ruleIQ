@@ -1,10 +1,11 @@
 import { apiClient } from './client';
 
 import type { Integration } from '@/types/api';
+import type { UnknownRecord } from '@/types/common';
 
 export interface ConnectIntegrationRequest {
   provider: string;
-  config?: Record<string, any>;
+  config?: UnknownRecord;
 }
 
 export interface IntegrationWebhookConfig {
@@ -39,7 +40,7 @@ class IntegrationService {
     status: 'connected' | 'pending_auth';
     auth_url?: string;
   }> {
-    const response = await apiClient.post<any>('/integrations/connect', data);
+    const response = await apiClient.post<UnknownRecord>('/integrations/connect', data);
     return response.data;
   }
 
@@ -56,9 +57,9 @@ class IntegrationService {
   async testIntegration(integrationId: string): Promise<{
     status: 'success' | 'failed';
     message: string;
-    details?: any;
+    details?: UnknownRecord;
   }> {
-    const response = await apiClient.post<any>(`/integrations/${integrationId}/test`);
+    const response = await apiClient.post<UnknownRecord>(`/integrations/${integrationId}/test`);
     return response.data;
   }
 
@@ -74,7 +75,7 @@ class IntegrationService {
     items_synced?: number;
     errors?: string[];
   }> {
-    const response = await apiClient.post<any>(`/integrations/${integrationId}/sync`, options || {});
+    const response = await apiClient.post<UnknownRecord>(`/integrations/${integrationId}/sync`, options || {});
     return response.data;
   }
 
@@ -91,7 +92,7 @@ class IntegrationService {
       errors_count: number;
     }>;
   }> {
-    const response = await apiClient.get<any>(`/integrations/${integrationId}/sync-history`);
+    const response = await apiClient.get<UnknownRecord>(`/integrations/${integrationId}/sync-history`);
     return response.data;
   }
 
@@ -106,7 +107,7 @@ class IntegrationService {
     status: 'active' | 'inactive';
     test_url: string;
   }> {
-    const response = await apiClient.post<any>(
+    const response = await apiClient.post<UnknownRecord>(
       `/integrations/${integrationId}/webhooks`,
       config
     );
@@ -130,11 +131,11 @@ class IntegrationService {
       timestamp: string;
       event_type: string;
       status: string;
-      details: any;
+      details: UnknownRecord;
     }>;
     total: number;
   }> {
-    const response = await apiClient.get<any>(`/integrations/${integrationId}/logs`, { params });
+    const response = await apiClient.get<UnknownRecord>(`/integrations/${integrationId}/logs`, { params });
     return response.data;
   }
 
@@ -143,7 +144,7 @@ class IntegrationService {
    */
   async updateIntegrationConfig(
     integrationId: string,
-    config: Record<string, any>
+    config: UnknownRecord
   ): Promise<Integration> {
     const response = await apiClient.patch<Integration>(
       `/integrations/${integrationId}/config`,
@@ -171,7 +172,7 @@ class IntegrationService {
     integration_id?: string;
     error?: string;
   }> {
-    const response = await apiClient.post<any>('/integrations/oauth/callback', {
+    const response = await apiClient.post<UnknownRecord>('/integrations/oauth/callback', {
       provider,
       code,
       state,

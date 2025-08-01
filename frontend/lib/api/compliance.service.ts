@@ -1,5 +1,7 @@
 import { apiClient } from './client';
 
+import type { UnknownRecord } from '@/types/common';
+
 export interface ComplianceStatus {
   framework: string;
   overall_compliance_percentage: number;
@@ -178,7 +180,7 @@ class ComplianceService {
     const params = frameworkId
       ? { business_profile_id: businessProfileId, framework_id: frameworkId }
       : { business_profile_id: businessProfileId };
-    const response = await apiClient.get<any>('/compliance/timeline', { params });
+    const response = await apiClient.get<UnknownRecord>('/compliance/timeline', { params });
     return response.data;
   }
 
@@ -206,7 +208,7 @@ class ComplianceService {
       score: number;
     }>;
   }> {
-    const response = await apiClient.get<any>('/compliance/dashboard', {
+    const response = await apiClient.get<UnknownRecord>('/compliance/dashboard', {
       params: { business_profile_id: businessProfileId },
     });
     return response.data;
@@ -224,7 +226,7 @@ class ComplianceService {
     valid_until: string;
     download_url: string;
   }> {
-    const response = await apiClient.post<any>('/compliance/certificate/generate', {
+    const response = await apiClient.post<UnknownRecord>('/compliance/certificate/generate', {
       business_profile_id: businessProfileId,
       framework_id: frameworkId,
     });

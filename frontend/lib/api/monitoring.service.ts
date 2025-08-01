@@ -1,5 +1,7 @@
 import { apiClient } from './client';
 
+import type { UnknownRecord } from '@/types/common';
+
 export interface DatabaseStatus {
   status: 'healthy' | 'degraded' | 'down';
   connected_clients: number;
@@ -15,7 +17,7 @@ export interface SystemAlert {
   severity: 'critical' | 'warning' | 'info';
   type: string;
   message: string;
-  details: any;
+  details: UnknownRecord;
   created_at: string;
   resolved: boolean;
   resolved_at?: string;
@@ -97,7 +99,7 @@ class MonitoringService {
       request_count: number;
     }>;
   }> {
-    const response = await apiClient.get<any>('/monitoring/api-performance', { params });
+    const response = await apiClient.get<UnknownRecord>('/monitoring/api-performance', { params });
     return response.data;
   }
 
@@ -119,11 +121,11 @@ class MonitoringService {
       stack_trace?: string;
       user_id?: string;
       request_id?: string;
-      metadata?: any;
+      metadata?: UnknownRecord;
     }>;
     total: number;
   }> {
-    const response = await apiClient.get<any>('/monitoring/error-logs', { params });
+    const response = await apiClient.get<UnknownRecord>('/monitoring/error-logs', { params });
     return response.data;
   }
 
@@ -140,7 +142,7 @@ class MonitoringService {
     };
     timestamp: string;
   }> {
-    const response = await apiClient.get<any>('/monitoring/health');
+    const response = await apiClient.get<UnknownRecord>('/monitoring/health');
     return response.data;
   }
 
@@ -162,14 +164,14 @@ class MonitoringService {
       action: string;
       resource_type: string;
       resource_id: string;
-      changes?: any;
+      changes?: UnknownRecord;
       ip_address: string;
       user_agent: string;
       timestamp: string;
     }>;
     total: number;
   }> {
-    const response = await apiClient.get<any>('/monitoring/audit-logs', { params });
+    const response = await apiClient.get<UnknownRecord>('/monitoring/audit-logs', { params });
     return response.data;
   }
 

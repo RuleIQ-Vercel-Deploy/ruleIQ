@@ -202,10 +202,11 @@ class EvidenceCollectionService {
       let comparison = 0;
 
       switch (sortBy) {
-        case 'priority':
+        case 'priority': {
           const priorityOrder = { critical: 0, high: 1, medium: 2, low: 3, deferred: 4 };
           comparison = priorityOrder[a.priority] - priorityOrder[b.priority];
           break;
+        }
         
         case 'dueDate':
           if (!a.due_date) return 1;
@@ -217,10 +218,11 @@ class EvidenceCollectionService {
           comparison = a.estimated_effort_hours - b.estimated_effort_hours;
           break;
         
-        case 'status':
+        case 'status': {
           const statusOrder = { pending: 0, in_progress: 1, blocked: 2, completed: 3, cancelled: 4 };
           comparison = statusOrder[a.status] - statusOrder[b.status];
           break;
+        }
       }
 
       return order === 'asc' ? comparison : -comparison;

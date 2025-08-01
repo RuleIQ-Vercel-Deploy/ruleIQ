@@ -1,5 +1,7 @@
 import { apiClient } from './client';
 
+import type { UnknownRecord } from '@/types/common';
+
 export interface DashboardStats {
   compliance_score: number;
   frameworks_active: number;
@@ -18,7 +20,7 @@ export interface DashboardActivity {
   action: string;
   description: string;
   user?: string;
-  metadata?: any;
+  metadata?: UnknownRecord;
 }
 
 export interface DashboardTask {
@@ -79,7 +81,7 @@ class DashboardService {
       score: number;
     }>;
   }> {
-    const response = await apiClient.get<any>('/dashboard');
+    const response = await apiClient.get<UnknownRecord>('/dashboard');
     return response.data;
   }
 
@@ -92,18 +94,18 @@ class DashboardService {
       type: string;
       title: string;
       position: { x: number; y: number; w: number; h: number };
-      config: any;
+      config: UnknownRecord;
       visible: boolean;
     }>;
   }> {
-    const response = await apiClient.get<any>('/dashboard/widgets');
+    const response = await apiClient.get<UnknownRecord>('/dashboard/widgets');
     return response.data;
   }
 
   /**
    * Update dashboard widgets configuration
    */
-  async updateDashboardWidgets(widgets: any[]): Promise<void> {
+  async updateDashboardWidgets(widgets: UnknownRecord[]): Promise<void> {
     await apiClient.put('/dashboard/widgets', { widgets });
   }
 
@@ -141,7 +143,7 @@ class DashboardService {
     unread_count: number;
     total: number;
   }> {
-    const response = await apiClient.get<any>('/dashboard/notifications', { params });
+    const response = await apiClient.get<UnknownRecord>('/dashboard/notifications', { params });
     return response.data;
   }
 
@@ -173,7 +175,7 @@ class DashboardService {
       enabled: boolean;
     }>;
   }> {
-    const response = await apiClient.get<any>('/dashboard/quick-actions');
+    const response = await apiClient.get<UnknownRecord>('/dashboard/quick-actions');
     return response.data;
   }
 
@@ -202,7 +204,7 @@ class DashboardService {
       action_steps: string[];
     }>;
   }> {
-    const response = await apiClient.get<any>('/dashboard/recommendations');
+    const response = await apiClient.get<UnknownRecord>('/dashboard/recommendations');
     return response.data;
   }
 }

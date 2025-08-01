@@ -1,6 +1,7 @@
 import { apiClient } from './client'
 
 import type { PricingPlan } from '@/lib/stripe/client'
+import type { UnknownRecord } from '@/types/common'
 
 export interface PaymentMethod {
   id: string
@@ -79,7 +80,7 @@ class PaymentService {
     try {
       const response = await apiClient.get<{ subscription: Subscription }>('/payments/subscription')
       return response.data.subscription
-    } catch (error) {
+    } catch {
       return null
     }
   }
@@ -167,7 +168,7 @@ class PaymentService {
     try {
       const response = await apiClient.get<{ invoice: Invoice }>('/payments/invoices/upcoming')
       return response.data.invoice
-    } catch (error) {
+    } catch {
       return null
     }
   }
@@ -184,7 +185,7 @@ class PaymentService {
       duration_in_months?: number
     }
   }> {
-    const response = await apiClient.post<any>('/payments/coupons/apply', { coupon_code })
+    const response = await apiClient.post<UnknownRecord>('/payments/coupons/apply', { coupon_code })
     return response.data
   }
 
@@ -209,7 +210,7 @@ class PaymentService {
     }
     can_upgrade: boolean
   }> {
-    const response = await apiClient.get<any>('/payments/subscription/limits')
+    const response = await apiClient.get<UnknownRecord>('/payments/subscription/limits')
     return response.data
   }
 }
