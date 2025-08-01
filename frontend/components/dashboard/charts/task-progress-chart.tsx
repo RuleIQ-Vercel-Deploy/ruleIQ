@@ -1,8 +1,9 @@
 "use client"
 
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend, Cell } from "recharts"
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from "recharts"
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import type { UnknownRecord } from '@/types/common'
 import { Progress } from "@/components/ui/progress"
 
 interface TaskProgressChartProps {
@@ -29,13 +30,13 @@ export function TaskProgressChart({
     overdue: "#DC3545"
   }
 
-  const CustomTooltip = ({ active, payload, label }: any) => {
+  const CustomTooltip = ({ active, payload, label }: UnknownRecord) => {
     if (active && payload && payload.length) {
-      const total = payload.reduce((sum: number, entry: any) => sum + entry.value, 0)
+      const total = (payload as UnknownRecord[]).reduce((sum: number, entry: UnknownRecord) => sum + (entry.value as number), 0)
       return (
         <div className="bg-white p-3 border border-gray-200 rounded-lg shadow-lg">
           <p className="text-sm font-semibold text-gray-900 mb-2">{label}</p>
-          {payload.map((entry: any, index: number) => (
+          {(payload as UnknownRecord[]).map((entry: UnknownRecord, index: number) => (
             <p key={index} className="text-sm" style={{ color: entry.color }}>
               {entry.name}: <span className="font-semibold">{entry.value}</span>
             </p>

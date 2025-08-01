@@ -2,6 +2,8 @@
 import { useScroll, useTransform, motion } from "framer-motion"
 import React, { useRef } from "react"
 
+import type { UnknownRecord } from '@/types/common'
+
 export const ContainerScroll = ({
   titleComponent,
   children,
@@ -9,7 +11,7 @@ export const ContainerScroll = ({
   titleComponent: string | React.ReactNode
   children: React.ReactNode
 }) => {
-  const containerRef = useRef<any>(null)
+  const containerRef = useRef<HTMLDivElement>(null)
   const { scrollYProgress } = useScroll({
     target: containerRef,
   })

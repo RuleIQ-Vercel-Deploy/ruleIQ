@@ -7,6 +7,8 @@
 
 import { type AxiosError } from 'axios';
 
+import type { UnknownRecord } from '@/types/common';
+
 // Error type classification
 export enum ErrorType {
   NETWORK = 'NETWORK',
@@ -36,7 +38,7 @@ export class EnhancedApiError extends Error {
     public severity: ErrorSeverity,
     public retryable: boolean,
     public userMessage: string,
-    public technicalDetails?: any,
+    public technicalDetails?: UnknownRecord,
     public originalError?: AxiosError
   ) {
     super(detail);
@@ -320,7 +322,7 @@ export function getContextualErrorMessage(
 }
 
 // Error logging for monitoring
-export function logError(error: EnhancedApiError, additionalContext?: any): void {
+export function logError(error: EnhancedApiError, additionalContext?: UnknownRecord): void {
   // Handle cases where error might be undefined or empty
   if (!error) {
     console.warn('[ruleIQ] Attempted to log undefined error');
