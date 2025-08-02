@@ -26,7 +26,7 @@ export default async function AssessmentResultsPage({ params }: { params: Promis
         <div className="flex flex-col sm:flex-row items-start justify-between gap-4">
           <div>
             <h1 className="text-3xl font-bold text-eggshell-white">{title} - Results</h1>
-            <p className="text-lg text-grey-600 mt-1">Assessment ID: {params.id}</p>
+            <p className="text-lg text-grey-600 mt-1">Assessment ID: {id}</p>
           </div>
           <div className="flex items-center gap-3">
             <Button variant="secondary">

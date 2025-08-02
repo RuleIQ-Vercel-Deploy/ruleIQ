@@ -139,7 +139,7 @@ const questionBank: Record<string, Question> = {
     question: "Do you have a dedicated compliance or legal team?",
     field: "hasComplianceTeam",
     options: ["Yes, full team", "Yes, part-time", "No, but planning to", "No dedicated team"],
-    nextQuestion: (_data, answer) => answer.includes("Yes") ? "complianceMaturity" : "industry"
+    nextQuestion: (_data, answer) => (answer as string).includes("Yes") ? "complianceMaturity" : "industry"
   },
 
   complianceMaturity: {
