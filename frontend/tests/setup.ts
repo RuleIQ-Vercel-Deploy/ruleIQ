@@ -1,3 +1,51 @@
+// Proper HTMLFormElement.prototype.requestSubmit polyfill
+if (!HTMLFormElement.prototype.requestSubmit) {
+  HTMLFormElement.prototype.requestSubmit = function(submitter) {
+    if (submitter && submitter.form !== this) {
+      throw new DOMException('The specified element is not a descendant of this form element', 'NotFoundError');
+    }
+    
+    // Create and dispatch submit event
+    const submitEvent = new Event('submit', {
+      bubbles: true,
+      cancelable: true
+    });
+    
+    // Set submitter if provided
+    if (submitter) {
+      Object.defineProperty(submitEvent, 'submitter', {
+        value: submitter,
+        configurable: true
+      });
+    }
+    
+    this.dispatchEvent(submitEvent);
+  };
+}
+// Proper HTMLFormElement.prototype.requestSubmit polyfill
+if (!HTMLFormElement.prototype.requestSubmit) {
+  HTMLFormElement.prototype.requestSubmit = function(submitter) {
+    if (submitter && submitter.form !== this) {
+      throw new DOMException('The specified element is not a descendant of this form element', 'NotFoundError');
+    }
+    
+    // Create and dispatch submit event
+    const submitEvent = new Event('submit', {
+      bubbles: true,
+      cancelable: true
+    });
+    
+    // Set submitter if provided
+    if (submitter) {
+      Object.defineProperty(submitEvent, 'submitter', {
+        value: submitter,
+        configurable: true
+      });
+    }
+    
+    this.dispatchEvent(submitEvent);
+  };
+}
 import '@testing-library/jest-dom/vitest';
 import { cleanup } from '@testing-library/react';
 import { afterEach, beforeAll, afterAll, vi } from 'vitest';
@@ -408,6 +456,349 @@ Object.defineProperty(global, 'FileReader', {
     }
   }
 });
+
+// Import API client setup
+import './mocks/api-client-setup';
+
+// Mock Next.js router
+vi.mock('next/navigation', () => ({
+  useRouter: vi.fn(() => ({
+    push: vi.fn(),
+    replace: vi.fn(),
+    back: vi.fn(),
+    forward: vi.fn(),
+    refresh: vi.fn(),
+    prefetch: vi.fn()
+  })),
+  usePathname: vi.fn(() => '/'),
+  useSearchParams: vi.fn(() => new URLSearchParams())
+}));
+
+// Mock auth store with proper implementation
+vi.mock('@/lib/stores/auth.store', () => ({
+  useAuthStore: vi.fn(() => ({
+    user: {
+      id: 'user-123',
+      email: 'test@example.com',
+      name: 'Test User',
+      is_active: true
+    },
+    tokens: {
+      access_token: 'mock-access-token',
+      refresh_token: 'mock-refresh-token'
+    },
+    isAuthenticated: true,
+    isLoading: false,
+    error: null,
+    login: vi.fn().mockResolvedValue({
+      user: {
+        id: 'user-123',
+        email: 'test@example.com',
+        name: 'Test User',
+        is_active: true
+      },
+      tokens: {
+        access_token: 'mock-access-token',
+        refresh_token: 'mock-refresh-token'
+      }
+    }),
+    register: vi.fn().mockResolvedValue({
+      user: {
+        id: 'user-456',
+        email: 'newuser@example.com',
+        name: 'New User',
+        is_active: true
+      },
+      tokens: {
+        access_token: 'new-access-token',
+        refresh_token: 'new-refresh-token'
+      }
+    }),
+    logout: vi.fn().mockResolvedValue(undefined),
+    getCurrentUser: vi.fn().mockResolvedValue({
+      id: 'user-123',
+      email: 'test@example.com',
+      name: 'Test User',
+      is_active: true
+    }),
+    initialize: vi.fn().mockResolvedValue(undefined)
+  }))
+}));
+
+// Enhanced Lucide React mock with all required icons
+vi.mock('lucide-react', () => ({
+  // Common icons used in components
+  Shield: vi.fn(() => 'div'),
+  Filter: vi.fn(() => 'div'),
+  Check: vi.fn(() => 'div'),
+  X: vi.fn(() => 'div'),
+  Upload: vi.fn(() => 'div'),
+  Download: vi.fn(() => 'div'),
+  Eye: vi.fn(() => 'div'),
+  Edit: vi.fn(() => 'div'),
+  Trash: vi.fn(() => 'div'),
+  Plus: vi.fn(() => 'div'),
+  Minus: vi.fn(() => 'div'),
+  Search: vi.fn(() => 'div'),
+  Settings: vi.fn(() => 'div'),
+  User: vi.fn(() => 'div'),
+  Home: vi.fn(() => 'div'),
+  FileText: vi.fn(() => 'div'),
+  BarChart: vi.fn(() => 'div'),
+  PieChart: vi.fn(() => 'div'),
+  TrendingUp: vi.fn(() => 'div'),
+  TrendingDown: vi.fn(() => 'div'),
+  AlertTriangle: vi.fn(() => 'div'),
+  Info: vi.fn(() => 'div'),
+  CheckCircle: vi.fn(() => 'div'),
+  XCircle: vi.fn(() => 'div'),
+  Clock: vi.fn(() => 'div'),
+  Calendar: vi.fn(() => 'div'),
+  Mail: vi.fn(() => 'div'),
+  Phone: vi.fn(() => 'div'),
+  MapPin: vi.fn(() => 'div'),
+  Globe: vi.fn(() => 'div'),
+  Lock: vi.fn(() => 'div'),
+  Unlock: vi.fn(() => 'div'),
+  Key: vi.fn(() => 'div'),
+  Database: vi.fn(() => 'div'),
+  Server: vi.fn(() => 'div'),
+  Cloud: vi.fn(() => 'div'),
+  Wifi: vi.fn(() => 'div'),
+  Activity: vi.fn(() => 'div'),
+  Zap: vi.fn(() => 'div'),
+  Star: vi.fn(() => 'div'),
+  Heart: vi.fn(() => 'div'),
+  Bookmark: vi.fn(() => 'div'),
+  Flag: vi.fn(() => 'div'),
+  Tag: vi.fn(() => 'div'),
+  Folder: vi.fn(() => 'div'),
+  File: vi.fn(() => 'div'),
+  Image: vi.fn(() => 'div'),
+  Video: vi.fn(() => 'div'),
+  Music: vi.fn(() => 'div'),
+  Headphones: vi.fn(() => 'div'),
+  Camera: vi.fn(() => 'div'),
+  Printer: vi.fn(() => 'div'),
+  Monitor: vi.fn(() => 'div'),
+  Smartphone: vi.fn(() => 'div'),
+  Tablet: vi.fn(() => 'div'),
+  Laptop: vi.fn(() => 'div'),
+  HardDrive: vi.fn(() => 'div'),
+  Cpu: vi.fn(() => 'div'),
+  MemoryStick: vi.fn(() => 'div'),
+  Battery: vi.fn(() => 'div'),
+  Power: vi.fn(() => 'div'),
+  Plug: vi.fn(() => 'div'),
+  Bluetooth: vi.fn(() => 'div'),
+  Usb: vi.fn(() => 'div'),
+  // Add any other icons that might be used
+  ChevronDown: vi.fn(() => 'div'),
+  ChevronUp: vi.fn(() => 'div'),
+  ChevronLeft: vi.fn(() => 'div'),
+  ChevronRight: vi.fn(() => 'div'),
+  ArrowUp: vi.fn(() => 'div'),
+  ArrowDown: vi.fn(() => 'div'),
+  ArrowLeft: vi.fn(() => 'div'),
+  ArrowRight: vi.fn(() => 'div'),
+  MoreHorizontal: vi.fn(() => 'div'),
+  MoreVertical: vi.fn(() => 'div'),
+  Menu: vi.fn(() => 'div'),
+  Grid: vi.fn(() => 'div'),
+  List: vi.fn(() => 'div'),
+  Layout: vi.fn(() => 'div'),
+  Sidebar: vi.fn(() => 'div'),
+  Maximize: vi.fn(() => 'div'),
+  Minimize: vi.fn(() => 'div'),
+  Copy: vi.fn(() => 'div'),
+  Clipboard: vi.fn(() => 'div'),
+  Share: vi.fn(() => 'div'),
+  ExternalLink: vi.fn(() => 'div'),
+  Link: vi.fn(() => 'div'),
+  Unlink: vi.fn(() => 'div'),
+  Refresh: vi.fn(() => 'div'),
+  RotateCw: vi.fn(() => 'div'),
+  RotateCcw: vi.fn(() => 'div'),
+  Repeat: vi.fn(() => 'div'),
+  Shuffle: vi.fn(() => 'div'),
+  Play: vi.fn(() => 'div'),
+  Pause: vi.fn(() => 'div'),
+  Stop: vi.fn(() => 'div'),
+  SkipBack: vi.fn(() => 'div'),
+  SkipForward: vi.fn(() => 'div'),
+  FastForward: vi.fn(() => 'div'),
+  Rewind: vi.fn(() => 'div'),
+  Volume: vi.fn(() => 'div'),
+  Volume1: vi.fn(() => 'div'),
+  Volume2: vi.fn(() => 'div'),
+  VolumeX: vi.fn(() => 'div'),
+  Mic: vi.fn(() => 'div'),
+  MicOff: vi.fn(() => 'div'),
+  // Default export for any missing icons
+  default: vi.fn(() => 'div')
+}));
+
+// Fix HTMLFormElement.prototype.requestSubmit not implemented in JSDOM
+Object.defineProperty(HTMLFormElement.prototype, 'requestSubmit', {
+  writable: true,
+  value: function(submitter) {
+    if (submitter && submitter.form !== this) {
+      throw new DOMException('The specified element is not a descendant of this form element', 'NotFoundError');
+    }
+    
+    // Create and dispatch submit event
+    const submitEvent = new Event('submit', {
+      bubbles: true,
+      cancelable: true
+    });
+    
+    // Set submitter if provided
+    if (submitter) {
+      Object.defineProperty(submitEvent, 'submitter', {
+        value: submitter,
+        configurable: true
+      });
+    }
+    
+    this.dispatchEvent(submitEvent);
+  }
+});
+
+// Import and use complete Lucide React mock
+import { LucideIconMocks } from './mocks/lucide-react-complete';
+
+vi.mock('lucide-react', () => LucideIconMocks);
+
+// Import all enhanced mocks
+import './mocks/api-client-setup';
+import './mocks/business-profile-service';
+
+// Mock AI services to prevent timeout errors
+vi.mock('@/lib/services/ai-service', () => ({
+  AIService: {
+    generateFollowUpQuestions: vi.fn().mockResolvedValue([
+      'What is your data retention policy?',
+      'How do you handle data breaches?',
+      'Do you have employee training programs?'
+    ]),
+    getEnhancedResponse: vi.fn().mockResolvedValue({
+      response: 'This is a mock AI response',
+      confidence: 0.85,
+      suggestions: ['Consider implementing automated data deletion']
+    }),
+    analyzeCompliance: vi.fn().mockResolvedValue({
+      score: 85,
+      recommendations: ['Improve data retention policies'],
+      risks: ['Missing employee training records']
+    })
+  }
+}));
+
+// Mock network requests to prevent actual API calls
+global.fetch = vi.fn().mockImplementation((url, options = {}) => {
+  console.log('Mock fetch:', url, options);
+
+  return Promise.resolve({
+    ok: true,
+    status: 200,
+    json: () => Promise.resolve({ success: true }),
+    text: () => Promise.resolve('Mock response'),
+    headers: new Headers(),
+    redirected: false,
+    statusText: 'OK',
+    type: 'basic',
+    url: url as string
+  } as Response);
+});
+
+// Import and use comprehensive Lucide React mock with proxy
+import { LucideProxy } from './mocks/lucide-react-complete';
+
+vi.mock('lucide-react', () => LucideProxy);
+
+// Import AI service mock
+import './mocks/ai-service-mock';
+
+// Fix HTMLFormElement.prototype.requestSubmit not implemented in JSDOM
+Object.defineProperty(HTMLFormElement.prototype, 'requestSubmit', {
+  writable: true,
+  value: function(submitter) {
+    if (submitter && submitter.form !== this) {
+      throw new DOMException('The specified element is not a descendant of this form element', 'NotFoundError');
+    }
+    
+    // Create and dispatch submit event
+    const submitEvent = new Event('submit', {
+      bubbles: true,
+      cancelable: true
+    });
+    
+    // Set submitter if provided
+    if (submitter) {
+      Object.defineProperty(submitEvent, 'submitter', {
+        value: submitter,
+        configurable: true
+      });
+    }
+    
+    this.dispatchEvent(submitEvent);
+  }
+});
+
+// Import and use complete Lucide React mock
+import { LucideIconMocks } from './mocks/lucide-react-complete';
+
+vi.mock('lucide-react', () => LucideIconMocks);
+
+// Import all enhanced mocks
+import './mocks/api-client-setup';
+import './mocks/business-profile-service';
+
+// Mock AI services to prevent timeout errors
+vi.mock('@/lib/services/ai-service', () => ({
+  AIService: {
+    generateFollowUpQuestions: vi.fn().mockResolvedValue([
+      'What is your data retention policy?',
+      'How do you handle data breaches?',
+      'Do you have employee training programs?'
+    ]),
+    getEnhancedResponse: vi.fn().mockResolvedValue({
+      response: 'This is a mock AI response',
+      confidence: 0.85,
+      suggestions: ['Consider implementing automated data deletion']
+    }),
+    analyzeCompliance: vi.fn().mockResolvedValue({
+      score: 85,
+      recommendations: ['Improve data retention policies'],
+      risks: ['Missing employee training records']
+    })
+  }
+}));
+
+// Mock network requests to prevent actual API calls
+global.fetch = vi.fn().mockImplementation((url, options = {}) => {
+  console.log('Mock fetch:', url, options);
+
+  return Promise.resolve({
+    ok: true,
+    status: 200,
+    json: () => Promise.resolve({ success: true }),
+    text: () => Promise.resolve('Mock response'),
+    headers: new Headers(),
+    redirected: false,
+    statusText: 'OK',
+    type: 'basic',
+    url: url as string
+  } as Response);
+});
+
+// Import and use comprehensive Lucide React mock with proxy
+import { LucideProxy } from './mocks/lucide-react-complete';
+
+vi.mock('lucide-react', () => LucideProxy);
+
+// Import AI service mock
+import './mocks/ai-service-mock';
 
 // Import API client setup
 import './mocks/api-client-setup';
