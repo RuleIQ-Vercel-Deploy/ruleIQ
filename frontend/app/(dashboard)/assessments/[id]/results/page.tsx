@@ -9,7 +9,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { assessmentResults } from "@/lib/data/results"
 
 
-export default function AssessmentResultsPage({ params }: { params: { id: string } }) {
+export default async function AssessmentResultsPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
   const { title, overallScore, summary, requirements, gapAnalysis, recommendations } = assessmentResults
 
   return (

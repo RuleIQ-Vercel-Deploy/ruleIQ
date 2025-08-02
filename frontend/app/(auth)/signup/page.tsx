@@ -75,7 +75,7 @@ const questionBank: Record<string, Question> = {
   email: {
     id: "email",
     type: "input",
-    question: (data) => `Nice to meet you, ${data.fullName}! What's your business email?`,
+    question: (data) => `Nice to meet you, ${data['fullName']}! What's your business email?`,
     field: "email",
     validation: "email"
   },
@@ -111,13 +111,13 @@ const questionBank: Record<string, Question> = {
   companySize: {
     id: "companySize",
     type: "choice",
-    question: (data) => `How many people work at ${data.companyName}?`,
+    question: (data) => `How many people work at ${data['companyName']}?`,
     field: "companySize",
     options: ["Just me", "2-10", "11-50", "51-200", "201-500", "500+"],
     icon: <Users className="h-5 w-5" />,
     nextQuestion: (_data, answer) => {
       if (answer === "Just me" || answer === "2-10") return "smallBusinessConcerns";
-      if (parseInt(answer) > 50) return "hasComplianceTeam";
+      if (parseInt(answer as string) > 50) return "hasComplianceTeam";
       return "industry";
     }
   },
