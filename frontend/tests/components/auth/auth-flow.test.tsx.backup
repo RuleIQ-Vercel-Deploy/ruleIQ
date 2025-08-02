@@ -250,7 +250,7 @@ describe('Authentication Flow', () => {
         </TestWrapper>,
       );
 
-      expect(screen.getAllByText('Invalid credentials')).toBeInTheDocument();
+      expect(screen.getByText('Invalid credentials')).toBeInTheDocument();
     });
 
     it('should handle remember me checkbox', async () => {
@@ -323,7 +323,7 @@ describe('Authentication Flow', () => {
       fireEvent.click(submitButton);
 
       await waitFor(() => {
-        expect(screen.getAllByText(/passwords don't match/i)).toBeInTheDocument();
+        expect(screen.getByText(/passwords don't match/i)).toBeInTheDocument();
       });
     });
 
@@ -349,7 +349,7 @@ describe('Authentication Flow', () => {
       fireEvent.click(submitButton);
 
       await waitFor(() => {
-        expect(screen.getAllByText(/password must be at least 8 characters/i)).toBeInTheDocument();
+        expect(screen.getByText(/password must be at least 8 characters/i)).toBeInTheDocument();
       });
     });
 
@@ -435,7 +435,7 @@ describe('Authentication Flow', () => {
         </TestWrapper>,
       );
 
-      expect(screen.getAllByText(/create account/i)).toBeInTheDocument();
+      expect(screen.getByText(/create account/i)).toBeInTheDocument();
     });
   });
 
@@ -494,7 +494,3 @@ describe('Authentication Flow', () => {
     });
   });
 });
-
-// Test utilities for auth flow
-const getCreateAccountButton = () => screen.getByRole('button', { name: /create account/i });
-const getCreateAccountHeading = () => screen.getByRole('heading', { name: /create account/i });
