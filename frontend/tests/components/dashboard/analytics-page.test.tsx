@@ -41,7 +41,7 @@ describe('AnalyticsPage', () => {
 
     expect(screen.getByText('Filters')).toBeInTheDocument();
     // Check for date picker button with actual date range text
-    expect(screen.getByRole('button', { name: /Jul 03, 2025 - Aug 02, 2025/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /Aug 02, 2025 - Sep 01, 2025/i })).toBeInTheDocument();
   });
 
   it('should show refresh and export buttons', () => {
