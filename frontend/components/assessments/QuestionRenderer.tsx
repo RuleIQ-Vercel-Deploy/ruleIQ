@@ -22,6 +22,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Slider } from "@/components/ui/slider";
 import { Textarea } from "@/components/ui/textarea";
 import { type Question } from "@/lib/assessment-engine/types";
+import type { UnknownRecord } from '@/types/common';
 import { cn } from "@/lib/utils";
 import { type UserContext } from "@/types/ai";
 
@@ -30,8 +31,8 @@ import { AIHelpTooltip } from "./AIHelpTooltip";
 
 interface QuestionRendererProps {
   question: Question;
-  value: any;
-  onChange: (value: any) => void;
+  value: UnknownRecord;
+  onChange: (_value: UnknownRecord) => void;
   error?: string | null;
   disabled?: boolean;
   frameworkId?: string;
@@ -83,7 +84,7 @@ export function QuestionRenderer({
           </RadioGroup>
         );
 
-      case 'checkbox':
+      case 'checkbox': {
         const checkedValues = value || [];
         return (
           <div className="space-y-2">
@@ -117,6 +118,7 @@ export function QuestionRenderer({
             ))}
           </div>
         );
+      }
 
       case 'text':
         return (

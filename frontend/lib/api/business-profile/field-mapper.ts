@@ -19,6 +19,8 @@
 
 import { type BusinessProfile } from '@/types/api';
 
+import type { UnknownRecord } from '@/types/common';
+
 export class BusinessProfileFieldMapper {
   /**
    * Bidirectional field mapping between frontend (descriptive) and backend (truncated) names
@@ -48,10 +50,10 @@ export class BusinessProfileFieldMapper {
    * @param data - Frontend data with descriptive field names
    * @returns API-compatible data with truncated field names
    */
-  static toAPI<T extends Partial<BusinessProfile>>(data: T): any {
+  static toAPI<T extends Partial<BusinessProfile>>(data: T): UnknownRecord {
     if (!data) return data;
     
-    const mapped: any = {};
+    const mapped: UnknownRecord = {};
     
     Object.entries(data).forEach(([key, value]) => {
       // Map frontend field to API field, or use original if no mapping exists
