@@ -1,0 +1,145 @@
+import { vi } from 'vitest';
+
+// Create a comprehensive mock for all Lucide React icons
+const createIconMock = (name: string) => 
+  vi.fn().mockImplementation((props = {}) => ({
+    type: 'svg',
+    props: {
+      className: props.className || '',
+      'data-testid': `${name.toLowerCase()}-icon`,
+      ...props
+    }
+  }));
+
+// Export ALL possible Lucide icons (comprehensive list)
+export const LucideIconMocks = {
+  // Recently missing icons
+  Users: createIconMock('Users'),
+  BarChart3: createIconMock('BarChart3'),
+  Shield: createIconMock('Shield'),
+  Filter: createIconMock('Filter'),
+  
+  // Comprehensive icon list
+  Activity: createIconMock('Activity'),
+  AlertTriangle: createIconMock('AlertTriangle'),
+  ArrowDown: createIconMock('ArrowDown'),
+  ArrowLeft: createIconMock('ArrowLeft'),
+  ArrowRight: createIconMock('ArrowRight'),
+  ArrowUp: createIconMock('ArrowUp'),
+  BarChart: createIconMock('BarChart'),
+  Battery: createIconMock('Battery'),
+  Bell: createIconMock('Bell'),
+  Bluetooth: createIconMock('Bluetooth'),
+  Bookmark: createIconMock('Bookmark'),
+  Calendar: createIconMock('Calendar'),
+  Camera: createIconMock('Camera'),
+  Check: createIconMock('Check'),
+  CheckCircle: createIconMock('CheckCircle'),
+  ChevronDown: createIconMock('ChevronDown'),
+  ChevronLeft: createIconMock('ChevronLeft'),
+  ChevronRight: createIconMock('ChevronRight'),
+  ChevronUp: createIconMock('ChevronUp'),
+  Circle: createIconMock('Circle'),
+  Clipboard: createIconMock('Clipboard'),
+  Clock: createIconMock('Clock'),
+  Cloud: createIconMock('Cloud'),
+  Code: createIconMock('Code'),
+  Copy: createIconMock('Copy'),
+  Cpu: createIconMock('Cpu'),
+  Database: createIconMock('Database'),
+  Download: createIconMock('Download'),
+  Edit: createIconMock('Edit'),
+  ExternalLink: createIconMock('ExternalLink'),
+  Eye: createIconMock('Eye'),
+  EyeOff: createIconMock('EyeOff'),
+  FastForward: createIconMock('FastForward'),
+  File: createIconMock('File'),
+  FileText: createIconMock('FileText'),
+  Flag: createIconMock('Flag'),
+  Folder: createIconMock('Folder'),
+  Globe: createIconMock('Globe'),
+  Grid: createIconMock('Grid'),
+  HardDrive: createIconMock('HardDrive'),
+  Headphones: createIconMock('Headphones'),
+  Heart: createIconMock('Heart'),
+  Home: createIconMock('Home'),
+  Image: createIconMock('Image'),
+  Info: createIconMock('Info'),
+  Key: createIconMock('Key'),
+  Laptop: createIconMock('Laptop'),
+  Layout: createIconMock('Layout'),
+  Link: createIconMock('Link'),
+  List: createIconMock('List'),
+  Lock: createIconMock('Lock'),
+  Mail: createIconMock('Mail'),
+  MapPin: createIconMock('MapPin'),
+  Maximize: createIconMock('Maximize'),
+  MemoryStick: createIconMock('MemoryStick'),
+  Menu: createIconMock('Menu'),
+  Mic: createIconMock('Mic'),
+  MicOff: createIconMock('MicOff'),
+  Minimize: createIconMock('Minimize'),
+  Minus: createIconMock('Minus'),
+  Monitor: createIconMock('Monitor'),
+  MoreHorizontal: createIconMock('MoreHorizontal'),
+  MoreVertical: createIconMock('MoreVertical'),
+  Music: createIconMock('Music'),
+  Pause: createIconMock('Pause'),
+  Phone: createIconMock('Phone'),
+  PieChart: createIconMock('PieChart'),
+  Play: createIconMock('Play'),
+  Plug: createIconMock('Plug'),
+  Plus: createIconMock('Plus'),
+  Power: createIconMock('Power'),
+  Printer: createIconMock('Printer'),
+  Refresh: createIconMock('Refresh'),
+  Repeat: createIconMock('Repeat'),
+  Rewind: createIconMock('Rewind'),
+  RotateCcw: createIconMock('RotateCcw'),
+  RotateCw: createIconMock('RotateCw'),
+  Search: createIconMock('Search'),
+  Server: createIconMock('Server'),
+  Settings: createIconMock('Settings'),
+  Share: createIconMock('Share'),
+  Shuffle: createIconMock('Shuffle'),
+  Sidebar: createIconMock('Sidebar'),
+  SkipBack: createIconMock('SkipBack'),
+  SkipForward: createIconMock('SkipForward'),
+  Smartphone: createIconMock('Smartphone'),
+  Star: createIconMock('Star'),
+  Stop: createIconMock('Stop'),
+  Tablet: createIconMock('Tablet'),
+  Tag: createIconMock('Tag'),
+  Trash: createIconMock('Trash'),
+  TrendingDown: createIconMock('TrendingDown'),
+  TrendingUp: createIconMock('TrendingUp'),
+  Unlink: createIconMock('Unlink'),
+  Unlock: createIconMock('Unlock'),
+  Upload: createIconMock('Upload'),
+  User: createIconMock('User'),
+  Usb: createIconMock('Usb'),
+  Video: createIconMock('Video'),
+  Volume: createIconMock('Volume'),
+  Volume1: createIconMock('Volume1'),
+  Volume2: createIconMock('Volume2'),
+  VolumeX: createIconMock('VolumeX'),
+  Wifi: createIconMock('Wifi'),
+  X: createIconMock('X'),
+  XCircle: createIconMock('XCircle'),
+  Zap: createIconMock('Zap'),
+  
+  // Default fallback for any missing icons
+  default: createIconMock('Default')
+};
+
+// Create a proxy to handle any missing icons dynamically
+export const LucideProxy = new Proxy(LucideIconMocks, {
+  get(target, prop) {
+    if (prop in target) {
+      return target[prop as keyof typeof target];
+    }
+    // Create a mock for any missing icon on the fly
+    console.log(`Creating mock for missing Lucide icon: ${String(prop)}`);
+    return createIconMock(String(prop));
+  }
+});

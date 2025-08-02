@@ -443,3 +443,48 @@ export const errorHandlers = {
     }),
   ],
 };
+
+// Enhanced auth response handlers
+export const authHandlers = [
+  http.post('/api/auth/login', () => {
+    return HttpResponse.json({
+      access_token: 'mock-access-token',
+      token_type: 'bearer',
+      expires_in: 3600,
+      user: {
+        id: 'user-123',
+        email: 'test@example.com',
+        name: 'Test User'
+      }
+    }, { status: 200 });
+  }),
+
+  http.post('/api/auth/register', () => {
+    return HttpResponse.json({
+      access_token: 'mock-access-token',
+      token_type: 'bearer',
+      expires_in: 3600,
+      user: {
+        id: 'user-456',
+        email: 'newuser@example.com',
+        name: 'New User'
+      }
+    }, { status: 201 });
+  }),
+
+  http.get('/api/auth/me', ({ request }) => {
+    const authHeader = request.headers.get('Authorization');
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return HttpResponse.json({ detail: 'No authentication token available' }, { status: 401 });
+    }
+    
+    return HttpResponse.json({
+      id: 'user-123',
+      email: 'test@example.com',
+      name: 'Test User'
+    }, { status: 200 });
+  }),
+];
+
+// Add auth handlers to main handlers array
+handlers.push(...authHandlers);

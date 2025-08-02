@@ -1,5 +1,4 @@
 import { fillAndSubmitLoginForm, fillAndSubmitRegisterForm, mockAuthService } from "../utils/form-test-helpers";
-import { fillAndSubmitLoginForm, fillAndSubmitRegisterForm, mockAuthService } from "../utils/form-test-helpers";
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -325,7 +324,7 @@ describe('Authentication Flow', () => {
       fireEvent.click(submitButton);
 
       await waitFor(() => {
-        expect(screen.getAllByText(/password is required/i))[0])[0]).toBeInTheDocument();
+        expect(screen.getByText(/password is required/i)).toBeInTheDocument();
       });
     });
 
@@ -351,7 +350,7 @@ describe('Authentication Flow', () => {
       fireEvent.click(submitButton);
 
       await waitFor(() => {
-        expect(screen.getAllByText(/password is required/i))[0])[0]).toBeInTheDocument();
+        expect(screen.getByText(/password is required/i)).toBeInTheDocument();
       });
     });
 
@@ -437,7 +436,7 @@ describe('Authentication Flow', () => {
         </TestWrapper>,
       );
 
-      expect(screen.getAllByText(/create account/i))[0])[0]).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: /create account/i })).toBeInTheDocument();
     });
   });
 
@@ -496,10 +495,6 @@ describe('Authentication Flow', () => {
     });
   });
 });
-
-// Test utilities for auth flow
-const getCreateAccountButton = () => screen.getByRole('button', { name: /create account/i });
-const getCreateAccountHeading = () => screen.getByRole('heading', { name: /create account/i });
 
 // Test utilities for auth flow
 const getCreateAccountButton = () => screen.getByRole('button', { name: /create account/i });

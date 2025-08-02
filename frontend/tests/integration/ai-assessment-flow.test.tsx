@@ -603,5 +603,3 @@ const mockAIService = {
   ]),
   isAvailable: vi.fn().mockReturnValue(true)
 };
-
-// Additional test utilities for AI mode already defined above

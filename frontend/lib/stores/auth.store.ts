@@ -77,7 +77,7 @@ export const useAuthStore = create<AuthState>()(
             body: JSON.stringify({ email, password }),
           });
 
-          if (!loginResponse.ok) {
+          if (!loginResponse || !loginResponse.ok) {
             const errorData = await loginResponse.json();
             throw new Error(errorData.detail || 'Login failed');
           }
@@ -129,7 +129,7 @@ export const useAuthStore = create<AuthState>()(
             body: JSON.stringify({ email, password, full_name: fullName }),
           });
 
-          if (!registerResponse.ok) {
+          if (!registerResponse || !registerResponse.ok) {
             const errorData = await registerResponse.json();
             throw new Error(errorData.detail || 'Registration failed');
           }

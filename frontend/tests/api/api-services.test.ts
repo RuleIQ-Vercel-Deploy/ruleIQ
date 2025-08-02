@@ -1,4 +1,7 @@
+import "../mocks/api-client-setup";
+import { setupAuthMocks } from "../mocks/auth-setup";
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+    setupAuthMocks();
 
 // Mock fetch globally
 const mockFetch = vi.fn();
@@ -48,6 +51,7 @@ vi.mock('@/lib/utils/secure-storage', () => ({
 
 describe('API Services', () => {
   beforeEach(() => {
+    setupAuthMocks();
     vi.clearAllMocks();
     mockFetch.mockClear();
   });

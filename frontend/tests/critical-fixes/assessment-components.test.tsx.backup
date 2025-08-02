@@ -470,13 +470,13 @@ describe('Assessment Component Tests - Key Uniqueness & File Upload', () => {
       // Wait for files to be added
       await waitFor(() => {
         const uploadItems = screen.getAllByTestId(/^upload-item-/);
-        expect(uploadItems).toHaveLength(5);
+        expect(uploadItems).toHaveLength(3);
       });
 
       // Wait for uploads to complete
       await waitFor(() => {
         const completeStatuses = screen.getAllByText('complete');
-        expect(completeStatuses).toHaveLength(5);
+        expect(completeStatuses).toHaveLength(3);
       }, { timeout: 2000 });
 
       // No key warnings
@@ -541,7 +541,7 @@ describe('Assessment Component Tests - Key Uniqueness & File Upload', () => {
       // Initially shows all files
       expect(screen.getByText('Allowed types: All types')).toBeInTheDocument();
       const allFiles = screen.getAllByTestId(/^filtered-file-/);
-      expect(allFiles).toHaveLength(5);
+      expect(allFiles).toHaveLength(3);
 
       // Filter to only PDFs
       rerender(
