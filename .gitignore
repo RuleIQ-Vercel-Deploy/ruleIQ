@@ -142,6 +142,7 @@ End of file
 
 
 # Environment files - Security Critical
+!.env.example
 .env
 .env.local
 .env.*.local
@@ -158,6 +159,7 @@ End of file
 .env.local.backup*
 .env.backup*
 # Environment files
+!.env.example
 .env
 .env.local
 .env.*.local
