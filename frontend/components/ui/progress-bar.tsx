@@ -7,11 +7,11 @@ interface ProgressBarProps {
 }
 
 const colorMap = {
-  success: '#28A745',
-  warning: '#FFC107',
-  error: '#DC3545',
-  info: '#17A2B8',
-  gold: '#FFD700',
+  success: '#10B981', // emerald-600
+  warning: '#F59E0B', // amber-600
+  error: '#EF4444', // red-600
+  info: '#319795', // teal-500
+  gold: '#F59E0B', // amber-600 (replacing gold with warning)
 };
 
 export function ProgressBar({

@@ -28,12 +28,12 @@ interface FrameworkBreakdownChartProps {
 }
 
 const COLORS = {
-  'ISO 27001': '#17255A',
-  GDPR: '#CB963E',
-  'Cyber Essentials': '#34FEF7',
-  'PCI DSS': '#28A745',
-  'SOC 2': '#DC3545',
-  HIPAA: '#6B7280',
+  'ISO 27001': '#2C7A7B', // teal-600 - primary
+  GDPR: '#319795', // teal-500 - secondary
+  'Cyber Essentials': '#4FD1C5', // teal-300 - bright accent
+  'PCI DSS': '#10B981', // emerald-600 - success
+  'SOC 2': '#F59E0B', // amber-600 - warning
+  HIPAA: '#6B7280', // neutral-500 - muted
 };
 
 export function FrameworkBreakdownChart({

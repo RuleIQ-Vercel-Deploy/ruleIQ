@@ -353,6 +353,9 @@ vi.mock('lucide-react', () => {
     MessageSquare: createMockIcon('message-square'),
     Lightbulb: createMockIcon('lightbulb'),
     BookOpen: createMockIcon('book-open'),
+    ThumbsUp: createMockIcon('thumbs-up'),
+    ThumbsDown: createMockIcon('thumbs-down'),
+    CalendarIcon: createMockIcon('calendar-icon'),
   };
 });
 

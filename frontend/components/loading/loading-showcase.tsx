@@ -99,27 +99,24 @@ export function LoadingShowcase() {
       {/* Page-Level Loading Indicator */}
       <Card className="ruleiq-card">
         <CardHeader>
-          <CardTitle style={{ color: '#F0EAD6' }}>Page-Level Loading Indicator</CardTitle>
-          <CardDescription style={{ color: '#6C757D' }}>
+          <CardTitle className="text-neutral-900">Page-Level Loading Indicator</CardTitle>
+          <CardDescription className="text-neutral-600">
             Displayed during initial page loads and navigation. This is handled by
             `app/loading.tsx`.
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div
-            className="flex flex-col items-center justify-center gap-4 rounded-lg p-8"
-            style={{ backgroundColor: '#002147' }}
-          >
+          <div className="flex flex-col items-center justify-center gap-4 rounded-lg bg-white p-8 shadow-sm border border-neutral-200">
             <div className="flex items-center space-x-2">
-              <span className="text-2xl font-bold" style={{ color: '#F0EAD6' }}>
+              <span className="text-2xl font-bold text-neutral-700">
                 rule
               </span>
-              <span className="text-2xl font-bold" style={{ color: '#FFD700' }}>
+              <span className="text-2xl font-bold text-teal-600">
                 IQ
               </span>
             </div>
-            <Loader2 className="h-6 w-6 animate-spin" style={{ color: '#F0EAD6' }} />
-            <p style={{ color: '#6C757D' }}>Simulating page load...</p>
+            <Loader2 className="h-6 w-6 animate-spin text-teal-600" />
+            <p className="text-neutral-600">Simulating page load...</p>
           </div>
         </CardContent>
       </Card>

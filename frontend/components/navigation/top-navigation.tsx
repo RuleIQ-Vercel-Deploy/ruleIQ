@@ -79,13 +79,7 @@ export function TopNavigation({ isDarkMode = false, onThemeToggle }: TopNavigati
 
   return (
     <TooltipProvider>
-      <header
-        className="supports-[backdrop-filter]:bg-oxford-blue/95 sticky top-0 z-50 w-full border-b backdrop-blur"
-        style={{
-          backgroundColor: '#161e3a',
-          borderBottomColor: 'rgba(233, 236, 239, 0.2)',
-        }}
-      >
+      <header className="sticky top-0 z-50 w-full border-b border-neutral-200 bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/95">
         <div className="flex h-16 items-center gap-4 px-4">
           {/* Logo Section */}
           <div className="flex min-w-fit items-center space-x-2">
@@ -174,13 +168,13 @@ export function TopNavigation({ isDarkMode = false, onThemeToggle }: TopNavigati
             <Tooltip>
               <TooltipTrigger asChild>
                 <div className="flex items-center space-x-2">
-                  <Sun className="h-4 w-4" style={{ color: isDarkMode ? '#6C757D' : '#FFD700' }} />
+                  <Sun className="h-4 w-4 text-neutral-500" />
                   <Switch
                     checked={isDarkMode}
                     onCheckedChange={handleThemeToggle}
-                    className="data-[state=checked]:bg-oxford-blue data-[state=unchecked]:bg-grey-300"
+                    className="data-[state=checked]:bg-teal-600 data-[state=unchecked]:bg-neutral-300"
                   />
-                  <Moon className="h-4 w-4" style={{ color: isDarkMode ? '#F0EAD6' : '#6C757D' }} />
+                  <Moon className="h-4 w-4 text-neutral-500" />
                 </div>
               </TooltipTrigger>
               <TooltipContent>
@@ -195,17 +189,10 @@ export function TopNavigation({ isDarkMode = false, onThemeToggle }: TopNavigati
               <Button
                 variant="ghost"
                 size="icon"
-                className="relative hover:bg-white/10"
-                style={{ color: '#F0EAD6' }}
+                className="relative text-neutral-600 hover:text-neutral-900 hover:bg-neutral-100"
               >
                 <Bell className="h-5 w-5" />
-                <Badge
-                  className="absolute -right-1 -top-1 flex h-5 w-5 animate-pulse items-center justify-center rounded-full p-0 text-xs"
-                  style={{
-                    backgroundColor: '#FF6F61',
-                    color: '#FFFFFF',
-                  }}
-                >
+                <Badge className="absolute -right-1 -top-1 flex h-5 w-5 animate-pulse items-center justify-center rounded-full bg-red-600 p-0 text-xs text-white">
                   5
                 </Badge>
                 <span className="sr-only">View alerts (5 new)</span>
@@ -213,11 +200,7 @@ export function TopNavigation({ isDarkMode = false, onThemeToggle }: TopNavigati
             </DropdownMenuTrigger>
             <DropdownMenuContent
               align="end"
-              className="w-96"
-              style={{
-                backgroundColor: '#F0EAD6',
-                borderColor: 'rgba(233, 236, 239, 0.2)',
-              }}
+              className="w-96 bg-white border-neutral-200"
             >
               <DropdownMenuLabel
                 className="flex items-center justify-between"
@@ -330,32 +313,22 @@ export function TopNavigation({ isDarkMode = false, onThemeToggle }: TopNavigati
             <DropdownMenuTrigger asChild>
               <Button
                 variant="ghost"
-                className="relative h-8 w-8 rounded-full hover:bg-white/10"
-                style={{
-                  backgroundColor: 'rgba(255, 215, 0, 0.2)',
-                }}
+                className="relative h-8 w-8 rounded-full bg-teal-50 hover:bg-teal-100"
               >
-                <User className="h-4 w-4" style={{ color: '#FFD700' }} />
+                <User className="h-4 w-4 text-teal-600" />
                 <span className="sr-only">Open user menu</span>
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent
-              className="w-64"
+              className="w-64 bg-white border-neutral-200"
               align="end"
               forceMount
-              style={{
-                backgroundColor: '#F0EAD6',
-                borderColor: 'rgba(233, 236, 239, 0.2)',
-              }}
             >
               <DropdownMenuLabel className="font-normal">
                 <div className="flex flex-col space-y-2">
                   <div className="flex items-center space-x-3">
-                    <div
-                      className="flex h-10 w-10 items-center justify-center rounded-full"
-                      style={{ backgroundColor: 'rgba(255, 215, 0, 0.2)' }}
-                    >
-                      <User className="h-5 w-5" style={{ color: '#FFD700' }} />
+                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-teal-100">
+                      <User className="h-5 w-5 text-teal-600" />
                     </div>
                     <div className="flex flex-col">
                       <p className="text-sm font-medium leading-none text-neutral-900">
