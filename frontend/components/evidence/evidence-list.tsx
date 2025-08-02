@@ -12,8 +12,18 @@ interface Evidence {
   status: 'pending' | 'approved' | 'rejected';
 }
 
-export function EvidenceList() {
-  const [evidence] = useState<Evidence[]>([
+interface EvidenceListProps {
+  evidence?: Evidence[];
+  onEvidenceClick?: (evidenceId: string) => void;
+  onStatusChange?: (evidenceId: string, status: string) => void;
+}
+
+export function EvidenceList({
+  evidence = [],
+  onEvidenceClick,
+  onStatusChange
+}: EvidenceListProps) {
+  const defaultEvidence: Evidence[] = [
     {
       id: '1',
       name: 'Privacy Policy.pdf',
@@ -28,7 +38,9 @@ export function EvidenceList() {
       uploadDate: '2024-01-14',
       status: 'pending'
     }
-  ]);
+  ];
+
+  const displayEvidence = evidence.length > 0 ? evidence : defaultEvidence;
 
   return (
     <Card>
@@ -37,8 +49,12 @@ export function EvidenceList() {
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
-          {evidence.map((item) => (
-            <div key={item.id} className="flex items-center justify-between p-3 border rounded">
+          {displayEvidence.map((item) => (
+            <div
+              key={item.id}
+              className="flex items-center justify-between p-3 border rounded"
+              role="listitem"
+            >
               <div>
                 <div className="font-medium">{item.name}</div>
                 <div className="text-sm text-gray-500">{item.uploadDate}</div>
@@ -51,7 +67,14 @@ export function EvidenceList() {
                 }`}>
                   {item.status}
                 </span>
-                <Button size="sm" variant="outline">View</Button>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => onEvidenceClick?.(item.id)}
+                  tabIndex={0}
+                >
+                  View
+                </Button>
               </div>
             </div>
           ))}

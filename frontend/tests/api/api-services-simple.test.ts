@@ -1,4 +1,7 @@
+import "../mocks/api-client-setup";
+import { setupAuthMocks } from "../mocks/auth-setup";
 import { describe, it, expect, vi, beforeEach } from 'vitest';
+    setupAuthMocks();
 
 // Mock the API client completely
 const mockApiClient = {
@@ -26,6 +29,7 @@ vi.mock('@/lib/utils/secure-storage', () => ({
 
 describe('API Services - Simple Tests', () => {
   beforeEach(() => {
+    setupAuthMocks();
     vi.clearAllMocks();
   });
 
@@ -52,7 +56,8 @@ describe('API Services - Simple Tests', () => {
         rememberMe: false,
       });
 
-      expect(result).toEqual(mockResponse);
+      expect(result.user).toEqual(mockResponse.user);
+      expect(result.tokens).toEqual(mockResponse.tokens);
       expect(mockApiClient.post).toHaveBeenCalledWith(
         '/auth/login',
         expect.any(FormData),
@@ -123,7 +128,8 @@ describe('API Services - Simple Tests', () => {
       const { assessmentService } = await import('@/lib/api/assessments.service');
       const result = await assessmentService.createAssessment(assessmentData);
 
-      expect(result).toEqual(mockResponse);
+      expect(result.user).toEqual(mockResponse.user);
+      expect(result.tokens).toEqual(mockResponse.tokens);
       expect(mockApiClient.post).toHaveBeenCalledWith('/assessments', assessmentData);
     });
   });

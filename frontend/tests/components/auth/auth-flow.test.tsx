@@ -350,7 +350,7 @@ describe('Authentication Flow', () => {
       fireEvent.click(submitButton);
 
       await waitFor(() => {
-        expect(screen.getAllByText(/password is required/i).toBeInTheDocument();
+        expect(screen.getByText(/password is required/i)).toBeInTheDocument();
       });
     });
 
@@ -436,7 +436,7 @@ describe('Authentication Flow', () => {
         </TestWrapper>,
       );
 
-      expect(screen.getAllByText(/create account/i).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: /create account/i })).toBeInTheDocument();
     });
   });
 

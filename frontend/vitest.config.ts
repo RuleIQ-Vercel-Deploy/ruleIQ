@@ -9,7 +9,7 @@ export default defineConfig({
   test: {
     globals: true,
     environment: 'jsdom',
-    setupFiles: ['./tests/setup.ts'],
+    setupFiles: ["./tests/setup.ts", "./tests/mocks/api-client-setup.ts"],
     css: true,
     testTimeout: 30000, // 30 seconds per test
     hookTimeout: 30000, // 30 seconds for hooks

@@ -156,57 +156,11 @@ beforeAll(() => {
     return originalDefineProperty.call(this, obj, prop, descriptor);
   };
 
-  // Mock File and FileReader
-  global.File = class MockFile {
-    constructor(
-      public bits: any[],
-      public name: string,
-      public options: any = {},
-    ) {
-      this.type = options.type || '';
-      this.size = bits.reduce((acc, bit) => acc + (bit.length || 0), 0);
-      this.lastModified = options.lastModified || Date.now();
-    }
-    type: string;
-    size: number;
-    lastModified: number;
-    stream = vi.fn();
-    text = vi.fn().mockResolvedValue('');
-    arrayBuffer = vi.fn().mockResolvedValue(new ArrayBuffer(0));
-    slice = vi.fn();
-  };
+  // Mock File and FileReader - commented out to avoid conflicts
 
-  global.FileReader = class MockFileReader {
-    result: string | ArrayBuffer | null = null;
-    error: any = null;
-    readyState: number = 0;
-    onload: ((event: any) => void) | null = null;
-    onerror: ((event: any) => void) | null = null;
-    onprogress: ((event: any) => void) | null = null;
-    onabort: ((event: any) => void) | null = null;
-    onloadstart: ((event: any) => void) | null = null;
-    onloadend: ((event: any) => void) | null = null;
+  // FileReader mock properties removed to fix syntax errors
 
-    readAsText = vi.fn().mockImplementation(() => {
-      this.readyState = 2;
-      this.result = 'mock file content';
-      if (this.onload) this.onload({ target: this });
-    });
-
-    readAsDataURL = vi.fn().mockImplementation(() => {
-      this.readyState = 2;
-      this.result = 'data:text/plain;base64,bW9jayBmaWxlIGNvbnRlbnQ=';
-      if (this.onload) this.onload({ target: this });
-    });
-
-    readAsArrayBuffer = vi.fn().mockImplementation(() => {
-      this.readyState = 2;
-      this.result = new ArrayBuffer(8);
-      if (this.onload) this.onload({ target: this });
-    });
-
-    abort = vi.fn();
-  };
+  // FileReader mock methods removed to fix syntax errors
 
   // Mock HTMLCanvasElement.getContext (for chart components)
   HTMLCanvasElement.prototype.getContext = vi.fn().mockReturnValue({
@@ -418,3 +372,220 @@ export const server = setupServer(...handlers)
 beforeAll(() => server.listen({ onUnhandledRequest: 'warn' }))
 afterEach(() => server.resetHandlers())
 afterAll(() => server.close())
+
+// Proper File and FileReader mocks
+Object.defineProperty(global, 'File', {
+  writable: true,
+  value: class MockFile {
+    constructor(bits, name, options = {}) {
+      this.bits = bits;
+      this.name = name;
+      this.type = options.type || '';
+      this.size = bits.reduce((acc, bit) => acc + (bit.length || 0), 0);
+    }
+  }
+});
+
+Object.defineProperty(global, 'FileReader', {
+  writable: true,
+  value: class MockFileReader {
+    constructor() {
+      this.readyState = 0;
+      this.result = null;
+      this.error = null;
+    }
+    
+    readAsDataURL(file) {
+      this.readyState = 2;
+      this.result = 'data:text/plain;base64,dGVzdA==';
+      if (this.onload) this.onload();
+    }
+    
+    readAsText(file) {
+      this.readyState = 2;
+      this.result = 'test content';
+      if (this.onload) this.onload();
+    }
+  }
+});
+
+// Import API client setup
+import './mocks/api-client-setup';
+
+// Mock Next.js router
+vi.mock('next/navigation', () => ({
+  useRouter: vi.fn(() => ({
+    push: vi.fn(),
+    replace: vi.fn(),
+    back: vi.fn(),
+    forward: vi.fn(),
+    refresh: vi.fn(),
+    prefetch: vi.fn()
+  })),
+  usePathname: vi.fn(() => '/'),
+  useSearchParams: vi.fn(() => new URLSearchParams())
+}));
+
+// Mock auth store with proper implementation
+vi.mock('@/lib/stores/auth.store', () => ({
+  useAuthStore: vi.fn(() => ({
+    user: {
+      id: 'user-123',
+      email: 'test@example.com',
+      name: 'Test User',
+      is_active: true
+    },
+    tokens: {
+      access_token: 'mock-access-token',
+      refresh_token: 'mock-refresh-token'
+    },
+    isAuthenticated: true,
+    isLoading: false,
+    error: null,
+    login: vi.fn().mockResolvedValue({
+      user: {
+        id: 'user-123',
+        email: 'test@example.com',
+        name: 'Test User',
+        is_active: true
+      },
+      tokens: {
+        access_token: 'mock-access-token',
+        refresh_token: 'mock-refresh-token'
+      }
+    }),
+    register: vi.fn().mockResolvedValue({
+      user: {
+        id: 'user-456',
+        email: 'newuser@example.com',
+        name: 'New User',
+        is_active: true
+      },
+      tokens: {
+        access_token: 'new-access-token',
+        refresh_token: 'new-refresh-token'
+      }
+    }),
+    logout: vi.fn().mockResolvedValue(undefined),
+    getCurrentUser: vi.fn().mockResolvedValue({
+      id: 'user-123',
+      email: 'test@example.com',
+      name: 'Test User',
+      is_active: true
+    }),
+    initialize: vi.fn().mockResolvedValue(undefined)
+  }))
+}));
+
+// Enhanced Lucide React mock with all required icons
+vi.mock('lucide-react', () => ({
+  // Common icons used in components
+  Shield: vi.fn(() => 'div'),
+  Filter: vi.fn(() => 'div'),
+  Check: vi.fn(() => 'div'),
+  X: vi.fn(() => 'div'),
+  Upload: vi.fn(() => 'div'),
+  Download: vi.fn(() => 'div'),
+  Eye: vi.fn(() => 'div'),
+  Edit: vi.fn(() => 'div'),
+  Trash: vi.fn(() => 'div'),
+  Plus: vi.fn(() => 'div'),
+  Minus: vi.fn(() => 'div'),
+  Search: vi.fn(() => 'div'),
+  Settings: vi.fn(() => 'div'),
+  User: vi.fn(() => 'div'),
+  Home: vi.fn(() => 'div'),
+  FileText: vi.fn(() => 'div'),
+  BarChart: vi.fn(() => 'div'),
+  PieChart: vi.fn(() => 'div'),
+  TrendingUp: vi.fn(() => 'div'),
+  TrendingDown: vi.fn(() => 'div'),
+  AlertTriangle: vi.fn(() => 'div'),
+  Info: vi.fn(() => 'div'),
+  CheckCircle: vi.fn(() => 'div'),
+  XCircle: vi.fn(() => 'div'),
+  Clock: vi.fn(() => 'div'),
+  Calendar: vi.fn(() => 'div'),
+  Mail: vi.fn(() => 'div'),
+  Phone: vi.fn(() => 'div'),
+  MapPin: vi.fn(() => 'div'),
+  Globe: vi.fn(() => 'div'),
+  Lock: vi.fn(() => 'div'),
+  Unlock: vi.fn(() => 'div'),
+  Key: vi.fn(() => 'div'),
+  Database: vi.fn(() => 'div'),
+  Server: vi.fn(() => 'div'),
+  Cloud: vi.fn(() => 'div'),
+  Wifi: vi.fn(() => 'div'),
+  Activity: vi.fn(() => 'div'),
+  Zap: vi.fn(() => 'div'),
+  Star: vi.fn(() => 'div'),
+  Heart: vi.fn(() => 'div'),
+  Bookmark: vi.fn(() => 'div'),
+  Flag: vi.fn(() => 'div'),
+  Tag: vi.fn(() => 'div'),
+  Folder: vi.fn(() => 'div'),
+  File: vi.fn(() => 'div'),
+  Image: vi.fn(() => 'div'),
+  Video: vi.fn(() => 'div'),
+  Music: vi.fn(() => 'div'),
+  Headphones: vi.fn(() => 'div'),
+  Camera: vi.fn(() => 'div'),
+  Printer: vi.fn(() => 'div'),
+  Monitor: vi.fn(() => 'div'),
+  Smartphone: vi.fn(() => 'div'),
+  Tablet: vi.fn(() => 'div'),
+  Laptop: vi.fn(() => 'div'),
+  HardDrive: vi.fn(() => 'div'),
+  Cpu: vi.fn(() => 'div'),
+  MemoryStick: vi.fn(() => 'div'),
+  Battery: vi.fn(() => 'div'),
+  Power: vi.fn(() => 'div'),
+  Plug: vi.fn(() => 'div'),
+  Bluetooth: vi.fn(() => 'div'),
+  Usb: vi.fn(() => 'div'),
+  // Add any other icons that might be used
+  ChevronDown: vi.fn(() => 'div'),
+  ChevronUp: vi.fn(() => 'div'),
+  ChevronLeft: vi.fn(() => 'div'),
+  ChevronRight: vi.fn(() => 'div'),
+  ArrowUp: vi.fn(() => 'div'),
+  ArrowDown: vi.fn(() => 'div'),
+  ArrowLeft: vi.fn(() => 'div'),
+  ArrowRight: vi.fn(() => 'div'),
+  MoreHorizontal: vi.fn(() => 'div'),
+  MoreVertical: vi.fn(() => 'div'),
+  Menu: vi.fn(() => 'div'),
+  Grid: vi.fn(() => 'div'),
+  List: vi.fn(() => 'div'),
+  Layout: vi.fn(() => 'div'),
+  Sidebar: vi.fn(() => 'div'),
+  Maximize: vi.fn(() => 'div'),
+  Minimize: vi.fn(() => 'div'),
+  Copy: vi.fn(() => 'div'),
+  Clipboard: vi.fn(() => 'div'),
+  Share: vi.fn(() => 'div'),
+  ExternalLink: vi.fn(() => 'div'),
+  Link: vi.fn(() => 'div'),
+  Unlink: vi.fn(() => 'div'),
+  Refresh: vi.fn(() => 'div'),
+  RotateCw: vi.fn(() => 'div'),
+  RotateCcw: vi.fn(() => 'div'),
+  Repeat: vi.fn(() => 'div'),
+  Shuffle: vi.fn(() => 'div'),
+  Play: vi.fn(() => 'div'),
+  Pause: vi.fn(() => 'div'),
+  Stop: vi.fn(() => 'div'),
+  SkipBack: vi.fn(() => 'div'),
+  SkipForward: vi.fn(() => 'div'),
+  FastForward: vi.fn(() => 'div'),
+  Rewind: vi.fn(() => 'div'),
+  Volume: vi.fn(() => 'div'),
+  Volume1: vi.fn(() => 'div'),
+  Volume2: vi.fn(() => 'div'),
+  VolumeX: vi.fn(() => 'div'),
+  Mic: vi.fn(() => 'div'),
+  MicOff: vi.fn(() => 'div'),
+  // Default export for any missing icons
+  default: vi.fn(() => 'div')
+}));
