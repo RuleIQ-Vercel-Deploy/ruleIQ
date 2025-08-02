@@ -1,4 +1,5 @@
 import { fillAndSubmitLoginForm, fillAndSubmitRegisterForm, mockAuthService } from "../utils/form-test-helpers";
+import { fillAndSubmitLoginForm, fillAndSubmitRegisterForm, mockAuthService } from "../utils/form-test-helpers";
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -296,10 +297,10 @@ describe('Authentication Flow', () => {
         </TestWrapper>,
       );
 
-      expect(screen.getByLabelText(/email/i))[0]).toBeInTheDocument();
-      expect(screen.getByLabelText(/^password/i))[0]).toBeInTheDocument();
-      expect(screen.getByLabelText(/confirm password/i))[0]).toBeInTheDocument();
-      expect(screen.getByRole('button', { name: /create account/i }))[0]).toBeInTheDocument();
+      expect(screen.getByLabelText(/email/i)).toBeInTheDocument();
+      expect(screen.getByLabelText(/^password/i)).toBeInTheDocument();
+      expect(screen.getByLabelText(/confirm password/i)).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: /create account/i })).toBeInTheDocument();
     });
 
     it('should validate password confirmation', async () => {
@@ -324,7 +325,7 @@ describe('Authentication Flow', () => {
       fireEvent.click(submitButton);
 
       await waitFor(() => {
-        expect(screen.getAllByText(/password is required/i))[0]).toBeInTheDocument();
+        expect(screen.getAllByText(/password is required/i))[0])[0]).toBeInTheDocument();
       });
     });
 
@@ -350,7 +351,7 @@ describe('Authentication Flow', () => {
       fireEvent.click(submitButton);
 
       await waitFor(() => {
-        expect(screen.getAllByText(/password is required/i))[0]).toBeInTheDocument();
+        expect(screen.getAllByText(/password is required/i))[0])[0]).toBeInTheDocument();
       });
     });
 
@@ -436,7 +437,7 @@ describe('Authentication Flow', () => {
         </TestWrapper>,
       );
 
-      expect(screen.getAllByText(/create account/i))[0]).toBeInTheDocument();
+      expect(screen.getAllByText(/create account/i))[0])[0]).toBeInTheDocument();
     });
   });
 
@@ -495,6 +496,10 @@ describe('Authentication Flow', () => {
     });
   });
 });
+
+// Test utilities for auth flow
+const getCreateAccountButton = () => screen.getByRole('button', { name: /create account/i });
+const getCreateAccountHeading = () => screen.getByRole('heading', { name: /create account/i });
 
 // Test utilities for auth flow
 const getCreateAccountButton = () => screen.getByRole('button', { name: /create account/i });
