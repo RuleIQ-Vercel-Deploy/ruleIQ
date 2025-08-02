@@ -140,3 +140,20 @@ End of file
 
 -----------------------------------------------------------------------------
 
+
+# Environment files - Security Critical
+.env
+.env.local
+.env.*.local
+.env.production
+.env.staging
+
+# Cache files with potential secrets
+.serena/cache/
+*/.serena/cache/
+**/.serena/cache/
+*.pkl
+
+# Backup environment files
+.env.local.backup*
+.env.backup*
