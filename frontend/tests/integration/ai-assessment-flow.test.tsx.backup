@@ -69,7 +69,7 @@ const mockFramework: AssessmentFramework = {
         },
         {
           id: 'q2',
-          text: 'What types of personal data do you process?',
+          text: 'Do you have a data protection policy?',
           type: 'radio',
           options: [
             { value: 'yes', label: 'Yes' },
@@ -232,7 +232,7 @@ function TestAssessmentWithAI({
     <AIErrorBoundary>
       <div data-testid="assessment-container">
         <div data-testid="question-text">{currentQuestion.text}</div>
-        <div data-testid="ai-mode-indicator">{isAIMode ? 'AI Mode' : 'AI Mode'}</div>
+        <div data-testid="ai-mode-indicator">{isAIMode ? 'AI Mode' : 'Framework Mode'}</div>
 
         {/* AI Help Tooltip */}
         <AIHelpTooltip
@@ -334,7 +334,7 @@ describe('AI Assessment Flow Integration', () => {
 
     // Start with first framework question
     expect(screen.getByTestId('question-text')).toHaveTextContent('Do you process personal data?');
-    expect(screen.getByTestId('ai-mode-indicator')).toHaveTextContent('AI Mode');
+    expect(screen.getByTestId('ai-mode-indicator')).toHaveTextContent('Framework Mode');
 
     // Answer 'yes' to trigger AI follow-up
     await user.click(screen.getByTestId('answer-yes'));
@@ -363,11 +363,11 @@ describe('AI Assessment Flow Integration', () => {
 
     // Should return to framework questions
     await waitFor(() => {
-      expect(screen.getByTestId('ai-mode-indicator')).toHaveTextContent('AI Mode');
+      expect(screen.getByTestId('ai-mode-indicator')).toHaveTextContent('Framework Mode');
     });
 
     expect(screen.getByTestId('question-text')).toHaveTextContent(
-      'What types of personal data do you process?',
+      'Do you have a data protection policy?',
     );
 
     // Complete assessment
@@ -506,12 +506,12 @@ describe('AI Assessment Flow Integration', () => {
 
     // Return to framework mode
     await waitFor(() => {
-      expect(screen.getByTestId('ai-mode-indicator')).toHaveTextContent('AI Mode');
+      expect(screen.getByTestId('ai-mode-indicator')).toHaveTextContent('Framework Mode');
     });
 
     // Should be on second framework question
     expect(screen.getByTestId('question-text')).toHaveTextContent(
-      'What types of personal data do you process?',
+      'Do you have a data protection policy?',
     );
 
     // Complete assessment
@@ -538,7 +538,7 @@ describe('AI Assessment Flow Integration', () => {
 
     await waitFor(() => {
       expect(screen.getByTestId('question-text')).toHaveTextContent(
-        'What types of personal data do you process?',
+        'Do you have a data protection policy?',
       );
     });
 
@@ -572,11 +572,11 @@ describe('AI Assessment Flow Integration', () => {
     // Should NOT enter AI mode
     await waitFor(() => {
       expect(screen.getByTestId('question-text')).toHaveTextContent(
-        'What types of personal data do you process?',
+        'Do you have a data protection policy?',
       );
     });
 
-    expect(screen.getByTestId('ai-mode-indicator')).toHaveTextContent('AI Mode');
+    expect(screen.getByTestId('ai-mode-indicator')).toHaveTextContent('Framework Mode');
 
     // Complete assessment
     await user.click(screen.getByTestId('answer-no'));
@@ -589,17 +589,3 @@ describe('AI Assessment Flow Integration', () => {
     expect(assessmentAIService.getFollowUpQuestions).not.toHaveBeenCalled();
   });
 });
-
-// Additional test utilities for AI mode
-const waitForAIMode = async () => {
-  await waitFor(() => {
-    expect(screen.getByTestId('ai-mode-indicator')).toHaveTextContent('AI Mode');
-  });
-};
-
-const mockAIService = {
-  generateFollowUpQuestions: vi.fn().mockResolvedValue([
-    'Can you provide more context about your data protection practices?'
-  ]),
-  isAvailable: vi.fn().mockReturnValue(true)
-};

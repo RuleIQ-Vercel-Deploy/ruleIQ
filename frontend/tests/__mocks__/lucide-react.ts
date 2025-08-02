@@ -1,15 +1,16 @@
-import React from 'react'
 import { vi } from 'vitest'
 
 // Create mock components for all lucide-react icons
 const createMockIcon = (name: string) => {
   const MockIcon = vi.fn(({ className, ...props }) => {
-    return React.createElement('svg', {
-      'data-testid': `${name.toLowerCase()}-icon`,
-      className,
-      ...props,
-      children: React.createElement('path', { d: 'M0 0h24v24H0z' })
-    })
+    return {
+      type: 'svg',
+      props: {
+        'data-testid': `${name.toLowerCase()}-icon`,
+        className,
+        ...props
+      }
+    }
   })
   MockIcon.displayName = name
   return MockIcon
@@ -50,7 +51,6 @@ export const Menu = createMockIcon('Menu')
 export const MoreHorizontal = createMockIcon('MoreHorizontal')
 export const MoreVertical = createMockIcon('MoreVertical')
 export const Calendar = createMockIcon('Calendar')
-export const CalendarIcon = createMockIcon('CalendarIcon')
 export const Clock = createMockIcon('Clock')
 export const Mail = createMockIcon('Mail')
 export const Phone = createMockIcon('Phone')
@@ -87,9 +87,6 @@ export const Minimize = createMockIcon('Minimize')
 export const RefreshCw = createMockIcon('RefreshCw')
 export const RotateCcw = createMockIcon('RotateCcw')
 export const RotateCw = createMockIcon('RotateCw')
-export const Bot = createMockIcon('Bot')
-export const Loader2 = createMockIcon('Loader2')
-export const Lightbulb = createMockIcon('Lightbulb')
 export const Zap = createMockIcon('Zap')
 export const Wifi = createMockIcon('Wifi')
 export const WifiOff = createMockIcon('WifiOff')
