@@ -1,8 +1,9 @@
 "use client"
 
-import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar } from "recharts"
+import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar } from "recharts"
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import type { UnknownRecord } from '@/types/common'
 
 interface FrameworkBreakdownChartProps {
   data: Array<{
@@ -37,7 +38,7 @@ export function FrameworkBreakdownChart({
     color: item.color || COLORS[item.framework as keyof typeof COLORS] || "#6B7280"
   }))
 
-  const CustomTooltip = ({ active, payload }: any) => {
+  const CustomTooltip = ({ active, payload }: UnknownRecord) => {
     if (active && payload && payload.length) {
       return (
         <div className="bg-white p-3 border border-gray-200 rounded-lg shadow-lg">

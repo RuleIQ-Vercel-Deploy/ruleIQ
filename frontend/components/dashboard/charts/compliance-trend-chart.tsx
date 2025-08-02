@@ -1,9 +1,10 @@
 "use client"
 
 import { format } from "date-fns"
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Area, AreaChart } from "recharts"
+import { Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Area, AreaChart } from "recharts"
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import type { UnknownRecord } from '@/types/common'
 
 interface ComplianceTrendChartProps {
   data: Array<{
@@ -28,7 +29,7 @@ export function ComplianceTrendChart({
     target: item.target || 90
   }))
 
-  const CustomTooltip = ({ active, payload, label }: any) => {
+  const CustomTooltip = ({ active, payload, label }: UnknownRecord) => {
     if (active && payload && payload.length) {
       return (
         <div className="bg-white p-3 border border-gray-200 rounded-lg shadow-lg">
