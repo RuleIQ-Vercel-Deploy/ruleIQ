@@ -257,7 +257,7 @@ function TestAssessmentWithAI({
               <button
                 key={index}
                 onClick={() => handleAnswer(option.value)}
-                data-testid={`answer-option-${index}`}
+                data-testid={`answer-${option.value}`}
               >
                 {option.label}
               </button>
@@ -349,7 +349,7 @@ describe('AI Assessment Flow Integration', () => {
     );
 
     // Answer first AI question
-    await user.click(screen.getByTestId('answer-option-0')); // Names
+    await user.click(screen.getByTestId('answer-Names')); // Names
 
     // Should move to second AI question
     await waitFor(() => {
@@ -359,7 +359,7 @@ describe('AI Assessment Flow Integration', () => {
     });
 
     // Answer second AI question
-    await user.click(screen.getByTestId('answer-option-0')); // Consent
+    await user.click(screen.getByTestId('answer-Consent')); // Consent
 
     // Should return to framework questions
     await waitFor(() => {
@@ -496,13 +496,13 @@ describe('AI Assessment Flow Integration', () => {
     });
 
     // Answer AI questions
-    await user.click(screen.getByTestId('answer-option-1')); // Email addresses
+    await user.click(screen.getByTestId('answer-Email addresses')); // Email addresses
 
     await waitFor(() => {
       expect(screen.getByTestId('question-text')).toHaveTextContent('What is the legal basis');
     });
 
-    await user.click(screen.getByTestId('answer-option-1')); // Contract
+    await user.click(screen.getByTestId('answer-Contract')); // Contract
 
     // Return to framework mode
     await waitFor(() => {
