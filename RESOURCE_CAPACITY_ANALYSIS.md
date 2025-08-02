@@ -168,19 +168,14 @@
 ## Resource Augmentation Plan
 
 ### Immediate Needs (Phase 1-2)
-1. **Conversational AI UX Consultant** - 4 weeks, $8,000/week
-2. **Senior Frontend Developer** - 8 weeks, $1,200/day
-3. **MLOps Specialist** - 2 weeks, $1,500/day
+1. **Conversational AI UX Consultant** - 4 weeks
+2. **Senior Frontend Developer** - 8 weeks
+3. **MLOps Specialist** - 2 weeks
 
 ### Medium-term Needs (Phase 3-4)
-1. **Regulatory Compliance Expert** - 6 months, $2,000/week
-2. **Senior AI/ML Engineer** - 6 months, $1,800/day
-3. **Security Consultant** - 4 weeks, $1,500/day
-
-### Total External Resource Cost
-- **Consultants**: $156,000
-- **Contractors**: $324,000
-- **Total**: $480,000 over 24 weeks
+1. **Regulatory Compliance Expert** - 6 months
+2. **Senior AI/ML Engineer** - 6 months
+3. **Security Consultant** - 4 weeks
 
 ---
 
@@ -216,7 +211,7 @@
 
 ### Resource Utilization Targets
 - **Team Utilization**: 75-85% (allowing for learning and innovation)
-- **External Consultant ROI**: 3x productivity improvement during engagement
+- **External Consultant Value**: 3x productivity improvement during engagement
 - **Skill Transfer Success**: 80% of consultant knowledge retained by team
 - **Cross-training Coverage**: 2+ team members competent in each critical area
 
