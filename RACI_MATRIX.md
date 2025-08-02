@@ -1,4 +1,4 @@
-# RuleIQ Agentic Transformation - RACI Matrix
+# RuleIQ Agentic Transformation - AI-Powered Solo Development RACI
 
 ## RACI Legend
 - **R** = Responsible (Does the work)
@@ -6,32 +6,30 @@
 - **C** = Consulted (Provides input/expertise)
 - **I** = Informed (Kept updated on progress)
 
-## Team Roles
+## Development Team Composition
 
-| Role | Primary Responsibilities | Key Skills |
-|------|-------------------------|------------|
-| **Product Manager** | Feature definition, user experience, business requirements | Product strategy, user research, stakeholder management |
-| **Engineering Manager** | Technical delivery, team coordination, resource allocation | Engineering leadership, project management, technical architecture |
-| **AI Team Lead** | AI model integration, agent development, performance optimization | Machine learning, LLMs, Python, AI frameworks |
-| **Backend Team Lead** | API development, database design, system integration | FastAPI, PostgreSQL, Redis, system architecture |
-| **Frontend Team Lead** | UI/UX implementation, conversational interface, user experience | React, Next.js, TypeScript, WebSocket, design systems |
-| **DevOps Engineer** | Infrastructure, deployment, monitoring, scalability | Docker, CI/CD, monitoring, cloud platforms |
-| **Security Lead** | Security architecture, compliance, risk assessment | Cybersecurity, compliance frameworks, threat modeling |
-| **QA Lead** | Testing strategy, quality assurance, performance testing | Test automation, performance testing, quality processes |
-| **Legal Counsel** | Compliance review, liability assessment, privacy requirements | Legal compliance, data privacy, professional liability |
-| **UX Designer** | User interface design, conversation flow design, usability | UI/UX design, conversation design, user research |
+| Role | Type | Primary Responsibilities | Key Capabilities |
+|------|------|-------------------------|------------------|
+| **Lead Developer** | Human | Architecture, strategy, validation, stakeholder communication | Full-stack expertise, AI orchestration, business logic |
+| **Primary AI Agent** | AI Assistant | Code coordination, integration, quality assurance | Multi-language coding, testing, documentation |
+| **Backend Sub-Agent** | AI Specialist | API development, database design, system integration | FastAPI, PostgreSQL, Redis, microservices |
+| **Frontend Sub-Agent** | AI Specialist | UI implementation, conversational interface, responsive design | React, Next.js, TypeScript, WebSocket |
+| **AI/ML Sub-Agent** | AI Specialist | Agent development, ML integration, AI orchestration | LLMs, PydanticAI, conversation logic |
+| **DevOps Sub-Agent** | AI Specialist | Infrastructure, deployment, monitoring, scaling | Docker, CI/CD, monitoring, cloud platforms |
+| **Testing Sub-Agent** | AI Specialist | Test generation, automation, quality assurance | Unit/integration/E2E testing, performance testing |
+| **Documentation Sub-Agent** | AI Specialist | Technical docs, API documentation, user guides | Technical writing, API docs, code documentation |
 
 ---
 
 ## Phase 1: Memory Foundation (Weeks 1-2)
 
-| Activity | Product Manager | Engineering Manager | AI Team Lead | Backend Team Lead | Frontend Team Lead | DevOps Engineer | Security Lead | QA Lead | Legal Counsel | UX Designer |
-|----------|----------------|-------------------|--------------|------------------|-------------------|----------------|---------------|---------|---------------|-------------|
-| **Context Storage Schema Design** | C | A | C | R | I | I | C | I | I | I |
-| **Session Continuity Implementation** | I | A | C | R | C | I | I | C | I | I |
-| **User Preference Learning System** | R | A | R | C | I | I | C | I | C | C |
-| **Trust Level 0 Agent Development** | C | A | R | C | I | I | I | C | I | I |
-| **Database Migration Planning** | I | C | I | R | I | A | C | I | I | I |
+| Activity | Lead Developer | Primary AI Agent | Backend Sub-Agent | Frontend Sub-Agent | AI/ML Sub-Agent | DevOps Sub-Agent | Testing Sub-Agent | Documentation Sub-Agent |
+|----------|----------------|------------------|-------------------|-------------------|-----------------|------------------|-------------------|------------------------|
+| **Context Storage Schema Design** | A/R | C | R | I | C | I | C | R |
+| **Session Continuity Implementation** | A | C | R | C | C | I | R | R |
+| **User Preference Learning System** | A/R | C | C | I | R | I | R | R |
+| **Trust Level 0 Agent Development** | A/R | C | C | I | R | I | R | R |
+| **Database Migration Planning** | A/R | C | R | I | C | C | C | R |
 
 ---
 
