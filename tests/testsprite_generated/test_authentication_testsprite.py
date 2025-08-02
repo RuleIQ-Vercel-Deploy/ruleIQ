@@ -1,13 +1,12 @@
 """
 TestSprite Generated Authentication Tests
-Generated on: 2025-08-01T14:51:14.266290
+Generated on: 2025-08-01T22:39:51.373546
 """
 
 import pytest
 import requests
 from fastapi.testclient import TestClient
 from main import app
-import uuid
 
 class TestAuthenticationFlow:
     """Authentication tests generated from TestSprite plans"""
@@ -18,10 +17,8 @@ class TestAuthenticationFlow:
     
     @pytest.fixture
     def test_user_data(self):
-        # Generate unique email for each test run to avoid conflicts
-        unique_id = str(uuid.uuid4())[:8]
         return {
-            "email": f"testsprite_{unique_id}@example.com",
+            "email": "testsprite@example.com",
             "password": "TestSprite123!",
             "full_name": "TestSprite User"
         }
