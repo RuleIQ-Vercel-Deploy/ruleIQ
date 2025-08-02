@@ -1,11 +1,13 @@
-# Ava Patel — Front-End QA Lead & Test-Automation Engineer
+# QA Automation System — Front-End Quality Assurance & Test Automation
 
 ## 🎯 Mission Statement
+
 Guarantee that ruleIQ's React/Next.js front-end ships bug-free, accessible, and performant, by designing, automating, and continuously running a complete suite of unit, integration, end-to-end, and visual-regression tests.
 
 ## 🔧 Current ruleIQ Testing Infrastructure
 
 ### Test Framework Stack
+
 - **Unit/Component Testing**: Vitest + React Testing Library (jsdom environment)
 - **Integration Testing**: Vitest + MSW (Mock Service Worker) for API mocking
 - **E2E Testing**: Playwright with multi-browser support (Chrome, Firefox, Safari, Mobile)
@@ -14,13 +16,15 @@ Guarantee that ruleIQ's React/Next.js front-end ships bug-free, accessible, and 
 - **Performance**: Lighthouse integration with Core Web Vitals monitoring
 
 ### Current Coverage Thresholds
+
 - **Statements**: 80%
-- **Branches**: 75% 
+- **Branches**: 75%
 - **Functions**: 80%
 - **Lines**: 80%
 - **Critical Components**: 90%+ required
 
 ### Test Organization (600+ tests)
+
 ```
 frontend/tests/
 ├── components/           # Unit tests for React components
@@ -38,13 +42,16 @@ frontend/tests/
 ## 🚀 Core Duties & Implementation
 
 ### 1. Test-Plan Design
+
 **Current Implementation:**
+
 - Comprehensive test matrix covering Desktop (Chrome/Firefox/Safari) + Mobile (iOS/Android)
 - Test configuration centralized in `frontend/tests/config/test-config.ts`
 - Environment-specific settings for CI/local development
 - Parallel test execution with 2 workers in CI, 1 locally
 
 **Ava's Enhancement:**
+
 ```typescript
 // Auto-generate test plans from user stories
 interface TestPlan {
@@ -58,19 +65,21 @@ interface TestPlan {
 const generateAutoTestPlan = (prNumber: number): TestPlan => {
   // Analyze PR changes and generate targeted test plan
   // Link to existing test matrix in test-config.ts
-}
+};
 ```
 
 ### 2. Automation Implementation
 
 **Current Setup:**
+
 - **Unit Tests**: `pnpm test` (Vitest + React Testing Library)
 - **E2E Tests**: `pnpm test:e2e` (Playwright with 30s timeout)
 - **Coverage**: `pnpm test:coverage` (80% threshold)
 - **Visual Tests**: Playwright snapshots with diff detection
 - **CI Integration**: GitHub Actions with quality gates
 
-**Ava's Quality Gates:**
+**QA System Quality Gates:**
+
 ```yaml
 # Enhanced CI pipeline checks
 quality_gates:
@@ -92,12 +101,14 @@ quality_gates:
 ### 3. Reporting & Analytics
 
 **Current Artifacts:**
+
 - Test results in `test-results/` directory
 - Coverage reports (XML, HTML, terminal)
 - Playwright traces and screenshots
 - JUnit XML for CI integration
 
 **Ava's Enhanced Reporting:**
+
 ```typescript
 interface QualityReport {
   timestamp: string;
@@ -114,10 +125,12 @@ interface QualityReport {
 ## 📋 Templates & Protocols
 
 ### Auto-Test Plan (PR Comment)
+
 ```markdown
 🧪 **Automated Test Plan - PR #{{pr_number}}**
 
 **Changed Files Analysis:**
+
 - Components: {{changed_components}}
 - Pages: {{changed_pages}}
 - Services: {{changed_services}}
@@ -131,6 +144,7 @@ interface QualityReport {
 • Performance Budget: ✅
 
 **Browser Matrix:**
+
 - Desktop: Chrome, Firefox, Safari
 - Mobile: iOS Safari, Android Chrome
 
@@ -138,6 +152,7 @@ interface QualityReport {
 🚩 **Merge Status**: Blocked until all checks pass
 
 **Quality Thresholds:**
+
 - Coverage: ≥80% (current: {{current_coverage}}%)
 - Performance: ≥90 (Lighthouse)
 - Accessibility: 0 violations
@@ -145,30 +160,36 @@ interface QualityReport {
 ```
 
 ### Bug Report Template
+
 ```markdown
 **🐛 Bug Report**
 
 **Environment:**
+
 - Commit: {{commit_sha}}
 - Browser: {{browser_name}} {{version}}
 - OS: {{os_version}}
 - Viewport: {{viewport_size}}
 
 **Test Failure:**
+
 - Test File: `{{test_file_path}}`
 - Test Name: `{{test_name}}`
 - Failure Type: {{failure_type}}
 
 **Steps to Reproduce:**
+
 1. {{step_1}}
 2. {{step_2}}
 3. {{step_3}}
 
 **Expected vs Actual:**
+
 - **Expected**: {{expected_behavior}}
 - **Actual**: {{actual_behavior}}
 
 **Artifacts:**
+
 - Screenshot: `{{screenshot_path}}`
 - Trace: `{{trace_path}}`
 - Console Logs: `{{console_logs}}`
@@ -178,11 +199,12 @@ interface QualityReport {
 ```
 
 ### Weekly Quality Radar
+
 ```markdown
 ## 📊 Quality Radar - Week of {{week_date}}
 
-| Component Area     | Coverage | Perf | A11y | Flaky | Risk |
-|-------------------|----------|------|------|-------|------|
+| Component Area    | Coverage | Perf | A11y | Flaky | Risk |
+| ----------------- | -------- | ---- | ---- | ----- | ---- |
 | Auth Flow         | 95%      | 94   | 100  | 0%    | 🟢   |
 | Dashboard Widgets | 88%      | 91   | 98   | 1%    | 🟢   |
 | Assessment Wizard | 82%      | 89   | 96   | 3%    | 🟠   |
@@ -190,14 +212,17 @@ interface QualityReport {
 | Reports Module    | 85%      | 92   | 97   | 2%    | 🟢   |
 
 **🔴 Critical Issues:**
+
 - {{critical_issue_1}}
 - {{critical_issue_2}}
 
 **🟠 Areas Needing Attention:**
+
 - {{attention_area_1}}
 - {{attention_area_2}}
 
 **✅ Improvements This Week:**
+
 - {{improvement_1}}
 - {{improvement_2}}
 ```
@@ -205,6 +230,7 @@ interface QualityReport {
 ## 🛠️ Implementation Commands
 
 ### Daily QA Operations
+
 ```bash
 # Morning health check
 pnpm test:health-check
@@ -223,6 +249,7 @@ pnpm test:a11y --wcag-level=AA
 ```
 
 ### CI/CD Integration
+
 ```bash
 # Pre-commit hooks (already configured)
 pnpm lint && pnpm typecheck && pnpm test:quick
@@ -237,6 +264,7 @@ pnpm test:release --full-suite --cross-browser
 ## 🎯 Success Metrics
 
 ### Quality Gates (Current Implementation)
+
 - ✅ **Coverage**: 80% minimum (configured in vitest.config.ts)
 - ✅ **Performance**: Lighthouse score ≥90
 - ✅ **Accessibility**: 0 WCAG violations
@@ -244,6 +272,7 @@ pnpm test:release --full-suite --cross-browser
 - ✅ **Test Stability**: <2% flaky test rate
 
 ### Enhanced Monitoring
+
 - **Test Execution Time**: <15 minutes full suite
 - **Parallel Efficiency**: 6 test groups running concurrently
 - **CI Success Rate**: >95%
@@ -252,6 +281,7 @@ pnpm test:release --full-suite --cross-browser
 ## 🔧 Integration Points
 
 ### Existing ruleIQ Infrastructure
+
 - **MSW Server**: API mocking for consistent test data
 - **Test Configuration**: Centralized in `tests/config/test-config.ts`
 - **GitHub Actions**: Quality gates in `.github/workflows/quality-gates.yml`
@@ -259,12 +289,14 @@ pnpm test:release --full-suite --cross-browser
 - **Coverage Reports**: Integrated with CI artifacts
 
 ### Required Inputs
+
 - Latest frontend source from `main` branch
 - User stories from GitHub issues/PRs
 - Performance budgets from `frontend/performance-budget.json`
 - Browser support matrix from `browserslist` config
 
 ### Output Channels
+
 - **GitHub PR Comments**: Auto-generated test plans and results
 - **Test Artifacts**: Screenshots, traces, coverage reports in `test-results/`
 - **Quality Dashboard**: Markdown reports in `docs/quality-reports/`
@@ -273,29 +305,33 @@ pnpm test:release --full-suite --cross-browser
 ## 🚨 Guardrails & Safety
 
 ### Data Protection
+
 - ✅ **Synthetic Test Data**: No production data in tests
 - ✅ **Environment Isolation**: Separate test database/Redis
 - ✅ **API Mocking**: MSW prevents external API calls during tests
 
 ### Code Quality
+
 - ✅ **Test Code Reviews**: All test changes require PR approval
 - ✅ **Version Control**: Tests tracked alongside source code
 - ✅ **Linting**: ESLint rules for test files
 - ✅ **Type Safety**: TypeScript for all test code
 
 ### Performance Optimization
+
 - ✅ **Parallel Execution**: 2 workers in CI, configurable locally
 - ✅ **Test Sharding**: Automatic splitting for large suites
 - ✅ **Smart Retries**: 2 retries in CI for flaky tests
 - ✅ **Artifact Cleanup**: Automatic cleanup of old test results
 
-## 🤖 Ava's Automation Scripts
+## 🤖 QA Automation Scripts
 
 ### PR Analysis & Test Plan Generation
+
 ```typescript
-// scripts/ava-pr-analyzer.ts
-import { Octokit } from '@octokit/rest';
-import { execSync } from 'child_process';
+// scripts/qa-pr-analyzer.ts
+import { Octokit } from "@octokit/rest";
+import { execSync } from "child_process";
 
 interface PRAnalysis {
   changedFiles: string[];
@@ -304,7 +340,7 @@ interface PRAnalysis {
   riskAssessment: RiskLevel;
 }
 
-class AvaQAAutomation {
+class QAAutomationSystem {
   async analyzePR(prNumber: number): Promise<PRAnalysis> {
     const changedFiles = this.getChangedFiles(prNumber);
     const affectedComponents = this.mapFilesToComponents(changedFiles);
@@ -314,24 +350,30 @@ class AvaQAAutomation {
     return { changedFiles, affectedComponents, testPlan, riskAssessment };
   }
 
-  async postTestPlanComment(prNumber: number, analysis: PRAnalysis): Promise<void> {
+  async postTestPlanComment(
+    prNumber: number,
+    analysis: PRAnalysis
+  ): Promise<void> {
     const comment = this.generateTestPlanComment(analysis);
     await this.github.issues.createComment({
       issue_number: prNumber,
-      body: comment
+      body: comment,
     });
   }
 
   async runAffectedTests(affectedComponents: string[]): Promise<TestResults> {
-    const testCommand = `pnpm test ${affectedComponents.map(c => `--testPathPattern=${c}`).join(' ')}`;
-    return execSync(testCommand, { encoding: 'utf8' });
+    const testCommand = `pnpm test ${affectedComponents
+      .map((c) => `--testPathPattern=${c}`)
+      .join(" ")}`;
+    return execSync(testCommand, { encoding: "utf8" });
   }
 }
 ```
 
 ### Quality Dashboard Generator
+
 ```typescript
-// scripts/ava-quality-dashboard.ts
+// scripts/qa-quality-dashboard.ts
 interface QualityMetrics {
   coverage: CoverageReport;
   performance: LighthouseReport;
@@ -353,12 +395,12 @@ class QualityDashboard {
     const currentMetrics = await this.collectMetrics();
 
     // Auto-adjust thresholds based on trend analysis
-    if (currentMetrics.coverage.trend === 'improving') {
+    if (currentMetrics.coverage.trend === "improving") {
       this.suggestCoverageIncrease();
     }
 
     // Flag degrading areas
-    if (currentMetrics.performance.trend === 'degrading') {
+    if (currentMetrics.performance.trend === "degrading") {
       await this.createPerformanceAlert();
     }
   }
@@ -366,6 +408,7 @@ class QualityDashboard {
 ```
 
 ### Flaky Test Detection & Management
+
 ```typescript
 // scripts/ava-flaky-detector.ts
 interface FlakyTestData {
@@ -379,13 +422,13 @@ interface FlakyTestData {
 class FlakyTestManager {
   async detectFlakyTests(): Promise<FlakyTestData[]> {
     const testHistory = await this.getTestHistory(30); // Last 30 days
-    const flakyTests = testHistory.filter(test =>
-      test.failureRate > 0.02 && test.failureRate < 0.98
+    const flakyTests = testHistory.filter(
+      (test) => test.failureRate > 0.02 && test.failureRate < 0.98
     );
 
-    return flakyTests.map(test => ({
+    return flakyTests.map((test) => ({
       ...test,
-      suggestedFix: this.analyzeFlakyPattern(test)
+      suggestedFix: this.analyzeFlakyPattern(test),
     }));
   }
 
@@ -401,11 +444,12 @@ class FlakyTestManager {
 ## 🔄 Daily Automation Workflows
 
 ### Morning Health Check
+
 ```bash
 #!/bin/bash
-# scripts/ava-morning-check.sh
+# scripts/qa-morning-check.sh
 
-echo "🌅 Ava's Morning QA Health Check"
+echo "🌅 QA System Morning Health Check"
 
 # 1. Check test infrastructure
 echo "Checking test infrastructure..."
@@ -413,35 +457,36 @@ pnpm test:health-check
 
 # 2. Analyze overnight CI failures
 echo "Analyzing CI failures..."
-node scripts/ava-ci-analyzer.js
+node scripts/qa-ci-analyzer.js
 
 # 3. Update quality metrics
 echo "Updating quality dashboard..."
-node scripts/ava-quality-dashboard.js
+node scripts/qa-quality-dashboard.js
 
 # 4. Check for new flaky tests
 echo "Scanning for flaky tests..."
-node scripts/ava-flaky-detector.js
+node scripts/qa-flaky-detector.js
 
 # 5. Generate daily standup report
 echo "Generating standup report..."
-node scripts/ava-standup-generator.js
+node scripts/qa-standup-generator.js
 
 echo "✅ Morning health check complete!"
 ```
 
 ### PR Automation Hook
+
 ```bash
 #!/bin/bash
-# .github/workflows/ava-pr-automation.yml
+# .github/workflows/qa-automation.yml
 
-name: Ava QA Automation
+name: QA Automation System
 on:
   pull_request:
     types: [opened, synchronize]
 
 jobs:
-  ava-analysis:
+  qa-analysis:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -454,19 +499,19 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
-      - name: Run Ava PR Analysis
+      - name: Run QA PR Analysis
         run: |
-          node scripts/ava-pr-analyzer.js ${{ github.event.number }}
+          node scripts/qa-pr-analyzer.js ${{ github.event.number }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Run Affected Tests
         run: |
-          node scripts/ava-affected-tests.js ${{ github.event.number }}
+          node scripts/qa-affected-tests.js ${{ github.event.number }}
 
       - name: Post Test Plan Comment
         run: |
-          node scripts/ava-comment-generator.js ${{ github.event.number }}
+          node scripts/qa-comment-generator.js ${{ github.event.number }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 ```
@@ -474,12 +519,18 @@ jobs:
 ## 📊 Enhanced Monitoring & Alerts
 
 ### Performance Budget Monitoring
+
 ```typescript
 // scripts/ava-performance-monitor.ts
 interface PerformanceBudget {
-  lighthouse: { performance: 90, accessibility: 100, bestPractices: 90, seo: 90 };
-  coreWebVitals: { cls: 0.1, fid: 100, lcp: 2500 };
-  bundleSize: { maxSize: '500kb', maxChunks: 10 };
+  lighthouse: {
+    performance: 90;
+    accessibility: 100;
+    bestPractices: 90;
+    seo: 90;
+  };
+  coreWebVitals: { cls: 0.1; fid: 100; lcp: 2500 };
+  bundleSize: { maxSize: "500kb"; maxChunks: 10 };
 }
 
 class PerformanceMonitor {
@@ -497,6 +548,7 @@ class PerformanceMonitor {
 ```
 
 ### Accessibility Compliance Tracker
+
 ```typescript
 // scripts/ava-a11y-tracker.ts
 class AccessibilityTracker {
@@ -508,7 +560,7 @@ class AccessibilityTracker {
       violations: axeResults.violations,
       score: lighthouseA11y.score,
       wcagLevel: this.determineWCAGCompliance(axeResults),
-      recommendations: this.generateRecommendations(axeResults)
+      recommendations: this.generateRecommendations(axeResults),
     };
   }
 
@@ -525,22 +577,24 @@ class AccessibilityTracker {
 ## 🎯 Integration with Existing ruleIQ Infrastructure
 
 ### Enhanced package.json Scripts
+
 ```json
 {
   "scripts": {
-    "ava:health-check": "node scripts/ava-morning-check.js",
-    "ava:pr-analysis": "node scripts/ava-pr-analyzer.js",
-    "ava:quality-report": "node scripts/ava-quality-dashboard.js",
-    "ava:flaky-scan": "node scripts/ava-flaky-detector.js",
-    "test:affected": "node scripts/ava-affected-tests.js",
-    "test:quality-gates": "node scripts/ava-quality-gates.js",
-    "test:performance-budget": "node scripts/ava-performance-monitor.js",
-    "test:a11y-audit": "node scripts/ava-a11y-tracker.js"
+    "qa:health-check": "node scripts/qa-morning-check.js",
+    "qa:pr-analysis": "node scripts/qa-pr-analyzer.js",
+    "qa:quality-report": "node scripts/qa-quality-dashboard.js",
+    "qa:flaky-scan": "node scripts/qa-flaky-detector.js",
+    "test:affected": "node scripts/qa-affected-tests.js",
+    "test:quality-gates": "node scripts/qa-quality-gates.js",
+    "test:performance-budget": "node scripts/qa-performance-monitor.js",
+    "test:a11y-audit": "node scripts/qa-a11y-tracker.js"
   }
 }
 ```
 
 ### GitHub Actions Integration
+
 ```yaml
 # .github/workflows/ava-quality-gates.yml
 name: Ava Quality Gates

@@ -1,8 +1,8 @@
-# 🤖 Ava Patel - QA Automation System
+# 🤖 QA Automation System
 
 ## Overview
 
-Ava Patel is ruleIQ's automated QA Lead & Test-Automation Engineer, designed to guarantee bug-free, accessible, and performant front-end releases through comprehensive automated testing and quality monitoring.
+The QA Automation System is ruleIQ's automated quality assurance and test automation solution, designed to guarantee bug-free, accessible, and performant front-end releases through comprehensive automated testing and quality monitoring.
 
 ## 🎯 Mission Statement
 
@@ -11,44 +11,47 @@ Guarantee that ruleIQ's React/Next.js front-end ships bug-free, accessible, and 
 ## 🚀 Quick Start
 
 ### Daily Operations
+
 ```bash
 # Morning health check (recommended daily)
-pnpm ava:morning-check
+pnpm qa:morning-check
 
 # PR workflow (automatic via GitHub Actions)
-pnpm ava:pr-workflow
+pnpm qa:pr-workflow
 
 # Quality gates enforcement
-pnpm ava:quality-gates
+pnpm qa:quality-gates
 ```
 
 ### Individual Tools
+
 ```bash
 # Health check
-pnpm ava:health-check
+pnpm qa:health-check
 
 # PR analysis
-pnpm ava:pr-analysis <PR_NUMBER>
+pnpm qa:pr-analysis <PR_NUMBER>
 
 # Run affected tests
-pnpm ava:affected-tests <PR_NUMBER>
+pnpm qa:affected-tests <PR_NUMBER>
 
 # Detect flaky tests
-pnpm ava:flaky-detector [iterations]
+pnpm qa:flaky-detector [iterations]
 
 # Generate quality dashboard
-pnpm ava:quality-dashboard
+pnpm qa:quality-dashboard
 
 # Monitor performance
-pnpm ava:performance-monitor [url]
+pnpm qa:performance-monitor [url]
 
 # Track accessibility
-pnpm ava:a11y-tracker [audit|progress]
+pnpm qa:a11y-tracker [audit|progress]
 ```
 
 ## 🛠️ Core Components
 
 ### 1. PR Analysis & Test Plan Generation (`ava-pr-analyzer.ts`)
+
 - **Purpose**: Automatically analyzes PR changes and generates targeted test plans
 - **Features**:
   - Identifies affected components and their risk levels
@@ -59,6 +62,7 @@ pnpm ava:a11y-tracker [audit|progress]
 - **Output**: JSON analysis reports and GitHub PR comments
 
 ### 2. Affected Tests Runner (`ava-affected-tests.ts`)
+
 - **Purpose**: Intelligently runs only tests affected by code changes
 - **Features**:
   - Fast feedback by running targeted test suites
@@ -69,6 +73,7 @@ pnpm ava:a11y-tracker [audit|progress]
 - **Output**: Test execution results and coverage reports
 
 ### 3. Flaky Test Detection (`ava-flaky-detector.ts`)
+
 - **Purpose**: Identifies and manages flaky tests to maintain CI/CD reliability
 - **Features**:
   - Runs multiple test iterations to detect inconsistent behavior
@@ -79,6 +84,7 @@ pnpm ava:a11y-tracker [audit|progress]
 - **Output**: Flaky test database and detailed analysis reports
 
 ### 4. Quality Dashboard Generator (`ava-quality-dashboard.ts`)
+
 - **Purpose**: Provides comprehensive quality metrics and trend analysis
 - **Features**:
   - Collects metrics from coverage, performance, accessibility, and test stability
@@ -89,6 +95,7 @@ pnpm ava:a11y-tracker [audit|progress]
 - **Output**: Interactive HTML dashboards and JSON reports
 
 ### 5. Performance Budget Monitor (`ava-performance-monitor.ts`)
+
 - **Purpose**: Ensures optimal performance through budget enforcement
 - **Features**:
   - Lighthouse audits with configurable thresholds
@@ -99,6 +106,7 @@ pnpm ava:a11y-tracker [audit|progress]
 - **Output**: Performance reports and budget violation alerts
 
 ### 6. Accessibility Compliance Tracker (`ava-a11y-tracker.ts`)
+
 - **Purpose**: Ensures WCAG 2.2 AA compliance across the application
 - **Features**:
   - Comprehensive accessibility audits using axe-core
@@ -109,6 +117,7 @@ pnpm ava:a11y-tracker [audit|progress]
 - **Output**: Accessibility reports and compliance dashboards
 
 ### 7. Daily Health Check System (`ava-health-check.ts`)
+
 - **Purpose**: Comprehensive daily QA health monitoring
 - **Features**:
   - Tests all QA infrastructure components
@@ -121,6 +130,7 @@ pnpm ava:a11y-tracker [audit|progress]
 ## 📊 Quality Metrics & Thresholds
 
 ### Coverage Requirements
+
 - **Statements**: ≥80%
 - **Branches**: ≥75%
 - **Functions**: ≥80%
@@ -128,6 +138,7 @@ pnpm ava:a11y-tracker [audit|progress]
 - **Critical Components**: ≥90%
 
 ### Performance Budgets
+
 - **Lighthouse Performance**: ≥90
 - **Lighthouse Accessibility**: 100
 - **Core Web Vitals**:
@@ -137,12 +148,14 @@ pnpm ava:a11y-tracker [audit|progress]
 - **Bundle Size**: ≤500KB total
 
 ### Accessibility Standards
+
 - **WCAG Level**: AA compliance
 - **Critical Violations**: 0
 - **Serious Violations**: ≤1
 - **Overall Score**: ≥90
 
 ### Test Stability
+
 - **Flaky Test Rate**: ≤2%
 - **Test Success Rate**: ≥95%
 - **Average Test Duration**: Monitored for optimization
@@ -150,12 +163,14 @@ pnpm ava:a11y-tracker [audit|progress]
 ## 🔄 Automation Workflows
 
 ### GitHub Actions Integration
+
 - **PR Analysis**: Automatic test plan generation and affected test execution
 - **Quality Gates**: Performance and accessibility checks on main/develop pushes
 - **Daily Health Check**: Scheduled comprehensive system health monitoring
 - **Full QA Suite**: Manual trigger for complete quality assessment
 
 ### CI/CD Pipeline Integration
+
 ```yaml
 # Automatic PR workflow
 on: pull_request
@@ -182,6 +197,7 @@ on: schedule (daily at 6 AM UTC)
 ## 📈 Reporting & Analytics
 
 ### Dashboard Features
+
 - **Real-time Quality Score**: Overall system health (0-100)
 - **Trend Analysis**: Coverage, performance, and stability trends
 - **Risk Assessment**: Heat map of high-risk areas
@@ -189,6 +205,7 @@ on: schedule (daily at 6 AM UTC)
 - **Recommendation Engine**: Specific actions to improve quality
 
 ### Report Types
+
 - **PR Analysis Reports**: Component risk assessment and test plans
 - **Quality Dashboards**: Comprehensive metrics and trends
 - **Performance Reports**: Lighthouse scores and Core Web Vitals
@@ -199,12 +216,14 @@ on: schedule (daily at 6 AM UTC)
 ## 🚨 Alert System
 
 ### Alert Levels
+
 - **INFO**: General information and improvements
 - **WARNING**: Issues that should be addressed soon
 - **CRITICAL**: Issues that need immediate attention
 - **FAILING**: System failures that block operations
 
 ### Alert Triggers
+
 - Critical performance budget violations
 - Accessibility compliance failures
 - High flaky test rates (>5%)
@@ -214,6 +233,7 @@ on: schedule (daily at 6 AM UTC)
 ## 🔧 Configuration
 
 ### Performance Budget (`performance-budget.json`)
+
 ```json
 {
   "lighthouse": {
@@ -239,6 +259,7 @@ on: schedule (daily at 6 AM UTC)
 ```
 
 ### Test Configuration (`tests/config/test-config.ts`)
+
 - Environment settings and URLs
 - Test timeouts and retry policies
 - Coverage thresholds
@@ -247,6 +268,7 @@ on: schedule (daily at 6 AM UTC)
 ## 📋 Best Practices
 
 ### For Developers
+
 1. **Run affected tests** before pushing: `pnpm ava:affected-tests`
 2. **Check health status** regularly: `pnpm ava:health-check`
 3. **Address flaky tests** immediately when detected
@@ -254,6 +276,7 @@ on: schedule (daily at 6 AM UTC)
 5. **Follow accessibility guidelines** to prevent violations
 
 ### For QA Team
+
 1. **Review PR analysis** comments for comprehensive test coverage
 2. **Monitor quality dashboard** for trends and risk areas
 3. **Investigate flaky tests** and implement fixes promptly
@@ -261,6 +284,7 @@ on: schedule (daily at 6 AM UTC)
 5. **Ensure accessibility compliance** across all user journeys
 
 ### For DevOps
+
 1. **Monitor CI/CD pipeline** health through daily checks
 2. **Configure alert thresholds** based on project requirements
 3. **Archive quality reports** for compliance and auditing
@@ -270,6 +294,7 @@ on: schedule (daily at 6 AM UTC)
 ## 🎯 Success Metrics
 
 ### Quality Gates
+
 - ✅ **Zero critical accessibility violations**
 - ✅ **Performance scores ≥90**
 - ✅ **Test coverage ≥80%**
@@ -277,6 +302,7 @@ on: schedule (daily at 6 AM UTC)
 - ✅ **Build success rate ≥95%**
 
 ### Operational Metrics
+
 - **Test Execution Time**: <15 minutes for full suite
 - **PR Feedback Time**: <5 minutes for affected tests
 - **Issue Detection Time**: <24 hours via daily health checks
@@ -288,7 +314,7 @@ on: schedule (daily at 6 AM UTC)
 
 **Ava Patel** is your dedicated QA automation engineer, working 24/7 to ensure ruleIQ delivers exceptional quality. She never sleeps, never misses a test, and always has your back when it comes to shipping bug-free, accessible, and performant software.
 
-*"Quality is not an act, it is a habit."* - Ava's motto
+_"Quality is not an act, it is a habit."_ - Ava's motto
 
 ---
 

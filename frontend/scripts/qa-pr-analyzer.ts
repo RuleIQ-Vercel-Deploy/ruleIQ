@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * Ava's PR Analysis & Test Plan Generation System
- * 
+ *
  * Automatically analyzes PR changes and generates comprehensive test plans
  * Posts test plan comments on GitHub PRs with affected components and risk assessment
  */
@@ -46,17 +46,17 @@ interface TestGroup {
 
 type RiskLevel = 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
 
-class AvaQAAutomation {
+class QAAutomationSystem {
   private readonly frontendPath = process.cwd();
   private readonly testsPath = join(this.frontendPath, 'tests');
 
   constructor() {
-    console.log('🤖 Ava PR Analyzer initializing...');
+    console.log('🤖 QA PR Analyzer initializing...');
   }
 
   async analyzePR(prNumber: number): Promise<PRAnalysis> {
     console.log(`📊 Analyzing PR #${prNumber}...`);
-    
+
     const changedFiles = this.getChangedFiles();
     const affectedComponents = this.analyzeComponents(changedFiles);
     const testPlan = this.generateTestPlan(affectedComponents);
@@ -69,17 +69,21 @@ class AvaQAAutomation {
       affectedComponents,
       testPlan,
       riskAssessment,
-      estimatedRuntime
+      estimatedRuntime,
     };
   }
 
   private getChangedFiles(): string[] {
     try {
       const gitDiff = execSync('git diff --name-only HEAD~1', { encoding: 'utf8' });
-      return gitDiff.trim().split('\n').filter(file => 
-        file.startsWith('frontend/') && 
-        (file.endsWith('.tsx') || file.endsWith('.ts') || file.endsWith('.js'))
-      );
+      return gitDiff
+        .trim()
+        .split('\n')
+        .filter(
+          (file) =>
+            file.startsWith('frontend/') &&
+            (file.endsWith('.tsx') || file.endsWith('.ts') || file.endsWith('.js')),
+        );
     } catch (error) {
       console.warn('⚠️ Could not get git diff, using fallback method');
       return [];
@@ -87,7 +91,7 @@ class AvaQAAutomation {
   }
 
   private analyzeComponents(changedFiles: string[]): ComponentAnalysis[] {
-    return changedFiles.map(filePath => {
+    return changedFiles.map((filePath) => {
       const componentName = this.extractComponentName(filePath);
       const testFiles = this.findTestFiles(componentName, filePath);
       const hasTests = testFiles.length > 0;
@@ -100,7 +104,7 @@ class AvaQAAutomation {
         testFiles,
         hasTests,
         riskLevel,
-        dependencies
+        dependencies,
       };
     });
   }
@@ -117,10 +121,10 @@ class AvaQAAutomation {
       `tests/components/${componentName}.test.ts`,
       `tests/integration/${componentName}.test.tsx`,
       `tests/e2e/${componentName}.test.ts`,
-      `__tests__/${componentName}.test.tsx`
+      `__tests__/${componentName}.test.tsx`,
     ];
 
-    possibleTestPaths.forEach(testPath => {
+    possibleTestPaths.forEach((testPath) => {
       if (existsSync(join(this.frontendPath, testPath))) {
         testFiles.push(testPath);
       }
@@ -131,27 +135,21 @@ class AvaQAAutomation {
 
   private assessComponentRisk(filePath: string, hasTests: boolean): RiskLevel {
     // Critical paths that require high attention
-    const criticalPaths = [
-      'auth/', 'payment/', 'security/', 'api/'
-    ];
-    
-    const highRiskPaths = [
-      'dashboard/', 'assessments/', 'policies/'
-    ];
+    const criticalPaths = ['auth/', 'payment/', 'security/', 'api/'];
 
-    const mediumRiskPaths = [
-      'components/ui/', 'forms/', 'navigation/'
-    ];
+    const highRiskPaths = ['dashboard/', 'assessments/', 'policies/'];
 
-    if (criticalPaths.some(path => filePath.includes(path))) {
+    const mediumRiskPaths = ['components/ui/', 'forms/', 'navigation/'];
+
+    if (criticalPaths.some((path) => filePath.includes(path))) {
       return 'CRITICAL';
     }
-    
-    if (highRiskPaths.some(path => filePath.includes(path))) {
+
+    if (highRiskPaths.some((path) => filePath.includes(path))) {
       return hasTests ? 'HIGH' : 'CRITICAL';
     }
-    
-    if (mediumRiskPaths.some(path => filePath.includes(path))) {
+
+    if (mediumRiskPaths.some((path) => filePath.includes(path))) {
       return hasTests ? 'MEDIUM' : 'HIGH';
     }
 
@@ -183,14 +181,14 @@ class AvaQAAutomation {
     const visualTests: TestGroup[] = [];
     const performanceTests: TestGroup[] = [];
 
-    components.forEach(component => {
+    components.forEach((component) => {
       // Unit tests for all components
       if (component.hasTests) {
         unitTests.push({
           category: 'Component Tests',
-          tests: component.testFiles.filter(f => f.includes('components/')),
+          tests: component.testFiles.filter((f) => f.includes('components/')),
           estimatedTime: 2,
-          required: true
+          required: true,
         });
       }
 
@@ -200,7 +198,7 @@ class AvaQAAutomation {
           category: 'Integration Tests',
           tests: [`integration/${component.componentName}.test.tsx`],
           estimatedTime: 5,
-          required: true
+          required: true,
         });
       }
 
@@ -210,7 +208,7 @@ class AvaQAAutomation {
           category: 'E2E Tests',
           tests: [`e2e/${component.componentName}.test.ts`],
           estimatedTime: 10,
-          required: true
+          required: true,
         });
       }
 
@@ -220,7 +218,7 @@ class AvaQAAutomation {
           category: 'Accessibility Tests',
           tests: [`accessibility/${component.componentName}.test.tsx`],
           estimatedTime: 3,
-          required: true
+          required: true,
         });
       }
 
@@ -230,17 +228,20 @@ class AvaQAAutomation {
           category: 'Visual Regression',
           tests: [`visual/${component.componentName}.test.ts`],
           estimatedTime: 4,
-          required: false
+          required: false,
         });
       }
 
       // Performance tests for dashboard and heavy components
-      if (component.filePath.includes('dashboard/') || component.filePath.includes('assessments/')) {
+      if (
+        component.filePath.includes('dashboard/') ||
+        component.filePath.includes('assessments/')
+      ) {
         performanceTests.push({
           category: 'Performance Tests',
           tests: [`performance/${component.componentName}.test.ts`],
           estimatedTime: 8,
-          required: false
+          required: false,
         });
       }
     });
@@ -251,15 +252,18 @@ class AvaQAAutomation {
       e2eTests,
       accessibilityTests,
       visualTests,
-      performanceTests
+      performanceTests,
     };
   }
 
   private assessOverallRisk(components: ComponentAnalysis[]): RiskLevel {
-    const riskCounts = components.reduce((acc, comp) => {
-      acc[comp.riskLevel] = (acc[comp.riskLevel] || 0) + 1;
-      return acc;
-    }, {} as Record<RiskLevel, number>);
+    const riskCounts = components.reduce(
+      (acc, comp) => {
+        acc[comp.riskLevel] = (acc[comp.riskLevel] || 0) + 1;
+        return acc;
+      },
+      {} as Record<RiskLevel, number>,
+    );
 
     if (riskCounts.CRITICAL > 0) return 'CRITICAL';
     if (riskCounts.HIGH > 2) return 'HIGH';
@@ -274,7 +278,7 @@ class AvaQAAutomation {
       ...testPlan.e2eTests,
       ...testPlan.accessibilityTests,
       ...testPlan.visualTests,
-      ...testPlan.performanceTests
+      ...testPlan.performanceTests,
     ];
 
     return allTests.reduce((total, group) => total + group.estimatedTime, 0);
@@ -282,12 +286,12 @@ class AvaQAAutomation {
 
   generateTestPlanComment(analysis: PRAnalysis): string {
     const { affectedComponents, testPlan, riskAssessment, estimatedRuntime } = analysis;
-    
+
     const riskEmoji = {
       LOW: '🟢',
-      MEDIUM: '🟡', 
+      MEDIUM: '🟡',
       HIGH: '🟠',
-      CRITICAL: '🔴'
+      CRITICAL: '🔴',
     };
 
     return `
@@ -296,9 +300,11 @@ class AvaQAAutomation {
 ${riskEmoji[riskAssessment]} **Overall Risk Level**: ${riskAssessment}
 
 **📁 Changed Files Analysis:**
-${affectedComponents.map(comp => 
-  `- \`${comp.filePath}\` (${comp.riskLevel}) ${comp.hasTests ? '✅' : '❌ No tests'}`
-).join('\n')}
+${affectedComponents
+  .map(
+    (comp) => `- \`${comp.filePath}\` (${comp.riskLevel}) ${comp.hasTests ? '✅' : '❌ No tests'}`,
+  )
+  .join('\n')}
 
 **🧪 Planned Test Execution:**
 • **Unit Tests**: ${testPlan.unitTests.length} test groups
@@ -316,9 +322,12 @@ ${affectedComponents.map(comp =>
 🚩 **Merge Status**: Will be blocked until all required tests pass
 
 **⚠️ Missing Test Coverage:**
-${affectedComponents.filter(c => !c.hasTests).map(c => 
-  `- \`${c.componentName}\` needs test coverage`
-).join('\n') || 'All components have test coverage ✅'}
+${
+  affectedComponents
+    .filter((c) => !c.hasTests)
+    .map((c) => `- \`${c.componentName}\` needs test coverage`)
+    .join('\n') || 'All components have test coverage ✅'
+}
 
 ---
 *Generated by Ava Patel - QA Lead & Test Automation Engineer*
@@ -326,7 +335,11 @@ ${affectedComponents.filter(c => !c.hasTests).map(c =>
   }
 
   async saveAnalysis(analysis: PRAnalysis): Promise<void> {
-    const reportPath = join(this.frontendPath, 'test-results', `pr-${analysis.prNumber}-analysis.json`);
+    const reportPath = join(
+      this.frontendPath,
+      'test-results',
+      `pr-${analysis.prNumber}-analysis.json`,
+    );
     writeFileSync(reportPath, JSON.stringify(analysis, null, 2));
     console.log(`📊 Analysis saved to ${reportPath}`);
   }
@@ -335,26 +348,25 @@ ${affectedComponents.filter(c => !c.hasTests).map(c =>
 // CLI execution
 async function main() {
   const prNumber = parseInt(process.argv[2]) || 0;
-  
+
   if (!prNumber) {
     console.error('❌ Please provide PR number: npm run ava:pr-analysis <PR_NUMBER>');
     process.exit(1);
   }
 
-  const ava = new AvaQAAutomation();
-  
+  const qaSystem = new QAAutomationSystem();
+
   try {
-    const analysis = await ava.analyzePR(prNumber);
-    const comment = ava.generateTestPlanComment(analysis);
-    
+    const analysis = await qaSystem.analyzePR(prNumber);
+    const comment = qaSystem.generateTestPlanComment(analysis);
+
     console.log('\n' + comment);
-    
+
     await ava.saveAnalysis(analysis);
-    
+
     console.log('\n✅ PR analysis complete!');
     console.log(`🎯 Risk Level: ${analysis.riskAssessment}`);
     console.log(`⏱️ Estimated Test Runtime: ${analysis.estimatedRuntime} minutes`);
-    
   } catch (error) {
     console.error('❌ PR analysis failed:', error);
     process.exit(1);
