@@ -21,3 +21,32 @@ The current front-end shows strong functional breadth but lacks a cohesive visua
 - Token rollout may cause regressions; use phased adoption and visual diffing
 - Hero media may require CDN and responsive art direction
 - SSO visual parity depends on provider configuration and copy alignment
+
+
+## Audit log: Landing page (frontend/app/(public))
+
+Checklist
+- [ ] Visual identity: consistent color roles, spacing rhythm, iconography alignment
+- [ ] Typography: apply defined type ramp; check headings hierarchy and line-length
+- [ ] Layout: hero grid responsive at 320, 768, 1024, 1280; safe areas respected
+- [ ] CTAs: primary/secondary contrast, hit area ≥44x44, clear affordances
+- [ ] Trust signals: logo row responsive, alt text present
+- [ ] Accessibility: landmarks, skip link, focus order, visible focus ring, aria-labels
+- [ ] Performance: LCP image optimized, width/height set, priority, preload as needed; CLS ≤0.1
+- [ ] Motion: prefers-reduced-motion respects; non-blocking decorative animations
+
+Metrics to capture
+- LCP (3G): target ≤2.5s
+- CLS: target ≤0.1
+- INP: target <100ms
+- Lighthouse a11y score: ≥95
+
+Initial findings
+- Pending: locate landing route within frontend/app/(public) and enumerate hero components, media assets, and section structure.
+- Action: identify LCP candidate image/video, measure current LCP and CLS, verify font loading strategy (preconnect, display), and check focus visibility.
+
+Planned fixes (landing hero)
+- Replace hero media with responsive sources and explicit dimensions; set priority for LCP asset.
+- Normalize spacing and type scale to style guide snippet; unify CTA variants.
+- Add skip link and ensure header/main landmarks; confirm visible keyboard focus.
+- Preconnect fonts and adjust font-display to optional; ensure fallback stack with minimal layout shift.
