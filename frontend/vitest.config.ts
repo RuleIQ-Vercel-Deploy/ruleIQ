@@ -14,33 +14,21 @@ export default defineConfig({
     hookTimeout: 10000,
     teardownTimeout: 5000,
     isolate: true,
-    pool: 'forks',
-    poolOptions: {
-      forks: {
-        singleFork: true
-      }
-    },
     retry: 1,
     bail: 0,
     reporter: ['verbose'],
     coverage: {
       provider: 'v8',
       reporter: ['text', 'json', 'html'],
-      exclude: [
-        'node_modules/',
-        'tests/',
-        '**/*.d.ts',
-        '**/*.config.*',
-        '**/coverage/**'
-      ]
-    }
+      exclude: ['node_modules/', 'tests/', '**/*.d.ts', '**/*.config.*', '**/coverage/**'],
+    },
   },
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './'),
       '@/components': path.resolve(__dirname, './components'),
       '@/lib': path.resolve(__dirname, './lib'),
-      '@/app': path.resolve(__dirname, './app')
-    }
-  }
+      '@/app': path.resolve(__dirname, './app'),
+    },
+  },
 });
