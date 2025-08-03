@@ -203,7 +203,7 @@ describe('Dialog Components', () => {
     it('includes screen reader text for close button', () => {
       render(<BasicDialog open />);
 
-      expect(screen.getByText('Close')).toHaveClass('sr-only');
+      expect(screen.getByRole('button', { name: /close/i })).toHaveClass('sr-only');
     });
   });
 
