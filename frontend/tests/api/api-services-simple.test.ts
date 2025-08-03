@@ -1,6 +1,8 @@
+import { setupAuthMocks } from "../mocks/auth-setup";
 import "../mocks/api-client-setup";
 import { setupAuthMocks } from "../mocks/auth-setup";
 import { describe, it, expect, vi, beforeEach } from 'vitest';
+    setupAuthMocks();
     setupAuthMocks();
 
 // Mock the API client completely
@@ -29,6 +31,7 @@ vi.mock('@/lib/utils/secure-storage', () => ({
 
 describe('API Services - Simple Tests', () => {
   beforeEach(() => {
+    setupAuthMocks();
     setupAuthMocks();
     vi.clearAllMocks();
   });

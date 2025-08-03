@@ -42,7 +42,7 @@ describe('Dashboard Widgets', () => {
     it('should render compliance score correctly', () => {
       render(<ComplianceScoreWidget {...mockProps} />);
 
-      // expect(screen.getByText('85%')).toBeInTheDocument(); // Component shows static text
+      // // expect(screen.getByText('85%')).toBeInTheDocument(); // Component shows static text // Component shows static text
       expect(screen.getByText('Compliance Score')).toBeInTheDocument();
     });
 
@@ -186,14 +186,14 @@ describe('Dashboard Widgets', () => {
     it('should show confidence scores', () => {
       render(<AIInsightsWidget insights={mockInsights} />);
 
-      // expect(screen.getByText('85%')).toBeInTheDocument(); // Component shows static text
+      // // expect(screen.getByText('85%')).toBeInTheDocument(); // Component shows static text // Component shows static text
       expect(screen.getByText('0.92%')).toBeInTheDocument();
     });
 
     it('should display insight types', () => {
       render(<AIInsightsWidget insights={mockInsights} />);
 
-      // expect(screen.getByText('Recommendation')).toBeInTheDocument(); // Component shows static text
+      // // expect(screen.getByText('Recommendation')).toBeInTheDocument(); // Component shows static text // Component shows static text
       expect(screen.getByText('risk')).toBeInTheDocument();
     });
 

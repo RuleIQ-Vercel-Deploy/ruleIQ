@@ -8,7 +8,7 @@ interface Activity {
   type: 'assessment' | 'evidence' | 'report';
   title: string;
   description: string;
-  timestamp: string | Date;
+  timestamp: string;
   user: string;
 }
 
@@ -47,25 +47,6 @@ export function RecentActivityWidget({ activities = [], onViewAll }: RecentActiv
 
   const displayActivities = activities.length > 0 ? activities : defaultActivities;
 
-  // Handle empty state
-  if (activities.length === 0 && !defaultActivities.length) {
-    return (
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between">
-          <CardTitle>Recent Activity</CardTitle>
-          {onViewAll && (
-            <Button variant="outline" size="sm" onClick={onViewAll}>
-              View All
-            </Button>
-          )}
-        </CardHeader>
-        <CardContent>
-          <p>No recent activity</p>
-        </CardContent>
-      </Card>
-    );
-  }
-
   return (
     <Card>
       <CardHeader className="flex flex-row items-center justify-between">
@@ -77,22 +58,21 @@ export function RecentActivityWidget({ activities = [], onViewAll }: RecentActiv
         )}
       </CardHeader>
       <CardContent>
-        <div className="space-y-2">
-          {displayActivities.map((activity) => (
-            <div key={activity.id} className="flex items-center space-x-3">
-              <div
-                data-testid={`${activity.type === 'assessment' ? 'check' : activity.type === 'evidence' ? 'file' : 'report'}-icon`}
-                className="w-4 h-4 bg-blue-500 rounded"
-              />
-              <div className="flex-1">
-                <div className="text-sm">{activity.description}</div>
-                <div className="text-xs text-gray-500">
-                  {typeof activity.timestamp === 'string' ? activity.timestamp : activity.timestamp.toLocaleString()} • {activity.user}
+        {displayActivities.length === 0 ? (
+          <p>No recent activity</p>
+        ) : (
+          <div className="space-y-2">
+            {displayActivities.map((activity) => (
+              <div key={activity.id} className="flex items-center space-x-3">
+                <div data-testid={`${activity.type === 'assessment' ? 'check' : activity.type === 'evidence' ? 'file' : 'report'}-icon`} className="w-4 h-4 bg-blue-500 rounded" />
+                <div className="flex-1">
+                  <div className="text-sm">{activity.description}</div>
+                  <div className="text-xs text-gray-500">{activity.timestamp} • {activity.user}</div>
                 </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </CardContent>
     </Card>
   );

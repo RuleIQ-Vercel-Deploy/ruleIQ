@@ -980,3 +980,39 @@ vi.mock('lucide-react', () => ({
   // Default export for any missing icons
   default: vi.fn(() => 'div')
 }));
+
+// Proper File and FileReader mocks
+Object.defineProperty(global, 'File', {
+  writable: true,
+  value: class MockFile {
+    constructor(bits, name, options = {}) {
+      this.bits = bits;
+      this.name = name;
+      this.type = options.type || '';
+      this.size = bits.reduce((acc, bit) => acc + (bit.length || 0), 0);
+    }
+  }
+});
+
+Object.defineProperty(global, 'FileReader', {
+  writable: true,
+  value: class MockFileReader {
+    constructor() {
+      this.readyState = 0;
+      this.result = null;
+      this.error = null;
+    }
+    
+    readAsDataURL(file) {
+      this.readyState = 2;
+      this.result = 'data:text/plain;base64,dGVzdA==';
+      if (this.onload) this.onload();
+    }
+    
+    readAsText(file) {
+      this.readyState = 2;
+      this.result = 'test content';
+      if (this.onload) this.onload();
+    }
+  }
+});

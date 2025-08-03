@@ -1,6 +1,8 @@
+import { setupAuthMocks } from "../mocks/auth-setup";
 import "../mocks/api-client-setup";
 import { setupAuthMocks } from "../mocks/auth-setup";
 import { describe, it, expect, vi, beforeEach } from 'vitest';
+    setupAuthMocks();
     setupAuthMocks();
 import { http, HttpResponse } from 'msw';
 import { server } from '../mocks/server';
@@ -41,6 +43,7 @@ vi.mock('@/lib/api/error-handler', async () => {
 
 describe('API Services with MSW', () => {
   beforeEach(() => {
+    setupAuthMocks();
     setupAuthMocks();
     vi.clearAllMocks();
   });
