@@ -155,7 +155,7 @@ const questionBank: Record<string, Question> = {
   industry: {
     id: "industry",
     type: "choice",
-    question: (data) => `Which industry is ${data.companyName} in?`,
+    question: (data) => `Which industry is ${data['companyName']} in?`,
     field: "industry",
     options: ["Technology/SaaS", "Healthcare", "Financial Services", "E-commerce/Retail", "Manufacturing", "Education", "Professional Services", "Other"],
     nextQuestion: (_data, answer) => {
@@ -202,10 +202,10 @@ const questionBank: Record<string, Question> = {
   businessModel: {
     id: "businessModel",
     type: "choice",
-    question: (data) => `Is ${data.companyName} B2B or B2C?`,
+    question: (data) => `Is ${data['companyName']} B2B or B2C?`,
     field: "businessModel",
     options: ["B2B only", "B2C only", "Both B2B and B2C", "B2G (Government)", "Non-profit"],
-    nextQuestion: (_data, answer) => answer.includes("B2C") || answer === "Both B2B and B2C" ? "customerBase" : "regions"
+    nextQuestion: (_data, answer) => (answer as string).includes("B2C") || (answer as string) === "Both B2B and B2C" ? "customerBase" : "regions"
   },
 
   customerBase: {
@@ -220,14 +220,14 @@ const questionBank: Record<string, Question> = {
   regions: {
     id: "regions",
     type: "multi-choice",
-    question: (data) => `Where does ${data.companyName} operate? (Select all)`,
+    question: (data) => `Where does ${data['companyName']} operate? (Select all)`,
     field: "regions",
     options: ["UK", "EU", "USA", "Canada", "Asia-Pacific", "Global"],
     multiple: true,
     icon: <Globe className="h-5 w-5" />,
     nextQuestion: (_data, answer) => {
-      if (answer.includes("EU") || answer.includes("UK")) return "gdprRelevant";
-      if (answer.includes("USA")) return "usCompliance";
+      if ((answer as string[]).includes("EU") || (answer as string[]).includes("UK")) return "gdprRelevant";
+      if ((answer as string[]).includes("USA")) return "usCompliance";
       return "dataTypes";
     }
   },
@@ -296,9 +296,9 @@ const questionBank: Record<string, Question> = {
     field: "currentFrameworks",
     options: (data) => {
       const base = ["None yet", "ISO 27001", "SOC 2", "Cyber Essentials"];
-      if (data.gdprRelevant === "Yes, extensively") base.push("GDPR");
-      if (data.paymentHandling && data.paymentHandling !== "We don't handle cards") base.push("PCI DSS");
-      if (data.hipaaStatus && data.hipaaStatus !== "Not applicable") base.push("HIPAA");
+      if (data['gdprRelevant'] === "Yes, extensively") base.push("GDPR");
+      if (data['paymentHandling'] && data['paymentHandling'] !== "We don't handle cards") base.push("PCI DSS");
+      if (data['hipaaStatus'] && data['hipaaStatus'] !== "Not applicable") base.push("HIPAA");
       return base;
     },
     multiple: true
@@ -312,8 +312,8 @@ const questionBank: Record<string, Question> = {
     field: "topPriority",
     options: (data) => {
       const priorities = [];
-      if (data.gdprRelevant === "Yes, extensively") priorities.push("GDPR compliance");
-      if (data.customerBase && parseInt(data.customerBase.split("-")[0]) > 1000) priorities.push("SOC 2 certification");
+      if (data['gdprRelevant'] === "Yes, extensively") priorities.push("GDPR compliance");
+      if (data['customerBase'] && parseInt((data['customerBase'] as string).split("-")[0]) > 1000) priorities.push("SOC 2 certification");
       priorities.push("ISO 27001", "Build security policies", "Risk assessment", "Employee training");
       return priorities;
     },
@@ -324,7 +324,7 @@ const questionBank: Record<string, Question> = {
   timeline: {
     id: "timeline",
     type: "choice",
-    question: (data) => `When do you need to achieve ${data.topPriority || "compliance"}?`,
+    question: (data) => `When do you need to achieve ${data['topPriority'] || "compliance"}?`,
     field: "timeline",
     options: ["ASAP (< 1 month)", "Within 3 months", "Within 6 months", "Within a year", "Just planning ahead"],
     priority: "high"
@@ -337,7 +337,7 @@ const questionBank: Record<string, Question> = {
     question: "What's your annual compliance budget?",
     field: "budget",
     options: ["Under £10k", "£10k-50k", "£50k-100k", "Over £100k", "Not yet defined"],
-    skipIf: (data) => data.companySize === "Just me"
+    skipIf: (data) => data['companySize'] === "Just me"
   },
 
   // Final Questions
@@ -348,7 +348,7 @@ const questionBank: Record<string, Question> = {
     field: "challenge",
     options: (data) => {
       const challenges = ["Don't know where to start", "Too time consuming", "Lack of expertise"];
-      if (data.companySize === "Just me" || data.companySize === "2-10") {
+      if (data['companySize'] === "Just me" || data['companySize'] === "2-10") {
         challenges.push("Limited budget", "No dedicated staff");
       } else {
         challenges.push("Keeping up with changes", "Managing multiple frameworks");
@@ -363,10 +363,10 @@ const questionBank: Record<string, Question> = {
     type: "confirm",
     question: (data) => {
       const frameworks = [];
-      if (data.gdprRelevant === "Yes, extensively") frameworks.push("GDPR");
-      if (data.topPriority) frameworks.push(data.topPriority);
-      
-      return `Excellent, ${data.fullName}! Based on your answers, I'll create a personalized compliance roadmap focusing on ${frameworks.join(" and ")}. Ready to get started?`;
+      if (data['gdprRelevant'] === "Yes, extensively") frameworks.push("GDPR");
+      if (data['topPriority']) frameworks.push(data['topPriority'] as string);
+
+      return `Excellent, ${data['fullName']}! Based on your answers, I'll create a personalized compliance roadmap focusing on ${frameworks.join(" and ")}. Ready to get started?`;
     },
     field: "agreeToTerms",
     confirmText: "I agree to the Terms of Service and Privacy Policy"
@@ -528,7 +528,7 @@ export default function AIGuidedSignupPage() {
       case "password":
         return value.length >= 8 && /[A-Z]/.test(value) && /[a-z]/.test(value) && /[0-9]/.test(value);
       case "confirmPassword":
-        return value === formData.password;
+        return value === formData['password'];
       case "name":
       case "companyName":
         return value.length >= 2;
@@ -649,7 +649,7 @@ export default function AIGuidedSignupPage() {
     setIsLoading(true);
     
     // Validate passwords match
-    if (formData.password !== formData.confirmPassword) {
+    if (formData['password'] !== formData['confirmPassword']) {
       addBotMessage("Passwords don't match. Please go back and re-enter your password.");
       setIsLoading(false);
       return;
@@ -674,22 +674,22 @@ export default function AIGuidedSignupPage() {
       };
       
       // Parse the full name
-      const { firstName, lastName } = parseFullName(formData.fullName);
-      
+      const { firstName, lastName } = parseFullName(formData['fullName'] as string);
+
       // Prepare registration data in the format expected by auth store
       const registrationData = {
-        email: formData.email,
-        password: formData.password,
-        confirmPassword: formData.confirmPassword,
+        email: formData['email'] as string,
+        password: formData['password'] as string,
+        confirmPassword: formData['confirmPassword'] as string,
         firstName,
         lastName,
-        companyName: formData.companyName,
-        companySize: companySizeMap[formData.companySize] || 'small',
-        industry: formData.industry || 'Other',
-        complianceFrameworks: formData.currentFrameworks || [],
-        hasDataProtectionOfficer: formData.hasComplianceTeam?.includes("Yes") || false,
-        agreedToTerms: formData.agreeToTerms || false,
-        agreedToDataProcessing: formData.agreeToTerms || false,
+        companyName: formData['companyName'] as string,
+        companySize: companySizeMap[formData['companySize'] as string] || 'small',
+        industry: (formData['industry'] as string) || 'Other',
+        complianceFrameworks: (formData['currentFrameworks'] as string[]) || [],
+        hasDataProtectionOfficer: (formData['hasComplianceTeam'] as string[])?.includes("Yes") || false,
+        agreedToTerms: (formData['agreeToTerms'] as boolean) || false,
+        agreedToDataProcessing: (formData['agreeToTerms'] as boolean) || false,
       };
       
       await registerUser(registrationData);
