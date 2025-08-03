@@ -31,6 +31,14 @@ interface AuthState {
   setTokens: (tokens: AuthTokens) => void;
   clearError: () => void;
   checkAuthStatus: () => Promise<void>;
+  initialize: () => Promise<void>;
+  getCurrentUser: () => User | null;
+  getToken: () => string | null;
+  requestPasswordReset: (email: string) => Promise<void>;
+  resetPassword: (token: string, password: string) => Promise<void>;
+  verifyEmail: (token: string) => Promise<void>;
+  updateProfile: (data: Partial<User>) => Promise<void>;
+  changePassword: (currentPassword: string, newPassword: string) => Promise<void>;
 }
 
 interface AuthStateInternal {
@@ -87,7 +95,7 @@ export const useAuthStore = create<AuthState>()(
           // Get user info
           const userResponse = await fetch(`${API_BASE_URL}/api/v1/auth/me`, {
             headers: {
-              'Authorization': `Bearer ${tokens.access_token}`,
+              Authorization: `Bearer ${tokens.access_token}`,
             },
           });
 
@@ -157,13 +165,13 @@ export const useAuthStore = create<AuthState>()(
 
       logout: () => {
         const { tokens } = get();
-        
+
         // Call logout endpoint if we have a token
         if (tokens?.access_token) {
           fetch(`${API_BASE_URL}/api/v1/auth/logout`, {
             method: 'POST',
             headers: {
-              'Authorization': `Bearer ${tokens.access_token}`,
+              Authorization: `Bearer ${tokens.access_token}`,
             },
           }).catch(() => {
             // Ignore errors on logout
@@ -180,7 +188,7 @@ export const useAuthStore = create<AuthState>()(
 
       refreshToken: async () => {
         const { tokens } = get();
-        
+
         if (!tokens?.refresh_token) {
           throw new Error('No refresh token available');
         }
@@ -199,7 +207,7 @@ export const useAuthStore = create<AuthState>()(
           }
 
           const newTokens: AuthTokens = await response.json();
-          
+
           set({
             tokens: newTokens,
             error: null,
@@ -225,7 +233,7 @@ export const useAuthStore = create<AuthState>()(
 
       checkAuthStatus: async () => {
         const { tokens } = get();
-        
+
         if (!tokens?.access_token) {
           set({ isAuthenticated: false, user: null });
           return;
@@ -234,7 +242,7 @@ export const useAuthStore = create<AuthState>()(
         try {
           const response = await fetch(`${API_BASE_URL}/api/v1/auth/me`, {
             headers: {
-              'Authorization': `Bearer ${tokens.access_token}`,
+              Authorization: `Bearer ${tokens.access_token}`,
             },
           });
 
@@ -251,6 +259,135 @@ export const useAuthStore = create<AuthState>()(
           get().logout();
         }
       },
+
+      initialize: async () => {
+        await get().checkAuthStatus();
+      },
+
+      getCurrentUser: () => {
+        return get().user;
+      },
+
+      getToken: () => {
+        return get().tokens?.access_token || null;
+      },
+
+      requestPasswordReset: async (email: string) => {
+        try {
+          const response = await fetch(`${API_BASE_URL}/api/v1/auth/forgot-password`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ email }),
+          });
+
+          if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.detail || 'Password reset request failed');
+          }
+        } catch (error) {
+          throw error;
+        }
+      },
+
+      resetPassword: async (token: string, password: string) => {
+        try {
+          const response = await fetch(`${API_BASE_URL}/api/v1/auth/reset-password`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ token, password }),
+          });
+
+          if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.detail || 'Password reset failed');
+          }
+        } catch (error) {
+          throw error;
+        }
+      },
+
+      verifyEmail: async (token: string) => {
+        try {
+          const response = await fetch(`${API_BASE_URL}/api/v1/auth/verify-email`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ token }),
+          });
+
+          if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.detail || 'Email verification failed');
+          }
+        } catch (error) {
+          throw error;
+        }
+      },
+
+      updateProfile: async (data: Partial<User>) => {
+        const { tokens } = get();
+
+        if (!tokens?.access_token) {
+          throw new Error('Not authenticated');
+        }
+
+        try {
+          const response = await fetch(`${API_BASE_URL}/api/v1/auth/profile`, {
+            method: 'PATCH',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${tokens.access_token}`,
+            },
+            body: JSON.stringify(data),
+          });
+
+          if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.detail || 'Profile update failed');
+          }
+
+          const updatedUser: User = await response.json();
+          set({ user: updatedUser });
+
+          return updatedUser;
+        } catch (error) {
+          throw error;
+        }
+      },
+
+      changePassword: async (currentPassword: string, newPassword: string) => {
+        const { tokens } = get();
+
+        if (!tokens?.access_token) {
+          throw new Error('Not authenticated');
+        }
+
+        try {
+          const response = await fetch(`${API_BASE_URL}/api/v1/auth/change-password`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${tokens.access_token}`,
+            },
+            body: JSON.stringify({
+              current_password: currentPassword,
+              new_password: newPassword,
+            }),
+          });
+
+          if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.detail || 'Password change failed');
+          }
+        } catch (error) {
+          throw error;
+        }
+      },
     }),
     {
       name: 'auth-storage',
@@ -259,6 +396,6 @@ export const useAuthStore = create<AuthState>()(
         tokens: state.tokens,
         isAuthenticated: state.isAuthenticated,
       }),
-    }
-  )
+    },
+  ),
 );
