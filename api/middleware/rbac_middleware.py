@@ -168,15 +168,19 @@ class RBACMiddleware(BaseHTTPMiddleware):
             Response from downstream handler
         """
         start_time = time.time()
-        
+
         try:
+            # Skip RBAC for OPTIONS requests (CORS preflight)
+            if request.method == "OPTIONS":
+                return await call_next(request)
+
             # Skip RBAC for public routes
             if self._is_public_route(request.url.path):
                 return await call_next(request)
-            
+
             # Get current user with roles
             current_user = await self._get_current_user(request)
-            
+
             # Check if route requires authentication only
             if self._is_authenticated_only_route(request.url.path):
                 if current_user is None:

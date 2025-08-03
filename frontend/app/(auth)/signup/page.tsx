@@ -580,6 +580,7 @@ export default function AIGuidedSignupPage() {
   const [isLoading, setIsLoading] = React.useState(false);
   const [questionsAnswered, setQuestionsAnswered] = React.useState(0);
   const messagesEndRef = React.useRef<HTMLDivElement>(null);
+  const messageIdCounter = React.useRef(Date.now());
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -593,9 +594,10 @@ export default function AIGuidedSignupPage() {
     // Start with greeting
     const greetingQuestion = questionBank['greeting'];
     if (greetingQuestion) {
+      messageIdCounter.current = 1;
       setMessages([
         {
-          id: 1,
+          id: messageIdCounter.current,
           type: 'bot',
           content: greetingQuestion.question as string,
           options: greetingQuestion.options as string[],
@@ -621,8 +623,9 @@ export default function AIGuidedSignupPage() {
   };
 
   const addBotMessage = (content: string, options?: string[], icon?: React.ReactNode) => {
+    messageIdCounter.current += 1;
     const newMessage: Message = {
-      id: messages.length + 1,
+      id: messageIdCounter.current,
       type: 'bot',
       content,
       ...(options && { options }),
@@ -646,10 +649,11 @@ export default function AIGuidedSignupPage() {
   };
 
   const addUserMessage = (content: string) => {
+    messageIdCounter.current += 1;
     setMessages((prev) => [
       ...prev,
       {
-        id: prev.length + 1,
+        id: messageIdCounter.current,
         type: 'user',
         content,
       },
@@ -735,9 +739,24 @@ export default function AIGuidedSignupPage() {
 
   const handleChoice = (choice: string) => {
     const currentQuestion = questionBank[currentQuestionId];
-    if (!currentQuestion) return;
 
     addUserMessage(choice);
+
+    // Handle email already exists choices
+    if (choice === 'Take me to login') {
+      addBotMessage("I'll redirect you to the login page now.");
+      setTimeout(() => {
+        router.push('/login');
+      }, 1000);
+      return;
+    } else if (choice === 'Try different email') {
+      addBotMessage("Let's try with a different email address. What's your email?");
+      setCurrentQuestionId('email');
+      setFormData({ ...formData, email: '' });
+      return;
+    }
+
+    if (!currentQuestion) return;
 
     if (currentQuestion.type === 'choice') {
       handleNext(choice);
@@ -807,37 +826,12 @@ export default function AIGuidedSignupPage() {
     try {
       await new Promise((resolve) => setTimeout(resolve, 2000));
 
-      // Map company size to auth store format
-      const companySizeMap: Record<string, 'micro' | 'small' | 'medium' | 'large'> = {
-        'Just me': 'micro',
-        '2-10': 'micro',
-        '11-50': 'small',
-        '51-200': 'medium',
-        '201-500': 'large',
-        '500+': 'large',
-      };
-
       // Parse the full name
       const { firstName, lastName } = parseFullName(formData.fullName || '');
 
-      // Prepare registration data in the format expected by auth store
-      const registrationData = {
-        email: formData.email || '',
-        password: formData.password || '',
-        confirmPassword: formData.confirmPassword || '',
-        firstName,
-        lastName,
-        companyName: formData.companyName || '',
-        companySize:
-          (formData.companySize ? companySizeMap[formData.companySize] : undefined) || 'small',
-        industry: formData.industry || 'Other',
-        complianceFrameworks: formData.currentFrameworks || [],
-        hasDataProtectionOfficer: formData.hasComplianceTeam?.includes('Yes') || false,
-        agreedToTerms: formData.agreeToTerms || false,
-        agreedToDataProcessing: formData.agreeToTerms || false,
-      };
-
-      await registerUser(registrationData);
+      // Register user with auth store (only email, password, fullName supported)
+      const fullName = `${firstName} ${lastName}`.trim() || 'User';
+      await registerUser(formData.email || '', formData.password || '', fullName);
 
       // Store compliance profile in local storage for dashboard to use (with error handling)
       try {
@@ -859,13 +853,35 @@ export default function AIGuidedSignupPage() {
 
       router.push('/dashboard');
     } catch (error: unknown) {
-      const errorMessage =
-        error && typeof error === 'object' && 'detail' in error
-          ? (error as { detail: string }).detail
-          : error && typeof error === 'object' && 'message' in error
-            ? (error as { message: string }).message
-            : 'There was an error creating your account. Please try again.';
-      addBotMessage(errorMessage);
+      console.error('Registration error:', error);
+
+      let errorMessage = 'There was an error creating your account. Please try again.';
+
+      if (error && typeof error === 'object') {
+        if ('detail' in error && typeof error.detail === 'string') {
+          errorMessage = error.detail;
+        } else if ('message' in error && typeof error.message === 'string') {
+          errorMessage = error.message;
+        }
+      } else if (typeof error === 'string') {
+        errorMessage = error;
+      }
+
+      // Handle specific email already exists case
+      if (
+        errorMessage.toLowerCase().includes('email') &&
+        (errorMessage.toLowerCase().includes('already') ||
+          errorMessage.toLowerCase().includes('exists') ||
+          errorMessage.toLowerCase().includes('taken'))
+      ) {
+        addBotMessage(
+          `It looks like ${formData.email} is already registered. Would you like to try logging in instead?`,
+          ['Take me to login', 'Try different email'],
+        );
+      } else {
+        addBotMessage(errorMessage);
+      }
+
       setIsLoading(false);
     }
   };
@@ -945,21 +961,26 @@ export default function AIGuidedSignupPage() {
   const calculateTotalQuestions = (): number => {
     const baseFlow = getQuestionFlow();
     let total = baseFlow.length;
-    
+
     // Add dynamic questions based on current data
     if (formData.industry === 'Healthcare') total += 1;
     if (formData.industry === 'Financial Services') total += 1;
     if (formData.industry === 'E-commerce/Retail') total += 1;
     if (formData.companySize === 'Just me' || formData.companySize === '2-10') total += 1;
-    if (formData.companySize && formData.companySize !== 'Just me' && formData.companySize !== '2-10') total += 2;
+    if (
+      formData.companySize &&
+      formData.companySize !== 'Just me' &&
+      formData.companySize !== '2-10'
+    )
+      total += 2;
     if (formData.regions?.includes('EU') || formData.regions?.includes('UK')) total += 1;
     if (formData.regions?.includes('USA')) total += 1;
     if (formData.dataTypes?.includes('Payment/financial')) total += 1;
     if (formData.dataTypes?.includes('Health records')) total += 1;
-    
+
     return Math.max(total, questionsAnswered + 1); // Ensure progress never exceeds 100%
   };
-  
+
   const totalQuestions = calculateTotalQuestions();
   const progress = Math.min((questionsAnswered / totalQuestions) * 100, 100);
   const currentQuestion = questionBank[currentQuestionId];
@@ -1066,7 +1087,7 @@ export default function AIGuidedSignupPage() {
                               <div className="space-y-2">
                                 {message.options.map((option, optionIndex) => (
                                   <label
-                                    key={`option-${optionIndex}`}
+                                    key={`msg-${message.id}-option-${optionIndex}`}
                                     className="flex cursor-pointer items-center space-x-2"
                                   >
                                     <Checkbox
@@ -1167,7 +1188,7 @@ export default function AIGuidedSignupPage() {
                             ) : (
                               message.options.map((option, optionIndex) => (
                                 <Button
-                                  key={`button-option-${optionIndex}`}
+                                  key={`msg-${message.id}-button-option-${optionIndex}`}
                                   variant="outline"
                                   size="sm"
                                   onClick={() => handleChoice(option)}

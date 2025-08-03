@@ -126,8 +126,14 @@ async def login(login_data: LoginRequest, db: Session = Depends(get_db)):
 
 
 @router.post("/refresh", response_model=Token, dependencies=[Depends(auth_rate_limit())])
-async def refresh_token(refresh_token: str, db: Session = Depends(get_db)):
+async def refresh_token(refresh_request: dict, db: Session = Depends(get_db)):
     from api.dependencies.auth import decode_token
+
+    refresh_token = refresh_request.get("refresh_token")
+    if not refresh_token:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST, detail="Refresh token required"
+        )
 
     payload = decode_token(refresh_token)
     if not payload or payload.get("type") != "refresh":

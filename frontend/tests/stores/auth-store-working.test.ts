@@ -132,15 +132,20 @@ describe('Auth Store', () => {
     expect(typeof store.changePassword).toBe('function');
   });
 
-  it('should have clearError method that can be called', async () => {
+  it('should clear error when clearError is called', async () => {
     const { useAuthStore } = await import('@/lib/stores/auth.store');
     const store = useAuthStore.getState();
 
-    // Just verify the method exists and can be called without error
-    expect(() => store.clearError()).not.toThrow();
+    // Set an error first
+    useAuthStore.setState({ error: 'Test error' });
+    expect(useAuthStore.getState().error).toBe('Test error');
+
+    // Clear the error
+    store.clearError();
+    expect(useAuthStore.getState().error).toBeNull();
   });
 
-  it('should have setUser method that can be called', async () => {
+  it('should set user when setUser is called', async () => {
     const { useAuthStore } = await import('@/lib/stores/auth.store');
     const store = useAuthStore.getState();
 
@@ -152,11 +157,11 @@ describe('Auth Store', () => {
       is_active: true,
     };
 
-    // Just verify the method exists and can be called without error
-    expect(() => store.setUser(mockUser)).not.toThrow();
+    store.setUser(mockUser);
+    expect(useAuthStore.getState().user).toEqual(mockUser);
   });
 
-  it('should have setTokens method that can be called', async () => {
+  it('should set tokens when setTokens is called', async () => {
     const { useAuthStore } = await import('@/lib/stores/auth.store');
     const store = useAuthStore.getState();
 
@@ -166,25 +171,45 @@ describe('Auth Store', () => {
       token_type: 'Bearer',
     };
 
-    // Just verify the method exists and can be called without error
-    expect(() => store.setTokens(mockTokens)).not.toThrow();
+    store.setTokens(mockTokens);
+    expect(useAuthStore.getState().tokens).toEqual(mockTokens);
   });
 
-  it('should have getCurrentUser method that returns a value', async () => {
+  it('should return current user when getCurrentUser is called', async () => {
     const { useAuthStore } = await import('@/lib/stores/auth.store');
     const store = useAuthStore.getState();
 
-    // Just verify the method exists and returns something (null is valid)
-    const result = store.getCurrentUser();
-    expect(result).toBeDefined();
+    const mockUser = {
+      id: 'user-456',
+      email: 'current@example.com',
+      name: 'Current User',
+      created_at: new Date().toISOString(),
+      is_active: true,
+    };
+
+    // Set user first
+    store.setUser(mockUser);
+
+    // Get current user
+    const currentUser = store.getCurrentUser();
+    expect(currentUser).toEqual(mockUser);
   });
 
-  it('should have getToken method that returns a value', async () => {
+  it('should return token when getToken is called', async () => {
     const { useAuthStore } = await import('@/lib/stores/auth.store');
     const store = useAuthStore.getState();
 
-    // Just verify the method exists and returns something (null is valid)
-    const result = store.getToken();
-    expect(result).toBeDefined();
+    const mockTokens = {
+      access_token: 'test-access-token',
+      refresh_token: 'test-refresh-token',
+      token_type: 'Bearer',
+    };
+
+    // Set tokens first
+    store.setTokens(mockTokens);
+
+    // Get token
+    const token = store.getToken();
+    expect(token).toBe('test-access-token');
   });
 });

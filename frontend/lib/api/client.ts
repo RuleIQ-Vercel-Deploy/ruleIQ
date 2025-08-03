@@ -49,7 +49,9 @@ class APIClient {
     endpoint: string,
     options: RequestInit = {}
   ): Promise<T> {
-    const url = `${API_BASE_URL}${endpoint}`;
+    // Automatically prepend /api/v1 to endpoints unless they already start with /api
+    const normalizedEndpoint = endpoint.startsWith('/api') ? endpoint : `/api/v1${endpoint}`;
+    const url = `${API_BASE_URL}${normalizedEndpoint}`;
     
     try {
       const headers = await this.getAuthHeaders();
@@ -88,6 +90,8 @@ class APIClient {
       );
     }
   }
+
+  
 
   // Convenience methods
   async get<T>(endpoint: string): Promise<T> {

@@ -268,26 +268,42 @@ vi.mock('@radix-ui/react-dialog', () => {
 });
 
 // Mock auth store
-vi.mock('@/lib/stores/auth.store', () => ({
-  useAuthStore: vi.fn(() => ({
+vi.mock('@/lib/stores/auth.store', () => {
+  const mockStore = {
     user: null,
     tokens: null,
     isAuthenticated: false,
     isLoading: false,
     error: null,
-    login: vi.fn().mockResolvedValue({
-      user: { id: 'user-123', email: 'test@example.com', name: 'Test User' },
-      tokens: { access_token: 'mock-token', refresh_token: 'mock-refresh' },
-    }),
-    register: vi.fn().mockResolvedValue({
-      user: { id: 'user-456', email: 'newuser@example.com', name: 'New User' },
-      tokens: { access_token: 'new-token', refresh_token: 'new-refresh' },
-    }),
-    logout: vi.fn().mockResolvedValue(undefined),
-    getCurrentUser: vi.fn().mockResolvedValue(null),
+    login: vi.fn().mockResolvedValue(undefined),
+    register: vi.fn().mockResolvedValue(undefined),
+    logout: vi.fn(),
+    refreshToken: vi.fn().mockResolvedValue(undefined),
+    setUser: vi.fn(),
+    setTokens: vi.fn(),
+    clearError: vi.fn(),
+    checkAuthStatus: vi.fn().mockResolvedValue(undefined),
     initialize: vi.fn().mockResolvedValue(undefined),
-  })),
-}));
+    getCurrentUser: vi.fn().mockReturnValue(null),
+    getToken: vi.fn().mockReturnValue(null),
+    requestPasswordReset: vi.fn().mockResolvedValue(undefined),
+    resetPassword: vi.fn().mockResolvedValue(undefined),
+    verifyEmail: vi.fn().mockResolvedValue(undefined),
+    updateProfile: vi.fn().mockResolvedValue(undefined),
+    changePassword: vi.fn().mockResolvedValue(undefined),
+  };
+
+  const mockUseAuthStore = vi.fn(() => mockStore) as any;
+  // Add getState method for non-React usage
+  mockUseAuthStore.getState = vi.fn(() => mockStore);
+  mockUseAuthStore.setState = vi.fn();
+  mockUseAuthStore.subscribe = vi.fn();
+  mockUseAuthStore.destroy = vi.fn();
+
+  return {
+    useAuthStore: mockUseAuthStore,
+  };
+});
 
 // Cleanup after each test
 afterEach(() => {

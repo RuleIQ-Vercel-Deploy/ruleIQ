@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useAuthStore } from "@/lib/stores/auth.store";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -12,13 +13,13 @@ import { Loader2 } from "lucide-react";
 
 export default function RegisterPage() {
   const router = useRouter();
+  const { register, isLoading, error: authError } = useAuthStore();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
     confirmPassword: "",
     company_name: "",
   });
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -29,35 +30,14 @@ export default function RegisterPage() {
       return;
     }
     
-    setLoading(true);
     setError("");
 
     try {
-      const response = await fetch("http://localhost:8000/api/auth/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: formData.email,
-          password: formData.password,
-          company_name: formData.company_name,
-        }),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.detail || "Registration failed");
-      }
-
-      // Auto-login after registration
-      localStorage.setItem("token", data.access_token);
+      await register(formData.email, formData.password, formData.company_name);
+      // Registration successful, redirect to dashboard
       router.push("/dashboard");
     } catch (err) {
       setError(err instanceof Error ? err.message : "An error occurred");
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -72,9 +52,9 @@ export default function RegisterPage() {
         </CardHeader>
         <form onSubmit={handleSubmit}>
           <CardContent className="space-y-4">
-            {error && (
+            {(error || authError) && (
               <Alert variant="destructive">
-                <AlertDescription>{error}</AlertDescription>
+                <AlertDescription>{error || authError}</AlertDescription>
               </Alert>
             )}
             <div className="space-y-2">
@@ -86,7 +66,7 @@ export default function RegisterPage() {
                 value={formData.company_name}
                 onChange={(e) => setFormData({ ...formData, company_name: e.target.value })}
                 required
-                disabled={loading}
+                disabled={isLoading}
               />
             </div>
             <div className="space-y-2">
@@ -98,7 +78,7 @@ export default function RegisterPage() {
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                 required
-                disabled={loading}
+                disabled={isLoading}
               />
             </div>
             <div className="space-y-2">
@@ -109,7 +89,7 @@ export default function RegisterPage() {
                 value={formData.password}
                 onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                 required
-                disabled={loading}
+                disabled={isLoading}
                 minLength={8}
               />
             </div>
@@ -121,13 +101,13 @@ export default function RegisterPage() {
                 value={formData.confirmPassword}
                 onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
                 required
-                disabled={loading}
+                disabled={isLoading}
               />
             </div>
           </CardContent>
           <CardFooter className="flex flex-col space-y-4">
-            <Button type="submit" className="w-full" disabled={loading}>
-              {loading ? (
+            <Button type="submit" className="w-full" disabled={isLoading}>
+              {isLoading ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                   Creating account...

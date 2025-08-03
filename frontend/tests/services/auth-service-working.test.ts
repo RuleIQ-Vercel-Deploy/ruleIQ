@@ -61,17 +61,13 @@ describe('Auth Service', () => {
 
       await authService.register('test@example.com', 'password123', 'Test User');
 
-      expect(mockStore.register).toHaveBeenCalledWith(
-        'test@example.com',
-        'password123',
-        'Test User',
-      );
+      expect(mockStore.register).toHaveBeenCalledWith('test@example.com', 'password123', 'Test User');
     });
   });
 
   describe('logout', () => {
-    it('should call auth store logout method', async () => {
-      const { useAuthStore } = await import('@/lib/stores/auth.store');
+    it('should call auth store logout method', () => {
+      const { useAuthStore } = require('@/lib/stores/auth.store');
       const mockStore = useAuthStore.getState();
 
       authService.logout();
@@ -81,8 +77,8 @@ describe('Auth Service', () => {
   });
 
   describe('getCurrentUser', () => {
-    it('should call auth store getCurrentUser method', async () => {
-      const { useAuthStore } = await import('@/lib/stores/auth.store');
+    it('should call auth store getCurrentUser method', () => {
+      const { useAuthStore } = require('@/lib/stores/auth.store');
       const mockStore = useAuthStore.getState();
 
       const result = authService.getCurrentUser();
@@ -93,8 +89,8 @@ describe('Auth Service', () => {
   });
 
   describe('getToken', () => {
-    it('should call auth store getToken method', async () => {
-      const { useAuthStore } = await import('@/lib/stores/auth.store');
+    it('should call auth store getToken method', () => {
+      const { useAuthStore } = require('@/lib/stores/auth.store');
       const mockStore = useAuthStore.getState();
 
       const result = authService.getToken();
@@ -105,8 +101,8 @@ describe('Auth Service', () => {
   });
 
   describe('isAuthenticated', () => {
-    it('should return auth store isAuthenticated state', async () => {
-      const { useAuthStore } = await import('@/lib/stores/auth.store');
+    it('should return auth store isAuthenticated state', () => {
+      const { useAuthStore } = require('@/lib/stores/auth.store');
       const mockStore = useAuthStore.getState();
 
       const result = authService.isAuthenticated();
@@ -205,8 +201,8 @@ describe('Auth Service', () => {
   });
 
   describe('utility methods', () => {
-    it('should provide clearError method', async () => {
-      const { useAuthStore } = await import('@/lib/stores/auth.store');
+    it('should provide clearError method', () => {
+      const { useAuthStore } = require('@/lib/stores/auth.store');
       const mockStore = useAuthStore.getState();
 
       authService.clearError();
@@ -214,8 +210,8 @@ describe('Auth Service', () => {
       expect(mockStore.clearError).toHaveBeenCalled();
     });
 
-    it('should provide getUser method', async () => {
-      const { useAuthStore } = await import('@/lib/stores/auth.store');
+    it('should provide getUser method', () => {
+      const { useAuthStore } = require('@/lib/stores/auth.store');
       const mockStore = useAuthStore.getState();
 
       const result = authService.getUser();
@@ -223,8 +219,8 @@ describe('Auth Service', () => {
       expect(result).toBe(null);
     });
 
-    it('should provide getTokens method', async () => {
-      const { useAuthStore } = await import('@/lib/stores/auth.store');
+    it('should provide getTokens method', () => {
+      const { useAuthStore } = require('@/lib/stores/auth.store');
       const mockStore = useAuthStore.getState();
 
       const result = authService.getTokens();
@@ -232,8 +228,8 @@ describe('Auth Service', () => {
       expect(result).toBe(null);
     });
 
-    it('should provide getError method', async () => {
-      const { useAuthStore } = await import('@/lib/stores/auth.store');
+    it('should provide getError method', () => {
+      const { useAuthStore } = require('@/lib/stores/auth.store');
       const mockStore = useAuthStore.getState();
 
       const result = authService.getError();
@@ -241,8 +237,8 @@ describe('Auth Service', () => {
       expect(result).toBe(null);
     });
 
-    it('should provide isLoading method', async () => {
-      const { useAuthStore } = await import('@/lib/stores/auth.store');
+    it('should provide isLoading method', () => {
+      const { useAuthStore } = require('@/lib/stores/auth.store');
       const mockStore = useAuthStore.getState();
 
       const result = authService.isLoading();

@@ -37,7 +37,7 @@ interface AuthState {
   requestPasswordReset: (email: string) => Promise<void>;
   resetPassword: (token: string, password: string) => Promise<void>;
   verifyEmail: (token: string) => Promise<void>;
-  updateProfile: (data: Partial<User>) => Promise<void>;
+  updateProfile: (data: Partial<User>) => Promise<User>;
   changePassword: (currentPassword: string, newPassword: string) => Promise<void>;
 }
 
@@ -93,7 +93,7 @@ export const useAuthStore = create<AuthState>()(
           const tokens: AuthTokens = await loginResponse.json();
 
           // Get user info
-          const userResponse = await fetch(`${API_BASE_URL}/api/v1/auth/me`, {
+          const userResponse = await fetch(`${API_BASE_URL}/api/v1/users/me`, {
             headers: {
               Authorization: `Bearer ${tokens.access_token}`,
             },
@@ -124,22 +124,34 @@ export const useAuthStore = create<AuthState>()(
         }
       },
 
-      register: async (email: string, password: string, fullName?: string) => {
+      register: async (email: string, password: string, _fullName?: string) => {
         set({ isLoading: true, error: null });
 
         try {
-          // Register request
+          // Register request - backend only accepts email and password
           const registerResponse = await fetch(`${API_BASE_URL}/api/v1/auth/register`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ email, password, full_name: fullName }),
+            body: JSON.stringify({ email, password }),
           });
 
           if (!registerResponse || !registerResponse.ok) {
-            const errorData = await registerResponse.json();
-            throw new Error(errorData.detail || 'Registration failed');
+            const errorData = await registerResponse
+              .json()
+              .catch(() => ({ detail: 'Registration failed' }));
+            const errorMessage =
+              typeof errorData.detail === 'string'
+                ? errorData.detail
+                : Array.isArray(errorData.detail)
+                  ? errorData.detail
+                      .map((err: any) =>
+                        typeof err === 'string' ? err : err.msg || 'Validation error',
+                      )
+                      .join(', ')
+                  : 'Registration failed';
+            throw new Error(errorMessage);
           }
 
           const { user, tokens } = await registerResponse.json();
@@ -240,7 +252,7 @@ export const useAuthStore = create<AuthState>()(
         }
 
         try {
-          const response = await fetch(`${API_BASE_URL}/api/v1/auth/me`, {
+          const response = await fetch(`${API_BASE_URL}/api/v1/users/me`, {
             headers: {
               Authorization: `Bearer ${tokens.access_token}`,
             },
@@ -287,6 +299,7 @@ export const useAuthStore = create<AuthState>()(
             throw new Error(errorData.detail || 'Password reset request failed');
           }
         } catch (error) {
+          console.error('Error in updateProfile:', error);
           throw error;
         }
       },
@@ -352,6 +365,18 @@ export const useAuthStore = create<AuthState>()(
           }
 
           const updatedUser: User = await response.json();
+
+          // Validate the response structure
+          if (
+            !updatedUser ||
+            typeof updatedUser.id !== 'string' ||
+            typeof updatedUser.email !== 'string' ||
+            typeof updatedUser.is_active !== 'boolean' ||
+            typeof updatedUser.created_at !== 'string'
+          ) {
+            throw new Error('Invalid user data received from server');
+          }
+
           set({ user: updatedUser });
 
           return updatedUser;

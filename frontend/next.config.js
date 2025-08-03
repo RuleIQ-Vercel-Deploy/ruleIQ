@@ -19,6 +19,20 @@ const nextConfig = {
   },
   experimental: {
     optimizePackageImports: ['@radix-ui/react-icons', 'lucide-react'],
+    turbo: {
+      rules: {
+        '*.svg': {
+          loaders: ['@svgr/webpack'],
+          as: '*.js',
+        },
+      },
+      resolveAlias: {
+        '@': './src',
+        '@/components': './components',
+        '@/lib': './lib',
+        '@/styles': './styles',
+      },
+    },
   },
   images: {
     domains: ['localhost', 'ruleiq.com', 'staging.ruleiq.com'],
@@ -29,6 +43,7 @@ const nextConfig = {
   compress: true,
   poweredByHeader: false,
   generateEtags: true,
+  // Webpack configuration (used when not using Turbopack)
   webpack: (config, { isServer }) => {
     // Optimize bundle size
     config.optimization = {
