@@ -726,40 +726,40 @@ export default function AIGuidedSignupPage() {
     const recommendations = [];
     
     // Analyze answers to create intelligent profile
-    if (data.gdprRelevant === "Yes, extensively") {
+    if (data['gdprRelevant'] === "Yes, extensively") {
       priorities.push("GDPR Compliance");
       risks.push("Data protection violations");
     }
-    
-    if (data.paymentHandling && data.paymentHandling !== "We don't handle cards") {
+
+    if (data['paymentHandling'] && data['paymentHandling'] !== "We don't handle cards") {
       priorities.push("PCI DSS");
       risks.push("Payment security");
     }
-    
-    if (data.companySize === "Just me" || data.companySize === "2-10") {
+
+    if (data['companySize'] === "Just me" || data['companySize'] === "2-10") {
       recommendations.push("Start with essential policies");
       recommendations.push("Use automated compliance tools");
     }
     
-    if (data.timeline === "ASAP (< 1 month)") {
+    if (data['timeline'] === "ASAP (< 1 month)") {
       recommendations.push("Fast-track certification program");
     }
-    
+
     return {
       priorities,
       risks,
       recommendations,
-      maturityLevel: data.currentFrameworks?.includes("None yet") ? "beginner" : "intermediate",
+      maturityLevel: (data['currentFrameworks'] as string[])?.includes("None yet") ? "beginner" : "intermediate",
       estimatedTimeToCompliance: getTimeEstimate(data),
       suggestedFrameworks: getSuggestedFrameworks(data)
     };
   };
 
   const getTimeEstimate = (data: Record<string, unknown>): string => {
-    if (data.currentFrameworks?.includes("None yet")) {
+    if ((data['currentFrameworks'] as string[])?.includes("None yet")) {
       return "3-6 months";
     }
-    if (data.hasComplianceTeam === "Yes, full team") {
+    if (data['hasComplianceTeam'] === "Yes, full team") {
       return "1-3 months";
     }
     return "2-4 months";
@@ -768,15 +768,15 @@ export default function AIGuidedSignupPage() {
   const getSuggestedFrameworks = (data: Record<string, unknown>): string[] => {
     const frameworks = [];
     
-    if (data.regions?.includes("UK") || data.regions?.includes("EU")) {
+    if ((data['regions'] as string[])?.includes("UK") || (data['regions'] as string[])?.includes("EU")) {
       frameworks.push("GDPR");
     }
-    
-    if (data.customerBase && parseInt(data.customerBase.split("-")[0]) > 1000) {
+
+    if (data['customerBase'] && parseInt((data['customerBase'] as string).split("-")[0]) > 1000) {
       frameworks.push("SOC 2");
     }
     
-    if (data.industry === "Healthcare") {
+    if (data['industry'] === "Healthcare") {
       frameworks.push("HIPAA");
     }
     
