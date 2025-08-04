@@ -12,6 +12,7 @@ export interface User {
   first_name?: string;
   last_name?: string;
   organization_id?: string;
+  companyId?: string; // For compatibility with auth.ts
   businessProfile?: {
     id: string;
     company_name: string;
@@ -80,7 +81,7 @@ export interface EvidenceItem {
   evidence_type: string;
   source: string;
   tags: string[];
-  status: 'pending' | 'approved' | 'rejected' | 'needs_review';
+  status: 'pending' | 'collected' | 'approved' | 'rejected' | 'needs_review';
   quality_score?: number;
   metadata?: Record<string, any>;
   file_url?: string;
@@ -119,11 +120,12 @@ export interface PolicySection {
 export interface Assessment {
   id: string;
   title: string;
+  name: string; // For test compatibility
   description: string;
   framework_id: string;
   framework_name?: string;
   business_profile_id: string;
-  status: 'scheduled' | 'in_progress' | 'under_review' | 'completed' | 'overdue';
+  status: 'draft' | 'scheduled' | 'in_progress' | 'under_review' | 'completed' | 'overdue';
   progress: number;
   score?: number;
   max_score?: number;
@@ -133,6 +135,8 @@ export interface Assessment {
   updated_at: string;
   questions_count: number;
   answered_count: number;
+  total_questions: number; // For test compatibility
+  answered_questions: number; // For test compatibility
 }
 
 export interface AssessmentQuestion {

@@ -326,13 +326,18 @@ export default function HomePage() {
       <header className="glass-card fixed left-0 right-0 top-0 z-50 border-b border-glass-border">
         <div className="container mx-auto flex h-16 items-center justify-between px-4">
           <Link href="/" className="flex items-center">
-            <Image
-              src="/assets/logo.svg"
-              alt="ruleIQ"
-              width={540}
-              height={150}
-              className="h-36 w-auto"
-            />
+            <div className="relative h-12 w-auto md:h-14 lg:h-16">
+              <Image
+                src="/assets/logo.svg"
+                alt="ruleIQ"
+                width={180}
+                height={50}
+                sizes="(max-width: 640px) 120px, (max-width: 1024px) 160px, 180px"
+                className="h-full w-full object-contain"
+                style={{ objectFit: 'contain' }}
+                priority
+              />
+            </div>
           </Link>
 
           <nav className="hidden items-center justify-center gap-8 md:flex">

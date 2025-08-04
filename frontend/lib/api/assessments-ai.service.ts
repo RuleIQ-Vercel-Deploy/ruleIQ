@@ -299,7 +299,7 @@ class AssessmentAIService {
               15000,
               'Question help AI request',
             );
-            return response.data;
+            return response;
           }
 
           // Development fallback with no artificial delay
@@ -356,7 +356,7 @@ class AssessmentAIService {
           20000,
           'Follow-up questions AI request',
         );
-        return response.data;
+        return response;
       }
 
       // Development fallback with no artificial delay
@@ -403,7 +403,7 @@ class AssessmentAIService {
           '/ai/assessments/analysis',
           request,
         );
-        return response.data;
+        return response;
       }
 
       // Development fallback
@@ -432,7 +432,7 @@ class AssessmentAIService {
           '/ai/assessments/recommendations',
           request,
         );
-        return response.data;
+        return response;
       }
 
       // Development fallback
@@ -570,7 +570,7 @@ Can you provide guidance on how to answer this question correctly?`;
   }> {
     try {
       const response = await apiClient.get('/ai/assessments/metrics');
-      return response.data;
+      return response;
     } catch (error) {
       console.error('Failed to get AI metrics:', error);
       throw new Error('Unable to retrieve AI performance metrics.');
@@ -948,7 +948,7 @@ Can you provide guidance on how to answer this question correctly?`;
 
       const response = await this.executeWithTimeout(aiRequest, timeoutMs, 'Enhanced AI analysis');
 
-      return response.data;
+      return response;
     } catch (error) {
       console.error('Enhanced AI response failed:', error);
 

@@ -16,7 +16,9 @@ export function AuthGuard({ children, requireAuth = true }: AuthGuardProps) {
   useEffect(() => {
     if (!isLoading) {
       if (requireAuth && !isAuthenticated) {
-        router.push('/login');
+        const currentPath = window.location.pathname;
+        const redirectUrl = `/auth/login?redirect=${encodeURIComponent(currentPath)}`;
+        router.push(redirectUrl);
       } else if (!requireAuth && isAuthenticated) {
         router.push('/dashboard');
       }

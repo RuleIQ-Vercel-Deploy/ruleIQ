@@ -1,12 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-
-export interface User {
-  id: string;
-  email: string;
-  is_active: boolean;
-  created_at: string;
-}
+import { User } from '@/types/auth';
 
 export interface AuthTokens {
   access_token: string;

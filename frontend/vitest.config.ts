@@ -16,7 +16,7 @@ export default defineConfig({
     isolate: true,
     retry: 1,
     bail: 0,
-    reporter: ['verbose'],
+    reporters: ['verbose'],
     coverage: {
       provider: 'v8',
       reporter: ['text', 'json', 'html'],

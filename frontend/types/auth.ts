@@ -5,6 +5,14 @@ export interface User {
   firstName?: string;
   lastName?: string;
   companyName?: string;
+  companyId?: string;
+  businessProfile?: {
+    id: string;
+    name: string;
+    industry?: string;
+    size?: string;
+    country?: string;
+  };
   role: 'admin' | 'user' | 'owner';
   isActive: boolean;
   createdAt: string;

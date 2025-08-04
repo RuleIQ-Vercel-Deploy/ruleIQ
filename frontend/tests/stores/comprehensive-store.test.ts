@@ -207,24 +207,34 @@ describe('Store Integration Tests', () => {
       const mockAssessments = [
         {
           id: 'assess-1',
+          title: 'Test Assessment',
           name: 'Test Assessment',
+          description: 'Test description',
           status: 'completed' as const,
           framework_id: 'gdpr',
           business_profile_id: 'profile-1',
+          progress: 100,
           created_at: new Date().toISOString(),
           updated_at: new Date().toISOString(),
+          questions_count: 20,
+          answered_count: 20,
           total_questions: 20,
           answered_questions: 20,
           score: 85,
         },
         {
           id: 'assess-2',
+          title: 'Test Assessment 2',
           name: 'Test Assessment 2',
+          description: 'Test description 2',
           status: 'in_progress' as const,
           framework_id: 'iso27001',
           business_profile_id: 'profile-1',
+          progress: 50,
           created_at: new Date().toISOString(),
           updated_at: new Date().toISOString(),
+          questions_count: 30,
+          answered_count: 15,
           total_questions: 30,
           answered_questions: 15,
           score: 50,
@@ -242,10 +252,17 @@ describe('Store Integration Tests', () => {
     it('should handle assessment creation', () => {
       const newAssessment = {
         id: 'new-assess',
+        title: 'New Assessment',
         name: 'New Assessment',
+        description: 'New assessment description',
         status: 'draft' as const,
         framework_id: 'gdpr',
         business_profile_id: 'profile-1',
+        progress: 0,
+        questions_count: 10,
+        answered_count: 0,
+        total_questions: 10,
+        answered_questions: 0,
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
       };
@@ -260,10 +277,17 @@ describe('Store Integration Tests', () => {
     it('should handle assessment updates', async () => {
       const initial = {
         id: 'assess-1',
+        title: 'Old Name',
         name: 'Old Name',
+        description: 'Old description',
         status: 'draft' as const,
         framework_id: 'gdpr',
         business_profile_id: 'profile-1',
+        progress: 0,
+        questions_count: 10,
+        answered_count: 0,
+        total_questions: 10,
+        answered_questions: 0,
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
       };
@@ -276,13 +300,14 @@ describe('Store Integration Tests', () => {
       const { assessmentService } = await import('@/lib/api/assessments.service');
       vi.mocked(assessmentService.updateAssessment).mockResolvedValue({
         ...initial,
+        title: 'New Name',
         name: 'New Name',
         status: 'in_progress' as const,
         updated_at: new Date().toISOString(),
       });
 
       const store = useAssessmentStore.getState();
-      await store.updateAssessment('assess-1', { name: 'New Name', status: 'in_progress' });
+      await store.updateAssessment('assess-1', { title: 'New Name', status: 'in_progress' });
 
       const state = useAssessmentStore.getState();
       const assessment = state.assessments.find((a) => a.id === 'assess-1');
@@ -320,8 +345,12 @@ describe('Store Integration Tests', () => {
         {
           id: 'ev-1',
           title: 'Evidence 1',
+          description: 'Evidence description 1',
+          control_id: 'ctrl-1',
           status: 'collected' as const,
           evidence_type: 'document',
+          source: 'manual',
+          tags: ['test'],
           framework_id: 'gdpr',
           business_profile_id: 'profile-1',
           created_at: new Date().toISOString(),
@@ -330,8 +359,12 @@ describe('Store Integration Tests', () => {
         {
           id: 'ev-2',
           title: 'Evidence 2',
+          description: 'Evidence description 2',
+          control_id: 'ctrl-2',
           status: 'pending' as const,
           evidence_type: 'screenshot',
+          source: 'automated',
+          tags: ['test', 'screenshot'],
           framework_id: 'iso27001',
           business_profile_id: 'profile-1',
           created_at: new Date().toISOString(),
@@ -364,8 +397,12 @@ describe('Store Integration Tests', () => {
       const initial = {
         id: 'ev-1',
         title: 'Evidence 1',
+        description: 'Evidence description',
+        control_id: 'ctrl-1',
         status: 'pending' as const,
         evidence_type: 'document',
+        source: 'manual',
+        tags: ['test'],
         framework_id: 'gdpr',
         business_profile_id: 'profile-1',
         created_at: new Date().toISOString(),

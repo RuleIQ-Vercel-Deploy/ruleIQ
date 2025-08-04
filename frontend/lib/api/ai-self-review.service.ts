@@ -295,7 +295,7 @@ class AISelfReviewService {
     try {
       if (this.useProductionEndpoints) {
         const response = await apiClient.post<SelfReviewResponse>('/ai/self-review', request);
-        return response.data;
+        return response;
       }
 
       // Development fallback - simulate review processing time
@@ -342,11 +342,16 @@ class AISelfReviewService {
   }> {
     try {
       if (this.useProductionEndpoints) {
-        const apiResponse = await apiClient.post('/ai/quick-confidence-check', {
+        const apiResponse = await apiClient.post<{
+          confidence_score: number;
+          confidence_factors: string[];
+          quick_issues: string[];
+          recommendation: 'use_as_is' | 'review_recommended' | 'seek_expert_help';
+        }>('/ai/quick-confidence-check', {
           response,
           context,
         });
-        return apiResponse.data;
+        return apiResponse;
       }
 
       // Development fallback
@@ -385,7 +390,7 @@ class AISelfReviewService {
         const response = await apiClient.get<SelfReviewMetrics>(
           `/ai/self-review/metrics?timeframe=${timeframe}`,
         );
-        return response.data;
+        return response;
       }
 
       // Development fallback

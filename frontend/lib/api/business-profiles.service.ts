@@ -23,8 +23,8 @@ class BusinessProfileService {
    */
   async getBusinessProfiles(): Promise<BusinessProfile[]> {
     const response = await apiClient.get<any>('/business-profiles');
-    // Handle both direct array and wrapped array responses
-    const profileData = Array.isArray(response.data) ? response.data : response.data.data || [];
+    // API client returns parsed JSON directly, not wrapped in .data
+    const profileData = Array.isArray(response) ? response : response.data || [];
     // Transform each profile from API format to frontend format
     return profileData
       .map((profile) => BusinessProfileFieldMapper.transformAPIResponseForFrontend(profile))
@@ -36,7 +36,7 @@ class BusinessProfileService {
    */
   async getBusinessProfile(id: string): Promise<BusinessProfile> {
     const response = await apiClient.get<any>(`/business-profiles/${id}`);
-    const transformed = BusinessProfileFieldMapper.transformAPIResponseForFrontend(response.data);
+    const transformed = BusinessProfileFieldMapper.transformAPIResponseForFrontend(response);
     if (!transformed) {
       throw new Error('Failed to transform business profile data');
     }
@@ -52,7 +52,7 @@ class BusinessProfileService {
     const response = await apiClient.post<any>('/business-profiles', apiData);
 
     // Transform response back to frontend format
-    const transformed = BusinessProfileFieldMapper.transformAPIResponseForFrontend(response.data);
+    const transformed = BusinessProfileFieldMapper.transformAPIResponseForFrontend(response);
     if (!transformed) {
       throw new Error('Failed to transform business profile data');
     }
@@ -71,7 +71,7 @@ class BusinessProfileService {
     const response = await apiClient.put<any>(`/business-profiles/${id}`, apiData);
 
     // Transform response back to frontend format
-    const transformed = BusinessProfileFieldMapper.transformAPIResponseForFrontend(response.data);
+    const transformed = BusinessProfileFieldMapper.transformAPIResponseForFrontend(response);
     if (!transformed) {
       throw new Error('Failed to transform business profile data');
     }
@@ -90,7 +90,7 @@ class BusinessProfileService {
    */
   async getBusinessProfileCompliance(id: string): Promise<any> {
     const response = await apiClient.get<any>(`/business-profiles/${id}/compliance`);
-    return response.data;
+    return response;
   }
 
   /**
@@ -162,7 +162,7 @@ class BusinessProfileService {
       const response = await apiClient.get<FrameworkRecommendation[]>(
         '/frameworks/recommendations',
       );
-      return response.data;
+      return response;
     } catch (error) {
       console.error('Failed to get framework recommendations:', error);
       // Return empty array if recommendations fail

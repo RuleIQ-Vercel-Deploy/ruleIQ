@@ -97,8 +97,8 @@ export class ThemeUtils {
   static getThemeColors(designSystem: DesignSystem = this.getCurrentDesignSystem()) {
     const colors = {
       legacy: {
-        primary: '#7C3AED',
-        secondary: '#06B6D4',
+        primary: '#2C7A7B',
+        secondary: '#319795',
         background: '#0A0A0B',
         surface: '#111113',
         text: '#FAFAFA',
