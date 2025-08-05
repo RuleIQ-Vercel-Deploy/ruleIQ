@@ -27,7 +27,7 @@ class BusinessProfileService {
     const profileData = Array.isArray(response) ? response : response.data || [];
     // Transform each profile from API format to frontend format
     return profileData
-      .map((profile) => BusinessProfileFieldMapper.transformAPIResponseForFrontend(profile))
+      .map((profile: any) => BusinessProfileFieldMapper.transformAPIResponseForFrontend(profile))
       .filter(Boolean) as BusinessProfile[];
   }
 

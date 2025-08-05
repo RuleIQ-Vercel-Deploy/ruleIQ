@@ -80,7 +80,7 @@ class DashboardService {
     }>;
   }> {
     const response = await apiClient.get<any>('/dashboard');
-    return response.data;
+    return response;
   }
 
   /**
@@ -97,7 +97,7 @@ class DashboardService {
     }>;
   }> {
     const response = await apiClient.get<any>('/dashboard/widgets');
-    return response.data;
+    return response;
   }
 
   /**
@@ -142,7 +142,7 @@ class DashboardService {
     total: number;
   }> {
     const response = await apiClient.get<any>('/dashboard/notifications', { params });
-    return response.data;
+    return response;
   }
 
   /**
@@ -174,7 +174,7 @@ class DashboardService {
     }>;
   }> {
     const response = await apiClient.get<any>('/dashboard/quick-actions');
-    return response.data;
+    return response;
   }
 
   /**
@@ -203,7 +203,7 @@ class DashboardService {
     }>;
   }> {
     const response = await apiClient.get<any>('/dashboard/recommendations');
-    return response.data;
+    return response;
   }
 
   /**

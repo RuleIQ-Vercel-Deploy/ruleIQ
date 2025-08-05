@@ -46,7 +46,7 @@ class ReadinessService {
    */
   async getReadinessScore(businessProfileId: string): Promise<ReadinessScore> {
     const response = await apiClient.get<ReadinessScore>(`/readiness/${businessProfileId}`);
-    return response.data;
+    return response;
   }
 
   /**
@@ -57,7 +57,7 @@ class ReadinessService {
     const response = await apiClient.get<GapAnalysis>(`/readiness/gaps/${businessProfileId}`, {
       params,
     });
-    return response.data;
+    return response;
   }
 
   /**
@@ -101,7 +101,7 @@ class ReadinessService {
       business_profile_id: businessProfileId,
       target_frameworks: targetFrameworks,
     });
-    return response.data;
+    return response;
   }
 
   /**
@@ -120,7 +120,7 @@ class ReadinessService {
       business_profile_id: businessProfileId,
       answers,
     });
-    return response.data;
+    return response;
   }
 
   /**
@@ -149,7 +149,7 @@ class ReadinessService {
     const response = await apiClient.get<any>(`/readiness/trends/${businessProfileId}`, {
       params: { days },
     });
-    return response.data;
+    return response;
   }
 
   /**
@@ -173,7 +173,7 @@ class ReadinessService {
     const response = await apiClient.get<any>('/readiness/benchmarks', {
       params: { industry, company_size },
     });
-    return response.data;
+    return response;
   }
 
   /**

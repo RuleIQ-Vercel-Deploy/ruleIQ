@@ -33,6 +33,12 @@ from .generated_policy import GeneratedPolicy
 from .chat_conversation import ChatConversation
 from .chat_message import ChatMessage
 from .report_schedule import ReportSchedule
+# Freemium models
+from .assessment_lead import AssessmentLead
+from .freemium_assessment_session import FreemiumAssessmentSession
+from .ai_question_bank import AIQuestionBank
+from .lead_scoring_event import LeadScoringEvent
+from .conversion_event import ConversionEvent
 from .models.policy import Policy
 from .models.evidence import Evidence
 from .models.integrations import (
@@ -82,6 +88,12 @@ __all__ = [
     "ChatConversation",
     "ChatMessage",
     "ReportSchedule",
+    # Freemium models
+    "AssessmentLead",
+    "FreemiumAssessmentSession",
+    "AIQuestionBank",
+    "LeadScoringEvent",
+    "ConversionEvent",
     "Policy",
     "Evidence",
     "Integration",

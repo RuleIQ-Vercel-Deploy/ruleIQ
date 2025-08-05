@@ -1,0 +1,351 @@
+'use client';
+
+import { useState, useEffect } from 'react';
+import { Button } from '../ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
+import { Progress } from '../ui/progress';
+import { Alert, AlertDescription } from '../ui/alert';
+import { RadioGroup, RadioGroupItem } from '../ui/radio-group';
+import { Label } from '../ui/label';
+import { Textarea } from '../ui/textarea';
+import { Slider } from '../ui/slider';
+import { 
+  Loader2, 
+  ArrowRight, 
+  ArrowLeft, 
+  CheckCircle,
+  AlertCircle,
+  Brain,
+  Clock
+} from 'lucide-react';
+import { useFreemiumStore, useFreemiumProgress } from '../../lib/stores/freemium-store';
+import type { AssessmentQuestion } from '../../types/freemium';
+
+interface FreemiumAssessmentFlowProps {
+  token?: string;
+  className?: string;
+}
+
+export function FreemiumAssessmentFlow({ token, className = "" }: FreemiumAssessmentFlowProps) {
+  const { 
+    sessionToken, 
+    currentQuestion, 
+    isLoading, 
+    error, 
+    submitAnswer
+  } = useFreemiumStore();
+  const { progress, questionsAnswered } = useFreemiumProgress();
+  const assessmentToken = token || sessionToken;
+  
+  // For now, we'll manage submitting state locally
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  
+  const [currentAnswer, setCurrentAnswer] = useState<string | number>('');
+  const [answerError, setAnswerError] = useState('');
+
+  // Reset answer when question changes
+  useEffect(() => {
+    if (currentQuestion) {
+      setCurrentAnswer('');
+      setAnswerError('');
+    }
+  }, [currentQuestion?.question_id]);
+
+  const handleAnswerChange = (value: string | number) => {
+    setCurrentAnswer(value);
+    if (answerError) {
+      setAnswerError('');
+    }
+  };
+
+  const handleSubmit = async () => {
+    if (!currentQuestion) return;
+
+    // Validate answer
+    if (currentAnswer === '' || currentAnswer === null || currentAnswer === undefined) {
+      setAnswerError('Please select an answer before continuing');
+      return;
+    }
+
+    // Submit answer
+    setIsSubmitting(true);
+    try {
+      await submitAnswer({
+        session_token: assessmentToken || '',
+        question_id: currentQuestion.question_id,
+        answer: currentAnswer,
+      });
+    } catch (error) {
+      console.error('Failed to submit answer:', error);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const renderQuestion = (question: AssessmentQuestion) => {
+    switch (question.question_type) {
+      case 'multiple_choice':
+        return (
+          <RadioGroup
+            value={currentAnswer.toString()}
+            onValueChange={handleAnswerChange}
+            className="space-y-3"
+          >
+            {question.answer_options?.map((option, index) => (
+              <div key={option} className="flex items-center space-x-3">
+                <RadioGroupItem 
+                  value={option} 
+                  id={`option-${index}`}
+                  disabled={isSubmitting}
+                />
+                <Label 
+                  htmlFor={`option-${index}`} 
+                  className="text-sm font-medium cursor-pointer flex-1"
+                >
+                  {option}
+                </Label>
+              </div>
+            ))}
+          </RadioGroup>
+        );
+
+      case 'text':
+        return (
+          <Textarea
+            placeholder="Please provide your answer..."
+            value={currentAnswer.toString()}
+            onChange={(e) => handleAnswerChange(e.target.value)}
+            className="min-h-[100px] resize-none"
+            disabled={isSubmitting}
+            maxLength={500}
+          />
+        );
+
+      case 'yes_no':
+        return (
+          <RadioGroup
+            value={currentAnswer.toString()}
+            onValueChange={handleAnswerChange}
+            className="space-y-3"
+          >
+            <div className="flex items-center space-x-3">
+              <RadioGroupItem value="true" id="yes" disabled={isSubmitting} />
+              <Label htmlFor="yes" className="text-sm font-medium cursor-pointer">
+                Yes
+              </Label>
+            </div>
+            <div className="flex items-center space-x-3">
+              <RadioGroupItem value="false" id="no" disabled={isSubmitting} />
+              <Label htmlFor="no" className="text-sm font-medium cursor-pointer">
+                No
+              </Label>
+            </div>
+          </RadioGroup>
+        );
+
+      case 'scale':
+        return (
+          <div className="space-y-4">
+            <div className="px-3">
+              <Slider
+                value={[Number(currentAnswer) || 1]}
+                onValueChange={(values) => handleAnswerChange(values[0])}
+                max={10}
+                min={1}
+                step={1}
+                className="w-full"
+                disabled={isSubmitting}
+              />
+            </div>
+            <div className="flex justify-between text-xs text-gray-500 px-3">
+              <span>1 (Very Low)</span>
+              <span className="font-medium text-teal-600">
+                {currentAnswer || 1}
+              </span>
+              <span>10 (Very High)</span>
+            </div>
+          </div>
+        );
+
+      default:
+        return (
+          <Alert variant="destructive">
+            <AlertCircle className="h-4 w-4" />
+            <AlertDescription>
+              Unsupported question type. Please refresh and try again.
+            </AlertDescription>
+          </Alert>
+        );
+    }
+  };
+
+  // Loading state
+  if (isLoading) {
+    return (
+      <Card className={`w-full max-w-2xl mx-auto ${className}`}>
+        <CardContent className="flex flex-col items-center justify-center py-12 space-y-4">
+          <div className="w-12 h-12 bg-teal-100 rounded-full flex items-center justify-center">
+            <Brain className="w-6 h-6 text-teal-600 animate-pulse" />
+          </div>
+          <div className="text-center space-y-2">
+            <h3 className="text-lg font-semibold text-gray-900">
+              Loading Your Assessment
+            </h3>
+            <p className="text-gray-600">
+              Preparing personalized questions based on your business...
+            </p>
+          </div>
+          <Loader2 className="w-6 h-6 animate-spin text-teal-600" />
+        </CardContent>
+      </Card>
+    );
+  }
+
+  // Error state
+  if (error) {
+    return (
+      <Card className={`w-full max-w-2xl mx-auto ${className}`}>
+        <CardContent className="py-8">
+          <Alert variant="destructive">
+            <AlertCircle className="h-4 w-4" />
+            <AlertDescription className="text-base">
+              {typeof error === 'string' ? error : 'Failed to load assessment. Please try again.'}
+            </AlertDescription>
+          </Alert>
+          <div className="mt-6 text-center">
+            <Button 
+              onClick={() => window.location.reload()} 
+              className="bg-teal-600 hover:bg-teal-700"
+            >
+              Try Again
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  // No question loaded
+  if (!currentQuestion) {
+    return (
+      <Card className={`w-full max-w-2xl mx-auto ${className}`}>
+        <CardContent className="py-8 text-center">
+          <Alert>
+            <AlertCircle className="h-4 w-4" />
+            <AlertDescription>
+              Assessment not found. Please start over.
+            </AlertDescription>
+          </Alert>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  return (
+    <Card className={`w-full max-w-2xl mx-auto ${className}`}>
+      {/* Progress Header */}
+      <CardHeader className="space-y-4">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-2">
+            <Brain className="w-5 h-5 text-teal-600" />
+            <span className="text-sm font-medium text-gray-600">
+              AI Compliance Assessment
+            </span>
+          </div>
+          <div className="flex items-center space-x-2 text-sm text-gray-500">
+            <Clock className="w-4 h-4" />
+            <span>~{Math.max(1, 5 - questionsAnswered)} min left</span>
+          </div>
+        </div>
+        
+        <div className="space-y-2">
+          <div className="flex justify-between text-sm">
+            <span className="text-gray-600">Progress</span>
+            <span className="font-medium text-teal-600">{Math.round(progress)}%</span>
+          </div>
+          <Progress value={progress} className="h-2" />
+        </div>
+      </CardHeader>
+
+      <CardContent className="space-y-6">
+        {/* Question */}
+        <div className="space-y-4">
+          <CardTitle className="text-xl font-semibold text-gray-900 leading-7">
+            {currentQuestion.question_text}
+          </CardTitle>
+          
+          {/* Question Type Indicator */}
+          <div className="flex items-center space-x-2 text-sm text-gray-500">
+            <div className="w-2 h-2 bg-teal-500 rounded-full"></div>
+            <span>
+              {currentQuestion.question_type === 'multiple_choice' && 'Select one option'}
+              {currentQuestion.question_type === 'text' && 'Enter your response'}
+              {currentQuestion.question_type === 'yes_no' && 'Yes or No'}
+              {currentQuestion.question_type === 'scale' && 'Rate from 1 to 10'}
+            </span>
+          </div>
+        </div>
+
+        {/* Answer Input */}
+        <div className="space-y-4">
+          {renderQuestion(currentQuestion)}
+          
+          {answerError && (
+            <Alert variant="destructive">
+              <AlertDescription>{answerError}</AlertDescription>
+            </Alert>
+          )}
+        </div>
+
+        {/* Navigation */}
+        <div className="flex justify-between items-center pt-6 border-t border-gray-100">
+          <div className="text-sm text-gray-500">
+            Question {questionsAnswered + 1}
+          </div>
+          
+          <Button
+            onClick={handleSubmit}
+            disabled={isSubmitting || currentAnswer === ''}
+            className="bg-teal-600 hover:bg-teal-700 text-white px-8"
+          >
+            {isSubmitting ? (
+              <>
+                <Loader2 className="w-4 h-4 animate-spin mr-2" />
+                Processing...
+              </>
+            ) : (
+              <>
+                Next
+                <ArrowRight className="w-4 h-4 ml-2" />
+              </>
+            )}
+          </Button>
+        </div>
+
+        {/* AI Indicator */}
+        <div className="flex items-center justify-center space-x-2 text-xs text-gray-400 pt-2">
+          <Brain className="w-3 h-3" />
+          <span>Questions are generated by AI based on your responses</span>
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
+
+// Minimal progress indicator component for standalone use
+export function FreemiumAssessmentProgress() {
+  const { progress, questionsAnswered } = useFreemiumProgress();
+  
+  return (
+    <div className="w-full max-w-sm mx-auto space-y-2">
+      <div className="flex justify-between text-sm">
+        <span className="text-gray-600">Assessment Progress</span>
+        <span className="font-medium text-teal-600">{Math.round(progress)}%</span>
+      </div>
+      <Progress value={progress} className="h-2" />
+      <div className="text-xs text-gray-500 text-center">
+        {questionsAnswered} questions answered
+      </div>
+    </div>
+  );
+}

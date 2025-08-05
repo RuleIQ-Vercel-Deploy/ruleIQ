@@ -65,7 +65,7 @@ class PaymentService {
       '/payments/create-checkout-session',
       data,
     );
-    return response.data;
+    return response;
   }
 
   /**
@@ -76,7 +76,7 @@ class PaymentService {
       '/payments/create-portal-session',
       { return_url },
     );
-    return response.data;
+    return response;
   }
 
   /**
@@ -87,7 +87,7 @@ class PaymentService {
       const response = await apiClient.get<{ subscription: Subscription }>(
         '/payments/subscription',
       );
-      return response.data.subscription;
+      return response.subscription;
     } catch (error) {
       return null;
     }
@@ -100,7 +100,7 @@ class PaymentService {
     const response = await apiClient.post<Subscription>('/payments/subscription/cancel', {
       at_period_end,
     });
-    return response.data;
+    return response;
   }
 
   /**
@@ -108,7 +108,7 @@ class PaymentService {
    */
   async reactivateSubscription(): Promise<Subscription> {
     const response = await apiClient.post<Subscription>('/payments/subscription/reactivate');
-    return response.data;
+    return response;
   }
 
   /**
@@ -118,7 +118,7 @@ class PaymentService {
     const response = await apiClient.get<{ payment_methods: PaymentMethod[] }>(
       '/payments/payment-methods',
     );
-    return response.data.payment_methods;
+    return response.payment_methods;
   }
 
   /**
@@ -128,7 +128,7 @@ class PaymentService {
     const response = await apiClient.post<PaymentMethod>('/payments/payment-methods', {
       payment_method_id,
     });
-    return response.data;
+    return response;
   }
 
   /**
@@ -145,7 +145,7 @@ class PaymentService {
     const response = await apiClient.post<PaymentMethod>(
       `/payments/payment-methods/${payment_method_id}/default`,
     );
-    return response.data;
+    return response;
   }
 
   /**
@@ -153,7 +153,7 @@ class PaymentService {
    */
   async getInvoices(params?: { limit?: number; starting_after?: string }): Promise<Invoice[]> {
     const response = await apiClient.get<{ invoices: Invoice[] }>('/payments/invoices', { params });
-    return response.data.invoices;
+    return response.invoices;
   }
 
   /**
@@ -172,7 +172,7 @@ class PaymentService {
   async getUpcomingInvoice(): Promise<Invoice | null> {
     try {
       const response = await apiClient.get<{ invoice: Invoice }>('/payments/invoices/upcoming');
-      return response.data.invoice;
+      return response.invoice;
     } catch (error) {
       return null;
     }
@@ -191,7 +191,7 @@ class PaymentService {
     };
   }> {
     const response = await apiClient.post<any>('/payments/coupons/apply', { coupon_code });
-    return response.data;
+    return response;
   }
 
   /**
@@ -216,7 +216,7 @@ class PaymentService {
     can_upgrade: boolean;
   }> {
     const response = await apiClient.get<any>('/payments/subscription/limits');
-    return response.data;
+    return response;
   }
 }
 

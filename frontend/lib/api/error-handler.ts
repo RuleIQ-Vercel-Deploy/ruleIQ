@@ -207,7 +207,7 @@ export function calculateRetryDelay(attemptNumber: number, config: RetryConfig):
 export function handleApiError(error: AxiosError): EnhancedApiError {
   const classification = classifyError(error);
   const status = error.response?.status || 0;
-  const detail = error.response?.data?.detail || error.message || 'Unknown error';
+  const detail = (error.response?.data as any)?.detail || error.message || 'Unknown error';
 
   return new EnhancedApiError(
     classification.type,
@@ -293,17 +293,30 @@ export function getContextualErrorMessage(error: EnhancedApiError, context?: str
       [ErrorType.NETWORK]: 'Unable to connect. Please check your internet connection.',
       [ErrorType.SERVER]: 'Login service is temporarily unavailable. Please try again later.',
       [ErrorType.TIMEOUT]: 'Login is taking longer than expected. Please try again.',
+      [ErrorType.PERMISSION]: 'Access denied. Please check your credentials.',
+      [ErrorType.NOT_FOUND]: 'Login endpoint not found. Please contact support.',
+      [ErrorType.RATE_LIMIT]: 'Too many login attempts. Please wait and try again.',
+      [ErrorType.UNKNOWN]: 'An unexpected error occurred during login.',
     },
     upload: {
       [ErrorType.VALIDATION]: 'Invalid file format or size. Please check the requirements.',
       [ErrorType.NETWORK]: 'Upload failed due to connection issues. Please try again.',
       [ErrorType.TIMEOUT]: 'Upload is taking too long. Please try with a smaller file.',
       [ErrorType.SERVER]: 'Upload service is temporarily unavailable.',
+      [ErrorType.PERMISSION]: 'You do not have permission to upload files.',
+      [ErrorType.NOT_FOUND]: 'Upload endpoint not found. Please contact support.',
+      [ErrorType.RATE_LIMIT]: 'Upload rate limit exceeded. Please wait and try again.',
+      [ErrorType.UNKNOWN]: 'An unexpected error occurred during upload.',
     },
     save: {
       [ErrorType.VALIDATION]: 'Some fields contain invalid data. Please review and correct.',
       [ErrorType.NETWORK]: 'Unable to save due to connection issues. Your data is safe.',
       [ErrorType.SERVER]: 'Save failed. Please try again or contact support if the issue persists.',
+      [ErrorType.PERMISSION]: 'You do not have permission to save this data.',
+      [ErrorType.NOT_FOUND]: 'Save endpoint not found. Please contact support.',
+      [ErrorType.TIMEOUT]: 'Save operation timed out. Please try again.',
+      [ErrorType.RATE_LIMIT]: 'Save rate limit exceeded. Please wait and try again.',
+      [ErrorType.UNKNOWN]: 'An unexpected error occurred while saving.',
     },
   };
 

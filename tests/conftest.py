@@ -315,6 +315,13 @@ from database.implementation_plan import ImplementationPlan
 from database.readiness_assessment import ReadinessAssessment
 from database.report_schedule import ReportSchedule
 
+# Import freemium models
+from database.assessment_lead import AssessmentLead
+from database.freemium_assessment_session import FreemiumAssessmentSession
+from database.ai_question_bank import AIQuestionBank
+from database.lead_scoring_event import LeadScoringEvent
+from database.conversion_event import ConversionEvent
+
 # Try to import integration models if they exist
 try:
     from database.models.integrations import (
@@ -389,6 +396,10 @@ def setup_database(event_loop):
             raise RuntimeError(f"Failed to run database migrations: {result.stderr}")
     finally:
         os.chdir(original_dir)
+
+    # Ensure all tables are created (including freemium tables)
+    from database import Base
+    Base.metadata.create_all(bind=engine)
 
     # Initialize default frameworks
     session = TestSessionLocal()

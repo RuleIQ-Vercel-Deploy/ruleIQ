@@ -20,7 +20,7 @@ class IntegrationService {
    */
   async getIntegrations(): Promise<Integration[]> {
     const response = await apiClient.get<Integration[]>('/integrations');
-    return response.data;
+    return response;
   }
 
   /**
@@ -28,7 +28,7 @@ class IntegrationService {
    */
   async getConnectedIntegrations(): Promise<Integration[]> {
     const response = await apiClient.get<Integration[]>('/integrations/connected');
-    return response.data;
+    return response;
   }
 
   /**
@@ -40,7 +40,7 @@ class IntegrationService {
     auth_url?: string;
   }> {
     const response = await apiClient.post<any>('/integrations/connect', data);
-    return response.data;
+    return response;
   }
 
   /**
@@ -59,7 +59,7 @@ class IntegrationService {
     details?: any;
   }> {
     const response = await apiClient.post<any>(`/integrations/${integrationId}/test`);
-    return response.data;
+    return response;
   }
 
   /**
@@ -81,7 +81,7 @@ class IntegrationService {
       `/integrations/${integrationId}/sync`,
       options || {},
     );
-    return response.data;
+    return response;
   }
 
   /**
@@ -98,7 +98,7 @@ class IntegrationService {
     }>;
   }> {
     const response = await apiClient.get<any>(`/integrations/${integrationId}/sync-history`);
-    return response.data;
+    return response;
   }
 
   /**
@@ -113,7 +113,7 @@ class IntegrationService {
     test_url: string;
   }> {
     const response = await apiClient.post<any>(`/integrations/${integrationId}/webhooks`, config);
-    return response.data;
+    return response;
   }
 
   /**
@@ -138,7 +138,7 @@ class IntegrationService {
     total: number;
   }> {
     const response = await apiClient.get<any>(`/integrations/${integrationId}/logs`, { params });
-    return response.data;
+    return response;
   }
 
   /**
@@ -152,7 +152,7 @@ class IntegrationService {
       `/integrations/${integrationId}/config`,
       config,
     );
-    return response.data;
+    return response;
   }
 
   /**
@@ -179,7 +179,7 @@ class IntegrationService {
       code,
       state,
     });
-    return response.data;
+    return response;
   }
 }
 

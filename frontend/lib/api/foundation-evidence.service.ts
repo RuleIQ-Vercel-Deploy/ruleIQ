@@ -95,8 +95,8 @@ class FoundationEvidenceService {
     capabilities: string[];
     message: string;
   }> {
-    const response = await apiClient.post('/foundation/evidence/aws/configure', config);
-    return response.data;
+    const response = await apiClient.post<any>('/foundation/evidence/aws/configure', config);
+    return response;
   }
 
   /**
@@ -110,8 +110,8 @@ class FoundationEvidenceService {
     capabilities: string[];
     message: string;
   }> {
-    const response = await apiClient.post('/foundation/evidence/okta/configure', config);
-    return response.data;
+    const response = await apiClient.post<any>('/foundation/evidence/okta/configure', config);
+    return response;
   }
 
   /**
@@ -125,8 +125,8 @@ class FoundationEvidenceService {
     capabilities: string[];
     message: string;
   }> {
-    const response = await apiClient.post('/foundation/evidence/google/configure', config);
-    return response.data;
+    const response = await apiClient.post<any>('/foundation/evidence/google/configure', config);
+    return response;
   }
 
   /**
@@ -140,8 +140,8 @@ class FoundationEvidenceService {
     capabilities: string[];
     message: string;
   }> {
-    const response = await apiClient.post('/foundation/evidence/microsoft/configure', config);
-    return response.data;
+    const response = await apiClient.post<any>('/foundation/evidence/microsoft/configure', config);
+    return response;
   }
 
   /**
@@ -152,7 +152,7 @@ class FoundationEvidenceService {
       '/foundation/evidence/collect',
       request,
     );
-    return response.data;
+    return response;
   }
 
   /**
@@ -162,7 +162,7 @@ class FoundationEvidenceService {
     const response = await apiClient.get<EvidenceCollectionStatus>(
       `/foundation/evidence/collect/${collectionId}/status`,
     );
-    return response.data;
+    return response;
   }
 
   /**
@@ -188,10 +188,10 @@ class FoundationEvidenceService {
     if (options?.page) params.append('page', options.page.toString());
     if (options?.page_size) params.append('page_size', options.page_size.toString());
 
-    const response = await apiClient.get(
+    const response = await apiClient.get<any>(
       `/foundation/evidence/collect/${collectionId}/results?${params}`,
     );
-    return response.data;
+    return response;
   }
 
   /**
@@ -204,8 +204,8 @@ class FoundationEvidenceService {
     healthy_integrations: number;
     timestamp: string;
   }> {
-    const response = await apiClient.get('/foundation/evidence/health');
-    return response.data;
+    const response = await apiClient.get<any>('/foundation/evidence/health');
+    return response;
   }
 
   /**

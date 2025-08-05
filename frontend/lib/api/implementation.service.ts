@@ -75,7 +75,7 @@ class ImplementationService {
       '/implementation/plans',
       { params },
     );
-    return response.data;
+    return response;
   }
 
   /**
@@ -83,7 +83,7 @@ class ImplementationService {
    */
   async getImplementationPlan(planId: string): Promise<ImplementationPlan> {
     const response = await apiClient.get<ImplementationPlan>(`/implementation/plans/${planId}`);
-    return response.data;
+    return response;
   }
 
   /**
@@ -93,7 +93,7 @@ class ImplementationService {
     data: CreateImplementationPlanRequest,
   ): Promise<ImplementationPlan> {
     const response = await apiClient.post<ImplementationPlan>('/implementation/plans', data);
-    return response.data;
+    return response;
   }
 
   /**
@@ -107,7 +107,7 @@ class ImplementationService {
       `/implementation/plans/${planId}`,
       data,
     );
-    return response.data;
+    return response;
   }
 
   /**
@@ -123,7 +123,7 @@ class ImplementationService {
       `/implementation/plans/${planId}/tasks/${taskId}/progress`,
       { progress, notes },
     );
-    return response.data;
+    return response;
   }
 
   /**
@@ -138,7 +138,7 @@ class ImplementationService {
       `/implementation/plans/${planId}/milestones/${milestoneId}/complete`,
       { evidence },
     );
-    return response.data;
+    return response;
   }
 
   /**
@@ -168,7 +168,7 @@ class ImplementationService {
     const response = await apiClient.get<any>('/implementation/recommendations', {
       params: { business_profile_id: businessProfileId, framework_id: frameworkId },
     });
-    return response.data;
+    return response;
   }
 
   /**
@@ -204,7 +204,7 @@ class ImplementationService {
     }>;
   }> {
     const response = await apiClient.get<any>(`/implementation/resources/${frameworkId}`);
-    return response.data;
+    return response;
   }
 
   /**
@@ -247,7 +247,7 @@ class ImplementationService {
     };
   }> {
     const response = await apiClient.get<any>(`/implementation/plans/${planId}/analytics`);
-    return response.data;
+    return response;
   }
 }
 

@@ -16,7 +16,7 @@ class FrameworkService {
    */
   async getFrameworks(): Promise<ComplianceFramework[]> {
     const response = await apiClient.get<ComplianceFramework[]>('/frameworks');
-    return response.data;
+    return response;
   }
 
   /**
@@ -24,7 +24,7 @@ class FrameworkService {
    */
   async getFramework(id: string): Promise<ComplianceFramework> {
     const response = await apiClient.get<ComplianceFramework>(`/frameworks/${id}`);
-    return response.data;
+    return response;
   }
 
   /**
@@ -34,7 +34,7 @@ class FrameworkService {
     const response = await apiClient.get<FrameworkRecommendation[]>(
       `/frameworks/recommendations/${businessProfileId}`,
     );
-    return response.data;
+    return response;
   }
 
   /**

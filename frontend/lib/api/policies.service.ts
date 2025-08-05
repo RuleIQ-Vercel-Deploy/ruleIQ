@@ -29,7 +29,7 @@ class PolicyService {
     page_size?: number;
   }): Promise<{ policies: Policy[] }> {
     const response = await apiClient.get<{ policies: Policy[] }>('/policies', { params });
-    return response.data;
+    return response;
   }
 
   /**
@@ -37,7 +37,7 @@ class PolicyService {
    */
   async getPolicy(id: string): Promise<Policy> {
     const response = await apiClient.get<Policy>(`/policies/${id}`);
-    return response.data;
+    return response;
   }
 
   /**
@@ -45,7 +45,7 @@ class PolicyService {
    */
   async generatePolicy(data: GeneratePolicyRequest): Promise<Policy> {
     const response = await apiClient.post<Policy>('/policies/generate', data);
-    return response.data;
+    return response;
   }
 
   /**
@@ -64,7 +64,7 @@ class PolicyService {
       status: string;
       approved: boolean;
     }>(`/policies/${id}/status`, data);
-    return response.data;
+    return response;
   }
 
   /**
@@ -78,7 +78,7 @@ class PolicyService {
       message: string;
       policy_id: string;
     }>(`/policies/${id}/approve`);
-    return response.data;
+    return response;
   }
 
   /**
@@ -93,7 +93,7 @@ class PolicyService {
    */
   async regeneratePolicySection(id: string, data: RegeneratePolicySectionRequest): Promise<Policy> {
     const response = await apiClient.post<Policy>(`/policies/${id}/regenerate-section`, data);
-    return response.data;
+    return response;
   }
 
   /**
@@ -124,7 +124,7 @@ class PolicyService {
   }> {
     const params = frameworkId ? { framework_id: frameworkId } : undefined;
     const response = await apiClient.get<any>('/policies/templates', { params });
-    return response.data;
+    return response;
   }
 
   /**
@@ -134,7 +134,7 @@ class PolicyService {
     const response = await apiClient.post<Policy>(`/policies/${id}/clone`, {
       name: newName,
     });
-    return response.data;
+    return response;
   }
 
   /**
@@ -149,7 +149,7 @@ class PolicyService {
     }>;
   }> {
     const response = await apiClient.get<any>(`/policies/${id}/versions`);
-    return response.data;
+    return response;
   }
 }
 

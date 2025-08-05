@@ -1,0 +1,283 @@
+# Production Docker Compose for AI Assessment Freemium Strategy
+# Includes enhanced configurations for public endpoints, monitoring, and security
+
+version: '3.8'
+
+services:
+  # Main FastAPI application
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.freemium
+      target: production
+    image: ruleiq/freemium-api:latest
+    container_name: ruleiq-freemium-api
+    ports:
+      - "8000:8000"
+    environment:
+      - ENV=production
+      - DATABASE_URL=${DATABASE_URL}
+      - REDIS_URL=${REDIS_URL}
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
+      - FERNET_KEY=${FERNET_KEY}
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - ALLOWED_ORIGINS=${ALLOWED_ORIGINS}
+      - CORS_ORIGINS=${CORS_ORIGINS}
+      - RATE_LIMIT_ENABLED=true
+      - FREEMIUM_RATE_LIMIT=50
+      - AI_RATE_LIMIT=20
+      - CACHE_TTL=3600
+      - LOG_LEVEL=info
+      - WORKERS=4
+    volumes:
+      - app_logs:/app/logs
+      - static_files:/app/static
+    depends_on:
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - freemium-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 2G
+        reservations:
+          cpus: '1'
+          memory: 1G
+
+  # Celery worker for background tasks
+  celery_worker:
+    build:
+      context: .
+      dockerfile: Dockerfile.freemium
+      target: production
+    image: ruleiq/freemium-api:latest
+    container_name: ruleiq-celery-worker
+    command: celery -A celery_app worker --loglevel=info --concurrency=4 --queues=freemium,ai,notifications,reports
+    environment:
+      - ENV=production
+      - DATABASE_URL=${DATABASE_URL}
+      - REDIS_URL=${REDIS_URL}
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
+      - FERNET_KEY=${FERNET_KEY}
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - LOG_LEVEL=info
+    volumes:
+      - worker_logs:/app/logs
+    depends_on:
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - freemium-network
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 2G
+        reservations:
+          cpus: '1'
+          memory: 1G
+
+  # Celery beat for scheduled tasks
+  celery_beat:
+    build:
+      context: .
+      dockerfile: Dockerfile.freemium
+      target: production
+    image: ruleiq/freemium-api:latest
+    container_name: ruleiq-celery-beat
+    command: celery -A celery_app beat --loglevel=info --scheduler=django_celery_beat.schedulers:DatabaseScheduler
+    environment:
+      - ENV=production
+      - DATABASE_URL=${DATABASE_URL}
+      - REDIS_URL=${REDIS_URL}
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
+      - FERNET_KEY=${FERNET_KEY}
+      - LOG_LEVEL=info
+    volumes:
+      - beat_logs:/app/logs
+    depends_on:
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - freemium-network
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+
+  # Redis for caching and message broker
+  redis:
+    image: redis:7-alpine
+    container_name: ruleiq-redis
+    command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD} --maxmemory 512mb --maxmemory-policy allkeys-lru
+    environment:
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+    volumes:
+      - redis_data:/data
+      - ./config/redis.conf:/usr/local/etc/redis/redis.conf:ro
+    ports:
+      - "6379:6379"
+    restart: unless-stopped
+    networks:
+      - freemium-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 1G
+        reservations:
+          cpus: '0.5'
+          memory: 512M
+
+  # Nginx reverse proxy with enhanced security
+  nginx:
+    image: nginx:alpine
+    container_name: ruleiq-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./config/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./config/nginx/conf.d:/etc/nginx/conf.d:ro
+      - ./ssl:/etc/nginx/ssl:ro
+      - static_files:/var/www/static:ro
+      - nginx_logs:/var/log/nginx
+    depends_on:
+      - app
+    restart: unless-stopped
+    networks:
+      - freemium-network
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 512M
+        reservations:
+          cpus: '0.5'
+          memory: 256M
+
+  # Monitoring with Prometheus
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: ruleiq-prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./config/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--storage.tsdb.retention.time=200h'
+      - '--web.enable-lifecycle'
+    restart: unless-stopped
+    networks:
+      - freemium-network
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 1G
+        reservations:
+          cpus: '0.5'
+          memory: 512M
+
+  # Grafana for visualization
+  grafana:
+    image: grafana/grafana:latest
+    container_name: ruleiq-grafana
+    ports:
+      - "3001:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD}
+      - GF_USERS_ALLOW_SIGN_UP=false
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./config/grafana/provisioning:/etc/grafana/provisioning:ro
+    depends_on:
+      - prometheus
+    restart: unless-stopped
+    networks:
+      - freemium-network
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 1G
+        reservations:
+          cpus: '0.5'
+          memory: 512M
+
+  # Log aggregation with Fluentd
+  fluentd:
+    build: ./config/fluentd
+    container_name: ruleiq-fluentd
+    volumes:
+      - app_logs:/fluentd/log/app:ro
+      - worker_logs:/fluentd/log/worker:ro
+      - beat_logs:/fluentd/log/beat:ro
+      - nginx_logs:/fluentd/log/nginx:ro
+      - ./config/fluentd/fluent.conf:/fluentd/etc/fluent.conf:ro
+    ports:
+      - "24224:24224"
+      - "24224:24224/udp"
+    restart: unless-stopped
+    networks:
+      - freemium-network
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+
+volumes:
+  redis_data:
+    driver: local
+  prometheus_data:
+    driver: local
+  grafana_data:
+    driver: local
+  app_logs:
+    driver: local
+  worker_logs:
+    driver: local
+  beat_logs:
+    driver: local
+  nginx_logs:
+    driver: local
+  static_files:
+    driver: local
+
+networks:
+  freemium-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16

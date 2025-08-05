@@ -52,7 +52,7 @@ class EvidenceService {
     const response = await apiClient.get<{ items: EvidenceItem[]; total: number }>('/evidence', {
       params,
     });
-    return response.data;
+    return response;
   }
 
   /**
@@ -60,7 +60,7 @@ class EvidenceService {
    */
   async getEvidenceItem(id: string): Promise<EvidenceItem> {
     const response = await apiClient.get<EvidenceItem>(`/evidence/${id}`);
-    return response.data;
+    return response;
   }
 
   /**
@@ -68,7 +68,7 @@ class EvidenceService {
    */
   async createEvidence(data: CreateEvidenceRequest): Promise<EvidenceItem> {
     const response = await apiClient.post<EvidenceItem>('/evidence', data);
-    return response.data;
+    return response;
   }
 
   /**
@@ -76,7 +76,7 @@ class EvidenceService {
    */
   async updateEvidence(id: string, data: UpdateEvidenceRequest): Promise<EvidenceItem> {
     const response = await apiClient.patch<EvidenceItem>(`/evidence/${id}`, data);
-    return response.data;
+    return response;
   }
 
   /**
@@ -99,7 +99,7 @@ class EvidenceService {
       failed_count: number;
       failed_ids?: string[];
     }>('/evidence/bulk-update', data);
-    return response.data;
+    return response;
   }
 
   /**
@@ -115,7 +115,7 @@ class EvidenceService {
       file,
       onProgress,
     );
-    return response.data;
+    return response;
   }
 
   /**
@@ -136,7 +136,7 @@ class EvidenceService {
       test_connection: boolean;
       next_collection?: string;
     }>(`/evidence/${id}/automation`, config);
-    return response.data;
+    return response;
   }
 
   /**
@@ -152,7 +152,7 @@ class EvidenceService {
     recent_activity: any[];
   }> {
     const response = await apiClient.get<any>(`/evidence/dashboard/${frameworkId}`);
-    return response.data;
+    return response;
   }
 
   /**
@@ -171,7 +171,7 @@ class EvidenceService {
     reasoning: string;
   }> {
     const response = await apiClient.post<any>(`/evidence/${id}/classify`, request || {});
-    return response.data;
+    return response;
   }
 
   /**
@@ -181,7 +181,7 @@ class EvidenceService {
     const response = await apiClient.get<EvidenceItem[]>(
       `/evidence/search?q=${encodeURIComponent(query)}`,
     );
-    return response.data;
+    return response;
   }
 
   /**
@@ -199,7 +199,7 @@ class EvidenceService {
     }>;
   }> {
     const response = await apiClient.get<any>(`/evidence/requirements/${frameworkId}`);
-    return response.data;
+    return response;
   }
 
   /**
@@ -213,7 +213,7 @@ class EvidenceService {
     suggestions: string[];
   }> {
     const response = await apiClient.get<any>(`/evidence/${id}/quality`);
-    return response.data;
+    return response;
   }
 }
 

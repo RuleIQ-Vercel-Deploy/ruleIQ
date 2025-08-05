@@ -30,6 +30,7 @@ class ChatService {
   private ws: WebSocket | null = null;
   private reconnectTimeout: NodeJS.Timeout | null = null;
   private messageHandlers: ((message: ChatWebSocketMessage) => void)[] = [];
+  private currentConversationId: string | null = null;
 
   /**
    * Get all chat conversations
@@ -42,7 +43,7 @@ class ChatService {
       '/chat/conversations',
       { params },
     );
-    return response.data;
+    return response;
   }
 
   /**
@@ -56,7 +57,7 @@ class ChatService {
       conversation: ChatConversation;
       messages: ChatMessage[];
     }>(`/chat/conversations/${id}`);
-    return response.data;
+    return response;
   }
 
   /**
@@ -70,7 +71,7 @@ class ChatService {
       conversation: ChatConversation;
       messages: ChatMessage[];
     }>('/chat/conversations', data || {});
-    return response.data;
+    return response;
   }
 
   /**
@@ -81,7 +82,7 @@ class ChatService {
       `/chat/conversations/${conversationId}/messages`,
       data,
     );
-    return response.data;
+    return response;
   }
 
   /**
@@ -106,7 +107,7 @@ class ChatService {
     total_recommendations: number;
   }> {
     const response = await apiClient.post<any>('/chat/evidence-recommendations', data);
-    return response.data;
+    return response;
   }
 
   /**
@@ -120,7 +121,7 @@ class ChatService {
     estimated_effort_hours: number;
   }> {
     const response = await apiClient.post<any>('/chat/compliance-gap-analysis', data);
-    return response.data;
+    return response;
   }
 
   /**
@@ -130,10 +131,10 @@ class ChatService {
     framework: string,
     contextType: 'comprehensive' | 'guidance' = 'comprehensive',
   ): Promise<any> {
-    const response = await apiClient.post<any>('/chat/context-aware-recommendations', null, {
-      params: { framework, context_type: contextType },
-    });
-    return response.data;
+    const response = await apiClient.post<any>(
+      `/chat/context-aware-recommendations?framework=${encodeURIComponent(framework)}&context_type=${encodeURIComponent(contextType)}`
+    );
+    return response;
   }
 
   /**
@@ -144,14 +145,15 @@ class ChatService {
     controlId?: string,
     workflowType: 'comprehensive' | 'quick' = 'comprehensive',
   ): Promise<any> {
-    const response = await apiClient.post<any>('/chat/evidence-collection-workflow', null, {
-      params: {
-        framework,
-        control_id: controlId,
-        workflow_type: workflowType,
-      },
+    const params = new URLSearchParams({
+      framework,
+      workflow_type: workflowType,
+      ...(controlId && { control_id: controlId }),
     });
-    return response.data;
+    const response = await apiClient.post<any>(
+      `/chat/evidence-collection-workflow?${params.toString()}`
+    );
+    return response;
   }
 
   /**
@@ -162,14 +164,15 @@ class ChatService {
     policyType: string,
     customRequirements?: string[],
   ): Promise<any> {
-    const response = await apiClient.post<any>('/chat/generate-policy', null, {
-      params: {
-        framework,
-        policy_type: policyType,
-        custom_requirements: customRequirements?.join(','),
-      },
+    const params = new URLSearchParams({
+      framework,
+      policy_type: policyType,
+      ...(customRequirements && { custom_requirements: customRequirements.join(',') }),
     });
-    return response.data;
+    const response = await apiClient.post<any>(
+      `/chat/generate-policy?${params.toString()}`
+    );
+    return response;
   }
 
   /**
@@ -182,7 +185,7 @@ class ChatService {
     const response = await apiClient.get<any>('/chat/smart-compliance-guidance', {
       params: { framework, guidance_type: guidanceType },
     });
-    return response.data;
+    return response;
   }
 
   /**
@@ -190,7 +193,7 @@ class ChatService {
    */
   async getCacheMetrics(): Promise<any> {
     const response = await apiClient.get<any>('/chat/cache/metrics');
-    return response.data;
+    return response;
   }
 
   /**
@@ -201,10 +204,8 @@ class ChatService {
     pattern: string;
     cleared_at: string;
   }> {
-    const response = await apiClient.delete<any>('/chat/cache/clear', {
-      params: { pattern },
-    });
-    return response.data;
+    const response = await apiClient.delete<any>(`/chat/cache/clear?pattern=${encodeURIComponent(pattern)}`);
+    return response;
   }
 
   /**
@@ -212,7 +213,7 @@ class ChatService {
    */
   async getPerformanceMetrics(): Promise<any> {
     const response = await apiClient.get<any>('/chat/performance/metrics');
-    return response.data;
+    return response;
   }
 
   /**
@@ -226,6 +227,7 @@ class ChatService {
    * WebSocket connection for real-time chat
    */
   connectWebSocket(conversationId: string): void {
+    this.currentConversationId = conversationId;
     const wsUrl = this.getWebSocketUrl(conversationId);
     this.connectWebSocketWithUrl(wsUrl);
   }
@@ -265,7 +267,9 @@ class ChatService {
 
       // Attempt to reconnect after 3 seconds
       this.reconnectTimeout = setTimeout(() => {
-        this.connectWebSocket(conversationId);
+        if (this.currentConversationId) {
+          this.connectWebSocket(this.currentConversationId);
+        }
       }, 3000);
     };
   }

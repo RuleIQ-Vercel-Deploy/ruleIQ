@@ -56,7 +56,7 @@ class ComplianceService {
     const response = await apiClient.get<ComplianceStatus[]>('/compliance/status', {
       params: { business_profile_id: businessProfileId },
     });
-    return response.data;
+    return response;
   }
 
   /**
@@ -69,7 +69,7 @@ class ComplianceService {
     const response = await apiClient.get<ComplianceStatus>(`/compliance/status/${frameworkId}`, {
       params: { business_profile_id: businessProfileId },
     });
-    return response.data;
+    return response;
   }
 
   /**
@@ -88,7 +88,7 @@ class ComplianceService {
       '/compliance/tasks',
       { params },
     );
-    return response.data;
+    return response;
   }
 
   /**
@@ -96,7 +96,7 @@ class ComplianceService {
    */
   async createComplianceTask(data: Partial<ComplianceTask>): Promise<ComplianceTask> {
     const response = await apiClient.post<ComplianceTask>('/compliance/tasks', data);
-    return response.data;
+    return response;
   }
 
   /**
@@ -107,7 +107,7 @@ class ComplianceService {
     data: Partial<ComplianceTask>,
   ): Promise<ComplianceTask> {
     const response = await apiClient.patch<ComplianceTask>(`/compliance/tasks/${taskId}`, data);
-    return response.data;
+    return response;
   }
 
   /**
@@ -125,7 +125,7 @@ class ComplianceService {
       '/compliance/risks',
       { params },
     );
-    return response.data;
+    return response;
   }
 
   /**
@@ -133,7 +133,7 @@ class ComplianceService {
    */
   async createComplianceRisk(data: Partial<ComplianceRisk>): Promise<ComplianceRisk> {
     const response = await apiClient.post<ComplianceRisk>('/compliance/risks', data);
-    return response.data;
+    return response;
   }
 
   /**
@@ -144,7 +144,7 @@ class ComplianceService {
     data: Partial<ComplianceRisk>,
   ): Promise<ComplianceRisk> {
     const response = await apiClient.patch<ComplianceRisk>(`/compliance/risks/${riskId}`, data);
-    return response.data;
+    return response;
   }
 
   /**
@@ -172,7 +172,7 @@ class ComplianceService {
       ? { business_profile_id: businessProfileId, framework_id: frameworkId }
       : { business_profile_id: businessProfileId };
     const response = await apiClient.get<any>('/compliance/timeline', { params });
-    return response.data;
+    return response;
   }
 
   /**
@@ -202,7 +202,7 @@ class ComplianceService {
     const response = await apiClient.get<any>('/compliance/dashboard', {
       params: { business_profile_id: businessProfileId },
     });
-    return response.data;
+    return response;
   }
 
   /**
@@ -221,7 +221,7 @@ class ComplianceService {
       business_profile_id: businessProfileId,
       framework_id: frameworkId,
     });
-    return response.data;
+    return response;
   }
 }
 

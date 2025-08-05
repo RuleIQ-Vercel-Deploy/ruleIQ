@@ -1,6 +1,17 @@
 import { apiClient } from './client';
 
-import type { EvidenceCollectionPlan, EvidenceTask, CollectionPlanSummary } from '@/types/api';
+import type { EvidenceCollectionPlan, EvidenceTask } from '@/types/api';
+
+export interface CollectionPlanSummary {
+  id: string;
+  framework: string;
+  status: string;
+  progress_percentage: number;
+  total_tasks: number;
+  completed_tasks: number;
+  target_completion_date?: string;
+  created_at: string;
+}
 
 export interface CreateCollectionPlanRequest {
   framework: string;
@@ -35,7 +46,7 @@ class EvidenceCollectionService {
       '/evidence-collection/plans',
       data,
     );
-    return response.data;
+    return response;
   }
 
   /**
@@ -45,7 +56,7 @@ class EvidenceCollectionService {
     const response = await apiClient.get<EvidenceCollectionPlan>(
       `/evidence-collection/plans/${planId}`,
     );
-    return response.data;
+    return response;
   }
 
   /**
@@ -58,7 +69,7 @@ class EvidenceCollectionService {
     const response = await apiClient.get<CollectionPlanSummary[]>('/evidence-collection/plans', {
       params,
     });
-    return response.data;
+    return response;
   }
 
   /**
@@ -69,7 +80,7 @@ class EvidenceCollectionService {
       `/evidence-collection/plans/${planId}/priority-tasks`,
       { params: { limit } },
     );
-    return response.data;
+    return response;
   }
 
   /**
@@ -84,7 +95,7 @@ class EvidenceCollectionService {
       `/evidence-collection/plans/${planId}/tasks/${taskId}`,
       data,
     );
-    return response.data;
+    return response;
   }
 
   /**
@@ -96,7 +107,7 @@ class EvidenceCollectionService {
     const response = await apiClient.get<AutomationRecommendationsResponse>(
       `/evidence-collection/automation-recommendations/${framework}`,
     );
-    return response.data;
+    return response;
   }
 
   /**

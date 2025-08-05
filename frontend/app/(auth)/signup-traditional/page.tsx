@@ -81,20 +81,7 @@ export default function TraditionalSignupPage() {
       const firstName = nameParts[0] || '';
       const lastName = nameParts.slice(1).join(' ') || '';
 
-      await registerUser({
-        email: data.email,
-        password: data.password,
-        confirmPassword: data.confirmPassword,
-        firstName,
-        lastName,
-        companyName: data.companyName,
-        companySize: 'small', // Default value
-        industry: 'Other', // Default value
-        complianceFrameworks: [],
-        hasDataProtectionOfficer: false,
-        agreedToTerms: data.agreeToTerms,
-        agreedToDataProcessing: data.agreeToTerms,
-      });
+      await registerUser(data.email, data.password, data.fullName);
 
       addNotification({
         type: 'success',

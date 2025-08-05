@@ -202,55 +202,39 @@ const mockAIResponses = {
       {
         id: 'gap_1',
         questionId: 'q1',
+        questionText: 'Do you have documented data retention policies with defined periods for different data categories?',
         section: 'Data Protection',
-        title: 'Data Retention Policy Gap',
-        description: 'Informal retention practices instead of documented policies',
-        severity: 'high' as const,
         category: 'Data Protection',
-        framework_reference: 'GDPR Article 5',
+        severity: 'high' as const,
+        description: 'Informal retention practices instead of documented policies',
+        impact: 'Potential GDPR violation for excessive data retention',
         currentState: 'Informal retention practices',
         targetState: 'Documented retention policies with defined periods',
-        impact: 'Potential GDPR violation for excessive data retention',
-        business_impact_score: 0.8,
-        technical_complexity: 0.6,
-        regulatory_requirement: true,
-        estimated_effort: 'medium' as const,
-        dependencies: ['Legal review', 'Policy documentation'],
-        affected_systems: ['CRM', 'Database'],
-        stakeholders: ['DPO', 'Legal Team', 'IT Department'],
+        expectedAnswer: 'Yes, with documented policies for each data category',
+        actualAnswer: 'No, we handle this informally',
       },
     ],
     recommendations: [
       {
         id: 'ai_rec_1',
         gapId: 'gap_1',
+        priority: 'immediate' as const,
         title: 'Implement Comprehensive Data Retention Policy',
         description:
           'Create and document formal data retention policies with specific timeframes for different data categories, automated deletion processes, and regular compliance reviews.',
-        priority: 'immediate' as const,
-        category: 'Data Protection',
-        framework_references: ['GDPR', 'ISO 27001'],
-        addresses_gaps: ['gap_1'],
-        effort_estimate: 'medium' as const,
         estimatedEffort: '3-4 weeks',
-        implementation_timeline: '3-4 weeks',
-        impact_score: 0.85,
-        cost_estimate: 'Low',
-        resource_requirements: [
+        resources: [
           'Data Protection Officer',
           'Legal Team',
           'IT Department',
           'Compliance Manager',
         ],
-        success_criteria: [
-          'Documented retention policy',
-          'Automated deletion systems',
-          'Legal approval',
-        ],
-        potential_challenges: ['Legal complexity', 'System integration'],
-        mitigation_strategies: ['Early legal consultation', 'Phased implementation'],
-        automation_potential: 0.7,
-        roi_estimate: 'High',
+        relatedFrameworks: ['GDPR', 'ISO 27001'],
+        category: 'Data Protection',
+        impact: 'High - Reduces GDPR violation risk and improves data governance',
+        effort: 'Medium - Requires documentation and system configuration',
+        estimatedTime: '3-4 weeks with phased implementation',
+        relatedGaps: ['gap_1'],
       },
     ],
     risk_assessment: {
@@ -370,16 +354,9 @@ class AssessmentAIService {
         const retryAfter = rateLimitError.error.retry_after;
 
         return {
-          questions: [],
-          total_generated: 0,
-          request_id: 'rate_limited',
-          generated_at: new Date().toISOString(),
-          rate_limit_info: {
-            message: `Rate limit exceeded for AI follow-up questions. ${rateLimitError.suggestion}`,
-            retry_after: retryAfter,
-            limit: rateLimitError.error.limit,
-            window: rateLimitError.error.window,
-          },
+          follow_up_questions: [],
+          reasoning: `Rate limit exceeded for AI follow-up questions. ${rateLimitError.suggestion}`,
+          estimated_completion_time: retryAfter,
         };
       }
 
@@ -569,7 +546,12 @@ Can you provide guidance on how to answer this question correctly?`;
     total_interactions: number;
   }> {
     try {
-      const response = await apiClient.get('/ai/assessments/metrics');
+      const response = await apiClient.get<{
+        response_times: { avg: number; p95: number };
+        accuracy_score: number;
+        user_satisfaction: number;
+        total_interactions: number;
+      }>('/ai/assessments/metrics');
       return response;
     } catch (error) {
       console.error('Failed to get AI metrics:', error);

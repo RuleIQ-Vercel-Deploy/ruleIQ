@@ -37,7 +37,7 @@ class MonitoringService {
    */
   async getDatabaseStatus(): Promise<DatabaseStatus> {
     const response = await apiClient.get<DatabaseStatus>('/monitoring/database/status');
-    return response.data;
+    return response;
   }
 
   /**
@@ -53,7 +53,7 @@ class MonitoringService {
       '/monitoring/alerts',
       { params },
     );
-    return response.data;
+    return response;
   }
 
   /**
@@ -63,7 +63,7 @@ class MonitoringService {
     const response = await apiClient.patch<SystemAlert>(`/monitoring/alerts/${alertId}/resolve`, {
       resolution,
     });
-    return response.data;
+    return response;
   }
 
   /**
@@ -71,7 +71,7 @@ class MonitoringService {
    */
   async getSystemMetrics(): Promise<SystemMetrics> {
     const response = await apiClient.get<SystemMetrics>('/monitoring/metrics');
-    return response.data;
+    return response;
   }
 
   /**
@@ -98,7 +98,7 @@ class MonitoringService {
     }>;
   }> {
     const response = await apiClient.get<any>('/monitoring/api-performance', { params });
-    return response.data;
+    return response;
   }
 
   /**
@@ -124,7 +124,7 @@ class MonitoringService {
     total: number;
   }> {
     const response = await apiClient.get<any>('/monitoring/error-logs', { params });
-    return response.data;
+    return response;
   }
 
   /**
@@ -141,7 +141,7 @@ class MonitoringService {
     timestamp: string;
   }> {
     const response = await apiClient.get<any>('/monitoring/health');
-    return response.data;
+    return response;
   }
 
   /**
@@ -170,7 +170,7 @@ class MonitoringService {
     total: number;
   }> {
     const response = await apiClient.get<any>('/monitoring/audit-logs', { params });
-    return response.data;
+    return response;
   }
 
   /**

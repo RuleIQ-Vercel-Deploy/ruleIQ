@@ -1,11 +1,16 @@
 import uuid
-from datetime import datetime
+import uuid
+from datetime import datetime, timedelta
+from decimal import Decimal
 
 from sqlalchemy import (
     JSON,
+    Boolean,
     Column,
     DateTime,
     ForeignKey,
+    Integer,
+    Numeric,
     String,
     Text,
 )
@@ -71,3 +76,6 @@ class Evidence(Base):
 # IntegrationConfiguration is imported from integration_configuration.py
 
 # ReportSchedule is imported from report_schedule.py
+
+
+

@@ -37,7 +37,7 @@ class ReportService {
     const response = await apiClient.get<{ items: Report[]; total: number }>('/reports/history', {
       params,
     });
-    return response.data;
+    return response;
   }
 
   /**
@@ -45,7 +45,7 @@ class ReportService {
    */
   async getReport(id: string): Promise<Report> {
     const response = await apiClient.get<Report>(`/reports/${id}`);
-    return response.data;
+    return response;
   }
 
   /**
@@ -53,7 +53,7 @@ class ReportService {
    */
   async generateReport(data: GenerateReportRequest): Promise<Report> {
     const response = await apiClient.post<Report>('/reports/generate', data);
-    return response.data;
+    return response;
   }
 
   /**
@@ -80,7 +80,7 @@ class ReportService {
     next_run: string;
   }> {
     const response = await apiClient.post<any>('/reports/schedule', data);
-    return response.data;
+    return response;
   }
 
   /**
@@ -98,7 +98,7 @@ class ReportService {
     }>;
   }> {
     const response = await apiClient.get<any>('/reports/scheduled');
-    return response.data;
+    return response;
   }
 
   /**
@@ -133,7 +133,7 @@ class ReportService {
   }> {
     const params = reportType ? { report_type: reportType } : undefined;
     const response = await apiClient.get<any>('/reports/templates', { params });
-    return response.data;
+    return response;
   }
 
   /**
@@ -152,7 +152,7 @@ class ReportService {
     };
   }> {
     const response = await apiClient.post<any>('/reports/preview', data);
-    return response.data;
+    return response;
   }
 
   /**
@@ -172,7 +172,7 @@ class ReportService {
     const response = await apiClient.get<any>('/reports/analytics', {
       params: { days },
     });
-    return response.data;
+    return response;
   }
 
   /**
@@ -185,7 +185,7 @@ class ReportService {
     });
 
     await apiClient.download(
-      `/reports/export-bundle/${response.data.bundle_id}/download`,
+      `/reports/export-bundle/${(response as any).bundle_id}/download`,
       `report-bundle.${format === 'zip' ? 'zip' : 'pdf'}`,
     );
   }

@@ -33,7 +33,7 @@ class AssessmentService {
     const response = await apiClient.get<{ items: Assessment[]; total: number }>('/assessments', {
       params,
     });
-    return response.data;
+    return response;
   }
 
   /**
@@ -41,7 +41,7 @@ class AssessmentService {
    */
   async getAssessment(id: string): Promise<Assessment> {
     const response = await apiClient.get<Assessment>(`/assessments/${id}`);
-    return response.data;
+    return response;
   }
 
   /**
@@ -49,7 +49,7 @@ class AssessmentService {
    */
   async createAssessment(data: CreateAssessmentRequest): Promise<Assessment> {
     const response = await apiClient.post<Assessment>('/assessments', data);
-    return response.data;
+    return response;
   }
 
   /**
@@ -57,7 +57,7 @@ class AssessmentService {
    */
   async updateAssessment(id: string, data: UpdateAssessmentRequest): Promise<Assessment> {
     const response = await apiClient.patch<Assessment>(`/assessments/${id}`, data);
-    return response.data;
+    return response;
   }
 
   /**
@@ -74,7 +74,7 @@ class AssessmentService {
     const response = await apiClient.get<AssessmentQuestion[]>(
       `/assessments/${assessmentId}/questions`,
     );
-    return response.data;
+    return response;
   }
 
   /**
@@ -88,7 +88,7 @@ class AssessmentService {
       `/assessments/${assessmentId}/answers`,
       data,
     );
-    return response.data;
+    return response;
   }
 
   /**
@@ -96,7 +96,7 @@ class AssessmentService {
    */
   async completeAssessment(id: string): Promise<Assessment> {
     const response = await apiClient.post<Assessment>(`/assessments/${id}/complete`);
-    return response.data;
+    return response;
   }
 
   /**
@@ -104,7 +104,7 @@ class AssessmentService {
    */
   async getAssessmentResults(id: string): Promise<any> {
     const response = await apiClient.get<any>(`/assessments/${id}/results`);
-    return response.data;
+    return response;
   }
 
   /**
@@ -115,7 +115,7 @@ class AssessmentService {
       business_profile_id: businessProfileId,
       framework_id: frameworkId,
     });
-    return response.data;
+    return response;
   }
 }
 

@@ -467,13 +467,30 @@ export class QuestionnaireEngine {
     return {
       id: `gap_${question.id}`,
       questionId: question.id,
+      questionText: question.text,
       section: section?.title || 'Unknown',
+      category: section?.category || 'General',
       severity: score === 0 ? 'critical' : score < 0.5 ? 'high' : 'medium',
       description: question.text,
       impact: this.assessImpact(question, score),
       currentState: answer ? `Score: ${Math.round(score * 100)}%` : 'Not answered',
       targetState: '100% compliance',
+      expectedAnswer: this.getExpectedAnswer(question),
+      actualAnswer: answer?.text || undefined,
     };
+  }
+
+  private getExpectedAnswer(question: Question): string {
+    // For boolean questions, the expected answer is typically the highest-scoring option
+    if (question.type === 'boolean') return 'Yes';
+    if (question.type === 'single_choice') {
+      // Return the option with the highest points as expected
+      const bestOption = question.options?.reduce((best, current) => 
+        (current.points || 0) > (best?.points || 0) ? current : best
+      );
+      return bestOption?.text || 'Best practice option';
+    }
+    return 'Full compliance';
   }
 
   private assessImpact(question: Question, score: number): string {
@@ -582,6 +599,10 @@ export class QuestionnaireEngine {
       description: this.generateRecommendationText(gap),
       estimatedEffort: this.estimateEffort(gap),
       resources: this.suggestResources(gap),
+      category: gap.category,
+      impact: gap.impact,
+      effort: this.estimateEffort(gap),
+      estimatedTime: this.estimateTime(gap),
     }));
   }
 

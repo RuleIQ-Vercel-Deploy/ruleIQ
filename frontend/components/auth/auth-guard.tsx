@@ -18,7 +18,7 @@ export function AuthGuard({
   fallback 
 }: AuthGuardProps) {
   const router = useRouter();
-  const { isAuthenticated, isLoading, checkAuth } = useAuthStore();
+  const { isAuthenticated, isLoading, checkAuthStatus } = useAuthStore();
   const [isCheckingAuth, setIsCheckingAuth] = useState(false);
 
   useEffect(() => {
@@ -26,14 +26,14 @@ export function AuthGuard({
     const performAuthCheck = async () => {
       setIsCheckingAuth(true);
       try {
-        await checkAuth();
+        await checkAuthStatus();
       } finally {
         setIsCheckingAuth(false);
       }
     };
     
     performAuthCheck();
-  }, [checkAuth]);
+  }, [checkAuthStatus]);
 
   useEffect(() => {
     if (!isLoading && !isCheckingAuth) {

@@ -23,7 +23,7 @@ export class BusinessProfileFieldMapper {
   /**
    * Bidirectional field mapping between frontend (descriptive) and backend (truncated) names
    */
-  private static readonly fieldMap = {
+  public static readonly fieldMap = {
     // Boolean fields - Business characteristics
     handles_personal_data: 'handles_persona',
     processes_payments: 'processes_payme',
