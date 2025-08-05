@@ -6,17 +6,18 @@
     },
     "serena": {
       "command": "/home/omar/.local/bin/uv",
-      "args": ["run", "--directory", "/home/omar/serena", "serena-mcp-server"],
-      "env": {
-        "CLAUDE_MD_PATH": "/home/omar/serena/CLAUDE.md",
-        "DOCS_PRELOAD": "true"
-      }
+      "args": [
+        "run",
+        "--directory",
+        "/home/omar/serena",
+        "serena",
+        "start-mcp-server"
+      ]
     },
-    "magic-ui-component-server": {
+    "magic-ui": {
       "command": "npx",
       "args": [
         "-y",
-        "@smithery/cli@latest",
         "run",
         "@magicuidesign/mcp",
         "--key",
@@ -191,5 +192,3 @@
   },
   "inputs": []
 }
-
- 

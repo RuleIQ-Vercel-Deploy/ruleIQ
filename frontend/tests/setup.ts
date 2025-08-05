@@ -2,6 +2,7 @@ import '@testing-library/jest-dom/vitest';
 import { cleanup } from '@testing-library/react';
 import { afterEach, beforeAll, afterAll, vi } from 'vitest';
 import React from 'react';
+import { server } from './mocks/server';
 
 // HTMLFormElement.prototype.requestSubmit polyfill for JSDOM
 if (typeof HTMLFormElement !== 'undefined' && !HTMLFormElement.prototype.requestSubmit) {
@@ -30,11 +31,14 @@ if (typeof HTMLFormElement !== 'undefined' && !HTMLFormElement.prototype.request
 }
 
 // Mock environment variables
-process.env.NEXT_PUBLIC_API_URL = 'http://localhost:8000/api';
+process.env.NEXT_PUBLIC_API_URL = 'http://localhost:8000';
 // Note: NODE_ENV is read-only in some environments, so we skip setting it
 
-// Global test setup
+// Start MSW server before all tests
 beforeAll(() => {
+  server.listen({ onUnhandledRequest: 'warn' });
+  
+  // Other global test setup
   // Mock window.matchMedia
   Object.defineProperty(window, 'matchMedia', {
     writable: true,
@@ -83,14 +87,7 @@ beforeAll(() => {
     value: localStorageMock,
   });
 
-  // Mock fetch
-  global.fetch = vi.fn().mockResolvedValue({
-    ok: true,
-    status: 200,
-    json: () => Promise.resolve({ success: true }),
-    text: () => Promise.resolve('Mock response'),
-    headers: new Headers(),
-  } as Response);
+
 });
 
 // Mock Next.js router
@@ -267,51 +264,17 @@ vi.mock('@radix-ui/react-dialog', () => {
   };
 });
 
-// Mock auth store
-vi.mock('@/lib/stores/auth.store', () => {
-  const mockStore = {
-    user: null,
-    tokens: null,
-    isAuthenticated: false,
-    isLoading: false,
-    error: null,
-    login: vi.fn().mockResolvedValue(undefined),
-    register: vi.fn().mockResolvedValue(undefined),
-    logout: vi.fn(),
-    refreshToken: vi.fn().mockResolvedValue(undefined),
-    setUser: vi.fn(),
-    setTokens: vi.fn(),
-    clearError: vi.fn(),
-    checkAuthStatus: vi.fn().mockResolvedValue(undefined),
-    initialize: vi.fn().mockResolvedValue(undefined),
-    getCurrentUser: vi.fn().mockReturnValue(null),
-    getToken: vi.fn().mockReturnValue(null),
-    requestPasswordReset: vi.fn().mockResolvedValue(undefined),
-    resetPassword: vi.fn().mockResolvedValue(undefined),
-    verifyEmail: vi.fn().mockResolvedValue(undefined),
-    updateProfile: vi.fn().mockResolvedValue(undefined),
-    changePassword: vi.fn().mockResolvedValue(undefined),
-  };
 
-  const mockUseAuthStore = vi.fn(() => mockStore) as any;
-  // Add getState method for non-React usage
-  mockUseAuthStore.getState = vi.fn(() => mockStore);
-  mockUseAuthStore.setState = vi.fn();
-  mockUseAuthStore.subscribe = vi.fn();
-  mockUseAuthStore.destroy = vi.fn();
-
-  return {
-    useAuthStore: mockUseAuthStore,
-  };
-});
 
 // Cleanup after each test
 afterEach(() => {
   cleanup();
   vi.clearAllMocks();
+  server.resetHandlers();
 });
 
 // Cleanup after all tests
 afterAll(() => {
   vi.resetAllMocks();
+  server.close();
 });

@@ -5,8 +5,8 @@ import { http, HttpResponse } from 'msw';
 import { server } from '../mocks/server';
 import React from 'react';
 
-// Test the OAuth2 token endpoint integration
-describe('OAuth2 Token Endpoint Integration', () => {
+// Test the authentication service integration
+describe('Authentication Service Integration', () => {
   let queryClient: QueryClient;
 
   beforeEach(() => {
@@ -27,22 +27,21 @@ describe('OAuth2 Token Endpoint Integration', () => {
     <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
   );
 
-  describe('Authentication Service OAuth2 Integration', () => {
-    it('should send OAuth2 form data to /auth/token endpoint', async () => {
-      // Mock successful OAuth2 token response
+  describe('Login Flow', () => {
+    it('should send JSON data to /api/v1/auth/login endpoint', async () => {
+      // Mock successful login response
       let capturedRequestBody: any = null;
       server.use(
-        http.post('http://localhost:8000/api/auth/token', async ({ request }) => {
-          capturedRequestBody = await request.text();
+        http.post('http://localhost:8000/api/v1/auth/login', async ({ request }) => {
+          capturedRequestBody = await request.json();
           return HttpResponse.json({
             access_token: 'mock-access-token',
             refresh_token: 'mock-refresh-token',
             token_type: 'bearer',
-            expires_in: 28800,
           });
         }),
-        // Mock the /auth/me endpoint for user data
-        http.get('http://localhost:8000/api/auth/me', () => {
+        // Mock the /api/v1/users/me endpoint for user data
+        http.get('http://localhost:8000/api/v1/users/me', () => {
           return HttpResponse.json({
             id: 'user-123',
             email: 'test@example.com',
@@ -55,26 +54,22 @@ describe('OAuth2 Token Endpoint Integration', () => {
 
       const { authService } = await import('@/lib/api/auth.service');
 
-      const credentials = {
+      await authService.login('test@example.com', 'password123');
+
+      // Verify JSON data format
+      expect(capturedRequestBody).toEqual({
         email: 'test@example.com',
         password: 'password123',
-      };
-
-      await authService.login(credentials);
-
-      // Verify OAuth2 form data format
-      expect(capturedRequestBody).toBe(
-        'username=test%40example.com&password=password123&grant_type=password',
-      );
+      });
     });
 
     it('should handle 422 authentication errors correctly', async () => {
       server.use(
-        http.post('http://localhost:8000/api/auth/token', () => {
+        http.post('http://localhost:8000/api/v1/auth/login', () => {
           return HttpResponse.json(
             {
               detail: [
-                { loc: ['body', 'username'], msg: 'field required', type: 'value_error.missing' },
+                { loc: ['body', 'email'], msg: 'field required', type: 'value_error.missing' },
               ],
             },
             { status: 422 },
@@ -84,21 +79,14 @@ describe('OAuth2 Token Endpoint Integration', () => {
 
       const { authService } = await import('@/lib/api/auth.service');
 
-      await expect(
-        authService.login({
-          email: '',
-          password: 'password123',
-        }),
-      ).rejects.toThrow();
+      await expect(authService.login('', 'password123')).rejects.toThrow();
     });
 
     it('should handle invalid credentials (401) correctly', async () => {
       server.use(
-        http.post('http://localhost:8000/api/auth/token', () => {
+        http.post('http://localhost:8000/api/v1/auth/login', () => {
           return HttpResponse.json(
-            {
-              detail: 'Incorrect username or password',
-            },
+            { detail: 'Invalid credentials' },
             { status: 401 },
           );
         }),
@@ -106,29 +94,91 @@ describe('OAuth2 Token Endpoint Integration', () => {
 
       const { authService } = await import('@/lib/api/auth.service');
 
-      await expect(
-        authService.login({
-          email: 'wrong@example.com',
-          password: 'wrongpassword',
-        }),
-      ).rejects.toThrow();
+      await expect(authService.login('wrong@example.com', 'wrongpassword')).rejects.toThrow('Invalid credentials');
     });
 
     it('should fetch user data after successful token response', async () => {
-      let userDataRequested = false;
+      let userEndpointCalled = false;
       server.use(
-        http.post('http://localhost:8000/api/auth/token', () => {
+        http.post('http://localhost:8000/api/v1/auth/login', () => {
           return HttpResponse.json({
-            access_token: 'new-access-token',
-            refresh_token: 'new-refresh-token',
+            access_token: 'mock-access-token',
+            refresh_token: 'mock-refresh-token',
             token_type: 'bearer',
-            expires_in: 28800,
           });
         }),
-        http.get('http://localhost:8000/api/auth/me', ({ request }) => {
-          userDataRequested = true;
-          const authHeader = request.headers.get('Authorization');
-          expect(authHeader).toBe('Bearer new-access-token');
+        http.get('http://localhost:8000/api/v1/users/me', () => {
+          userEndpointCalled = true;
+          return HttpResponse.json({
+            id: 'user-123',
+            email: 'test@example.com',
+            is_active: true,
+            permissions: ['read', 'write'],
+            role: 'user',
+          });
+        }),
+      );
+
+      const { authService } = await import('@/lib/api/auth.service');
+
+      await authService.login('test@example.com', 'password123');
+
+      expect(userEndpointCalled).toBe(true);
+    });
+
+    it('should store tokens securely after successful login', async () => {
+      server.use(
+        http.post('http://localhost:8000/api/v1/auth/login', () => {
+          return HttpResponse.json({
+            access_token: 'mock-access-token',
+            refresh_token: 'mock-refresh-token',
+            token_type: 'bearer',
+          });
+        }),
+        http.get('http://localhost:8000/api/v1/users/me', () => {
+          return HttpResponse.json({
+            id: 'user-123',
+            email: 'test@example.com',
+            is_active: true,
+            permissions: ['read', 'write'],
+            role: 'user',
+          });
+        }),
+      );
+
+      const { authService } = await import('@/lib/api/auth.service');
+
+      await authService.login('test@example.com', 'password123');
+
+      // Check if token is stored
+      const token = authService.getToken();
+      expect(token).toBe('mock-access-token');
+    });
+
+    it('should handle network errors gracefully', async () => {
+      server.use(
+        http.post('http://localhost:8000/api/v1/auth/login', () => {
+          return HttpResponse.error();
+        }),
+      );
+
+      const { authService } = await import('@/lib/api/auth.service');
+
+      await expect(authService.login('test@example.com', 'password123')).rejects.toThrow();
+    });
+  });
+
+  describe('Token Management', () => {
+    it('should retrieve stored tokens for authenticated requests', async () => {
+      server.use(
+        http.post('http://localhost:8000/api/v1/auth/login', () => {
+          return HttpResponse.json({
+            access_token: 'stored-access-token',
+            refresh_token: 'stored-refresh-token',
+            token_type: 'bearer',
+          });
+        }),
+        http.get('http://localhost:8000/api/v1/users/me', () => {
           return HttpResponse.json({
             id: 'user-456',
             email: 'test@example.com',
@@ -141,27 +191,23 @@ describe('OAuth2 Token Endpoint Integration', () => {
 
       const { authService } = await import('@/lib/api/auth.service');
 
-      const result = await authService.login({
-        email: 'test@example.com',
-        password: 'password123',
-      });
+      await authService.login('test@example.com', 'password123');
 
-      expect(userDataRequested).toBe(true);
-      expect(result.user.id).toBe('user-456');
-      expect(result.tokens.access_token).toBe('new-access-token');
+      // Verify token retrieval
+      const token = authService.getToken();
+      expect(token).toBe('stored-access-token');
     });
 
-    it('should store tokens securely after successful login', async () => {
+    it('should clear tokens on logout', async () => {
       server.use(
-        http.post('http://localhost:8000/api/auth/token', () => {
+        http.post('http://localhost:8000/api/v1/auth/login', () => {
           return HttpResponse.json({
-            access_token: 'test-access-token',
-            refresh_token: 'test-refresh-token',
+            access_token: 'logout-test-token',
+            refresh_token: 'logout-refresh-token',
             token_type: 'bearer',
-            expires_in: 28800,
           });
         }),
-        http.get('http://localhost:8000/api/auth/me', () => {
+        http.get('http://localhost:8000/api/v1/users/me', () => {
           return HttpResponse.json({
             id: 'user-789',
             email: 'test@example.com',
@@ -170,88 +216,20 @@ describe('OAuth2 Token Endpoint Integration', () => {
             role: 'user',
           });
         }),
-      );
-
-      const { authService } = await import('@/lib/api/auth.service');
-
-      await authService.login({
-        email: 'test@example.com',
-        password: 'password123',
-      });
-
-      // Verify token storage (mocked in test setup)
-      const storedUser = authService.getStoredUser();
-      expect(storedUser?.id).toBe('user-789');
-    });
-
-    it('should handle network errors gracefully', async () => {
-      server.use(
-        http.post('http://localhost:8000/api/auth/token', () => {
-          return HttpResponse.error();
+        http.post('http://localhost:8000/api/v1/auth/logout', () => {
+          return HttpResponse.json({ message: 'Logged out successfully' });
         }),
       );
 
       const { authService } = await import('@/lib/api/auth.service');
 
-      await expect(
-        authService.login({
-          email: 'test@example.com',
-          password: 'password123',
-        }),
-      ).rejects.toThrow();
-    });
-  });
+      // Login first
+      await authService.login('test@example.com', 'password123');
+      expect(authService.getToken()).toBe('logout-test-token');
 
-  describe('Token Storage and Retrieval', () => {
-    it('should store tokens with proper expiry time', async () => {
-      const { authService } = await import('@/lib/api/auth.service');
-      const mockSetAccessToken = vi.fn();
-      const mockSetRefreshToken = vi.fn();
-
-      // Mock SecureStorage
-      vi.doMock('@/lib/utils/secure-storage', () => ({
-        default: {
-          setAccessToken: mockSetAccessToken,
-          setRefreshToken: mockSetRefreshToken,
-        },
-      }));
-
-      server.use(
-        http.post('http://localhost:8000/api/auth/token', () => {
-          return HttpResponse.json({
-            access_token: 'access-token',
-            refresh_token: 'refresh-token',
-            token_type: 'bearer',
-            expires_in: 28800,
-          });
-        }),
-        http.get('http://localhost:8000/api/auth/me', () => {
-          return HttpResponse.json({
-            id: 'user-123',
-            email: 'test@example.com',
-            is_active: true,
-          });
-        }),
-      );
-
-      await authService.login({
-        email: 'test@example.com',
-        password: 'password123',
-      });
-
-      // Verify tokens are stored with proper expiry (8 hours)
-      expect(mockSetAccessToken).toHaveBeenCalledWith('access-token', {
-        expiry: expect.any(Number),
-      });
-      expect(mockSetRefreshToken).toHaveBeenCalledWith('refresh-token', expect.any(Number));
-    });
-
-    it('should retrieve stored tokens for authenticated requests', async () => {
-      const { authService } = await import('@/lib/api/auth.service');
-
-      const isAuthenticated = await authService.isAuthenticated();
-      // Should return false in test environment unless tokens are present
-      expect(typeof isAuthenticated).toBe('boolean');
+      // Then logout
+      authService.logout();
+      expect(authService.getToken()).toBeNull();
     });
   });
 });

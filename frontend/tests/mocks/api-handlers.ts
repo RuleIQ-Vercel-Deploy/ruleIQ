@@ -4,7 +4,7 @@ const baseURL = 'http://localhost:8000/api';
 
 export const handlers = [
   // Auth endpoints
-  http.post(`${baseURL}/auth/login`, () => {
+  http.post(`${baseURL}/v1/auth/login`, () => {
     return HttpResponse.json({
       data: {
         tokens: {
@@ -22,7 +22,7 @@ export const handlers = [
     });
   }),
 
-  http.post(`${baseURL}/auth/register`, () => {
+  http.post(`${baseURL}/v1/auth/register`, () => {
     return HttpResponse.json(
       {
         data: {
@@ -37,11 +37,11 @@ export const handlers = [
     );
   }),
 
-  http.post(`${baseURL}/auth/logout`, () => {
+  http.post(`${baseURL}/v1/auth/logout`, () => {
     return HttpResponse.json({ message: 'Logged out successfully' });
   }),
 
-  http.get(`${baseURL}/auth/me`, () => {
+  http.get(`${baseURL}/v1/users/me`, () => {
     return HttpResponse.json({
       data: {
         id: 'user-123',
@@ -53,7 +53,7 @@ export const handlers = [
     });
   }),
 
-  http.post(`${baseURL}/auth/refresh`, () => {
+  http.post(`${baseURL}/v1/auth/refresh`, () => {
     return HttpResponse.json({
       data: {
         access_token: 'refreshed-access-token',

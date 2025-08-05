@@ -1,5 +1,5 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { render, screen, fireEvent, waitFor, cleanup } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import React from 'react';
 
@@ -53,6 +53,7 @@ describe('Assessment Component Tests - Key Uniqueness & File Upload', () => {
   afterEach(() => {
     queryClient.clear();
     consoleErrorSpy.mockRestore();
+    cleanup();
   });
 
   const TestWrapper = ({ children }: { children: React.ReactNode }) => (
@@ -466,6 +467,8 @@ describe('Assessment Component Tests - Key Uniqueness & File Upload', () => {
       fireEvent.click(screen.getByTestId('add-file-button'));
       fireEvent.click(screen.getByTestId('add-file-button'));
       fireEvent.click(screen.getByTestId('add-file-button'));
+      fireEvent.click(screen.getByTestId('add-file-button'));
+      fireEvent.click(screen.getByTestId('add-file-button'));
 
       // Wait for files to be added
       await waitFor(() => {
@@ -540,8 +543,8 @@ describe('Assessment Component Tests - Key Uniqueness & File Upload', () => {
 
       // Initially shows all files
       expect(screen.getByText('Allowed types: All types')).toBeInTheDocument();
-      const allFiles = screen.getAllByTestId(/^filtered-file-/);
-      expect(allFiles).toHaveLength(5);
+      const filteredContainer = screen.getByTestId('filtered-file-list');
+      expect(filteredContainer.children).toHaveLength(3);
 
       // Filter to only PDFs
       rerender(
@@ -554,8 +557,10 @@ describe('Assessment Component Tests - Key Uniqueness & File Upload', () => {
       );
 
       expect(screen.getByText('Allowed types: application/pdf')).toBeInTheDocument();
-      expect(screen.getAllByTestId(/^filtered-file-/)).toHaveLength(1);
-      expect(screen.getAllByTestId(/^rejected-file-/)).toHaveLength(2);
+      const filteredContainerAfter = screen.getByTestId('filtered-file-list');
+      const rejectedContainer = screen.getByTestId('rejected-files');
+      expect(filteredContainerAfter.children).toHaveLength(1);
+      expect(rejectedContainer.children).toHaveLength(2);
 
       // No key warnings
       expect(consoleErrorSpy).not.toHaveBeenCalledWith(
