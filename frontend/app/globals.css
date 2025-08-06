@@ -217,11 +217,11 @@
 
   /* Glass Morphism Cards */
   .glass-card {
-    @apply rounded-xl border border-glass-border bg-glass-white;
+    @apply rounded-xl border border-neutral-200 bg-white/80 backdrop-blur-sm;
   }
 
   .glass-card:hover {
-    @apply border-glass-border-hover bg-glass-white-hover;
+    @apply border-neutral-300 bg-white/90;
   }
 
   /* Neon Glow Effects */
@@ -389,5 +389,74 @@
     100% {
       transform: translateZ(0) rotate(360deg);
     }
+  }
+}
+
+
+/* Enhanced Utility Classes for Visual Refresh */
+@layer utilities {
+  /* Glass Morphism Effects */
+  .glass-white {
+    @apply bg-white/85 backdrop-blur-md border border-white/20;
+  }
+  
+  .glass-elevated {
+    @apply bg-white/95 backdrop-blur-lg shadow-lg;
+  }
+  
+  .glass-overlay {
+    @apply bg-black/40 backdrop-blur-sm;
+  }
+  
+  /* Hover Interactions */
+  .hover-lift {
+    @apply transition-all duration-250 hover:-translate-y-0.5;
+  }
+  
+  .hover-scale {
+    @apply transition-transform duration-250 hover:scale-[1.02];
+  }
+  
+  .hover-glow {
+    @apply transition-shadow duration-250 hover:shadow-glow-teal;
+  }
+  
+  /* Premium Spacing */
+  .section-padding {
+    @apply py-16 px-8 md:py-20 md:px-12 lg:py-24 lg:px-16;
+  }
+  
+  .card-padding {
+    @apply p-6 md:p-8;
+  }
+  
+  .button-padding {
+    @apply px-6 py-3;
+  }
+  
+  /* Animation Delays */
+  .animation-delay-150 {
+    animation-delay: 150ms;
+  }
+  
+  .animation-delay-300 {
+    animation-delay: 300ms;
+  }
+  
+  .animation-delay-450 {
+    animation-delay: 450ms;
+  }
+  
+  /* Gradient Accent Lines */
+  .gradient-accent-top::before {
+    content: '';
+    @apply absolute inset-x-0 top-0 h-1;
+    @apply bg-gradient-to-r from-teal-700 via-teal-600 to-teal-400;
+  }
+  
+  .gradient-accent-left::before {
+    content: '';
+    @apply absolute inset-y-0 left-0 w-1;
+    @apply bg-gradient-to-b from-teal-700 via-teal-600 to-teal-400;
   }
 }

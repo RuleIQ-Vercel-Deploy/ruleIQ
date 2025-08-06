@@ -3,25 +3,24 @@
 Create a test user for TestSprite testing
 """
 import requests
-import json
 
 def create_test_user():
     """Create test user via API"""
     url = "http://localhost:8000/api/v1/auth/register"
-    
+
     payload = {
-        "email": "testuser@testsprite.com", 
+        "email": "testuser@testsprite.com",
         "password": "TestSprite123@",
         "full_name": "TestSprite User"
     }
-    
+
     headers = {
         "Content-Type": "application/json"
     }
-    
+
     try:
         response = requests.post(url, json=payload, headers=headers)
-        
+
         if response.status_code == 201:
             data = response.json()
             print("✅ Test user created successfully!")
@@ -33,7 +32,7 @@ def create_test_user():
             print(f"❌ Failed to create user: {response.status_code}")
             print(f"Error: {response.text}")
             return False
-            
+
     except Exception as e:
         print(f"❌ Error creating user: {e}")
         return False

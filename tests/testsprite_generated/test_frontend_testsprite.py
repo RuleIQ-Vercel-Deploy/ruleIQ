@@ -8,11 +8,11 @@ from main import app
 
 class TestFrontendFlow:
     """Frontend tests generated from TestSprite plans"""
-    
+
     @pytest.fixture
     def client(self):
         return TestClient(app)
-    
+
 
 def test_tc001_user_registration_with_valid_data():
     """

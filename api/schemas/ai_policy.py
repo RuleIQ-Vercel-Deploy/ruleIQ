@@ -41,14 +41,14 @@ class BusinessContext(BaseModel):
     employee_count: Optional[int] = Field(None, ge=1, le=1000000)
     annual_revenue: Optional[str] = None
     geographic_operations: List[str] = Field(default_factory=list)
-    
+
     # Data processing context
     processes_personal_data: bool = Field(default=True)
     data_types: List[str] = Field(default_factory=list)
     data_retention_period: Optional[str] = None
     third_party_processors: bool = Field(default=False)
     cross_border_transfers: bool = Field(default=False)
-    
+
     # Technical context
     cloud_services: List[str] = Field(default_factory=list)
     security_certifications: List[str] = Field(default_factory=list)
@@ -64,7 +64,7 @@ class PolicyGenerationRequest(BaseModel):
     target_audience: TargetAudience = Field(default=TargetAudience.GENERAL_PUBLIC)
     include_templates: bool = Field(default=True)
     language: str = Field(default="en-GB", description="Policy language (ISO 639-1)")
-    
+
     @validator('language')
     def validate_language(cls, v):
         supported_languages = ["en-GB", "en-US"]
@@ -99,16 +99,16 @@ class PolicyGenerationResponse(BaseModel):
     provider_used: str  # "google" or "openai"
     generated_sections: List[str]
     compliance_checklist: List[str]
-    
+
     # Optional fields for different scenarios
     error_message: Optional[str] = None
     fallback_content: Optional[str] = None
     was_cached: bool = Field(default=False)
     generation_time_ms: Optional[int] = None
-    
+
     # Validation results
     validation_result: Optional[PolicyValidationResult] = None
-    
+
     # Cost tracking
     estimated_cost: Optional[float] = None
     tokens_used: Optional[int] = None
@@ -121,7 +121,7 @@ class PolicyRefinementResponse(BaseModel):
     changes_made: List[str]
     confidence_score: float = Field(ge=0.0, le=1.0)
     provider_used: str
-    
+
     error_message: Optional[str] = None
     generation_time_ms: Optional[int] = None
     estimated_cost: Optional[float] = None
@@ -174,9 +174,9 @@ class PolicyGenerationMetrics(BaseModel):
     success_rate: float = Field(ge=0.0, le=1.0, default=0.0)
     average_generation_time_ms: float = Field(default=0.0)
     cache_hit_rate: float = Field(ge=0.0, le=1.0, default=0.0)
-    
+
     provider_metrics: List[AIProviderMetrics] = Field(default_factory=list)
     circuit_breaker_status: CircuitBreakerStatus
-    
+
     cost_savings_percentage: float = Field(ge=0.0, le=100.0, default=0.0)
     monthly_cost_trend: List[float] = Field(default_factory=list)

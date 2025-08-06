@@ -15,25 +15,21 @@ Integrates with:
 - Lead scoring for behavioral analytics
 """
 
-import json
 import uuid
 from datetime import datetime, timedelta
-from typing import Dict, List, Optional, Any, Tuple
-from decimal import Decimal
+from typing import Dict, List, Optional, Any
 
-from sqlalchemy.orm import Session
-from sqlalchemy import and_, or_
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy import select
 
 from database import (
     AssessmentLead,
     FreemiumAssessmentSession,
     AIQuestionBank,
-    LeadScoringEvent,
 )
 from services.ai.assistant import ComplianceAssistant
 from services.ai.circuit_breaker import AICircuitBreaker
 from config.logging_config import get_logger
-from config.ai_config import get_ai_model
 
 logger = get_logger(__name__)
 
@@ -45,18 +41,18 @@ class FreemiumAssessmentService:
     Orchestrates the complete assessment flow from session creation
     to results generation with AI-powered personalization.
     """
-    
-    def __init__(self, db_session: Session):
+
+    def __init__(self, db_session: AsyncSession):
         self.db = db_session
         self.assistant = ComplianceAssistant(db_session)
         self.circuit_breaker = AICircuitBreaker()
-        
+
         # Configuration constants
         self.SESSION_DURATION_HOURS = 24
         self.MIN_QUESTIONS_FOR_RESULTS = 3
         self.MAX_QUESTIONS_PER_SESSION = 12
         self.DEFAULT_QUESTION_TIME_LIMIT = 300  # 5 minutes per question
-    
+
     async def create_session(
         self,
         lead_id: uuid.UUID,
@@ -80,31 +76,36 @@ class FreemiumAssessmentService:
         """
         try:
             logger.info(f"Creating assessment session for lead: {lead_id}")
-            
+
             # Generate secure session token
             session_token = self._generate_session_token()
-            
+
             # Set session expiration
             expires_at = datetime.utcnow() + timedelta(hours=self.SESSION_DURATION_HOURS)
-            
+
+            # Prepare personalization data with business context
+            full_personalization_data = personalization_data or {}
+            full_personalization_data.update({
+                "business_type": business_type,
+                "company_size": company_size,
+            })
+
             # Create session record
             session = FreemiumAssessmentSession(
                 session_token=session_token,
                 lead_id=lead_id,
-                business_type=business_type,
-                company_size=company_size,
                 assessment_type=assessment_type,
-                completion_status="started",
+                status="started",  # Using status instead of completion_status
                 expires_at=expires_at,
-                personalization_data=personalization_data or {},
+                personalization_data=full_personalization_data,
                 questions_answered=0,
                 progress_percentage=0.0
             )
-            
+
             self.db.add(session)
-            self.db.commit()
-            self.db.refresh(session)
-            
+            await self.db.commit()
+            await self.db.refresh(session)
+
             # Generate initial AI questions based on business context
             initial_questions = await self._generate_initial_questions(
                 session_id=session.id,
@@ -113,7 +114,7 @@ class FreemiumAssessmentService:
                 assessment_type=assessment_type,
                 personalization_data=personalization_data
             )
-            
+
             # Store questions in session
             session.ai_responses = {
                 "questions_generated": len(initial_questions),
@@ -121,21 +122,21 @@ class FreemiumAssessmentService:
                 "personalization_applied": bool(personalization_data),
                 "generation_timestamp": datetime.utcnow().isoformat()
             }
-            
+
             session.user_answers = {}
             session.current_question_id = initial_questions[0]["question_id"] if initial_questions else None
             session.total_questions = len(initial_questions)
-            
-            self.db.commit()
-            
+
+            await self.db.commit()
+
             logger.info(f"Session created successfully: {session.id} with {len(initial_questions)} questions")
             return session
-            
+
         except Exception as e:
             logger.error(f"Error creating assessment session: {str(e)}")
-            self.db.rollback()
+            await self.db.rollback()
             raise
-    
+
     async def process_answer(
         self,
         session_id: uuid.UUID,
@@ -158,34 +159,35 @@ class FreemiumAssessmentService:
             Dict containing next question, progress update, and any insights
         """
         try:
-            session = self.db.query(FreemiumAssessmentSession).filter_by(id=session_id).first()
+            result = await self.db.execute(select(FreemiumAssessmentSession).where(FreemiumAssessmentSession.id == session_id))
+            session = result.scalar_one_or_none()
             if not session:
                 raise ValueError(f"Session not found: {session_id}")
-            
+
             if session.is_expired():
                 raise ValueError("Session has expired")
-            
+
             logger.info(f"Processing answer for session: {session_id}, question: {question_id}")
-            
+
             # Store the answer
             if not session.user_answers:
                 session.user_answers = {}
-            
+
             session.user_answers[question_id] = {
                 "answer": answer,
                 "confidence": answer_confidence,
                 "time_spent_seconds": time_spent_seconds,
                 "timestamp": datetime.utcnow().isoformat()
             }
-            
+
             # Update progress
             session.questions_answered += 1
             session.progress_percentage = (session.questions_answered / session.total_questions) * 100
-            
+
             # Determine if we need more questions or can complete
             next_question = None
             completion_status = "in_progress"
-            
+
             if session.questions_answered >= self.MIN_QUESTIONS_FOR_RESULTS:
                 # Use AI to determine if we have enough information or need follow-up questions
                 follow_up_needed = await self._determine_follow_up_questions(
@@ -196,7 +198,7 @@ class FreemiumAssessmentService:
                         "confidence": answer_confidence
                     }
                 )
-                
+
                 if follow_up_needed and session.questions_answered < self.MAX_QUESTIONS_PER_SESSION:
                     next_question = await self._generate_follow_up_question(
                         session_id=session_id,
@@ -211,16 +213,16 @@ class FreemiumAssessmentService:
                     session_id=session_id,
                     answered_questions=list(session.user_answers.keys())
                 )
-            
+
             # Update session status
             session.completion_status = completion_status
             if next_question:
                 session.current_question_id = next_question["question_id"]
             else:
                 session.current_question_id = None
-            
-            self.db.commit()
-            
+
+            await self.db.commit()
+
             # Prepare response
             response = {
                 "session_id": str(session_id),
@@ -231,19 +233,19 @@ class FreemiumAssessmentService:
                 "next_question": next_question,
                 "answer_processed": True
             }
-            
+
             # Add AI insights if available
             if answer_confidence == "high" and len(answer) > 50:
                 response["insights"] = await self._generate_answer_insights(question_id, answer)
-            
+
             logger.info(f"Answer processed successfully for session: {session_id}")
             return response
-            
+
         except Exception as e:
             logger.error(f"Error processing answer: {str(e)}")
-            self.db.rollback()
+            await self.db.rollback()
             raise
-    
+
     async def generate_results(self, session_id: uuid.UUID) -> Dict[str, Any]:
         """
         Generate comprehensive assessment results with AI insights.
@@ -255,55 +257,60 @@ class FreemiumAssessmentService:
             Dict containing complete assessment results and recommendations
         """
         try:
-            session = self.db.query(FreemiumAssessmentSession).filter_by(id=session_id).first()
+            result = await self.db.execute(select(FreemiumAssessmentSession).where(FreemiumAssessmentSession.id == session_id))
+            session = result.scalar_one_or_none()
             if not session:
                 raise ValueError(f"Session not found: {session_id}")
-            
+
             if session.questions_answered < self.MIN_QUESTIONS_FOR_RESULTS:
                 raise ValueError("Insufficient answers to generate results")
-            
+
             logger.info(f"Generating results for session: {session_id}")
-            
+
             # Get lead information for personalization
-            lead = self.db.query(AssessmentLead).filter_by(id=session.lead_id).first()
-            
+            result = await self.db.execute(select(AssessmentLead).where(AssessmentLead.id == session.lead_id))
+            lead = result.scalar_one_or_none()
+
+            # Get business context from personalization data
+            personalization = session.personalization_data or {}
+
             # Prepare context for AI analysis
             assessment_context = {
-                "business_type": session.business_type,
-                "company_size": session.company_size,
+                "business_type": personalization.get("business_type"),
+                "company_size": personalization.get("company_size"),
                 "assessment_type": session.assessment_type,
                 "industry": lead.industry if lead else None,
                 "company_name": lead.company_name if lead else None,
                 "answers": session.user_answers,
                 "personalization_data": session.personalization_data
             }
-            
+
             # Generate AI-powered compliance analysis
             ai_analysis = await self._generate_ai_analysis(assessment_context)
-            
+
             # Calculate compliance score
             compliance_score = self._calculate_compliance_score(
                 session.user_answers,
                 session.assessment_type
             )
-            
+
             # Determine risk level
             risk_level = self._determine_risk_level(compliance_score, ai_analysis)
-            
+
             # Generate personalized recommendations
             recommendations = await self._generate_recommendations(
                 assessment_context,
                 ai_analysis,
                 compliance_score
             )
-            
+
             # Identify compliance gaps
             gaps_identified = self._identify_compliance_gaps(
                 session.user_answers,
                 session.assessment_type,
                 ai_analysis
             )
-            
+
             # Generate conversion opportunities
             conversion_opportunities = self._generate_conversion_opportunities(
                 compliance_score,
@@ -311,7 +318,7 @@ class FreemiumAssessmentService:
                 gaps_identified,
                 lead
             )
-            
+
             # Create results summary
             results_summary = await self._generate_results_summary(
                 compliance_score,
@@ -319,16 +326,16 @@ class FreemiumAssessmentService:
                 recommendations,
                 gaps_identified
             )
-            
+
             # Store results in session
             session.compliance_score = compliance_score
             session.risk_assessment = ai_analysis
             session.recommendations = recommendations
             session.gaps_identified = gaps_identified
             session.results_summary = results_summary
-            
-            self.db.commit()
-            
+
+            await self.db.commit()
+
             # Prepare comprehensive response
             results = {
                 "session_id": str(session_id),
@@ -344,19 +351,19 @@ class FreemiumAssessmentService:
                 "assessment_metadata": {
                     "questions_answered": session.questions_answered,
                     "assessment_type": session.assessment_type,
-                    "business_type": session.business_type,
+                    "business_type": personalization.get("business_type"),
                     "generation_timestamp": datetime.utcnow().isoformat()
                 }
             }
-            
+
             logger.info(f"Results generated successfully for session: {session_id}")
             return results
-            
+
         except Exception as e:
             logger.error(f"Error generating results: {str(e)}")
             raise
-    
-    def calculate_answer_score_impact(
+
+    async def calculate_answer_score_impact(
         self,
         question_id: str,
         answer: str,
@@ -376,43 +383,44 @@ class FreemiumAssessmentService:
         try:
             # Base score impact
             base_score = 5
-            
+
             # Adjust for answer completeness
             if len(str(answer)) > 100:
                 base_score += 5
             elif len(str(answer)) < 20:
                 base_score -= 2
-            
+
             # Adjust for confidence level
             confidence_multiplier = {
                 "high": 1.5,
                 "medium": 1.0,
                 "low": 0.8
             }.get(confidence, 1.0)
-            
+
             # Adjust for question complexity (look up in question bank if available)
-            question = self.db.query(AIQuestionBank).filter_by(question_id=question_id).first()
+            result = await self.db.execute(select(AIQuestionBank).where(AIQuestionBank.question_id == question_id))
+            question = result.scalar_one_or_none()
             if question:
                 difficulty_multiplier = question.difficulty_level / 5.0  # Scale 1-10 to 0.2-2.0
                 base_score = int(base_score * difficulty_multiplier)
-            
+
             final_score = int(base_score * confidence_multiplier)
-            
+
             logger.debug(f"Score impact calculated: {final_score} for question {question_id}")
             return final_score
-            
+
         except Exception as e:
             logger.error(f"Error calculating score impact: {str(e)}")
             return 5  # Default safe score
-    
+
     # ========================================================================
     # PRIVATE HELPER METHODS
     # ========================================================================
-    
+
     def _generate_session_token(self) -> str:
         """Generate a secure session token."""
         return uuid.uuid4().hex + uuid.uuid4().hex  # 64 characters
-    
+
     async def _generate_initial_questions(
         self,
         session_id: uuid.UUID,
@@ -427,7 +435,7 @@ class FreemiumAssessmentService:
             if not self.circuit_breaker.is_model_available("gemini-2.5-flash"):
                 logger.warning("AI unavailable, using fallback questions")
                 return self._get_fallback_questions(assessment_type)
-            
+
             # Build context for AI question generation
             context = {
                 "business_type": business_type,
@@ -435,20 +443,20 @@ class FreemiumAssessmentService:
                 "assessment_type": assessment_type,
                 "personalization": personalization_data or {}
             }
-            
+
             # Generate questions using AI assistant
             questions_data = await self.assistant.generate_assessment_questions(
                 business_context=context,
                 max_questions=8,
                 difficulty_level="mixed"
             )
-            
+
             return questions_data.get("questions", self._get_fallback_questions(assessment_type))
-            
+
         except Exception as e:
             logger.error(f"Error generating initial questions: {str(e)}")
             return self._get_fallback_questions(assessment_type)
-    
+
     def _get_fallback_questions(self, assessment_type: str) -> List[Dict[str, Any]]:
         """Get hardcoded fallback questions when AI is unavailable."""
         fallback_questions = {
@@ -461,7 +469,7 @@ class FreemiumAssessmentService:
                     "options": ["Yes", "No", "Unsure"]
                 },
                 {
-                    "question_id": "gen_002", 
+                    "question_id": "gen_002",
                     "question_text": "Do you have documented information security policies?",
                     "question_type": "yes_no",
                     "category": "security",
@@ -502,15 +510,15 @@ class FreemiumAssessmentService:
                 {
                     "question_id": "sec_002",
                     "question_text": "How often do you update your software and systems?",
-                    "question_type": "multiple_choice", 
+                    "question_type": "multiple_choice",
                     "category": "maintenance",
                     "options": ["Immediately", "Monthly", "Quarterly", "Annually", "Rarely"]
                 }
             ]
         }
-        
+
         return fallback_questions.get(assessment_type, fallback_questions["general"])
-    
+
     async def _determine_follow_up_questions(
         self,
         session_id: uuid.UUID,
@@ -521,10 +529,10 @@ class FreemiumAssessmentService:
             # Simple heuristic: if answer is short or low confidence, ask follow-up
             answer = latest_answer.get("answer", "")
             confidence = latest_answer.get("confidence", "medium")
-            
+
             if len(str(answer)) < 30 or confidence == "low":
                 return True
-            
+
             # Use AI to determine if follow-up is needed (if available)
             if self.circuit_breaker.is_model_available("gemini-2.5-flash"):
                 follow_up_analysis = await self.assistant.analyze_answer_completeness(
@@ -533,13 +541,13 @@ class FreemiumAssessmentService:
                     confidence=confidence
                 )
                 return follow_up_analysis.get("needs_follow_up", False)
-            
+
             return False
-            
+
         except Exception as e:
             logger.error(f"Error determining follow-up questions: {str(e)}")
             return False
-    
+
     async def _generate_follow_up_question(
         self,
         session_id: uuid.UUID,
@@ -554,13 +562,13 @@ class FreemiumAssessmentService:
                 )
                 questions = follow_up.get("questions", [])
                 return questions[0] if questions else None
-            
+
             return None
-            
+
         except Exception as e:
             logger.error(f"Error generating follow-up question: {str(e)}")
             return None
-    
+
     async def _get_next_question(
         self,
         session_id: uuid.UUID,
@@ -570,7 +578,7 @@ class FreemiumAssessmentService:
         # For now, return None to indicate no more questions
         # In a full implementation, this would select from the question bank
         return None
-    
+
     async def _generate_ai_analysis(self, assessment_context: Dict[str, Any]) -> Dict[str, Any]:
         """Generate AI-powered analysis of assessment responses."""
         try:
@@ -581,11 +589,11 @@ class FreemiumAssessmentService:
                 return analysis
             else:
                 return {"analysis": "AI analysis unavailable", "confidence": 0.5}
-                
+
         except Exception as e:
             logger.error(f"Error generating AI analysis: {str(e)}")
             return {"analysis": "Analysis failed", "error": str(e)}
-    
+
     def _calculate_compliance_score(
         self,
         answers: Dict[str, Any],
@@ -594,15 +602,15 @@ class FreemiumAssessmentService:
         """Calculate compliance score based on answers."""
         if not answers:
             return 0.0
-        
+
         # Simple scoring algorithm - can be made more sophisticated
         total_score = 0.0
         answer_count = len(answers)
-        
+
         for answer_data in answers.values():
             answer = str(answer_data.get("answer", "")).lower()
             confidence = answer_data.get("confidence", "medium")
-            
+
             # Basic scoring
             if "yes" in answer or "implemented" in answer or "compliant" in answer:
                 score = 85.0
@@ -612,13 +620,13 @@ class FreemiumAssessmentService:
                 score = 25.0
             else:
                 score = 50.0  # Neutral/text answers
-            
+
             # Adjust for confidence
             confidence_multiplier = {"high": 1.0, "medium": 0.9, "low": 0.7}.get(confidence, 0.8)
             total_score += score * confidence_multiplier
-        
+
         return round(total_score / answer_count, 1)
-    
+
     def _determine_risk_level(self, compliance_score: float, ai_analysis: Dict[str, Any]) -> str:
         """Determine risk level based on compliance score and AI analysis."""
         if compliance_score >= 80:
@@ -629,7 +637,7 @@ class FreemiumAssessmentService:
             return "high"
         else:
             return "critical"
-    
+
     async def _generate_recommendations(
         self,
         assessment_context: Dict[str, Any],
@@ -647,11 +655,11 @@ class FreemiumAssessmentService:
                 return recommendations.get("recommendations", [])
             else:
                 return self._get_fallback_recommendations(compliance_score)
-                
+
         except Exception as e:
             logger.error(f"Error generating recommendations: {str(e)}")
             return self._get_fallback_recommendations(compliance_score)
-    
+
     def _get_fallback_recommendations(self, compliance_score: float) -> List[Dict[str, Any]]:
         """Get fallback recommendations when AI is unavailable."""
         if compliance_score < 40:
@@ -663,7 +671,7 @@ class FreemiumAssessmentService:
                     "estimated_effort": "2-4 weeks"
                 },
                 {
-                    "priority": "high", 
+                    "priority": "high",
                     "title": "Data Protection Assessment",
                     "description": "Conduct a comprehensive review of personal data handling practices.",
                     "estimated_effort": "1-2 weeks"
@@ -687,7 +695,7 @@ class FreemiumAssessmentService:
                     "estimated_effort": "Ongoing"
                 }
             ]
-    
+
     def _identify_compliance_gaps(
         self,
         answers: Dict[str, Any],
@@ -696,10 +704,10 @@ class FreemiumAssessmentService:
     ) -> List[Dict[str, Any]]:
         """Identify specific compliance gaps based on answers."""
         gaps = []
-        
+
         for question_id, answer_data in answers.items():
             answer = str(answer_data.get("answer", "")).lower()
-            
+
             if "no" in answer or "not implemented" in answer:
                 gaps.append({
                     "question_id": question_id,
@@ -707,9 +715,9 @@ class FreemiumAssessmentService:
                     "severity": "medium",
                     "description": f"Gap identified in {question_id}"
                 })
-        
+
         return gaps
-    
+
     def _generate_conversion_opportunities(
         self,
         compliance_score: float,
@@ -719,7 +727,7 @@ class FreemiumAssessmentService:
     ) -> List[Dict[str, Any]]:
         """Generate conversion opportunities based on assessment results."""
         opportunities = []
-        
+
         if compliance_score < 60:
             opportunities.append({
                 "type": "consultation",
@@ -728,7 +736,7 @@ class FreemiumAssessmentService:
                 "urgency": "high",
                 "cta_text": "Book Free Consultation"
             })
-        
+
         if len(gaps_identified) > 3:
             opportunities.append({
                 "type": "trial",
@@ -737,9 +745,9 @@ class FreemiumAssessmentService:
                 "urgency": "medium",
                 "cta_text": "Start Free Trial"
             })
-        
+
         return opportunities
-    
+
     async def _generate_results_summary(
         self,
         compliance_score: float,
@@ -753,20 +761,20 @@ class FreemiumAssessmentService:
             f"We identified {len(gaps_identified)} areas for improvement.",
             f"Our analysis includes {len(recommendations)} personalized recommendations."
         ]
-        
+
         if compliance_score >= 80:
             summary_parts.append("Your organization demonstrates strong compliance practices.")
         elif compliance_score >= 60:
             summary_parts.append("Your compliance foundation is solid but can be strengthened.")
         else:
             summary_parts.append("Significant compliance improvements are recommended.")
-        
+
         return " ".join(summary_parts)
-    
+
     def _generate_next_steps(self, compliance_score: float, risk_level: str) -> List[str]:
         """Generate actionable next steps."""
         steps = []
-        
+
         if compliance_score < 40:
             steps.extend([
                 "Schedule a compliance consultation",
@@ -775,7 +783,7 @@ class FreemiumAssessmentService:
             ])
         elif compliance_score < 70:
             steps.extend([
-                "Review detailed recommendations", 
+                "Review detailed recommendations",
                 "Create implementation timeline",
                 "Consider compliance platform trial"
             ])
@@ -785,9 +793,9 @@ class FreemiumAssessmentService:
                 "Schedule periodic reviews",
                 "Stay updated on regulatory changes"
             ])
-        
+
         return steps
-    
+
     async def _generate_answer_insights(self, question_id: str, answer: str) -> Dict[str, Any]:
         """Generate insights for a specific answer."""
         try:
@@ -799,7 +807,7 @@ class FreemiumAssessmentService:
                 return insights
             else:
                 return {"insight": "Detailed insights are available with our full platform"}
-                
+
         except Exception as e:
             logger.error(f"Error generating answer insights: {str(e)}")
             return {"insight": "Unable to generate insights at this time"}

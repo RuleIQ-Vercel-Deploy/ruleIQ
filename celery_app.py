@@ -171,11 +171,11 @@ def safe_autodiscover():
         # First try to import each module individually to catch specific errors
         task_modules = [
             "workers.evidence_tasks",
-            "workers.compliance_tasks", 
+            "workers.compliance_tasks",
             "workers.notification_tasks",
             "workers.reporting_tasks",
         ]
-        
+
         for module in task_modules:
             try:
                 __import__(module)
@@ -187,11 +187,11 @@ def safe_autodiscover():
             except Exception as e:
                 logger.error(f"Unexpected error importing {module}: {e}")
                 continue
-        
+
         # Now run autodiscovery
         celery_app.autodiscover_tasks()
         logger.info("Task autodiscovery completed successfully")
-        
+
     except Exception as e:
         logger.error(f"Failed to autodiscover tasks: {e}")
         import traceback

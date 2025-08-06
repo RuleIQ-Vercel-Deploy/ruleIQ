@@ -207,13 +207,17 @@ export interface FreemiumState {
   session: FreemiumSession | null;
   sessionToken: string | null;
   sessionExpiry: string | null;
+  token: string | null; // Add for test compatibility
   
   // Assessment state
   currentQuestion: AssessmentQuestion | null;
+  currentQuestionId: string | null; // Add for test compatibility
   responses: AssessmentResponse[];
   progress: AssessmentProgress;
   isAssessmentStarted: boolean;
   isAssessmentComplete: boolean;
+  assessmentStarted: boolean; // Add for test compatibility
+  assessmentCompleted: boolean; // Add for test compatibility
   
   // Results
   results: AssessmentResultsResponse | null;
@@ -227,6 +231,8 @@ export interface FreemiumState {
   hasMarketingConsent: boolean;
   hasNewsletterConsent: boolean;
   consentDate: string | null;
+  consentMarketing: boolean; // Add for test compatibility
+  consentTerms: boolean; // Add for test compatibility
   
   // Analytics and tracking
   timeStarted: string | null;
@@ -236,6 +242,20 @@ export interface FreemiumState {
     timestamp: string;
     metadata?: Record<string, any>;
   }>;
+  lastActivity: number | null; // Add for test compatibility
+  
+  // UTM parameters for test compatibility
+  utmSource: string | null;
+  utmCampaign: string | null;
+  utmMedium: string | null;
+  utmTerm: string | null;
+  utmContent: string | null;
+  
+  // Computed properties for test compatibility
+  isSessionExpired: boolean;
+  canStartAssessment: boolean;
+  hasValidSession: boolean;
+  responseCount: number;
 }
 
 // ============================================================================
@@ -283,9 +303,21 @@ export interface FreemiumActions {
   getResponseCount: () => number;
   
   // State management
-  reset: () => void;
+  reset: (options?: { keepEmail?: boolean; keepUtm?: boolean }) => void;
   setLoading: (loading: boolean) => void;
   setError: (error: string | null) => void;
+  
+  // Test compatibility methods
+  setEmail: (email: string) => void;
+  setToken: (token: string | null) => void;
+  addResponse: (questionId: string, answer: string) => void;
+  setConsent: (type: 'marketing' | 'terms', value: boolean) => void;
+  setProgress: (progress: number) => void;
+  markAssessmentStarted: () => void;
+  markAssessmentCompleted: () => void;
+  setUtmParams: (params: Record<string, string>) => void;
+  setCurrentQuestion: (questionId: string | null) => void;
+  updateLastActivity: () => void;
 }
 
 // ============================================================================

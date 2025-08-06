@@ -75,10 +75,10 @@ async def rate_limit_middleware(request: Request, call_next):
     # Skip rate limiting for docs and testing environment
     if request.url.path in ["/docs", "/redoc", "/openapi.json"] or settings.is_testing:
         return await call_next(request)
-    
+
     # Get client identifier (IP address)
     client_ip = request.client.host if request.client else "unknown"
-    
+
     # Emergency bypass for localhost during testing - remove in production
     if client_ip in ["127.0.0.1", "::1", "localhost"] and settings.is_testing:
         return await call_next(request)
@@ -125,13 +125,13 @@ def auth_rate_limit():
         # Skip rate limiting in testing environment
         if settings.is_testing:
             return
-        
+
         client_ip = request.client.host if request.client else "unknown"
-        
+
         # Emergency bypass for localhost during testing - remove in production
         if client_ip in ["127.0.0.1", "::1", "localhost"] and settings.is_testing:
             return
-            
+
         allowed, retry_after = await auth_limiter.check_rate_limit(client_ip)
 
         if not allowed:
@@ -169,7 +169,7 @@ def rate_limit(requests_per_minute: int = 60):
 
 class RateLimited:
     """Rate limiting dependency class for FastAPI endpoints"""
-    
+
     def __init__(self, requests: int, window: int = 60):
         """
         Initialize rate limiter
@@ -180,16 +180,16 @@ class RateLimited:
         """
         self.requests_per_minute = requests
         self.limiter = RateLimiter(requests_per_minute=requests)
-    
+
     async def __call__(self, request: Request):
         """FastAPI dependency that checks rate limits"""
         # Skip rate limiting in testing environment for most tests
         if settings.is_testing and self.requests_per_minute > 10:
             return
-        
+
         client_ip = request.client.host if request.client else "unknown"
         allowed, retry_after = await self.limiter.check_rate_limit(client_ip)
-        
+
         if not allowed:
             raise HTTPException(
                 status_code=status.HTTP_429_TOO_MANY_REQUESTS,

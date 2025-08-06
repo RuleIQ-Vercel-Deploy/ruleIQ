@@ -11,23 +11,21 @@ Implements the email-gated AI assessment funnel with 5 core endpoints:
 Following ruleIQ patterns: Rate limiting, RBAC middleware, field mappers, error handling.
 """
 
-from datetime import datetime, timedelta
+from datetime import datetime
 from typing import List, Optional
 from uuid import UUID
 
 from fastapi import APIRouter, Depends, HTTPException, Request, status
 from fastapi.responses import JSONResponse
-from sqlalchemy.orm import Session
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy import select, func, text
 from pydantic import BaseModel, EmailStr, Field
 
-from api.dependencies.database import get_db
-from api.dependencies.rate_limiter import rate_limit
-from api.middleware.rbac_middleware import require_permission
+from api.dependencies.database import get_async_db
+from api.middleware.rate_limiter import rate_limit
 from database import (
     AssessmentLead,
     FreemiumAssessmentSession,
-    AIQuestionBank,
-    LeadScoringEvent,
 )
 from services.freemium_assessment_service import FreemiumAssessmentService
 from services.lead_scoring_service import LeadScoringService
@@ -56,22 +54,22 @@ class LeadCaptureRequest(BaseModel):
     first_name: Optional[str] = Field(None, max_length=100)
     last_name: Optional[str] = Field(None, max_length=100)
     company_name: Optional[str] = Field(None, max_length=200)
-    company_size: Optional[str] = Field(None, regex="^(1-10|11-50|51-200|201-500|500+)$")
+    company_size: Optional[str] = Field(None, pattern="^(1-10|11-50|51-200|201-500|500+)$")
     industry: Optional[str] = Field(None, max_length=100)
     phone: Optional[str] = Field(None, max_length=20)
-    
+
     # UTM tracking parameters
     utm_source: Optional[str] = Field(None, max_length=100)
     utm_medium: Optional[str] = Field(None, max_length=100)
     utm_campaign: Optional[str] = Field(None, max_length=200)
     utm_term: Optional[str] = Field(None, max_length=200)
     utm_content: Optional[str] = Field(None, max_length=200)
-    
+
     # Browser and context data
     referrer_url: Optional[str] = Field(None, max_length=500)
     landing_page: Optional[str] = Field(None, max_length=500)
     user_agent: Optional[str] = None
-    
+
     # Consent and preferences
     marketing_consent: bool = Field(default=False)
     newsletter_subscribed: bool = Field(default=True)
@@ -81,9 +79,9 @@ class SessionStartRequest(BaseModel):
     """Schema for starting an assessment session."""
     lead_email: EmailStr
     business_type: str = Field(..., max_length=100)
-    company_size: Optional[str] = Field(None, regex="^(1-10|11-50|51-200|201-500|500+)$")
-    assessment_type: str = Field(default="general", regex="^(general|gdpr|security|compliance)$")
-    
+    company_size: Optional[str] = Field(None, pattern="^(1-10|11-50|51-200|201-500|500+)$")
+    assessment_type: str = Field(default="general", pattern="^(general|gdpr|security|compliance)$")
+
     # Personalization preferences
     industry_focus: Optional[str] = Field(None, max_length=100)
     compliance_frameworks: Optional[List[str]] = Field(default_factory=list)
@@ -94,7 +92,7 @@ class AnswerSubmissionRequest(BaseModel):
     """Schema for submitting assessment answers."""
     question_id: str
     answer: str
-    answer_confidence: Optional[str] = Field(None, regex="^(low|medium|high)$")
+    answer_confidence: Optional[str] = Field(None, pattern="^(low|medium|high)$")
     time_spent_seconds: Optional[int] = Field(None, ge=0)
     skip_reason: Optional[str] = Field(None, max_length=200)
 
@@ -106,9 +104,20 @@ class LeadResponse(BaseModel):
     lead_score: int
     lead_status: str
     created_at: datetime
-    
+
     class Config:
         from_attributes = True
+
+    @classmethod
+    def from_orm(cls, obj):
+        """Custom from_orm to handle field mapping."""
+        return cls(
+            lead_id=obj.id,
+            email=obj.email,
+            lead_score=obj.lead_score,
+            lead_status=obj.lead_status,
+            created_at=obj.created_at
+        )
 
 
 class SessionResponse(BaseModel):
@@ -123,9 +132,25 @@ class SessionResponse(BaseModel):
     questions_answered: int
     expires_at: datetime
     created_at: datetime
-    
+
     class Config:
         from_attributes = True
+
+    @classmethod
+    def from_orm(cls, obj):
+        """Custom from_orm to handle field mapping."""
+        return cls(
+            session_id=obj.id,
+            session_token=obj.session_token,
+            lead_id=obj.lead_id,
+            status=obj.completion_status or 'active',
+            progress_percentage=obj.progress_percentage or 0.0,
+            current_question_id=obj.current_question_id,
+            total_questions=obj.total_questions or 0,
+            questions_answered=obj.questions_answered or 0,
+            expires_at=obj.expires_at,
+            created_at=obj.created_at
+        )
 
 
 class QuestionResponse(BaseModel):
@@ -137,7 +162,7 @@ class QuestionResponse(BaseModel):
     context: Optional[str]
     category: str
     difficulty_level: int
-    
+
     class Config:
         from_attributes = True
 
@@ -148,17 +173,17 @@ class AssessmentResultsResponse(BaseModel):
     compliance_score: Optional[float]
     risk_level: str
     completed_at: Optional[datetime]
-    
+
     # AI-generated insights
     risk_assessment: dict
     recommendations: List[dict]
     gaps_identified: List[dict]
     results_summary: str
-    
+
     # Conversion tracking
     conversion_opportunities: List[dict]
     next_steps: List[str]
-    
+
     class Config:
         from_attributes = True
 
@@ -172,13 +197,13 @@ class AssessmentResultsResponse(BaseModel):
     response_model=LeadResponse,
     status_code=status.HTTP_201_CREATED,
     summary="Capture lead and track UTM parameters",
-    description="Email capture endpoint with UTM tracking for freemium funnel conversion analytics"
+    description="Email capture endpoint with UTM tracking for freemium funnel conversion analytics",
+    dependencies=[Depends(rate_limit(requests_per_minute=20))]
 )
-@rate_limit(requests=20, window=60)  # 20 requests per minute for lead capture
 async def capture_lead(
     request: Request,
     lead_data: LeadCaptureRequest,
-    db: Session = Depends(get_db)
+    db: AsyncSession = Depends(get_async_db)
 ) -> LeadResponse:
     """
     Capture lead information and UTM parameters for freemium assessment funnel.
@@ -192,24 +217,25 @@ async def capture_lead(
     try:
         # Extract IP address for geolocation (if needed)
         client_ip = request.client.host
-        
+
         # Check for existing lead by email
-        existing_lead = db.query(AssessmentLead).filter_by(email=lead_data.email).first()
-        
+        result = await db.execute(select(AssessmentLead).where(AssessmentLead.email == lead_data.email))
+        existing_lead = result.scalar_one_or_none()
+
         if existing_lead:
             logger.info(f"Updating existing lead: {lead_data.email}")
-            
+
             # Update existing lead with new information
             for field, value in lead_data.dict(exclude_unset=True).items():
                 if hasattr(existing_lead, field) and value is not None:
                     setattr(existing_lead, field, value)
-            
+
             existing_lead.last_activity_at = datetime.utcnow()
             existing_lead.lead_score += 5  # Returning visitor bonus
-            
-            db.commit()
-            db.refresh(existing_lead)
-            
+
+            await db.commit()
+            await db.refresh(existing_lead)
+
             # Track returning visitor event
             scoring_service = LeadScoringService(db)
             await scoring_service.track_event(
@@ -220,12 +246,12 @@ async def capture_lead(
                 score_impact=5,
                 metadata={"source": "freemium_capture"}
             )
-            
+
             return LeadResponse.from_orm(existing_lead)
-        
+
         else:
             logger.info(f"Creating new lead: {lead_data.email}")
-            
+
             # Create new lead
             new_lead = AssessmentLead(
                 **lead_data.dict(exclude_unset=True),
@@ -234,14 +260,14 @@ async def capture_lead(
                 lead_status="new",
                 last_activity_at=datetime.utcnow()
             )
-            
+
             if lead_data.marketing_consent:
                 new_lead.consent_date = datetime.utcnow()
-            
+
             db.add(new_lead)
-            db.commit()
-            db.refresh(new_lead)
-            
+            await db.commit()
+            await db.refresh(new_lead)
+
             # Track new lead conversion event
             scoring_service = LeadScoringService(db)
             await scoring_service.track_event(
@@ -256,13 +282,13 @@ async def capture_lead(
                     "consent_given": lead_data.marketing_consent
                 }
             )
-            
+
             logger.info(f"New lead created successfully: {new_lead.id}")
             return LeadResponse.from_orm(new_lead)
-    
+
     except Exception as e:
         logger.error(f"Error capturing lead {lead_data.email}: {str(e)}")
-        db.rollback()
+        await db.rollback()
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Failed to capture lead information"
@@ -274,13 +300,13 @@ async def capture_lead(
     response_model=SessionResponse,
     status_code=status.HTTP_201_CREATED,
     summary="Start AI assessment session",
-    description="Initialize personalized AI assessment session with dynamic question generation"
+    description="Initialize personalized AI assessment session with dynamic question generation",
+    dependencies=[Depends(rate_limit(requests_per_minute=10))]
 )
-@rate_limit(requests=10, window=60)  # 10 session starts per minute
 async def start_assessment_session(
     request: Request,
     session_data: SessionStartRequest,
-    db: Session = Depends(get_db)
+    db: AsyncSession = Depends(get_async_db)
 ) -> SessionResponse:
     """
     Start a new freemium assessment session for a lead.
@@ -293,18 +319,19 @@ async def start_assessment_session(
     """
     try:
         # Find the lead by email
-        lead = db.query(AssessmentLead).filter_by(email=session_data.lead_email).first()
+        result = await db.execute(select(AssessmentLead).where(AssessmentLead.email == session_data.lead_email))
+        lead = result.scalar_one_or_none()
         if not lead:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail="Lead not found. Please capture lead information first."
             )
-        
+
         logger.info(f"Starting assessment session for lead: {lead.id}")
-        
+
         # Initialize FreemiumAssessmentService
         assessment_service = FreemiumAssessmentService(db)
-        
+
         # Create new assessment session
         session = await assessment_service.create_session(
             lead_id=lead.id,
@@ -317,12 +344,12 @@ async def start_assessment_session(
                 "priority_areas": session_data.priority_areas
             }
         )
-        
+
         # Update lead activity and score
         lead.last_activity_at = datetime.utcnow()
         lead.lead_score += 15  # Assessment start bonus
-        db.commit()
-        
+        await db.commit()
+
         # Track assessment start event
         scoring_service = LeadScoringService(db)
         await scoring_service.track_event(
@@ -337,10 +364,10 @@ async def start_assessment_session(
                 "assessment_type": session_data.assessment_type
             }
         )
-        
+
         logger.info(f"Assessment session created: {session.id}")
         return SessionResponse.from_orm(session)
-    
+
     except HTTPException:
         raise
     except Exception as e:
@@ -356,12 +383,12 @@ async def start_assessment_session(
     "/sessions/{session_token}",
     response_model=SessionResponse,
     summary="Get assessment session progress",
-    description="Retrieve current session state, progress, and next question"
+    description="Retrieve current session state, progress, and next question",
+    dependencies=[Depends(rate_limit(requests_per_minute=30))]
 )
-@rate_limit(requests=30, window=60)  # 30 requests per minute for progress checks
 async def get_session_progress(
     session_token: str,
-    db: Session = Depends(get_db)
+    db: AsyncSession = Depends(get_async_db)
 ) -> SessionResponse:
     """
     Get current assessment session progress and state.
@@ -374,26 +401,27 @@ async def get_session_progress(
     """
     try:
         # Find session by token
-        session = db.query(FreemiumAssessmentSession).filter_by(
-            session_token=session_token
-        ).first()
-        
+        result = await db.execute(select(FreemiumAssessmentSession).where(
+            FreemiumAssessmentSession.session_token == session_token
+        ))
+        session = result.scalar_one_or_none()
+
         if not session:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail="Assessment session not found"
             )
-        
+
         # Check if session is expired
         if session.is_expired():
             raise HTTPException(
                 status_code=status.HTTP_410_GONE,
                 detail="Assessment session has expired"
             )
-        
+
         logger.info(f"Retrieved session progress: {session.id}")
         return SessionResponse.from_orm(session)
-    
+
     except HTTPException:
         raise
     except Exception as e:
@@ -408,13 +436,13 @@ async def get_session_progress(
     "/sessions/{session_token}/answers",
     response_model=dict,
     summary="Submit assessment answers",
-    description="Submit answers and get next AI-generated question with scoring"
+    description="Submit answers and get next AI-generated question with scoring",
+    dependencies=[Depends(rate_limit(requests_per_minute=25))]
 )
-@rate_limit(requests=25, window=60)  # 25 answer submissions per minute
 async def submit_assessment_answer(
     session_token: str,
     answer_data: AnswerSubmissionRequest,
-    db: Session = Depends(get_db)
+    db: AsyncSession = Depends(get_async_db)
 ) -> dict:
     """
     Submit an answer to the current assessment question.
@@ -427,27 +455,28 @@ async def submit_assessment_answer(
     """
     try:
         # Find and validate session
-        session = db.query(FreemiumAssessmentSession).filter_by(
-            session_token=session_token
-        ).first()
-        
+        result = await db.execute(select(FreemiumAssessmentSession).where(
+            FreemiumAssessmentSession.session_token == session_token
+        ))
+        session = result.scalar_one_or_none()
+
         if not session:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail="Assessment session not found"
             )
-        
+
         if session.is_expired():
             raise HTTPException(
                 status_code=status.HTTP_410_GONE,
                 detail="Assessment session has expired"
             )
-        
+
         logger.info(f"Processing answer for session: {session.id}")
-        
+
         # Initialize assessment service
         assessment_service = FreemiumAssessmentService(db)
-        
+
         # Process the answer and get next question
         result = await assessment_service.process_answer(
             session_id=session.id,
@@ -456,14 +485,14 @@ async def submit_assessment_answer(
             answer_confidence=answer_data.answer_confidence,
             time_spent_seconds=answer_data.time_spent_seconds
         )
-        
+
         # Calculate score impact based on answer
-        score_impact = assessment_service.calculate_answer_score_impact(
+        score_impact = await assessment_service.calculate_answer_score_impact(
             question_id=answer_data.question_id,
             answer=answer_data.answer,
             confidence=answer_data.answer_confidence
         )
-        
+
         # Track answer submission event
         scoring_service = LeadScoringService(db)
         await scoring_service.track_event(
@@ -480,10 +509,10 @@ async def submit_assessment_answer(
                 "confidence": answer_data.answer_confidence
             }
         )
-        
+
         logger.info(f"Answer processed successfully for session: {session.id}")
         return result
-    
+
     except HTTPException:
         raise
     except Exception as e:
@@ -499,12 +528,12 @@ async def submit_assessment_answer(
     "/sessions/{session_token}/results",
     response_model=AssessmentResultsResponse,
     summary="Get AI assessment results",
-    description="Generate comprehensive assessment results with AI insights and conversion opportunities"
+    description="Generate comprehensive assessment results with AI insights and conversion opportunities",
+    dependencies=[Depends(rate_limit(requests_per_minute=15))]
 )
-@rate_limit(requests=15, window=60)  # 15 results requests per minute
 async def get_assessment_results(
     session_token: str,
-    db: Session = Depends(get_db)
+    db: AsyncSession = Depends(get_async_db)
 ) -> AssessmentResultsResponse:
     """
     Generate and return comprehensive assessment results.
@@ -517,36 +546,37 @@ async def get_assessment_results(
     """
     try:
         # Find and validate session
-        session = db.query(FreemiumAssessmentSession).filter_by(
-            session_token=session_token
-        ).first()
-        
+        result = await db.execute(select(FreemiumAssessmentSession).where(
+            FreemiumAssessmentSession.session_token == session_token
+        ))
+        session = result.scalar_one_or_none()
+
         if not session:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail="Assessment session not found"
             )
-        
+
         if session.is_expired():
             raise HTTPException(
                 status_code=status.HTTP_410_GONE,
                 detail="Assessment session has expired"
             )
-        
+
         logger.info(f"Generating results for session: {session.id}")
-        
+
         # Initialize assessment service
         assessment_service = FreemiumAssessmentService(db)
-        
+
         # Generate comprehensive results
         results = await assessment_service.generate_results(session.id)
-        
+
         # Mark results as viewed for conversion tracking
         if not session.results_viewed:
             session.results_viewed = True
             session.results_viewed_at = datetime.utcnow()
-            db.commit()
-            
+            await db.commit()
+
             # Track results view event with high score impact
             scoring_service = LeadScoringService(db)
             await scoring_service.track_event(
@@ -562,18 +592,19 @@ async def get_assessment_results(
                     "compliance_score": results.get("compliance_score")
                 }
             )
-            
+
             # Update lead score for completing assessment
-            lead = db.query(AssessmentLead).filter_by(id=session.lead_id).first()
+            result = await db.execute(select(AssessmentLead).where(AssessmentLead.id == session.lead_id))
+            lead = result.scalar_one_or_none()
             if lead:
                 lead.lead_score += 25
                 lead.lead_status = "qualified"  # Mark as qualified lead
                 lead.last_activity_at = datetime.utcnow()
-                db.commit()
-        
+                await db.commit()
+
         logger.info(f"Results generated successfully for session: {session.id}")
         return AssessmentResultsResponse(**results)
-    
+
     except HTTPException:
         raise
     except Exception as e:
@@ -593,16 +624,19 @@ async def get_assessment_results(
     summary="Freemium API health check",
     description="Check freemium API health and database connectivity"
 )
-async def health_check(db: Session = Depends(get_db)) -> dict:
+async def health_check(db: AsyncSession = Depends(get_async_db)) -> dict:
     """Health check endpoint for freemium API router."""
     try:
         # Test database connectivity
-        db.execute("SELECT 1")
-        
+        await db.execute(text("SELECT 1"))
+
         # Check freemium tables exist
-        lead_count = db.query(AssessmentLead).count()
-        session_count = db.query(FreemiumAssessmentSession).count()
-        
+        lead_result = await db.execute(select(func.count(AssessmentLead.id)))
+        lead_count = lead_result.scalar()
+
+        session_result = await db.execute(select(func.count(FreemiumAssessmentSession.id)))
+        session_count = session_result.scalar()
+
         return {
             "status": "healthy",
             "timestamp": datetime.utcnow().isoformat(),

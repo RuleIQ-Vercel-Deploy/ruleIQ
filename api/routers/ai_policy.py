@@ -4,7 +4,7 @@ AI Policy Generation API Router
 Provides endpoints for AI-powered policy generation with dual provider support.
 """
 
-from typing import List, Optional
+from typing import Optional
 from fastapi import APIRouter, Depends, HTTPException, status, BackgroundTasks
 from sqlalchemy.orm import Session
 
@@ -18,7 +18,6 @@ from api.schemas.ai_policy import (
 )
 from services.ai.policy_generator import PolicyGenerator, TemplateProcessor
 from api.dependencies.auth import get_current_active_user
-from database.user import User
 from api.middleware.rate_limiter import RateLimited
 
 
@@ -49,26 +48,26 @@ async def generate_policy(
     framework = db.query(ComplianceFramework)\
         .filter(ComplianceFramework.id == request.framework_id)\
         .first()
-    
+
     if not framework:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"Framework not found: {request.framework_id}"
         )
-    
+
     if not framework.is_active:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=f"Framework is not active: {framework.name}"
         )
-    
+
     # Initialize policy generator
     generator = PolicyGenerator()
-    
+
     try:
         # Generate policy
         result = generator.generate_policy(request, framework)
-        
+
         # Log metrics in background
         background_tasks.add_task(
             _log_generation_metrics,
@@ -76,9 +75,9 @@ async def generate_policy(
             request.framework_id,
             framework.name
         )
-        
+
         return result
-        
+
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
@@ -107,24 +106,24 @@ async def refine_policy(
     framework = db.query(ComplianceFramework)\
         .filter(ComplianceFramework.id == request.framework_id)\
         .first()
-    
+
     if not framework:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"Framework not found: {request.framework_id}"
         )
-    
+
     generator = PolicyGenerator()
-    
+
     try:
         result = generator.refine_policy(
             request.original_policy,
             request.feedback,
             framework
         )
-        
+
         return result
-        
+
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
@@ -149,7 +148,7 @@ async def get_policy_templates(
     Limited to 100 requests per minute.
     """
     processor = TemplateProcessor()
-    
+
     # Base templates available
     templates = [
         PolicyTemplate(
@@ -203,28 +202,28 @@ async def get_policy_templates(
             }
         )
     ]
-    
+
     # Filter by framework if specified
     if framework_id:
         framework = db.query(ComplianceFramework)\
             .filter(ComplianceFramework.id == framework_id)\
             .first()
-        
+
         if framework:
             templates = [
-                t for t in templates 
+                t for t in templates
                 if framework.name in t.framework_compatibility
             ]
-    
+
     # Filter by policy type if specified
     if policy_type:
         templates = [t for t in templates if t.policy_type == policy_type]
-    
+
     supported_frameworks = list(set(
-        fw for template in templates 
+        fw for template in templates
         for fw in template.framework_compatibility
     ))
-    
+
     return PolicyTemplatesResponse(
         templates=templates,
         total_count=len(templates),
@@ -249,7 +248,7 @@ async def get_ai_metrics():
     """
     # This would typically come from a metrics service
     # For now, returning sample data structure
-    
+
     google_metrics = AIProviderMetrics(
         provider="google",
         requests_total=150,
@@ -260,7 +259,7 @@ async def get_ai_metrics():
         total_cost=45.30,
         last_24h_requests=25
     )
-    
+
     openai_metrics = AIProviderMetrics(
         provider="openai",
         requests_total=25,  # Fallback usage
@@ -271,10 +270,10 @@ async def get_ai_metrics():
         total_cost=12.75,
         last_24h_requests=3
     )
-    
+
     from services.ai.circuit_breaker import CircuitBreakerService
     circuit_breaker = CircuitBreakerService()
-    
+
     circuit_status = {
         "google_status": circuit_breaker.get_state("google"),
         "openai_status": circuit_breaker.get_state("openai"),
@@ -282,7 +281,7 @@ async def get_ai_metrics():
         "last_failure_time": None,
         "next_retry_time": None
     }
-    
+
     return PolicyGenerationMetrics(
         total_policies_generated=175,
         success_rate=0.94,
@@ -315,19 +314,19 @@ async def validate_policy(
     framework = db.query(ComplianceFramework)\
         .filter(ComplianceFramework.id == framework_id)\
         .first()
-    
+
     if not framework:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"Framework not found: {framework_id}"
         )
-    
+
     generator = PolicyGenerator()
-    
+
     try:
         validation_result = generator.validate_uk_policy(policy_content, framework)
         return validation_result
-        
+
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
@@ -350,10 +349,10 @@ async def _log_generation_metrics(
     """
     # This would typically write to a metrics database or service
     # For now, just log the information
-    
+
     import logging
     logger = logging.getLogger(__name__)
-    
+
     logger.info(f"Policy generated: framework={framework_name}, "
                f"provider={result.provider_used}, "
                f"confidence={result.confidence_score}, "
@@ -384,7 +383,7 @@ async def export_analytics(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Supported formats: csv, json, xlsx"
         )
-    
+
     # This would generate actual analytics export
     return {
         "message": f"Analytics export started for {start_date} to {end_date}",

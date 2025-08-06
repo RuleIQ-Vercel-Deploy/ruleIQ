@@ -16,7 +16,6 @@ from api.dependencies.auth import get_current_active_user
 from database.user import User
 from database.db_setup import get_db
 from database.business_profile import BusinessProfile
-from database.user import User
 from services.reporting.pdf_generator import PDFGenerator
 from services.reporting.report_generator import ReportGenerator
 from services.reporting.report_scheduler import ReportScheduler

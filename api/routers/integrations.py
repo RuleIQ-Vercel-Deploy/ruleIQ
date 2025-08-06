@@ -21,7 +21,6 @@ from api.integrations.base.base_integration import (
 from config.logging_config import get_logger
 from database.db_setup import get_async_db
 from database.models.integrations import Integration
-from database.user import User
 
 logger = get_logger(__name__)
 router = APIRouter()

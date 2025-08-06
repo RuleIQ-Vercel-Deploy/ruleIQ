@@ -7,7 +7,7 @@ import time
 import psutil
 import statistics
 from datetime import datetime, timedelta
-from typing import Dict, List, Optional, Any
+from typing import Dict, List, Any
 from dataclasses import dataclass, asdict
 from contextlib import asynccontextmanager
 from sqlalchemy import text
@@ -70,19 +70,19 @@ class PerformanceMonitor:
     - System resource usage
     - Performance trends
     """
-    
+
     def __init__(self):
         self.response_times: List[float] = []
         self.api_metrics: Dict[str, List[float]] = {}
         self.slow_query_threshold = 0.1  # 100ms
         self.performance_history: List[PerformanceMetrics] = []
         self.monitoring_active = False
-        
+
     async def initialize(self):
         """Initialize performance monitoring."""
         self.cache_manager = await get_cache_manager()
         logger.info("Performance monitoring initialized")
-        
+
     @asynccontextmanager
     async def track_api_call(self, endpoint: str):
         """Context manager to track API call performance."""
@@ -92,25 +92,25 @@ class PerformanceMonitor:
         finally:
             duration = time.time() - start_time
             await self.record_api_call(endpoint, duration)
-    
+
     async def record_api_call(self, endpoint: str, duration: float):
         """Record API call performance metrics."""
         if endpoint not in self.api_metrics:
             self.api_metrics[endpoint] = []
-        
+
         self.api_metrics[endpoint].append(duration)
-        
+
         # Keep only recent measurements (last 1000 calls per endpoint)
         if len(self.api_metrics[endpoint]) > 1000:
             self.api_metrics[endpoint] = self.api_metrics[endpoint][-1000:]
-        
+
         # Log slow API calls
         if duration > 2.0:  # 2 seconds threshold
             logger.warning(f"Slow API call detected: {endpoint} took {duration:.2f}s")
-        
+
         # Cache recent metrics
         await self.cache_manager.set(
-            f"api_metrics:{endpoint}:recent", 
+            f"api_metrics:{endpoint}:recent",
             {
                 "avg_time": statistics.mean(self.api_metrics[endpoint][-100:]),
                 "count": len(self.api_metrics[endpoint]),
@@ -118,17 +118,17 @@ class PerformanceMonitor:
             },
             ttl=60
         )
-    
+
     async def get_database_metrics(self) -> DatabaseMetrics:
         """Collect database performance metrics."""
         engine_info = get_engine_info()
-        
+
         # Connection pool metrics
         pool_info = engine_info.get("pool", {})
         pool_size = pool_info.get("size", 0)
         active_connections = pool_info.get("checked_out", 0)
         pool_utilization = active_connections / pool_size if pool_size > 0 else 0
-        
+
         # Query performance metrics
         async with get_async_db() as db:
             # Get slow queries from pg_stat_statements if available
@@ -141,12 +141,12 @@ class PerformanceMonitor:
                 slow_queries_count = slow_queries_result.scalar() or 0
             except Exception:
                 slow_queries_count = 0
-            
+
             # Sample query time
             start_time = time.time()
             await db.execute(text("SELECT 1"))
             sample_query_time = time.time() - start_time
-        
+
         return DatabaseMetrics(
             connection_pool_size=pool_size,
             active_connections=active_connections,
@@ -155,21 +155,21 @@ class PerformanceMonitor:
             slow_queries_count=slow_queries_count,
             deadlocks_count=0  # Would need PostgreSQL log analysis
         )
-    
+
     async def get_cache_metrics(self) -> CacheMetrics:
         """Collect cache performance metrics."""
         try:
             if hasattr(self.cache_manager, 'redis_client') and self.cache_manager.redis_client:
                 # Get Redis INFO stats
                 info = await self.cache_manager.redis_client.info()
-                
+
                 keyspace_hits = info.get('keyspace_hits', 0)
                 keyspace_misses = info.get('keyspace_misses', 0)
                 total_requests = keyspace_hits + keyspace_misses
-                
+
                 hit_rate = keyspace_hits / total_requests if total_requests > 0 else 0
                 miss_rate = keyspace_misses / total_requests if total_requests > 0 else 0
-                
+
                 return CacheMetrics(
                     hit_rate=hit_rate,
                     miss_rate=miss_rate,
@@ -191,15 +191,15 @@ class PerformanceMonitor:
         except Exception as e:
             logger.warning(f"Failed to get cache metrics: {e}")
             return CacheMetrics(0, 0, 0, 0, 0, 0.001)
-    
+
     async def get_api_metrics(self) -> APIMetrics:
         """Collect API performance metrics."""
         if not self.api_metrics:
             return APIMetrics(0, 0, 0, 0, 0, [])
-        
+
         all_response_times = []
         slowest_endpoints = []
-        
+
         for endpoint, times in self.api_metrics.items():
             if times:
                 all_response_times.extend(times)
@@ -210,12 +210,12 @@ class PerformanceMonitor:
                     "call_count": len(times),
                     "p95_time": sorted(times)[int(len(times) * 0.95)] if len(times) > 20 else avg_time
                 })
-        
+
         if not all_response_times:
             return APIMetrics(0, 0, 0, 0, 0, [])
-        
+
         slowest_endpoints.sort(key=lambda x: x["avg_response_time"], reverse=True)
-        
+
         return APIMetrics(
             avg_response_time=statistics.mean(all_response_times),
             p95_response_time=sorted(all_response_times)[int(len(all_response_times) * 0.95)],
@@ -224,7 +224,7 @@ class PerformanceMonitor:
             error_rate=0.0,  # Would need error tracking
             slowest_endpoints=slowest_endpoints[:10]
         )
-    
+
     def get_system_metrics(self) -> Dict[str, float]:
         """Get system resource metrics."""
         return {
@@ -233,14 +233,14 @@ class PerformanceMonitor:
             "disk_percent": psutil.disk_usage('/').percent,
             "load_average": psutil.getloadavg()[0] if hasattr(psutil, 'getloadavg') else 0,
         }
-    
+
     async def collect_comprehensive_metrics(self) -> Dict[str, Any]:
         """Collect all performance metrics."""
         db_metrics = await self.get_database_metrics()
         cache_metrics = await self.get_cache_metrics()
         api_metrics = await self.get_api_metrics()
         system_metrics = self.get_system_metrics()
-        
+
         return {
             "timestamp": datetime.utcnow().isoformat(),
             "database": asdict(db_metrics),
@@ -251,17 +251,17 @@ class PerformanceMonitor:
                 db_metrics, cache_metrics, api_metrics, system_metrics
             )
         }
-    
+
     def calculate_performance_score(
-        self, 
-        db_metrics: DatabaseMetrics, 
-        cache_metrics: CacheMetrics, 
-        api_metrics: APIMetrics, 
+        self,
+        db_metrics: DatabaseMetrics,
+        cache_metrics: CacheMetrics,
+        api_metrics: APIMetrics,
         system_metrics: Dict[str, float]
     ) -> float:
         """Calculate overall performance score (0-100)."""
         scores = []
-        
+
         # Database score
         db_score = 100
         if db_metrics.connection_pool_utilization > 0.8:
@@ -271,11 +271,11 @@ class PerformanceMonitor:
         if db_metrics.slow_queries_count > 10:
             db_score -= 20
         scores.append(max(0, db_score))
-        
+
         # Cache score
         cache_score = cache_metrics.hit_rate * 100
         scores.append(cache_score)
-        
+
         # API score
         api_score = 100
         if api_metrics.avg_response_time > 0.2:  # 200ms threshold
@@ -283,7 +283,7 @@ class PerformanceMonitor:
         if api_metrics.p95_response_time > 1.0:  # 1s threshold
             api_score -= 30
         scores.append(max(0, api_score))
-        
+
         # System score
         system_score = 100
         if system_metrics["cpu_percent"] > 80:
@@ -291,14 +291,14 @@ class PerformanceMonitor:
         if system_metrics["memory_percent"] > 80:
             system_score -= 30
         scores.append(max(0, system_score))
-        
+
         return statistics.mean(scores)
-    
+
     async def generate_optimization_recommendations(self) -> List[Dict[str, Any]]:
         """Generate performance optimization recommendations."""
         metrics = await self.collect_comprehensive_metrics()
         recommendations = []
-        
+
         # Database recommendations
         if metrics["database"]["connection_pool_utilization"] > 0.8:
             recommendations.append({
@@ -310,10 +310,10 @@ class PerformanceMonitor:
                 "suggested_value": int(metrics["database"]["connection_pool_size"] * 1.5),
                 "impact": "Prevents connection timeouts under load"
             })
-        
+
         if metrics["database"]["avg_query_time"] > 0.1:
             recommendations.append({
-                "category": "database", 
+                "category": "database",
                 "priority": "high",
                 "issue": "Slow average query time",
                 "recommendation": "Review and optimize slow queries, add indexes",
@@ -321,7 +321,7 @@ class PerformanceMonitor:
                 "suggested_value": "<0.1s",
                 "impact": "Improves overall API response times"
             })
-        
+
         # Cache recommendations
         if metrics["cache"]["hit_rate"] < 0.85:
             recommendations.append({
@@ -333,19 +333,19 @@ class PerformanceMonitor:
                 "suggested_value": ">85%",
                 "impact": "Reduces database load and improves response times"
             })
-        
+
         # API recommendations
         if metrics["api"]["avg_response_time"] > 0.2:
             recommendations.append({
                 "category": "api",
-                "priority": "high", 
+                "priority": "high",
                 "issue": "Slow API response times",
                 "recommendation": "Implement response caching and optimize slow endpoints",
                 "current_value": f"{metrics['api']['avg_response_time']:.3f}s",
                 "suggested_value": "<0.2s",
                 "impact": "Better user experience and system efficiency"
             })
-        
+
         # System recommendations
         if metrics["system"]["memory_percent"] > 80:
             recommendations.append({
@@ -357,25 +357,25 @@ class PerformanceMonitor:
                 "suggested_value": "<80%",
                 "impact": "Prevents system instability and improves performance"
             })
-        
+
         return recommendations
-    
+
     async def start_monitoring(self, interval: int = 60):
         """Start continuous performance monitoring."""
         self.monitoring_active = True
         logger.info(f"Starting performance monitoring with {interval}s interval")
-        
+
         while self.monitoring_active:
             try:
                 metrics = await self.collect_comprehensive_metrics()
-                
+
                 # Store in cache for API access
                 await self.cache_manager.set("performance_metrics:latest", metrics, ttl=300)
-                
+
                 # Log performance alerts
                 if metrics["performance_score"] < 70:
                     logger.warning(f"Performance score low: {metrics['performance_score']:.1f}/100")
-                
+
                 # Store in history
                 self.performance_history.append(PerformanceMetrics(
                     timestamp=datetime.utcnow(),
@@ -387,29 +387,29 @@ class PerformanceMonitor:
                     active_connections=metrics["database"]["active_connections"],
                     requests_per_second=metrics["api"]["requests_per_second"]
                 ))
-                
+
                 # Keep only recent history
                 if len(self.performance_history) > 1440:  # 24 hours at 1-minute intervals
                     self.performance_history = self.performance_history[-1440:]
-                
+
             except Exception as e:
                 logger.error(f"Error in performance monitoring: {e}")
-            
+
             await asyncio.sleep(interval)
-    
+
     def stop_monitoring(self):
         """Stop performance monitoring."""
         self.monitoring_active = False
         logger.info("Performance monitoring stopped")
-    
+
     async def get_performance_trends(self, hours: int = 24) -> Dict[str, Any]:
         """Get performance trends over time."""
         cutoff_time = datetime.utcnow() - timedelta(hours=hours)
         recent_metrics = [m for m in self.performance_history if m.timestamp > cutoff_time]
-        
+
         if not recent_metrics:
             return {"status": "no_data", "hours": hours}
-        
+
         return {
             "hours": hours,
             "data_points": len(recent_metrics),
@@ -448,9 +448,9 @@ def monitor_performance(endpoint_name: str = None):
         async def wrapper(*args, **kwargs):
             monitor = await get_performance_monitor()
             name = endpoint_name or f"{func.__module__}.{func.__name__}"
-            
+
             async with monitor.track_api_call(name):
                 return await func(*args, **kwargs)
-        
+
         return wrapper
     return decorator

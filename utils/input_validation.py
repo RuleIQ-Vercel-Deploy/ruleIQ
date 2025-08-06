@@ -319,13 +319,6 @@ class WhitelistValidator:
                     "min_length": 1,
                     "required": False,
                 },
-                "collection_notes": {
-                    "type": FieldType.STRING,
-                    "max_length": 1000,
-                    "min_length": 0,
-                    "required": False,
-                    "allow_empty": True,
-                },
                 "file_type": {
                     "type": FieldType.STRING,
                     "max_length": 20,

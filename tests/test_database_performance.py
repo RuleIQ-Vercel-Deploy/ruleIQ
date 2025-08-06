@@ -17,36 +17,36 @@ import statistics
 
 class TestDatabasePerformance:
     """Test suite for database performance optimization."""
-    
+
     @pytest.mark.asyncio
     async def test_connection_pool_stress(self):
         """Test connection pool behavior under stress."""
         start_time = time.time()
         concurrent_requests = 50
-        
+
         async def simulate_db_request():
             async with get_async_db() as db:
                 result = await db.execute(text("SELECT 1"))
                 return result.scalar()
-        
+
         # Execute concurrent requests
         tasks = [simulate_db_request() for _ in range(concurrent_requests)]
         results = await asyncio.gather(*tasks, return_exceptions=True)
-        
+
         end_time = time.time()
         total_time = end_time - start_time
-        
+
         # Performance assertions
         assert len([r for r in results if not isinstance(r, Exception)]) >= concurrent_requests * 0.95
         assert total_time < 5.0  # Should complete within 5 seconds
-        
+
         return {
             "concurrent_requests": concurrent_requests,
             "total_time": total_time,
             "success_rate": len([r for r in results if not isinstance(r, Exception)]) / concurrent_requests,
             "avg_time_per_request": total_time / concurrent_requests
         }
-    
+
     @pytest.mark.asyncio
     async def test_query_performance_baseline(self):
         """Establish baseline query performance metrics."""
@@ -55,9 +55,9 @@ class TestDatabasePerformance:
             ("SELECT COUNT(*) FROM evidence_items WHERE status = 'pending'", "pending_evidence"),
             ("SELECT u.email, COUNT(e.id) FROM users u LEFT JOIN evidence_items e ON u.id = e.user_id GROUP BY u.id, u.email LIMIT 10", "user_evidence_summary"),
         ]
-        
+
         performance_results = {}
-        
+
         async with get_async_db() as db:
             for query, name in queries_to_test:
                 times = []
@@ -65,68 +65,68 @@ class TestDatabasePerformance:
                     start = time.time()
                     await db.execute(text(query))
                     times.append(time.time() - start)
-                
+
                 performance_results[name] = {
                     "avg_time": statistics.mean(times),
                     "min_time": min(times),
                     "max_time": max(times),
                     "std_dev": statistics.stdev(times) if len(times) > 1 else 0
                 }
-                
+
                 # Performance assertion: queries should complete within 100ms on average
                 assert performance_results[name]["avg_time"] < 0.1, f"Query {name} too slow: {performance_results[name]['avg_time']:.3f}s"
-        
+
         return performance_results
-    
+
     @pytest.mark.asyncio 
     async def test_n_plus_one_detection(self):
         """Test for N+1 query problems in common operations."""
         query_count = 0
-        
+
         class QueryCounter:
             def __init__(self):
                 self.count = 0
-                
+
             def __call__(self, *args, **kwargs):
                 self.count += 1
-        
+
         counter = QueryCounter()
-        
+
         # This test would need SQLAlchemy event listeners to count queries
         # For now, we'll test specific endpoints that might have N+1 issues
         async with get_async_db() as db:
             # Simulate loading users with their evidence (potential N+1)
             users = await db.execute(text("SELECT id FROM users LIMIT 5"))
             user_ids = [row[0] for row in users.fetchall()]
-            
+
             # Count queries for evidence loading
             start_queries = counter.count
             for user_id in user_ids:
                 await db.execute(text("SELECT COUNT(*) FROM evidence_items WHERE user_id = :user_id"), {"user_id": user_id})
             end_queries = counter.count
-            
+
             # Should ideally be done in one query with JOIN
             individual_queries = end_queries - start_queries
             assert individual_queries <= len(user_ids), "Potential N+1 query detected"
-    
+
     def test_connection_pool_metrics(self):
         """Test connection pool monitoring capabilities."""
         engine_info = get_engine_info()
-        
+
         assert "pool" in engine_info
         assert "size" in engine_info["pool"]
         assert "checked_in" in engine_info["pool"]
         assert "checked_out" in engine_info["pool"]
         assert "overflow" in engine_info["pool"]
-        
+
         # Pool should not be at capacity during tests
         assert engine_info["pool"]["checked_out"] < engine_info["pool"]["size"]
-    
+
     @pytest.mark.asyncio
     async def test_query_optimization_suggestions(self):
         """Test query optimizer suggestions."""
         optimizer = QueryOptimizer()
-        
+
         # Test with a potentially slow query
         slow_query = """
         SELECT e.*, u.email, bp.company_name 
@@ -136,21 +136,21 @@ class TestDatabasePerformance:
         WHERE e.status = 'pending' 
         ORDER BY e.created_at DESC
         """
-        
+
         async with get_async_db() as db:
             suggestions = await optimizer.analyze_query(db, slow_query)
-            
+
             # Should provide optimization suggestions
             assert "execution_time" in suggestions
             assert "index_suggestions" in suggestions
             assert "query_plan" in suggestions
-    
+
     @pytest.mark.asyncio
     async def test_bulk_operations_performance(self):
         """Test bulk operations vs individual operations."""
         # Test bulk insert performance vs individual inserts
         test_records = 100
-        
+
         async with get_async_db() as db:
             # Individual inserts timing
             start_time = time.time()
@@ -161,11 +161,11 @@ class TestDatabasePerformance:
                 )
             await db.commit()
             individual_time = time.time() - start_time
-            
+
             # Cleanup
             await db.execute(text("DELETE FROM evidence_items WHERE evidence_name LIKE 'test_evidence_%'"))
             await db.commit()
-            
+
             # Bulk insert timing (if supported)
             start_time = time.time()
             values = [{"name": f"bulk_evidence_{i}"} for i in range(test_records)]
@@ -175,25 +175,25 @@ class TestDatabasePerformance:
             )
             await db.commit()
             bulk_time = time.time() - start_time
-            
+
             # Cleanup
             await db.execute(text("DELETE FROM evidence_items WHERE evidence_name LIKE 'bulk_evidence_%'"))
             await db.commit()
-            
+
             # Bulk should be significantly faster
             assert bulk_time < individual_time * 0.5, f"Bulk operations not optimized: {bulk_time:.3f}s vs {individual_time:.3f}s"
-    
+
     @pytest.mark.asyncio
     async def test_cache_performance_impact(self):
         """Test the impact of caching on query performance."""
         from config.cache import get_cache_manager
-        
+
         cache = await get_cache_manager()
-        
+
         # Test query with and without cache
         test_query = "SELECT COUNT(*) FROM evidence_items"
         cache_key = "test_performance_query"
-        
+
         async with get_async_db() as db:
             # First run (no cache)
             await cache.delete(cache_key)
@@ -201,22 +201,22 @@ class TestDatabasePerformance:
             result = await db.execute(text(test_query))
             db_result = result.scalar()
             db_time = time.time() - start_time
-            
+
             # Cache the result
             await cache.set(cache_key, db_result, 60)
-            
+
             # Second run (with cache)
             start_time = time.time()
             cached_result = await cache.get(cache_key)
             cache_time = time.time() - start_time
-            
+
             # Cache should be significantly faster
             assert cached_result == db_result
             assert cache_time < db_time * 0.1, f"Cache not providing performance benefit: {cache_time:.6f}s vs {db_time:.6f}s"
 
 class TestDatabaseOptimizationRecommendations:
     """Generate optimization recommendations based on test results."""
-    
+
     @pytest.mark.asyncio
     async def test_generate_performance_report(self):
         """Generate comprehensive performance optimization report."""
@@ -232,20 +232,20 @@ class TestDatabaseOptimizationRecommendations:
             "caching_opportunities": [],
             "optimization_priority": "high"
         }
-        
+
         assert report["optimization_priority"] in ["low", "medium", "high"]
         return report
 
 # Performance benchmarking utilities
 class DatabasePerformanceBenchmark:
     """Utility class for ongoing performance monitoring."""
-    
+
     @staticmethod
     async def run_performance_suite():
         """Run the complete performance test suite and return metrics."""
         # This would be called regularly to monitor performance
         pass
-    
+
     @staticmethod
     async def check_performance_thresholds():
         """Check if performance metrics are within acceptable thresholds."""

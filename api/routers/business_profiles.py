@@ -7,8 +7,7 @@ from sqlalchemy.orm import Session
 
 from api.dependencies.database import get_async_db
 from api.dependencies.rbac_auth import (
-    get_current_user_with_roles, 
-    UserWithRoles, 
+    UserWithRoles,
     require_permission
 )
 from services.data_access_service import DataAccessService
@@ -81,7 +80,7 @@ async def create_business_profile(
 
 @router.get("/", response_model=BusinessProfileResponse)
 async def get_business_profile(
-    current_user: UserWithRoles = Depends(require_permission("user_list")), 
+    current_user: UserWithRoles = Depends(require_permission("user_list")),
     db: AsyncSession = Depends(get_async_db)
 ):
     stmt = select(BusinessProfile).where(BusinessProfile.user_id == current_user["id"])
@@ -106,22 +105,22 @@ async def get_business_profile_by_id(
     stmt = select(BusinessProfile).where(BusinessProfile.id == profile_id)
     result = await db.execute(stmt)
     profile = result.scalars().first()
-    
+
     if not profile:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Business profile not found"
         )
-    
+
     # Check data access permissions
     data_access_service = DataAccessService(sync_db)
     if not data_access_service.can_access_business_profile(
         current_user, profile_id, profile.user_id
     ):
         raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN, 
+            status_code=status.HTTP_403_FORBIDDEN,
             detail="Access denied: Insufficient permissions to view this profile"
         )
-    
+
     return profile
 
 
@@ -182,19 +181,19 @@ async def update_business_profile_by_id(
     stmt = select(BusinessProfile).where(BusinessProfile.id == profile_id)
     result = await db.execute(stmt)
     profile = result.scalars().first()
-    
+
     if not profile:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Business profile not found"
         )
-    
+
     # Check data access permissions
     data_access_service = DataAccessService(sync_db)
     if not data_access_service.can_access_business_profile(
         current_user, profile_id, profile.user_id
     ):
         raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN, 
+            status_code=status.HTTP_403_FORBIDDEN,
             detail="Access denied: Insufficient permissions to update this profile"
         )
 
@@ -240,19 +239,19 @@ async def delete_business_profile_by_id(
     stmt = select(BusinessProfile).where(BusinessProfile.id == profile_id)
     result = await db.execute(stmt)
     profile = result.scalars().first()
-    
+
     if not profile:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Business profile not found"
         )
-    
+
     # Check data access permissions
     data_access_service = DataAccessService(sync_db)
     if not data_access_service.can_access_business_profile(
         current_user, profile_id, profile.user_id
     ):
         raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN, 
+            status_code=status.HTTP_403_FORBIDDEN,
             detail="Access denied: Insufficient permissions to delete this profile"
         )
 
@@ -275,19 +274,19 @@ async def patch_business_profile(
     stmt = select(BusinessProfile).where(BusinessProfile.id == profile_id)
     result = await db.execute(stmt)
     profile = result.scalars().first()
-    
+
     if not profile:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Business profile not found"
         )
-    
+
     # Check data access permissions
     data_access_service = DataAccessService(sync_db)
     if not data_access_service.can_access_business_profile(
         current_user, profile_id, profile.user_id
     ):
         raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN, 
+            status_code=status.HTTP_403_FORBIDDEN,
             detail="Access denied: Insufficient permissions to update this profile"
         )
 

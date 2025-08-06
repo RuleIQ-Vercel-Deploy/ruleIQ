@@ -42,37 +42,37 @@ TestSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 def test_with_exact_setup():
     """Test using the exact same setup as pytest conftest."""
     print("=== Using Exact Test Setup ===")
-    
+
     # Import models and ensure tables exist
     from database import Base, AssessmentLead
     print("✅ Models imported")
-    
+
     # Create all tables (this is what we added to conftest)
     Base.metadata.create_all(bind=engine)
     print("✅ Tables created")
-    
+
     # Create a test session
     session = TestSessionLocal()
     print("✅ Test session created")
-    
+
     try:
         # Test basic model creation
         lead = AssessmentLead(email="manual-test@example.com", consent_marketing=True)
         session.add(lead)
         session.commit()
         print(f"✅ Lead saved: {lead.id}")
-        
+
         # Test querying
         saved_lead = session.query(AssessmentLead).filter_by(email="manual-test@example.com").first()
         print(f"✅ Lead retrieved: {saved_lead}")
-        
+
         # Cleanup
         session.delete(saved_lead)
         session.commit()
         print("✅ Cleanup completed")
-        
+
         return True
-        
+
     except Exception as e:
         print(f"❌ Test failed: {e}")
         import traceback
@@ -84,17 +84,17 @@ def test_with_exact_setup():
 def simulate_pytest_test():
     """Simulate the exact pytest test that's failing."""
     print("\n=== Simulating Pytest Test ===")
-    
+
     try:
         from database import AssessmentLead
-        
+
         # Simulate the db_session fixture
         session = TestSessionLocal()
-        
+
         try:
             # This is the exact test content
             email = "test@example.com"
-            
+
             # Act
             lead = AssessmentLead(
                 email=email,
@@ -102,7 +102,7 @@ def simulate_pytest_test():
             )
             session.add(lead)
             session.commit()
-            
+
             # Assert
             assert lead.id is not None
             assert lead.email == email
@@ -110,21 +110,21 @@ def simulate_pytest_test():
             assert lead.lead_score == 0
             assert lead.created_at is not None
             assert lead.updated_at is not None
-            
+
             print("✅ Pytest simulation PASSED!")
-            
+
             # Cleanup
             session.delete(lead)
             session.commit()
-            
+
             return True
-            
-        except Exception as e:
+
+        except Exception:
             session.rollback()
             raise
         finally:
             session.close()
-            
+
     except Exception as e:
         print(f"❌ Pytest simulation FAILED: {e}")
         import traceback
@@ -133,14 +133,14 @@ def simulate_pytest_test():
 
 if __name__ == "__main__":
     print("🧪 Manual Test with Exact Setup")
-    
+
     success1 = test_with_exact_setup()
     success2 = simulate_pytest_test()
-    
+
     if success1 and success2:
         print("\n🎉 Both tests PASSED! The models work correctly.")
         print("The issue might be with pytest configuration or environment.")
     else:
-        print(f"\n❌ Tests failed. Check errors above.")
-    
+        print("\n❌ Tests failed. Check errors above.")
+
     sys.exit(0 if (success1 and success2) else 1)

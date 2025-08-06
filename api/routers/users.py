@@ -10,7 +10,6 @@ from api.dependencies.database import get_async_db
 from api.schemas.models import UserResponse
 from database.business_profile import BusinessProfile
 from database.db_setup import get_db
-from database.user import User
 
 router = APIRouter()
 

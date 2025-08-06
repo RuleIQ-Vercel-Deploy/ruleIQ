@@ -13,7 +13,6 @@ from database.business_profile import BusinessProfile
 from database.evidence_item import EvidenceItem
 from database.compliance_framework import ComplianceFramework
 from database.readiness_assessment import ReadinessAssessment
-from database.user import User
 from services.evidence_service import EvidenceService
 
 router = APIRouter()

@@ -26,12 +26,8 @@ Provides API endpoints for system monitoring including:
 - Alert status
 """
 
-from typing import Dict, Any
-from fastapi import APIRouter, HTTPException, Depends
-from datetime import datetime
+from fastapi import Depends
 
-from monitoring.database_monitor import get_database_monitor, get_database_health_status
-from database.db_setup import get_engine_info
 from api.dependencies.auth import get_current_active_user
 from database import User
 
@@ -46,16 +42,16 @@ async def health_check() -> Dict[str, Any]:
     """
     try:
         monitor = get_database_monitor()
-        
+
         # Perform quick health checks
         health_checks = monitor.check_connection_health()
         async_health = await monitor.check_async_connection_health()
-        
+
         # Determine overall health
         all_healthy = all(check.success for check in health_checks.values())
         if async_health:
             all_healthy = all_healthy and async_health.success
-        
+
         return {
             "status": "healthy" if all_healthy else "unhealthy",
             "timestamp": datetime.utcnow().isoformat(),
@@ -94,7 +90,7 @@ async def database_pool_metrics(
     try:
         monitor = get_database_monitor()
         metrics = monitor.get_pool_metrics()
-        
+
         return {
             "timestamp": datetime.utcnow().isoformat(),
             "pools": {k: v.to_dict() for k, v in metrics.items()}
@@ -115,13 +111,13 @@ async def database_alerts(
         monitor = get_database_monitor()
         metrics = monitor.get_pool_metrics()
         alerts = monitor.check_alerts(metrics)
-        
+
         # Group alerts by severity
         alert_counts = {"critical": 0, "warning": 0, "info": 0}
         for alert in alerts:
             severity = alert.get("severity", "info")
             alert_counts[severity] = alert_counts.get(severity, 0) + 1
-        
+
         return {
             "timestamp": datetime.utcnow().isoformat(),
             "alert_counts": alert_counts,
@@ -161,10 +157,10 @@ async def prometheus_metrics() -> str:
         metrics = monitor.get_pool_metrics()
         health_checks = monitor.check_connection_health()
         async_health = await monitor.check_async_connection_health()
-        
+
         # Generate Prometheus format metrics
         prometheus_metrics = []
-        
+
         # Help and type declarations
         prometheus_metrics.append("# HELP ruleiq_db_pool_size Database connection pool size")
         prometheus_metrics.append("# TYPE ruleiq_db_pool_size gauge")
@@ -178,7 +174,7 @@ async def prometheus_metrics() -> str:
         prometheus_metrics.append("# TYPE ruleiq_db_health gauge")
         prometheus_metrics.append("# HELP ruleiq_db_response_time Database response time in milliseconds")
         prometheus_metrics.append("# TYPE ruleiq_db_response_time gauge")
-        
+
         # Pool metrics
         for pool_type, metric in metrics.items():
             labels = f'pool_type="{pool_type}"'
@@ -186,22 +182,22 @@ async def prometheus_metrics() -> str:
             prometheus_metrics.append(f'ruleiq_db_pool_checked_out{{{labels}}} {metric.checked_out}')
             prometheus_metrics.append(f'ruleiq_db_pool_utilization{{{labels}}} {metric.utilization_percent}')
             prometheus_metrics.append(f'ruleiq_db_pool_overflow{{{labels}}} {metric.overflow}')
-        
+
         # Health check metrics
         for pool_type, health in health_checks.items():
             labels = f'pool_type="{pool_type}"'
             health_value = 1 if health.success else 0
             prometheus_metrics.append(f'ruleiq_db_health{{{labels}}} {health_value}')
             prometheus_metrics.append(f'ruleiq_db_response_time{{{labels}}} {health.response_time_ms}')
-        
+
         if async_health:
-            labels = f'pool_type="async"'
+            labels = 'pool_type="async"'
             health_value = 1 if async_health.success else 0
             prometheus_metrics.append(f'ruleiq_db_health{{{labels}}} {health_value}')
             prometheus_metrics.append(f'ruleiq_db_response_time{{{labels}}} {async_health.response_time_ms}')
-        
+
         return "\n".join(prometheus_metrics) + "\n"
-        
+
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Prometheus metrics failed: {str(e)}")
 
@@ -216,21 +212,21 @@ async def test_database_connection(
     """
     try:
         monitor = get_database_monitor()
-        
+
         # Perform health checks
         sync_health = monitor.check_connection_health()
         async_health = await monitor.check_async_connection_health()
-        
+
         results = {
             "timestamp": datetime.utcnow().isoformat(),
             "sync_health": {k: v.to_dict() for k, v in sync_health.items()},
         }
-        
+
         if async_health:
             results["async_health"] = async_health.to_dict()
-        
+
         return results
-        
+
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Connection test failed: {str(e)}")
 
@@ -246,13 +242,13 @@ async def get_monitoring_status(
     try:
         monitor = get_database_monitor()
         summary = monitor.get_monitoring_summary()
-        
+
         return {
             "service_status": "active",
             "monitoring_summary": summary,
             "endpoints": {
                 "health": "/api/monitoring/health",
-                "database": "/api/monitoring/database", 
+                "database": "/api/monitoring/database",
                 "alerts": "/api/monitoring/database/alerts",
                 "metrics": "/api/monitoring/prometheus",
                 "pool_metrics": "/api/monitoring/database/pool"
@@ -270,16 +266,16 @@ async def health_check() -> Dict[str, Any]:
     """
     try:
         monitor = get_database_monitor()
-        
+
         # Perform quick health checks
         health_checks = monitor.check_connection_health()
         async_health = await monitor.check_async_connection_health()
-        
+
         # Determine overall health
         all_healthy = all(check.success for check in health_checks.values())
         if async_health:
             all_healthy = all_healthy and async_health.success
-        
+
         return {
             "status": "healthy" if all_healthy else "unhealthy",
             "timestamp": datetime.utcnow().isoformat(),
@@ -312,7 +308,7 @@ async def database_pool_metrics() -> Dict[str, Any]:
     try:
         monitor = get_database_monitor()
         metrics = monitor.get_pool_metrics()
-        
+
         return {
             "timestamp": datetime.utcnow().isoformat(),
             "pools": {k: v.to_dict() for k, v in metrics.items()}
@@ -330,7 +326,7 @@ async def database_alerts() -> Dict[str, Any]:
         monitor = get_database_monitor()
         metrics = monitor.get_pool_metrics()
         alerts = monitor.check_alerts(metrics)
-        
+
         return {
             "timestamp": datetime.utcnow().isoformat(),
             "alert_count": len(alerts),
@@ -366,10 +362,10 @@ async def prometheus_metrics() -> str:
         metrics = monitor.get_pool_metrics()
         health_checks = monitor.check_connection_health()
         async_health = await monitor.check_async_connection_health()
-        
+
         # Generate Prometheus format metrics
         prometheus_metrics = []
-        
+
         # Help and type declarations
         prometheus_metrics.append("# HELP ruleiq_db_pool_size Database connection pool size")
         prometheus_metrics.append("# TYPE ruleiq_db_pool_size gauge")
@@ -383,7 +379,7 @@ async def prometheus_metrics() -> str:
         prometheus_metrics.append("# TYPE ruleiq_db_health gauge")
         prometheus_metrics.append("# HELP ruleiq_db_response_time Database response time in milliseconds")
         prometheus_metrics.append("# TYPE ruleiq_db_response_time gauge")
-        
+
         # Pool metrics
         for pool_type, metric in metrics.items():
             labels = f'pool_type="{pool_type}"'
@@ -391,22 +387,22 @@ async def prometheus_metrics() -> str:
             prometheus_metrics.append(f'ruleiq_db_pool_checked_out{{{labels}}} {metric.checked_out}')
             prometheus_metrics.append(f'ruleiq_db_pool_utilization{{{labels}}} {metric.utilization_percent}')
             prometheus_metrics.append(f'ruleiq_db_pool_overflow{{{labels}}} {metric.overflow}')
-        
+
         # Health check metrics
         for pool_type, health in health_checks.items():
             labels = f'pool_type="{pool_type}"'
             health_value = 1 if health.success else 0
             prometheus_metrics.append(f'ruleiq_db_health{{{labels}}} {health_value}')
             prometheus_metrics.append(f'ruleiq_db_response_time{{{labels}}} {health.response_time_ms}')
-        
+
         if async_health:
-            labels = f'pool_type="async"'
+            labels = 'pool_type="async"'
             health_value = 1 if async_health.success else 0
             prometheus_metrics.append(f'ruleiq_db_health{{{labels}}} {health_value}')
             prometheus_metrics.append(f'ruleiq_db_response_time{{{labels}}} {async_health.response_time_ms}')
-        
+
         return "\n".join(prometheus_metrics) + "\n"
-        
+
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Prometheus metrics failed: {str(e)}")
 
@@ -418,20 +414,20 @@ async def test_database_connection() -> Dict[str, Any]:
     """
     try:
         monitor = get_database_monitor()
-        
+
         # Perform health checks
         sync_health = monitor.check_connection_health()
         async_health = await monitor.check_async_connection_health()
-        
+
         results = {
             "timestamp": datetime.utcnow().isoformat(),
             "sync_health": {k: v.to_dict() for k, v in sync_health.items()},
         }
-        
+
         if async_health:
             results["async_health"] = async_health.to_dict()
-        
+
         return results
-        
+
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Connection test failed: {str(e)}")

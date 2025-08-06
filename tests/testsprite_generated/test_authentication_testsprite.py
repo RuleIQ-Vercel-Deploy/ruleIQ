@@ -10,11 +10,11 @@ from main import app
 
 class TestAuthenticationFlow:
     """Authentication tests generated from TestSprite plans"""
-    
+
     @pytest.fixture
     def client(self):
         return TestClient(app)
-    
+
     @pytest.fixture
     def test_user_data(self):
         return {
@@ -22,14 +22,14 @@ class TestAuthenticationFlow:
             "password": "TestSprite123!",
             "full_name": "TestSprite User"
         }
-    
+
     def test_user_registration_valid_data(self, client, test_user_data):
         """
         TestSprite TC001: User Registration with Valid Data
         Verify that a user can successfully register using valid credentials
         """
         response = client.post("/api/v1/auth/register", json=test_user_data)
-        
+
         assert response.status_code == 201
         data = response.json()
         assert "user" in data
@@ -37,7 +37,7 @@ class TestAuthenticationFlow:
         assert data["user"]["email"] == test_user_data["email"]
         assert "access_token" in data["tokens"]
         assert "refresh_token" in data["tokens"]
-    
+
     def test_user_login_correct_credentials(self, client, test_user_data):
         """
         TestSprite TC002: User Login with Correct Credentials
@@ -45,20 +45,20 @@ class TestAuthenticationFlow:
         """
         # First register the user
         client.post("/api/v1/auth/register", json=test_user_data)
-        
+
         # Then login
         login_data = {
             "email": test_user_data["email"],
             "password": test_user_data["password"]
         }
         response = client.post("/api/v1/auth/login", json=login_data)
-        
+
         assert response.status_code == 200
         data = response.json()
         assert "access_token" in data
         assert "refresh_token" in data
         assert data["token_type"] == "bearer"
-    
+
     def test_protected_endpoint_access(self, client, test_user_data):
         """
         TestSprite: Protected Endpoint Access
@@ -70,14 +70,14 @@ class TestAuthenticationFlow:
             "email": test_user_data["email"],
             "password": test_user_data["password"]
         })
-        
+
         token = login_response.json()["access_token"]
         headers = {"Authorization": f"Bearer {token}"}
-        
+
         # Access protected endpoint
         response = client.get("/api/v1/auth/me", headers=headers)
         assert response.status_code == 200
-        
+
         user_data = response.json()
         assert user_data["email"] == test_user_data["email"]
 

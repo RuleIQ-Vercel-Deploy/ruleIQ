@@ -22,11 +22,18 @@ import React, { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 
 import { Button } from '@/components/ui/button';
+import { EmailCaptureForm } from '@/components/marketing/email-capture-form';
+import { freemiumService } from '@/lib/api/freemium.service';
 import { useAuthStore } from '@/lib/stores/auth.store';
 import { cn } from '@/lib/utils';
 
 // Hero Section with Animated Background
-const HeroSection = () => {
+interface HeroSectionProps {
+  showEmailCapture: boolean;
+  setShowEmailCapture: (show: boolean) => void;
+}
+
+const HeroSection = ({ showEmailCapture, setShowEmailCapture }: HeroSectionProps) => {
   const router = useRouter();
   const { isAuthenticated } = useAuthStore();
   const containerRef = useRef<HTMLDivElement>(null);
@@ -38,13 +45,83 @@ const HeroSection = () => {
   const y = useTransform(scrollYProgress, [0, 1], ['0%', '50%']);
   const opacity = useTransform(scrollYProgress, [0, 1], [1, 0]);
 
+  const handleEmailSuccess = async (leadId: string, email: string) => {
+    console.log('🔄 handleEmailSuccess called with:', { leadId, email });
+    
+    try {
+      console.log('📞 Starting assessment via freemiumService...');
+      
+      // Start assessment session
+      const session = await freemiumService.startAssessment({
+        lead_email: email,
+        business_type: 'general',
+        assessment_type: 'general',
+      });
+
+      console.log('✅ Assessment session created:', session);
+      console.log('🔗 Redirecting to:', `/assessment?token=${session.session_token}`);
+
+      // Hide email capture form before redirecting
+      setShowEmailCapture(false);
+      
+      // Add a small delay to ensure state updates
+      setTimeout(() => {
+        console.log('🚀 Executing navigation...');
+        console.log('🔧 Current URL:', window.location.href);
+        console.log('🔧 Target URL:', `/assessment?token=${session.session_token}`);
+        
+        // Try Next.js router first
+        router.push(`/assessment?token=${session.session_token}`);
+        console.log('🚀 Next.js router.push() called');
+        
+        // Add fallback navigation after short delay
+        setTimeout(() => {
+          console.log('🔧 Checking if navigation happened...');
+          if (window.location.pathname === '/') {
+            console.log('❌ Navigation failed, using window.location fallback');
+            window.location.href = `/assessment?token=${session.session_token}`;
+          } else {
+            console.log('✅ Navigation successful');
+          }
+        }, 500);
+      }, 100);
+      
+    } catch (error) {
+      console.error('❌ Failed to start assessment:', error);
+      console.error('❌ Error details:', JSON.stringify(error, null, 2));
+      
+      // Show error message and reset form to try again
+      alert('Sorry, we couldn\'t start your assessment right now. Please try again.');
+      setShowEmailCapture(false);
+      setTimeout(() => setShowEmailCapture(true), 1000);
+    }
+  };
+
   return (
     <section
+      id="hero-section"
       ref={containerRef}
       className="relative flex min-h-screen items-center justify-center overflow-hidden"
     >
-      {/* Clean Background */}
-      <div className="absolute inset-0 bg-surface-base" />
+      {/* Enhanced Clean Background with Gradient */}
+      <div className="absolute inset-0 bg-gradient-to-br from-teal-50 via-white to-neutral-50" />
+      
+      {/* Animated Background Elements */}
+      <div className="absolute inset-0">
+        {[...Array(3)].map((_, i) => (
+          <div
+            key={i}
+            className="absolute rounded-full bg-gradient-to-br from-teal-400/20 to-teal-600/20 blur-3xl animate-float"
+            style={{
+              width: `${300 + i * 100}px`,
+              height: `${300 + i * 100}px`,
+              left: `${20 + i * 30}%`,
+              top: `${10 + i * 20}%`,
+              animationDelay: `${i * 2}s`,
+            }}
+          />
+        ))}
+      </div>
 
 
       {/* Grid Pattern Overlay */}
@@ -52,29 +129,31 @@ const HeroSection = () => {
 
       {/* Content */}
       <motion.div className="container relative z-10 mx-auto px-4 text-center" style={{ opacity }}>
-        {/* Badge */}
+        {/* Enhanced Badge with Glass Effect */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="glass-card mb-8 inline-flex items-center gap-2 rounded-full px-4 py-2"
+          className="glass-white shadow-elevation-low mb-8 inline-flex items-center gap-2 rounded-full px-4 py-2 hover:shadow-elevation-medium transition-all duration-250"
         >
-          <Sparkles className="h-4 w-4 text-primary" />
-          <span className="text-sm font-medium text-foreground">
+          <Sparkles className="h-4 w-4 text-teal-600" />
+          <span className="text-sm font-medium text-neutral-900">
             AI-Powered Compliance Automation
           </span>
         </motion.div>
 
-        {/* Main Heading */}
+        {/* Enhanced Main Heading */}
         <motion.h1
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.1 }}
-          className="mb-6 text-6xl font-bold md:text-8xl"
+          className="mb-6 text-6xl font-semibold tracking-heading md:text-8xl animate-slide-up-fade"
         >
-          <span className="gradient-text">Transform</span>
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-700 via-teal-600 to-teal-400">
+            Transform
+          </span>
           <br />
-          <span className="text-foreground">Your Compliance</span>
+          <span className="text-neutral-900">Your Compliance</span>
         </motion.h1>
 
         {/* Subheading */}
@@ -88,30 +167,85 @@ const HeroSection = () => {
           achieve 99.9% accuracy across 50+ frameworks.
         </motion.p>
 
-        {/* CTA Buttons */}
+        {/* Enhanced CTA Section */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.3 }}
-          className="mb-12 flex flex-col items-center justify-center gap-4 sm:flex-row"
+          className="mb-12 flex flex-col items-center justify-center gap-6"
         >
-          <Button
-            size="lg"
-            className="btn-gradient group px-8 py-6 text-lg"
-            onClick={() => router.push(isAuthenticated ? '/dashboard' : '/signup')}
-          >
-            {isAuthenticated ? 'Go to Dashboard' : 'Start Free Trial'}
-            <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
-          </Button>
-          <Button
-            size="lg"
-            variant="outline"
-            className="glass-card border-glass-border px-8 py-6 text-lg hover:bg-glass-white-hover"
-            onClick={() => router.push('/demo')}
-          >
-            Watch Demo
-            <ChevronRight className="ml-2 h-5 w-5" />
-          </Button>
+          {isAuthenticated ? (
+            <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
+              <Button
+                size="lg"
+                variant="default"
+                className="group"
+                onClick={() => router.push('/dashboard')}
+              >
+                Go to Dashboard
+                <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
+              </Button>
+              <Button
+                size="lg"
+                variant="outline"
+                onClick={() => router.push('/demo')}
+              >
+                Watch Demo
+                <ChevronRight className="ml-2 h-5 w-5" />
+              </Button>
+            </div>
+          ) : (
+            <div className="w-full max-w-md">
+              {!showEmailCapture ? (
+                <div className="flex flex-col items-center gap-4">
+                  <Button
+                    size="lg"
+                    variant="default"
+                    className="group"
+                    onClick={() => setShowEmailCapture(true)}
+                  >
+                    Start Free AI Assessment
+                    <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
+                  </Button>
+                  <div className="flex gap-4">
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={() => router.push('/login')}
+                    >
+                      Already have an account?
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={() => router.push('/demo')}
+                    >
+                      Watch Demo
+                    </Button>
+                  </div>
+                </div>
+              ) : (
+                <div className="glass-white rounded-2xl p-6 shadow-elevation-medium">
+                  <h3 className="mb-4 text-xl font-semibold text-center">
+                    Start Your Free AI Assessment
+                  </h3>
+                  <EmailCaptureForm
+                    onSuccess={handleEmailSuccess}
+                    variant="modal"
+                  />
+                  <div className="mt-4 text-center">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setShowEmailCapture(false)}
+                    >
+                      ← Back
+                    </Button>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
         </motion.div>
 
         {/* Trust Indicators */}
@@ -303,6 +437,7 @@ const PricingCard = ({
 export default function HomePage() {
   const router = useRouter();
   const [mounted, setMounted] = useState(false);
+  const [showEmailCapture, setShowEmailCapture] = useState(false);
 
   useEffect(() => {
     setMounted(true);
@@ -369,7 +504,14 @@ export default function HomePage() {
             >
               Sign In
             </Button>
-            <Button className="btn-gradient" onClick={() => router.push('/signup')}>
+            <Button 
+              className="btn-gradient" 
+              onClick={() => {
+                const element = document.getElementById('hero-section');
+                element?.scrollIntoView({ behavior: 'smooth' });
+                setTimeout(() => setShowEmailCapture(true), 500);
+              }}
+            >
               Get Started
             </Button>
           </div>
@@ -377,7 +519,10 @@ export default function HomePage() {
       </header>
 
       {/* Hero Section */}
-      <HeroSection />
+      <HeroSection 
+        showEmailCapture={showEmailCapture}
+        setShowEmailCapture={setShowEmailCapture}
+      />
 
       {/* Stats Section */}
       <StatsSection />
@@ -515,7 +660,7 @@ export default function HomePage() {
                 'Email support',
                 '1 user account',
               ]}
-              onSelect={() => router.push('/signup?plan=starter')}
+              onSelect={() => setShowEmailCapture(true)}
             />
             <PricingCard
               name="Professional"
@@ -531,7 +676,7 @@ export default function HomePage() {
                 'API access',
               ]}
               popular
-              onSelect={() => router.push('/signup?plan=professional')}
+              onSelect={() => setShowEmailCapture(true)}
             />
             <PricingCard
               name="Enterprise"
@@ -571,9 +716,13 @@ export default function HomePage() {
             <Button
               size="lg"
               className="bg-white px-8 py-6 text-lg font-semibold text-primary hover:bg-neutral-100"
-              onClick={() => router.push('/signup')}
+              onClick={() => {
+                const element = document.getElementById('hero-section');
+                element?.scrollIntoView({ behavior: 'smooth' });
+                setTimeout(() => setShowEmailCapture(true), 500);
+              }}
             >
-              Start Your Free Trial
+              Start Free Assessment
               <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
           </motion.div>

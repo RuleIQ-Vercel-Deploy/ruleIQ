@@ -14,7 +14,7 @@ from database.db_setup import init_db
 async def test_neon_and_ai():
     """Simple test for Neon connection and basic AI"""
     print("🧪 Testing Neon Database and AI Setup\n")
-    
+
     # 1. Test database connection
     print("1️⃣ Testing Neon database connection...")
     try:
@@ -24,22 +24,22 @@ async def test_neon_and_ai():
     except Exception as e:
         print(f"❌ Database connection failed: {e}\n")
         return
-    
+
     # 2. Test Google AI API
     print("2️⃣ Testing Google AI API...")
     try:
         import google.generativeai as genai
         from config.ai_config import get_ai_model
-        
+
         # Get the AI model
         model = get_ai_model()
-        
+
         # Simple test prompt
         response = model.generate_content("Say 'Hello from Google Gemini AI!'")
         print(f"✅ Google AI responded: {response.text}\n")
     except Exception as e:
         print(f"❌ Google AI test failed: {e}\n")
-    
+
     # 3. Test Redis connection
     print("3️⃣ Testing Redis connection...")
     try:
@@ -50,7 +50,7 @@ async def test_neon_and_ai():
     except Exception as e:
         print(f"❌ Redis connection failed: {e}")
         print("   Make sure Redis is running: docker compose up redis\n")
-    
+
     print("🎉 Basic connectivity tests completed!")
     print("\n📝 Summary:")
     print("- Neon Database: ✅ Connected") 

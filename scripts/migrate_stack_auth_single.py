@@ -8,7 +8,7 @@ import re
 import shutil
 from pathlib import Path
 from datetime import datetime
-from typing import List, Tuple, Dict
+from typing import List, Dict
 
 # Migration patterns based on our schema
 MIGRATION_PATTERNS = [
@@ -94,7 +94,7 @@ def analyze_file(file_path: Path) -> Dict[str, List[Dict]]:
     """Analyze a file and return all needed changes"""
     content = file_path.read_text()
     lines = content.split('\n')
-    
+
     changes = {
         'imports': [],
         'dependencies': [],
@@ -102,7 +102,7 @@ def analyze_file(file_path: Path) -> Dict[str, List[Dict]]:
         'attributes': [],
         'user_imports': []
     }
-    
+
     # Check for User model imports
     for i, line in enumerate(lines):
         if re.search(r'from database(?:\.models)? import.*\bUser\b', line):
@@ -111,7 +111,7 @@ def analyze_file(file_path: Path) -> Dict[str, List[Dict]]:
                 'content': line.strip(),
                 'action': 'Review if User model is needed beyond type hints'
             })
-    
+
     # Apply migration patterns
     for pattern_info in MIGRATION_PATTERNS:
         pattern = pattern_info['pattern']
@@ -125,7 +125,7 @@ def analyze_file(file_path: Path) -> Dict[str, List[Dict]]:
                     'replacement': pattern_info['replacement'],
                     'description': pattern_info['description']
                 })
-    
+
     # Apply type patterns
     for pattern_info in TYPE_PATTERNS:
         pattern = pattern_info['pattern']
@@ -138,7 +138,7 @@ def analyze_file(file_path: Path) -> Dict[str, List[Dict]]:
                     'replacement': pattern_info['replacement'],
                     'description': pattern_info['description']
                 })
-    
+
     # Apply attribute patterns (context-aware)
     for pattern_info in ATTRIBUTE_PATTERNS:
         pattern = pattern_info['pattern']
@@ -155,22 +155,22 @@ def analyze_file(file_path: Path) -> Dict[str, List[Dict]]:
                         'replacement': pattern_info['replacement'],
                         'description': pattern_info['description']
                     })
-    
+
     return changes
 
 def print_dry_run_report(file_path: Path, changes: Dict[str, List[Dict]]) -> int:
     """Print detailed dry run report"""
     total_changes = sum(len(v) for v in changes.values())
-    
+
     print(f"\n{'=' * 80}")
     print(f"DRY RUN REPORT: {file_path}")
     print(f"{'=' * 80}")
     print(f"Total changes needed: {total_changes}")
-    
+
     if total_changes == 0:
         print("✅ No changes needed - file already migrated or doesn't use auth")
         return 0
-    
+
     # Import changes
     if changes['imports']:
         print(f"\n📦 Import Changes ({len(changes['imports'])})")
@@ -179,7 +179,7 @@ def print_dry_run_report(file_path: Path, changes: Dict[str, List[Dict]]) -> int
             print(f"  Line {change['line']}: {change['description']}")
             print(f"    From: {change['content']}")
             print(f"    To:   {change['replacement']}")
-    
+
     # User model imports
     if changes['user_imports']:
         print(f"\n⚠️  User Model Imports ({len(changes['user_imports'])}) - Need Review")
@@ -187,14 +187,14 @@ def print_dry_run_report(file_path: Path, changes: Dict[str, List[Dict]]) -> int
         for change in changes['user_imports']:
             print(f"  Line {change['line']}: {change['content']}")
             print(f"    Action: {change['action']}")
-    
+
     # Dependency changes
     if changes['dependencies']:
         print(f"\n🔗 Dependency Changes ({len(changes['dependencies'])})")
         print("-" * 40)
         for change in changes['dependencies']:
             print(f"  Line {change['line']}: {change['description']}")
-    
+
     # Type hint changes
     if changes['type_hints']:
         print(f"\n📝 Type Hint Changes ({len(changes['type_hints'])})")
@@ -202,7 +202,7 @@ def print_dry_run_report(file_path: Path, changes: Dict[str, List[Dict]]) -> int
         for change in changes['type_hints']:
             print(f"  Line {change['line']}: {change['description']}")
             print(f"    From: {change['content']}")
-    
+
     # Attribute access changes
     if changes['attributes']:
         print(f"\n🔍 Attribute Access Changes ({len(changes['attributes'])})")
@@ -211,29 +211,29 @@ def print_dry_run_report(file_path: Path, changes: Dict[str, List[Dict]]) -> int
             print(f"  Line {change['line']}: {change['description']}")
             print(f"    In: {change['content']}")
             print(f"    Change: {change['match']} -> {change['description'].split('->')[-1].strip()}")
-    
+
     return total_changes
 
 def apply_migrations(file_path: Path, changes: Dict[str, List[Dict]]) -> str:
     """Apply all migrations to file content"""
     content = file_path.read_text()
-    
+
     # Apply replacements in reverse line order to maintain line numbers
     all_changes = []
     for category, change_list in changes.items():
         if category != 'user_imports':  # Skip user imports, they need manual review
             all_changes.extend(change_list)
-    
+
     # Sort by line number in reverse
     all_changes.sort(key=lambda x: x['line'], reverse=True)
-    
+
     lines = content.split('\n')
-    
+
     for change in all_changes:
         line_idx = change['line'] - 1
         if line_idx < len(lines):
             old_line = lines[line_idx]
-            
+
             if 'pattern' in change and 'replacement' in change:
                 # For simple pattern replacements
                 if isinstance(change['replacement'], str) and not change['replacement'].startswith(r'\1'):
@@ -242,7 +242,7 @@ def apply_migrations(file_path: Path, changes: Dict[str, List[Dict]]) -> str:
                     # For backreference replacements
                     new_line = re.sub(change['pattern'], change['replacement'], old_line)
                 lines[line_idx] = new_line
-    
+
     return '\n'.join(lines)
 
 def create_backup(file_path: Path) -> Path:
@@ -255,25 +255,25 @@ def create_backup(file_path: Path) -> Path:
 def main():
     parser = argparse.ArgumentParser(description="Migrate single file to Stack Auth")
     parser.add_argument('--file', required=True, help='Path to file to migrate')
-    parser.add_argument('--dry-run', action='store_true', default=True, 
+    parser.add_argument('--dry-run', action='store_true', default=True,
                        help='Perform dry run (default: True)')
-    parser.add_argument('--execute', action='store_true', 
+    parser.add_argument('--execute', action='store_true',
                        help='Execute migration (requires explicit flag)')
-    
+
     args = parser.parse_args()
-    
+
     file_path = Path(args.file)
     if not file_path.exists():
         print(f"❌ Error: File not found: {file_path}")
         return 1
-    
+
     # Analyze file
     changes = analyze_file(file_path)
     total_changes = print_dry_run_report(file_path, changes)
-    
+
     if total_changes == 0:
         return 0
-    
+
     # If only dry run, stop here
     if not args.execute:
         print(f"\n{'=' * 80}")
@@ -281,28 +281,28 @@ def main():
         print("To execute migration, run with --execute flag")
         print(f"{'=' * 80}")
         return 0
-    
+
     # Execute migration
     print(f"\n{'=' * 80}")
     print("🚀 EXECUTING MIGRATION")
     print(f"{'=' * 80}")
-    
+
     # Create backup
     backup_path = create_backup(file_path)
     print(f"✅ Backup created: {backup_path}")
-    
+
     # Apply migrations
     new_content = apply_migrations(file_path, changes)
     file_path.write_text(new_content)
     print(f"✅ Migration applied to: {file_path}")
-    
+
     # Final instructions
-    print(f"\n📋 Next Steps:")
+    print("\n📋 Next Steps:")
     print(f"1. Run tests: pytest tests/test_{file_path.stem}.py -v")
-    print(f"2. Test with curl: curl -H 'Authorization: Bearer <stack-token>' http://localhost:8000/api/...")
+    print("2. Test with curl: curl -H 'Authorization: Bearer <stack-token>' http://localhost:8000/api/...")
     print(f"3. If issues, restore: cp {backup_path} {file_path}")
     print(f"4. Commit: git add {file_path} && git commit -m 'feat: migrate {file_path.stem} to Stack Auth'")
-    
+
     return 0
 
 if __name__ == "__main__":

@@ -12,7 +12,6 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from api.dependencies.auth import get_current_active_user
 from database.user import User
 from api.dependencies.database import get_async_db
-from database.user import User
 from services.ai.assistant import ComplianceAssistant
 from services.ai.circuit_breaker import AICircuitBreaker
 

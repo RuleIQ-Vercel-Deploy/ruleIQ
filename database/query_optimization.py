@@ -208,7 +208,7 @@ class QueryOptimizer:
             }
             for item in evidence_items
         ]
-    
+
     async def analyze_query(self, query: str, params: dict = None) -> Dict[str, Any]:
         """
         Analyze query performance using EXPLAIN ANALYZE.
@@ -216,34 +216,34 @@ class QueryOptimizer:
         Returns execution plan and performance metrics.
         """
         import time
-        
+
         try:
             # Execute EXPLAIN ANALYZE
             explain_query = f"EXPLAIN (ANALYZE, BUFFERS, FORMAT JSON) {query}"
-            
+
             start_time = time.time()
             result = await self.db.execute(text(explain_query), params or {})
             execution_time = time.time() - start_time
-            
+
             plan_data = result.fetchone()[0][0]
-            
+
             # Extract key metrics
             total_cost = plan_data.get("Plan", {}).get("Total Cost", 0)
             actual_time = plan_data.get("Plan", {}).get("Actual Total Time", 0)
             rows_returned = plan_data.get("Plan", {}).get("Actual Rows", 0)
-            
+
             # Generate optimization suggestions
             suggestions = []
-            
+
             if actual_time > 100:  # >100ms
                 suggestions.append("Query is slow - consider adding indexes")
-            
+
             if "Seq Scan" in str(plan_data):
                 suggestions.append("Sequential scan detected - consider adding appropriate indexes")
-            
+
             if "Nested Loop" in str(plan_data) and rows_returned > 1000:
                 suggestions.append("Nested loop with many rows - consider hash join optimization")
-            
+
             return {
                 "execution_time": execution_time,
                 "actual_time_ms": actual_time,
@@ -253,7 +253,7 @@ class QueryOptimizer:
                 "index_suggestions": suggestions,
                 "performance_rating": "slow" if actual_time > 100 else "fast"
             }
-            
+
         except Exception as e:
             logger.error(f"Query analysis failed: {e}")
             return {
@@ -261,7 +261,7 @@ class QueryOptimizer:
                 "error": str(e),
                 "index_suggestions": ["Unable to analyze query"]
             }
-    
+
     async def get_slow_queries(self, threshold_ms: float = 100) -> List[Dict[str, Any]]:
         """
         Get slow queries from pg_stat_statements.
@@ -283,10 +283,10 @@ class QueryOptimizer:
                 ORDER BY mean_exec_time DESC 
                 LIMIT 20
             """)
-            
+
             result = await self.db.execute(query, {"threshold": threshold_ms})
             rows = result.fetchall()
-            
+
             return [
                 {
                     "query": row.query[:200] + "..." if len(row.query) > 200 else row.query,
@@ -299,11 +299,11 @@ class QueryOptimizer:
                 }
                 for row in rows
             ]
-            
+
         except Exception as e:
             logger.warning(f"Could not get slow queries (pg_stat_statements may not be enabled): {e}")
             return []
-    
+
     async def get_index_usage_stats(self) -> List[Dict[str, Any]]:
         """
         Get index usage statistics to identify unused indexes.
@@ -321,10 +321,10 @@ class QueryOptimizer:
                 FROM pg_stat_user_indexes 
                 ORDER BY idx_scan ASC, pg_relation_size(indexrelid) DESC
             """)
-            
+
             result = await self.db.execute(query)
             rows = result.fetchall()
-            
+
             return [
                 {
                     "schema": row.schemaname,
@@ -338,11 +338,11 @@ class QueryOptimizer:
                 }
                 for row in rows
             ]
-            
+
         except Exception as e:
             logger.error(f"Could not get index usage stats: {e}")
             return []
-    
+
     async def optimize_connection_pool(self) -> Dict[str, Any]:
         """
         Analyze connection pool usage and suggest optimizations.
@@ -358,29 +358,29 @@ class QueryOptimizer:
                 FROM pg_stat_activity 
                 WHERE datname = current_database()
             """)
-            
+
             result = await self.db.execute(query)
             row = result.fetchone()
-            
+
             total = row.total_connections
             active = row.active_connections
             idle = row.idle_connections
             idle_in_tx = row.idle_in_transaction
-            
+
             # Calculate recommendations
             utilization = active / max(total, 1)
-            
+
             recommendations = []
-            
+
             if utilization > 0.8:
                 recommendations.append("High connection pool utilization - consider increasing pool size")
-            
+
             if idle_in_tx > total * 0.1:
                 recommendations.append("Many idle-in-transaction connections - check for connection leaks")
-            
+
             if idle > total * 0.5:
                 recommendations.append("Many idle connections - consider reducing pool size")
-            
+
             return {
                 "total_connections": total,
                 "active_connections": active,
@@ -390,17 +390,17 @@ class QueryOptimizer:
                 "recommendations": recommendations,
                 "pool_health": "good" if 0.3 <= utilization <= 0.7 else "needs_attention"
             }
-            
+
         except Exception as e:
             logger.error(f"Could not analyze connection pool: {e}")
             return {"error": str(e)}
-    
+
     async def suggest_performance_improvements(self) -> List[Dict[str, Any]]:
         """
         Generate comprehensive performance improvement suggestions.
         """
         suggestions = []
-        
+
         # Analyze slow queries
         slow_queries = await self.get_slow_queries()
         if slow_queries:
@@ -411,7 +411,7 @@ class QueryOptimizer:
                 "recommendation": "Review and optimize slow queries with indexes or query restructuring",
                 "impact": "Significant improvement in API response times"
             })
-        
+
         # Analyze index usage
         index_stats = await self.get_index_usage_stats()
         unused_indexes = [idx for idx in index_stats if idx["usage_status"] == "unused"]
@@ -423,7 +423,7 @@ class QueryOptimizer:
                 "recommendation": "Consider dropping unused indexes to improve write performance",
                 "impact": "Faster INSERT/UPDATE operations, reduced storage"
             })
-        
+
         # Analyze connection pool
         pool_analysis = await self.optimize_connection_pool()
         if pool_analysis.get("pool_health") == "needs_attention":
@@ -434,7 +434,7 @@ class QueryOptimizer:
                 "recommendation": "; ".join(pool_analysis.get("recommendations", [])),
                 "impact": "Better concurrency handling and resource utilization"
             })
-        
+
         return suggestions
 
 

@@ -6,15 +6,13 @@ Provides centralized management of data access permissions for UK compliance req
 """
 
 import logging
-from typing import Dict, List, Optional, Set, Tuple
+from typing import List
 from uuid import UUID
 
 from sqlalchemy.orm import Session
-from sqlalchemy import and_, or_, select
-from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy import and_
 
 from database.rbac import DataAccess, Role, UserRole
-from database.user import User
 from database.business_profile import BusinessProfile
 from api.dependencies.rbac_auth import UserWithRoles
 
@@ -30,10 +28,10 @@ class DataAccessService:
     - organization_data: User can see data within their organization
     - all_data: User can see all data (admin level)
     """
-    
+
     def __init__(self, db: Session):
         self.db = db
-    
+
     def get_user_data_access_level(self, user_id: UUID) -> str:
         """
         Get the highest data access level for a user.
@@ -52,27 +50,27 @@ class DataAccessService:
                 Role.is_active == True
             )
         ).all()
-        
+
         if not user_roles:
             return 'own_data'
-        
+
         # Check if user has admin role (grants all_data access)
         for user_role in user_roles:
             if user_role.role.name == 'admin':
                 return 'all_data'
-        
+
         # Check if user has framework_manager role (grants organization_data access)
         for user_role in user_roles:
             if user_role.role.name in ['framework_manager', 'assessor']:
                 return 'organization_data'
-        
+
         # Default to own_data for business_user and viewer roles
         return 'own_data'
-    
+
     def can_access_business_profile(
-        self, 
-        user: UserWithRoles, 
-        profile_id: UUID, 
+        self,
+        user: UserWithRoles,
+        profile_id: UUID,
         profile_owner_id: UUID = None
     ) -> bool:
         """
@@ -87,11 +85,11 @@ class DataAccessService:
             True if user can access the profile
         """
         access_level = self.get_user_data_access_level(user.id)
-        
+
         # Admin users can access all profiles
         if access_level == 'all_data':
             return True
-        
+
         # Get profile owner if not provided
         if profile_owner_id is None:
             profile = self.db.query(BusinessProfile).filter(
@@ -100,22 +98,22 @@ class DataAccessService:
             if not profile:
                 return False
             profile_owner_id = profile.user_id
-        
+
         # Own data access - can only see own profiles
         if access_level == 'own_data':
             return profile_owner_id == user.id
-        
+
         # Organization data access - can see profiles within same organization
         if access_level == 'organization_data':
             # For now, we'll implement this as same organization logic
             # This would need to be extended with actual organization relationships
             return True  # Placeholder - implement organization logic
-        
+
         return False
-    
+
     def filter_business_profiles_query(
-        self, 
-        user: UserWithRoles, 
+        self,
+        user: UserWithRoles,
         base_query
     ):
         """
@@ -129,27 +127,27 @@ class DataAccessService:
             Filtered query
         """
         access_level = self.get_user_data_access_level(user.id)
-        
+
         # Admin users can see all profiles
         if access_level == 'all_data':
             return base_query
-        
+
         # Own data access - only see own profiles
         if access_level == 'own_data':
             return base_query.filter(BusinessProfile.user_id == user.id)
-        
+
         # Organization data access - see profiles within organization
         if access_level == 'organization_data':
             # For now, allow access to all profiles for framework managers
             # This should be refined with proper organization relationships
             return base_query
-        
+
         # Default to own data only
         return base_query.filter(BusinessProfile.user_id == user.id)
-    
+
     def can_access_assessment(
-        self, 
-        user: UserWithRoles, 
+        self,
+        user: UserWithRoles,
         assessment_owner_id: UUID
     ) -> bool:
         """
@@ -163,26 +161,26 @@ class DataAccessService:
             True if user can access the assessment
         """
         access_level = self.get_user_data_access_level(user.id)
-        
+
         # Admin users can access all assessments
         if access_level == 'all_data':
             return True
-        
+
         # Own data access - can only see own assessments
         if access_level == 'own_data':
             return assessment_owner_id == user.id
-        
+
         # Organization data access - can see assessments within organization
         if access_level == 'organization_data':
             # Placeholder - implement organization logic
             return True
-        
+
         return False
-    
+
     def grant_data_access(
-        self, 
-        user_id: UUID, 
-        access_type: str, 
+        self,
+        user_id: UUID,
+        access_type: str,
         business_profile_id: UUID = None,
         granted_by: UUID = None
     ) -> DataAccess:
@@ -200,7 +198,7 @@ class DataAccessService:
         """
         if access_type not in ['own_data', 'organization_data', 'all_data']:
             raise ValueError("Invalid access type")
-        
+
         # Check if access already exists
         existing = self.db.query(DataAccess).filter(
             and_(
@@ -209,7 +207,7 @@ class DataAccessService:
                 DataAccess.is_active == True
             )
         ).first()
-        
+
         if existing:
             # Update existing access
             existing.access_type = access_type
@@ -227,13 +225,13 @@ class DataAccessService:
             self.db.add(data_access)
             self.db.commit()
             self.db.refresh(data_access)
-        
+
         logger.info(f"Data access granted: user {user_id}, type {access_type}")
         return data_access
-    
+
     def revoke_data_access(
-        self, 
-        user_id: UUID, 
+        self,
+        user_id: UUID,
         business_profile_id: UUID = None
     ) -> bool:
         """
@@ -253,16 +251,16 @@ class DataAccessService:
                 DataAccess.is_active == True
             )
         ).first()
-        
+
         if not data_access:
             return False
-        
+
         data_access.is_active = False
         self.db.commit()
-        
+
         logger.info(f"Data access revoked: user {user_id}")
         return True
-    
+
     def get_accessible_business_profiles(self, user: UserWithRoles) -> List[UUID]:
         """
         Get list of business profile IDs accessible to a user.
@@ -274,24 +272,24 @@ class DataAccessService:
             List of accessible business profile IDs
         """
         access_level = self.get_user_data_access_level(user.id)
-        
+
         if access_level == 'all_data':
             # Admin can access all profiles
             profiles = self.db.query(BusinessProfile.id).all()
             return [profile.id for profile in profiles]
-        
+
         if access_level == 'own_data':
             # Can only access own profiles
             profiles = self.db.query(BusinessProfile.id).filter(
                 BusinessProfile.user_id == user.id
             ).all()
             return [profile.id for profile in profiles]
-        
+
         if access_level == 'organization_data':
             # Can access organization profiles (placeholder implementation)
             profiles = self.db.query(BusinessProfile.id).all()
             return [profile.id for profile in profiles]
-        
+
         return []
 
 

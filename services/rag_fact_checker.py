@@ -6,7 +6,7 @@ Provides advanced fact-checking, source verification, and response quality asses
 import os
 import json
 import logging
-from typing import Dict, Any, List, Optional, Tuple
+from typing import Dict, Any, List
 from datetime import datetime
 from enum import Enum
 from pydantic import BaseModel, Field
@@ -75,34 +75,34 @@ class RAGFactChecker:
     - Automated self-criticism
     - Bias detection
     """
-    
+
     def __init__(self):
         # Initialize AI clients
         self.openai_client = None
         self.mistral_client = None
-        
+
         # OpenAI for complex reasoning tasks
         openai_api_key = os.getenv("OPENAI_API_KEY")
         if openai_api_key and openai_api_key != "your-openai-api-key":
             self.openai_client = openai.OpenAI(api_key=openai_api_key)
-        
+
         # Mistral for alternative perspective
         mistral_api_key = os.getenv("MISTRAL_API_KEY")
         if mistral_api_key:
             self.mistral_client = Mistral(api_key=mistral_api_key)
-        
+
         self.fact_check_model = "gpt-4o-mini"  # Use smaller model for efficiency
         self.critic_model = "gpt-4o-mini"
-        
+
         # Fact-checking thresholds
         self.high_confidence_threshold = 0.85
         self.medium_confidence_threshold = 0.65
         self.approval_threshold = 0.75
-        
+
     async def comprehensive_fact_check(
-        self, 
-        response_text: str, 
-        sources: List[Dict[str, Any]], 
+        self,
+        response_text: str,
+        sources: List[Dict[str, Any]],
         original_query: str
     ) -> QualityAssessment:
         """
@@ -115,47 +115,47 @@ class RAGFactChecker:
         """
         try:
             logger.info("Starting comprehensive fact-check analysis")
-            
+
             # Extract factual claims from response
             claims = await self._extract_factual_claims(response_text)
-            
+
             # Fact-check each claim
             fact_check_results = []
             for claim in claims:
                 result = await self._fact_check_claim(claim, sources, response_text)
                 fact_check_results.append(result)
-            
+
             # Perform self-criticism analysis
             self_critiques = await self._perform_self_criticism(
                 response_text, sources, original_query
             )
-            
+
             # Assess source quality
             source_quality_score = await self._assess_source_quality(sources)
-            
+
             # Calculate overall scores
             overall_score = self._calculate_overall_score(
                 fact_check_results, self_critiques, source_quality_score
             )
-            
+
             response_reliability = self._calculate_reliability(fact_check_results)
-            
+
             # Generate recommendations
             recommendations = await self._generate_recommendations(
                 fact_check_results, self_critiques, source_quality_score
             )
-            
+
             # Identify critical issues
             flagged_issues = self._identify_flagged_issues(
                 fact_check_results, self_critiques
             )
-            
+
             # Determine approval status
             approved_for_use = (
                 overall_score >= self.approval_threshold and
                 not any(issue.startswith("CRITICAL") for issue in flagged_issues)
             )
-            
+
             return QualityAssessment(
                 overall_score=overall_score,
                 fact_check_results=fact_check_results,
@@ -166,7 +166,7 @@ class RAGFactChecker:
                 flagged_issues=flagged_issues,
                 approved_for_use=approved_for_use
             )
-            
+
         except Exception as e:
             logger.error(f"Comprehensive fact-check failed: {e}")
             # Return a basic assessment indicating the check failed
@@ -180,7 +180,7 @@ class RAGFactChecker:
                 flagged_issues=["CRITICAL: Fact-checking system failure"],
                 approved_for_use=False
             )
-    
+
     async def _extract_factual_claims(self, response_text: str) -> List[str]:
         """Extract factual claims from response text"""
         try:
@@ -195,7 +195,7 @@ class RAGFactChecker:
             Return a JSON list of factual claims. Each claim should be a specific, verifiable statement.
             Example: ["LangGraph supports PostgreSQL checkpointers", "State management requires TypedDict classes"]
             """
-            
+
             if self.openai_client:
                 response = await self.openai_client.chat.completions.create(
                     model=self.fact_check_model,
@@ -203,9 +203,9 @@ class RAGFactChecker:
                     max_tokens=500,
                     temperature=0.1
                 )
-                
+
                 claims_text = response.choices[0].message.content.strip()
-                
+
                 # Parse JSON response
                 try:
                     claims = json.loads(claims_text)
@@ -216,31 +216,31 @@ class RAGFactChecker:
             else:
                 # Fallback to manual extraction if no AI available
                 return self._manual_claim_extraction(response_text)
-                
+
         except Exception as e:
             logger.warning(f"Failed to extract factual claims: {e}")
             return []
-    
+
     def _manual_claim_extraction(self, text: str) -> List[str]:
         """Manual fallback for claim extraction"""
         claims = []
         sentences = text.split('.')
-        
+
         for sentence in sentences:
             sentence = sentence.strip()
-            if (len(sentence) > 20 and 
+            if (len(sentence) > 20 and
                 any(keyword in sentence.lower() for keyword in [
-                    'supports', 'requires', 'provides', 'enables', 'uses', 
+                    'supports', 'requires', 'provides', 'enables', 'uses',
                     'implements', 'includes', 'allows', 'prevents'
                 ])):
                 claims.append(sentence)
-        
+
         return claims[:10]  # Limit to 10 claims
-    
+
     async def _fact_check_claim(
-        self, 
-        claim: str, 
-        sources: List[Dict[str, Any]], 
+        self,
+        claim: str,
+        sources: List[Dict[str, Any]],
         full_response: str
     ) -> FactCheckResult:
         """Fact-check a specific claim against sources"""
@@ -250,7 +250,7 @@ class RAGFactChecker:
                 f"Source {i+1} ({source.get('source', 'unknown')}):\n{source.get('content', '')[:1000]}"
                 for i, source in enumerate(sources[:3])
             ])
-            
+
             prompt = f"""
             You are a fact-checking expert. Verify the following claim against the provided sources.
             
@@ -274,7 +274,7 @@ class RAGFactChecker:
             
             Be thorough and conservative in your assessment.
             """
-            
+
             if self.openai_client:
                 response = await self.openai_client.chat.completions.create(
                     model=self.fact_check_model,
@@ -282,12 +282,12 @@ class RAGFactChecker:
                     max_tokens=600,
                     temperature=0.1
                 )
-                
+
                 result_text = response.choices[0].message.content.strip()
-                
+
                 try:
                     result_data = json.loads(result_text)
-                    
+
                     return FactCheckResult(
                         claim=claim,
                         is_factual=result_data.get("is_factual", False),
@@ -297,17 +297,17 @@ class RAGFactChecker:
                         source_reliability=float(result_data.get("source_reliability", 0.5)),
                         reasoning=result_data.get("reasoning", "Analysis completed")
                     )
-                    
+
                 except (json.JSONDecodeError, ValueError) as e:
                     logger.warning(f"Failed to parse fact-check result: {e}")
                     return self._create_fallback_fact_check(claim)
             else:
                 return self._create_fallback_fact_check(claim)
-                
+
         except Exception as e:
             logger.error(f"Fact-checking failed for claim '{claim}': {e}")
             return self._create_fallback_fact_check(claim)
-    
+
     def _create_fallback_fact_check(self, claim: str) -> FactCheckResult:
         """Create a fallback fact-check result when AI analysis fails"""
         return FactCheckResult(
@@ -319,31 +319,31 @@ class RAGFactChecker:
             source_reliability=0.5,
             reasoning="Fact-checking service unavailable, claim not verified"
         )
-    
+
     async def _perform_self_criticism(
-        self, 
-        response_text: str, 
-        sources: List[Dict[str, Any]], 
+        self,
+        response_text: str,
+        sources: List[Dict[str, Any]],
         original_query: str
     ) -> List[SelfCritique]:
         """Perform comprehensive self-criticism analysis"""
         critique_aspects = [
             "accuracy",
-            "completeness", 
+            "completeness",
             "relevance",
             "clarity"
         ]
-        
+
         critiques = []
-        
+
         for aspect in critique_aspects:
             critique = await self._analyze_aspect(
                 aspect, response_text, sources, original_query
             )
             critiques.append(critique)
-        
+
         return critiques
-    
+
     async def _analyze_aspect(
         self,
         aspect: str,
@@ -359,7 +359,7 @@ class RAGFactChecker:
                 "relevance": "How relevant is this response to the original query? Does it address all parts of the question?",
                 "clarity": "How clear and understandable is this response? Are there confusing or ambiguous parts?"
             }
-            
+
             prompt = f"""
             You are a critical reviewer analyzing a RAG system response.
             
@@ -383,7 +383,7 @@ class RAGFactChecker:
             
             Be constructively critical and identify both strengths and weaknesses.
             """
-            
+
             if self.openai_client:
                 response = await self.openai_client.chat.completions.create(
                     model=self.critic_model,
@@ -391,12 +391,12 @@ class RAGFactChecker:
                     max_tokens=500,
                     temperature=0.2
                 )
-                
+
                 result_text = response.choices[0].message.content.strip()
-                
+
                 try:
                     result_data = json.loads(result_text)
-                    
+
                     return SelfCritique(
                         aspect=aspect,
                         score=float(result_data.get("score", 0.5)),
@@ -405,17 +405,17 @@ class RAGFactChecker:
                         suggestions=result_data.get("suggestions", []),
                         reasoning=result_data.get("reasoning", "Analysis completed")
                     )
-                    
+
                 except (json.JSONDecodeError, ValueError) as e:
                     logger.warning(f"Failed to parse criticism result for {aspect}: {e}")
                     return self._create_fallback_critique(aspect)
             else:
                 return self._create_fallback_critique(aspect)
-                
+
         except Exception as e:
             logger.error(f"Self-criticism failed for aspect '{aspect}': {e}")
             return self._create_fallback_critique(aspect)
-    
+
     def _create_fallback_critique(self, aspect: str) -> SelfCritique:
         """Create a fallback critique when AI analysis fails"""
         return SelfCritique(
@@ -426,17 +426,17 @@ class RAGFactChecker:
             suggestions=["Manual review recommended"],
             reasoning="Self-criticism service unavailable"
         )
-    
+
     async def _assess_source_quality(self, sources: List[Dict[str, Any]]) -> float:
         """Assess the quality and reliability of sources used"""
         if not sources:
             return 0.0
-        
+
         total_score = 0.0
-        
+
         for source in sources:
             score = 0.0
-            
+
             # Source type quality
             source_type = source.get('chunk_type', 'unknown')
             if source_type == 'documentation':
@@ -445,27 +445,27 @@ class RAGFactChecker:
                 score += 0.4
             elif source_type == 'api_reference':
                 score += 0.3
-            
+
             # Similarity score (how relevant to query)
             similarity = source.get('similarity', 0.0)
             score += similarity * 0.4
-            
+
             # Content length (more content can be better)
             content_length = len(source.get('content', ''))
             if content_length > 1000:
                 score += 0.2
             elif content_length > 500:
                 score += 0.1
-            
+
             # Framework/source reliability
             framework = source.get('source', '').lower()
             if framework in ['langgraph', 'pydantic_ai']:
                 score += 0.1  # Trusted sources
-            
+
             total_score += min(1.0, score)
-        
+
         return total_score / len(sources)
-    
+
     def _calculate_overall_score(
         self,
         fact_check_results: List[FactCheckResult],
@@ -478,7 +478,7 @@ class RAGFactChecker:
             'self_critique': 0.4,
             'source_quality': 0.2
         }
-        
+
         # Fact accuracy score
         if fact_check_results:
             fact_score = sum(
@@ -487,29 +487,29 @@ class RAGFactChecker:
             ) / len(fact_check_results)
         else:
             fact_score = 0.8  # Default if no claims to check
-        
+
         # Self-critique score
         if self_critiques:
             critique_score = sum(critique.score for critique in self_critiques) / len(self_critiques)
         else:
             critique_score = 0.5  # Default if no critiques
-        
+
         # Calculate weighted average
         overall_score = (
             weights['fact_accuracy'] * fact_score +
             weights['self_critique'] * critique_score +
             weights['source_quality'] * source_quality_score
         )
-        
+
         return round(overall_score, 3)
-    
+
     def _calculate_reliability(self, fact_check_results: List[FactCheckResult]) -> float:
         """Calculate response reliability based on fact-checking"""
         if not fact_check_results:
             return 0.7  # Default reliability
-        
+
         reliability_scores = []
-        
+
         for result in fact_check_results:
             if result.is_factual:
                 if result.confidence == FactCheckConfidence.HIGH:
@@ -522,9 +522,9 @@ class RAGFactChecker:
                     reliability_scores.append(0.4)
             else:
                 reliability_scores.append(0.1)  # Factually incorrect
-        
+
         return round(sum(reliability_scores) / len(reliability_scores), 3)
-    
+
     async def _generate_recommendations(
         self,
         fact_check_results: List[FactCheckResult],
@@ -533,27 +533,27 @@ class RAGFactChecker:
     ) -> List[str]:
         """Generate improvement recommendations"""
         recommendations = []
-        
+
         # Fact-checking based recommendations
         false_claims = [r for r in fact_check_results if not r.is_factual]
         if false_claims:
             recommendations.append(f"Review {len(false_claims)} potentially inaccurate claims")
-        
+
         uncertain_claims = [r for r in fact_check_results if r.confidence == FactCheckConfidence.UNCERTAIN]
         if uncertain_claims:
             recommendations.append(f"Verify {len(uncertain_claims)} uncertain claims with additional sources")
-        
+
         # Critique-based recommendations
         for critique in self_critiques:
             if critique.score < 0.6:
                 recommendations.append(f"Improve {critique.aspect}: {critique.suggestions[0] if critique.suggestions else 'needs attention'}")
-        
+
         # Source quality recommendations
         if source_quality_score < 0.5:
             recommendations.append("Consider using higher-quality or more relevant sources")
-        
+
         return recommendations[:5]  # Limit to top 5 recommendations
-    
+
     def _identify_flagged_issues(
         self,
         fact_check_results: List[FactCheckResult],
@@ -561,22 +561,22 @@ class RAGFactChecker:
     ) -> List[str]:
         """Identify critical issues that should flag the response"""
         flagged_issues = []
-        
+
         # Critical fact-checking issues
         false_claims = [r for r in fact_check_results if not r.is_factual]
         if false_claims:
             flagged_issues.append(f"CRITICAL: {len(false_claims)} factually incorrect claims detected")
-        
+
         # Critical self-critique issues
         critical_critiques = [c for c in self_critiques if c.severity == CriticSeverity.CRITICAL]
         if critical_critiques:
             flagged_issues.append(f"CRITICAL: {len(critical_critiques)} critical quality issues")
-        
+
         # High severity issues
         high_severity = [c for c in self_critiques if c.severity == CriticSeverity.HIGH and c.score < 0.3]
         if high_severity:
             flagged_issues.append(f"HIGH: {len(high_severity)} high-severity quality issues")
-        
+
         return flagged_issues
 
     async def quick_fact_check(self, response_text: str, sources: List[Dict[str, Any]]) -> bool:
@@ -587,21 +587,21 @@ class RAGFactChecker:
         try:
             # Extract claims
             claims = await self._extract_factual_claims(response_text)
-            
+
             if not claims:
                 return True  # No claims to verify
-            
+
             # Quick check of up to 3 most important claims
             suspicious_count = 0
-            
+
             for claim in claims[:3]:
                 result = await self._fact_check_claim(claim, sources, response_text)
                 if not result.is_factual or result.confidence == FactCheckConfidence.UNCERTAIN:
                     suspicious_count += 1
-            
+
             # Flag as suspicious if >50% of claims are problematic
             return suspicious_count <= len(claims[:3]) * 0.5
-            
+
         except Exception as e:
             logger.error(f"Quick fact-check failed: {e}")
             return True  # Default to allowing response if check fails

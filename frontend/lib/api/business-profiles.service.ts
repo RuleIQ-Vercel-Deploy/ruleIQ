@@ -116,7 +116,7 @@ class BusinessProfileService {
 
       if (existingProfile) {
         // Update existing profile
-        return await this.updateProfile(existingProfile.id, data as any);
+        return await this.updateProfile(existingProfile, data as any);
       } else {
         // Create new profile
         return await this.createBusinessProfile(data as any);

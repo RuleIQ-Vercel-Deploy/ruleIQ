@@ -6,7 +6,7 @@ import os
 def install_missing_dependencies():
     """Install all missing dependencies"""
     print("🔧 Installing missing dependencies...")
-    
+
     dependencies = [
         "asyncpg",
         "mistralai",
@@ -24,17 +24,17 @@ def install_missing_dependencies():
         "email-validator",
         "python-dotenv",
     ]
-    
+
     for dep in dependencies:
         print(f"📦 Installing {dep}...")
         subprocess.check_call([sys.executable, "-m", "pip", "install", dep])
-    
+
     print("✅ All dependencies installed!")
 
 def create_minimal_backend():
     """Create a minimal working backend"""
     print("🚀 Creating minimal backend...")
-    
+
     minimal_backend = '''# minimal_backend.py - Emergency backend to test with
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
@@ -119,27 +119,27 @@ if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)
 '''
-    
+
     with open("minimal_backend.py", "w") as f:
         f.write(minimal_backend)
-    
+
     print("✅ Minimal backend created!")
 
 def main():
     print("🚨 RuleIQ Emergency Fix Script")
     print("=" * 40)
-    
+
     # Check current directory
     if not os.path.exists("main.py"):
         print("❌ Please run this script from the RuleIQ root directory")
         return
-    
+
     # Install dependencies
     install_missing_dependencies()
-    
+
     # Create minimal backend
     create_minimal_backend()
-    
+
     print("\n✅ Emergency fix complete!")
     print("\n📋 Next steps:")
     print("1. Run the minimal backend: python3 minimal_backend.py")

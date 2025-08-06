@@ -65,9 +65,9 @@ class TestUKComplianceFrameworksLoading:
     def test_load_uk_frameworks_success(self, uk_frameworks_data):
         """Test successful loading of UK compliance frameworks"""
         loader = UKComplianceLoader()
-        
+
         result = loader.load_frameworks(uk_frameworks_data)
-        
+
         assert result.success is True
         assert len(result.loaded_frameworks) == 2
         assert "ICO_GDPR_UK" in [fw.name for fw in result.loaded_frameworks]
@@ -77,9 +77,9 @@ class TestUKComplianceFrameworksLoading:
         """Test UK GDPR framework has correct structure"""
         loader = UKComplianceLoader()
         gdpr_data = uk_frameworks_data[0]
-        
+
         framework = loader.create_framework(gdpr_data)
-        
+
         assert framework.name == "ICO_GDPR_UK"
         assert framework.category == "Data Protection"
         assert "UK" in framework.geographic_scop
@@ -90,9 +90,9 @@ class TestUKComplianceFrameworksLoading:
         """Test FCA framework has financial services specifics"""
         loader = UKComplianceLoader()
         fca_data = uk_frameworks_data[1]
-        
+
         framework = loader.create_framework(fca_data)
-        
+
         assert framework.name == "FCA_REGULATORY"
         assert framework.category == "Financial Services"
         assert "fintech" in framework.applicable_indu
@@ -107,18 +107,18 @@ class TestUKComplianceFrameworksLoading:
             "category": "Data Protection",
             # Missing required fields
         }
-        
+
         with pytest.raises(ValueError, match="Framework name cannot be empty"):
             loader.create_framework(invalid_data)
 
     def test_duplicate_framework_handling(self, uk_frameworks_data):
         """Test handling of duplicate framework names"""
         loader = UKComplianceLoader()
-        
+
         # Load once
         result1 = loader.load_frameworks([uk_frameworks_data[0]])
         assert result1.success is True
-        
+
         # Load same framework again
         result2 = loader.load_frameworks([uk_frameworks_data[0]])
         assert result2.success is True
@@ -141,9 +141,9 @@ class TestUKFrameworkAPIIntegration:
         )
         db_session.add(uk_framework)
         db_session.commit()
-        
+
         response = client.get("/api/v1/compliance/frameworks?region=UK")
-        
+
         assert response.status_code == 200
         data = response.json()
         assert len(data["frameworks"]) >= 1
@@ -162,16 +162,16 @@ class TestUKFrameworkAPIIntegration:
         )
         db_session.add(uk_framework)
         db_session.commit()
-        
+
         # Test assessment with UK framework
         assessment_data = {
             "business_profile_id": "test-profile-id",
             "framework_ids": [str(uk_framework.id)],
             "assessment_type": "initial"
         }
-        
+
         response = client.post("/api/v1/assessments/", json=assessment_data)
-        
+
         assert response.status_code == 201
         assert response.json()["framework_count"] == 1
 
@@ -182,16 +182,16 @@ class TestUKComplianceFrameworksDataIntegrity:
     def test_iso27001_template_mapping(self):
         """Test ISO 27001 templates map correctly to UK frameworks"""
         from services.iso27001_mapper import ISO27001UKMapper
-        
+
         mapper = ISO27001UKMapper()
-        
+
         # Test mapping ISO controls to UK GDPR requirements
         uk_gdpr_controls = mapper.map_iso_to_uk_gdpr([
             "A.5.1.1",  # Information security policies
             "A.8.2.1",  # Data classification
             "A.12.6.1"  # Secure disposal
         ])
-        
+
         assert len(uk_gdpr_controls) == 3
         assert "Data Protection by Design" in uk_gdpr_controls[0]["uk_requirement"]
 
@@ -202,10 +202,10 @@ class TestUKComplianceFrameworksDataIntegrity:
             version="1.0",
             description="Initial UK GDPR implementation"
         )
-        
+
         # Test version update
         updated_framework = framework.create_new_version("1.1", "Updated for ICO guidance 2024")
-        
+
         assert updated_framework.version == "1.1"
         assert "ICO guidance 2024" in updated_framework.description
         assert updated_framework.name == framework.name
@@ -213,13 +213,13 @@ class TestUKComplianceFrameworksDataIntegrity:
     def test_geographic_scope_validation(self):
         """Test geographic scope validation for UK frameworks"""
         from services.geographic_validator import GeographicValidator
-        
+
         validator = GeographicValidator()
-        
+
         # Valid UK scopes
         assert validator.validate_uk_scope(["UK"]) is True
         assert validator.validate_uk_scope(["England", "Scotland"]) is True
-        
+
         # Invalid scopes for UK frameworks
         assert validator.validate_uk_scope(["EU", "Germany"]) is False
         assert validator.validate_uk_scope([]) is False
@@ -231,16 +231,16 @@ class TestUKFrameworksPerformance:
     def test_bulk_framework_loading_performance(self, uk_frameworks_data):
         """Test bulk loading performance meets SLA requirements"""
         import time
-        
+
         loader = UKComplianceLoader()
-        
+
         # Simulate loading 50 UK frameworks
         bulk_data = uk_frameworks_data * 25
-        
+
         start_time = time.time()
         result = loader.load_frameworks(bulk_data)
         load_time = time.time() - start_time
-        
+
         # Should complete within 2 seconds for 50 frameworks
         assert load_time < 2.0
         assert result.success is True
@@ -249,7 +249,7 @@ class TestUKFrameworksPerformance:
     def test_framework_query_performance(self, db_session):
         """Test framework queries meet performance SLA"""
         import time
-        
+
         # Pre-populate with UK frameworks
         for i in range(100):
             framework = ComplianceFramework(
@@ -261,13 +261,13 @@ class TestUKFrameworksPerformance:
             )
             db_session.add(framework)
         db_session.commit()
-        
+
         start_time = time.time()
         frameworks = db_session.query(ComplianceFramework)\
             .filter(ComplianceFramework.geographic_scop.contains(["UK"]))\
             .all()
         query_time = time.time() - start_time
-        
+
         # Query should complete under 100ms
         assert query_time < 0.1
         assert len(frameworks) == 100

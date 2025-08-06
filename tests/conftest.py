@@ -584,6 +584,8 @@ def authenticated_headers(auth_token):
 @pytest.fixture
 def another_user(db_session):
     """Create another test user."""
+    from api.dependencies.auth import get_password_hash
+
     user = User(
         id=uuid4(),
         email=f"another-user-{uuid4()}@example.com",
@@ -963,6 +965,7 @@ async def async_test_client(db_session, sample_user):
     from httpx import ASGITransport, AsyncClient
     from api.dependencies.database import get_db, get_async_db
     from api.dependencies.auth import get_current_user, get_current_active_user
+    from main import app
 
     def override_get_db():
         try:

@@ -66,7 +66,7 @@ export function FreemiumEmailCapture({
         email: email.trim(),
         utm_source,
         utm_campaign,
-        consent_marketing: consentMarketing,
+        marketing_consent: consentMarketing,
       });
     } catch (error: any) {
       setEmailError(error.message || 'Failed to start assessment. Please try again.');
@@ -230,7 +230,7 @@ export function FreemiumEmailCaptureInline({ className = "" }: { className?: str
         email: email.trim(),
         utm_source,
         utm_campaign,
-        consent_marketing: consentMarketing,
+        marketing_consent: consentMarketing,
       });
     } catch (error: any) {
       setEmailError(error.message || 'Failed to start assessment');

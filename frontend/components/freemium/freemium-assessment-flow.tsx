@@ -18,30 +18,63 @@ import {
   Brain,
   Clock
 } from 'lucide-react';
-import { useFreemiumStore, useFreemiumProgress } from '../../lib/stores/freemium-store';
-import type { AssessmentQuestion } from '../../types/freemium';
+import { freemiumService } from '../../lib/api/freemium.service';
+
+// Mock question structure for now
+interface AssessmentQuestion {
+  question_id: string;
+  question_text: string;
+  question_type: 'multiple_choice' | 'text' | 'yes_no' | 'scale';
+  answer_options?: string[];
+}
 
 interface FreemiumAssessmentFlowProps {
   token?: string;
   className?: string;
+  onComplete?: () => void;
 }
 
-export function FreemiumAssessmentFlow({ token, className = "" }: FreemiumAssessmentFlowProps) {
-  const { 
-    sessionToken, 
-    currentQuestion, 
-    isLoading, 
-    error, 
-    submitAnswer
-  } = useFreemiumStore();
-  const { progress, questionsAnswered } = useFreemiumProgress();
-  const assessmentToken = token || sessionToken;
-  
-  // For now, we'll manage submitting state locally
+export function FreemiumAssessmentFlow({ token, className = "", onComplete }: FreemiumAssessmentFlowProps) {
+  const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  
+  const [error, setError] = useState<string | null>(null);
   const [currentAnswer, setCurrentAnswer] = useState<string | number>('');
   const [answerError, setAnswerError] = useState('');
+  const [sessionProgress, setSessionProgress] = useState<any>(null);
+  const [currentQuestion, setCurrentQuestion] = useState<AssessmentQuestion | null>(null);
+
+  // Load session data and first question
+  useEffect(() => {
+    if (token) {
+      loadSessionData();
+    }
+  }, [token]);
+
+  const loadSessionData = async () => {
+    if (!token) return;
+    
+    try {
+      setIsLoading(true);
+      setError(null);
+      const progress = await freemiumService.getSessionProgress(token);
+      setSessionProgress(progress);
+      
+      // For now, we'll create a mock question
+      // In a real implementation, this would come from the API
+      const mockQuestion: AssessmentQuestion = {
+        question_id: `q_${Date.now()}`,
+        question_text: "How would you rate your organization's current compliance maturity?",
+        question_type: 'scale',
+      };
+      
+      setCurrentQuestion(mockQuestion);
+    } catch (err) {
+      console.error('Failed to load session:', err);
+      setError(err instanceof Error ? err.message : 'Failed to load session');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   // Reset answer when question changes
   useEffect(() => {
@@ -59,7 +92,7 @@ export function FreemiumAssessmentFlow({ token, className = "" }: FreemiumAssess
   };
 
   const handleSubmit = async () => {
-    if (!currentQuestion) return;
+    if (!currentQuestion || !token) return;
 
     // Validate answer
     if (currentAnswer === '' || currentAnswer === null || currentAnswer === undefined) {
@@ -70,13 +103,26 @@ export function FreemiumAssessmentFlow({ token, className = "" }: FreemiumAssess
     // Submit answer
     setIsSubmitting(true);
     try {
-      await submitAnswer({
-        session_token: assessmentToken || '',
+      await freemiumService.submitAnswer(token, {
         question_id: currentQuestion.question_id,
-        answer: currentAnswer,
+        answer: currentAnswer.toString(),
+        answer_confidence: 'medium',
+        time_spent_seconds: 30,
       });
+      
+      // Check if assessment is complete
+      const updatedProgress = await freemiumService.getSessionProgress(token);
+      setSessionProgress(updatedProgress);
+      
+      if (updatedProgress.status === 'completed') {
+        onComplete?.();
+      } else {
+        // Load next question (for now, mark as complete after first answer)
+        onComplete?.();
+      }
     } catch (error) {
       console.error('Failed to submit answer:', error);
+      setAnswerError(error instanceof Error ? error.message : 'Failed to submit answer');
     } finally {
       setIsSubmitting(false);
     }
@@ -254,16 +300,16 @@ export function FreemiumAssessmentFlow({ token, className = "" }: FreemiumAssess
           </div>
           <div className="flex items-center space-x-2 text-sm text-gray-500">
             <Clock className="w-4 h-4" />
-            <span>~{Math.max(1, 5 - questionsAnswered)} min left</span>
+            <span>~{Math.max(1, 5 - (sessionProgress?.questions_answered || 0))} min left</span>
           </div>
         </div>
         
         <div className="space-y-2">
           <div className="flex justify-between text-sm">
             <span className="text-gray-600">Progress</span>
-            <span className="font-medium text-teal-600">{Math.round(progress)}%</span>
+            <span className="font-medium text-teal-600">{Math.round(sessionProgress?.progress_percentage || 0)}%</span>
           </div>
-          <Progress value={progress} className="h-2" />
+          <Progress value={sessionProgress?.progress_percentage || 0} className="h-2" />
         </div>
       </CardHeader>
 
@@ -300,7 +346,7 @@ export function FreemiumAssessmentFlow({ token, className = "" }: FreemiumAssess
         {/* Navigation */}
         <div className="flex justify-between items-center pt-6 border-t border-gray-100">
           <div className="text-sm text-gray-500">
-            Question {questionsAnswered + 1}
+            Question {(sessionProgress?.questions_answered || 0) + 1}
           </div>
           
           <Button
@@ -333,8 +379,13 @@ export function FreemiumAssessmentFlow({ token, className = "" }: FreemiumAssess
 }
 
 // Minimal progress indicator component for standalone use
-export function FreemiumAssessmentProgress() {
-  const { progress, questionsAnswered } = useFreemiumProgress();
+interface FreemiumAssessmentProgressProps {
+  sessionProgress?: any;
+}
+
+export function FreemiumAssessmentProgress({ sessionProgress }: FreemiumAssessmentProgressProps) {
+  const progress = sessionProgress?.progress_percentage || 0;
+  const questionsAnswered = sessionProgress?.questions_answered || 0;
   
   return (
     <div className="w-full max-w-sm mx-auto space-y-2">

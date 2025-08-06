@@ -31,7 +31,6 @@ from database.business_profile import BusinessProfile
 from database.chat_conversation import ChatConversation, ConversationStatus
 from database.chat_message import ChatMessage
 from database.db_setup import get_async_db, get_db
-from database.user import User
 from services.ai import ComplianceAssistant
 
 # Set up logging

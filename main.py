@@ -1,9 +1,8 @@
 from contextlib import asynccontextmanager
 
 import uvicorn
-from fastapi import Depends, FastAPI
+from fastapi import Depends, FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from sqlalchemy.ext.asyncio import AsyncSession
 
 from api.dependencies.auth import get_current_active_user
 
@@ -26,6 +25,7 @@ from api.routers import (
     evidence_collection,
     foundation_evidence,
     frameworks,
+    freemium,
     google_auth,
     implementation,
     integrations,
@@ -46,7 +46,6 @@ from config.logging_config import get_logger, setup_logging
 from config.settings import settings
 from database.db_setup import init_db, get_async_db
 from database import User  # Import all models through the database package
-from api.dependencies.auth import get_current_active_user
 
 # Setup logging
 setup_logging()
@@ -87,13 +86,13 @@ async def lifespan(app: FastAPI):
     # Initialize database monitoring service
     from monitoring.database_monitor import get_database_monitor
     import asyncio
-    
+
     try:
         # Start the database monitoring background task
         monitor = get_database_monitor()
         monitoring_task = asyncio.create_task(monitor.start_monitoring_loop(interval_seconds=30))
         logger.info("Database monitoring service started with 30s interval")
-        
+
         # Store the task reference for cleanup
         app.state.monitoring_task = monitoring_task
     except Exception as e:
@@ -102,10 +101,10 @@ async def lifespan(app: FastAPI):
     logger.info(f"Environment: {settings.environment}")
     logger.info(f"Debug mode: {settings.debug}")
     yield
-    
+
     # Shutdown
     logger.info("Shutting down ComplianceGPT API...")
-    
+
     # Cancel monitoring task if it exists
     if hasattr(app.state, 'monitoring_task'):
         try:
@@ -146,7 +145,7 @@ app = FastAPI(
     """,
     version="2.0.0",
     docs_url="/docs",
-    redoc_url="/redoc", 
+    redoc_url="/redoc",
     openapi_url="/openapi.json",
     lifespan=lifespan,
     contact={
@@ -164,7 +163,7 @@ app = FastAPI(
             "description": "Development server"
         },
         {
-            "url": "https://api.ruleiq.com", 
+            "url": "https://api.ruleiq.com",
             "description": "Production server"
         }
     ]
@@ -185,7 +184,7 @@ app.add_middleware(RequestIDMiddleware)
 app.middleware("http")(error_handler_middleware)
 
 
-# RBAC middleware for role-based access control  
+# RBAC middleware for role-based access control
 from api.middleware.rbac_middleware import RBACMiddleware
 
 app.add_middleware(RBACMiddleware, enable_audit_logging=True)
@@ -209,6 +208,7 @@ app.include_router(
     business_profiles.router, prefix="/api/v1/business-profiles", tags=["Business Profiles"]
 )
 app.include_router(assessments.router, prefix="/api/v1/assessments", tags=["Assessments"])
+app.include_router(freemium.router, prefix="/api/v1", tags=["Freemium Assessment"])
 app.include_router(ai_assessments.router, prefix="/api/v1/ai-assessments", tags=["AI Assessment Assistant"])
 app.include_router(ai_optimization.router, prefix="/api/v1/ai/optimization", tags=["AI Optimization"])
 app.include_router(frameworks.router, prefix="/api/v1/frameworks", tags=["Compliance Frameworks"])
@@ -278,7 +278,7 @@ async def health_check():
         from datetime import datetime
         from database.db_setup import get_engine_info
         from monitoring.database_monitor import get_database_monitor
-        
+
         # Get database monitoring status from the new enhanced monitor
         monitor = get_database_monitor()
         monitoring_summary = monitor.get_monitoring_summary()
@@ -289,7 +289,7 @@ async def health_check():
         # Extract key metrics from monitoring summary
         current_metrics = monitoring_summary.get("current_metrics", {})
         alerts = monitoring_summary.get("alerts", [])
-        
+
         # Count alerts by severity
         critical_alerts = len([a for a in alerts if a.get("severity") == "critical"])
         warning_alerts = len([a for a in alerts if a.get("severity") == "warning"])
@@ -311,11 +311,11 @@ async def health_check():
         # Get pool utilization from either sync or async pool
         pool_utilization = 0
         active_sessions = 0
-        
+
         for pool_type, metrics in current_metrics.items():
             if metrics:
                 pool_utilization = max(pool_utilization, metrics.get("utilization_percent", 0))
-        
+
         # Get session metrics if available
         recent_averages = monitoring_summary.get("recent_averages", {})
         for key, value in recent_averages.items():
@@ -345,6 +345,19 @@ async def health_check():
     except Exception as e:
         logger.error(f"Health check failed: {e}")
         return HealthCheckResponse(status="error", message=f"Health check failed: {e!s}")
+
+
+@app.get("/debug-suite", include_in_schema=False)
+async def serve_debug_suite():
+    """Serve the API debug suite HTML file"""
+    import os
+    from fastapi.responses import FileResponse
+
+    debug_file_path = os.path.join(os.getcwd(), "debug-suite.html")
+    if os.path.exists(debug_file_path):
+        return FileResponse(debug_file_path, media_type="text/html")
+    else:
+        raise HTTPException(status_code=404, detail="Debug suite not found")
 
 
 if __name__ == "__main__":

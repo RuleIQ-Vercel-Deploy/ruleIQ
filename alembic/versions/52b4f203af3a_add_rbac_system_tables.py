@@ -5,8 +5,6 @@ Revises: add_check_constraints_data_integrity
 Create Date: 2025-07-25 03:29:04.463516
 
 """
-from alembic import op
-import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.

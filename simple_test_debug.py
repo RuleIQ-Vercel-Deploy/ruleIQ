@@ -20,25 +20,25 @@ sys.path.insert(0, str(project_root))
 def test_freemium_model_directly():
     """Test freemium models directly without pytest overhead."""
     print("=== Direct Freemium Model Test ===")
-    
+
     try:
         # Import test fixtures and setup
         sys.path.insert(0, str(project_root / "tests"))
-        from conftest import TestSessionLocal, engine
-        
+        from conftest import TestSessionLocal
+
         # Import the freemium models
         from database.assessment_lead import AssessmentLead
         from database.freemium_assessment_session import FreemiumAssessmentSession
         from database.ai_question_bank import AIQuestionBank
-        from database.lead_scoring_event import LeadScoringEvent  
+        from database.lead_scoring_event import LeadScoringEvent
         from database.conversion_event import ConversionEvent
-        
+
         print("✅ All freemium models imported successfully")
-        
+
         # Create session
         session = TestSessionLocal()
         print("✅ Database session created")
-        
+
         # Test 1: Create AssessmentLead
         print("\n1. Testing AssessmentLead creation...")
         lead = AssessmentLead(
@@ -48,14 +48,14 @@ def test_freemium_model_directly():
         session.add(lead)
         session.commit()
         print(f"✅ AssessmentLead created with ID: {lead.id}")
-        
+
         # Verify it exists
         found_lead = session.query(AssessmentLead).filter_by(email="test@example.com").first()
         assert found_lead is not None, "Lead not found in database"
         assert found_lead.email == "test@example.com"
         assert found_lead.consent_marketing is True
         print("✅ AssessmentLead verification passed")
-        
+
         # Test 2: Create FreemiumAssessmentSession
         print("\n2. Testing FreemiumAssessmentSession creation...")
         from datetime import datetime, timedelta
@@ -68,7 +68,7 @@ def test_freemium_model_directly():
         session.add(session_obj)
         session.commit()
         print(f"✅ FreemiumAssessmentSession created with ID: {session_obj.id}")
-        
+
         # Test 3: Create AIQuestionBank
         print("\n3. Testing AIQuestionBank creation...")
         from decimal import Decimal
@@ -84,7 +84,7 @@ def test_freemium_model_directly():
         session.add(question)
         session.commit()
         print(f"✅ AIQuestionBank created with ID: {question.id}")
-        
+
         # Test 4: Create LeadScoringEvent
         print("\n4. Testing LeadScoringEvent creation...")
         event = LeadScoringEvent(
@@ -97,7 +97,7 @@ def test_freemium_model_directly():
         session.add(event)
         session.commit()
         print(f"✅ LeadScoringEvent created with ID: {event.id}")
-        
+
         # Test 5: Create ConversionEvent
         print("\n5. Testing ConversionEvent creation...")
         conversion = ConversionEvent(
@@ -110,7 +110,7 @@ def test_freemium_model_directly():
         session.add(conversion)
         session.commit()
         print(f"✅ ConversionEvent created with ID: {conversion.id}")
-        
+
         # Test 6: Relationships and constraints
         print("\n6. Testing relationships...")
         # Test unique constraint on AssessmentLead email
@@ -125,7 +125,7 @@ def test_freemium_model_directly():
         except Exception as e:
             session.rollback()
             print(f"✅ Unique constraint test PASSED - duplicate email rejected: {type(e).__name__}")
-        
+
         # Cleanup
         print("\n7. Cleaning up test data...")
         session.delete(conversion)
@@ -136,22 +136,22 @@ def test_freemium_model_directly():
         session.commit()
         session.close()
         print("✅ All test data cleaned up")
-        
+
         print("\n🎉 ALL FREEMIUM MODEL TESTS PASSED!")
         return True
-        
+
     except Exception as e:
         print(f"\n❌ Test failed with error: {e}")
         print(f"Error type: {type(e).__name__}")
         traceback.print_exc()
-        
+
         # Try to cleanup
         try:
             session.rollback()
             session.close()
         except:
             pass
-        
+
         return False
 
 if __name__ == "__main__":

@@ -32,7 +32,7 @@ from tests.conftest import async_test
 
 class TestFreemiumEmailCapture:
     """Test email capture endpoint with UTM tracking."""
-    
+
     @async_test
     async def test_capture_email_success(self, async_client: AsyncClient, db_session):
         """Test successful email capture with UTM parameters."""
@@ -46,16 +46,16 @@ class TestFreemiumEmailCapture:
             "consent_marketing": True,
             "consent_terms": True
         }
-        
+
         response = await async_client.post("/api/v1/freemium/capture-email", json=payload)
-        
+
         assert response.status_code == 200
         data = response.json()
         assert data["success"] is True
         assert "token" in data
         assert len(data["token"]) > 20  # Valid JWT token
         assert data["message"] == "Email captured successfully"
-        
+
         # Verify token can be decoded
         token_data = verify_freemium_token(data["token"])
         assert token_data["email"] == "test@example.com"
@@ -70,9 +70,9 @@ class TestFreemiumEmailCapture:
             "consent_marketing": True,
             "consent_terms": True
         }
-        
+
         response = await async_client.post("/api/v1/freemium/capture-email", json=payload)
-        
+
         assert response.status_code == 422
         data = response.json()
         assert "email" in data["detail"][0]["loc"]
@@ -86,9 +86,9 @@ class TestFreemiumEmailCapture:
             "consent_marketing": False,
             "consent_terms": False
         }
-        
+
         response = await async_client.post("/api/v1/freemium/capture-email", json=payload)
-        
+
         assert response.status_code == 400
         data = response.json()
         assert data["detail"] == "Terms of service consent is required"
@@ -101,17 +101,17 @@ class TestFreemiumEmailCapture:
             "consent_marketing": True,
             "consent_terms": True
         }
-        
+
         # First capture
         response1 = await async_client.post("/api/v1/freemium/capture-email", json=payload)
         assert response1.status_code == 200
         token1 = response1.json()["token"]
-        
+
         # Second capture - should return same token
         response2 = await async_client.post("/api/v1/freemium/capture-email", json=payload)
         assert response2.status_code == 200
         token2 = response2.json()["token"]
-        
+
         assert token1 == token2
 
     @async_test
@@ -122,14 +122,14 @@ class TestFreemiumEmailCapture:
             "consent_marketing": True,
             "consent_terms": True
         }
-        
+
         # Make multiple rapid requests
         responses = []
         for i in range(10):  # Exceed rate limit
             payload["email"] = f"test{i}@example.com"
             response = await async_client.post("/api/v1/freemium/capture-email", json=payload)
             responses.append(response)
-        
+
         # Should get rate limited after threshold
         rate_limited = [r for r in responses if r.status_code == 429]
         assert len(rate_limited) > 0
@@ -138,29 +138,29 @@ class TestFreemiumEmailCapture:
     async def test_capture_email_performance(self, async_client: AsyncClient):
         """Test email capture endpoint performance."""
         import time
-        
+
         payload = {
             "email": "performance@example.com",
             "consent_marketing": True,
             "consent_terms": True
         }
-        
+
         start_time = time.time()
         response = await async_client.post("/api/v1/freemium/capture-email", json=payload)
         end_time = time.time()
-        
+
         assert response.status_code == 200
         assert (end_time - start_time) < 0.2  # Under 200ms
 
 
 class TestFreemiumAssessmentStart:
     """Test assessment session creation endpoint."""
-    
+
     @async_test
     async def test_start_assessment_success(self, async_client: AsyncClient, freemium_token):
         """Test successful assessment session start."""
         payload = {"token": freemium_token}
-        
+
         with patch('services.ai.assistant.ComplianceAssistant.generate_dynamic_question') as mock_ai:
             mock_ai.return_value = {
                 "question_id": "q1_business_type",
@@ -170,9 +170,9 @@ class TestFreemiumAssessmentStart:
                 "help_text": "Select the category that best describes your primary business model.",
                 "validation_rules": {"required": True}
             }
-            
+
             response = await async_client.post("/api/v1/freemium/start-assessment", json=payload)
-            
+
             assert response.status_code == 200
             data = response.json()
             assert data["session_started"] is True
@@ -187,9 +187,9 @@ class TestFreemiumAssessmentStart:
     async def test_start_assessment_invalid_token(self, async_client: AsyncClient):
         """Test assessment start with invalid token."""
         payload = {"token": "invalid-token-12345"}
-        
+
         response = await async_client.post("/api/v1/freemium/start-assessment", json=payload)
-        
+
         assert response.status_code == 401
         data = response.json()
         assert data["detail"] == "Invalid or expired token"
@@ -202,11 +202,11 @@ class TestFreemiumAssessmentStart:
             email="expired@example.com",
             expires_delta=timedelta(seconds=-1)
         )
-        
+
         payload = {"token": expired_token}
-        
+
         response = await async_client.post("/api/v1/freemium/start-assessment", json=payload)
-        
+
         assert response.status_code == 401
         data = response.json()
         assert data["detail"] == "Invalid or expired token"
@@ -215,12 +215,12 @@ class TestFreemiumAssessmentStart:
     async def test_start_assessment_ai_service_error(self, async_client: AsyncClient, freemium_token):
         """Test assessment start when AI service fails."""
         payload = {"token": freemium_token}
-        
+
         with patch('services.ai.assistant.ComplianceAssistant.generate_dynamic_question') as mock_ai:
             mock_ai.side_effect = CircuitBreakerError("AI service unavailable")
-            
+
             response = await async_client.post("/api/v1/freemium/start-assessment", json=payload)
-            
+
             assert response.status_code == 503
             data = response.json()
             assert "AI service temporarily unavailable" in data["detail"]
@@ -240,9 +240,9 @@ class TestFreemiumAssessmentStart:
         )
         db_session.add(existing_session)
         await db_session.commit()
-        
+
         payload = {"token": freemium_token}
-        
+
         with patch('services.ai.assistant.ComplianceAssistant.generate_dynamic_question') as mock_ai:
             mock_ai.return_value = {
                 "question_id": "q2_employee_count",
@@ -252,9 +252,9 @@ class TestFreemiumAssessmentStart:
                 "help_text": "Include full-time, part-time, and contractors.",
                 "validation_rules": {"required": True}
             }
-            
+
             response = await async_client.post("/api/v1/freemium/start-assessment", json=payload)
-            
+
             assert response.status_code == 200
             data = response.json()
             assert data["session_resumed"] is True
@@ -265,7 +265,7 @@ class TestFreemiumAssessmentStart:
 
 class TestFreemiumAnswerQuestion:
     """Test answer submission and next question generation."""
-    
+
     @async_test
     async def test_answer_question_success(self, async_client: AsyncClient, freemium_session):
         """Test successful answer submission."""
@@ -278,7 +278,7 @@ class TestFreemiumAnswerQuestion:
                 "time_spent": 15.5
             }
         }
-        
+
         with patch('services.ai.assistant.ComplianceAssistant.generate_next_question') as mock_ai:
             mock_ai.return_value = {
                 "question_id": "q2_employee_count",
@@ -288,9 +288,9 @@ class TestFreemiumAnswerQuestion:
                 "progress": 20,
                 "assessment_complete": False
             }
-            
+
             response = await async_client.post("/api/v1/freemium/answer-question", json=payload)
-            
+
             assert response.status_code == 200
             data = response.json()
             assert data["answer_recorded"] is True
@@ -306,9 +306,9 @@ class TestFreemiumAnswerQuestion:
             "question_id": "wrong_question_id",
             "answer": "SaaS"
         }
-        
+
         response = await async_client.post("/api/v1/freemium/answer-question", json=payload)
-        
+
         assert response.status_code == 400
         data = response.json()
         assert "Invalid question ID" in data["detail"]
@@ -321,16 +321,16 @@ class TestFreemiumAnswerQuestion:
             "question_id": "q5_compliance_goals",
             "answer": "GDPR and ISO 27001"
         }
-        
+
         with patch('services.ai.assistant.ComplianceAssistant.generate_next_question') as mock_ai:
             mock_ai.return_value = {
                 "assessment_complete": True,
                 "redirect_to_results": True,
                 "progress": 100
             }
-            
+
             response = await async_client.post("/api/v1/freemium/answer-question", json=payload)
-            
+
             assert response.status_code == 200
             data = response.json()
             assert data["answer_recorded"] is True
@@ -346,9 +346,9 @@ class TestFreemiumAnswerQuestion:
             "question_id": "q1_business_type",
             "answer": ""  # Empty answer
         }
-        
+
         response = await async_client.post("/api/v1/freemium/answer-question", json=payload)
-        
+
         assert response.status_code == 422
         data = response.json()
         assert "Answer is required" in data["detail"]
@@ -361,13 +361,13 @@ class TestFreemiumAnswerQuestion:
             "question_id": "q1_business_type",
             "answer": "SaaS"
         }
-        
+
         with patch('services.ai.assistant.ComplianceAssistant.generate_next_question') as mock_ai:
             mock_ai.side_effect = CircuitBreakerError("AI service down")
-            
+
             # Should use fallback static questions
             response = await async_client.post("/api/v1/freemium/answer-question", json=payload)
-            
+
             assert response.status_code == 200
             data = response.json()
             assert data["answer_recorded"] is True
@@ -377,12 +377,12 @@ class TestFreemiumAnswerQuestion:
 
 class TestFreemiumResults:
     """Test results retrieval endpoint."""
-    
+
     @async_test
     async def test_get_results_success(self, async_client: AsyncClient, completed_freemium_session):
         """Test successful results retrieval."""
         token = completed_freemium_session["token"]
-        
+
         with patch('services.ai.assistant.ComplianceAssistant.analyze_freemium_responses') as mock_ai:
             mock_ai.return_value = {
                 "compliance_gaps": [
@@ -414,9 +414,9 @@ class TestFreemiumResults:
                     "Conduct privacy impact assessments"
                 ]
             }
-            
+
             response = await async_client.get(f"/api/v1/freemium/results/{token}")
-            
+
             assert response.status_code == 200
             data = response.json()
             assert len(data["compliance_gaps"]) == 2
@@ -432,7 +432,7 @@ class TestFreemiumResults:
     async def test_get_results_invalid_token(self, async_client: AsyncClient):
         """Test results retrieval with invalid token."""
         response = await async_client.get("/api/v1/freemium/results/invalid-token")
-        
+
         assert response.status_code == 401
         data = response.json()
         assert data["detail"] == "Invalid or expired token"
@@ -441,9 +441,9 @@ class TestFreemiumResults:
     async def test_get_results_incomplete_assessment(self, async_client: AsyncClient, freemium_session):
         """Test results retrieval for incomplete assessment."""
         token = freemium_session["token"]
-        
+
         response = await async_client.get(f"/api/v1/freemium/results/{token}")
-        
+
         assert response.status_code == 400
         data = response.json()
         assert "Assessment not yet complete" in data["detail"]
@@ -452,20 +452,20 @@ class TestFreemiumResults:
     async def test_get_results_cached(self, async_client: AsyncClient, completed_freemium_session):
         """Test results caching for performance."""
         token = completed_freemium_session["token"]
-        
+
         with patch('services.ai.assistant.ComplianceAssistant.analyze_freemium_responses') as mock_ai:
             mock_ai.return_value = {"risk_score": 7.5, "compliance_gaps": []}
-            
+
             # First request - should call AI
             response1 = await async_client.get(f"/api/v1/freemium/results/{token}")
             assert response1.status_code == 200
             assert mock_ai.call_count == 1
-            
+
             # Second request - should use cache
             response2 = await async_client.get(f"/api/v1/freemium/results/{token}")
             assert response2.status_code == 200
             assert mock_ai.call_count == 1  # No additional calls
-            
+
             # Results should be identical
             assert response1.json() == response2.json()
 
@@ -473,23 +473,23 @@ class TestFreemiumResults:
     async def test_get_results_performance(self, async_client: AsyncClient, completed_freemium_session):
         """Test results endpoint performance."""
         import time
-        
+
         token = completed_freemium_session["token"]
-        
+
         with patch('services.ai.assistant.ComplianceAssistant.analyze_freemium_responses') as mock_ai:
             mock_ai.return_value = {"risk_score": 5.0, "compliance_gaps": []}
-            
+
             start_time = time.time()
             response = await async_client.get(f"/api/v1/freemium/results/{token}")
             end_time = time.time()
-            
+
             assert response.status_code == 200
             assert (end_time - start_time) < 0.2  # Under 200ms
 
 
 class TestFreemiumConversionTracking:
     """Test conversion event tracking endpoint."""
-    
+
     @async_test
     async def test_track_conversion_success(self, async_client: AsyncClient, completed_freemium_session):
         """Test successful conversion tracking."""
@@ -506,9 +506,9 @@ class TestFreemiumConversionTracking:
                 "results_viewed": True
             }
         }
-        
+
         response = await async_client.post("/api/v1/freemium/track-conversion", json=payload)
-        
+
         assert response.status_code == 200
         data = response.json()
         assert data["tracked"] is True
@@ -524,15 +524,15 @@ class TestFreemiumConversionTracking:
             "cta_text": "Get Compliant Now - 30% Off",
             "conversion_value": 30
         }
-        
+
         # First tracking
         response1 = await async_client.post("/api/v1/freemium/track-conversion", json=payload)
         assert response1.status_code == 200
-        
+
         # Duplicate tracking - should be deduplicated
         response2 = await async_client.post("/api/v1/freemium/track-conversion", json=payload)
         assert response2.status_code == 200
-        
+
         data2 = response2.json()
         assert data2["duplicate"] is True
         assert data2["message"] == "Event already tracked"
@@ -545,9 +545,9 @@ class TestFreemiumConversionTracking:
             "event_type": "invalid_event",
             "conversion_value": 30
         }
-        
+
         response = await async_client.post("/api/v1/freemium/track-conversion", json=payload)
-        
+
         assert response.status_code == 422
         data = response.json()
         assert "event_type" in data["detail"][0]["loc"]
@@ -555,7 +555,7 @@ class TestFreemiumConversionTracking:
 
 class TestFreemiumSecurityAndValidation:
     """Test security measures and input validation."""
-    
+
     @async_test
     async def test_sql_injection_prevention(self, async_client: AsyncClient):
         """Test SQL injection prevention in email capture."""
@@ -564,9 +564,9 @@ class TestFreemiumSecurityAndValidation:
             "consent_marketing": True,
             "consent_terms": True
         }
-        
+
         response = await async_client.post("/api/v1/freemium/capture-email", json=payload)
-        
+
         # Should validate email format and reject
         assert response.status_code == 422
 
@@ -578,9 +578,9 @@ class TestFreemiumSecurityAndValidation:
             "question_id": "q1_business_type",
             "answer": "<script>alert('xss')</script>SaaS"
         }
-        
+
         response = await async_client.post("/api/v1/freemium/answer-question", json=payload)
-        
+
         # Should sanitize input
         assert response.status_code == 422 or "script" not in str(response.json())
 
@@ -588,15 +588,15 @@ class TestFreemiumSecurityAndValidation:
     async def test_oversized_payload_rejection(self, async_client: AsyncClient, freemium_session):
         """Test rejection of oversized payloads."""
         large_answer = "A" * 10000  # 10KB answer
-        
+
         payload = {
             "token": freemium_session["token"],
             "question_id": "q1_business_type",
             "answer": large_answer
         }
-        
+
         response = await async_client.post("/api/v1/freemium/answer-question", json=payload)
-        
+
         assert response.status_code == 413 or response.status_code == 422
 
     @async_test
@@ -607,13 +607,13 @@ class TestFreemiumSecurityAndValidation:
             email="expiry@example.com",
             expires_delta=timedelta(seconds=1)
         )
-        
+
         # Wait for expiration
         await asyncio.sleep(1.1)
-        
+
         payload = {"token": token}
         response = await async_client.post("/api/v1/freemium/start-assessment", json=payload)
-        
+
         assert response.status_code == 401
         assert "expired" in response.json()["detail"].lower()
 
@@ -645,7 +645,7 @@ async def freemium_session(freemium_token, db_session):
     )
     db_session.add(session)
     await db_session.commit()
-    
+
     return {
         "token": freemium_token,
         "session": session
@@ -666,9 +666,9 @@ async def completed_freemium_session(freemium_session, db_session):
         "q5_compliance_goals": "Full GDPR and ISO 27001"
     }
     session.completed_at = datetime.utcnow()
-    
+
     await db_session.commit()
-    
+
     return freemium_session
 
 

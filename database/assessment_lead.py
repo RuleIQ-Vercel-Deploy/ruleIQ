@@ -3,7 +3,6 @@ AssessmentLead model for capturing leads through the freemium assessment flow.
 Stores email capture, UTM tracking, and lead scoring data.
 """
 import uuid
-from datetime import datetime
 from sqlalchemy import (
     Boolean,
     Column,
@@ -25,7 +24,7 @@ class AssessmentLead(Base):
     Stores email capture, UTM tracking, and lead scoring data.
     """
     __tablename__ = "assessment_leads"
-    
+
     # Primary identifiers
     id = Column(PG_UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     email = Column(String(255), nullable=False, unique=True, index=True)
@@ -35,7 +34,7 @@ class AssessmentLead(Base):
     company_size = Column(String(50), nullable=True)
     industry = Column(String(100), nullable=True)
     phone = Column(String(20), nullable=True)
-    
+
     # UTM tracking parameters
     utm_source = Column(String(100), nullable=True)
     utm_medium = Column(String(100), nullable=True)
@@ -46,22 +45,22 @@ class AssessmentLead(Base):
     landing_page = Column(String(500), nullable=True)
     user_agent = Column(Text, nullable=True)
     ip_address = Column(String(45), nullable=True)  # IPv6 compatible
-    
+
     # Lead scoring and status
     lead_score = Column(Integer, default=0)
     lead_status = Column(String(20), default='new')  # new, qualified, converted, lost
     conversion_probability = Column(Float, nullable=True)
     engagement_score = Column(Integer, default=0)
-    
+
     # Newsletter and marketing consent
     newsletter_subscribed = Column(Boolean, default=True)
     marketing_consent = Column(Boolean, default=False)  # Note: this is the correct column name
     consent_date = Column(DateTime, nullable=True)
-    
+
     # Timestamps
     created_at = Column(DateTime, server_default=func.now(), nullable=False)
     updated_at = Column(DateTime, server_default=func.now(), onupdate=func.now(), nullable=False)
     last_activity_at = Column(DateTime, nullable=True)
-    
+
     def __repr__(self):
         return f"<AssessmentLead(email='{self.email}', score={self.lead_score})>"

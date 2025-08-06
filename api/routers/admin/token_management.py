@@ -89,9 +89,13 @@ async def get_blacklist_entry(
     """Get details for a specific blacklisted token by hash."""
     blacklist = await get_token_blacklist()
 
-    # Note: We would need to store token hash mappings to implement this fully
-    # This is a placeholder for the interface
-    return {"message": "Token hash lookup requires additional implementation"}
+    # Search for matching token hash in blacklist
+    for entry in blacklist:
+        if entry.get("token_hash") == token_hash:
+            return BlacklistEntryResponse(**entry)
+
+    # Token hash not found in blacklist
+    return None
 
 
 @router.post("/blacklist")

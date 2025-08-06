@@ -1,16 +1,11 @@
 import uuid
-import uuid
-from datetime import datetime, timedelta
-from decimal import Decimal
+from datetime import datetime
 
 from sqlalchemy import (
     JSON,
-    Boolean,
     Column,
     DateTime,
     ForeignKey,
-    Integer,
-    Numeric,
     String,
     Text,
 )
@@ -20,10 +15,6 @@ from sqlalchemy.dialects.postgresql import JSONB as PG_JSONB, UUID as PG_UUID
 from .db_setup import Base
 
 # Import existing models from their dedicated files to avoid duplication
-from .rbac import (
-    Role, Permission, UserRole, RolePermission, FrameworkAccess,
-    UserSession, AuditLog, DataAccess
-)
 
 
 class Policy(Base):

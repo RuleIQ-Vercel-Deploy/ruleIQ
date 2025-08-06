@@ -3,11 +3,13 @@
 import { Loader2 } from 'lucide-react';
 import * as React from 'react';
 
-export function GenerationProgress() {
+export function GenerationProgress({ isGenerating = true }: { isGenerating?: boolean }) {
   const [progress, setProgress] = React.useState(0);
   const [estimatedTime, setEstimatedTime] = React.useState(45);
 
   React.useEffect(() => {
+    if (!isGenerating) return;
+
     const progressInterval = setInterval(() => {
       setProgress((prev) => {
         if (prev >= 100) {
@@ -32,7 +34,7 @@ export function GenerationProgress() {
       clearInterval(progressInterval);
       clearInterval(timeInterval);
     };
-  }, []);
+  }, [isGenerating]);
 
   return (
     <div className="bg-oxford-blue-light flex h-full flex-col items-center justify-center space-y-6 rounded-lg border border-white/10 p-8 text-center">

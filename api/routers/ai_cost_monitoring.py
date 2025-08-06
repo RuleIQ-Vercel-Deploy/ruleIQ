@@ -5,31 +5,20 @@ Provides endpoints for AI cost tracking, budget management, optimization insight
 and real-time monitoring of AI service usage and expenses.
 """
 
-import asyncio
 from datetime import date, datetime, timedelta
 from decimal import Decimal
 from typing import Dict, List, Optional, Any
-from fastapi import APIRouter, Depends, HTTPException, Query, status, BackgroundTasks
+from fastapi import APIRouter, Depends, HTTPException, Query, status
 from pydantic import BaseModel, Field
-from sqlalchemy.ext.asyncio import AsyncSession
 
 from api.dependencies.auth import get_current_active_user
 from database.user import User
 from api.middleware.rate_limiter import RateLimited
-from database.db_setup import get_async_db
-from database.user import User
 from services.ai.cost_management import (
     AICostManager,
     CostTrackingService,
     BudgetAlertService,
-    CostOptimizationService,
-    AIUsageMetrics,
-    CostMetrics,
-    BudgetAlert,
-    CostOptimization,
-    AlertType,
-    OptimizationStrategy,
-    UsageType
+    CostOptimizationService
 )
 from config.logging_config import get_logger
 
@@ -183,7 +172,7 @@ async def track_ai_usage(
             error_occurred=request.error_occurred,
             metadata=request.metadata
         )
-        
+
         return CostTrackingResponse(
             usage_id=result["usage_id"] or "generated",
             cost_usd=result["cost_usd"],
@@ -191,7 +180,7 @@ async def track_ai_usage(
             cost_per_token=result["cost_per_token"],
             timestamp=datetime.now()
         )
-        
+
     except Exception as e:
         logger.error(f"Failed to track AI usage: {str(e)}")
         raise HTTPException(
@@ -220,14 +209,14 @@ async def get_daily_cost_analytics(
     try:
         if not target_date:
             target_date = date.today()
-            
+
         daily_summary = await cost_manager.get_daily_summary(target_date)
-        
+
         # Calculate derived metrics
         total_cost = daily_summary["total_cost"]
         total_requests = daily_summary["total_requests"]
         total_tokens = daily_summary["total_tokens"]
-        
+
         return CostAnalyticsResponse(
             total_cost=total_cost,
             total_requests=total_requests,
@@ -238,7 +227,7 @@ async def get_daily_cost_analytics(
             model_breakdown=daily_summary.get("model_breakdown", {}),
             hourly_breakdown=daily_summary.get("hourly_breakdown") if include_hourly else None
         )
-        
+
     except Exception as e:
         logger.error(f"Failed to get daily analytics: {str(e)}")
         raise HTTPException(
@@ -266,7 +255,7 @@ async def get_cost_trends(
     """
     try:
         trends = await cost_tracker.get_cost_trends(days)
-        
+
         # Calculate growth rate
         if len(trends) >= 2:
             first_cost = float(trends[0]["cost"])
@@ -274,7 +263,7 @@ async def get_cost_trends(
             growth_rate = ((last_cost - first_cost) / first_cost * 100) if first_cost > 0 else 0
         else:
             growth_rate = 0.0
-        
+
         # Mock seasonal patterns (would be calculated from historical data)
         seasonal_patterns = {
             "monday": 1.2,
@@ -285,19 +274,19 @@ async def get_cost_trends(
             "saturday": 0.7,
             "sunday": 0.6
         }
-        
+
         # Get anomalies if requested
         anomalies = []
         if include_anomalies:
             anomalies = await cost_tracker.identify_cost_anomalies()
-        
+
         return CostTrendsResponse(
             trends=trends,
             growth_rate=growth_rate,
             seasonal_patterns=seasonal_patterns,
             anomalies=anomalies
         )
-        
+
     except Exception as e:
         logger.error(f"Failed to get cost trends: {str(e)}")
         raise HTTPException(
@@ -326,17 +315,17 @@ async def configure_budget(
     try:
         if config.daily_limit:
             await budget_service.set_daily_budget(config.daily_limit)
-            
+
         if config.monthly_limit:
             await budget_service.set_monthly_budget(config.monthly_limit)
-            
+
         if config.service_limits:
             for service_name, limit in config.service_limits.items():
                 await budget_service.set_service_budget(service_name, limit)
-        
+
         logger.info(f"Budget configured by user {str(current_user.id)}")
         return {"message": "Budget configuration updated successfully"}
-        
+
     except Exception as e:
         logger.error(f"Failed to configure budget: {str(e)}")
         raise HTTPException(
@@ -364,20 +353,20 @@ async def get_budget_status():
         today = date.today()
         daily_summary = await cost_manager.get_daily_summary(today)
         daily_usage = daily_summary["total_cost"]
-        
+
         # Get monthly costs (simplified - would calculate from daily totals)
         monthly_usage = daily_usage * 15  # Mock calculation
-        
+
         # Get budget limits
         budget_config = await budget_service.get_current_budget()
         daily_limit = budget_config.get("daily_limit")
         monthly_limit = budget_config.get("monthly_limit")
-        
+
         # Calculate usage percentage and alert level
         if daily_limit:
             usage_percentage = float((daily_usage / daily_limit) * 100)
             remaining_budget = daily_limit - daily_usage
-            
+
             if usage_percentage >= 100:
                 alert_level = "critical"
             elif usage_percentage >= 80:
@@ -388,12 +377,12 @@ async def get_budget_status():
             usage_percentage = 0.0
             remaining_budget = Decimal("0")
             alert_level = "normal"
-        
+
         # Project monthly cost
         days_in_month = 30  # Simplified
         day_of_month = today.day
         projected_monthly_cost = (daily_usage / day_of_month) * days_in_month if day_of_month > 0 else monthly_usage
-        
+
         return BudgetStatusResponse(
             daily_usage=daily_usage,
             daily_limit=daily_limit,
@@ -404,7 +393,7 @@ async def get_budget_status():
             alert_level=alert_level,
             projected_monthly_cost=projected_monthly_cost
         )
-        
+
     except Exception as e:
         logger.error(f"Failed to get budget status: {str(e)}")
         raise HTTPException(
@@ -429,7 +418,7 @@ async def get_budget_alerts():
     """
     try:
         alerts = await cost_manager.check_budget_alerts()
-        
+
         return [
             AlertResponse(
                 alert_type=alert.alert_type.value,
@@ -442,7 +431,7 @@ async def get_budget_alerts():
             )
             for alert in alerts
         ]
-        
+
     except Exception as e:
         logger.error(f"Failed to get budget alerts: {str(e)}")
         raise HTTPException(
@@ -467,7 +456,7 @@ async def get_optimization_recommendations():
     """
     try:
         recommendations = await cost_manager.get_optimization_recommendations()
-        
+
         return [
             OptimizationResponse(
                 strategy=rec["strategy"],
@@ -479,7 +468,7 @@ async def get_optimization_recommendations():
             )
             for rec in recommendations
         ]
-        
+
     except Exception as e:
         logger.error(f"Failed to get optimization recommendations: {str(e)}")
         raise HTTPException(
@@ -504,20 +493,20 @@ async def select_optimal_model(request: ModelRoutingRequest):
     """
     try:
         from services.ai.cost_management import IntelligentModelRouter
-        
+
         router_service = IntelligentModelRouter()
-        
+
         result = await router_service.select_optimal_model(
             task_description=request.task_description,
             task_type=request.task_type,
             max_cost_per_request=request.max_cost_per_request
         )
-        
+
         # Get cost estimate for recommended model
         cost_tracker_service = CostTrackingService()
         model_config = cost_tracker_service.model_configs.get(result["model"])
         estimated_cost = model_config.calculate_total_cost(1000, 500) if model_config else Decimal("0.01")
-        
+
         return ModelRoutingResponse(
             recommended_model=result["model"],
             alternative_models=result["alternatives"],
@@ -525,7 +514,7 @@ async def select_optimal_model(request: ModelRoutingRequest):
             reasoning=result["reasoning"],
             complexity_score=result["complexity_score"]
         )
-        
+
     except Exception as e:
         logger.error(f"Failed to select optimal model: {str(e)}")
         raise HTTPException(
@@ -553,16 +542,16 @@ async def generate_monthly_report(
     """
     try:
         report = await cost_manager.generate_monthly_report(year, month)
-        
+
         if format == "pdf":
             # In production, would generate PDF report
             raise HTTPException(
                 status_code=status.HTTP_501_NOT_IMPLEMENTED,
                 detail="PDF generation not implemented yet"
             )
-        
+
         return report
-        
+
     except Exception as e:
         logger.error(f"Failed to generate monthly report: {str(e)}")
         raise HTTPException(
@@ -593,18 +582,18 @@ async def get_usage_by_service(
             start_date = date.today() - timedelta(days=7)
         if not end_date:
             end_date = date.today()
-        
+
         usage_metrics = await cost_tracker.get_usage_by_service(
             service_name=service_name,
             start_date=start_date,
             end_date=end_date
         )
-        
+
         # Aggregate metrics
         total_cost = sum(metric.cost_usd for metric in usage_metrics)
         total_requests = sum(metric.request_count for metric in usage_metrics)
         total_tokens = sum(metric.total_tokens for metric in usage_metrics)
-        
+
         return {
             "service_name": service_name,
             "period": {
@@ -628,7 +617,7 @@ async def get_usage_by_service(
                 for metric in usage_metrics
             ]
         }
-        
+
     except Exception as e:
         logger.error(f"Failed to get service usage: {str(e)}")
         raise HTTPException(
@@ -651,7 +640,7 @@ async def cost_monitoring_health():
         # Basic health checks
         redis_status = "healthy"  # Would check Redis connection
         tracking_status = "healthy"  # Would check cost tracking service
-        
+
         return {
             "status": "healthy",
             "services": {
@@ -662,7 +651,7 @@ async def cost_monitoring_health():
             },
             "timestamp": datetime.now().isoformat()
         }
-        
+
     except Exception as e:
         logger.error(f"Cost monitoring health check failed: {str(e)}")
         return {
@@ -690,7 +679,7 @@ async def clear_cost_cache():
         # In production, would clear Redis cache
         logger.info("Cost monitoring cache cleared")
         return {"message": "Cache cleared successfully"}
-        
+
     except Exception as e:
         logger.error(f"Failed to clear cache: {str(e)}")
         raise HTTPException(

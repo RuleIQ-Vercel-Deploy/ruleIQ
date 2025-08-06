@@ -161,7 +161,7 @@ async def refresh_token(refresh_request: dict, db: Session = Depends(get_db)):
 async def get_current_user(db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)):
     """Get current user information from JWT token"""
     from api.dependencies.auth import decode_token
-    
+
     payload = decode_token(token)
     if not payload:
         raise HTTPException(
@@ -169,7 +169,7 @@ async def get_current_user(db: Session = Depends(get_db), token: str = Depends(o
             detail="Could not validate credentials",
             headers={"WWW-Authenticate": "Bearer"},
         )
-    
+
     user_id = payload.get("sub")
     if not user_id:
         raise HTTPException(
@@ -177,7 +177,7 @@ async def get_current_user(db: Session = Depends(get_db), token: str = Depends(o
             detail="Could not validate credentials",
             headers={"WWW-Authenticate": "Bearer"},
         )
-    
+
     user = db.query(User).filter(User.id == user_id).first()
     if not user or not user.is_active:
         raise HTTPException(
@@ -185,7 +185,7 @@ async def get_current_user(db: Session = Depends(get_db), token: str = Depends(o
             detail="User not found or inactive",
             headers={"WWW-Authenticate": "Bearer"},
         )
-    
+
     return UserResponse(
         id=user.id,
         email=user.email,

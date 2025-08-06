@@ -13,12 +13,12 @@ def test_endpoint(endpoint, description, should_fail=True):
     """Test an endpoint and return result"""
     print(f"\n🧪 Testing {description}")
     print("-" * 50)
-    
+
     try:
         # Test without auth (should fail)
         response = requests.get(f"{BASE_URL}{endpoint}", timeout=5)
         print(f"Without auth: {response.status_code}")
-        
+
         if should_fail and response.status_code == 401:
             print("✅ Correctly returns 401 without auth")
             return True
@@ -35,7 +35,7 @@ def test_endpoint(endpoint, description, should_fail=True):
         else:
             print(f"❌ Unexpected status: {response.status_code}")
             return False
-            
+
     except requests.exceptions.ConnectionError:
         print("❌ Connection failed - is server running?")
         return False
@@ -54,15 +54,15 @@ def check_server():
 def main():
     print("🚀 Phase 1 Stack Auth Endpoint Test")
     print("=" * 60)
-    
+
     # Check server
     if not check_server():
         print("❌ Server not running on http://localhost:8000")
         print("Start with: source .venv/bin/activate && python main.py")
         return 1
-    
+
     print("✅ Server is running")
-    
+
     # Test Phase 1 endpoints
     endpoints_to_test = [
         ("/api/users/me", "Get current user"),
@@ -70,26 +70,26 @@ def main():
         ("/api/users/dashboard", "Get user dashboard"),
         ("/api/business-profiles/", "Get business profile"),
     ]
-    
+
     results = []
     for endpoint, description in endpoints_to_test:
         result = test_endpoint(endpoint, description)
         results.append((endpoint, result))
-    
+
     # Summary
     print("\n" + "=" * 60)
     print("📊 Test Summary")
     print("=" * 60)
-    
+
     passed = sum(1 for _, result in results if result)
     total = len(results)
-    
+
     for endpoint, result in results:
         status = "✅ PASS" if result else "❌ FAIL"
         print(f"{endpoint:30} {status}")
-    
+
     print(f"\nResults: {passed}/{total} passed")
-    
+
     if passed == total:
         print("\n✅ All Phase 1 endpoints properly protected!")
         return 0

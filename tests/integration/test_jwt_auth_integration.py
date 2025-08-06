@@ -50,10 +50,10 @@ class TestJWTAuthenticationFlow:
             "password": test_user_data["password"],
             "full_name": test_user_data["full_name"]
         })
-        
+
         assert response.status_code == 201
         data = response.json()
-        
+
         # Verify response structure
         assert "user" in data
         assert "tokens" in data
@@ -69,15 +69,15 @@ class TestJWTAuthenticationFlow:
             "email": test_user_data["email"],
             "password": test_user_data["password"]
         })
-        
+
         assert response.status_code == 200
         data = response.json()
-        
+
         # Verify token structure
         assert "access_token" in data
         assert "refresh_token" in data
         assert data["token_type"] == "bearer"
-        
+
         return data["access_token"]
 
     def test_protected_endpoint_access(self, test_client: TestClient, existing_user, test_user_data):
@@ -87,14 +87,14 @@ class TestJWTAuthenticationFlow:
             "email": test_user_data["email"],
             "password": test_user_data["password"]
         })
-        
+
         assert login_response.status_code == 200
         token = login_response.json()["access_token"]
-        
+
         # Access protected endpoint
         headers = {"Authorization": f"Bearer {token}"}
         response = test_client.get("/api/v1/auth/me", headers=headers)
-        
+
         assert response.status_code == 200
         user_data = response.json()
         assert user_data["email"] == test_user_data["email"]
@@ -107,18 +107,18 @@ class TestJWTAuthenticationFlow:
             "email": test_user_data["email"],
             "password": test_user_data["password"]
         })
-        
+
         assert login_response.status_code == 200
         tokens = login_response.json()
-        
+
         # Refresh token
         refresh_response = test_client.post("/api/v1/auth/refresh", json={
             "refresh_token": tokens["refresh_token"]
         })
-        
+
         assert refresh_response.status_code == 200
         new_tokens = refresh_response.json()
-        
+
         # Verify new tokens are different
         assert new_tokens["access_token"] != tokens["access_token"]
         assert new_tokens["refresh_token"] != tokens["refresh_token"]
@@ -130,14 +130,14 @@ class TestJWTAuthenticationFlow:
             "email": test_user_data["email"],
             "password": test_user_data["password"]
         })
-        
+
         assert login_response.status_code == 200
         token = login_response.json()["access_token"]
-        
+
         # Logout
         headers = {"Authorization": f"Bearer {token}"}
         logout_response = test_client.post("/api/v1/auth/logout", headers=headers)
-        
+
         assert logout_response.status_code == 200
         assert logout_response.json()["message"] == "Successfully logged out"
 
@@ -148,7 +148,7 @@ class TestJWTAuthenticationFlow:
             "email": existing_user.email,
             "password": "WrongPassword123!"
         })
-        
+
         assert response.status_code == 401
         assert "Invalid credentials" in response.json()["detail"]
 
@@ -158,7 +158,7 @@ class TestJWTAuthenticationFlow:
             "email": "nonexistent@example.com",
             "password": "SomePassword123!"
         })
-        
+
         assert response.status_code == 401
         assert "Invalid credentials" in response.json()["detail"]
 
@@ -169,7 +169,7 @@ class TestJWTAuthenticationFlow:
             "password": "NewPassword123!",
             "full_name": "Another User"
         })
-        
+
         assert response.status_code == 409
         assert "Email already exists" in response.json()["detail"]
 
@@ -195,14 +195,14 @@ class TestBusinessProfileIntegration:
             "email": test_user_data["email"],
             "password": test_user_data["password"]
         })
-        
+
         assert login_response.status_code == 200
         token = login_response.json()["access_token"]
-        
+
         # Access business profiles endpoint
         headers = {"Authorization": f"Bearer {token}"}
         response = test_client.get("/api/v1/business-profiles", headers=headers)
-        
+
         # Should return 200 (empty list) or 404 (no profile yet)
         assert response.status_code in [200, 404]
 
@@ -222,14 +222,14 @@ class TestRAGSystemIntegration:
             "email": test_user_data["email"],
             "password": test_user_data["password"]
         })
-        
+
         assert login_response.status_code == 200
         token = login_response.json()["access_token"]
-        
+
         # Access chat endpoint
         headers = {"Authorization": f"Bearer {token}"}
         response = test_client.get("/api/v1/chat/conversations", headers=headers)
-        
+
         # Should return 200 with empty list or conversations
         assert response.status_code == 200
 
@@ -250,35 +250,35 @@ class TestAuthenticationSystemIntegration:
             "password": "JourneyTest123!",
             "full_name": "Journey Test User"
         }
-        
+
         # 1. Register
         register_response = test_client.post("/api/v1/auth/register", json=user_data)
         assert register_response.status_code == 201
         register_data = register_response.json()
-        
+
         # 2. Use token from registration to access protected endpoint
         token = register_data["tokens"]["access_token"]
         headers = {"Authorization": f"Bearer {token}"}
-        
+
         me_response = test_client.get("/api/v1/auth/me", headers=headers)
         assert me_response.status_code == 200
         assert me_response.json()["email"] == user_data["email"]
-        
+
         # 3. Logout
         logout_response = test_client.post("/api/v1/auth/logout", headers=headers)
         assert logout_response.status_code == 200
-        
+
         # 4. Login again
         login_response = test_client.post("/api/v1/auth/login", json={
             "email": user_data["email"],
             "password": user_data["password"]
         })
         assert login_response.status_code == 200
-        
+
         # 5. Access protected endpoint with new token
         new_token = login_response.json()["access_token"]
         new_headers = {"Authorization": f"Bearer {new_token}"}
-        
+
         final_me_response = test_client.get("/api/v1/auth/me", headers=new_headers)
         assert final_me_response.status_code == 200
         assert final_me_response.json()["email"] == user_data["email"]
@@ -288,14 +288,14 @@ class TestAuthenticationSystemIntegration:
         # Test public endpoints work
         health_response = test_client.get("/health")
         assert health_response.status_code == 200
-        
+
         # Test protected endpoints require auth
         protected_endpoints = [
             "/api/v1/auth/me",
             "/api/v1/business-profiles",
             "/api/v1/chat/conversations"
         ]
-        
+
         for endpoint in protected_endpoints:
             response = test_client.get(endpoint)
             assert response.status_code == 401, f"Endpoint {endpoint} should require authentication"

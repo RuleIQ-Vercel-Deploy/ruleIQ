@@ -33,7 +33,6 @@ from api.middleware.ai_rate_limiter import (
 )
 from core.exceptions import NotFoundException
 from database.business_profile import BusinessProfile
-from database.user import User
 from services.ai import ComplianceAssistant
 from services.ai.exceptions import (
     AIServiceException,
@@ -734,7 +733,7 @@ async def generate_personalized_recommendations(
             recommendations=recommendations,
             implementation_plan=implementation_plan,
             success_metrics=rec_response["success_metrics"],
-            request_id=rec_response.get("request_id", f"recommendations_{current_user["id"]}"),
+            request_id=rec_response.get("request_id", f"recommendations_{current_user['id']}"),
             generated_at=rec_response.get("generated_at", ""),
         )
 
@@ -856,7 +855,7 @@ async def submit_ai_feedback(
     try:
         # Log feedback for analytics
         logger.info(
-            f"AI feedback received from user {current_user["id"]}: "
+            f"AI feedback received from user {current_user['id']}: "
             f"helpful={request.helpful}, rating={request.rating}"
         )
 

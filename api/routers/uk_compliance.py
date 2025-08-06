@@ -4,7 +4,7 @@ UK Compliance Frameworks API Router
 Provides endpoints for managing UK-specific compliance frameworks.
 """
 
-from typing import List, Optional
+from typing import Optional
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.orm import Session
 
@@ -12,11 +12,10 @@ from database.db_setup import get_db
 from database.compliance_framework import ComplianceFramework
 from api.schemas.compliance import (
     UKFrameworkSchema, FrameworkResponse, FrameworkListResponse,
-    FrameworkLoadRequest, FrameworkLoadResponse, FrameworkQueryParams
+    FrameworkLoadRequest, FrameworkLoadResponse
 )
 from services.compliance_loader import UKComplianceLoader, GeographicValidator
 from api.dependencies.auth import get_current_active_user
-from database.user import User
 from api.middleware.rate_limiter import RateLimited
 
 
@@ -43,33 +42,33 @@ async def get_frameworks(
     Supports filtering by region, category, industry, and complexity.
     """
     query = db.query(ComplianceFramework)
-    
+
     # Apply filters
     if active_only:
         query = query.filter(ComplianceFramework.is_active == True)
-    
+
     if region:
         query = query.filter(ComplianceFramework.geographic_scop.contains([region]))
-    
+
     if category:
         query = query.filter(ComplianceFramework.category == category)
-    
+
     if industry:
         query = query.filter(ComplianceFramework.applicable_indu.contains([industry]))
-    
+
     if complexity_min is not None:
         query = query.filter(ComplianceFramework.complexity_scor >= complexity_min)
-    
+
     if complexity_max is not None:
         query = query.filter(ComplianceFramework.complexity_scor <= complexity_max)
-    
+
     # Get total count before pagination
     total_count = db.query(ComplianceFramework).count()
     filtered_count = query.count()
-    
+
     # Execute query
     frameworks = query.all()
-    
+
     # Convert to response format
     framework_responses = [
         FrameworkResponse(
@@ -87,7 +86,7 @@ async def get_frameworks(
         )
         for fw in frameworks
     ]
-    
+
     return FrameworkListResponse(
         frameworks=framework_responses,
         total_count=total_count,
@@ -112,13 +111,13 @@ async def get_framework(
     framework = db.query(ComplianceFramework)\
         .filter(ComplianceFramework.id == framework_id)\
         .first()
-    
+
     if not framework:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"Framework not found: {framework_id}"
         )
-    
+
     return FrameworkResponse(
         id=str(framework.id),
         name=framework.name,
@@ -153,7 +152,7 @@ async def load_frameworks(
     """
     # Validate geographic scope for UK frameworks
     validator = GeographicValidator()
-    
+
     frameworks_data = []
     for framework_schema in request.frameworks:
         # Convert schema to dict with proper field mappings
@@ -179,20 +178,20 @@ async def load_frameworks(
             "version": framework_schema.version,
             "is_active": framework_schema.is_active
         }
-        
+
         # Validate UK scope
         if not validator.validate_uk_scope(framework_dict["geographic_scop"]):
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail=f"Invalid geographic scope for UK framework: {framework_schema.name}"
             )
-        
+
         frameworks_data.append(framework_dict)
-    
+
     # Load frameworks using service
     loader = UKComplianceLoader(db_session=db)
     result = loader.load_frameworks(frameworks_data)
-    
+
     return FrameworkLoadResponse(
         success=result.success,
         loaded_count=len(result.loaded_frameworks),
@@ -227,13 +226,13 @@ async def update_framework(
     framework = db.query(ComplianceFramework)\
         .filter(ComplianceFramework.id == framework_id)\
         .first()
-    
+
     if not framework:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"Framework not found: {framework_id}"
         )
-    
+
     # Update framework fields with truncated column mappings
     framework.name = framework_update.name
     framework.display_name = framework_update.display_name
@@ -255,7 +254,7 @@ async def update_framework(
     framework.evidence_templa = framework_update.evidence_templates
     framework.version = framework_update.version
     framework.is_active = framework_update.is_active
-    
+
     try:
         db.commit()
         db.refresh(framework)
@@ -265,7 +264,7 @@ async def update_framework(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Failed to update framework: {str(e)}"
         )
-    
+
     return FrameworkResponse(
         id=str(framework.id),
         name=framework.name,
@@ -300,16 +299,16 @@ async def delete_framework(
     framework = db.query(ComplianceFramework)\
         .filter(ComplianceFramework.id == framework_id)\
         .first()
-    
+
     if not framework:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"Framework not found: {framework_id}"
         )
-    
+
     # Soft delete
     framework.is_active = False
-    
+
     try:
         db.commit()
     except Exception as e:
@@ -318,5 +317,5 @@ async def delete_framework(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Failed to delete framework: {str(e)}"
         )
-    
+
     return {"message": f"Framework {framework_id} deactivated successfully"}

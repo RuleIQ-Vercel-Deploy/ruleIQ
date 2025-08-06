@@ -196,7 +196,7 @@ def sanitize_filename(filename: str) -> str:
     return filename
 
 
-def validate_file_content(file_content: bytes, content_type: str) -> bool:
+def validate_file_content(file_content: bytes, content_type: str, filename: str = "") -> bool:
     """Validate file content matches declared content type."""
     # Check file signatures if available
     signatures = FILE_SIGNATURES.get(content_type)
@@ -452,7 +452,7 @@ def get_file_validator(
 
         # Layer 5: Legacy validation checks (for backward compatibility)
         if enable_content_validation:
-            if not validate_file_content(content, file.content_type):
+            if not validate_file_content(content, file.content_type, file.filename):
                 raise HTTPException(
                     status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
                     detail="File content does not match declared type",

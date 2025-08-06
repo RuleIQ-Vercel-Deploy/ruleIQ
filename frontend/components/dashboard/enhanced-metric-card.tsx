@@ -5,7 +5,7 @@ import React from 'react';
 
 import { cn } from '@/lib/utils';
 import { NumberTicker } from '@/components/magicui/number-ticker';
-import { MagicCard } from '@/components/magicui/magic-card';
+import { Card } from '@/components/ui/card';
 
 interface EnhancedMetricCardProps {
   title: string;
@@ -60,20 +60,21 @@ export function EnhancedMetricCard({
   };
 
   return (
-    <MagicCard
+    <Card
       className={cn(
-        'cursor-pointer flex-col items-start justify-start p-6 shadow-2xl',
+        'cursor-pointer flex-col items-start justify-start p-6',
+        'hover-lift transition-all duration-250',
         gradient && 'bg-gradient-to-br from-white to-teal-50/30',
         className
       )}
-      gradientColor="#2C7A7B"
+      glass
     >
       <div className="w-full space-y-4">
         {/* Header with icon and title */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             {icon && (
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-teal-100 text-teal-600">
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-teal-100 to-teal-200 text-teal-600 shadow-elevation-low">
                 {icon}
               </div>
             )}
@@ -90,12 +91,12 @@ export function EnhancedMetricCard({
         {/* Main value */}
         <div className="space-y-1">
           <div className="flex items-baseline gap-1">
-            <h3 className="text-3xl font-bold text-neutral-900">
+            <h3 className="text-3xl font-semibold text-neutral-900 tracking-heading">
               {prefix}
               {typeof value === 'number' ? (
                 <NumberTicker 
                   value={value} 
-                  className="text-3xl font-bold text-neutral-900" 
+                  className="text-3xl font-semibold text-neutral-900" 
                 />
               ) : (
                 value
@@ -109,6 +110,6 @@ export function EnhancedMetricCard({
           )}
         </div>
       </div>
-    </MagicCard>
+    </Card>
   );
 }

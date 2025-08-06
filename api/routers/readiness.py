@@ -10,7 +10,6 @@ from api.dependencies.auth import get_current_active_user
 from database.user import User
 from api.dependencies.database import get_async_db
 from api.schemas.models import ComplianceReport
-from database.user import User
 from services.readiness_service import (
     generate_compliance_report,
     generate_readiness_assessment,

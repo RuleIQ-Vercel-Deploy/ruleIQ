@@ -12,12 +12,10 @@ from uuid import UUID, uuid4
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from pydantic import BaseModel, EmailStr, Field
 from sqlalchemy.orm import Session
-from sqlalchemy import and_, or_, desc, func
+from sqlalchemy import and_, or_, desc
 
-from api.dependencies.auth import get_current_active_user
 from api.dependencies.rbac_auth import (
-    UserWithRoles, get_current_user_with_roles,
-    require_permission, require_any_permission
+    UserWithRoles, require_permission
 )
 from database.db_setup import get_db
 from database.user import User
@@ -160,9 +158,9 @@ async def list_users(
 ):
     """List all users with filtering and pagination."""
     rbac = RBACService(db)
-    
+
     query = db.query(User)
-    
+
     # Apply filters
     if search:
         search_filter = or_(
@@ -170,25 +168,25 @@ async def list_users(
             User.full_name.ilike(f"%{search}%")
         )
         query = query.filter(search_filter)
-    
+
     if is_active is not None:
         query = query.filter(User.is_active == is_active)
-    
+
     if role:
         query = query.join(UserRole).join(Role).filter(
             and_(Role.name == role, UserRole.is_active == True)
         )
-    
+
     # Pagination
     offset = (page - 1) * limit
     users = query.order_by(desc(User.created_at)).offset(offset).limit(limit).all()
-    
+
     # Build response with roles and permissions
     user_responses = []
     for user in users:
         roles = rbac.get_user_roles(user.id)
         permissions = rbac.get_user_permissions(user.id)
-        
+
         user_responses.append(UserResponse(
             id=str(user.id),
             email=user.email,
@@ -201,7 +199,7 @@ async def list_users(
             roles=roles,
             permissions=permissions
         ))
-    
+
     return user_responses
 
 
@@ -213,17 +211,17 @@ async def get_user(
 ):
     """Get a specific user by ID."""
     rbac = RBACService(db)
-    
+
     user = db.query(User).filter(User.id == user_id).first()
     if not user:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="User not found"
         )
-    
+
     roles = rbac.get_user_roles(user.id)
     permissions = rbac.get_user_permissions(user.id)
-    
+
     return UserResponse(
         id=str(user.id),
         email=user.email,
@@ -246,7 +244,7 @@ async def create_user(
 ):
     """Create a new user with optional role assignments."""
     rbac = RBACService(db)
-    
+
     # Check if user already exists
     existing_user = db.query(User).filter(User.email == request.email).first()
     if existing_user:
@@ -254,11 +252,11 @@ async def create_user(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="User with this email already exists"
         )
-    
+
     # Hash password
     from api.dependencies.auth import get_password_hash
     hashed_password = get_password_hash(request.password)
-    
+
     # Create user
     user = User(
         id=uuid4(),
@@ -268,11 +266,11 @@ async def create_user(
         is_active=request.is_active,
         is_verified=request.is_verified
     )
-    
+
     db.add(user)
     db.commit()
     db.refresh(user)
-    
+
     # Assign roles if specified
     roles_assigned = []
     for role_name in request.roles:
@@ -290,11 +288,11 @@ async def create_user(
                 import logging
                 logger = logging.getLogger(__name__)
                 logger.warning(f"Failed to assign role {role_name} to user {user.id}: {e}")
-    
+
     # Get updated user data
     roles = rbac.get_user_roles(user.id)
     permissions = rbac.get_user_permissions(user.id)
-    
+
     return UserResponse(
         id=str(user.id),
         email=user.email,
@@ -318,14 +316,14 @@ async def update_user(
 ):
     """Update a user's information."""
     rbac = RBACService(db)
-    
+
     user = db.query(User).filter(User.id == user_id).first()
     if not user:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="User not found"
         )
-    
+
     # Update fields if provided
     if request.email is not None:
         # Check for email conflicts
@@ -338,25 +336,25 @@ async def update_user(
                 detail="Email already in use"
             )
         user.email = request.email
-    
+
     if request.full_name is not None:
         user.full_name = request.full_name
-    
+
     if request.is_active is not None:
         user.is_active = request.is_active
-    
+
     if request.is_verified is not None:
         user.is_verified = request.is_verified
-    
+
     user.updated_at = datetime.utcnow()
-    
+
     db.commit()
     db.refresh(user)
-    
+
     # Get updated user data
     roles = rbac.get_user_roles(user.id)
     permissions = rbac.get_user_permissions(user.id)
-    
+
     return UserResponse(
         id=str(user.id),
         email=user.email,
@@ -384,33 +382,33 @@ async def delete_user(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="User not found"
         )
-    
+
     # Prevent self-deletion
     if user_id == current_user.id:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Cannot delete your own account"
         )
-    
+
     # Soft delete by deactivating
     user.is_active = False
     user.updated_at = datetime.utcnow()
-    
+
     # Revoke all active roles
     rbac = RBACService(db)
     user_roles = db.query(UserRole).filter(
         and_(UserRole.user_id == user_id, UserRole.is_active == True)
     ).all()
-    
+
     for user_role in user_roles:
         rbac.revoke_role_from_user(
             user_id=user_id,
             role_id=user_role.role_id,
             revoked_by=current_user.id
         )
-    
+
     db.commit()
-    
+
     return {"message": "User deleted successfully"}
 
 
@@ -423,7 +421,7 @@ async def list_roles(
 ):
     """List all roles with permission and user count information."""
     roles = db.query(Role).filter(Role.is_active == True).all()
-    
+
     role_responses = []
     for role in roles:
         # Get permissions for role
@@ -433,7 +431,7 @@ async def list_roles(
                 Permission.is_active == True
             )
         ).all()
-        
+
         permission_data = [
             {
                 "id": str(perm.id),
@@ -443,12 +441,12 @@ async def list_roles(
             }
             for perm in permissions
         ]
-        
+
         # Get user count for role
         user_count = db.query(UserRole).filter(
             and_(UserRole.role_id == role.id, UserRole.is_active == True)
         ).count()
-        
+
         role_responses.append(RoleResponse(
             id=str(role.id),
             name=role.name,
@@ -460,7 +458,7 @@ async def list_roles(
             permissions=permission_data,
             user_count=user_count
         ))
-    
+
     return role_responses
 
 
@@ -472,7 +470,7 @@ async def create_role(
 ):
     """Create a new role with permissions."""
     rbac = RBACService(db)
-    
+
     try:
         # Create role
         role = rbac.create_role(
@@ -481,7 +479,7 @@ async def create_role(
             description=request.description,
             created_by=current_user.id
         )
-        
+
         # Assign permissions
         permissions_assigned = []
         for permission_name in request.permissions:
@@ -502,7 +500,7 @@ async def create_role(
                 except ValueError:
                     # Permission already assigned
                     pass
-        
+
         return RoleResponse(
             id=str(role.id),
             name=role.name,
@@ -514,7 +512,7 @@ async def create_role(
             permissions=permissions_assigned,
             user_count=0
         )
-        
+
     except ValueError as e:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
@@ -533,7 +531,7 @@ async def assign_role_to_user(
 ):
     """Assign a role to a user."""
     rbac = RBACService(db)
-    
+
     try:
         user_role = rbac.assign_role_to_user(
             user_id=request.user_id or user_id,
@@ -541,13 +539,13 @@ async def assign_role_to_user(
             granted_by=current_user.id,
             expires_at=request.expires_at
         )
-        
+
         return {
             "message": "Role assigned successfully",
             "assignment_id": str(user_role.id),
             "expires_at": user_role.expires_at.isoformat() if user_role.expires_at else None
         }
-        
+
     except ValueError as e:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
@@ -564,19 +562,19 @@ async def revoke_role_from_user(
 ):
     """Revoke a role from a user."""
     rbac = RBACService(db)
-    
+
     success = rbac.revoke_role_from_user(
         user_id=user_id,
         role_id=role_id,
         revoked_by=current_user.id
     )
-    
+
     if not success:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Role assignment not found"
         )
-    
+
     return {"message": "Role revoked successfully"}
 
 
@@ -592,22 +590,22 @@ async def get_admin_statistics(
     total_users = db.query(User).count()
     active_users = db.query(User).filter(User.is_active == True).count()
     verified_users = db.query(User).filter(User.is_verified == True).count()
-    
+
     # Role statistics
     total_roles = db.query(Role).filter(Role.is_active == True).count()
     system_roles = db.query(Role).filter(
         and_(Role.is_active == True, Role.is_system_role == True)
     ).count()
     custom_roles = total_roles - system_roles
-    
+
     # Permission statistics
     total_permissions = db.query(Permission).filter(Permission.is_active == True).count()
-    
+
     # Recent activity (last 7 days)
     week_ago = datetime.utcnow() - timedelta(days=7)
     recent_logins = db.query(User).filter(User.last_login >= week_ago).count()
     recent_registrations = db.query(User).filter(User.created_at >= week_ago).count()
-    
+
     return AdminStatsResponse(
         total_users=total_users,
         active_users=active_users,
@@ -635,22 +633,22 @@ async def get_audit_logs(
 ):
     """Get audit logs with filtering and pagination."""
     query = db.query(AuditLog)
-    
+
     # Time filter
     since_date = datetime.utcnow() - timedelta(days=days)
     query = query.filter(AuditLog.created_at >= since_date)
-    
+
     # Apply filters
     if action:
         query = query.filter(AuditLog.action.ilike(f"%{action}%"))
-    
+
     if user_id:
         query = query.filter(AuditLog.user_id == user_id)
-    
+
     # Pagination
     offset = (page - 1) * limit
     audit_logs = query.order_by(desc(AuditLog.created_at)).offset(offset).limit(limit).all()
-    
+
     return [
         AuditLogResponse(
             id=str(log.id),
@@ -694,7 +692,7 @@ async def cleanup_expired_roles(
     """Clean up expired role assignments."""
     rbac = RBACService(db)
     expired_count = rbac.cleanup_expired_roles()
-    
+
     return {
         "message": f"Cleaned up {expired_count} expired role assignments",
         "expired_count": expired_count

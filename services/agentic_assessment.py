@@ -16,13 +16,12 @@ Part of the ruleIQ Agentic Transformation Vision 2025
 
 import json
 import logging
-from datetime import datetime, timedelta
-from typing import Dict, List, Any, Optional, Tuple
+from datetime import datetime
+from typing import Dict, List, Any, Optional
 from dataclasses import dataclass, asdict
 from enum import Enum
 
 from services.context_service import (
-    UserContextService, 
     get_context_service,
     InteractionType,
     TrustLevel,
@@ -30,9 +29,6 @@ from services.context_service import (
 )
 from services.assessment_service import AssessmentService
 from services.ai import ComplianceAssistant
-from database.assessment_session import AssessmentSession
-from database.business_profile import BusinessProfile
-from api.schemas.models import AssessmentSessionCreate, AssessmentSessionResponse
 
 logger = logging.getLogger(__name__)
 
@@ -93,13 +89,13 @@ class AgenticAssessmentService:
     4. Builds trust through transparent reasoning
     5. Automates routine parts for trusted users
     """
-    
+
     def __init__(self):
         self.context_service = None
         self.assessment_service = AssessmentService()
         self.llm_service = ComplianceAssistant()
         self._conversation_templates = self._load_conversation_templates()
-        
+
     async def initialize(self):
         """Initialize the agentic assessment service"""
         try:
@@ -133,13 +129,13 @@ class AgenticAssessmentService:
         try:
             # Get user patterns for personalization
             user_patterns = await self.context_service.retrieve_user_patterns(user_id)
-            
+
             # Check for resumable assessment if requested
             if resume_previous:
                 existing_conversation = await self._get_resumable_conversation(user_id)
                 if existing_conversation:
                     return await self._resume_conversation(existing_conversation, session_id)
-            
+
             # Start new conversation
             conversation = AssessmentConversation(
                 session_id=session_id,
@@ -159,10 +155,10 @@ class AgenticAssessmentService:
                 last_activity=datetime.utcnow(),
                 estimated_completion=0.0
             )
-            
+
             # Store conversation state
             await self._store_conversation(conversation)
-            
+
             # Record interaction
             await self.context_service.store_interaction_context(
                 user_id=user_id,
@@ -174,17 +170,17 @@ class AgenticAssessmentService:
                 },
                 session_id=session_id
             )
-            
+
             # Generate personalized opening
             opening_message = await self._generate_personalized_opening(user_patterns, framework_types)
-            
+
             # Get first question
             first_question = await self._get_next_question(conversation)
             conversation.current_question = first_question
             conversation.conversation_state = ConversationState.GATHERING_CONTEXT
-            
+
             await self._store_conversation(conversation)
-            
+
             return {
                 "conversation_id": session_id,
                 "state": conversation.conversation_state,
@@ -196,7 +192,7 @@ class AgenticAssessmentService:
                     "communication_style": user_patterns.communication_style if user_patterns else CommunicationStyle.FORMAL
                 }
             }
-            
+
         except Exception as e:
             logger.error(f"Failed to start conversational assessment: {e}")
             raise
@@ -223,14 +219,14 @@ class AgenticAssessmentService:
             conversation = await self._get_conversation(session_id)
             if not conversation:
                 raise ValueError(f"No active conversation found for session {session_id}")
-            
+
             # Process the response
             processed_response = await self._process_response(
-                conversation, 
-                user_response, 
+                conversation,
+                user_response,
                 additional_context or {}
             )
-            
+
             # Record the response
             conversation.answered_questions.append({
                 "question_id": conversation.current_question.id,
@@ -240,21 +236,21 @@ class AgenticAssessmentService:
                 "timestamp": datetime.utcnow().isoformat(),
                 "additional_context": additional_context
             })
-            
+
             # Analyze response for trust signals
             trust_signals = await self._analyze_trust_signals(user_response, processed_response)
             conversation.trust_signals.extend(trust_signals)
-            
+
             # Update context and personalization
             await self._update_conversation_context(conversation, processed_response)
-            
+
             # Determine next action
             next_action = await self._determine_next_action(conversation)
-            
+
             # Update conversation state
             conversation.last_activity = datetime.utcnow()
             conversation.estimated_completion = len(conversation.answered_questions) / self._estimate_total_questions(conversation)
-            
+
             if next_action["action"] == "ask_question":
                 conversation.current_question = next_action["question"]
                 conversation.conversation_state = ConversationState.ASKING_QUESTIONS
@@ -266,9 +262,9 @@ class AgenticAssessmentService:
                 # Generate final assessment
                 assessment_result = await self._generate_final_assessment(conversation)
                 next_action["assessment_result"] = assessment_result
-            
+
             await self._store_conversation(conversation)
-            
+
             # Record interaction
             await self.context_service.store_interaction_context(
                 user_id=conversation.user_id,
@@ -280,7 +276,7 @@ class AgenticAssessmentService:
                 },
                 session_id=session_id
             )
-            
+
             return {
                 "conversation_id": session_id,
                 "state": conversation.conversation_state,
@@ -289,7 +285,7 @@ class AgenticAssessmentService:
                 "trust_signals": trust_signals,
                 "estimated_remaining_time": self._estimate_remaining_time(conversation)
             }
-            
+
         except Exception as e:
             logger.error(f"Failed to process conversation response: {e}")
             raise
@@ -300,12 +296,12 @@ class AgenticAssessmentService:
             conversation = await self._get_conversation(session_id)
             if not conversation:
                 raise ValueError(f"No active conversation found for session {session_id}")
-            
+
             conversation.conversation_state = ConversationState.PAUSED
             conversation.last_activity = datetime.utcnow()
-            
+
             await self._store_conversation(conversation)
-            
+
             # Record interaction
             await self.context_service.store_interaction_context(
                 user_id=conversation.user_id,
@@ -316,7 +312,7 @@ class AgenticAssessmentService:
                 },
                 session_id=session_id
             )
-            
+
             return {
                 "conversation_id": session_id,
                 "state": conversation.conversation_state,
@@ -327,7 +323,7 @@ class AgenticAssessmentService:
                     "progress": conversation.estimated_completion
                 }
             }
-            
+
         except Exception as e:
             logger.error(f"Failed to pause conversation: {e}")
             raise
@@ -338,7 +334,7 @@ class AgenticAssessmentService:
             conversation = await self._get_conversation(session_id)
             if not conversation:
                 raise ValueError(f"No conversation found for session {session_id}")
-            
+
             summary = {
                 "conversation_id": session_id,
                 "state": conversation.conversation_state,
@@ -351,26 +347,26 @@ class AgenticAssessmentService:
                 "trust_signals_count": len(conversation.trust_signals),
                 "current_question": asdict(conversation.current_question) if conversation.current_question else None
             }
-            
+
             if conversation.conversation_state == ConversationState.COMPLETED:
                 summary["completion_timestamp"] = conversation.last_activity.isoformat()
-                
+
             return summary
-            
+
         except Exception as e:
             logger.error(f"Failed to get conversation summary: {e}")
             raise
 
     async def _generate_personalized_opening(
-        self, 
-        user_patterns: Optional[Any], 
+        self,
+        user_patterns: Optional[Any],
         framework_types: List[str]
     ) -> str:
         """Generate a personalized opening message based on user patterns"""
         try:
             if not user_patterns:
                 return f"I'll help you complete your {', '.join(framework_types)} compliance assessment. Let's start with some questions about your business."
-            
+
             # Personalize based on communication style
             if user_patterns.communication_style == CommunicationStyle.CASUAL:
                 greeting = "Hi! Ready to tackle your compliance assessment?"
@@ -378,21 +374,21 @@ class AgenticAssessmentService:
                 greeting = f"Let's conduct a comprehensive {', '.join(framework_types)} compliance evaluation."
             else:
                 greeting = f"Good day. I'll assist you with your {', '.join(framework_types)} compliance assessment."
-            
+
             # Add trust-based context
             if user_patterns.trust_level in [TrustLevel.TRUSTING, TrustLevel.DELEGATING]:
                 trust_context = " Based on your profile, I can streamline some routine questions."
             else:
                 trust_context = " I'll explain each step as we go."
-                
+
             # Add previous context if available
             if 'assessment' in user_patterns.common_tasks:
                 experience_context = " I see you've done assessments before, so we can focus on any changes since last time."
             else:
                 experience_context = " This assessment will help identify your compliance requirements."
-                
+
             return greeting + trust_context + experience_context
-            
+
         except Exception as e:
             logger.error(f"Failed to generate personalized opening: {e}")
             return f"Let's start your {', '.join(framework_types)} compliance assessment."
@@ -405,11 +401,11 @@ class AgenticAssessmentService:
                 question_type = QuestionType.BASIC_INFO
             else:
                 question_type = QuestionType.COMPLIANCE_SPECIFIC
-            
+
             # Get framework-specific questions
             framework_types = conversation.context_gathered.get("framework_types", [])
             answered_question_ids = [q["question_id"] for q in conversation.answered_questions]
-            
+
             # Find appropriate question from templates
             for framework in framework_types:
                 questions = self._conversation_templates.get(framework, {}).get(question_type.value, [])
@@ -420,13 +416,13 @@ class AgenticAssessmentService:
                         user_trust = TrustLevel.UNKNOWN
                         if user_patterns:
                             user_trust = TrustLevel(user_patterns.get("trust_level", TrustLevel.UNKNOWN))
-                        
+
                         required_trust = TrustLevel(q_data.get("trust_level_required", TrustLevel.UNKNOWN))
                         if self._trust_level_sufficient(user_trust, required_trust):
                             return ConversationalQuestion(**q_data)
-            
+
             return None
-            
+
         except Exception as e:
             logger.error(f"Failed to get next question: {e}")
             return None
@@ -447,7 +443,7 @@ class AgenticAssessmentService:
                         "trust_level_required": "unknown"
                     },
                     {
-                        "id": "iso_industry_type", 
+                        "id": "iso_industry_type",
                         "question_text": "What industry sector does your business operate in?",
                         "question_type": "basic_info",
                         "framework_area": "context",
@@ -471,7 +467,7 @@ class AgenticAssessmentService:
                     {
                         "id": "gdpr_data_processing",
                         "question_text": "Do you process personal data of EU residents?",
-                        "question_type": "basic_info", 
+                        "question_type": "basic_info",
                         "framework_area": "scope",
                         "required": True,
                         "trust_level_required": "unknown"
@@ -491,8 +487,8 @@ class AgenticAssessmentService:
         }
 
     async def _process_response(
-        self, 
-        conversation: AssessmentConversation, 
+        self,
+        conversation: AssessmentConversation,
         user_response: str,
         additional_context: Dict[str, Any]
     ) -> Dict[str, Any]:
@@ -502,7 +498,7 @@ class AgenticAssessmentService:
             current_question = conversation.current_question
             if not current_question:
                 return {"raw_response": user_response}
-            
+
             # Create prompt for LLM to extract structured data
             extraction_prompt = f"""
             Extract structured information from this user response to the compliance question.
@@ -519,12 +515,12 @@ class AgenticAssessmentService:
             
             Return as JSON.
             """
-            
+
             llm_result = await self.llm_service.process_text(
                 extraction_prompt,
                 temperature=0.1  # Low temperature for structured extraction
             )
-            
+
             try:
                 structured_data = json.loads(llm_result)
             except json.JSONDecodeError:
@@ -534,14 +530,14 @@ class AgenticAssessmentService:
                     "confidence": "medium",
                     "needs_clarification": False
                 }
-            
+
             return {
                 "raw_response": user_response,
                 "structured_data": structured_data,
                 "additional_context": additional_context,
                 "processed_at": datetime.utcnow().isoformat()
             }
-            
+
         except Exception as e:
             logger.error(f"Failed to process response: {e}")
             return {"raw_response": user_response, "error": str(e)}
@@ -549,24 +545,24 @@ class AgenticAssessmentService:
     async def _analyze_trust_signals(self, user_response: str, processed_response: Dict[str, Any]) -> List[str]:
         """Analyze response for trust-building signals"""
         trust_signals = []
-        
+
         # Analyze response completeness
         if len(user_response.strip()) > 50:
             trust_signals.append("detailed_response")
-        
+
         # Check for proactive information sharing
         if any(keyword in user_response.lower() for keyword in ["also", "additionally", "furthermore"]):
             trust_signals.append("proactive_disclosure")
-        
+
         # Check for questions about process
         if "?" in user_response:
             trust_signals.append("engaged_inquiry")
-        
+
         # Check structured data confidence
         structured_data = processed_response.get("structured_data", {})
         if structured_data.get("confidence") == "high":
             trust_signals.append("confident_response")
-        
+
         return trust_signals
 
     async def _determine_next_action(self, conversation: AssessmentConversation) -> Dict[str, Any]:
@@ -578,15 +574,15 @@ class AgenticAssessmentService:
                     "action": "clarify",
                     "clarifications": conversation.pending_clarifications
                 }
-            
+
             # Check if we have enough information to complete
             framework_types = conversation.context_gathered.get("framework_types", [])
             total_questions_needed = self._estimate_total_questions(conversation)
             answered_count = len(conversation.answered_questions)
-            
+
             if answered_count >= total_questions_needed:
                 return {"action": "complete"}
-            
+
             # Get next question
             next_question = await self._get_next_question(conversation)
             if next_question:
@@ -597,7 +593,7 @@ class AgenticAssessmentService:
             else:
                 # No more questions available, complete assessment
                 return {"action": "complete"}
-                
+
         except Exception as e:
             logger.error(f"Failed to determine next action: {e}")
             return {"action": "complete"}  # Default to completion on error
@@ -605,28 +601,28 @@ class AgenticAssessmentService:
     def _estimate_total_questions(self, conversation: AssessmentConversation) -> int:
         """Estimate total questions needed based on frameworks and context"""
         framework_types = conversation.context_gathered.get("framework_types", [])
-        
+
         # Base questions per framework
         base_questions = {
             "ISO27001": 8,
             "GDPR": 6,
             "SOC2": 7
         }
-        
+
         total = sum(base_questions.get(framework, 5) for framework in framework_types)
-        
+
         # Adjust based on user patterns
         user_patterns = conversation.context_gathered.get("user_patterns")
         if user_patterns and user_patterns.get("trust_level") in ["trusting", "delegating"]:
             total = int(total * 0.8)  # Reduce questions for trusted users
-        
+
         return max(3, total)  # Minimum 3 questions
 
     def _estimate_remaining_time(self, conversation: AssessmentConversation) -> int:
         """Estimate remaining time in minutes"""
         total_questions = self._estimate_total_questions(conversation)
         remaining_questions = total_questions - len(conversation.answered_questions)
-        
+
         # Estimate 2-3 minutes per question on average
         return max(1, remaining_questions * 2.5)
 
@@ -634,15 +630,15 @@ class AgenticAssessmentService:
         """Check if user's trust level meets the requirement for a question"""
         trust_order = [
             TrustLevel.UNKNOWN,
-            TrustLevel.SKEPTICAL, 
+            TrustLevel.SKEPTICAL,
             TrustLevel.CAUTIOUS,
             TrustLevel.TRUSTING,
             TrustLevel.DELEGATING
         ]
-        
+
         user_index = trust_order.index(user_trust) if user_trust in trust_order else 0
         required_index = trust_order.index(required_trust) if required_trust in trust_order else 0
-        
+
         return user_index >= required_index
 
     async def _store_conversation(self, conversation: AssessmentConversation):
@@ -670,9 +666,9 @@ class AgenticAssessmentService:
         conversation.session_id = new_session_id
         conversation.conversation_state = ConversationState.ASKING_QUESTIONS
         conversation.last_activity = datetime.utcnow()
-        
+
         await self._store_conversation(conversation)
-        
+
         return {
             "conversation_id": new_session_id,
             "state": conversation.conversation_state,
@@ -701,7 +697,7 @@ class AgenticAssessmentService:
                 },
                 session_id=conversation.session_id
             )
-            
+
             # Update trust score based on completion
             await self.context_service.update_trust_score(
                 conversation.user_id,
@@ -710,7 +706,7 @@ class AgenticAssessmentService:
                     "engagement_level": "high" if len(conversation.trust_signals) > 3 else "medium"
                 }
             )
-            
+
             return {
                 "assessment_id": f"conv_{conversation.session_id}",
                 "completion_timestamp": datetime.utcnow().isoformat(),
@@ -720,7 +716,7 @@ class AgenticAssessmentService:
                 "personalization_applied": bool(conversation.personalization_data),
                 "next_steps": ["Review findings", "Generate policies", "Schedule follow-up"]
             }
-            
+
         except Exception as e:
             logger.error(f"Failed to generate final assessment: {e}")
             return {"error": str(e)}
@@ -729,13 +725,13 @@ class AgenticAssessmentService:
         """Update conversation context with new information"""
         # Extract business context from responses
         structured_data = processed_response.get("structured_data", {})
-        
+
         # Update context based on question area
         if conversation.current_question:
             area = conversation.current_question.framework_area
             if area not in conversation.context_gathered:
                 conversation.context_gathered[area] = {}
-            
+
             conversation.context_gathered[area][conversation.current_question.id] = structured_data
 
 # Global service instance

@@ -21,7 +21,6 @@ from api.schemas.evidence_collection import (
 )
 from config.logging_config import get_logger
 from database.db_setup import get_async_db
-from database.user import User
 from services.ai.smart_evidence_collector import (
     CollectionStatus,
     smart_evidence_collector,

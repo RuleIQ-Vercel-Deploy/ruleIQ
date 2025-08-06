@@ -5,11 +5,8 @@ Comprehensive testing status assessment and production readiness validation
 """
 
 import subprocess
-import json
-import time
-import os
 from datetime import datetime
-from typing import Dict, Any, List, Tuple
+from typing import Dict, Any, Tuple
 
 class TestHealthMonitor:
     def __init__(self):
@@ -28,17 +25,17 @@ class TestHealthMonitor:
             'critical_issues': [],
             'production_ready': False
         }
-    
+
     def run_backend_tests(self) -> Tuple[bool, Dict[str, Any]]:
         """Run backend tests and collect metrics"""
         print("🔍 Running backend test assessment...")
-        
+
         try:
             # Test collection first
             result = subprocess.run([
                 'python', '-m', 'pytest', '--collect-only', '-q'
             ], capture_output=True, text=True, timeout=60)
-            
+
             if result.returncode == 0:
                 # Parse collection output
                 lines = result.stdout.split('\n')
@@ -52,14 +49,14 @@ class TestHealthMonitor:
                                     self.metrics['backend_total_tests'] = int(parts[i+1])
                                 except (IndexError, ValueError):
                                     pass
-                
+
                 print(f"✅ Backend test collection successful: {self.metrics['backend_total_tests']} tests found")
-                
+
                 # Run validation test
                 validation_result = subprocess.run([
                     'python', '-m', 'pytest', 'tests/test_validation.py', '-v'
                 ], capture_output=True, text=True, timeout=60)
-                
+
                 if validation_result.returncode == 0:
                     self.metrics['backend_passing_tests'] = 5  # validation tests
                     self.metrics['backend_pass_rate'] = 100  # validation tests pass
@@ -73,7 +70,7 @@ class TestHealthMonitor:
                 print("❌ Backend test collection failed")
                 self.metrics['critical_issues'].append("Backend test collection failed")
                 return False, {'status': 'collection_failed', 'error': result.stderr}
-                
+
         except subprocess.TimeoutExpired:
             print("⏰ Backend tests timed out")
             self.metrics['critical_issues'].append("Backend tests timeout")
@@ -82,17 +79,17 @@ class TestHealthMonitor:
             print(f"💥 Backend test error: {e}")
             self.metrics['critical_issues'].append(f"Backend test error: {e}")
             return False, {'status': 'error', 'error': str(e)}
-    
+
     def run_frontend_tests(self) -> Tuple[bool, Dict[str, Any]]:
         """Run frontend tests and collect metrics"""
         print("🔍 Running frontend test assessment...")
-        
+
         try:
             # Change to frontend directory and run tests
             result = subprocess.run([
                 'pnpm', 'test', '--run', '--reporter=json'
             ], cwd='frontend', capture_output=True, text=True, timeout=120)
-            
+
             # Parse results even if some tests fail
             if result.stdout:
                 try:
@@ -131,14 +128,14 @@ class TestHealthMonitor:
                                         self.metrics['frontend_failing_tests'] = failed
                                     except (IndexError, ValueError):
                                         pass
-                    
+
                     total = self.metrics['frontend_passing_tests'] + self.metrics['frontend_failing_tests']
                     if total > 0:
                         self.metrics['frontend_total_tests'] = total
                         self.metrics['frontend_pass_rate'] = (self.metrics['frontend_passing_tests'] / total) * 100
-                        
+
                         print(f"📊 Frontend test results: {self.metrics['frontend_passing_tests']}/{total} passing ({self.metrics['frontend_pass_rate']:.1f}%)")
-                        
+
                         if self.metrics['frontend_pass_rate'] >= 75:
                             return True, {'status': 'acceptable', 'pass_rate': self.metrics['frontend_pass_rate']}
                         else:
@@ -148,7 +145,7 @@ class TestHealthMonitor:
                         print("❌ Could not parse frontend test results")
                         self.metrics['critical_issues'].append("Could not parse frontend test results")
                         return False, {'status': 'parse_failed'}
-                        
+
                 except Exception as e:
                     print(f"❌ Error parsing frontend results: {e}")
                     self.metrics['critical_issues'].append(f"Frontend result parsing error: {e}")
@@ -157,7 +154,7 @@ class TestHealthMonitor:
                 print("❌ No frontend test output")
                 self.metrics['critical_issues'].append("No frontend test output")
                 return False, {'status': 'no_output'}
-                
+
         except subprocess.TimeoutExpired:
             print("⏰ Frontend tests timed out")
             self.metrics['critical_issues'].append("Frontend tests timeout")
@@ -166,7 +163,7 @@ class TestHealthMonitor:
             print(f"💥 Frontend test error: {e}")
             self.metrics['critical_issues'].append(f"Frontend test error: {e}")
             return False, {'status': 'error', 'error': str(e)}
-    
+
     def assess_production_readiness(self) -> bool:
         """Assess if system is production ready"""
         criteria = {
@@ -175,23 +172,23 @@ class TestHealthMonitor:
             'frontend_acceptable_pass_rate': self.metrics['frontend_pass_rate'] >= 75,
             'no_critical_issues': len(self.metrics['critical_issues']) == 0
         }
-        
+
         self.metrics['production_ready'] = all(criteria.values())
-        
+
         print("\n📋 Production Readiness Assessment:")
         for criterion, status in criteria.items():
             status_icon = "✅" if status else "❌"
             print(f"  {status_icon} {criterion.replace('_', ' ').title()}: {status}")
-        
+
         return self.metrics['production_ready']
-    
+
     def generate_report(self) -> str:
         """Generate comprehensive health report"""
         self.metrics['last_updated'] = datetime.now().isoformat()
-        
+
         status_emoji = "🎉" if self.metrics['production_ready'] else "⚠️"
         status_text = "PRODUCTION READY" if self.metrics['production_ready'] else "NEEDS FIXES"
-        
+
         report = f"""# 🚀 ruleIQ Test Health Report
 *Generated: {self.metrics['last_updated']}*
 
@@ -213,18 +210,18 @@ class TestHealthMonitor:
 
 ### 🚨 Critical Issues
 """
-        
+
         if self.metrics['critical_issues']:
             for issue in self.metrics['critical_issues']:
                 report += f"- ❌ {issue}\n"
         else:
             report += "- ✅ No critical issues detected\n"
-        
-        report += f"""
+
+        report += """
 ### 🎯 Next Steps
 
 """
-        
+
         if self.metrics['production_ready']:
             report += """✅ **System is production ready!**
 - All critical infrastructure is working
@@ -247,41 +244,41 @@ class TestHealthMonitor:
                 report += "2. Improve frontend test pass rate\n"
             if self.metrics['critical_issues']:
                 report += "3. Resolve critical issues listed above\n"
-        
+
         return report
-    
+
     def run_health_check(self) -> bool:
         """Run complete health check"""
         print("🏥 Advanced QA Agent: Running Comprehensive Test Health Check...")
         print("=" * 60)
-        
+
         # Run backend assessment
         backend_ok, backend_info = self.run_backend_tests()
-        
-        # Run frontend assessment  
+
+        # Run frontend assessment
         frontend_ok, frontend_info = self.run_frontend_tests()
-        
+
         # Assess production readiness
         production_ready = self.assess_production_readiness()
-        
+
         # Generate report
         report = self.generate_report()
-        
+
         # Save report
         with open('TEST_HEALTH_REPORT.md', 'w') as f:
             f.write(report)
-        
+
         print("\n" + "=" * 60)
         print(report)
         print("=" * 60)
-        print(f"📄 Full report saved to: TEST_HEALTH_REPORT.md")
-        
+        print("📄 Full report saved to: TEST_HEALTH_REPORT.md")
+
         return production_ready
 
 if __name__ == "__main__":
     monitor = TestHealthMonitor()
     is_ready = monitor.run_health_check()
-    
+
     if is_ready:
         print("\n🎉 SUCCESS: System is production ready!")
         exit(0)

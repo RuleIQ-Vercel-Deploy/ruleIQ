@@ -56,16 +56,16 @@ async def google_login(request: Request):
             status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
             detail="Google OAuth is not configured. Please contact support."
         )
-    
+
     # Generate and store state parameter for CSRF protection
     state = secrets.token_urlsafe(32)
-    
+
     # Store state in session or cache for validation
     # For now, we'll use a simple in-memory store (should use Redis in production)
     if not hasattr(google_login, '_states'):
         google_login._states = {}
     google_login._states[state] = True
-    
+
     # Build Google OAuth URL
     google_auth_url = (
         "https://accounts.google.com/o/oauth2/v2/auth"
@@ -77,7 +77,7 @@ async def google_login(request: Request):
         "&prompt=consent"
         f"&state={state}"
     )
-    
+
     return RedirectResponse(url=google_auth_url)
 
 
@@ -99,24 +99,24 @@ async def google_callback(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=f"Google OAuth error: {error}"
         )
-    
+
     if not code:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Authorization code not provided"
         )
-    
+
     # Validate state parameter (CSRF protection)
     if not state or not getattr(google_login, '_states', {}).get(state):
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Invalid state parameter"
         )
-    
+
     # Clean up used state
     if hasattr(google_login, '_states'):
         google_login._states.pop(state, None)
-    
+
     try:
         # Exchange authorization code for access token
         async with httpx.AsyncClient() as client:
@@ -132,7 +132,7 @@ async def google_callback(
             )
             token_response.raise_for_status()
             token_data = token_response.json()
-            
+
             # Get user info from Google
             user_response = await client.get(
                 "https://www.googleapis.com/oauth2/v2/userinfo",
@@ -140,7 +140,7 @@ async def google_callback(
             )
             user_response.raise_for_status()
             user_info = GoogleUserInfo(**user_response.json())
-    
+
     except httpx.HTTPError as e:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
@@ -151,18 +151,18 @@ async def google_callback(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Authentication error: {str(e)}"
         )
-    
+
     # Check if email is verified
     if not user_info.verified_email:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Email not verified with Google"
         )
-    
+
     # Check if user exists
     db_user = db.query(User).filter(User.email == user_info.email).first()
     is_new_user = False
-    
+
     if not db_user:
         # Create new user
         is_new_user = True
@@ -177,30 +177,29 @@ async def google_callback(
         db.add(db_user)
         db.commit()
         db.refresh(db_user)
-    else:
-        # Update Google ID if not set
-        if not db_user.google_id:
-            db_user.google_id = user_info.id
-            db.commit()
-    
+    # Update Google ID if not set
+    elif not db_user.google_id:
+        db_user.google_id = user_info.id
+        db.commit()
+
     # Create JWT tokens
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = create_access_token(
-        data={"sub": str(db_user.id)}, 
+        data={"sub": str(db_user.id)},
         expires_delta=access_token_expires
     )
     refresh_token = create_refresh_token(data={"sub": str(db_user.id)})
-    
+
     # Create session for tracking
     await auth_service.create_user_session(
-        db_user, 
-        access_token, 
+        db_user,
+        access_token,
         metadata={"login_method": "google_oauth", "google_id": user_info.id}
     )
-    
+
     # Redirect to frontend with tokens (in production, use secure HTTP-only cookies)
     redirect_url = f"http://localhost:3000/auth/callback?access_token={access_token}&refresh_token={refresh_token}&new_user={is_new_user}"
-    
+
     return RedirectResponse(url=redirect_url)
 
 
@@ -220,7 +219,7 @@ async def google_mobile_login(
             status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
             detail="Google OAuth is not configured"
         )
-    
+
     try:
         # Verify Google ID token
         async with httpx.AsyncClient() as client:
@@ -229,14 +228,14 @@ async def google_mobile_login(
             )
             verify_response.raise_for_status()
             token_info = verify_response.json()
-            
+
             # Validate token audience
             if token_info.get("aud") != settings.google_client_id:
                 raise HTTPException(
                     status_code=status.HTTP_400_BAD_REQUEST,
                     detail="Invalid token audience"
                 )
-            
+
             # Get user info from token
             user_info = GoogleUserInfo(
                 id=token_info["sub"],
@@ -247,7 +246,7 @@ async def google_mobile_login(
                 family_name=token_info.get("family_name", ""),
                 picture=token_info.get("picture", "")
             )
-    
+
     except httpx.HTTPError:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
@@ -258,18 +257,18 @@ async def google_mobile_login(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Token verification error: {str(e)}"
         )
-    
+
     # Check if email is verified
     if not user_info.verified_email:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Email not verified with Google"
         )
-    
+
     # Check if user exists
     db_user = db.query(User).filter(User.email == user_info.email).first()
     is_new_user = False
-    
+
     if not db_user:
         # Create new user
         is_new_user = True
@@ -284,27 +283,26 @@ async def google_mobile_login(
         db.add(db_user)
         db.commit()
         db.refresh(db_user)
-    else:
-        # Update Google ID if not set
-        if not db_user.google_id:
-            db_user.google_id = user_info.id
-            db.commit()
-    
+    # Update Google ID if not set
+    elif not db_user.google_id:
+        db_user.google_id = user_info.id
+        db.commit()
+
     # Create JWT tokens
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = create_access_token(
-        data={"sub": str(db_user.id)}, 
+        data={"sub": str(db_user.id)},
         expires_delta=access_token_expires
     )
     refresh_token = create_refresh_token(data={"sub": str(db_user.id)})
-    
+
     # Create session for tracking
     await auth_service.create_user_session(
-        db_user, 
-        access_token, 
+        db_user,
+        access_token,
         metadata={"login_method": "google_oauth_mobile", "google_id": user_info.id}
     )
-    
+
     return GoogleAuthResponse(
         user=UserResponse(
             id=db_user.id,

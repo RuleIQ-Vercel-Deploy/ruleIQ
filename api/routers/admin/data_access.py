@@ -13,8 +13,7 @@ from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
 from api.dependencies.rbac_auth import (
-    get_current_active_user_with_roles, 
-    UserWithRoles, 
+    UserWithRoles,
     require_permission
 )
 from database.db_setup import get_db
@@ -57,7 +56,7 @@ async def grant_data_access(
     Grant data access to a user. Requires admin_permissions.
     """
     data_access_service = DataAccessService(db)
-    
+
     try:
         data_access = data_access_service.grant_data_access(
             user_id=request.user_id,
@@ -65,7 +64,7 @@ async def grant_data_access(
             business_profile_id=request.business_profile_id,
             granted_by=current_user.id
         )
-        
+
         return DataAccessResponse(
             id=str(data_access.id),
             user_id=str(data_access.user_id),
@@ -75,7 +74,7 @@ async def grant_data_access(
             granted_by=str(data_access.granted_by) if data_access.granted_by else None,
             is_active=data_access.is_active
         )
-        
+
     except ValueError as e:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
@@ -94,12 +93,12 @@ async def revoke_data_access(
     Revoke data access from a user. Requires admin_permissions.
     """
     data_access_service = DataAccessService(db)
-    
+
     success = data_access_service.revoke_data_access(
         user_id=user_id,
         business_profile_id=business_profile_id
     )
-    
+
     if success:
         return {"message": "Data access revoked successfully"}
     else:
@@ -119,7 +118,7 @@ async def get_user_data_access(
     Get data access information for a specific user. Requires admin_audit permission.
     """
     from database.user import User
-    
+
     # Get user info
     user = db.query(User).filter(User.id == user_id).first()
     if not user:
@@ -127,24 +126,24 @@ async def get_user_data_access(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="User not found"
         )
-    
+
     data_access_service = DataAccessService(db)
-    
+
     # Get user's data access level
     access_level = data_access_service.get_user_data_access_level(user_id)
-    
+
     # Create UserWithRoles for the target user (needed for accessible profiles check)
     from services.rbac_service import RBACService
     rbac = RBACService(db)
     roles = rbac.get_user_roles(user_id)
     permissions = rbac.get_user_permissions(user_id)
     accessible_frameworks = rbac.get_accessible_frameworks(user_id)
-    
+
     target_user_with_roles = UserWithRoles(user, roles, permissions, accessible_frameworks)
-    
+
     # Get accessible profiles
     accessible_profiles = data_access_service.get_accessible_business_profiles(target_user_with_roles)
-    
+
     return UserDataAccessInfo(
         user_id=str(user_id),
         email=user.email,
@@ -167,7 +166,7 @@ async def list_access_levels(
                 "description": "User can only access their own data"
             },
             {
-                "level": "organization_data", 
+                "level": "organization_data",
                 "description": "User can access data within their organization"
             },
             {
@@ -187,14 +186,14 @@ async def audit_data_access(
     Get audit information about data access permissions.
     """
     from database.rbac import DataAccess
-    from sqlalchemy import func, select
-    
+    from sqlalchemy import func
+
     # Get summary statistics
     total_access_records = db.query(func.count(DataAccess.id)).scalar()
     active_access_records = db.query(func.count(DataAccess.id)).filter(
         DataAccess.is_active == True
     ).scalar()
-    
+
     # Get access level distribution
     access_distribution = db.query(
         DataAccess.access_type,
@@ -202,7 +201,7 @@ async def audit_data_access(
     ).filter(
         DataAccess.is_active == True
     ).group_by(DataAccess.access_type).all()
-    
+
     return {
         "summary": {
             "total_access_records": total_access_records,

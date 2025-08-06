@@ -91,13 +91,13 @@ async def get_performance_overview(
     try:
         # Require admin or performance monitoring permission
         await require_permissions(current_user, "performance:read")
-        
+
         monitor = await get_performance_monitor()
         metrics = await monitor.collect_comprehensive_metrics()
         recommendations = await monitor.generate_optimization_recommendations()
-        
+
         critical_issues = len([r for r in recommendations if r["priority"] == "high"])
-        
+
         # Determine status based on performance score
         score = metrics["performance_score"]
         if score >= 90:
@@ -108,7 +108,7 @@ async def get_performance_overview(
             status = "warning"
         else:
             status = "critical"
-        
+
         return PerformanceOverview(
             performance_score=score,
             status=status,
@@ -116,7 +116,7 @@ async def get_performance_overview(
             recommendations_count=len(recommendations),
             last_updated=datetime.fromisoformat(metrics["timestamp"])
         )
-        
+
     except Exception as e:
         logger.error(f"Error getting performance overview: {e}")
         raise HTTPException(status_code=500, detail="Failed to get performance overview")
@@ -136,10 +136,10 @@ async def get_database_performance(
     """
     try:
         await require_permissions(current_user, "performance:read")
-        
+
         monitor = await get_performance_monitor()
         db_metrics = await monitor.get_database_metrics()
-        
+
         # Determine performance rating
         if db_metrics.avg_query_time < 0.05 and db_metrics.connection_pool_utilization < 0.7:
             rating = "excellent"
@@ -149,7 +149,7 @@ async def get_database_performance(
             rating = "warning"
         else:
             rating = "critical"
-        
+
         return DatabasePerformanceResponse(
             connection_pool_size=db_metrics.connection_pool_size,
             active_connections=db_metrics.active_connections,
@@ -158,7 +158,7 @@ async def get_database_performance(
             slow_queries_count=db_metrics.slow_queries_count,
             performance_rating=rating
         )
-        
+
     except Exception as e:
         logger.error(f"Error getting database performance: {e}")
         raise HTTPException(status_code=500, detail="Failed to get database metrics")
@@ -178,10 +178,10 @@ async def get_cache_performance(
     """
     try:
         await require_permissions(current_user, "performance:read")
-        
+
         monitor = await get_performance_monitor()
         cache_metrics = await monitor.get_cache_metrics()
-        
+
         # Determine performance rating
         if cache_metrics.hit_rate >= 0.9:
             rating = "excellent"
@@ -191,7 +191,7 @@ async def get_cache_performance(
             rating = "warning"
         else:
             rating = "critical"
-        
+
         return CachePerformanceResponse(
             hit_rate=cache_metrics.hit_rate,
             miss_rate=cache_metrics.miss_rate,
@@ -200,7 +200,7 @@ async def get_cache_performance(
             avg_response_time=cache_metrics.avg_response_time,
             performance_rating=rating
         )
-        
+
     except Exception as e:
         logger.error(f"Error getting cache performance: {e}")
         raise HTTPException(status_code=500, detail="Failed to get cache metrics")
@@ -220,10 +220,10 @@ async def get_api_performance(
     """
     try:
         await require_permissions(current_user, "performance:read")
-        
+
         monitor = await get_performance_monitor()
         api_metrics = await monitor.get_api_metrics()
-        
+
         # Determine performance rating
         if api_metrics.avg_response_time < 0.1 and api_metrics.p95_response_time < 0.5:
             rating = "excellent"
@@ -233,7 +233,7 @@ async def get_api_performance(
             rating = "warning"
         else:
             rating = "critical"
-        
+
         return APIPerformanceResponse(
             avg_response_time=api_metrics.avg_response_time,
             p95_response_time=api_metrics.p95_response_time,
@@ -242,7 +242,7 @@ async def get_api_performance(
             slowest_endpoints=api_metrics.slowest_endpoints,
             performance_rating=rating
         )
-        
+
     except Exception as e:
         logger.error(f"Error getting API performance: {e}")
         raise HTTPException(status_code=500, detail="Failed to get API metrics")
@@ -263,22 +263,22 @@ async def get_system_metrics(
     """
     try:
         await require_permissions(current_user, "performance:read")
-        
+
         monitor = await get_performance_monitor()
         system_metrics = monitor.get_system_metrics()
-        
+
         # Determine status based on resource usage
         cpu_ok = system_metrics["cpu_percent"] < 80
         memory_ok = system_metrics["memory_percent"] < 80
         disk_ok = system_metrics["disk_percent"] < 90
-        
+
         if cpu_ok and memory_ok and disk_ok:
             status = "healthy"
         elif system_metrics["cpu_percent"] > 90 or system_metrics["memory_percent"] > 90:
             status = "critical"
         else:
             status = "warning"
-        
+
         return SystemMetricsResponse(
             cpu_percent=system_metrics["cpu_percent"],
             memory_percent=system_metrics["memory_percent"],
@@ -286,7 +286,7 @@ async def get_system_metrics(
             load_average=system_metrics["load_average"],
             status=status
         )
-        
+
     except Exception as e:
         logger.error(f"Error getting system metrics: {e}")
         raise HTTPException(status_code=500, detail="Failed to get system metrics")
@@ -303,12 +303,12 @@ async def get_optimization_recommendations(
     """
     try:
         await require_permissions(current_user, "performance:read")
-        
+
         monitor = await get_performance_monitor()
         recommendations = await monitor.generate_optimization_recommendations()
-        
+
         return [OptimizationRecommendation(**rec) for rec in recommendations]
-        
+
     except Exception as e:
         logger.error(f"Error getting optimization recommendations: {e}")
         raise HTTPException(status_code=500, detail="Failed to get recommendations")
@@ -330,12 +330,12 @@ async def get_performance_trends(
     """
     try:
         await require_permissions(current_user, "performance:read")
-        
+
         monitor = await get_performance_monitor()
         trends = await monitor.get_performance_trends(hours=hours)
-        
+
         return PerformanceTrendsResponse(**trends)
-        
+
     except Exception as e:
         logger.error(f"Error getting performance trends: {e}")
         raise HTTPException(status_code=500, detail="Failed to get performance trends")
@@ -354,22 +354,22 @@ async def configure_performance_alerts(
     """
     try:
         await require_permissions(current_user, "performance:admin")
-        
+
         # Validate configuration
         required_fields = ["response_time_threshold", "cache_hit_rate_threshold", "cpu_threshold"]
         for field in required_fields:
             if field not in alerts_config:
                 raise HTTPException(status_code=400, detail=f"Missing required field: {field}")
-        
+
         # Store configuration (would typically go to database)
         from config.cache import get_cache_manager
         cache = await get_cache_manager()
         await cache.set("performance_alerts_config", alerts_config, ttl=86400)  # 24 hours
-        
+
         logger.info(f"Performance alerts configured by user {current_user.id}")
-        
+
         return {"status": "success", "message": "Performance alerts configured"}
-        
+
     except Exception as e:
         logger.error(f"Error configuring performance alerts: {e}")
         raise HTTPException(status_code=500, detail="Failed to configure alerts")
@@ -381,7 +381,7 @@ async def performance_monitoring_health():
     """
     try:
         monitor = await get_performance_monitor()
-        
+
         # Basic health checks
         health_status = {
             "status": "healthy",
@@ -389,9 +389,9 @@ async def performance_monitoring_health():
             "metrics_available": len(monitor.performance_history) > 0,
             "timestamp": datetime.utcnow().isoformat()
         }
-        
+
         return health_status
-        
+
     except Exception as e:
         logger.error(f"Performance monitoring health check failed: {e}")
         return {
@@ -413,20 +413,20 @@ async def start_performance_monitoring(
     """
     try:
         await require_permissions(current_user, "performance:admin")
-        
+
         monitor = await get_performance_monitor()
-        
+
         if monitor.monitoring_active:
             return {"status": "already_running", "message": "Performance monitoring is already active"}
-        
+
         # Start monitoring in background
         import asyncio
         asyncio.create_task(monitor.start_monitoring(interval=interval))
-        
+
         logger.info(f"Performance monitoring started by user {current_user.id} with {interval}s interval")
-        
+
         return {"status": "started", "interval": interval, "message": "Performance monitoring started"}
-        
+
     except Exception as e:
         logger.error(f"Error starting performance monitoring: {e}")
         raise HTTPException(status_code=500, detail="Failed to start monitoring")
@@ -440,14 +440,14 @@ async def stop_performance_monitoring(
     """
     try:
         await require_permissions(current_user, "performance:admin")
-        
+
         monitor = await get_performance_monitor()
         monitor.stop_monitoring()
-        
+
         logger.info(f"Performance monitoring stopped by user {current_user.id}")
-        
+
         return {"status": "stopped", "message": "Performance monitoring stopped"}
-        
+
     except Exception as e:
         logger.error(f"Error stopping performance monitoring: {e}")
         raise HTTPException(status_code=500, detail="Failed to stop monitoring")

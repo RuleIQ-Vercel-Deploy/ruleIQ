@@ -15,10 +15,8 @@ import time
 from datetime import datetime, timedelta
 from typing import Dict, Any, Optional, List
 from dataclasses import dataclass, asdict
-from contextlib import asynccontextmanager
 
 from sqlalchemy import text
-from sqlalchemy.pool import Pool
 
 from database.db_setup import get_engine_info, _ENGINE, _ASYNC_ENGINE
 
@@ -38,7 +36,7 @@ class PoolMetrics:
     total_connections: int
     utilization_percent: float
     overflow_percent: float
-    
+
     def to_dict(self) -> Dict[str, Any]:
         """Convert to dictionary for JSON serialization."""
         result = asdict(self)
@@ -54,7 +52,7 @@ class ConnectionHealthCheck:
     success: bool
     response_time_ms: float
     error_message: Optional[str] = None
-    
+
     def to_dict(self) -> Dict[str, Any]:
         """Convert to dictionary for JSON serialization."""
         result = asdict(self)
@@ -76,20 +74,20 @@ class AlertThresholds:
 
 class DatabaseMonitor:
     """Database connection pool monitoring service."""
-    
+
     def __init__(self, alert_thresholds: Optional[AlertThresholds] = None):
         self.alert_thresholds = alert_thresholds or AlertThresholds()
         self.metrics_history: List[PoolMetrics] = []
         self.health_history: List[ConnectionHealthCheck] = []
         self.max_history_size = 1000  # Keep last 1000 entries
         self.consecutive_failures = {"sync": 0, "async": 0}
-        
+
     def get_pool_metrics(self) -> Dict[str, PoolMetrics]:
         """Get current pool metrics for both sync and async pools."""
         metrics = {}
         engine_info = get_engine_info()
         timestamp = datetime.utcnow()
-        
+
         # Sync pool metrics
         if engine_info.get("sync_engine_initialized") and _ENGINE:
             pool = _ENGINE.pool
@@ -97,7 +95,7 @@ class DatabaseMonitor:
             checked_out = engine_info.get("sync_pool_checked_out", 0)
             overflow = engine_info.get("sync_pool_overflow", 0)
             total_connections = checked_out + overflow
-            
+
             metrics["sync"] = PoolMetrics(
                 timestamp=timestamp,
                 pool_type="sync",
@@ -109,7 +107,7 @@ class DatabaseMonitor:
                 utilization_percent=(checked_out / pool_size * 100) if pool_size > 0 else 0,
                 overflow_percent=(overflow / pool_size * 100) if pool_size > 0 else 0,
             )
-        
+
         # Async pool metrics
         if engine_info.get("async_engine_initialized") and _ASYNC_ENGINE:
             pool = _ASYNC_ENGINE.pool
@@ -117,7 +115,7 @@ class DatabaseMonitor:
             checked_out = engine_info.get("async_pool_checked_out", 0)
             overflow = engine_info.get("async_pool_overflow", 0)
             total_connections = checked_out + overflow
-            
+
             metrics["async"] = PoolMetrics(
                 timestamp=timestamp,
                 pool_type="async",
@@ -129,22 +127,22 @@ class DatabaseMonitor:
                 utilization_percent=(checked_out / pool_size * 100) if pool_size > 0 else 0,
                 overflow_percent=(overflow / pool_size * 100) if pool_size > 0 else 0,
             )
-        
+
         # Store metrics in history
         for metric in metrics.values():
             self.metrics_history.append(metric)
-            
+
         # Trim history if needed
         if len(self.metrics_history) > self.max_history_size:
             self.metrics_history = self.metrics_history[-self.max_history_size:]
-        
+
         return metrics
-    
+
     def check_connection_health(self) -> Dict[str, ConnectionHealthCheck]:
         """Perform health checks on database connections."""
         results = {}
         timestamp = datetime.utcnow()
-        
+
         # Sync connection health check
         if _ENGINE:
             try:
@@ -152,7 +150,7 @@ class DatabaseMonitor:
                 with _ENGINE.connect() as conn:
                     conn.execute(text("SELECT 1"))
                 response_time = (time.time() - start_time) * 1000  # Convert to ms
-                
+
                 results["sync"] = ConnectionHealthCheck(
                     timestamp=timestamp,
                     pool_type="sync",
@@ -160,7 +158,7 @@ class DatabaseMonitor:
                     response_time_ms=response_time
                 )
                 self.consecutive_failures["sync"] = 0
-                
+
             except Exception as e:
                 results["sync"] = ConnectionHealthCheck(
                     timestamp=timestamp,
@@ -171,29 +169,29 @@ class DatabaseMonitor:
                 )
                 self.consecutive_failures["sync"] += 1
                 logger.error(f"Sync database health check failed: {e}")
-        
+
         # Store health check results
         for result in results.values():
             self.health_history.append(result)
-            
+
         # Trim history if needed
         if len(self.health_history) > self.max_history_size:
             self.health_history = self.health_history[-self.max_history_size:]
-        
+
         return results
-    
+
     async def check_async_connection_health(self) -> Optional[ConnectionHealthCheck]:
         """Perform async health check on database connection."""
         if not _ASYNC_ENGINE:
             return None
-            
+
         timestamp = datetime.utcnow()
         try:
             start_time = time.time()
             async with _ASYNC_ENGINE.connect() as conn:
                 await conn.execute(text("SELECT 1"))
             response_time = (time.time() - start_time) * 1000  # Convert to ms
-            
+
             result = ConnectionHealthCheck(
                 timestamp=timestamp,
                 pool_type="async",
@@ -201,7 +199,7 @@ class DatabaseMonitor:
                 response_time_ms=response_time
             )
             self.consecutive_failures["async"] = 0
-            
+
         except Exception as e:
             result = ConnectionHealthCheck(
                 timestamp=timestamp,
@@ -212,19 +210,19 @@ class DatabaseMonitor:
             )
             self.consecutive_failures["async"] += 1
             logger.error(f"Async database health check failed: {e}")
-        
+
         self.health_history.append(result)
-        
+
         # Trim history if needed
         if len(self.health_history) > self.max_history_size:
             self.health_history = self.health_history[-self.max_history_size:]
-        
+
         return result
-    
+
     def check_alerts(self, metrics: Dict[str, PoolMetrics]) -> List[Dict[str, Any]]:
         """Check for alert conditions based on current metrics."""
         alerts = []
-        
+
         for pool_type, metric in metrics.items():
             # Pool utilization alerts
             if metric.utilization_percent >= self.alert_thresholds.pool_utilization_critical:
@@ -247,7 +245,7 @@ class DatabaseMonitor:
                     "threshold": self.alert_thresholds.pool_utilization_warning,
                     "timestamp": metric.timestamp.isoformat()
                 })
-            
+
             # Overflow alerts
             if metric.overflow_percent >= self.alert_thresholds.overflow_critical:
                 alerts.append({
@@ -269,7 +267,7 @@ class DatabaseMonitor:
                     "threshold": self.alert_thresholds.overflow_warning,
                     "timestamp": metric.timestamp.isoformat()
                 })
-        
+
         # Connection failure alerts
         for pool_type, failures in self.consecutive_failures.items():
             if failures >= self.alert_thresholds.failed_connections_threshold:
@@ -282,19 +280,19 @@ class DatabaseMonitor:
                     "threshold": self.alert_thresholds.failed_connections_threshold,
                     "timestamp": datetime.utcnow().isoformat()
                 })
-        
+
         return alerts
-    
+
     def get_monitoring_summary(self) -> Dict[str, Any]:
         """Get comprehensive monitoring summary."""
         metrics = self.get_pool_metrics()
         health_checks = self.check_connection_health()
         alerts = self.check_alerts(metrics)
-        
+
         # Calculate recent averages (last 10 minutes)
         recent_cutoff = datetime.utcnow() - timedelta(minutes=10)
         recent_metrics = [m for m in self.metrics_history if m.timestamp >= recent_cutoff]
-        
+
         recent_averages = {}
         if recent_metrics:
             for pool_type in ["sync", "async"]:
@@ -302,7 +300,7 @@ class DatabaseMonitor:
                 if pool_metrics:
                     recent_averages[f"{pool_type}_avg_utilization"] = sum(m.utilization_percent for m in pool_metrics) / len(pool_metrics)
                     recent_averages[f"{pool_type}_avg_overflow"] = sum(m.overflow_percent for m in pool_metrics) / len(pool_metrics)
-        
+
         return {
             "timestamp": datetime.utcnow().isoformat(),
             "current_metrics": {k: v.to_dict() for k, v in metrics.items()},
@@ -315,32 +313,32 @@ class DatabaseMonitor:
                 "health_checks": len(self.health_history)
             }
         }
-    
+
     async def start_monitoring_loop(self, interval_seconds: int = 30):
         """Start continuous monitoring loop."""
         logger.info(f"Starting database monitoring loop with {interval_seconds}s interval")
-        
+
         while True:
             try:
                 # Get metrics and perform health checks
                 metrics = self.get_pool_metrics()
                 await self.check_async_connection_health()
                 alerts = self.check_alerts(metrics)
-                
+
                 # Log alerts
                 for alert in alerts:
                     if alert["severity"] == "critical":
                         logger.critical(alert["message"])
                     else:
                         logger.warning(alert["message"])
-                
+
                 # Log summary every 5 minutes (10 cycles at 30s interval)
                 if len(self.metrics_history) % 10 == 0:
                     summary = self.get_monitoring_summary()
                     logger.info(f"Database monitoring summary: {len(alerts)} active alerts")
-                
+
                 await asyncio.sleep(interval_seconds)
-                
+
             except Exception as e:
                 logger.error(f"Database monitoring loop error: {e}")
                 await asyncio.sleep(interval_seconds)

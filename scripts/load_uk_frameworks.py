@@ -4,13 +4,11 @@ UK Compliance Frameworks Data Loader
 Loads UK-specific compliance frameworks with ISO 27001 template integration.
 """
 
-import json
 import logging
 from pathlib import Path
-from typing import Dict, List, Any
+from typing import Dict, Any
 
 import sys
-from pathlib import Path
 sys.path.append(str(Path(__file__).parent.parent))
 
 from services.compliance_loader import UKComplianceLoader
@@ -49,7 +47,7 @@ def load_uk_gdpr_framework() -> Dict[str, Any]:
             "Data retention and disposal policies"
         ],
         "control_domains": [
-            "Access Control", "Data Minimization", "Consent Management", 
+            "Access Control", "Data Minimization", "Consent Management",
             "Data Subject Rights", "Breach Management", "Privacy Impact Assessment",
             "Data Retention", "Third Party Management", "Staff Training"
         ],
@@ -270,13 +268,13 @@ def load_iso27001_uk_framework() -> Dict[str, Any]:
 def main():
     """Main function to load UK compliance frameworks"""
     logger.info("Starting UK compliance frameworks loading...")
-    
+
     # Initialize database session
     db_session = next(get_db())
-    
+
     # Initialize loader
     loader = UKComplianceLoader(db_session=db_session)
-    
+
     # Prepare framework data
     frameworks_data = [
         load_uk_gdpr_framework(),
@@ -285,35 +283,35 @@ def main():
         load_pci_dss_uk_framework(),
         load_iso27001_uk_framework()
     ]
-    
+
     # Load frameworks
     result = loader.load_frameworks(frameworks_data)
-    
+
     # Report results
-    logger.info(f"Loading completed:")
+    logger.info("Loading completed:")
     logger.info(f"  Total processed: {result.total_processed}")
     logger.info(f"  Successfully loaded: {len(result.loaded_frameworks)}")
     logger.info(f"  Skipped (already exist): {len(result.skipped_frameworks)}")
     logger.info(f"  Errors: {len(result.errors)}")
-    
+
     if result.loaded_frameworks:
         logger.info("Loaded frameworks:")
         for framework in result.loaded_frameworks:
             logger.info(f"  - {framework.name}: {framework.display_name}")
-    
+
     if result.skipped_frameworks:
         logger.info("Skipped frameworks:")
         for name in result.skipped_frameworks:
             logger.info(f"  - {name}")
-    
+
     if result.errors:
         logger.error("Errors encountered:")
         for error in result.errors:
             logger.error(f"  - {error}")
-    
+
     # Close database session
     db_session.close()
-    
+
     return result.success
 
 

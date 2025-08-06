@@ -5,15 +5,12 @@ Extends the base authentication system with role-based access control,
 including role claims in JWT tokens and permission-based access control.
 """
 
-import json
 import logging
-from datetime import datetime, timedelta
-from typing import Dict, List, Optional, Set
+from typing import Dict, List, Optional
 from uuid import UUID
 
 from fastapi import Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.orm import Session
 
 from api.dependencies.auth import (
     create_access_token, create_refresh_token, decode_token,
@@ -32,51 +29,51 @@ class UserWithRoles:
     """
     Enhanced user object that includes role and permission information.
     """
-    
+
     def __init__(self, user: User, roles: List[Dict], permissions: List[str], accessible_frameworks: List[Dict]):
         self.user = user
         self.roles = roles
         self.permissions = permissions
         self.accessible_frameworks = accessible_frameworks
-        
+
         # User properties proxy
         self.id = user.id
         self.email = user.email
         self.is_active = user.is_active
         self.created_at = user.created_at
-    
+
     def has_permission(self, permission: str) -> bool:
         """Check if user has a specific permission."""
         return permission in self.permissions
-    
+
     def has_any_permission(self, permissions: List[str]) -> bool:
         """Check if user has any of the specified permissions."""
         return any(perm in self.permissions for perm in permissions)
-    
+
     def has_all_permissions(self, permissions: List[str]) -> bool:
         """Check if user has all of the specified permissions."""
         return all(perm in self.permissions for perm in permissions)
-    
+
     def has_role(self, role_name: str) -> bool:
         """Check if user has a specific role."""
         return any(role["name"] == role_name for role in self.roles)
-    
+
     def has_any_role(self, role_names: List[str]) -> bool:
         """Check if user has any of the specified roles."""
         return any(self.has_role(role) for role in role_names)
-    
+
     def can_access_framework(self, framework_id: str, required_level: str = "read") -> bool:
         """Check if user can access a specific framework."""
         level_hierarchy = {"read": 1, "write": 2, "admin": 3}
         required_level_value = level_hierarchy.get(required_level, 1)
-        
+
         for framework in self.accessible_frameworks:
             if framework["id"] == framework_id:
                 access_level_value = level_hierarchy.get(framework["access_level"], 1)
                 return access_level_value >= required_level_value
-        
+
         return False
-    
+
     def to_dict(self) -> Dict:
         """Convert to dictionary for JSON serialization."""
         return {
@@ -108,14 +105,14 @@ def create_access_token_with_roles(user_id: UUID, roles: List[Dict], permissions
         "permissions": permissions,
         "role_details": roles
     }
-    
+
     token_data = {
         "sub": str(user_id),
         "roles": role_claims["roles"],
         "permissions": permissions,
         "role_details": role_claims["role_details"]
     }
-    
+
     return create_access_token(token_data)
 
 
@@ -148,39 +145,39 @@ async def get_current_user_with_roles(
     """
     if token is None:
         return None
-    
+
     try:
         # Get base user first
         user = await base_get_current_user(token, async_db)
         if not user:
             return None
-        
+
         # Get synchronous database session for RBAC operations
         # (RBAC service currently uses sync SQLAlchemy)
         sync_db = next(get_db())
         try:
             rbac = RBACService(sync_db)
-            
+
             # Get user roles, permissions, and framework access
             roles = rbac.get_user_roles(user.id)
             permissions = rbac.get_user_permissions(user.id)
             accessible_frameworks = rbac.get_accessible_frameworks(user.id)
-            
+
             # Verify token roles match current database roles (security check)
             payload = decode_token(token)
             token_roles = set(payload.get("roles", []))
             current_roles = set(role["name"] for role in roles)
-            
+
             if token_roles != current_roles:
                 logger.warning(f"Token roles mismatch for user {user.id}: "
                              f"token={token_roles}, db={current_roles}")
                 # Could force re-authentication here, but for now just use DB roles
-            
+
             return UserWithRoles(user, roles, permissions, accessible_frameworks)
-            
+
         finally:
             sync_db.close()
-            
+
     except NotAuthenticatedException:
         return None
 
@@ -206,13 +203,13 @@ async def get_current_active_user_with_roles(
             detail="Not authenticated",
             headers={"WWW-Authenticate": "Bearer"},
         )
-    
+
     if not current_user.is_active:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Inactive user"
         )
-    
+
     return current_user
 
 
@@ -235,7 +232,7 @@ def require_permission(permission: str):
                 detail=f"Permission '{permission}' required"
             )
         return current_user
-    
+
     return check_permission
 
 
@@ -258,7 +255,7 @@ def require_any_permission(permissions: List[str]):
                 detail=f"One of these permissions required: {', '.join(permissions)}"
             )
         return current_user
-    
+
     return check_permissions
 
 
@@ -282,7 +279,7 @@ def require_all_permissions(permissions: List[str]):
                 detail=f"Missing required permissions: {', '.join(missing)}"
             )
         return current_user
-    
+
     return check_permissions
 
 
@@ -305,7 +302,7 @@ def require_role(role: str):
                 detail=f"Role '{role}' required"
             )
         return current_user
-    
+
     return check_role
 
 
@@ -328,7 +325,7 @@ def require_any_role(roles: List[str]):
                 detail=f"One of these roles required: {', '.join(roles)}"
             )
         return current_user
-    
+
     return check_roles
 
 
@@ -352,7 +349,7 @@ def require_framework_access(framework_id: str, access_level: str = "read"):
                 detail=f"Framework access required: {framework_id} ({access_level})"
             )
         return current_user
-    
+
     return check_framework_access
 
 
@@ -370,12 +367,12 @@ def check_framework_access_permission(user: UserWithRoles, framework_id: str, re
     """
     level_hierarchy = {"read": 1, "write": 2, "admin": 3}
     required_level_value = level_hierarchy.get(required_level, 1)
-    
+
     for framework in user.accessible_frameworks:
         if framework["id"] == str(framework_id):
             user_level_value = level_hierarchy.get(framework.get("access_level", "read"), 1)
             return user_level_value >= required_level_value
-    
+
     return False
 
 
@@ -399,7 +396,7 @@ def require_framework_access_level(framework_id: str, access_level: str = "read"
                 detail=f"Framework access required: {framework_id} ({access_level} level)"
             )
         return current_user
-    
+
     return check_access
 
 
@@ -407,7 +404,7 @@ class RBACMiddleware:
     """
     Middleware for automatic RBAC enforcement and audit logging.
     """
-    
+
     def __init__(self):
         self.protected_paths = {
             "/api/v1/admin": ["admin_roles", "admin_permissions", "admin_audit"],
@@ -416,7 +413,7 @@ class RBACMiddleware:
             "/api/v1/policies": ["policy_generate"],
             "/api/v1/reports": ["report_view"],
         }
-    
+
     async def check_path_permissions(self, path: str, user: UserWithRoles) -> bool:
         """
         Check if user has permission to access a specific path.
@@ -431,7 +428,7 @@ class RBACMiddleware:
         for protected_path, required_permissions in self.protected_paths.items():
             if path.startswith(protected_path):
                 return user.has_any_permission(required_permissions)
-        
+
         return True  # Allow access to unprotected paths
 
 

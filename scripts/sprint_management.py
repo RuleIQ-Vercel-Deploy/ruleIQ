@@ -53,7 +53,7 @@ class Task:
     dependencies: List[str] = None
     technical_notes: Optional[str] = None
     created_at: datetime.datetime = None
-    
+
     def __post_init__(self):
         if self.dependencies is None:
             self.dependencies = []
@@ -79,7 +79,7 @@ class UserStory:
     sprint_id: Optional[str] = None
     assigned_to: Optional[str] = None
     created_at: datetime.datetime = None
-    
+
     def __post_init__(self):
         if self.tasks is None:
             self.tasks = []
@@ -104,7 +104,7 @@ class Sprint:
     actual_velocity: int = 0
     retrospective_notes: Optional[str] = None
     created_at: datetime.datetime = None
-    
+
     def __post_init__(self):
         if self.stories is None:
             self.stories = []
@@ -113,15 +113,15 @@ class Sprint:
 
 class SprintManager:
     """Main sprint management system"""
-    
+
     def __init__(self, data_dir: str = ".sprint_data"):
         self.data_dir = data_dir
         self.ensure_data_dir()
-        
+
     def ensure_data_dir(self):
         """Ensure sprint data directory exists"""
         os.makedirs(self.data_dir, exist_ok=True)
-        
+
     def init_sprint(self, sprint_data: Dict[str, Any]) -> Sprint:
         """Initialize a new sprint"""
         sprint = Sprint(
@@ -134,13 +134,13 @@ class SprintManager:
             team_members=sprint_data.get("team_members", ["Development Team"]),
             velocity_target=sprint_data.get("velocity_target", 20)
         )
-        
+
         self._save_sprint(sprint)
         return sprint
-        
+
     def generate_sprint_stories(self, sprint_id: str, roadmap_context: Dict[str, Any]) -> List[UserStory]:
         """Generate user stories for the sprint based on roadmap and priorities"""
-        
+
         # Current ruleIQ project context based on memory analysis
         current_state = {
             "completed_features": [
@@ -156,9 +156,9 @@ class SprintManager:
                 "Compliance Insights Engine"
             ]
         }
-        
+
         stories = []
-        
+
         # Priority 1: Complete RBAC (Sprint 1 carryover)
         rbac_story = UserStory(
             id="STORY-001",
@@ -178,10 +178,10 @@ class SprintManager:
             estimated_hours=32.0
         )
         stories.append(rbac_story)
-        
+
         # Priority 2: Frontend Design System Migration
         design_story = UserStory(
-            id="STORY-002", 
+            id="STORY-002",
             title="Complete Teal Design System Migration",
             description="As a user, I want a consistent teal-branded interface so that the application feels professional and trustworthy.",
             priority=Priority.HIGH,
@@ -198,7 +198,7 @@ class SprintManager:
             estimated_hours=40.0
         )
         stories.append(design_story)
-        
+
         # Priority 3: Evidence Auto-Classifier
         evidence_story = UserStory(
             id="STORY-003",
@@ -218,7 +218,7 @@ class SprintManager:
             estimated_hours=64.0
         )
         stories.append(evidence_story)
-        
+
         # Priority 4: Compliance Insights Engine
         insights_story = UserStory(
             id="STORY-004",
@@ -238,7 +238,7 @@ class SprintManager:
             estimated_hours=40.0
         )
         stories.append(insights_story)
-        
+
         # Priority 5: API Performance Optimization
         performance_story = UserStory(
             id="STORY-005",
@@ -258,9 +258,9 @@ class SprintManager:
             estimated_hours=24.0
         )
         stories.append(performance_story)
-        
+
         return stories
-        
+
     def analyze_stories(self, stories: List[UserStory]) -> Dict[str, Any]:
         """Analyze user stories for completeness and feasibility"""
         analysis = {
@@ -274,18 +274,18 @@ class SprintManager:
             "risks": [],
             "dependencies": []
         }
-        
+
         # Priority breakdown
         for priority in Priority:
             count = len([s for s in stories if s.priority == priority])
             analysis["priority_breakdown"][priority.value] = count
-            
+
         # Complexity breakdown
         complexities = [s.technical_complexity for s in stories]
         for complexity in ["LOW", "MEDIUM", "HIGH", "CRITICAL"]:
             count = complexities.count(complexity)
             analysis["complexity_breakdown"][complexity] = count
-            
+
         # Feature area breakdown
         feature_areas = {}
         for story in stories:
@@ -296,31 +296,31 @@ class SprintManager:
             feature_areas[area]["story_points"] += story.story_points
             feature_areas[area]["hours"] += story.estimated_hours
         analysis["feature_area_breakdown"] = feature_areas
-        
+
         # Generate recommendations
         if analysis["total_story_points"] > 50:
             analysis["recommendations"].append("Consider splitting sprint - current scope exceeds typical team capacity")
-            
+
         critical_stories = [s for s in stories if s.priority == Priority.CRITICAL]
         if len(critical_stories) > 2:
             analysis["recommendations"].append("Too many critical priority stories - consider prioritization")
-            
+
         high_complexity_stories = [s for s in stories if s.technical_complexity == "CRITICAL"]
         if len(high_complexity_stories) > 1:
             analysis["risks"].append("Multiple critical complexity stories increase sprint risk")
-            
+
         # Check for dependencies
         all_story_ids = [s.id for s in stories]
         for story in stories:
             for dep in story.dependencies:
                 if dep not in all_story_ids:
                     analysis["dependencies"].append(f"Story {story.id} depends on external item {dep}")
-                    
+
         return analysis
-        
+
     def decompose_stories(self, stories: List[UserStory]) -> List[UserStory]:
         """Break down complex stories into specific implementation tasks"""
-        
+
         for story in stories:
             if story.id == "STORY-001":  # RBAC Story
                 story.tasks = [
@@ -331,7 +331,7 @@ class SprintManager:
                     Task("TASK-001-05", "Implement audit logging", "Track all permission changes", TaskType.FEATURE, story.id, 4.0),
                     Task("TASK-001-06", "Write comprehensive tests", "Unit and integration tests for RBAC", TaskType.TESTING, story.id, 6.0)
                 ]
-                
+
             elif story.id == "STORY-002":  # Design System Story
                 story.tasks = [
                     Task("TASK-002-01", "Update Tailwind configuration", "Replace purple/cyan with teal in config", TaskType.TECHNICAL, story.id, 4.0),
@@ -341,7 +341,7 @@ class SprintManager:
                     Task("TASK-002-05", "Accessibility testing", "Ensure WCAG 2.2 AA compliance maintained", TaskType.TESTING, story.id, 8.0),
                     Task("TASK-002-06", "Performance optimization", "Keep bundle size increase under 5%", TaskType.TECHNICAL, story.id, 4.0)
                 ]
-                
+
             elif story.id == "STORY-003":  # Evidence Auto-Classifier
                 story.tasks = [
                     Task("TASK-003-01", "Design AI classification API", "Define endpoints and data structures", TaskType.TECHNICAL, story.id, 8.0),
@@ -352,7 +352,7 @@ class SprintManager:
                     Task("TASK-003-06", "Create override interface", "Allow manual classification changes", TaskType.FEATURE, story.id, 8.0),
                     Task("TASK-003-07", "Implement bulk processing", "Handle multiple file uploads", TaskType.TECHNICAL, story.id, 6.0)
                 ]
-                
+
             elif story.id == "STORY-004":  # Compliance Insights
                 story.tasks = [
                     Task("TASK-004-01", "Design analytics data model", "Schema for compliance metrics and trends", TaskType.TECHNICAL, story.id, 6.0),
@@ -362,7 +362,7 @@ class SprintManager:
                     Task("TASK-004-05", "Build recommendation engine", "AI-powered actionable insights", TaskType.FEATURE, story.id, 8.0),
                     Task("TASK-004-06", "Implement export features", "PDF/Excel report generation", TaskType.FEATURE, story.id, 6.0)
                 ]
-                
+
             elif story.id == "STORY-005":  # Performance Optimization
                 story.tasks = [
                     Task("TASK-005-01", "Database query optimization", "Add indexes and optimize slow queries", TaskType.TECHNICAL, story.id, 8.0),
@@ -371,15 +371,15 @@ class SprintManager:
                     Task("TASK-005-04", "Set up automated alerts", "Alert system for performance issues", TaskType.TECHNICAL, story.id, 4.0),
                     Task("TASK-005-05", "Conduct load testing", "Validate performance under load", TaskType.TESTING, story.id, 6.0)
                 ]
-        
+
         return stories
-        
+
     def track_sprint_implementation(self, sprint_id: str) -> Dict[str, Any]:
         """Track implementation progress for the current sprint"""
         sprint = self._load_sprint(sprint_id)
         if not sprint:
             return {"error": f"Sprint {sprint_id} not found"}
-            
+
         progress = {
             "sprint_id": sprint_id,
             "sprint_name": sprint.name,
@@ -401,7 +401,7 @@ class SprintManager:
             "blockers": [],
             "recommendations": []
         }
-        
+
         # Story status breakdown
         for status in StoryStatus:
             stories_in_status = [s for s in sprint.stories if s.status == status]
@@ -410,7 +410,7 @@ class SprintManager:
                 "story_points": sum(s.story_points for s in stories_in_status),
                 "stories": [{"id": s.id, "title": s.title, "points": s.story_points} for s in stories_in_status]
             }
-            
+
         # Identify blockers
         blocked_stories = [s for s in sprint.stories if s.status == StoryStatus.BLOCKED]
         for story in blocked_stories:
@@ -420,24 +420,24 @@ class SprintManager:
                 "dependencies": story.dependencies,
                 "priority": story.priority.value
             })
-            
+
         # Generate recommendations
         completion_rate = progress["completed_stories"] / progress["total_stories"] if progress["total_stories"] > 0 else 0
         days_elapsed = (datetime.date.today() - sprint.start_date).days
         sprint_duration = (sprint.end_date - sprint.start_date).days
         expected_completion = days_elapsed / sprint_duration if sprint_duration > 0 else 0
-        
+
         if completion_rate < expected_completion - 0.2:
             progress["recommendations"].append("Sprint is behind schedule - consider scope reduction or timeline extension")
-            
+
         if len(blocked_stories) > 0:
             progress["recommendations"].append("Address blocked stories to maintain sprint momentum")
-            
+
         if progress["hours_spent"] > progress["hours_estimated"] * 1.2:
             progress["recommendations"].append("Actual effort exceeding estimates - review story complexity")
-            
+
         return progress
-        
+
     def _save_sprint(self, sprint: Sprint):
         """Save sprint to disk"""
         filepath = os.path.join(self.data_dir, f"{sprint.id}.json")
@@ -448,29 +448,29 @@ class SprintManager:
             sprint_dict['start_date'] = sprint.start_date.isoformat()
             sprint_dict['end_date'] = sprint.end_date.isoformat()
             sprint_dict['created_at'] = sprint.created_at.isoformat()
-            
+
             # Handle nested dataclasses
             for i, story in enumerate(sprint_dict['stories']):
                 story['created_at'] = sprint.stories[i].created_at.isoformat()
                 story['priority'] = story['priority']
                 story['status'] = story['status']
-                
+
                 for j, task in enumerate(story['tasks']):
                     task['created_at'] = sprint.stories[i].tasks[j].created_at.isoformat()
                     task['type'] = task['type']
                     task['status'] = task['status']
-                    
+
             json.dump(sprint_dict, f, indent=2)
-            
+
     def _load_sprint(self, sprint_id: str) -> Optional[Sprint]:
         """Load sprint from disk"""
         filepath = os.path.join(self.data_dir, f"{sprint_id}.json")
         if not os.path.exists(filepath):
             return None
-            
+
         with open(filepath, 'r') as f:
             sprint_dict = json.load(f)
-            
+
         # TODO: Implement proper deserialization from dict to Sprint dataclass
         # This is a simplified version - full implementation would handle all conversions
         return None
@@ -478,15 +478,15 @@ class SprintManager:
 def main():
     """CLI interface for sprint management"""
     import sys
-    
+
     if len(sys.argv) < 2:
         print("Usage: python sprint_management.py <command> [args]")
         print("Commands: init_sprint, generate_stories, analyze_stories, decompose_stories, track_progress")
         return
-        
+
     command = sys.argv[1]
     manager = SprintManager()
-    
+
     if command == "init_sprint":
         # Example sprint initialization
         sprint_data = {
@@ -501,13 +501,13 @@ def main():
         }
         sprint = manager.init_sprint(sprint_data)
         print(f"Initialized sprint: {sprint.name}")
-        
+
     elif command == "generate_stories":
         stories = manager.generate_sprint_stories("sprint_2_evidence_classifier", {})
         print(f"Generated {len(stories)} user stories")
         for story in stories:
             print(f"- {story.id}: {story.title} ({story.story_points} pts)")
-            
+
     elif command == "analyze_stories":
         stories = manager.generate_sprint_stories("sprint_2_evidence_classifier", {})
         analysis = manager.analyze_stories(stories)
@@ -518,7 +518,7 @@ def main():
         print("Recommendations:")
         for rec in analysis['recommendations']:
             print(f"- {rec}")
-            
+
     elif command == "decompose_stories":
         stories = manager.generate_sprint_stories("sprint_2_evidence_classifier", {})
         stories = manager.decompose_stories(stories)
@@ -527,10 +527,10 @@ def main():
             print(f"\n{story.id}: {story.title}")
             for task in story.tasks:
                 print(f"  - {task.id}: {task.title} ({task.estimated_hours}h)")
-                
+
     elif command == "track_progress":
         # This would track actual sprint progress - requires saved sprint data
         print("Sprint progress tracking requires saved sprint data")
-        
+
 if __name__ == "__main__":
     main()

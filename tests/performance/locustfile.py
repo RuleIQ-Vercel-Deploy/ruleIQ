@@ -386,7 +386,7 @@ class ReportingUser(AuthenticatedUser):
         self.client.post("/api/export", json=export_data, headers=self.headers)
 
 
-class StressTestUser(AuthUser):
+class StressTestUser(AuthenticatedUser):
     """High-intensity user for stress testing"""
 
     wait_time = between(0.1, 0.5)  # Very short wait times

@@ -5,8 +5,6 @@ Revises: freemium_001, d354bd6c0c4b
 Create Date: 2025-08-05 15:44:40.028805
 
 """
-from alembic import op
-import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.

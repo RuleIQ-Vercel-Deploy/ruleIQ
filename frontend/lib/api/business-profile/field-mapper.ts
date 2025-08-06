@@ -56,7 +56,15 @@ export class BusinessProfileFieldMapper {
     Object.entries(data).forEach(([key, value]) => {
       // Map frontend field to API field, or use original if no mapping exists
       const apiKey = this.fieldMap[key as keyof typeof this.fieldMap] || key;
-      mapped[apiKey] = value;
+      
+      // Handle type conversions
+      if (key === 'compliance_budget' && typeof value === 'string') {
+        // Convert string to number for API
+        const numValue = parseFloat(value);
+        mapped[apiKey] = isNaN(numValue) ? 0 : numValue;
+      } else {
+        mapped[apiKey] = value;
+      }
     });
 
     return mapped;
@@ -79,7 +87,13 @@ export class BusinessProfileFieldMapper {
       const frontendKey =
         Object.entries(this.fieldMap).find(([_, apiKey]) => apiKey === key)?.[0] || key;
 
-      mapped[frontendKey] = value;
+      // Handle type conversions from API to frontend
+      if (frontendKey === 'compliance_budget' && typeof value === 'number') {
+        // Convert number to string for frontend
+        mapped[frontendKey] = value.toString();
+      } else {
+        mapped[frontendKey] = value;
+      }
     });
 
     return mapped as BusinessProfile;

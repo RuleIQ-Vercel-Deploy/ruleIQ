@@ -12,7 +12,6 @@ from pydantic import BaseModel
 from api.dependencies.auth import get_current_active_user
 from database.user import User
 from database.db_setup import get_async_db
-from database.user import User
 from database.services.integration_service import (
     EvidenceCollectionService,
     store_integration_config,

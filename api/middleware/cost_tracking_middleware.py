@@ -5,7 +5,6 @@ Automatically tracks AI costs for API requests and integrates with
 budget monitoring and optimization systems.
 """
 
-import json
 import time
 import uuid
 from datetime import datetime
@@ -17,7 +16,7 @@ from starlette.responses import JSONResponse
 
 from services.ai.cost_management import AICostManager, CostTrackingService
 from services.ai.cost_aware_circuit_breaker import get_cost_aware_circuit_breaker
-from services.ai.exceptions import AIServiceException
+
 from config.logging_config import get_logger
 from database.user import User
 
@@ -31,7 +30,7 @@ class CostTrackingMiddleware(BaseHTTPMiddleware):
     Intercepts AI-related API requests, tracks costs, enforces budgets,
     and provides real-time cost monitoring.
     """
-    
+
     def __init__(
         self,
         app,
@@ -47,7 +46,7 @@ class CostTrackingMiddleware(BaseHTTPMiddleware):
         self.enable_budget_enforcement = enable_budget_enforcement
         self.enable_cost_optimization = enable_cost_optimization
         self.track_all_requests = track_all_requests
-        
+
         # AI endpoints that should be tracked
         self.ai_endpoints = {
             "/api/v1/ai/generate-policy",
@@ -57,29 +56,29 @@ class CostTrackingMiddleware(BaseHTTPMiddleware):
             "/api/v1/ai/evidence",
             "/api/v1/ai/recommendations"
         }
-    
+
     async def dispatch(
-        self, 
-        request: Request, 
+        self,
+        request: Request,
         call_next: Callable[[Request], Awaitable[Response]]
     ) -> Response:
         """Process request with cost tracking."""
-        
+
         # Check if this is an AI-related request
         should_track = self._should_track_request(request)
-        
+
         if not should_track:
             # Pass through non-AI requests
             return await call_next(request)
-        
+
         # Generate request tracking ID
         request_id = str(uuid.uuid4())
         start_time = time.time()
-        
+
         # Extract user information
         user_id = await self._extract_user_id(request)
         session_id = self._extract_session_id(request)
-        
+
         # Add tracking metadata to request state
         request.state.cost_tracking = {
             "request_id": request_id,
@@ -89,52 +88,52 @@ class CostTrackingMiddleware(BaseHTTPMiddleware):
             "service_name": self._extract_service_name(request),
             "endpoint": str(request.url.path)
         }
-        
+
         try:
             # Check budget constraints before processing
             if self.enable_budget_enforcement and user_id:
                 await self._check_user_budget_limits(user_id)
-            
+
             # Process the request
             response = await call_next(request)
-            
+
             # Track successful request
             await self._track_successful_request(request, response, start_time)
-            
+
             # Add cost headers to response
             self._add_cost_headers(response, request)
-            
+
             return response
-            
+
         except HTTPException as e:
             # Track failed request (may still incur costs)
             await self._track_failed_request(request, e, start_time)
             raise
-            
+
         except Exception as e:
             # Track unexpected errors
             await self._track_error_request(request, e, start_time)
-            
+
             # Return appropriate error response
             logger.error(f"Unexpected error in cost tracking middleware: {str(e)}")
             return JSONResponse(
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 content={"detail": "Internal server error", "request_id": request_id}
             )
-    
+
     def _should_track_request(self, request: Request) -> bool:
         """Determine if request should be tracked for costs."""
-        
+
         if self.track_all_requests:
             return True
-        
+
         # Check if it's an AI endpoint
         path = request.url.path
         return any(ai_endpoint in path for ai_endpoint in self.ai_endpoints)
-    
+
     async def _extract_user_id(self, request: Request) -> Optional[str]:
         """Extract user ID from request."""
-        
+
         try:
             # Try to get user from request state (set by auth middleware)
             if hasattr(request.state, 'current_user'):
@@ -143,44 +142,44 @@ class CostTrackingMiddleware(BaseHTTPMiddleware):
                     return str(user.id)
                 elif isinstance(user, dict):
                     return str(user.get('id'))
-            
+
             # Try to extract from JWT token in headers
             auth_header = request.headers.get('Authorization')
             if auth_header and auth_header.startswith('Bearer '):
                 # In production, would decode JWT token
                 # For now, return a placeholder
                 return "jwt_user"
-            
+
             return None
-            
+
         except Exception as e:
             logger.warning(f"Failed to extract user ID: {str(e)}")
             return None
-    
+
     def _extract_session_id(self, request: Request) -> Optional[str]:
         """Extract session ID from request."""
-        
+
         # Try session cookie first
         session_id = request.cookies.get('session_id')
         if session_id:
             return session_id
-        
+
         # Try custom header
         session_id = request.headers.get('X-Session-ID')
         if session_id:
             return session_id
-        
+
         # Generate temporary session ID based on request
         if hasattr(request.state, 'cost_tracking'):
             return request.state.cost_tracking.get('request_id')
-        
+
         return None
-    
+
     def _extract_service_name(self, request: Request) -> str:
         """Extract service name from request path."""
-        
+
         path = request.url.path
-        
+
         # Map endpoints to service names
         service_mapping = {
             '/api/v1/ai/generate-policy': 'policy_generation',
@@ -190,36 +189,37 @@ class CostTrackingMiddleware(BaseHTTPMiddleware):
             '/api/v1/ai/evidence': 'evidence_analysis',
             '/api/v1/ai/recommendations': 'recommendation_engine'
         }
-        
+
         for endpoint, service in service_mapping.items():
             if endpoint in path:
                 return service
-        
+
         # Default service name
         return 'ai_general'
-    
+
     async def _check_user_budget_limits(self, user_id: str) -> None:
         """Check if user has exceeded budget limits."""
-        
+
         try:
             # Check user's daily limit
             user_limit_key = f"budget:user:{user_id}:daily"
             # In production, would check Redis for user limit
             # For now, implement basic check
-            
+            logger.debug(f"Checking budget limits for user: {user_id}, key: {user_limit_key}")
+
             # Get user's daily usage
             from datetime import date
             today_usage = await self.cost_tracker.get_usage_by_time_range(
                 start_time=datetime.combine(date.today(), datetime.min.time()),
                 end_time=datetime.now()
             )
-            
+
             if today_usage:
                 total_cost = sum(usage.cost_usd for usage in today_usage)
-                
+
                 # Mock user limit check (would be configurable per user)
                 daily_limit = Decimal("50.00")  # $50 daily limit
-                
+
                 if total_cost >= daily_limit:
                     raise HTTPException(
                         status_code=status.HTTP_429_TOO_MANY_REQUESTS,
@@ -228,13 +228,13 @@ class CostTrackingMiddleware(BaseHTTPMiddleware):
                     )
                 elif total_cost >= daily_limit * Decimal("0.9"):  # 90% warning
                     logger.warning(f"User {user_id} approaching daily cost limit: ${total_cost:.2f}")
-            
+
         except HTTPException:
             raise
         except Exception as e:
             logger.error(f"Failed to check user budget limits: {str(e)}")
             # Don't block request on budget check failure
-    
+
     async def _track_successful_request(
         self,
         request: Request,
@@ -242,14 +242,14 @@ class CostTrackingMiddleware(BaseHTTPMiddleware):
         start_time: float
     ) -> None:
         """Track successful AI request with cost calculation."""
-        
+
         try:
             tracking_info = request.state.cost_tracking
             response_time = (time.time() - start_time) * 1000  # Convert to milliseconds
-            
+
             # Extract token usage from response
             token_usage = await self._extract_token_usage(request, response)
-            
+
             if token_usage:
                 # Track the request
                 result = await self.cost_manager.track_ai_request(
@@ -271,15 +271,15 @@ class CostTrackingMiddleware(BaseHTTPMiddleware):
                         "middleware": "cost_tracking"
                     }
                 )
-                
+
                 # Store cost information in request state for header addition
                 request.state.cost_result = result
-                
+
                 logger.debug(f"Tracked successful request {tracking_info['request_id']}: ${result['cost_usd']:.6f}")
-            
+
         except Exception as e:
             logger.error(f"Failed to track successful request: {str(e)}")
-    
+
     async def _track_failed_request(
         self,
         request: Request,
@@ -287,16 +287,16 @@ class CostTrackingMiddleware(BaseHTTPMiddleware):
         start_time: float
     ) -> None:
         """Track failed AI request."""
-        
+
         try:
             tracking_info = request.state.cost_tracking
             response_time = (time.time() - start_time) * 1000
-            
+
             # Even failed requests may incur costs if they reached the AI service
             if error.status_code >= 500:  # Server errors may have incurred costs
                 # Estimate token usage for failed request
                 estimated_tokens = self._estimate_failed_request_tokens(request)
-                
+
                 if estimated_tokens:
                     await self.cost_manager.track_ai_request(
                         service_name=tracking_info["service_name"],
@@ -319,10 +319,10 @@ class CostTrackingMiddleware(BaseHTTPMiddleware):
                             "middleware": "cost_tracking"
                         }
                     )
-            
+
         except Exception as e:
             logger.error(f"Failed to track failed request: {str(e)}")
-    
+
     async def _track_error_request(
         self,
         request: Request,
@@ -330,27 +330,30 @@ class CostTrackingMiddleware(BaseHTTPMiddleware):
         start_time: float
     ) -> None:
         """Track unexpected error request."""
-        
+
         try:
             tracking_info = request.state.cost_tracking
             response_time = (time.time() - start_time) * 1000
-            
+
             # Log error for monitoring
-            logger.error(f"Unexpected error in request {tracking_info['request_id']}: {str(error)}")
-            
+            logger.error(
+                f"Unexpected error in request {tracking_info['request_id']}: {str(error)} "
+                f"(response_time: {response_time:.2f}ms)"
+            )
+
             # Track error metrics (without cost since request likely didn't reach AI service)
             # This helps with reliability monitoring
-            
+
         except Exception as e:
             logger.error(f"Failed to track error request: {str(e)}")
-    
+
     async def _extract_token_usage(
         self,
         request: Request,
         response: Response
     ) -> Optional[Dict[str, Any]]:
         """Extract token usage information from request/response."""
-        
+
         try:
             # Check if response contains usage information
             if hasattr(response, 'body'):
@@ -360,18 +363,18 @@ class CostTrackingMiddleware(BaseHTTPMiddleware):
                     # In production, would parse response body for usage information
                     # For now, return mock data based on endpoint
                     return self._mock_token_usage(request)
-            
+
             return None
-            
+
         except Exception as e:
             logger.warning(f"Failed to extract token usage: {str(e)}")
             return None
-    
+
     def _mock_token_usage(self, request: Request) -> Dict[str, Any]:
         """Generate mock token usage for testing."""
-        
+
         path = request.url.path
-        
+
         # Mock token usage based on endpoint
         if 'generate-policy' in path:
             return {
@@ -400,7 +403,7 @@ class CostTrackingMiddleware(BaseHTTPMiddleware):
                 "response_content": "Analysis results...",
                 "cache_hit": False
             }
-        
+
         # Default usage
         return {
             "model_name": "gemini-1.5-flash",
@@ -410,10 +413,10 @@ class CostTrackingMiddleware(BaseHTTPMiddleware):
             "response_content": "AI response...",
             "cache_hit": False
         }
-    
+
     def _estimate_failed_request_tokens(self, request: Request) -> Optional[Dict[str, Any]]:
         """Estimate token usage for failed requests."""
-        
+
         try:
             # Read request body to estimate input tokens
             # In production, would analyze actual request content
@@ -422,38 +425,38 @@ class CostTrackingMiddleware(BaseHTTPMiddleware):
                 "input_tokens": 500,  # Estimated based on typical request
                 "output_tokens": 0    # No output on failure
             }
-            
+
         except Exception:
             return None
-    
+
     def _add_cost_headers(self, response: Response, request: Request) -> None:
         """Add cost-related headers to response."""
-        
+
         try:
             if hasattr(request.state, 'cost_result'):
                 cost_result = request.state.cost_result
-                
+
                 # Add cost information to response headers
                 response.headers["X-AI-Cost-USD"] = str(cost_result["cost_usd"])
                 response.headers["X-AI-Efficiency-Score"] = str(cost_result["efficiency_score"])
                 response.headers["X-AI-Request-ID"] = cost_result["usage_id"]
-                
+
                 # Add budget information if available
                 if hasattr(request.state, 'cost_tracking') and request.state.cost_tracking.get('user_id'):
                     # In production, would add remaining budget info
                     response.headers["X-Budget-Remaining"] = "50.00"  # Mock value
-            
+
         except Exception as e:
             logger.warning(f"Failed to add cost headers: {str(e)}")
 
 
 class RealTimeCostMonitor:
     """Real-time cost monitoring with WebSocket support."""
-    
+
     def __init__(self, cost_manager: AICostManager):
         self.cost_manager = cost_manager
         self.active_connections: Dict[str, Any] = {}
-    
+
     async def connect_client(self, client_id: str, websocket) -> None:
         """Connect client for real-time cost updates."""
         self.active_connections[client_id] = {
@@ -461,25 +464,25 @@ class RealTimeCostMonitor:
             "connected_at": datetime.now()
         }
         logger.info(f"Client {client_id} connected for real-time cost monitoring")
-    
+
     async def disconnect_client(self, client_id: str) -> None:
         """Disconnect client from real-time updates."""
         if client_id in self.active_connections:
             del self.active_connections[client_id]
             logger.info(f"Client {client_id} disconnected from cost monitoring")
-    
+
     async def broadcast_cost_update(self, cost_data: Dict[str, Any]) -> None:
         """Broadcast cost update to all connected clients."""
-        
+
         if not self.active_connections:
             return
-        
+
         message = {
             "type": "cost_update",
             "timestamp": datetime.now().isoformat(),
             "data": cost_data
         }
-        
+
         # Send to all connected clients
         disconnected_clients = []
         for client_id, connection in self.active_connections.items():
@@ -488,20 +491,20 @@ class RealTimeCostMonitor:
             except Exception as e:
                 logger.warning(f"Failed to send cost update to client {client_id}: {str(e)}")
                 disconnected_clients.append(client_id)
-        
+
         # Clean up disconnected clients
         for client_id in disconnected_clients:
             await self.disconnect_client(client_id)
-    
+
     async def send_budget_alert(self, alert_data: Dict[str, Any]) -> None:
         """Send budget alert to connected clients."""
-        
+
         message = {
             "type": "budget_alert",
             "timestamp": datetime.now().isoformat(),
             "alert": alert_data
         }
-        
+
         # Send to all connected clients
         for client_id, connection in self.active_connections.items():
             try:

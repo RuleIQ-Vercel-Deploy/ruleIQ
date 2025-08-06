@@ -5,7 +5,6 @@ Provides authentication endpoints with role-based access control integration.
 Extends base authentication with role claims in JWT tokens.
 """
 
-from datetime import timedelta
 from typing import Dict, List, Optional
 from uuid import UUID
 
@@ -15,12 +14,12 @@ from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
 from api.dependencies.auth import (
-    verify_password, get_password_hash, ACCESS_TOKEN_EXPIRE_MINUTES
+    verify_password, ACCESS_TOKEN_EXPIRE_MINUTES
 )
 from api.dependencies.rbac_auth import (
     create_access_token_with_roles, create_refresh_token_with_roles,
     get_current_active_user_with_roles, UserWithRoles,
-    require_permission, require_role, require_any_permission
+    require_permission, require_any_permission
 )
 from api.middleware.rate_limiter import auth_rate_limit, RateLimited
 from database.db_setup import get_db
@@ -82,29 +81,29 @@ async def login_with_roles(
     """
     # Find user by email (OAuth2PasswordRequestForm uses 'username' field)
     user = db.query(User).filter(User.email == form_data.username).first()
-    
+
     if not user or not verify_password(form_data.password, user.hashed_password):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Incorrect email or password",
             headers={"WWW-Authenticate": "Bearer"},
         )
-    
+
     if not user.is_active:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Account is disabled"
         )
-    
+
     # Get user roles and permissions
     rbac = RBACService(db)
     roles = rbac.get_user_roles(user.id)
     permissions = rbac.get_user_permissions(user.id)
-    
+
     # Create tokens with role claims
     access_token = create_access_token_with_roles(user.id, roles, permissions)
     refresh_token = create_refresh_token_with_roles(user.id)
-    
+
     # Log successful login
     rbac._log_audit(
         user_id=user.id,
@@ -115,7 +114,7 @@ async def login_with_roles(
             "permissions_count": len(permissions)
         }
     )
-    
+
     return TokenResponse(
         access_token=access_token,
         refresh_token=refresh_token,
@@ -136,28 +135,28 @@ async def login_with_json(
     Alternative login endpoint that accepts JSON payload.
     """
     user = db.query(User).filter(User.email == login_data.email).first()
-    
+
     if not user or not verify_password(login_data.password, user.hashed_password):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Incorrect email or password"
         )
-    
+
     if not user.is_active:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Account is disabled"
         )
-    
+
     # Get user roles and permissions
     rbac = RBACService(db)
     roles = rbac.get_user_roles(user.id)
     permissions = rbac.get_user_permissions(user.id)
-    
+
     # Create tokens with role claims
     access_token = create_access_token_with_roles(user.id, roles, permissions)
     refresh_token = create_refresh_token_with_roles(user.id)
-    
+
     # Log successful login
     rbac._log_audit(
         user_id=user.id,
@@ -168,7 +167,7 @@ async def login_with_json(
             "permissions_count": len(permissions)
         }
     )
-    
+
     return TokenResponse(
         access_token=access_token,
         refresh_token=refresh_token,
@@ -212,7 +211,7 @@ async def refresh_access_token(
     Re-evaluates user roles and permissions to ensure token is up-to-date.
     """
     from api.dependencies.auth import decode_token
-    
+
     try:
         payload = decode_token(refresh_token)
     except Exception:
@@ -220,31 +219,31 @@ async def refresh_access_token(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid refresh token"
         )
-    
+
     if payload.get("type") != "refresh":
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid token type"
         )
-    
+
     user_id = UUID(payload.get("sub"))
     user = db.query(User).filter(User.id == user_id).first()
-    
+
     if not user or not user.is_active:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="User not found or inactive"
         )
-    
+
     # Re-evaluate roles and permissions (they might have changed)
     rbac = RBACService(db)
     roles = rbac.get_user_roles(user.id)
     permissions = rbac.get_user_permissions(user.id)
-    
+
     # Create new tokens
     access_token = create_access_token_with_roles(user.id, roles, permissions)
     new_refresh_token = create_refresh_token_with_roles(user.id)
-    
+
     return TokenResponse(
         access_token=access_token,
         refresh_token=new_refresh_token,
@@ -267,27 +266,27 @@ async def assign_role_to_user(
     Assign a role to a user. Requires admin_roles permission.
     """
     from datetime import datetime
-    
+
     rbac = RBACService(db)
-    
+
     try:
         expires_at = None
         if assignment.expires_at:
             expires_at = datetime.fromisoformat(assignment.expires_at)
-        
+
         user_role = rbac.assign_role_to_user(
             user_id=assignment.user_id,
             role_id=assignment.role_id,
             granted_by=current_user.id,
             expires_at=expires_at
         )
-        
+
         return RoleAssignmentResponse(
             success=True,
             message="Role assigned successfully",
             assignment_id=str(user_role.id)
         )
-        
+
     except ValueError as e:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
@@ -310,13 +309,13 @@ async def revoke_role_from_user(
     Revoke a role from a user. Requires admin_roles permission.
     """
     rbac = RBACService(db)
-    
+
     success = rbac.revoke_role_from_user(
         user_id=user_id,
         role_id=role_id,
         revoked_by=current_user.id
     )
-    
+
     if success:
         return RoleAssignmentResponse(
             success=True,
@@ -341,7 +340,7 @@ async def get_user_roles(
     Get roles for a specific user. Requires admin_roles or user_list permission.
     """
     rbac = RBACService(db)
-    
+
     # Verify user exists
     user = db.query(User).filter(User.id == user_id).first()
     if not user:
@@ -349,11 +348,11 @@ async def get_user_roles(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="User not found"
         )
-    
+
     roles = rbac.get_user_roles(user_id)
     permissions = rbac.get_user_permissions(user_id)
     accessible_frameworks = rbac.get_accessible_frameworks(user_id)
-    
+
     return {
         "user_id": str(user_id),
         "email": user.email,
@@ -375,13 +374,13 @@ async def cleanup_expired_roles(
     Clean up expired role assignments. Requires admin_roles permission.
     """
     rbac = RBACService(db)
-    
+
     def cleanup_task():
         expired_count = rbac.cleanup_expired_roles()
         return expired_count
-    
+
     background_tasks.add_task(cleanup_task)
-    
+
     return {
         "message": "Expired role cleanup initiated",
         "background_task": True

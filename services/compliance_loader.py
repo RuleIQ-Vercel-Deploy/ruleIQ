@@ -13,7 +13,6 @@ import logging
 from database.compliance_framework import ComplianceFramework
 from database.db_setup import get_db
 from sqlalchemy.orm import Session
-from sqlalchemy.exc import IntegrityError
 
 
 logger = logging.getLogger(__name__)
@@ -36,7 +35,7 @@ class UKComplianceLoader:
     Handles validation, deduplication, and database persistence
     of UK regulatory frameworks.
     """
-    
+
     def __init__(self, db_session: Optional[Session] = None):
         """
         Initialize the loader.
@@ -62,33 +61,33 @@ class UKComplianceLoader:
         self.loaded_frameworks.clear()
         self.skipped_frameworks.clear()
         self.errors.clear()
-        
+
         for framework_data in frameworks_data:
             try:
                 # Check if framework already exists
                 existing = self.db_session.query(ComplianceFramework)\
                     .filter(ComplianceFramework.name == framework_data.get("name"))\
                     .first()
-                
+
                 if existing:
                     self.skipped_frameworks.append(framework_data["name"])
                     logger.info(f"Skipped existing framework: {framework_data['name']}")
                     continue
-                
+
                 # Create and validate new framework
                 framework = self.create_framework(framework_data)
-                
+
                 # Add to database
                 self.db_session.add(framework)
                 self.loaded_frameworks.append(framework)
-                
+
                 logger.info(f"Loaded framework: {framework.name}")
-                
+
             except Exception as e:
                 error_msg = f"Failed to load framework {framework_data.get('name', 'unknown')}: {str(e)}"
                 self.errors.append(error_msg)
                 logger.error(error_msg)
-        
+
         # Commit all changes
         try:
             self.db_session.commit()
@@ -97,7 +96,7 @@ class UKComplianceLoader:
             self.db_session.rollback()
             self.errors.append(f"Database commit failed: {str(e)}")
             success = False
-        
+
         return LoadResult(
             success=success,
             loaded_frameworks=self.loaded_frameworks.copy(),
@@ -122,48 +121,48 @@ class UKComplianceLoader:
         # Validate required fields
         if not data.get("name"):
             raise ValueError("Framework name cannot be empty")
-        
+
         if not data.get("display_name"):
             raise ValueError("Framework display_name is required")
-            
+
         if not data.get("category"):
             raise ValueError("Framework category is required")
-        
+
         # Create framework with proper field mappings
         framework = ComplianceFramework(
             name=data["name"],
             display_name=data["display_name"],
             description=data.get("description", ""),
             category=data["category"],
-            
+
             # Truncated column mappings
             applicable_indu=data.get("applicable_indu", []),
             employee_thresh=data.get("employee_thresh"),
             revenue_thresho=data.get("revenue_thresho"),
             geographic_scop=data.get("geographic_scop", ["UK"]),
-            
+
             key_requirement=data.get("key_requirement", []),
             control_domains=data.get("control_domains", []),
             evidence_types=data.get("evidence_types", []),
-            
+
             # Assessment criteria
             relevance_facto=data.get("relevance_facto", {}),
             complexity_scor=data.get("complexity_scor", 1),
             implementation_=data.get("implementation_", 12),
             estimated_cost_=data.get("estimated_cost_", "£5,000-£25,000"),
-            
+
             # Templates
             policy_template=data.get("policy_template", ""),
             control_templat=data.get("control_templat", {}),
             evidence_templa=data.get("evidence_templa", {}),
-            
+
             # Metadata
             is_active=data.get("is_active", True),
             version=data.get("version", "1.0"),
             created_at=datetime.utcnow(),
             updated_at=datetime.utcnow()
         )
-        
+
         return framework
 
     def get_uk_frameworks(self) -> List[ComplianceFramework]:
@@ -180,7 +179,7 @@ class UKComplianceLoader:
             )\
             .all()
 
-    def update_framework_version(self, framework_name: str, new_version: str, 
+    def update_framework_version(self, framework_name: str, new_version: str,
                                description_update: str = "") -> ComplianceFramework:
         """
         Update framework version and description.
@@ -199,24 +198,24 @@ class UKComplianceLoader:
         framework = self.db_session.query(ComplianceFramework)\
             .filter(ComplianceFramework.name == framework_name)\
             .first()
-        
+
         if not framework:
             raise ValueError(f"Framework not found: {framework_name}")
-        
+
         framework.version = new_version
         if description_update:
             framework.description = f"{framework.description} {description_update}"
         framework.updated_at = datetime.utcnow()
-        
+
         self.db_session.commit()
         return framework
 
 
 class GeographicValidator:
     """Validator for geographic scope of frameworks"""
-    
+
     UK_REGIONS = {"UK", "England", "Scotland", "Wales", "Northern Ireland"}
-    
+
     def validate_uk_scope(self, geographic_scope: List[str]) -> bool:
         """
         Validate that geographic scope is appropriate for UK frameworks.
@@ -229,14 +228,14 @@ class GeographicValidator:
         """
         if not geographic_scope:
             return False
-        
+
         # Must contain at least one UK region
         return bool(set(geographic_scope) & self.UK_REGIONS)
 
 
 class ISO27001UKMapper:
     """Mapper for ISO 27001 controls to UK regulatory requirements"""
-    
+
     ISO_TO_UK_GDPR_MAPPING = {
         "A.5.1.1": {
             "uk_requirement": "Data Protection by Design and Default",
@@ -251,7 +250,7 @@ class ISO27001UKMapper:
             "ico_guidance": "Securely delete personal data when no longer needed"
         }
     }
-    
+
     def map_iso_to_uk_gdpr(self, iso_controls: List[str]) -> List[Dict[str, str]]:
         """
         Map ISO 27001 controls to UK GDPR requirements.
@@ -272,5 +271,5 @@ class ISO27001UKMapper:
                     "uk_requirement": f"General Data Protection Requirement for {control}",
                     "ico_guidance": "Refer to ICO guidance for specific implementation"
                 })
-        
+
         return mappings

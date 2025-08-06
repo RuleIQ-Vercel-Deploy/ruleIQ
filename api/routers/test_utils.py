@@ -40,15 +40,15 @@ async def cleanup_test_users(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="This endpoint is only available in test environments"
         )
-    
+
     try:
         # Find test users
         test_users = db.query(User).filter(User.email.like(f"%{email_pattern}%")).all()
         count = len(test_users)
-        
+
         if count == 0:
             return {"deleted_users": 0, "pattern": email_pattern}
-        
+
         # Clean up related data first to avoid foreign key constraints
         from database import (
             AuditLog, UserSession, UserRole, BusinessProfile,
@@ -56,7 +56,7 @@ async def cleanup_test_users(
             ReportSchedule, EvidenceItem, ImplementationPlan,
             ReadinessAssessment
         )
-        
+
         for user in test_users:
             # Delete business-related data
             db.query(BusinessProfile).filter(BusinessProfile.user_id == user.id).delete()
@@ -67,19 +67,19 @@ async def cleanup_test_users(
             db.query(EvidenceItem).filter(EvidenceItem.user_id == user.id).delete()
             db.query(ImplementationPlan).filter(ImplementationPlan.user_id == user.id).delete()
             db.query(ReadinessAssessment).filter(ReadinessAssessment.user_id == user.id).delete()
-            
+
             # Delete RBAC and audit data
             db.query(AuditLog).filter(AuditLog.user_id == user.id).delete()
             db.query(UserSession).filter(UserSession.user_id == user.id).delete()
             db.query(UserRole).filter(UserRole.user_id == user.id).delete()
-            
+
             # Delete the user
             db.delete(user)
-        
+
         db.commit()
-        
+
         return {"deleted_users": count, "pattern": email_pattern}
-        
+
     except Exception as e:
         db.rollback()
         raise HTTPException(
@@ -110,18 +110,18 @@ async def create_test_user(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="This endpoint is only available in test environments"
         )
-    
+
     # Check if user already exists
     existing_user = db.query(User).filter(User.email == email).first()
     if existing_user:
         # Delete existing user
         db.delete(existing_user)
         db.commit()
-    
+
     # Create new test user
     from uuid import uuid4
     from api.auth.security import get_password_hash
-    
+
     hashed_password = get_password_hash(password)
     db_user = User(
         id=uuid4(),
@@ -132,7 +132,7 @@ async def create_test_user(
     db.add(db_user)
     db.commit()
     db.refresh(db_user)
-    
+
     return {
         "id": str(db_user.id),
         "email": db_user.email,
@@ -154,12 +154,12 @@ async def clear_rate_limits():
             status_code=status.HTTP_403_FORBIDDEN,
             detail="This endpoint is only available in test environments"
         )
-    
+
     # Import rate limiters
     from api.middleware.rate_limiter import general_limiter, auth_limiter
-    
+
     # Clear rate limit data
     general_limiter.requests.clear()
     auth_limiter.requests.clear()
-    
+
     return {"status": "success", "message": "Rate limits cleared"}
