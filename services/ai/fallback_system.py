@@ -50,7 +50,7 @@ class FallbackResponse:
 class FallbackTemplateManager:
     """Manages fallback response templates"""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.templates = self._initialize_templates()
         self.logger = logging.getLogger(__name__)
 
@@ -278,7 +278,7 @@ We apologize for the inconvenience and are working to restore full service quick
 class CacheManager:
     """Manages cached AI responses for fallback use"""
 
-    def __init__(self, cache_ttl_hours: int = 24):
+    def __init__(self, cache_ttl_hours: int = 24) -> None:
         self.cache: Dict[str, Dict[str, Any]] = {}
         self.cache_ttl = timedelta(hours=cache_ttl_hours)
         self.logger = logging.getLogger(__name__)
@@ -298,7 +298,7 @@ class CacheManager:
 
         return "|".join(key_elements)
 
-    def store_response(self, operation: str, context: Dict[str, Any], response: str):
+    def store_response(self, operation: str, context: Dict[str, Any], response: str) -> None:
         """Store a successful AI response in cache"""
         cache_key = self._generate_cache_key(operation, context)
 
@@ -340,7 +340,7 @@ class CacheManager:
 
         return None
 
-    def clear_expired_cache(self):
+    def clear_expired_cache(self) -> None:
         """Remove all expired cache entries"""
         current_time = datetime.now()
         expired_keys = []
@@ -361,7 +361,7 @@ class FallbackSystem:
     Comprehensive fallback system for AI services
     """
 
-    def __init__(self, fallback_level: FallbackLevel = FallbackLevel.COMPREHENSIVE):
+    def __init__(self, fallback_level: FallbackLevel = FallbackLevel.COMPREHENSIVE) -> None:
         self.fallback_level = fallback_level
         self.template_manager = FallbackTemplateManager()
         self.cache_manager = CacheManager()
@@ -462,7 +462,7 @@ class FallbackSystem:
             metadata={"operation": operation, "exception": str(exception) if exception else None},
         )
 
-    def _update_fallback_stats(self, operation: str, source: str):
+    def _update_fallback_stats(self, operation: str, source: str) -> None:
         """Update fallback usage statistics"""
         self.fallback_stats["total_fallbacks"] += 1
 
@@ -474,7 +474,7 @@ class FallbackSystem:
             self.fallback_stats["fallback_by_source"][source] = 0
         self.fallback_stats["fallback_by_source"][source] += 1
 
-    def cache_successful_response(self, operation: str, context: Dict[str, Any], response: str):
+    def cache_successful_response(self, operation: str, context: Dict[str, Any], response: str) -> None:
         """Cache a successful AI response for future fallback use"""
         if self.fallback_level in [FallbackLevel.CACHED, FallbackLevel.COMPREHENSIVE]:
             self.cache_manager.store_response(operation, context, response)
@@ -488,7 +488,7 @@ class FallbackSystem:
             "template_types": list(self.template_manager.templates.keys()),
         }
 
-    def perform_maintenance(self):
+    def perform_maintenance(self) -> None:
         """Perform routine maintenance (clear expired cache, etc.)"""
         self.cache_manager.clear_expired_cache()
         self.logger.info("Fallback system maintenance completed")
@@ -508,7 +508,7 @@ def get_fallback_system(
     return _fallback_system
 
 
-def reset_fallback_system():
+def reset_fallback_system() -> None:
     """Reset global fallback system (for testing)"""
     global _fallback_system
     _fallback_system = None

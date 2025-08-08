@@ -28,9 +28,10 @@ from sqlalchemy import text
 
 # Import all models to ensure they're registered
 from database.db_setup import Base
+from typing import Optional
 
 
-async def create_tables():
+async def create_tables() -> Optional[bool]:
     """Create all database tables."""
     db_url = os.environ["DATABASE_URL"]
     async_url = db_url.replace("postgresql://", "postgresql+asyncpg://")
@@ -58,9 +59,9 @@ async def create_tables():
         async with engine.begin() as conn:
             result = await conn.execute(
                 text("""
-                SELECT table_name 
-                FROM information_schema.tables 
-                WHERE table_schema = 'public' 
+                SELECT table_name
+                FROM information_schema.tables
+                WHERE table_schema = 'public'
                 ORDER BY table_name
             """)
             )
@@ -91,7 +92,7 @@ async def create_tables():
         await engine.dispose()
 
 
-def main():
+def main() -> int:
     """Run the setup."""
     print("Setting up test database")
     print("=" * 50)
@@ -108,4 +109,4 @@ def main():
 
 
 if __name__ == "__main__":
-    exit(main())
+    sys.exit(main())

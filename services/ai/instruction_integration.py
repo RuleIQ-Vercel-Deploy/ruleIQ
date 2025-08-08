@@ -27,7 +27,7 @@ class InstructionManager:
     Manages system instructions with integrated performance monitoring
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.templates = SystemInstructionTemplates()
         self.monitor = get_instruction_monitor()
         self._instruction_cache = {}
@@ -155,7 +155,7 @@ class InstructionManager:
         session_id: Optional[str] = None,
         user_id: Optional[str] = None,
         additional_context: Optional[Dict[str, Any]] = None,
-    ):
+    ) -> None:
         """
         Record usage metrics for an instruction
 

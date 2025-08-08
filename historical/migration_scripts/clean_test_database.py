@@ -7,9 +7,11 @@ import asyncio
 import os
 from sqlalchemy.ext.asyncio import create_async_engine
 from sqlalchemy import text
+import sys
+from typing import Optional
 
 
-async def clean_database():
+async def clean_database() -> Optional[bool]:
     """Drop all tables and types from the database."""
     db_url = os.environ.get(
         "DATABASE_URL",
@@ -31,7 +33,7 @@ async def clean_database():
             print("Dropping all tables...")
             result = await conn.execute(
                 text("""
-                SELECT tablename FROM pg_tables 
+                SELECT tablename FROM pg_tables
                 WHERE schemaname = 'public'
             """)
             )
@@ -45,7 +47,7 @@ async def clean_database():
             print("\nDropping all custom types...")
             result = await conn.execute(
                 text("""
-                SELECT typname FROM pg_type 
+                SELECT typname FROM pg_type
                 WHERE typnamespace = (SELECT oid FROM pg_namespace WHERE nspname = 'public')
                 AND typtype = 'e'
             """)
@@ -66,7 +68,7 @@ async def clean_database():
         await engine.dispose()
 
 
-def main():
+def main() -> int:
     """Run the cleanup."""
     print("Cleaning test database")
     print("=" * 50)
@@ -83,4 +85,4 @@ def main():
 
 
 if __name__ == "__main__":
-    exit(main())
+    sys.exit(main())

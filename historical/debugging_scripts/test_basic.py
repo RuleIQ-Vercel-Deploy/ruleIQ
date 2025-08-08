@@ -2,7 +2,7 @@
 """Basic test without fixtures."""
 
 
-def test_basic():
+def test_basic() -> None:
     """Basic test."""
     assert 1 + 1 == 2
     print("✓ Basic test works")

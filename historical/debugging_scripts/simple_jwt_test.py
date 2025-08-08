@@ -11,6 +11,7 @@ import requests
 
 # Use the same JWT library as the server
 from jose import jwt
+import sys
 
 # Load environment variables
 env_path = Path(__file__).parent / ".env.local"
@@ -41,7 +42,7 @@ try:
     print(f"  Token: {token[:50]}...")
 except Exception as e:
     print(f"✗ Failed to create token: {e}")
-    exit(1)
+    sys.exit(1)
 
 # Test the endpoint
 url = "http://localhost:8000/api/v1/ai-assessments/soc2/help"

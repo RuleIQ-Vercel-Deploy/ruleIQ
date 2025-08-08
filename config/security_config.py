@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 class SecurityConfig:
     """Centralized security configuration management."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self._validate_required_keys()
 
     def _validate_required_keys(self) -> None:

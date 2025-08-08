@@ -12,7 +12,7 @@ load_dotenv()
 import re
 import ast
 import subprocess
-from typing import Dict, List, Any
+from typing import Dict, List, Any, Optional
 from pathlib import Path
 from datetime import datetime
 
@@ -23,14 +23,14 @@ sys.path.insert(0, str(project_root))
 class StackAuthDryRunValidator:
     """Validates Stack Auth conversion readiness without making changes"""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.project_root = project_root
         self.api_routers_path = self.project_root / "api" / "routers"
         self.issues = []
         self.warnings = []
         self.success_count = 0
 
-    def log_issue(self, severity: str, file_path: str, message: str):
+    def log_issue(self, severity: str, file_path: str, message: str) -> None:
         """Log an issue found during validation"""
         item = {
             "severity": severity,
@@ -375,7 +375,7 @@ class StackAuthDryRunValidator:
         return summary
 
 
-def main():
+def main() -> Optional[int]:
     """Main dry run execution"""
     validator = StackAuthDryRunValidator()
 

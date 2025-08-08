@@ -5,8 +5,10 @@ before running TestSprite.
 """
 
 import requests
+import sys
+from typing import Optional
 
-def test_frontend_csrf():
+def test_frontend_csrf() -> Optional[bool]:
     """Test CSRF token endpoint"""
     print("🔐 Testing CSRF token endpoint...")
     try:
@@ -21,7 +23,7 @@ def test_frontend_csrf():
         print(f"❌ CSRF endpoint error: {e}")
         return False
 
-def test_backend_auth():
+def test_backend_auth() -> Optional[bool]:
     """Test backend authentication"""
     print("🔐 Testing backend authentication...")
     try:
@@ -89,7 +91,7 @@ def test_page_loads():
 
     return all_passed
 
-def main():
+def main() -> int:
     """Run all validation tests"""
     print("🚀 Starting authentication flow validation...\n")
 
@@ -118,4 +120,4 @@ def main():
         return 1
 
 if __name__ == '__main__':
-    exit(main())
+    sys.exit(main())

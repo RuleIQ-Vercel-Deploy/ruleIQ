@@ -81,7 +81,7 @@ class CircuitBreakerMetrics:
             return self.successful_requests / self.total_requests
         return 0.0
 
-    def update_failure_rate(self):
+    def update_failure_rate(self) -> None:
         """Update the failure rate based on current metrics"""
         if self.total_requests > 0:
             self.failure_rate = self.failed_requests / self.total_requests
@@ -95,7 +95,7 @@ class AICircuitBreaker:
     and automatic fallback capabilities.
     """
 
-    def __init__(self, config: Optional[CircuitBreakerConfig] = None):
+    def __init__(self, config: Optional[CircuitBreakerConfig] = None) -> None:
         self.config = config or CircuitBreakerConfig()
         self.logger = logging.getLogger(__name__)
 
@@ -153,7 +153,7 @@ class AICircuitBreaker:
         with self._lock:
             return self._is_model_available_unlocked(model_name)
 
-    def record_success(self, model_name: str, response_time: float = 0.0):
+    def record_success(self, model_name: str, response_time: float = 0.0) -> None:
         """Record a successful AI operation"""
         with self._lock:
             self.metrics.total_requests += 1
@@ -183,7 +183,7 @@ class AICircuitBreaker:
 
     def record_failure(
         self, model_name: str, error: Exception, context: Optional[Dict[str, Any]] = None
-    ):
+    ) -> None:
         """Record a failed AI operation"""
         with self._lock:
             now = datetime.now()
@@ -221,7 +221,7 @@ class AICircuitBreaker:
                 f"(recent_failures: {recent_failures}/{self.config.failure_threshold})"
             )
 
-    def _trip_circuit(self, model_name: str):
+    def _trip_circuit(self, model_name: str) -> None:
         """Trip the circuit breaker for a specific model"""
         self._model_states[model_name] = CircuitState.OPEN
         self._state = CircuitState.OPEN
@@ -243,7 +243,7 @@ class AICircuitBreaker:
         time_since_failure = datetime.now() - self._last_failure_time
         return time_since_failure.total_seconds() >= self.config.recovery_timeout
 
-    def _clean_old_failures(self, model_name: str):
+    def _clean_old_failures(self, model_name: str) -> None:
         """Remove failures outside the time window"""
         if model_name not in self._failures:
             return
@@ -346,7 +346,7 @@ class AICircuitBreaker:
         """
         return self._perform_health_check(model_name)
 
-    def reset_circuit(self, model_name: Optional[str] = None):
+    def reset_circuit(self, model_name: Optional[str] = None) -> None:
         """Manually reset circuit breaker (admin function)"""
         with self._lock:
             if model_name:
@@ -453,7 +453,7 @@ def get_circuit_breaker() -> AICircuitBreaker:
     return _circuit_breaker
 
 
-def reset_circuit_breaker():
+def reset_circuit_breaker() -> None:
     """Reset global circuit breaker (for testing)"""
     global _circuit_breaker
     _circuit_breaker = None

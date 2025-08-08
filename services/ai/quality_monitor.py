@@ -101,7 +101,7 @@ class AIQualityMonitor:
     - Feedback loop optimization
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.quality_assessments: Dict[str, QualityAssessment] = {}
         self.feedback_history: List[ResponseFeedback] = []
         self.quality_trends: Dict[str, List[float]] = {}
@@ -553,7 +553,7 @@ class AIQualityMonitor:
 
         return suggestions
 
-    def _update_quality_metrics(self, assessment: QualityAssessment):
+    def _update_quality_metrics(self, assessment: QualityAssessment) -> None:
         """Update overall quality metrics."""
 
         self.metrics["total_assessments"] += 1
@@ -565,7 +565,7 @@ class AIQualityMonitor:
         )
         self.metrics["average_quality_score"] = total_score / self.metrics["total_assessments"]
 
-    async def record_user_feedback(self, feedback: ResponseFeedback):
+    async def record_user_feedback(self, feedback: ResponseFeedback) -> None:
         """Record user feedback for quality improvement."""
 
         self.feedback_history.append(feedback)

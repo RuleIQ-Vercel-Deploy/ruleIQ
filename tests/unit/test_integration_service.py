@@ -142,7 +142,7 @@ class TestIntegrationService:
 
         # Verify the existing integration was updated
         assert existing_integration.health_status == sample_health_info
-        assert existing_integration.is_active == True
+        assert existing_integration.is_active
         assert existing_integration.encrypted_credentials == "encrypted_credentials"
 
         # Verify database operations (no manual commit with transaction context manager)
@@ -259,7 +259,7 @@ class TestIntegrationService:
         )
 
         # Verify result
-        assert result == True
+        assert result
         assert existing_integration.health_status == health_data
         assert existing_integration.last_health_check is not None
 
@@ -292,8 +292,8 @@ class TestIntegrationService:
         result = await integration_service.delete_integration(integration_id, user_id)
 
         # Verify result
-        assert result == True
-        assert existing_integration.is_active == False
+        assert result
+        assert not existing_integration.is_active
 
 
 class TestEvidenceCollectionService:
@@ -384,7 +384,7 @@ class TestEvidenceCollectionService:
         )
 
         # Verify result
-        assert result == True
+        assert result
         assert existing_collection.status == "running"
         assert existing_collection.progress_percentage == 50
         assert existing_collection.current_activity == "Collecting IAM policies"

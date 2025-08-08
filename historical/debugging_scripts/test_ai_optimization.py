@@ -11,7 +11,7 @@ import sys
 from pathlib import Path
 
 
-def run_quick_tests():
+def run_quick_tests() -> bool:
     """Run a quick subset of AI optimization tests."""
     print("🚀 Running AI Optimization Quick Tests...")
     print("=" * 50)
@@ -58,7 +58,7 @@ def run_quick_tests():
         return False
 
 
-def check_test_setup():
+def check_test_setup() -> bool:
     """Check if the test environment is properly set up."""
     print("🔍 Checking test setup...")
 
@@ -103,7 +103,7 @@ def check_test_setup():
     return True
 
 
-def main():
+def main() -> None:
     """Main function."""
     print("AI Optimization Test Verification")
     print("=" * 50)

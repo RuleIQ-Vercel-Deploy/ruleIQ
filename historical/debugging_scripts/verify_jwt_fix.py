@@ -11,6 +11,7 @@ import sys
 import time
 import subprocess
 from pathlib import Path
+from typing import Optional
 
 # Colors for output
 GREEN = "\033[92m"
@@ -20,7 +21,7 @@ BLUE = "\033[94m"
 RESET = "\033[0m"
 
 
-def print_status(message, status="info"):
+def print_status(message, status="info") -> None:
     """Print colored status messages"""
     if status == "success":
         print(f"{GREEN}✓ {message}{RESET}")
@@ -32,7 +33,7 @@ def print_status(message, status="info"):
         print(f"{BLUE}→ {message}{RESET}")
 
 
-def check_prerequisites():
+def check_prerequisites() -> bool:
     """Check if all required libraries are installed"""
     print_status("Checking prerequisites...")
 
@@ -57,7 +58,7 @@ def check_prerequisites():
     return True
 
 
-def kill_existing_servers():
+def kill_existing_servers() -> None:
     """Kill any existing uvicorn processes"""
     print_status("Killing existing server processes...")
 
@@ -101,7 +102,7 @@ def start_server():
         return None
 
 
-def test_jwt_authentication():
+def test_jwt_authentication() -> Optional[bool]:
     """Test JWT authentication with the correct library"""
     print_status("Testing JWT authentication...")
 
@@ -176,7 +177,7 @@ def test_jwt_authentication():
         return False
 
 
-def main():
+def main() -> Optional[int]:
     """Main execution function"""
     print(f"\n{BLUE}{'=' * 60}{RESET}")
     print(f"{BLUE}JWT Authentication Fix Verification{RESET}")

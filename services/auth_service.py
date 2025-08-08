@@ -19,7 +19,7 @@ from database.user import User
 class SessionManager:
     """Manages user sessions with Redis backend and in-memory fallback."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self._redis_client: Optional[redis.Redis] = None
         self._redis_available: Optional[bool] = None
         # Fallback in-memory session store
@@ -201,7 +201,7 @@ class SessionManager:
 class AuthService:
     """Main authentication service with session management."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.session_manager = SessionManager()
 
     async def create_user_session(

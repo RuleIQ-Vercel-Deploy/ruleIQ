@@ -562,7 +562,7 @@ class EnhancedFileValidator:
         allowed_types: List[str] = None,
         security_level: str = "standard",
         enable_quarantine: bool = True,
-    ):
+    ) -> None:
         self.max_size = max_size or settings.max_file_size
         self.allowed_types = allowed_types or settings.allowed_file_types
         self.security_level = security_level

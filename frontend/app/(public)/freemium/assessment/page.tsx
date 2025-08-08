@@ -2,8 +2,7 @@
 
 import { Suspense, useEffect } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
-import { FreemiumAssessmentFlow } from '../../../../components/freemium/freemium-assessment-flow';
-import { FreemiumAssessmentProgress } from '../../../../components/freemium/freemium-assessment-flow';
+import { FreemiumAssessmentFlow , FreemiumAssessmentProgress } from '../../../../components/freemium/freemium-assessment-flow';
 import { Card, CardContent } from '../../../../components/ui/card';
 import { Alert, AlertDescription } from '../../../../components/ui/alert';
 import { Button } from '../../../../components/ui/button';

@@ -28,7 +28,7 @@ logger = get_logger(__name__)
 class IntegrationService:
     """Service for managing enterprise integrations"""
 
-    def __init__(self, db: AsyncSession):
+    def __init__(self, db: AsyncSession) -> None:
         self.db = db
         self.encryption = get_credential_encryption()
 
@@ -146,7 +146,7 @@ class IntegrationService:
             stmt = select(Integration).where(Integration.user_id == user_id)
 
             if active_only:
-                stmt = stmt.where(Integration.is_active == True)
+                stmt = stmt.where(Integration.is_active)
 
             if include_health:
                 stmt = stmt.options(selectinload(Integration.evidence_collections))
@@ -364,7 +364,7 @@ class IntegrationService:
 class EvidenceCollectionService:
     """Service for managing evidence collections"""
 
-    def __init__(self, db: AsyncSession):
+    def __init__(self, db: AsyncSession) -> None:
         self.db = db
 
     async def create_evidence_collection(

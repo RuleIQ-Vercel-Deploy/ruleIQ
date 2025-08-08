@@ -74,7 +74,10 @@ async def _generate_and_distribute_report_async(schedule_id_str: str):
                 pdf_generator = PDFGenerator(report_data)
                 pdf_content = pdf_generator.generate()  # CPU-bound, can be sync
                 attachment = {
-                    "filename": f"{schedule.report_type.replace(' ', '_')}_{datetime.utcnow().strftime('%Y%m%d')}.pdf",
+                    "filename": (
+                        f"{schedule.report_type.replace(' ', '_')}_"
+                        f"{datetime.utcnow().strftime('%Y%m%d')}.pdf"
+                    ),
                     "content": pdf_content,
                 }
 
@@ -140,7 +143,10 @@ async def _send_report_summary_notifications_async():
             user = summary["user"]
             if user and user.email:
                 logger.info(
-                    f"Would send summary to {user.email} for {summary['total_reports']} scheduled reports"
+                    (
+                        f"Would send summary to {user.email} for "
+                        f"{summary['total_reports']} scheduled reports"
+                    )
                 )
                 notifications_sent += 1
 

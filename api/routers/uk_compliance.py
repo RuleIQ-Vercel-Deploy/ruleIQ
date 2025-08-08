@@ -38,14 +38,14 @@ async def get_frameworks(
 ):
     """
     Get compliance frameworks with optional filtering.
-    
+
     Supports filtering by region, category, industry, and complexity.
     """
     query = db.query(ComplianceFramework)
 
     # Apply filters
     if active_only:
-        query = query.filter(ComplianceFramework.is_active == True)
+        query = query.filter(ComplianceFramework.is_active)
 
     if region:
         query = query.filter(ComplianceFramework.geographic_scop.contains([region]))
@@ -147,7 +147,7 @@ async def load_frameworks(
 ):
     """
     Bulk load UK compliance frameworks.
-    
+
     Requires authentication. Limited to 10 requests per minute.
     """
     # Validate geographic scope for UK frameworks
@@ -219,7 +219,7 @@ async def update_framework(
 ):
     """
     Update a specific compliance framework.
-    
+
     Requires authentication.
     """
     # Find existing framework
@@ -293,7 +293,7 @@ async def delete_framework(
 ):
     """
     Soft delete a compliance framework (set is_active = False).
-    
+
     Requires authentication.
     """
     framework = db.query(ComplianceFramework)\

@@ -1,8 +1,7 @@
 "use client";
 
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import React from 'react';
 import { CommandPalette } from '@/components/dashboard/command-palette';
 import { KeyboardShortcutsDialog } from '@/components/dashboard/keyboard-shortcuts-dialog';
 import { QuickActionsPanel } from '@/components/dashboard/quick-actions';

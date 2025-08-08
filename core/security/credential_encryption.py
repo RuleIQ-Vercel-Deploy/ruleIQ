@@ -56,7 +56,7 @@ class CredentialEncryption:
     MIN_KEY_LENGTH = 32  # Minimum master key length
     SALT_LENGTH = 32  # Salt length for key derivation
 
-    def __init__(self, master_key: Optional[str] = None, salt: Optional[bytes] = None):
+    def __init__(self, master_key: Optional[str] = None, salt: Optional[bytes] = None) -> None:
         """
         Initialize credential encryption system
 
@@ -107,7 +107,10 @@ class CredentialEncryption:
 
         # In production, this should be stored in secure key management
         logger.warning(
-            f"Generated new deployment salt for {deployment_id} - store securely in DEPLOYMENT_SALT env var"
+            (
+                f"Generated new deployment salt for {deployment_id} - "
+                "store securely in DEPLOYMENT_SALT env var"
+            )
         )
         return salt
 

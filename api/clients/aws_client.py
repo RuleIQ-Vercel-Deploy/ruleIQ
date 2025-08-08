@@ -30,7 +30,7 @@ class AWSAPIException(APIException):
 class AWSAPIClient(BaseAPIClient):
     """AWS API client for collecting infrastructure and security evidence"""
 
-    def __init__(self, credentials: APICredentials):
+    def __init__(self, credentials: APICredentials) -> None:
         super().__init__(credentials)
         self.aws_session: Optional[boto3.Session] = None
         self.region = credentials.region or "us-east-1"

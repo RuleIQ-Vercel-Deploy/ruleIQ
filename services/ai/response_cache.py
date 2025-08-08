@@ -49,7 +49,7 @@ class AIResponseCache:
     - Cost optimization through intelligent caching
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.cache_manager = None
         self.default_ttl = 3600  # 1 hour default
         self.max_ttl = 86400  # 24 hours max
@@ -74,7 +74,7 @@ class AIResponseCache:
             "cost_savings": 0.0,
         }
 
-    async def initialize(self):
+    async def initialize(self) -> None:
         """Initialize the cache manager."""
         self.cache_manager = await get_cache_manager()
         logger.info("AI Response Cache initialized")
@@ -312,17 +312,17 @@ class AIResponseCache:
             "has_business_context": bool(context.get("business_context")),
         }
 
-    def _record_cache_hit(self):
+    def _record_cache_hit(self) -> None:
         """Record a cache hit for metrics."""
         self.metrics["hits"] += 1
         self.metrics["total_requests"] += 1
 
-    def _record_cache_miss(self):
+    def _record_cache_miss(self) -> None:
         """Record a cache miss for metrics."""
         self.metrics["misses"] += 1
         self.metrics["total_requests"] += 1
 
-    def _update_cache_metrics(self, cache_data: Dict[str, Any]):
+    def _update_cache_metrics(self, cache_data: Dict[str, Any]) -> None:
         """Update cache metrics with new cached data."""
         # Estimate cost savings (rough calculation)
         response_length = len(cache_data["response"])

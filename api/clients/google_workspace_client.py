@@ -29,7 +29,7 @@ except ImportError:
     GOOGLE_AVAILABLE = False
 
     class Credentials:
-        def __init__(self, *args, **kwargs):
+        def __init__(self, *args, **kwargs) -> None:
             self.expired = False
             self.refresh_token = None
             self.valid = True
@@ -39,7 +39,7 @@ except ImportError:
         def from_authorized_user_info(cls, info, scopes):
             return cls()
 
-        def refresh(self, request):
+        def refresh(self, request) -> None:
             pass
 
     class Request:
@@ -95,7 +95,7 @@ class GoogleWorkspaceAPIClient(BaseAPIClient):
         "https://www.googleapis.com/auth/admin.security.readonly",
     ]
 
-    def __init__(self, credentials: APICredentials):
+    def __init__(self, credentials: APICredentials) -> None:
         super().__init__(credentials)
         self.service_cache = {}
         self.credentials_obj: Optional[Credentials] = None

@@ -10,7 +10,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 
-def main():
+def main() -> None:
     # Get database URL from environment
     database_url = os.getenv("DATABASE_URL")
     if not database_url:

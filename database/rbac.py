@@ -23,7 +23,7 @@ from .db_setup import Base
 class Role(Base):
     """
     System roles that define user permissions.
-    
+
     Built-in roles:
     - admin: Full system access
     - framework_manager: Manage compliance frameworks
@@ -51,7 +51,7 @@ class Role(Base):
 class Permission(Base):
     """
     System permissions that can be assigned to roles.
-    
+
     Permission categories:
     - user_management: Create, update, delete users
     - framework_management: Manage compliance frameworks

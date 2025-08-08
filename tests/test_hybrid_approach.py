@@ -9,7 +9,7 @@ from uuid import uuid4
 def test_sync_database_fixture_works(sync_db_session, sync_sample_user):
     """Test that sync database fixtures work."""
     assert sync_sample_user.email == "test@example.com"
-    assert sync_sample_user.is_active == True
+    assert sync_sample_user.is_active
 
     # Verify user is in database
     from database.user import User

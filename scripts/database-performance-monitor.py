@@ -17,7 +17,7 @@ logger = logging.getLogger(__name__)
 
 
 class DatabasePerformanceMonitor:
-    def __init__(self, connection_string: str):
+    def __init__(self, connection_string: str) -> None:
         self.connection_string = connection_string
         self.results = {
             "timestamp": datetime.now().isoformat(),
@@ -46,9 +46,9 @@ class DatabasePerformanceMonitor:
                        pg_size_pretty(pg_database_size(current_database())) as size_human
             """,
             "table_sizes": """
-                SELECT schemaname, tablename, 
+                SELECT schemaname, tablename,
                        pg_size_pretty(pg_total_relation_size(schemaname||'.'||tablename)) as size
-                FROM pg_tables 
+                FROM pg_tables
                 WHERE schemaname NOT IN ('information_schema', 'pg_catalog')
                 ORDER BY pg_total_relation_size(schemaname||'.'||tablename) DESC
                 LIMIT 10
@@ -61,8 +61,8 @@ class DatabasePerformanceMonitor:
                 WHERE datname = current_database()
             """,
             "cache_hit_ratio": """
-                SELECT 
-                    CASE 
+                SELECT
+                    CASE
                         WHEN sum(heap_blks_hit) + sum(heap_blks_read) = 0 THEN 0
                         ELSE sum(heap_blks_hit)::float / (sum(heap_blks_hit) + sum(heap_blks_read))
                     END as ratio
@@ -88,7 +88,7 @@ class DatabasePerformanceMonitor:
         table_stats = []
 
         query = """
-            SELECT 
+            SELECT
                 schemaname,
                 tablename,
                 n_tup_ins as inserts,
@@ -117,14 +117,14 @@ class DatabasePerformanceMonitor:
         index_analysis = []
 
         query = """
-            SELECT 
+            SELECT
                 schemaname,
                 tablename,
                 indexrelname as index_name,
                 idx_scan as index_scans,
                 idx_tup_read as tuples_read,
                 idx_tup_fetch as tuples_fetched,
-                CASE 
+                CASE
                     WHEN idx_scan = 0 THEN 'Unused'
                     WHEN idx_tup_fetch::float / idx_tup_read < 0.1 THEN 'Inefficient'
                     ELSE 'Efficient'
@@ -164,7 +164,7 @@ class DatabasePerformanceMonitor:
             logger.error(f"Error generating performance report: {e}")
             return self.results
 
-    def generate_recommendations(self):
+    def generate_recommendations(self) -> None:
         """Generate optimization recommendations based on collected data"""
         recommendations = []
 
@@ -210,7 +210,7 @@ class DatabasePerformanceMonitor:
 
         self.results["optimization_suggestions"] = recommendations
 
-    def save_report(self, filename: str = None):
+    def save_report(self, filename: str = None) -> None:
         """Save performance report to file"""
         if filename is None:
             filename = (
@@ -225,7 +225,7 @@ class DatabasePerformanceMonitor:
             logger.error(f"Error saving report: {e}")
 
 
-def main():
+def main() -> None:
     """Main execution function"""
     # Get database URL from environment
     database_url = os.getenv("DATABASE_URL", "postgresql://user:password@localhost:5432/ruleiq")

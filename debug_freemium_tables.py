@@ -16,7 +16,7 @@ os.environ["DATABASE_URL"] = (
 # Add project to path
 sys.path.insert(0, "/home/omar/Documents/ruleIQ")
 
-def main():
+def main() -> None:
     print("=== Freemium Database Table Debug Script ===")
 
     try:

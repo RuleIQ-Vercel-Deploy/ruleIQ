@@ -8,6 +8,8 @@ import os
 from sqlalchemy import create_engine, text
 from sqlalchemy.ext.asyncio import create_async_engine
 from sqlalchemy.pool import NullPool
+import sys
+from typing import Optional
 
 # Set up environment
 os.environ["DATABASE_URL"] = (
@@ -15,7 +17,7 @@ os.environ["DATABASE_URL"] = (
 )
 
 
-def test_sync_connection():
+def test_sync_connection() -> Optional[bool]:
     """Test synchronous database connection."""
     print("Testing synchronous connection...")
 
@@ -34,7 +36,7 @@ def test_sync_connection():
         return False
 
 
-async def test_async_connection():
+async def test_async_connection() -> Optional[bool]:
     """Test asynchronous database connection."""
     print("\nTesting asynchronous connection...")
 
@@ -67,7 +69,7 @@ async def test_async_connection():
         return False
 
 
-async def test_table_creation():
+async def test_table_creation() -> Optional[bool]:
     """Test table creation in test database."""
     print("\nTesting table operations...")
 
@@ -89,9 +91,9 @@ async def test_table_creation():
         async with engine.begin() as conn:
             result = await conn.execute(
                 text("""
-                SELECT table_name 
-                FROM information_schema.tables 
-                WHERE table_schema = 'public' 
+                SELECT table_name
+                FROM information_schema.tables
+                WHERE table_schema = 'public'
                 ORDER BY table_name
             """)
             )
@@ -105,7 +107,7 @@ async def test_table_creation():
         return False
 
 
-def main():
+def main() -> int:
     """Run all tests."""
     print("Database Connection Test Suite")
     print("=" * 50)
@@ -134,4 +136,4 @@ def main():
 
 
 if __name__ == "__main__":
-    exit(main())
+    sys.exit(main())

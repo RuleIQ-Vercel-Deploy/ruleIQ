@@ -48,17 +48,17 @@ class ParsedTemplate:
 class TemplateProcessor:
     """Processes ISO 27001 templates for policy generation"""
 
-    def __init__(self, templates_path: str = "iso27001-templates"):
+    def __init__(self, templates_path: str = "iso27001-templates") -> None:
         self.templates_path = Path(templates_path)
         self.template_cache: Dict[str, ParsedTemplate] = {}
 
     def parse_iso27001_template(self, template_path: str) -> ParsedTemplate:
         """
         Parse ISO 27001 template document into structured sections.
-        
+
         Args:
             template_path: Path to template document
-            
+
         Returns:
             ParsedTemplate with sections and variables
         """
@@ -178,12 +178,12 @@ class TemplateProcessor:
 class PolicyGenerator:
     """
     AI-powered policy generation service with dual provider support.
-    
+
     Uses Google AI (primary) and OpenAI (fallback) with circuit breaker pattern
     for reliability and cost optimization.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.primary_provider = "google"
         self.fallback_provider = "openai"
         self.circuit_breaker = AICircuitBreaker()
@@ -193,7 +193,7 @@ class PolicyGenerator:
         # Initialize AI clients
         self._init_ai_clients()
 
-    def _init_ai_clients(self):
+    def _init_ai_clients(self) -> None:
         """Initialize AI provider clients"""
         try:
             from services.ai.google_client import GoogleAIClient
@@ -215,11 +215,11 @@ class PolicyGenerator:
     ) -> PolicyGenerationResponse:
         """
         Generate compliance policy using AI with dual provider fallback.
-        
+
         Args:
             request: Policy generation request with business context
             framework: Compliance framework to generate policy for
-            
+
         Returns:
             PolicyGenerationResponse with generated policy content
         """
@@ -233,8 +233,8 @@ class PolicyGenerator:
             logger.info(f"Returning cached policy for {framework.name}")
             return cached_response
 
-        # Try primary provider (Google)
-        if self.circuit_breaker.get_state(self.primary_provider) != "OPEN":
+        # Try primary provider (Google) - check if model is available
+        if self.circuit_breaker.is_model_available(self.primary_provider):
             try:
                 response = self._generate_with_google(request, framework)
                 if response.success:
@@ -245,10 +245,10 @@ class PolicyGenerator:
 
             except Exception as e:
                 logger.warning(f"Google AI failed: {e}")
-                self.circuit_breaker.record_failure(self.primary_provider)
+                self.circuit_breaker.record_failure(self.primary_provider, e)
 
-        # Fallback to OpenAI
-        if self.circuit_breaker.get_state(self.fallback_provider) != "OPEN":
+        # Fallback to OpenAI - check if model is available
+        if self.circuit_breaker.is_model_available(self.fallback_provider):
             try:
                 response = self._generate_with_openai(request, framework)
                 if response.success:
@@ -259,7 +259,7 @@ class PolicyGenerator:
 
             except Exception as e:
                 logger.error(f"OpenAI fallback failed: {e}")
-                self.circuit_breaker.record_failure(self.fallback_provider)
+                self.circuit_breaker.record_failure(self.fallback_provider, e)
 
         # Both providers failed - return template-based fallback
         return self._generate_fallback_policy(request, framework, start_time)
@@ -362,9 +362,9 @@ class PolicyGenerator:
         context = request.business_context
 
         prompt = f"""
-        Generate a {request.policy_type.value} for {context.organization_name} 
+        Generate a {request.policy_type.value} for {context.organization_name}
         compliant with {framework.display_name}.
-        
+
         Business Context:
         - Industry: {context.industry}
         - Employee Count: {context.employee_count}
@@ -372,21 +372,21 @@ class PolicyGenerator:
         - Processes Personal Data: {context.processes_personal_data}
         - Data Types: {', '.join(context.data_types)}
         - Third Party Processors: {context.third_party_processors}
-        
+
         Framework Requirements:
         {chr(10).join(f"- {req}" for req in framework.key_requirement)}
-        
+
         Customization Level: {request.customization_level.value}
         Target Audience: {request.target_audience.value}
         Language: {request.language}
-        
+
         Requirements:
         1. Include all mandatory sections for {framework.name}
         2. Customize content for the business context
         3. Use appropriate legal language for {request.language}
         4. Include compliance checklist
         5. Ensure policy is actionable and implementable
-        
+
         Please generate a comprehensive policy document.
         """
 
@@ -402,20 +402,20 @@ class PolicyGenerator:
 
         return f"""
         # {context.organization_name} {request.policy_type.value.replace('_', ' ').title()}
-        
+
         ## 1. Policy Statement
-        {context.organization_name} is committed to maintaining the highest standards of 
+        {context.organization_name} is committed to maintaining the highest standards of
         {request.policy_type.value.replace('_', ' ')} in accordance with {framework.display_name}.
-        
+
         ## 2. Scope
         This policy applies to all {context.organization_name} operations in {', '.join(context.geographic_operations)}.
-        
+
         ## 3. Responsibilities
         All employees and contractors must comply with this policy.
-        
+
         ## 4. Implementation
         This policy will be reviewed annually and updated as necessary.
-        
+
         Effective Date: {datetime.now().strftime('%Y-%m-%d')}
         """
 
@@ -428,26 +428,26 @@ class PolicyGenerator:
         templates = {
             "privacy_policy": """
             # Privacy Policy Template
-            
+
             ## Data Controller Information
             [Organization Name]
             [Address]
-            
+
             ## Legal Basis for Processing
             We process personal data for legitimate business purposes.
-            
+
             ## Data Subject Rights
             You have rights regarding your personal data under applicable law.
             """,
             "information_security_policy": """
             # Information Security Policy Template
-            
+
             ## Policy Statement
             [Organization Name] is committed to protecting information assets.
-            
+
             ## Scope
             This policy applies to all systems and personnel.
-            
+
             ## Responsibilities
             All staff must follow security procedures.
             """
@@ -486,12 +486,12 @@ class PolicyGenerator:
     ) -> PolicyRefinementResponse:
         """
         Refine existing policy based on feedback.
-        
+
         Args:
             original_policy: Original policy content
             feedback: List of feedback items
             framework: Compliance framework
-            
+
         Returns:
             PolicyRefinementResponse with refined content
         """
@@ -545,15 +545,15 @@ class PolicyGenerator:
         """Build prompt for policy refinement"""
         return f"""
         Please refine the following policy based on the feedback provided:
-        
+
         Original Policy:
         {original_policy}
-        
+
         Feedback to Address:
         {chr(10).join(f"- {item}" for item in feedback)}
-        
+
         Framework Requirements: {framework.display_name}
-        
+
         Please provide an improved version that addresses all feedback while maintaining compliance.
         """
 
@@ -564,11 +564,11 @@ class PolicyGenerator:
     ) -> PolicyValidationResult:
         """
         Validate policy against UK-specific requirements.
-        
+
         Args:
             policy_content: Policy content to validate
             framework: UK compliance framework
-            
+
         Returns:
             PolicyValidationResult with validation details
         """

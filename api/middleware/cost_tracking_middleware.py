@@ -26,7 +26,7 @@ logger = get_logger(__name__)
 class CostTrackingMiddleware(BaseHTTPMiddleware):
     """
     Middleware for automatic AI cost tracking and budget enforcement.
-    
+
     Intercepts AI-related API requests, tracks costs, enforces budgets,
     and provides real-time cost monitoring.
     """
@@ -38,7 +38,7 @@ class CostTrackingMiddleware(BaseHTTPMiddleware):
         enable_budget_enforcement: bool = True,
         enable_cost_optimization: bool = True,
         track_all_requests: bool = False
-    ):
+    ) -> None:
         super().__init__(app)
         self.cost_manager = cost_manager or AICostManager()
         self.cost_tracker = CostTrackingService()
@@ -453,7 +453,7 @@ class CostTrackingMiddleware(BaseHTTPMiddleware):
 class RealTimeCostMonitor:
     """Real-time cost monitoring with WebSocket support."""
 
-    def __init__(self, cost_manager: AICostManager):
+    def __init__(self, cost_manager: AICostManager) -> None:
         self.cost_manager = cost_manager
         self.active_connections: Dict[str, Any] = {}
 

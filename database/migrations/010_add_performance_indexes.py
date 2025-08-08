@@ -9,7 +9,7 @@ branch_labels = None
 depends_on = None
 
 
-def upgrade():
+def upgrade() -> None:
     """Add performance indexes to improve query performance."""
 
     # Enable pg_trgm extension for text search
@@ -93,7 +93,7 @@ def upgrade():
     op.execute("ANALYZE generated_policies;")
 
 
-def downgrade():
+def downgrade() -> None:
     """Remove performance indexes."""
 
     # Evidence table indexes

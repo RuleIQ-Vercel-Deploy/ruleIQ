@@ -9,7 +9,7 @@ project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, project_root)
 
 
-def fix_cache_strategy_tests():
+def fix_cache_strategy_tests() -> None:
     """Fix fixture scope issues in cache strategy tests."""
 
     test_file = os.path.join(
@@ -384,14 +384,14 @@ class TestCacheStrategyIntegration:
         # Mock assistant for testing since it may not have these methods yet
         assistant = Mock()
         assistant.async_db_session = async_db_session
-        
+
         # Create optimized cache config
         config = CacheLifecycleConfig(
             performance_based_ttl=True,
             cache_warming_enabled=True,
             intelligent_invalidation=True
         )
-        
+
         # Mock the cache-related methods
         assistant.get_cache_strategy_metrics = AsyncMock(return_value={
             "strategy_optimization": {
@@ -400,7 +400,7 @@ class TestCacheStrategyIntegration:
                 "intelligent_invalidation": {"enabled": True, "recent_triggers": 0}
             }
         })
-        
+
         assistant._add_to_cache_warming_queue = AsyncMock()
         assistant.process_cache_warming_queue = AsyncMock(return_value=0)
         assistant.trigger_cache_invalidation = AsyncMock()

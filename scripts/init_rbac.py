@@ -17,7 +17,7 @@ from services.rbac_service import RBACService, initialize_rbac_system
 from database.rbac import Role, Permission
 
 
-def assign_permissions_to_roles(db_session):
+def assign_permissions_to_roles(db_session) -> None:
     """Assign permissions to default roles based on role responsibilities."""
 
     rbac = RBACService(db_session)
@@ -59,10 +59,12 @@ def assign_permissions_to_roles(db_session):
         ],
         "business_user": [
             # Business users can create assessments and policies for their organization
+            # FIXED: Added missing permissions for business profiles and full functionality
             "framework_list",
             "assessment_create", "assessment_update", "assessment_list",
             "policy_generate", "policy_refine", "policy_validate",
-            "report_view", "report_export"
+            "report_view", "report_export",
+            "user_create", "user_list", "user_update"  # Added: business profile management
         ]
     }
 
@@ -91,7 +93,7 @@ def assign_permissions_to_roles(db_session):
                     print(f"✗ Error assigning '{permission_name}' to '{role_name}': {e}")
 
 
-def main():
+def main() -> bool:
     """Initialize the RBAC system."""
 
     print("=== Initializing RBAC System ===")

@@ -287,7 +287,7 @@ async def async_db_session():
 
 
 @pytest.fixture
-async def initialized_frameworks(async_db_session):
+async def initialized_frameworks(async_db_session) -> bool:
     """Initialize default frameworks for tests that need them."""
     from services.framework_service import initialize_default_frameworks
 
@@ -772,7 +772,7 @@ def compliance_golden_dataset():
     ]
 
 
-def assert_api_response_security(response):
+def assert_api_response_security(response) -> None:
     """Placeholder for security assertion on API responses."""
     # A real implementation would check for security headers like CSP, HSTS, etc.
     assert "X-Content-Type-Options" in response.headers
@@ -780,7 +780,7 @@ def assert_api_response_security(response):
     pass
 
 
-def assert_no_sensitive_data_in_logs(log_capture):
+def assert_no_sensitive_data_in_logs(log_capture) -> None:
     """Placeholder for checking sensitive data in logs."""
     # A real implementation would use more sophisticated pattern matching.
     sensitive_keywords = ["password", "secret", "api_key", "token"]

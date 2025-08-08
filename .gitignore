@@ -153,6 +153,9 @@ End of file
 .serena/cache/
 */.serena/cache/
 **/.serena/cache/
+
+# Debug and testing tools - keep out of version control  
+debug-suite.html
 *.pkl
 
 # Backup environment files
@@ -168,3 +171,6 @@ End of file
 .serena/cache/
 */.serena/cache/
 **/.serena/cache/
+
+# Debug and testing tools - keep out of version control  
+debug-suite.html

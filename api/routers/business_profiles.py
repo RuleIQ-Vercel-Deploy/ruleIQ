@@ -28,7 +28,7 @@ async def create_business_profile(
     db: AsyncSession = Depends(get_async_db),
 ):
     # Check if profile already exists
-    stmt = select(BusinessProfile).where(BusinessProfile.user_id == current_user["id"])
+    stmt = select(BusinessProfile).where(BusinessProfile.user_id == current_user.id)
     result = await db.execute(stmt)
     existing = result.scalars().first()
 
@@ -71,7 +71,7 @@ async def create_business_profile(
         except ValidationError as e:
             raise HTTPException(status_code=400, detail=str(e))
 
-        db_profile = BusinessProfile(id=uuid4(), user_id=current_user["id"], **validated_data)
+        db_profile = BusinessProfile(id=uuid4(), user_id=current_user.id, **validated_data)
         db.add(db_profile)
         await db.commit()
         await db.refresh(db_profile)
@@ -83,7 +83,7 @@ async def get_business_profile(
     current_user: UserWithRoles = Depends(require_permission("user_list")),
     db: AsyncSession = Depends(get_async_db)
 ):
-    stmt = select(BusinessProfile).where(BusinessProfile.user_id == current_user["id"])
+    stmt = select(BusinessProfile).where(BusinessProfile.user_id == current_user.id)
     result = await db.execute(stmt)
     profile = result.scalars().first()
     if not profile:
@@ -130,7 +130,7 @@ async def update_business_profile(
     current_user: UserWithRoles = Depends(require_permission("user_update")),
     db: AsyncSession = Depends(get_async_db),
 ):
-    stmt = select(BusinessProfile).where(BusinessProfile.user_id == current_user["id"])
+    stmt = select(BusinessProfile).where(BusinessProfile.user_id == current_user.id)
     result = await db.execute(stmt)
     profile = result.scalars().first()
     if not profile:

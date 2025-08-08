@@ -9,6 +9,7 @@ import sys
 import asyncio
 import json
 from datetime import datetime
+from typing import Optional
 
 # Add project root to path
 sys.path.insert(0, "/home/omar/Documents/ruleIQ")
@@ -18,7 +19,7 @@ os.environ["ENVIRONMENT"] = "development"
 os.environ["USE_MOCK_AI"] = "false"
 
 
-def test_google_api_key():
+def test_google_api_key() -> bool:
     """Test Google API key configuration"""
     print("=== Testing Google API Key Configuration ===")
 
@@ -34,7 +35,7 @@ def test_google_api_key():
         return False
 
 
-async def test_ai_model_initialization():
+async def test_ai_model_initialization() -> Optional[bool]:
     """Test AI model initialization"""
     print("\n=== Testing AI Model Initialization ===")
 
@@ -66,7 +67,7 @@ async def test_ai_model_initialization():
         return False
 
 
-async def test_basic_ai_functionality():
+async def test_basic_ai_functionality() -> Optional[bool]:
     """Test basic AI functionality"""
     print("\n=== Testing Basic AI Functionality ===")
 
@@ -104,7 +105,7 @@ async def test_basic_ai_functionality():
         return False
 
 
-async def test_assessment_ai():
+async def test_assessment_ai() -> Optional[bool]:
     """Test assessment AI endpoints"""
     print("\n=== Testing Assessment AI ===")
 
@@ -134,7 +135,7 @@ async def test_assessment_ai():
         return False
 
 
-async def test_policy_generation():
+async def test_policy_generation() -> Optional[bool]:
     """Test AI policy generation"""
     print("\n=== Testing AI Policy Generation ===")
 
@@ -166,7 +167,7 @@ async def test_policy_generation():
         return False
 
 
-async def test_evidence_analysis():
+async def test_evidence_analysis() -> Optional[bool]:
     """Test AI evidence analysis"""
     print("\n=== Testing AI Evidence Analysis ===")
 
@@ -198,7 +199,7 @@ async def test_evidence_analysis():
         return False
 
 
-async def test_circuit_breaker():
+async def test_circuit_breaker() -> Optional[bool]:
     """Test circuit breaker functionality"""
     print("\n=== Testing Circuit Breaker ===")
 
@@ -288,7 +289,7 @@ async def run_comprehensive_ai_test():
     return results
 
 
-async def main():
+async def main() -> None:
     """Main testing function"""
     try:
         await run_comprehensive_ai_test()

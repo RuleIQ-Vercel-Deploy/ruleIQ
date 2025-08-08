@@ -19,7 +19,7 @@ project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
 
 
-def fix_cache_strategy_tests():
+def fix_cache_strategy_tests() -> None:
     """Fix cache strategy optimization tests."""
     print("Fixing cache strategy tests...")
 
@@ -68,7 +68,7 @@ def fix_cache_strategy_tests():
             print(f"  WARNING: {test_file} not found!")
 
 
-def fix_compliance_accuracy_tests():
+def fix_compliance_accuracy_tests() -> None:
     """Fix AI compliance accuracy tests."""
     print("\nFixing AI compliance accuracy tests...")
 
@@ -127,7 +127,7 @@ def fix_compliance_accuracy_tests():
         print("  WARNING: process_message method missing!")
 
 
-def fix_ai_optimization_tests():
+def fix_ai_optimization_tests() -> None:
     """Fix AI optimization performance tests."""
     print("\nFixing AI optimization performance tests...")
 
@@ -166,7 +166,7 @@ def fix_ai_optimization_tests():
             print(f"  ✗ {method} missing")
 
 
-def fix_database_performance_tests():
+def fix_database_performance_tests() -> None:
     """Fix database performance tests."""
     print("\nFixing database performance tests...")
 
@@ -208,64 +208,13 @@ def fix_database_performance_tests():
         print("  WARNING: Performance indexes module not found")
 
 
-def update_conftest():
+def update_conftest() -> None:
     """Update conftest.py with additional fixtures."""
     print("\nUpdating conftest.py...")
 
     conftest_path = project_root / "tests/conftest.py"
 
     # Additional fixtures that might be needed
-    additional_fixtures = '''
-# Additional test fixtures for failing tests
-
-@pytest.fixture
-def gdpr_golden_dataset():
-    """Load GDPR golden dataset for compliance accuracy tests."""
-    dataset_path = Path(__file__).parent / "ai" / "golden_datasets" / "gdpr_questions.json"
-    if dataset_path.exists():
-        with open(dataset_path, 'r') as f:
-            return json.load(f)
-    else:
-        # Return minimal dataset for testing
-        return [{
-            "id": "gdpr_001",
-            "question": "What is the maximum fine for GDPR violations?",
-            "expected_answer": "Up to €20 million or 4% of annual global turnover, whichever is higher",
-            "framework": "GDPR",
-            "category": "penalties",
-            "keywords": ["€20 million", "4%", "turnover", "fine"],
-            "difficulty": "basic",
-            "source": "GDPR Article 83"
-        }]
-
-@pytest.fixture  
-def optimized_cache_config():
-    """Cache configuration with optimization enabled."""
-    from services.ai.cached_content import CacheLifecycleConfig
-    return CacheLifecycleConfig(
-        default_ttl_hours=2,
-        max_ttl_hours=8,
-        min_ttl_minutes=15,
-        performance_based_ttl=True,
-        cache_warming_enabled=True,
-        intelligent_invalidation=True,
-        fast_response_threshold_ms=200,
-        slow_response_threshold_ms=2000,
-        ttl_adjustment_factor=0.2,
-    )
-
-@pytest.fixture
-def performance_config():
-    """Performance test configuration."""
-    return {
-        "max_response_time": 3.0,  # seconds
-        "min_throughput": 10,  # requests per second
-        "max_memory_mb": 500,
-        "target_success_rate": 0.95,
-        "concurrent_users": [1, 5, 10, 20],
-        "test_duration": 30,  # seconds
-    }
-'''
 
     # Check if fixtures already exist
     with open(conftest_path, "r") as f:
@@ -282,7 +231,7 @@ def performance_config():
         print("  optimized_cache_config fixture already exists")
 
 
-def create_test_runner():
+def create_test_runner() -> None:
     """Create a test runner script for the failing tests."""
     print("\nCreating test runner script...")
 
@@ -300,13 +249,13 @@ test_files = [
     # Cache Strategy & Content Tests
     "tests/unit/services/test_cache_strategy_optimization.py",
     "tests/unit/services/test_cached_content.py",
-    
-    # AI Compliance Accuracy Tests  
+
+    # AI Compliance Accuracy Tests
     "tests/ai/test_compliance_accuracy.py",
-    
+
     # AI Optimization Performance Tests
     "tests/performance/test_ai_optimization_performance.py",
-    
+
     # Database Performance Tests
     "tests/performance/test_database_performance.py"
 ]
@@ -314,18 +263,18 @@ test_files = [
 def run_tests():
     """Run all failing tests and report results."""
     results = {}
-    
+
     for test_file in test_files:
         print(f"\\nRunning {test_file}...")
         cmd = [sys.executable, "-m", "pytest", test_file, "-v", "--tb=short"]
-        
+
         result = subprocess.run(cmd, capture_output=True, text=True)
         results[test_file] = {
             "returncode": result.returncode,
             "passed": result.returncode == 0,
             "output": result.stdout + result.stderr
         }
-        
+
         if result.returncode == 0:
             print(f"  ✓ PASSED")
         else:
@@ -335,25 +284,25 @@ def run_tests():
             for line in error_lines:
                 if line.strip():
                     print(f"    {line}")
-    
+
     # Summary
     print("\\n" + "="*60)
     print("TEST SUMMARY")
     print("="*60)
-    
+
     passed = sum(1 for r in results.values() if r["passed"])
     failed = len(results) - passed
-    
+
     print(f"Total: {len(results)}")
     print(f"Passed: {passed}")
     print(f"Failed: {failed}")
-    
+
     if failed > 0:
         print("\\nFailed tests:")
         for test, result in results.items():
             if not result["passed"]:
                 print(f"  - {test}")
-    
+
     return failed == 0
 
 if __name__ == "__main__":
@@ -370,7 +319,7 @@ if __name__ == "__main__":
     print(f"  Created test runner at {runner_path}")
 
 
-def main():
+def main() -> None:
     """Main function to run all fixes."""
     print("Starting test fix process...")
     print("=" * 60)

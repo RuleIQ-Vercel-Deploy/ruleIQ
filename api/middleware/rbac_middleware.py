@@ -27,12 +27,12 @@ logger = logging.getLogger(__name__)
 class RBACMiddleware(BaseHTTPMiddleware):
     """
     Middleware for automatic RBAC enforcement and audit logging.
-    
+
     Automatically checks permissions for protected API routes based on
     HTTP method and path patterns. Logs access attempts for audit purposes.
     """
 
-    def __init__(self, app, enable_audit_logging: bool = True):
+    def __init__(self, app, enable_audit_logging: bool = True) -> None:
         super().__init__(app)
         self.enable_audit_logging = enable_audit_logging
 
@@ -64,7 +64,7 @@ class RBACMiddleware(BaseHTTPMiddleware):
     def _configure_route_permissions(self) -> Dict[Pattern, Dict[str, List[str]]]:
         """
         Configure route patterns and their required permissions by HTTP method.
-        
+
         Returns:
             Dictionary mapping compiled regex patterns to method permissions
         """
@@ -159,11 +159,11 @@ class RBACMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next) -> Response:
         """
         Main middleware dispatch method.
-        
+
         Args:
             request: FastAPI request object
             call_next: Next middleware/handler in chain
-            
+
         Returns:
             Response from downstream handler
         """
@@ -262,10 +262,10 @@ class RBACMiddleware(BaseHTTPMiddleware):
     async def _get_current_user(self, request: Request) -> Optional[UserWithRoles]:
         """
         Extract current user from request token.
-        
+
         Args:
             request: FastAPI request object
-            
+
         Returns:
             UserWithRoles instance or None if not authenticated
         """
@@ -322,11 +322,11 @@ class RBACMiddleware(BaseHTTPMiddleware):
     def _get_required_permissions(self, path: str, method: str) -> List[str]:
         """
         Get required permissions for a route and method.
-        
+
         Args:
             path: Request path
             method: HTTP method
-            
+
         Returns:
             List of required permissions
         """
@@ -339,12 +339,12 @@ class RBACMiddleware(BaseHTTPMiddleware):
     def _check_permissions(self, user: UserWithRoles, required_permissions: List[str], request: Request) -> bool:
         """
         Check if user has required permissions for the request.
-        
+
         Args:
             user: User with roles and permissions
             required_permissions: List of required permissions
             request: FastAPI request object
-            
+
         Returns:
             True if user has required permissions
         """
@@ -362,11 +362,11 @@ class RBACMiddleware(BaseHTTPMiddleware):
         """
         Check business profile access - users can access their own profiles,
         admins can access any profile.
-        
+
         Args:
             user: User with roles
             request: FastAPI request object
-            
+
         Returns:
             True if access allowed
         """
@@ -389,10 +389,10 @@ class RBACMiddleware(BaseHTTPMiddleware):
         return False
 
     async def _log_access(self, user: UserWithRoles, request: Request,
-                         status_code: int, duration: float):
+                         status_code: int, duration: float) -> None:
         """
         Log successful access for audit purposes.
-        
+
         Args:
             user: User who made the request
             request: FastAPI request object
@@ -423,10 +423,10 @@ class RBACMiddleware(BaseHTTPMiddleware):
             logger.error(f"Failed to log access: {e}")
 
     async def _log_access_failure(self, request: Request, status_code: int,
-                                 reason: str, duration: float):
+                                 reason: str, duration: float) -> None:
         """
         Log failed access attempts for security monitoring.
-        
+
         Args:
             request: FastAPI request object
             status_code: HTTP response status code
@@ -459,7 +459,7 @@ class RBACMiddleware(BaseHTTPMiddleware):
 class RBACRouteProtector:
     """
     Decorator-based route protection for specific endpoints.
-    
+
     Use this for fine-grained permission control on individual routes
     that need custom logic beyond the middleware patterns.
     """
@@ -468,10 +468,10 @@ class RBACRouteProtector:
     def require_permissions(permissions: List[str]):
         """
         Decorator to require specific permissions for a route.
-        
+
         Args:
             permissions: List of required permissions
-            
+
         Returns:
             Route decorator
         """
@@ -484,11 +484,11 @@ class RBACRouteProtector:
     def require_framework_access(framework_id: str, access_level: str = "read"):
         """
         Decorator to require framework access for a route.
-        
+
         Args:
             framework_id: Framework ID to check
             access_level: Required access level
-            
+
         Returns:
             Route decorator
         """
@@ -501,10 +501,10 @@ class RBACRouteProtector:
     def admin_only(func):
         """
         Decorator to restrict route to admin users only.
-        
+
         Args:
             func: Route function
-            
+
         Returns:
             Decorated function
         """

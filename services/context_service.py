@@ -6,7 +6,7 @@ ruleIQ to build ongoing relationships with users rather than stateless interacti
 
 Core Features:
 - User interaction pattern learning
-- Context continuity across sessions  
+- Context continuity across sessions
 - Trust relationship tracking
 - Personalized experience adaptation
 - Predictive need identification
@@ -118,7 +118,7 @@ class PredictedNeed:
 class UserContextService:
     """
     Service for managing user context, patterns, and agentic behavior
-    
+
     This service enables ruleIQ to:
     1. Remember user interactions across sessions
     2. Learn from user behavior patterns
@@ -127,12 +127,12 @@ class UserContextService:
     5. Predict user needs proactively
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.cache_service = None  # CacheService()  # TODO: Implement cache service
         self.redis_client = None
         self._session_contexts: Dict[str, SessionContext] = {}
 
-    async def initialize(self):
+    async def initialize(self) -> None:
         """Initialize the context service"""
         try:
             # Initialize Redis connection for session state
@@ -158,7 +158,7 @@ class UserContextService:
     ) -> bool:
         """
         Store a user interaction for pattern learning
-        
+
         Args:
             user_id: User identifier
             interaction_type: Type of interaction
@@ -166,7 +166,7 @@ class UserContextService:
             session_id: Optional session identifier
             outcome: Optional outcome description
             success: Whether interaction was successful
-            
+
         Returns:
             bool: Success status
         """
@@ -212,10 +212,10 @@ class UserContextService:
     async def retrieve_user_patterns(self, user_id: str) -> Optional[UserPattern]:
         """
         Retrieve learned patterns for a user
-        
+
         Args:
             user_id: User identifier
-            
+
         Returns:
             UserPattern or None if no patterns found
         """
@@ -255,11 +255,11 @@ class UserContextService:
     ) -> bool:
         """
         Update user trust score based on interaction success
-        
+
         Args:
             user_id: User identifier
             success_metrics: Metrics about interaction success
-            
+
         Returns:
             bool: Success status
         """
@@ -319,10 +319,10 @@ class UserContextService:
     async def predict_user_needs(self, user_id: str) -> List[PredictedNeed]:
         """
         Predict user needs based on patterns and context
-        
+
         Args:
             user_id: User identifier
-            
+
         Returns:
             List of predicted needs
         """
@@ -334,7 +334,7 @@ class UserContextService:
             predictions = []
 
             # Get recent interactions
-            recent_interactions = await self._get_recent_interactions(user_id, limit=20)
+            await self._get_recent_interactions(user_id, limit=20)
 
             # Predict based on common patterns
             if 'assessment' in patterns.common_tasks:
@@ -380,11 +380,11 @@ class UserContextService:
     async def start_session(self, user_id: str, session_id: str) -> SessionContext:
         """
         Start a new session and initialize context
-        
+
         Args:
             user_id: User identifier
             session_id: Session identifier
-            
+
         Returns:
             SessionContext: Initialized session context
         """
@@ -419,10 +419,10 @@ class UserContextService:
     async def get_session_context(self, session_id: str) -> Optional[SessionContext]:
         """
         Get current session context
-        
+
         Args:
             session_id: Session identifier
-            
+
         Returns:
             SessionContext or None if not found
         """
@@ -457,11 +457,11 @@ class UserContextService:
     ) -> bool:
         """
         Update session context with new information
-        
+
         Args:
             session_id: Session identifier
             updates: Updates to apply to context
-            
+
         Returns:
             bool: Success status
         """
@@ -523,7 +523,6 @@ class UserContextService:
             task_counts = {}
             error_patterns = []
             success_patterns = []
-            session_durations = []
 
             for interaction in interactions:
                 # Count task types
@@ -620,7 +619,7 @@ class UserContextService:
             logger.error(f"Failed to get last interaction of type: {e}")
             return None
 
-    async def _update_user_patterns(self, user_id: str):
+    async def _update_user_patterns(self, user_id: str) -> None:
         """Background task to update user patterns"""
         try:
             # Clear cache to force regeneration on next access

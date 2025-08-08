@@ -17,7 +17,7 @@ project_root = Path(__file__).parent.parent
 sys.path.append(str(project_root))
 
 class TestSpriteExecutor:
-    def __init__(self):
+    def __init__(self) -> None:
         self.project_root = project_root
         self.testsprite_dir = self.project_root / "testsprite_tests"
         self.generated_tests_dir = self.project_root / "tests" / "testsprite_generated"
@@ -61,7 +61,7 @@ class TestSpriteExecutor:
 def {func_name}():
     """
     {title}
-    
+
     Description: {description}
     Category: {category}
     Priority: {priority}
@@ -99,11 +99,11 @@ from main import app
 
 class TestAuthenticationFlow:
     """Authentication tests generated from TestSprite plans"""
-    
+
     @pytest.fixture
     def client(self):
         return TestClient(app)
-    
+
     @pytest.fixture
     def test_user_data(self):
         return {
@@ -111,14 +111,14 @@ class TestAuthenticationFlow:
             "password": "TestSprite123!",
             "full_name": "TestSprite User"
         }
-    
+
     def test_user_registration_valid_data(self, client, test_user_data):
         """
         TestSprite TC001: User Registration with Valid Data
         Verify that a user can successfully register using valid credentials
         """
         response = client.post("/api/v1/auth/register", json=test_user_data)
-        
+
         assert response.status_code == 201
         data = response.json()
         assert "user" in data
@@ -126,7 +126,7 @@ class TestAuthenticationFlow:
         assert data["user"]["email"] == test_user_data["email"]
         assert "access_token" in data["tokens"]
         assert "refresh_token" in data["tokens"]
-    
+
     def test_user_login_correct_credentials(self, client, test_user_data):
         """
         TestSprite TC002: User Login with Correct Credentials
@@ -134,20 +134,20 @@ class TestAuthenticationFlow:
         """
         # First register the user
         client.post("/api/v1/auth/register", json=test_user_data)
-        
+
         # Then login
         login_data = {
             "email": test_user_data["email"],
             "password": test_user_data["password"]
         }
         response = client.post("/api/v1/auth/login", json=login_data)
-        
+
         assert response.status_code == 200
         data = response.json()
         assert "access_token" in data
         assert "refresh_token" in data
         assert data["token_type"] == "bearer"
-    
+
     def test_protected_endpoint_access(self, client, test_user_data):
         """
         TestSprite: Protected Endpoint Access
@@ -159,19 +159,19 @@ class TestAuthenticationFlow:
             "email": test_user_data["email"],
             "password": test_user_data["password"]
         })
-        
+
         token = login_response.json()["access_token"]
         headers = {"Authorization": f"Bearer {token}"}
-        
+
         # Access protected endpoint
         response = client.get("/api/v1/auth/me", headers=headers)
         assert response.status_code == 200
-        
+
         user_data = response.json()
         assert user_data["email"] == test_user_data["email"]
 '''
 
-    def create_generated_tests_directory(self):
+    def create_generated_tests_directory(self) -> None:
         """Create directory for generated tests"""
         self.generated_tests_dir.mkdir(parents=True, exist_ok=True)
 
@@ -179,7 +179,7 @@ class TestAuthenticationFlow:
         init_file = self.generated_tests_dir / "__init__.py"
         init_file.write_text("# TestSprite Generated Tests\n")
 
-    def generate_all_tests(self, test_plans: Dict[str, Any]):
+    def generate_all_tests(self, test_plans: Dict[str, Any]) -> None:
         """Generate all test files from TestSprite plans"""
         self.create_generated_tests_directory()
 
@@ -212,17 +212,17 @@ from main import app
 
 class TestFrontendFlow:
     """Frontend tests generated from TestSprite plans"""
-    
+
     @pytest.fixture
     def client(self):
         return TestClient(app)
-    
+
 {"".join(frontend_tests)}
 '''
             frontend_test_file.write_text(frontend_content)
             print(f"✅ Generated frontend tests: {frontend_test_file}")
 
-    async def run_generated_tests(self):
+    async def run_generated_tests(self) -> None:
         """Execute the generated tests"""
         print("\n🧪 Running TestSprite Generated Tests...")
 
@@ -271,7 +271,7 @@ class TestFrontendFlow:
             except Exception as e:
                 print(f"❌ Error running test command {i}: {e}")
 
-    def generate_report(self):
+    def generate_report(self) -> None:
         """Generate execution report"""
         report_file = self.project_root / "testsprite_execution_report.json"
 
@@ -298,7 +298,7 @@ class TestFrontendFlow:
         print(f"   Passed: {report['summary']['passed']}")
         print(f"   Failed: {report['summary']['failed']}")
 
-async def main():
+async def main() -> None:
     """Main execution function"""
     print("🚀 TestSprite Code Generation and Execution")
     print("=" * 50)

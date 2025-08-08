@@ -81,7 +81,7 @@ async def get_performance_overview(
 ) -> PerformanceOverview:
     """
     Get overall performance overview with key metrics.
-    
+
     Returns:
         - Performance score (0-100)
         - System status
@@ -128,7 +128,7 @@ async def get_database_performance(
 ) -> DatabasePerformanceResponse:
     """
     Get detailed database performance metrics.
-    
+
     Includes:
     - Connection pool utilization
     - Query performance
@@ -170,7 +170,7 @@ async def get_cache_performance(
 ) -> CachePerformanceResponse:
     """
     Get cache performance metrics.
-    
+
     Includes:
     - Hit/miss rates
     - Memory usage
@@ -212,7 +212,7 @@ async def get_api_performance(
 ) -> APIPerformanceResponse:
     """
     Get API performance metrics.
-    
+
     Includes:
     - Response time percentiles
     - Requests per second
@@ -254,7 +254,7 @@ async def get_system_metrics(
 ) -> SystemMetricsResponse:
     """
     Get system resource metrics.
-    
+
     Includes:
     - CPU usage
     - Memory usage
@@ -298,7 +298,7 @@ async def get_optimization_recommendations(
 ) -> List[OptimizationRecommendation]:
     """
     Get performance optimization recommendations.
-    
+
     Returns prioritized list of actionable performance improvements.
     """
     try:
@@ -321,10 +321,10 @@ async def get_performance_trends(
 ) -> PerformanceTrendsResponse:
     """
     Get performance trends over time.
-    
+
     Args:
         hours: Number of hours to analyze (1-168, default 24)
-    
+
     Returns:
         Performance trends and statistics
     """
@@ -348,7 +348,7 @@ async def configure_performance_alerts(
 ):
     """
     Configure performance alerting thresholds.
-    
+
     Args:
         alerts_config: Alert configuration with thresholds
     """
@@ -407,7 +407,7 @@ async def start_performance_monitoring(
 ):
     """
     Start continuous performance monitoring.
-    
+
     Args:
         interval: Monitoring interval in seconds (10-300)
     """

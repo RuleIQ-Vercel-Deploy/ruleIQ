@@ -6,7 +6,7 @@ Script to update all router files from Stack Auth to JWT authentication
 import re
 from pathlib import Path
 
-def update_file(file_path):
+def update_file(file_path) -> bool:
     """Update a single file to use JWT auth instead of Stack Auth"""
     print(f"Updating {file_path}...")
 
@@ -73,7 +73,7 @@ def update_file(file_path):
         print(f"⏭️  No changes needed for {file_path}")
         return False
 
-def main():
+def main() -> None:
     """Main function to update all router files"""
     router_dir = Path("api/routers")
 

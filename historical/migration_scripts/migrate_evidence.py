@@ -22,6 +22,7 @@ from config.logging_config import get_logger, setup_logging
 from database.chat_conversation import ChatConversation
 from database.chat_message import ChatMessage
 from database.db_setup import Base  # Assuming Base is correctly defined for all models
+from typing import Optional
 
 # Setup logging first
 setup_logging()
@@ -52,7 +53,7 @@ async def check_table_exists(table_name: str) -> bool:
         return False
 
 
-async def add_integration_columns_to_evidence():
+async def add_integration_columns_to_evidence() -> Optional[bool]:
     """Add new columns to support automated evidence collection asynchronously."""
     logger.info("Checking evidence_items table schema...")
 
@@ -98,7 +99,7 @@ async def add_integration_columns_to_evidence():
         return False
 
 
-async def create_chat_tables():
+async def create_chat_tables() -> Optional[bool]:
     """Create chat_conversations and chat_messages tables asynchronously if they don't exist."""
     logger.info("Checking and creating chat tables...")
     try:
@@ -120,7 +121,7 @@ async def create_chat_tables():
         return False
 
 
-async def backfill_existing_evidence():
+async def backfill_existing_evidence() -> Optional[bool]:
     """Backfill existing evidence items with default values for new columns asynchronously."""
     logger.info("Backfilling existing evidence items...")
     try:
@@ -143,7 +144,7 @@ async def backfill_existing_evidence():
         return False
 
 
-async def add_indexes_for_performance():
+async def add_indexes_for_performance() -> Optional[bool]:
     """Add indexes to new columns for performance asynchronously."""
     logger.info("Adding performance indexes...")
     indexes_ddl = [
@@ -165,7 +166,7 @@ async def add_indexes_for_performance():
         return False
 
 
-async def verify_migration():
+async def verify_migration() -> bool:
     """Verify that the migration steps were successful asynchronously."""
     logger.info("Verifying migration...")
     # Add specific checks, e.g., count of backfilled items, presence of new columns
@@ -178,7 +179,7 @@ async def verify_migration():
     return True
 
 
-def create_alembic_migration_template():
+def create_alembic_migration_template() -> Optional[bool]:
     """Creates a template for an Alembic migration script."""
     logger.info("Creating Alembic migration template (alembic_migration_template.txt)...")
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")

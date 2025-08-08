@@ -30,6 +30,14 @@ import { Label } from '@/components/ui/label';
 import { Progress } from '@/components/ui/progress';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { useAppStore } from '@/lib/stores/app.store';
+import { useBusinessProfileStore } from '@/lib/stores/business-profile.store';
+import { 
+  useComplianceStatus,
+  useComplianceScore,
+  useComplianceRequirements,
+  useFrameworks,
+  useRunComplianceCheck,
+} from '@/lib/tanstack-query/hooks';
 import { cn } from '@/lib/utils';
 
 // Question types
@@ -185,6 +193,16 @@ const questions: Question[] = [
     required: true,
     icon: <TrendingUp className="h-5 w-5" />,
   },
+  {
+    id: 'framework_selection',
+    type: 'single-choice',
+    category: 'compliance',
+    question: 'Which framework would you like to focus on for detailed assessment?',
+    description: 'This will run a comprehensive API-based compliance check',
+    options: [], // Will be populated dynamically from API
+    required: false,
+    icon: <FileCheck className="h-5 w-5" />,
+  },
 
   // Risk Assessment
   {
@@ -217,18 +235,57 @@ const questions: Question[] = [
 export default function ComplianceWizardPage() {
   const router = useRouter();
   const { addNotification } = useAppStore();
+  const { profile } = useBusinessProfileStore();
 
   const [currentCategoryIndex, setCurrentCategoryIndex] = React.useState(0);
   const [answers, setAnswers] = React.useState<Record<string, any>>({});
+  const [selectedFramework, setSelectedFramework] = React.useState<string>('');
   const [isLoading, setIsLoading] = React.useState(false);
+
+  // Fetch frameworks and compliance data
+  const { data: frameworksData, isLoading: frameworksLoading } = useFrameworks();
+  const { data: complianceStatus } = useComplianceStatus(profile?.id);
+  const { data: complianceScore } = useComplianceScore(profile?.id);
+  const { mutate: runComplianceCheck, isPending: isRunningCheck } = useRunComplianceCheck();
+
+  // Load saved draft on mount
+  React.useEffect(() => {
+    const saved = localStorage.getItem('compliance_assessment_draft');
+    if (saved) {
+      try {
+        const draft = JSON.parse(saved);
+        setAnswers(draft);
+        addNotification({
+          type: 'info',
+          title: 'Draft Loaded',
+          message: 'We found your previous answers and loaded them for you.',
+        });
+      } catch (error) {
+        console.error('Failed to load draft:', error);
+      }
+    }
+  }, []);
+
+  // Update framework selection question with API data
+  const processedQuestions = React.useMemo(() => {
+    return questions.map(question => {
+      if (question.id === 'framework_selection' && frameworksData?.items) {
+        return {
+          ...question,
+          options: frameworksData.items.map(framework => framework.name),
+        };
+      }
+      return question;
+    });
+  }, [frameworksData?.items]);
 
   const currentCategory = questionCategories[currentCategoryIndex];
   const categoryQuestions = currentCategory
-    ? questions.filter((q) => q.category === currentCategory.id)
+    ? processedQuestions.filter((q) => q.category === currentCategory.id)
     : [];
 
   // Calculate overall progress
-  const totalQuestions = questions.length;
+  const totalQuestions = processedQuestions.length;
   const answeredQuestions = Object.keys(answers).length;
   const progress = (answeredQuestions / totalQuestions) * 100;
 
@@ -243,6 +300,14 @@ export default function ComplianceWizardPage() {
       ...prev,
       [questionId]: value,
     }));
+
+    // Track framework selection for API compliance check
+    if (questionId === 'framework_selection' && typeof value === 'string' && frameworksData?.items) {
+      const framework = frameworksData.items.find(f => f.name === value);
+      if (framework) {
+        setSelectedFramework(framework.id);
+      }
+    }
   };
 
   const handleNext = () => {
@@ -263,29 +328,91 @@ export default function ComplianceWizardPage() {
     setIsLoading(true);
 
     try {
-      // Generate compliance report based on answers
-      const report = generateComplianceReport(answers);
+      // If user selected a framework, run compliance check for that framework
+      if (selectedFramework && profile?.id) {
+        await new Promise<void>((resolve, reject) => {
+          runComplianceCheck(
+            {
+              businessProfileId: profile.id,
+              frameworkId: selectedFramework,
+            },
+            {
+              onSuccess: (data) => {
+                // Store assessment results with API response
+                localStorage.setItem(
+                  'compliance_assessment',
+                  JSON.stringify({
+                    answers,
+                    complianceStatus: data,
+                    apiScore: complianceScore,
+                    completedAt: new Date().toISOString(),
+                    frameworkId: selectedFramework,
+                  }),
+                );
 
-      // Store in localStorage for other components to use
-      localStorage.setItem(
-        'compliance_assessment',
-        JSON.stringify({
-          answers,
-          report,
-          completedAt: new Date().toISOString(),
-        }),
-      );
+                addNotification({
+                  type: 'success',
+                  title: 'Assessment Complete!',
+                  message: `Your compliance check is complete. Review your personalized recommendations.`,
+                  duration: 5000,
+                });
 
-      addNotification({
-        type: 'success',
-        title: 'Assessment Complete!',
-        message: `Your compliance score is ${report.score}%. Check your personalized recommendations.`,
-        duration: 5000,
-      });
+                resolve();
+              },
+              onError: (error) => {
+                console.error('Compliance check failed:', error);
+                // Fallback to local report
+                const fallbackReport = generateComplianceReport(answers);
+                localStorage.setItem(
+                  'compliance_assessment',
+                  JSON.stringify({
+                    answers,
+                    report: fallbackReport,
+                    completedAt: new Date().toISOString(),
+                    isLocal: true,
+                  }),
+                );
+                
+                addNotification({
+                  type: 'warning',
+                  title: 'Assessment Complete (Offline)',
+                  message: `Your local compliance score is ${fallbackReport.score}%. API check will retry later.`,
+                  duration: 5000,
+                });
 
+                resolve();
+              },
+            }
+          );
+        });
+      } else {
+        // Fallback to local assessment if no framework selected
+        const report = generateComplianceReport(answers);
+        localStorage.setItem(
+          'compliance_assessment',
+          JSON.stringify({
+            answers,
+            report,
+            completedAt: new Date().toISOString(),
+            isLocal: true,
+          }),
+        );
+
+        addNotification({
+          type: 'success',
+          title: 'Assessment Complete!',
+          message: `Your compliance score is ${report.score}%. Check your personalized recommendations.`,
+          duration: 5000,
+        });
+      }
+
+      // Clear draft
+      localStorage.removeItem('compliance_assessment_draft');
+      
       // Redirect to results page
       router.push('/compliance-wizard/results');
     } catch (error) {
+      console.error('Assessment completion error:', error);
       addNotification({
         type: 'error',
         title: 'Error',
@@ -423,6 +550,20 @@ export default function ComplianceWizardPage() {
     }
   };
 
+  // Show loading state while frameworks are loading
+  if (frameworksLoading) {
+    return (
+      <div className="container mx-auto max-w-4xl px-4 py-8">
+        <div className="flex items-center justify-center min-h-[400px]">
+          <div className="text-center space-y-4">
+            <Loader2 className="h-8 w-8 animate-spin mx-auto text-primary" />
+            <p className="text-muted-foreground">Loading compliance frameworks...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="container mx-auto max-w-4xl px-4 py-8">
       <div className="mb-8">
@@ -445,6 +586,17 @@ export default function ComplianceWizardPage() {
           </div>
           <Progress value={progress} className="h-2" />
         </div>
+
+        {selectedFramework && (
+          <div className="mt-4 p-3 bg-blue-50 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-800 rounded-lg">
+            <div className="flex items-center gap-2 text-sm text-blue-700 dark:text-blue-300">
+              <Sparkles className="h-4 w-4" />
+              <span>
+                You've selected a framework for detailed compliance analysis. We'll run a comprehensive API check when you complete the assessment.
+              </span>
+            </div>
+          </div>
+        )}
       </div>
 
       <div className="grid gap-6 lg:grid-cols-4">
@@ -456,7 +608,7 @@ export default function ComplianceWizardPage() {
             </CardHeader>
             <CardContent className="space-y-2">
               {questionCategories.map((category, index) => {
-                const categoryAnswered = questions
+                const categoryAnswered = processedQuestions
                   .filter((q) => q.category === category.id && q.required)
                   .every((q) => answers[q.id]);
 
@@ -542,11 +694,11 @@ export default function ComplianceWizardPage() {
                 </Button>
 
                 {currentCategoryIndex === questionCategories.length - 1 ? (
-                  <Button onClick={handleComplete} disabled={!isCategoryComplete() || isLoading}>
-                    {isLoading ? (
+                  <Button onClick={handleComplete} disabled={!isCategoryComplete() || isLoading || isRunningCheck}>
+                    {isLoading || isRunningCheck ? (
                       <>
                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        Analyzing...
+                        {selectedFramework ? 'Running Compliance Check...' : 'Analyzing...'}
                       </>
                     ) : (
                       <>

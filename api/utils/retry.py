@@ -28,7 +28,7 @@ class RetryConfig:
         jitter: bool = True,
         exceptions: tuple = (Exception,),
         on_retry: Optional[Callable] = None,
-    ):
+    ) -> None:
         self.max_attempts = max_attempts
         self.base_delay = base_delay
         self.max_delay = max_delay
@@ -41,7 +41,7 @@ class RetryConfig:
 class RetryExhaustedError(Exception):
     """Raised when all retry attempts have been exhausted."""
 
-    def __init__(self, attempts: int, last_exception: Exception):
+    def __init__(self, attempts: int, last_exception: Exception) -> None:
         self.attempts = attempts
         self.last_exception = last_exception
         super().__init__(
@@ -53,7 +53,7 @@ class RetryExhaustedError(Exception):
 class RetryManager:
     """Manages retry logic for both sync and async functions."""
 
-    def __init__(self, config: RetryConfig):
+    def __init__(self, config: RetryConfig) -> None:
         self.config = config
 
     def calculate_delay(self, attempt: int) -> float:
@@ -75,7 +75,7 @@ class RetryManager:
 
         return isinstance(exception, self.config.exceptions)
 
-    def log_retry_attempt(self, attempt: int, exception: Exception, delay: float):
+    def log_retry_attempt(self, attempt: int, exception: Exception, delay: float) -> None:
         """Log retry attempt details."""
         logger.warning(
             f"Retry attempt {attempt}/{self.config.max_attempts} "

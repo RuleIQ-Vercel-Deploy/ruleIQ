@@ -125,7 +125,7 @@ class UnsupportedEvidenceTypeException(APIException):
 class BaseAPIClient(ABC):
     """Base class for all enterprise API clients"""
 
-    def __init__(self, credentials: APICredentials):
+    def __init__(self, credentials: APICredentials) -> None:
         self.credentials = credentials
         self.base_url = self.get_base_url()
         self.session: Optional[aiohttp.ClientSession] = None
@@ -397,7 +397,7 @@ class BaseAPIClient(ABC):
                 "error_count": self.error_count,
             }
 
-    async def close(self):
+    async def close(self) -> None:
         """Close the API client and cleanup resources"""
         if self.session:
             await self.session.close()
@@ -413,7 +413,7 @@ class BaseAPIClient(ABC):
 class BaseEvidenceCollector(ABC):
     """Base class for evidence collectors"""
 
-    def __init__(self, api_client):
+    def __init__(self, api_client) -> None:
         self.api_client = api_client
         self.logger = get_logger(f"{self.__class__.__name__}")
 

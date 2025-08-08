@@ -426,7 +426,7 @@ def ai_compliance_test_cases():
 
 
 # Utility functions for AI testing
-def assert_ai_response_quality(response: Dict[str, Any], min_confidence: float = 0.7):
+def assert_ai_response_quality(response: Dict[str, Any], min_confidence: float = 0.7) -> None:
     """Assert that AI response meets quality standards"""
     assert "guidance" in response, "Response must include guidance"
     assert "confidence_score" in response, "Response must include confidence score"
@@ -440,7 +440,7 @@ def assert_ai_response_quality(response: Dict[str, Any], min_confidence: float =
     assert len(response["guidance"]) >= 50, "Guidance must be substantial (at least 50 characters)"
 
 
-def assert_ai_response_structure(response: Dict[str, Any]):
+def assert_ai_response_structure(response: Dict[str, Any]) -> None:
     """Assert that AI response has correct structure"""
     required_fields = ["guidance", "confidence_score", "request_id", "generated_at"]
     for field in required_fields:
@@ -452,6 +452,6 @@ def assert_ai_response_structure(response: Dict[str, Any]):
             assert isinstance(response[field], list), f"{field} must be a list"
 
 
-def assert_ai_performance(response_time: float, max_time: float = 10.0):
+def assert_ai_performance(response_time: float, max_time: float = 10.0) -> None:
     """Assert that AI response time meets performance requirements"""
     assert response_time <= max_time, f"Response time {response_time}s exceeds maximum {max_time}s"

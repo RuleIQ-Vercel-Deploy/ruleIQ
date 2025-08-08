@@ -8,6 +8,11 @@ export * from './use-assessments';
 export * from './use-policies';
 export * from './use-evidence';
 export * from './use-business-profile';
+export * from './use-reports';
+export * from './use-compliance';
+export * from './use-monitoring';
+export * from './use-frameworks';
+export * from './use-integrations';
 
 // Utility hooks
 export * from './use-optimistic';

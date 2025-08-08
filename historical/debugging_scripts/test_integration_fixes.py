@@ -7,9 +7,10 @@ import asyncio
 import os
 from core.security.credential_encryption import CredentialEncryption
 from api.clients.base_api_client import APICredentials, AuthType
+from typing import Optional
 
 
-async def test_encryption_fixes():
+async def test_encryption_fixes() -> bool:
     """Test encryption fixes"""
     print("Testing encryption fixes...")
 
@@ -50,7 +51,7 @@ async def test_encryption_fixes():
     return True
 
 
-def test_model_imports():
+def test_model_imports() -> Optional[bool]:
     """Test model imports are working"""
     print("\nTesting model imports...")
 
@@ -71,7 +72,7 @@ def test_model_imports():
         return False
 
 
-def test_validation_logic():
+def test_validation_logic() -> Optional[bool]:
     """Test validation logic"""
     print("\nTesting validation logic...")
 
@@ -98,7 +99,7 @@ def test_validation_logic():
         return False
 
 
-async def main():
+async def main() -> bool:
     """Run all tests"""
     print("=== Integration Fixes Test Suite ===\n")
 

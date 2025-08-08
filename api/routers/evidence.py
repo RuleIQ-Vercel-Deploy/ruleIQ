@@ -339,7 +339,7 @@ async def delete_evidence_item(
     evidence_id: UUID,
     db: AsyncSession = Depends(get_async_db),
     current_user: User = Depends(get_current_active_user),
-):
+) -> None:
     """Delete an evidence item."""
     success, status = await EvidenceService.delete_evidence_item(
         db=db, user=current_user, evidence_id=evidence_id

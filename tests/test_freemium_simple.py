@@ -24,7 +24,7 @@ def test_assessment_lead_creation(db_session):
     # Verify the lead was created correctly
     assert lead.id is not None
     assert lead.email == email
-    assert lead.marketing_consent == True
+    assert lead.marketing_consent
     assert lead.lead_score == 0
     assert lead.lead_status == "new"
     assert lead.created_at is not None
@@ -62,5 +62,5 @@ def test_assessment_lead_with_all_fields(db_session):
     assert lead.last_name == "Doe"
     assert lead.company_name == "Test Corp"
     assert lead.utm_source == "google"
-    assert lead.marketing_consent == True
+    assert lead.marketing_consent
     assert lead.lead_score == 10

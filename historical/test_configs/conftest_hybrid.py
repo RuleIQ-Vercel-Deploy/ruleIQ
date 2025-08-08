@@ -55,12 +55,12 @@ from database.business_profile import BusinessProfile
 class HybridDatabaseManager:
     """Manages both sync and async database connections for testing."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self._sync_engine = None
         self._async_engine = None
         self._initialized = False
 
-    def _initialize_engines(self):
+    def _initialize_engines(self) -> None:
         """Initialize both sync and async engines."""
         if self._initialized:
             return
@@ -121,14 +121,14 @@ class HybridDatabaseManager:
         engine = self.get_sync_engine()
         return sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
-    async def create_tables(self):
+    async def create_tables(self) -> None:
         """Create database tables for tests."""
         # Create tables using async engine
         async_engine = self.get_async_engine()
         async with async_engine.begin() as conn:
             await conn.run_sync(Base.metadata.create_all)
 
-    async def drop_tables(self):
+    async def drop_tables(self) -> None:
         """Drop database tables after tests."""
         if not self._initialized:
             return
@@ -140,7 +140,7 @@ class HybridDatabaseManager:
         except Exception as e:
             print(f"Warning: Table cleanup failed: {e}")
 
-    async def dispose(self):
+    async def dispose(self) -> None:
         """Dispose of database engines."""
         if self._sync_engine:
             self._sync_engine.dispose()
@@ -372,18 +372,18 @@ def authenticated_test_client(sync_db_session, sync_sample_user):
         # This is a workaround for the event loop issue
         # Create a mock async session that wraps the sync session
         class SyncSessionWrapper:
-            def __init__(self, sync_session):
+            def __init__(self, sync_session) -> None:
                 self.sync_session = sync_session
 
             async def execute(self, statement):
                 # Mock async execute by returning the sync result
                 class MockAsyncResult:
-                    def __init__(self, sync_result):
+                    def __init__(self, sync_result) -> None:
                         self.sync_result = sync_result
 
                     def scalars(self):
                         class MockScalars:
-                            def __init__(self, sync_scalars):
+                            def __init__(self, sync_scalars) -> None:
                                 self.sync_scalars = sync_scalars
 
                             def first(self):
@@ -461,18 +461,18 @@ def unauthenticated_test_client(sync_db_session):
         # This is a workaround for the event loop issue
         # Create a mock async session that wraps the sync session
         class SyncSessionWrapper:
-            def __init__(self, sync_session):
+            def __init__(self, sync_session) -> None:
                 self.sync_session = sync_session
 
             async def execute(self, statement):
                 # Mock async execute by returning the sync result
                 class MockAsyncResult:
-                    def __init__(self, sync_result):
+                    def __init__(self, sync_result) -> None:
                         self.sync_result = sync_result
 
                     def scalars(self):
                         class MockScalars:
-                            def __init__(self, sync_scalars):
+                            def __init__(self, sync_scalars) -> None:
                                 self.sync_scalars = sync_scalars
 
                             def first(self):

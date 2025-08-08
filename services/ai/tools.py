@@ -52,7 +52,7 @@ class ToolResult:
 class BaseTool(ABC):
     """Base interface for all AI tools"""
 
-    def __init__(self, name: str, description: str):
+    def __init__(self, name: str, description: str) -> None:
         self.name = name
         self.description = description
         self.created_at = datetime.now()
@@ -105,7 +105,7 @@ class BaseTool(ABC):
 
         return True
 
-    def increment_execution_count(self):
+    def increment_execution_count(self) -> None:
         """Track tool usage"""
         self.execution_count += 1
 
@@ -113,11 +113,11 @@ class BaseTool(ABC):
 class ToolRegistry:
     """Registry for managing AI tools"""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self._tools: Dict[str, BaseTool] = {}
         self._tool_by_type: Dict[ToolType, List[BaseTool]] = {}
 
-    def register_tool(self, tool: BaseTool, tool_type: ToolType):
+    def register_tool(self, tool: BaseTool, tool_type: ToolType) -> None:
         """
         Register a tool in the registry
 
@@ -265,7 +265,7 @@ class ToolValidator:
 class ToolExecutor:
     """Executes tools and handles results"""
 
-    def __init__(self, registry: ToolRegistry):
+    def __init__(self, registry: ToolRegistry) -> None:
         self.registry = registry
         self.execution_history: List[Dict[str, Any]] = []
 
@@ -324,7 +324,7 @@ class ToolExecutor:
         parameters: Dict[str, Any],
         result: ToolResult,
         context: Optional[Dict[str, Any]] = None,
-    ):
+    ) -> None:
         """Record tool execution for monitoring"""
         execution_record = {
             "timestamp": datetime.now().isoformat(),
@@ -382,7 +382,7 @@ tool_registry = ToolRegistry()
 tool_executor = ToolExecutor(tool_registry)
 
 
-def register_tool(tool: BaseTool, tool_type: ToolType):
+def register_tool(tool: BaseTool, tool_type: ToolType) -> None:
     """Convenience function to register a tool"""
     tool_registry.register_tool(tool, tool_type)
 

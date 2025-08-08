@@ -28,7 +28,7 @@ class OktaAPIException(APIException):
 class OktaAPIClient(BaseAPIClient):
     """Okta API client for identity and access management evidence"""
 
-    def __init__(self, credentials: APICredentials):
+    def __init__(self, credentials: APICredentials) -> None:
         super().__init__(credentials)
         self.domain = credentials.credentials.get("domain")
         if not self.domain:

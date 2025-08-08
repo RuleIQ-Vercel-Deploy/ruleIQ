@@ -2,7 +2,7 @@
 
 import logging
 import traceback
-from typing import Dict, Any, Optional, List
+from typing import Dict, Any, Optional, List, NoReturn
 from fastapi import HTTPException, Request, status
 from fastapi.responses import JSONResponse
 from pydantic import ValidationError
@@ -19,7 +19,7 @@ class RuleIQException(Exception):
         error_code: str = "GENERAL_ERROR",
         status_code: int = 500,
         details: Optional[Dict[str, Any]] = None,
-    ):
+    ) -> None:
         super().__init__(message)
         self.message = message
         self.error_code = error_code
@@ -30,7 +30,7 @@ class RuleIQException(Exception):
 class ValidationException(RuleIQException):
     """Exception for validation errors."""
 
-    def __init__(self, message: str, details: Optional[Dict[str, Any]] = None):
+    def __init__(self, message: str, details: Optional[Dict[str, Any]] = None) -> None:
         super().__init__(
             message=message,
             error_code="VALIDATION_ERROR",
@@ -42,7 +42,7 @@ class ValidationException(RuleIQException):
 class AuthenticationException(RuleIQException):
     """Exception for authentication errors."""
 
-    def __init__(self, message: str = "Authentication required"):
+    def __init__(self, message: str = "Authentication required") -> None:
         super().__init__(
             message=message,
             error_code="AUTHENTICATION_ERROR",
@@ -53,7 +53,7 @@ class AuthenticationException(RuleIQException):
 class AuthorizationException(RuleIQException):
     """Exception for authorization errors."""
 
-    def __init__(self, message: str = "Access denied"):
+    def __init__(self, message: str = "Access denied") -> None:
         super().__init__(
             message=message, error_code="AUTHORIZATION_ERROR", status_code=status.HTTP_403_FORBIDDEN
         )
@@ -62,7 +62,7 @@ class AuthorizationException(RuleIQException):
 class ResourceNotFoundException(RuleIQException):
     """Exception for resource not found errors."""
 
-    def __init__(self, resource: str, identifier: Optional[str] = None):
+    def __init__(self, resource: str, identifier: Optional[str] = None) -> None:
         message = f"{resource} not found"
         if identifier:
             message = f"{resource} with id '{identifier}' not found"
@@ -78,7 +78,7 @@ class ResourceNotFoundException(RuleIQException):
 class DatabaseException(RuleIQException):
     """Exception for database-related errors."""
 
-    def __init__(self, message: str, details: Optional[Dict[str, Any]] = None):
+    def __init__(self, message: str, details: Optional[Dict[str, Any]] = None) -> None:
         super().__init__(
             message=message,
             error_code="DATABASE_ERROR",
@@ -90,7 +90,7 @@ class DatabaseException(RuleIQException):
 class IntegrationException(RuleIQException):
     """Exception for third-party integration errors."""
 
-    def __init__(self, service: str, message: str, details: Optional[Dict[str, Any]] = None):
+    def __init__(self, service: str, message: str, details: Optional[Dict[str, Any]] = None) -> None:
         super().__init__(
             message=f"Integration error with {service}: {message}",
             error_code="INTEGRATION_ERROR",
@@ -102,7 +102,7 @@ class IntegrationException(RuleIQException):
 class RateLimitException(RuleIQException):
     """Exception for rate limiting errors."""
 
-    def __init__(self, retry_after: Optional[int] = None):
+    def __init__(self, retry_after: Optional[int] = None) -> None:
         details = {}
         if retry_after:
             details["retry_after"] = retry_after
@@ -118,7 +118,7 @@ class RateLimitException(RuleIQException):
 class SecurityException(RuleIQException):
     """Exception for security-related errors."""
 
-    def __init__(self, message: str, details: Optional[Dict[str, Any]] = None):
+    def __init__(self, message: str, details: Optional[Dict[str, Any]] = None) -> None:
         super().__init__(
             message=message,
             error_code="SECURITY_ERROR",
@@ -190,7 +190,7 @@ class ErrorHandler:
     @staticmethod
     def log_error(
         exception: Exception, request: Optional[Request] = None, user_id: Optional[str] = None
-    ):
+    ) -> None:
         """Log error with context."""
 
         log_data = {
@@ -309,7 +309,7 @@ class SecurityErrorHandler:
     """Security-focused error handling."""
 
     @staticmethod
-    def handle_authentication_error(details: Optional[Dict[str, Any]] = None):
+    def handle_authentication_error(details: Optional[Dict[str, Any]] = None) -> NoReturn:
         """Handle authentication errors securely."""
         logger.warning(
             "Authentication attempt failed",
@@ -318,7 +318,7 @@ class SecurityErrorHandler:
         raise AuthenticationException()
 
     @staticmethod
-    def handle_authorization_error(resource: str, action: str, user_id: Optional[str] = None):
+    def handle_authorization_error(resource: str, action: str, user_id: Optional[str] = None) -> NoReturn:
         """Handle authorization errors securely."""
         logger.warning(
             "Authorization attempt failed",
@@ -327,7 +327,7 @@ class SecurityErrorHandler:
         raise AuthorizationException(f"Access denied to {resource}")
 
     @staticmethod
-    def handle_rate_limit_error(retry_after: Optional[int] = None):
+    def handle_rate_limit_error(retry_after: Optional[int] = None) -> NoReturn:
         """Handle rate limiting errors."""
         logger.warning("Rate limit exceeded", extra={"retry_after": retry_after})
         raise RateLimitException(retry_after)

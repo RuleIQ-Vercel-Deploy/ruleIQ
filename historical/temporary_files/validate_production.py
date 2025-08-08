@@ -14,7 +14,7 @@ import importlib.util
 
 
 # Load environment variables from .env file
-def load_env_file(path=".env"):
+def load_env_file(path=".env") -> None:
     """Load environment variables from .env file"""
     if os.path.exists(path):
         with open(path, "r") as f:
@@ -35,7 +35,7 @@ class Colors:
 
 
 class ValidationResult:
-    def __init__(self, test_name: str, passed: bool, message: str = "", details: Dict = None):
+    def __init__(self, test_name: str, passed: bool, message: str = "", details: Dict = None) -> None:
         self.test_name = test_name
         self.passed = passed
         self.message = message
@@ -43,7 +43,7 @@ class ValidationResult:
 
 
 class ProductionValidator:
-    def __init__(self):
+    def __init__(self) -> None:
         # Load environment variables
         load_env_file()
 
@@ -51,7 +51,7 @@ class ProductionValidator:
         self.base_url = os.getenv("API_BASE_URL", "http://localhost:8000")
         self.db_url = os.getenv("DATABASE_URL", "")
 
-    def log_result(self, result: ValidationResult):
+    def log_result(self, result: ValidationResult) -> None:
         """Log validation result with appropriate formatting"""
         status = (
             f"{Colors.PASS}PASS{Colors.RESET}"
@@ -350,7 +350,7 @@ class ProductionValidator:
         return passed == total
 
 
-def main():
+def main() -> None:
     """Main validation function"""
     validator = ProductionValidator()
     all_passed = validator.run_all_tests()

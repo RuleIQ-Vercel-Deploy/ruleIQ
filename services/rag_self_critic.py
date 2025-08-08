@@ -7,7 +7,7 @@ import sys
 import json
 import asyncio
 import argparse
-from typing import Dict, Any
+from typing import Dict, Any, Optional
 from datetime import datetime
 from pathlib import Path
 
@@ -20,7 +20,7 @@ from services.rag_fact_checker import RAGFactChecker, QualityAssessment
 class RAGSelfCriticCommands:
     """
     Command-line interface for RAG fact-checking and self-criticism
-    
+
     Available Commands:
     - fact-check: Run comprehensive fact-checking on a RAG response
     - quick-check: Run fast fact-checking for real-time usage
@@ -29,11 +29,11 @@ class RAGSelfCriticCommands:
     - benchmark: Run benchmark tests on sample queries
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.rag_system = None
         self.fact_checker = None
 
-    async def initialize(self):
+    async def initialize(self) -> Optional[bool]:
         """Initialize RAG system and fact checker"""
         try:
             print("🔧 Initializing RAG Self-Critic System...")
@@ -48,7 +48,7 @@ class RAGSelfCriticCommands:
     async def fact_check_command(self, query: str, max_results: int = 5) -> Dict[str, Any]:
         """
         Run fact-checking on a RAG query response
-        
+
         Args:
             query: The question to ask the RAG system
             max_results: Maximum number of sources to use
@@ -92,7 +92,7 @@ class RAGSelfCriticCommands:
     async def quick_check_command(self, query: str) -> Dict[str, Any]:
         """
         Run quick fact-checking for real-time usage
-        
+
         Args:
             query: The question to ask the RAG system
         """
@@ -130,7 +130,7 @@ class RAGSelfCriticCommands:
     async def critique_command(self, query: str) -> Dict[str, Any]:
         """
         Run self-criticism analysis on a RAG response
-        
+
         Args:
             query: The question to ask the RAG system
         """
@@ -164,7 +164,7 @@ class RAGSelfCriticCommands:
     async def assess_command(self, query: str) -> Dict[str, Any]:
         """
         Run full quality assessment (fact-check + critique + scoring)
-        
+
         Args:
             query: The question to ask the RAG system
         """
@@ -198,7 +198,7 @@ class RAGSelfCriticCommands:
     async def benchmark_command(self, num_queries: int = 5) -> Dict[str, Any]:
         """
         Run benchmark tests on sample queries
-        
+
         Args:
             num_queries: Number of test queries to run
         """
@@ -275,7 +275,7 @@ class RAGSelfCriticCommands:
             }
         }
 
-    def _display_fact_check_results(self, assessment: QualityAssessment, rag_response):
+    def _display_fact_check_results(self, assessment: QualityAssessment, rag_response) -> None:
         """Display fact-checking results"""
         print("\n📋 Fact-Check Results:")
         print(f"   Overall Score: {assessment.overall_score:.3f}")
@@ -304,7 +304,7 @@ class RAGSelfCriticCommands:
             for rec in assessment.recommendations:
                 print(f"   • {rec}")
 
-    def _display_critique_results(self, critiques):
+    def _display_critique_results(self, critiques) -> None:
         """Display self-critique results"""
         print("\n🎯 Self-Critique Results:")
 
@@ -317,7 +317,7 @@ class RAGSelfCriticCommands:
             if critique.suggestions:
                 print(f"      Suggestion: {critique.suggestions[0]}")
 
-    def _display_comprehensive_assessment(self, assessment: QualityAssessment, rag_response):
+    def _display_comprehensive_assessment(self, assessment: QualityAssessment, rag_response) -> None:
         """Display comprehensive assessment results"""
         self._display_fact_check_results(assessment, rag_response)
         self._display_critique_results(assessment.self_critiques)
@@ -328,7 +328,7 @@ class RAGSelfCriticCommands:
         print(f"   Processing Time: {rag_response.processing_time:.2f}s")
         print(f"   Final Status: {'✅ APPROVED FOR USE' if assessment.approved_for_use else '⚠️ REQUIRES REVIEW'}")
 
-async def main():
+async def main() -> None:
     """Main CLI interface"""
     parser = argparse.ArgumentParser(description="RAG Self-Critic Commands")
     parser.add_argument("command", choices=["fact-check", "quick-check", "critique", "assess", "benchmark"],

@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 class AbacusRAGClient:
     """Client for querying the Abacus.AI agentic RAG agent for LangGraph/Pydantic docs."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         # Credentials provided by user (updated)
         self.api_key = "s2_204284b3b8364ffe9ce52708e876a701"
         self.deployment_id = "3eef03fd8"  # Corrected deployment ID
@@ -34,10 +34,10 @@ class AbacusRAGClient:
     def query_documentation(self, question: str) -> Optional[Dict[str, Any]]:
         """
         Query the agentic RAG agent with a documentation question.
-        
+
         Args:
             question: Question about LangGraph or Pydantic AI
-            
+
         Returns:
             Dictionary containing the agent's response or None if error
         """
@@ -168,7 +168,7 @@ class BaseComplianceAgent:
             result_type=AgentResponse,
             system_prompt=self._build_system_prompt()
         )
-    
+
     def _build_system_prompt(self):
         return f\"\"\"You are a compliance agent operating at trust level {self.trust_level}.
         Trust Level 0: Observe and learn only
@@ -183,7 +183,7 @@ class ContextAccumulator(BaseModel):
     user_patterns: dict
     business_context: dict
     interaction_history: list
-    
+
     def update_context(self, interaction_data):
         # Update patterns based on user behavior
         self.interaction_history.append(interaction_data)

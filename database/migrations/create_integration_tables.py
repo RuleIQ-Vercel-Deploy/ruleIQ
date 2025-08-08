@@ -5,11 +5,12 @@ Run this script to create the required database tables for the integration syste
 
 import asyncio
 from config.logging_config import get_logger
+from typing import Optional
 
 logger = get_logger(__name__)
 
 
-async def create_integration_tables():
+async def create_integration_tables() -> Optional[bool]:
     """Create all integration-related tables"""
     try:
         # This function is deprecated - use 'alembic upgrade head' instead

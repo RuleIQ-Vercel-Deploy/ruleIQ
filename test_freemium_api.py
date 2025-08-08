@@ -7,7 +7,7 @@ import sys
 
 BASE_URL = "http://localhost:8000/api/v1/freemium"
 
-def test_freemium_flow():
+def test_freemium_flow() -> bool:
     """Test the complete freemium assessment flow"""
 
     # Step 1: Capture lead

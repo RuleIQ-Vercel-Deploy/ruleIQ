@@ -10,6 +10,7 @@ from typing import Dict, List, Any
 
 from sqlalchemy import text
 from sqlalchemy.ext.asyncio import create_async_engine
+import sys
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -19,7 +20,7 @@ logger = logging.getLogger(__name__)
 class DatabaseValidator:
     """Validates database schema fixes and integrity."""
 
-    def __init__(self, async_database_url: str):
+    def __init__(self, async_database_url: str) -> None:
         self.async_database_url = async_database_url
         self.async_engine = create_async_engine(async_database_url)
 
@@ -29,8 +30,8 @@ class DatabaseValidator:
             result = await conn.execute(
                 text("""
                 SELECT EXISTS (
-                    SELECT FROM information_schema.tables 
-                    WHERE table_schema = 'public' 
+                    SELECT FROM information_schema.tables
+                    WHERE table_schema = 'public'
                     AND table_name = :table_name
                 )
             """),
@@ -44,8 +45,8 @@ class DatabaseValidator:
         async with self.async_engine.begin() as conn:
             result = await conn.execute(
                 text("""
-                SELECT column_name 
-                FROM information_schema.columns 
+                SELECT column_name
+                FROM information_schema.columns
                 WHERE table_name = :table_name
                 ORDER BY ordinal_position
             """),
@@ -166,7 +167,7 @@ class DatabaseValidator:
             # Check assessment_sessions -> business_profiles foreign key
             fk_result = await conn.execute(
                 text("""
-                SELECT 
+                SELECT
                     tc.table_name,
                     kcu.column_name,
                     ccu.table_name AS foreign_table_name,
@@ -205,26 +206,26 @@ class DatabaseValidator:
         try:
             async with self.async_engine.begin() as conn:
                 # Test assessment_sessions query
-                assessment_result = await conn.execute(
+                await conn.execute(
                     text("""
-                    SELECT 
+                    SELECT
                         business_profile_id,
                         questions_answered,
                         calculated_scores,
                         recommended_frameworks
-                    FROM assessment_sessions 
+                    FROM assessment_sessions
                     LIMIT 1
                 """)
                 )
 
                 # Test business_profiles query
-                business_result = await conn.execute(
+                await conn.execute(
                     text("""
-                    SELECT 
+                    SELECT
                         handles_personal_data,
                         processes_payments,
                         stores_health_data
-                    FROM business_profiles 
+                    FROM business_profiles
                     LIMIT 1
                 """)
                 )
@@ -308,12 +309,12 @@ class DatabaseValidator:
 
         return results
 
-    async def cleanup(self):
+    async def cleanup(self) -> None:
         """Clean up database connections."""
         await self.async_engine.dispose()
 
 
-def print_validation_results(results: Dict[str, Any]):
+def print_validation_results(results: Dict[str, Any]) -> None:
     """Print validation results in a formatted way."""
     print("\n" + "=" * 60)
     print("🔍 DATABASE VALIDATION RESULTS")
@@ -347,7 +348,7 @@ def print_validation_results(results: Dict[str, Any]):
     print(f"{'=' * 60}\n")
 
 
-async def main():
+async def main() -> None:
     """Main function to run database validation."""
     from config.settings import get_settings
 
@@ -367,15 +368,15 @@ async def main():
 
         # Return appropriate exit code
         if results["overall"]["status"] == "ERROR":
-            exit(1)
+            sys.exit(1)
         elif results["overall"]["status"] == "WARNING":
-            exit(2)
+            sys.exit(2)
         else:
-            exit(0)
+            sys.exit(0)
 
     except Exception as e:
         logger.error(f"❌ Unexpected error during validation: {str(e)}")
-        exit(1)
+        sys.exit(1)
 
     finally:
         await validator.cleanup()

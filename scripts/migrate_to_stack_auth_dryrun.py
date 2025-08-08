@@ -100,7 +100,7 @@ def analyze_file(file_path: Path) -> List[str]:
 
     return changes
 
-def main():
+def main() -> None:
     """Run the dry-run analysis"""
     print("🔍 Stack Auth Migration Dry Run")
     print("=" * 70)

@@ -22,23 +22,23 @@ logger = logging.getLogger(__name__)
 class DataAccessService:
     """
     Service for managing data visibility and access controls.
-    
+
     Implements hierarchical data access patterns:
     - own_data: User can only see their own data
     - organization_data: User can see data within their organization
     - all_data: User can see all data (admin level)
     """
 
-    def __init__(self, db: Session):
+    def __init__(self, db: Session) -> None:
         self.db = db
 
     def get_user_data_access_level(self, user_id: UUID) -> str:
         """
         Get the highest data access level for a user.
-        
+
         Args:
             user_id: User ID to check
-            
+
         Returns:
             Access level: 'own_data', 'organization_data', or 'all_data'
         """
@@ -46,8 +46,8 @@ class DataAccessService:
         user_roles = self.db.query(UserRole).join(Role).filter(
             and_(
                 UserRole.user_id == user_id,
-                UserRole.is_active == True,
-                Role.is_active == True
+                UserRole.is_active,
+                Role.is_active
             )
         ).all()
 
@@ -75,12 +75,12 @@ class DataAccessService:
     ) -> bool:
         """
         Check if user can access a specific business profile.
-        
+
         Args:
             user: User with roles
             profile_id: Business profile ID
             profile_owner_id: Optional profile owner ID (for performance)
-            
+
         Returns:
             True if user can access the profile
         """
@@ -118,11 +118,11 @@ class DataAccessService:
     ):
         """
         Filter a business profiles query based on user's data access level.
-        
+
         Args:
             user: User with roles
             base_query: SQLAlchemy query to filter
-            
+
         Returns:
             Filtered query
         """
@@ -152,11 +152,11 @@ class DataAccessService:
     ) -> bool:
         """
         Check if user can access a specific assessment.
-        
+
         Args:
             user: User with roles
             assessment_owner_id: Assessment owner user ID
-            
+
         Returns:
             True if user can access the assessment
         """
@@ -186,13 +186,13 @@ class DataAccessService:
     ) -> DataAccess:
         """
         Grant specific data access to a user.
-        
+
         Args:
             user_id: User to grant access to
             access_type: Access type ('own_data', 'organization_data', 'all_data')
             business_profile_id: Optional specific business profile
             granted_by: User who granted the access
-            
+
         Returns:
             DataAccess instance
         """
@@ -204,7 +204,7 @@ class DataAccessService:
             and_(
                 DataAccess.user_id == user_id,
                 DataAccess.business_profile_id == business_profile_id,
-                DataAccess.is_active == True
+                DataAccess.is_active
             )
         ).first()
 
@@ -236,11 +236,11 @@ class DataAccessService:
     ) -> bool:
         """
         Revoke data access from a user.
-        
+
         Args:
             user_id: User to revoke access from
             business_profile_id: Optional specific business profile
-            
+
         Returns:
             True if access was revoked
         """
@@ -248,7 +248,7 @@ class DataAccessService:
             and_(
                 DataAccess.user_id == user_id,
                 DataAccess.business_profile_id == business_profile_id,
-                DataAccess.is_active == True
+                DataAccess.is_active
             )
         ).first()
 
@@ -264,10 +264,10 @@ class DataAccessService:
     def get_accessible_business_profiles(self, user: UserWithRoles) -> List[UUID]:
         """
         Get list of business profile IDs accessible to a user.
-        
+
         Args:
             user: User with roles
-            
+
         Returns:
             List of accessible business profile IDs
         """

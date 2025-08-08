@@ -380,7 +380,7 @@ async def run_chunks_parallel(chunks: List[Dict], max_concurrent: int = 3) -> Li
     return results
 
 
-def print_summary(results: List[Tuple], total_time: float):
+def print_summary(results: List[Tuple], total_time: float) -> None:
     """Print test execution summary."""
     print("\n" + "=" * 80)
     print("📊 TEST EXECUTION SUMMARY")
@@ -415,7 +415,7 @@ def print_summary(results: List[Tuple], total_time: float):
     print("=" * 80)
 
 
-async def main():
+async def main() -> None:
     """Main execution function."""
     parser = argparse.ArgumentParser(description="Run NexCompli tests in optimized chunks")
     parser.add_argument(

@@ -59,12 +59,12 @@ class BlacklistMetrics:
 class EnhancedTokenBlacklist:
     """Enhanced Redis-based token blacklist with security features."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.cache_manager = None
         self.metrics = BlacklistMetrics()
         self._initialized = False
 
-    async def initialize(self):
+    async def initialize(self) -> None:
         """Initialize the blacklist manager."""
         if self._initialized:
             return
@@ -74,7 +74,7 @@ class EnhancedTokenBlacklist:
         self._initialized = True
         logger.info("Enhanced token blacklist initialized")
 
-    async def _ensure_initialized(self):
+    async def _ensure_initialized(self) -> None:
         """Ensure the blacklist manager is initialized."""
         if not self._initialized:
             await self.initialize()
@@ -338,7 +338,7 @@ class EnhancedTokenBlacklist:
             logger.error(f"Failed to get blacklist statistics: {e}")
             return {}
 
-    async def _update_metrics(self, operation: str, count: int = 1):
+    async def _update_metrics(self, operation: str, count: int = 1) -> None:
         """Update blacklist metrics."""
         try:
             if operation == "blacklisted":
@@ -358,7 +358,7 @@ class EnhancedTokenBlacklist:
         except Exception as e:
             logger.error(f"Failed to update metrics: {e}")
 
-    async def _save_metrics(self):
+    async def _save_metrics(self) -> None:
         """Save metrics to Redis."""
         try:
             metrics_data = {
@@ -372,7 +372,7 @@ class EnhancedTokenBlacklist:
         except Exception as e:
             logger.error(f"Failed to save metrics: {e}")
 
-    async def _load_metrics(self):
+    async def _load_metrics(self) -> None:
         """Load metrics from Redis."""
         try:
             metrics_data = await self.cache_manager.get(BLACKLIST_METRICS_KEY)
@@ -386,7 +386,7 @@ class EnhancedTokenBlacklist:
             logger.error(f"Failed to load metrics: {e}")
             self.metrics = BlacklistMetrics()
 
-    async def _analyze_blacklist_patterns(self, entry: BlacklistEntry):
+    async def _analyze_blacklist_patterns(self, entry: BlacklistEntry) -> None:
         """Analyze blacklist patterns for security threats."""
         try:
             # Check for rapid token blacklisting from same IP/user

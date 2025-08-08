@@ -17,7 +17,7 @@ class TestFrontendFlow:
 def test_tc001_user_registration_with_valid_data():
     """
     User Registration with Valid Data
-    
+
     Description: Verify that a user can successfully register using valid credentials and required information.
     Category: functional
     Priority: High
@@ -44,7 +44,7 @@ def test_tc001_user_registration_with_valid_data():
 def test_tc002_user_login_with_correct_credentials():
     """
     User Login with Correct Credentials
-    
+
     Description: Validate that users can log in successfully using valid username/email and password.
     Category: functional
     Priority: High
@@ -71,7 +71,7 @@ def test_tc002_user_login_with_correct_credentials():
 def test_tc003_user_login_with_invalid_credentials():
     """
     User Login with Invalid Credentials
-    
+
     Description: Ensure login fails with incorrect username/email or password and appropriate error messages are shown.
     Category: error handling
     Priority: High
@@ -98,7 +98,7 @@ def test_tc003_user_login_with_invalid_credentials():
 def test_tc004_jwt_token_refresh_flow():
     """
     JWT Token Refresh Flow
-    
+
     Description: Test that users can refresh their JWT tokens without needing to re-authenticate when tokens expire.
     Category: functional
     Priority: High
@@ -125,7 +125,7 @@ def test_tc004_jwt_token_refresh_flow():
 def test_tc005_oauth_login_integration():
     """
     OAuth Login Integration
-    
+
     Description: Verify that users can log in using integrated OAuth providers correctly.
     Category: functional
     Priority: High

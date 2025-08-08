@@ -18,7 +18,7 @@ from typing import Any, Dict, List
 class AIOptimizationTestRunner:
     """Test runner for AI optimization implementation."""
 
-    def __init__(self, project_root: Path):
+    def __init__(self, project_root: Path) -> None:
         self.project_root = project_root
         self.test_results = {}
 
@@ -160,7 +160,7 @@ class AIOptimizationTestRunner:
 
         return results
 
-    def _print_test_result(self, result: Dict[str, Any]):
+    def _print_test_result(self, result: Dict[str, Any]) -> None:
         """Print test result summary."""
         status = "✅ PASSED" if result["success"] else "❌ FAILED"
         duration = f"{result['duration']:.2f}s"
@@ -224,7 +224,7 @@ Detailed Results:
         print("✅ All test dependencies available")
         return True
 
-    def setup_test_environment(self):
+    def setup_test_environment(self) -> None:
         """Setup test environment variables."""
         os.environ["TESTING"] = "true"
         os.environ["AI_TESTING_MODE"] = "true"
@@ -234,7 +234,7 @@ Detailed Results:
         os.environ["MOCK_AI_RESPONSES"] = "true"
 
 
-def main():
+def main() -> None:
     """Main test runner function."""
     parser = argparse.ArgumentParser(description="AI Optimization Test Runner")
     parser.add_argument("--verbose", "-v", action="store_true", help="Verbose output")

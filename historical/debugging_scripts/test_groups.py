@@ -213,7 +213,7 @@ def run_all_groups_sequential():
     return passed == len(results)
 
 
-def list_groups():
+def list_groups() -> None:
     """List all available test groups"""
     print("📋 Available Test Groups (597 total tests):")
     print("=" * 80)

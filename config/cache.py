@@ -35,13 +35,13 @@ class CacheManager:
     - API response data
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.redis_client: Optional[redis.Redis] = None
         self.memory_cache: Dict[str, Dict[str, Any]] = {}
         self.cache_enabled = True
         self.default_ttl = 300  # 5 minutes default TTL
 
-    async def initialize(self):
+    async def initialize(self) -> None:
         """Initialize Redis connection with fallback to memory cache."""
         if not REDIS_AVAILABLE:
             logger.warning("Redis not available, using in-memory cache fallback")
@@ -223,7 +223,7 @@ class CacheManager:
         logger.info(f"Invalidated {total_cleared} cache entries for user {user_id}")
         return total_cleared
 
-    async def cleanup_expired_memory_cache(self):
+    async def cleanup_expired_memory_cache(self) -> None:
         """Clean up expired entries from memory cache."""
         if self.redis_client:
             return  # Redis handles expiration automatically

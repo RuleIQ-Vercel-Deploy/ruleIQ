@@ -145,7 +145,7 @@ class AdvancedSafetyManager:
     content filtering, and comprehensive audit capabilities.
     """
 
-    def __init__(self, user_context: Optional[Dict[str, Any]] = None):
+    def __init__(self, user_context: Optional[Dict[str, Any]] = None) -> None:
         self.safety_profiles: Dict[str, SafetyProfile] = {}
         self.decision_history: List[SafetyDecisionRecord] = []
         self.metrics = SafetyMetrics()
@@ -220,7 +220,7 @@ class AdvancedSafetyManager:
             f"Initialized AdvancedSafetyManager for user {self.user_id} with role {self.user_role}"
         )
 
-    def _initialize_default_profiles(self):
+    def _initialize_default_profiles(self) -> None:
         """Initialize default safety profiles for different use cases."""
 
         # Permissive profile for internal testing
@@ -359,13 +359,16 @@ class AdvancedSafetyManager:
     ) -> None:
         """Log authorization decisions for audit purposes."""
         decision_record = SafetyDecisionRecord(
+            decision_id=str(uuid4()),
             user_id=self.user_id,
-            user_role=self.user_role,
-            content_type=context.get("content_type", "unknown") if context else "unknown",
-            action=f"AUTHORIZATION: {action}",
+            content_type=ContentType.GENERAL_QUESTION if context and context.get("content_type") == "unknown" else ContentType.GENERAL_INQUIRY,
+            safety_profile="standard",
+            input_content=f"AUTHORIZATION: {action}",
             decision=SafetyDecision.ALLOW if granted else SafetyDecision.BLOCK,
+            confidence_score=1.0,
             reasoning=f"Permission '{permission}' {'granted' if granted else 'denied'} for role '{self.user_role}'",
-            confidence=1.0,
+            applied_filters=[],
+            timestamp=datetime.now(),
             metadata={
                 "permission_requested": permission,
                 "user_context": self.user_context,
@@ -503,7 +506,7 @@ class AdvancedSafetyManager:
             profile_name = role_appropriate_profile
 
         # Step 4: Get role-specific content filters
-        role_filters = self.get_content_filters_for_role()
+        self.get_content_filters_for_role()
         profile = self.safety_profiles.get(profile_name, self.safety_profiles["standard"])
 
         # Check if user can evaluate content at this risk level
@@ -692,7 +695,7 @@ class AdvancedSafetyManager:
 
         return False
 
-    def _update_metrics(self, record: SafetyDecisionRecord):
+    def _update_metrics(self, record: SafetyDecisionRecord) -> None:
         """Update safety metrics."""
         self.metrics.total_decisions += 1
 
@@ -978,7 +981,7 @@ def validate_safety_manager_permissions(
 class RoleBasedSafetyMiddleware:
     """Middleware for role-based safety management in AI operations."""
 
-    def __init__(self, default_role: str = "user"):
+    def __init__(self, default_role: str = "user") -> None:
         self.default_role = default_role
 
     def get_safety_manager(self, user_context: Dict[str, Any]) -> AdvancedSafetyManager:

@@ -18,7 +18,7 @@ logger = get_logger(__name__)
 class QualityScorer:
     """Calculates a quality score (0-100) for evidence."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize the quality scorer with scoring weights."""
         self.weights = {
             "completeness": 0.30,

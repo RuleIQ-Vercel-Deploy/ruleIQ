@@ -31,15 +31,15 @@ class LoadResult:
 class UKComplianceLoader:
     """
     Service for loading UK-specific compliance frameworks.
-    
+
     Handles validation, deduplication, and database persistence
     of UK regulatory frameworks.
     """
 
-    def __init__(self, db_session: Optional[Session] = None):
+    def __init__(self, db_session: Optional[Session] = None) -> None:
         """
         Initialize the loader.
-        
+
         Args:
             db_session: Database session. If None, will create new session.
         """
@@ -51,10 +51,10 @@ class UKComplianceLoader:
     def load_frameworks(self, frameworks_data: List[Dict[str, Any]]) -> LoadResult:
         """
         Load multiple UK compliance frameworks from data.
-        
+
         Args:
             frameworks_data: List of framework dictionaries
-            
+
         Returns:
             LoadResult with success status and details
         """
@@ -108,13 +108,13 @@ class UKComplianceLoader:
     def create_framework(self, data: Dict[str, Any]) -> ComplianceFramework:
         """
         Create a ComplianceFramework instance from data dictionary.
-        
+
         Args:
             data: Framework data dictionary
-            
+
         Returns:
             ComplianceFramework instance
-            
+
         Raises:
             ValueError: If required fields are missing or invalid
         """
@@ -168,13 +168,13 @@ class UKComplianceLoader:
     def get_uk_frameworks(self) -> List[ComplianceFramework]:
         """
         Retrieve all active UK frameworks from database.
-        
+
         Returns:
             List of UK compliance frameworks
         """
         return self.db_session.query(ComplianceFramework)\
             .filter(
-                ComplianceFramework.is_active == True,
+                ComplianceFramework.is_active,
                 ComplianceFramework.geographic_scop.contains(["UK"])
             )\
             .all()
@@ -183,15 +183,15 @@ class UKComplianceLoader:
                                description_update: str = "") -> ComplianceFramework:
         """
         Update framework version and description.
-        
+
         Args:
             framework_name: Name of framework to update
             new_version: New version string
             description_update: Additional description text
-            
+
         Returns:
             Updated framework
-            
+
         Raises:
             ValueError: If framework not found
         """
@@ -219,10 +219,10 @@ class GeographicValidator:
     def validate_uk_scope(self, geographic_scope: List[str]) -> bool:
         """
         Validate that geographic scope is appropriate for UK frameworks.
-        
+
         Args:
             geographic_scope: List of geographic regions
-            
+
         Returns:
             True if valid UK scope, False otherwise
         """
@@ -254,10 +254,10 @@ class ISO27001UKMapper:
     def map_iso_to_uk_gdpr(self, iso_controls: List[str]) -> List[Dict[str, str]]:
         """
         Map ISO 27001 controls to UK GDPR requirements.
-        
+
         Args:
             iso_controls: List of ISO control identifiers
-            
+
         Returns:
             List of UK GDPR requirement mappings
         """

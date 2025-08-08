@@ -19,7 +19,7 @@ class AccessLevel(Enum):
 class RBACConfig:
     """
     Centralized RBAC configuration.
-    
+
     Modify these settings to adjust permissions and access control
     throughout the application.
     """

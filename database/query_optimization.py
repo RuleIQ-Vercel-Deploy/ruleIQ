@@ -1,6 +1,6 @@
 """Query optimization utilities for ruleIQ database."""
 
-from sqlalchemy import select, func, and_, or_, update, delete
+from sqlalchemy import select, func, and_, or_, update, delete, text
 from sqlalchemy.orm import selectinload
 from sqlalchemy.ext.asyncio import AsyncSession
 from typing import List, Optional, Dict, Any
@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 class QueryOptimizer:
     """Enhanced database query optimizer with performance monitoring."""
 
-    def __init__(self, db: AsyncSession):
+    def __init__(self, db: AsyncSession) -> None:
         self.db = db
 
     async def get_evidence_with_relations(
@@ -119,7 +119,7 @@ class QueryOptimizer:
         query = (
             select(ComplianceFramework, func.count(AssessmentSession.id).label("usage_count"))
             .outerjoin(AssessmentSession, AssessmentSession.framework_id == ComplianceFramework.id)
-            .where(ComplianceFramework.is_active == True)
+            .where(ComplianceFramework.is_active)
             .group_by(ComplianceFramework.id)
             .order_by(func.count(AssessmentSession.id).desc())
         )
@@ -212,7 +212,7 @@ class QueryOptimizer:
     async def analyze_query(self, query: str, params: dict = None) -> Dict[str, Any]:
         """
         Analyze query performance using EXPLAIN ANALYZE.
-        
+
         Returns execution plan and performance metrics.
         """
         import time
@@ -265,22 +265,23 @@ class QueryOptimizer:
     async def get_slow_queries(self, threshold_ms: float = 100) -> List[Dict[str, Any]]:
         """
         Get slow queries from pg_stat_statements.
-        
+
         Requires pg_stat_statements extension to be enabled.
         """
         try:
             query = text("""
-                SELECT 
+                SELECT
                     query,
                     calls,
                     total_exec_time,
                     mean_exec_time,
                     max_exec_time,
                     rows,
-                    100.0 * shared_blks_hit / nullif(shared_blks_hit + shared_blks_read, 0) as hit_percent
-                FROM pg_stat_statements 
+                    100.0 * shared_blks_hit / 
+                    nullif(shared_blks_hit + shared_blks_read, 0) as hit_percent
+                FROM pg_stat_statements
                 WHERE mean_exec_time > :threshold
-                ORDER BY mean_exec_time DESC 
+                ORDER BY mean_exec_time DESC
                 LIMIT 20
             """)
 
@@ -301,7 +302,9 @@ class QueryOptimizer:
             ]
 
         except Exception as e:
-            logger.warning(f"Could not get slow queries (pg_stat_statements may not be enabled): {e}")
+            logger.warning(
+                f"Could not get slow queries (pg_stat_statements may not be enabled): {e}"
+            )
             return []
 
     async def get_index_usage_stats(self) -> List[Dict[str, Any]]:
@@ -310,7 +313,7 @@ class QueryOptimizer:
         """
         try:
             query = text("""
-                SELECT 
+                SELECT
                     schemaname,
                     tablename,
                     indexname,
@@ -318,7 +321,7 @@ class QueryOptimizer:
                     idx_tup_fetch,
                     idx_scan,
                     pg_size_pretty(pg_relation_size(indexrelid)) as size
-                FROM pg_stat_user_indexes 
+                FROM pg_stat_user_indexes
                 ORDER BY idx_scan ASC, pg_relation_size(indexrelid) DESC
             """)
 
@@ -350,12 +353,12 @@ class QueryOptimizer:
         try:
             # Get current connection stats
             query = text("""
-                SELECT 
+                SELECT
                     count(*) as total_connections,
                     count(*) FILTER (WHERE state = 'active') as active_connections,
                     count(*) FILTER (WHERE state = 'idle') as idle_connections,
                     count(*) FILTER (WHERE state = 'idle in transaction') as idle_in_transaction
-                FROM pg_stat_activity 
+                FROM pg_stat_activity
                 WHERE datname = current_database()
             """)
 
@@ -373,10 +376,14 @@ class QueryOptimizer:
             recommendations = []
 
             if utilization > 0.8:
-                recommendations.append("High connection pool utilization - consider increasing pool size")
+                recommendations.append(
+                    "High connection pool utilization - consider increasing pool size"
+                )
 
             if idle_in_tx > total * 0.1:
-                recommendations.append("Many idle-in-transaction connections - check for connection leaks")
+                recommendations.append(
+                    "Many idle-in-transaction connections - check for connection leaks"
+                )
 
             if idle > total * 0.5:
                 recommendations.append("Many idle connections - consider reducing pool size")
@@ -408,7 +415,9 @@ class QueryOptimizer:
                 "category": "queries",
                 "priority": "high",
                 "issue": f"Found {len(slow_queries)} slow queries",
-                "recommendation": "Review and optimize slow queries with indexes or query restructuring",
+                "recommendation": (
+                    "Review and optimize slow queries with indexes or query restructuring"
+                ),
                 "impact": "Significant improvement in API response times"
             })
 
@@ -441,7 +450,7 @@ class QueryOptimizer:
 class BatchQueryOptimizer:
     """Batch operations to reduce database round trips."""
 
-    def __init__(self, db: AsyncSession):
+    def __init__(self, db: AsyncSession) -> None:
         self.db = db
 
     async def batch_update_evidence_status(self, evidence_ids: List[str], new_status: str) -> int:
@@ -520,7 +529,7 @@ class BatchQueryOptimizer:
 class QueryCache:
     """Simple query caching to reduce database load."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self._cache = {}
 
     def get(self, key: str) -> Any:

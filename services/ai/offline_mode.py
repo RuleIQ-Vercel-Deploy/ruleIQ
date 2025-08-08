@@ -54,7 +54,7 @@ class OfflineCapability:
 class OfflineDatabase:
     """Local SQLite database for offline operation"""
 
-    def __init__(self, db_path: Optional[str] = None):
+    def __init__(self, db_path: Optional[str] = None) -> None:
         # Get database path from config or use default
         if db_path is None:
             try:
@@ -69,7 +69,7 @@ class OfflineDatabase:
         self.logger = logging.getLogger(__name__)
         self._initialize_database()
 
-    def _initialize_database(self):
+    def _initialize_database(self) -> None:
         """Initialize the offline database schema"""
         with sqlite3.connect(self.db_path) as conn:
             cursor = conn.cursor()
@@ -131,7 +131,7 @@ class OfflineDatabase:
             conn.commit()
             self.logger.info("Offline database initialized")
 
-    def store_offline_request(self, request: OfflineRequest):
+    def store_offline_request(self, request: OfflineRequest) -> None:
         """Store a request made while offline"""
         with sqlite3.connect(self.db_path) as conn:
             cursor = conn.cursor()
@@ -178,7 +178,7 @@ class OfflineDatabase:
 
             return requests
 
-    def update_request_status(self, request_id: str, status: str):
+    def update_request_status(self, request_id: str, status: str) -> None:
         """Update the status of an offline request"""
         with sqlite3.connect(self.db_path) as conn:
             cursor = conn.cursor()
@@ -193,7 +193,7 @@ class OfflineDatabase:
 
     def store_cached_response(
         self, operation: str, context_hash: str, response: str, confidence: float
-    ):
+    ) -> None:
         """Store a cached response for offline use"""
         with sqlite3.connect(self.db_path) as conn:
             cursor = conn.cursor()
@@ -220,8 +220,8 @@ class OfflineDatabase:
             cursor = conn.cursor()
             cursor.execute(
                 """
-                SELECT response, confidence 
-                FROM cached_responses 
+                SELECT response, confidence
+                FROM cached_responses
                 WHERE operation = ? AND context_hash = ?
             """,
                 (operation, context_hash),
@@ -232,7 +232,7 @@ class OfflineDatabase:
                 # Update last used timestamp
                 cursor.execute(
                     """
-                    UPDATE cached_responses 
+                    UPDATE cached_responses
                     SET last_used = ?, use_count = use_count + 1
                     WHERE operation = ? AND context_hash = ?
                 """,
@@ -248,7 +248,7 @@ class OfflineDatabase:
 class OfflineAssessmentTools:
     """Provides offline assessment capabilities"""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.logger = logging.getLogger(__name__)
         self.frameworks = self._initialize_frameworks()
 
@@ -392,7 +392,7 @@ class OfflineModeManager:
     Comprehensive offline mode management system
     """
 
-    def __init__(self, mode: OfflineMode = OfflineMode.ENHANCED):
+    def __init__(self, mode: OfflineMode = OfflineMode.ENHANCED) -> None:
         self.mode = mode
         self.database = OfflineDatabase()
         self.assessment_tools = OfflineAssessmentTools()
@@ -662,7 +662,7 @@ You will be notified when the analysis is complete. In the meantime, you can:
 
         return {"sync_status": "service_unavailable"}
 
-    def update_service_status(self, ai_service_available: bool):
+    def update_service_status(self, ai_service_available: bool) -> None:
         """Update the status of AI services"""
         self.service_status["last_check"] = datetime.now()
 
@@ -707,7 +707,7 @@ def get_offline_manager(mode: OfflineMode = OfflineMode.ENHANCED) -> OfflineMode
     return _offline_manager
 
 
-def reset_offline_manager():
+def reset_offline_manager() -> None:
     """Reset global offline manager (for testing)"""
     global _offline_manager
     _offline_manager = None

@@ -39,7 +39,7 @@ class MicrosoftGraphAPIClient(BaseAPIClient):
 
     SCOPES = ["https://graph.microsoft.com/.default"]
 
-    def __init__(self, credentials: APICredentials):
+    def __init__(self, credentials: APICredentials) -> None:
         super().__init__(credentials)
         self.access_token: Optional[str] = None
         self.token_expires_at: Optional[datetime] = None

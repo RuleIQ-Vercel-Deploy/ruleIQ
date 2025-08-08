@@ -16,7 +16,7 @@ branch_labels = None
 depends_on = None
 
 
-def upgrade():
+def upgrade() -> None:
     """Add CHECK constraints for data integrity."""
 
     # ==== HIGH PRIORITY CONSTRAINTS ====
@@ -25,8 +25,8 @@ def upgrade():
     try:
         # Employee count validation
         op.execute("""
-            ALTER TABLE business_profiles 
-            ADD CONSTRAINT ck_business_profile_employee_count 
+            ALTER TABLE business_profiles
+            ADD CONSTRAINT ck_business_profile_employee_count
             CHECK (employee_count >= 1 AND employee_count <= 1000000)
         """)
     except Exception:
@@ -35,8 +35,8 @@ def upgrade():
     try:
         # Company name validation
         op.execute("""
-            ALTER TABLE business_profiles 
-            ADD CONSTRAINT ck_business_profile_company_name_length 
+            ALTER TABLE business_profiles
+            ADD CONSTRAINT ck_business_profile_company_name_length
             CHECK (length(company_name) >= 2 AND length(company_name) <= 255)
         """)
     except Exception:
@@ -45,8 +45,8 @@ def upgrade():
     try:
         # Data sensitivity validation
         op.execute("""
-            ALTER TABLE business_profiles 
-            ADD CONSTRAINT ck_business_profile_data_sensitivity 
+            ALTER TABLE business_profiles
+            ADD CONSTRAINT ck_business_profile_data_sensitivity
             CHECK (data_sensitivity IN ('Low', 'Medium', 'High', 'Critical'))
         """)
     except Exception:
@@ -56,8 +56,8 @@ def upgrade():
     try:
         # Complexity score validation (1-10 scale)
         op.execute("""
-            ALTER TABLE compliance_frameworks 
-            ADD CONSTRAINT ck_compliance_framework_complexity 
+            ALTER TABLE compliance_frameworks
+            ADD CONSTRAINT ck_compliance_framework_complexity
             CHECK (complexity_score >= 1 AND complexity_score <= 10)
         """)
     except Exception:
@@ -66,8 +66,8 @@ def upgrade():
     try:
         # Implementation time validation (1-260 weeks, max 5 years)
         op.execute("""
-            ALTER TABLE compliance_frameworks 
-            ADD CONSTRAINT ck_compliance_framework_implementation_time 
+            ALTER TABLE compliance_frameworks
+            ADD CONSTRAINT ck_compliance_framework_implementation_time
             CHECK (implementation_time_weeks >= 1 AND implementation_time_weeks <= 260)
         """)
     except Exception:
@@ -76,9 +76,12 @@ def upgrade():
     try:
         # Employee threshold validation
         op.execute("""
-            ALTER TABLE compliance_frameworks 
-            ADD CONSTRAINT ck_compliance_framework_employee_threshold 
-            CHECK (employee_threshold IS NULL OR (employee_threshold > 0 AND employee_threshold <= 1000000))
+            ALTER TABLE compliance_frameworks
+            ADD CONSTRAINT ck_compliance_framework_employee_threshold
+            CHECK (
+                employee_threshold IS NULL OR 
+                (employee_threshold > 0 AND employee_threshold <= 1000000)
+            )
         """)
     except Exception:
         pass
@@ -87,8 +90,8 @@ def upgrade():
     try:
         # Evidence name length validation
         op.execute("""
-            ALTER TABLE evidence_items 
-            ADD CONSTRAINT ck_evidence_item_name_length 
+            ALTER TABLE evidence_items
+            ADD CONSTRAINT ck_evidence_item_name_length
             CHECK (length(evidence_name) >= 2 AND length(evidence_name) <= 255)
         """)
     except Exception:
@@ -97,9 +100,12 @@ def upgrade():
     try:
         # Evidence type validation
         op.execute("""
-            ALTER TABLE evidence_items 
-            ADD CONSTRAINT ck_evidence_item_type 
-            CHECK (evidence_type IN ('Policy', 'Procedure', 'Log', 'Certificate', 'Configuration', 'Audit Report', 'Training Record', 'Other'))
+            ALTER TABLE evidence_items
+            ADD CONSTRAINT ck_evidence_item_type
+            CHECK (evidence_type IN (
+                'Policy', 'Procedure', 'Log', 'Certificate', 
+                'Configuration', 'Audit Report', 'Training Record', 'Other'
+            ))
         """)
     except Exception:
         pass
@@ -107,9 +113,12 @@ def upgrade():
     try:
         # Status validation
         op.execute("""
-            ALTER TABLE evidence_items 
-            ADD CONSTRAINT ck_evidence_item_status 
-            CHECK (status IN ('not_started', 'in_progress', 'collected', 'under_review', 'approved', 'rejected', 'expired'))
+            ALTER TABLE evidence_items
+            ADD CONSTRAINT ck_evidence_item_status
+            CHECK (status IN (
+                'not_started', 'in_progress', 'collected', 'under_review', 
+                'approved', 'rejected', 'expired'
+            ))
         """)
     except Exception:
         pass
@@ -117,8 +126,8 @@ def upgrade():
     try:
         # Priority validation
         op.execute("""
-            ALTER TABLE evidence_items 
-            ADD CONSTRAINT ck_evidence_item_priority 
+            ALTER TABLE evidence_items
+            ADD CONSTRAINT ck_evidence_item_priority
             CHECK (priority IN ('low', 'medium', 'high', 'critical'))
         """)
     except Exception:
@@ -127,8 +136,8 @@ def upgrade():
     try:
         # Collection method validation
         op.execute("""
-            ALTER TABLE evidence_items 
-            ADD CONSTRAINT ck_evidence_item_method 
+            ALTER TABLE evidence_items
+            ADD CONSTRAINT ck_evidence_item_method
             CHECK (collection_method IN ('manual', 'automated', 'semi_automated'))
         """)
     except Exception:
@@ -137,9 +146,11 @@ def upgrade():
     try:
         # Collection frequency validation
         op.execute("""
-            ALTER TABLE evidence_items 
-            ADD CONSTRAINT ck_evidence_item_frequency 
-            CHECK (collection_frequency IN ('once', 'daily', 'weekly', 'monthly', 'quarterly', 'annually'))
+            ALTER TABLE evidence_items
+            ADD CONSTRAINT ck_evidence_item_frequency
+            CHECK (collection_frequency IN (
+                'once', 'daily', 'weekly', 'monthly', 'quarterly', 'annually'
+            ))
         """)
     except Exception:
         pass
@@ -147,8 +158,8 @@ def upgrade():
     try:
         # Compliance score impact validation (0-100%)
         op.execute("""
-            ALTER TABLE evidence_items 
-            ADD CONSTRAINT ck_evidence_item_score_impact 
+            ALTER TABLE evidence_items
+            ADD CONSTRAINT ck_evidence_item_score_impact
             CHECK (compliance_score_impact >= 0.0 AND compliance_score_impact <= 100.0)
         """)
     except Exception:
@@ -157,9 +168,12 @@ def upgrade():
     try:
         # File size validation (max 5GB)
         op.execute("""
-            ALTER TABLE evidence_items 
-            ADD CONSTRAINT ck_evidence_item_file_size 
-            CHECK (file_size_bytes IS NULL OR (file_size_bytes >= 0 AND file_size_bytes <= 5368709120))
+            ALTER TABLE evidence_items
+            ADD CONSTRAINT ck_evidence_item_file_size
+            CHECK (
+                file_size_bytes IS NULL OR 
+                (file_size_bytes >= 0 AND file_size_bytes <= 5368709120)
+            )
         """)
     except Exception:
         pass
@@ -168,9 +182,12 @@ def upgrade():
     try:
         # Session type validation
         op.execute("""
-            ALTER TABLE assessment_sessions 
-            ADD CONSTRAINT ck_assessment_session_type 
-            CHECK (session_type IN ('compliance_scoping', 'readiness_assessment', 'gap_analysis', 'risk_assessment'))
+            ALTER TABLE assessment_sessions
+            ADD CONSTRAINT ck_assessment_session_type
+            CHECK (session_type IN (
+                'compliance_scoping', 'readiness_assessment', 
+                'gap_analysis', 'risk_assessment'
+            ))
         """)
     except Exception:
         pass
@@ -178,8 +195,8 @@ def upgrade():
     try:
         # Status validation
         op.execute("""
-            ALTER TABLE assessment_sessions 
-            ADD CONSTRAINT ck_assessment_session_status 
+            ALTER TABLE assessment_sessions
+            ADD CONSTRAINT ck_assessment_session_status
             CHECK (status IN ('in_progress', 'completed', 'abandoned', 'paused'))
         """)
     except Exception:
@@ -188,8 +205,8 @@ def upgrade():
     try:
         # Stage validation
         op.execute("""
-            ALTER TABLE assessment_sessions 
-            ADD CONSTRAINT ck_assessment_session_stages 
+            ALTER TABLE assessment_sessions
+            ADD CONSTRAINT ck_assessment_session_stages
             CHECK (current_stage >= 1 AND current_stage <= total_stages)
         """)
     except Exception:
@@ -198,8 +215,8 @@ def upgrade():
     try:
         # Total stages validation
         op.execute("""
-            ALTER TABLE assessment_sessions 
-            ADD CONSTRAINT ck_assessment_session_total_stages 
+            ALTER TABLE assessment_sessions
+            ADD CONSTRAINT ck_assessment_session_total_stages
             CHECK (total_stages >= 1 AND total_stages <= 50)
         """)
     except Exception:
@@ -208,8 +225,8 @@ def upgrade():
     try:
         # Questions validation
         op.execute("""
-            ALTER TABLE assessment_sessions 
-            ADD CONSTRAINT ck_assessment_session_questions 
+            ALTER TABLE assessment_sessions
+            ADD CONSTRAINT ck_assessment_session_questions
             CHECK (questions_answered >= 0 AND questions_answered <= total_questions)
         """)
     except Exception:
@@ -218,8 +235,8 @@ def upgrade():
     try:
         # Total questions validation
         op.execute("""
-            ALTER TABLE assessment_sessions 
-            ADD CONSTRAINT ck_assessment_session_total_questions 
+            ALTER TABLE assessment_sessions
+            ADD CONSTRAINT ck_assessment_session_total_questions
             CHECK (total_questions >= 0 AND total_questions <= 1000)
         """)
     except Exception:
@@ -229,8 +246,8 @@ def upgrade():
     try:
         # Overall score validation (0-100%)
         op.execute("""
-            ALTER TABLE readiness_assessments 
-            ADD CONSTRAINT ck_readiness_assessment_overall_score 
+            ALTER TABLE readiness_assessments
+            ADD CONSTRAINT ck_readiness_assessment_overall_score
             CHECK (overall_score >= 0.0 AND overall_score <= 100.0)
         """)
     except Exception:
@@ -239,8 +256,8 @@ def upgrade():
     try:
         # Score trend validation
         op.execute("""
-            ALTER TABLE readiness_assessments 
-            ADD CONSTRAINT ck_readiness_assessment_trend 
+            ALTER TABLE readiness_assessments
+            ADD CONSTRAINT ck_readiness_assessment_trend
             CHECK (score_trend IN ('improving', 'stable', 'declining', 'unknown'))
         """)
     except Exception:
@@ -250,9 +267,12 @@ def upgrade():
     try:
         # Integration provider validation
         op.execute("""
-            ALTER TABLE integrations 
-            ADD CONSTRAINT ck_integration_provider 
-            CHECK (provider IN ('aws', 'okta', 'google_workspace', 'microsoft_365', 'azure', 'github', 'gitlab'))
+            ALTER TABLE integrations
+            ADD CONSTRAINT ck_integration_provider
+            CHECK (provider IN (
+                'aws', 'okta', 'google_workspace', 'microsoft_365', 
+                'azure', 'github', 'gitlab'
+            ))
         """)
     except Exception:
         pass
@@ -260,8 +280,8 @@ def upgrade():
     try:
         # Provider length validation
         op.execute("""
-            ALTER TABLE integrations 
-            ADD CONSTRAINT ck_integration_provider_length 
+            ALTER TABLE integrations
+            ADD CONSTRAINT ck_integration_provider_length
             CHECK (length(provider) >= 2 AND length(provider) <= 50)
         """)
     except Exception:
@@ -271,8 +291,8 @@ def upgrade():
     try:
         # Evidence collection status validation
         op.execute("""
-            ALTER TABLE evidence_collections 
-            ADD CONSTRAINT ck_evidence_collection_status 
+            ALTER TABLE evidence_collections
+            ADD CONSTRAINT ck_evidence_collection_status
             CHECK (status IN ('pending', 'running', 'completed', 'failed', 'cancelled'))
         """)
     except Exception:
@@ -281,8 +301,8 @@ def upgrade():
     try:
         # Progress percentage validation
         op.execute("""
-            ALTER TABLE evidence_collections 
-            ADD CONSTRAINT ck_evidence_collection_progress 
+            ALTER TABLE evidence_collections
+            ADD CONSTRAINT ck_evidence_collection_progress
             CHECK (progress_percentage >= 0 AND progress_percentage <= 100)
         """)
     except Exception:
@@ -291,8 +311,8 @@ def upgrade():
     try:
         # Collection mode validation
         op.execute("""
-            ALTER TABLE evidence_collections 
-            ADD CONSTRAINT ck_evidence_collection_mode 
+            ALTER TABLE evidence_collections
+            ADD CONSTRAINT ck_evidence_collection_mode
             CHECK (collection_mode IN ('immediate', 'scheduled', 'streaming'))
         """)
     except Exception:
@@ -302,9 +322,12 @@ def upgrade():
     try:
         # Source system validation
         op.execute("""
-            ALTER TABLE integration_evidence_items 
-            ADD CONSTRAINT ck_integration_evidence_source 
-            CHECK (source_system IN ('aws', 'okta', 'google_workspace', 'microsoft_365', 'azure', 'github', 'gitlab', 'manual'))
+            ALTER TABLE integration_evidence_items
+            ADD CONSTRAINT ck_integration_evidence_source
+            CHECK (source_system IN (
+                'aws', 'okta', 'google_workspace', 'microsoft_365', 
+                'azure', 'github', 'gitlab', 'manual'
+            ))
         """)
     except Exception:
         pass
@@ -312,8 +335,8 @@ def upgrade():
     try:
         # Data classification validation
         op.execute("""
-            ALTER TABLE integration_evidence_items 
-            ADD CONSTRAINT ck_integration_evidence_classification 
+            ALTER TABLE integration_evidence_items
+            ADD CONSTRAINT ck_integration_evidence_classification
             CHECK (data_classification IN ('public', 'internal', 'confidential', 'restricted'))
         """)
     except Exception:
@@ -322,8 +345,8 @@ def upgrade():
     try:
         # Retention policy validation
         op.execute("""
-            ALTER TABLE integration_evidence_items 
-            ADD CONSTRAINT ck_integration_evidence_retention 
+            ALTER TABLE integration_evidence_items
+            ADD CONSTRAINT ck_integration_evidence_retention
             CHECK (retention_policy IN ('standard', 'extended', 'permanent', 'minimal'))
         """)
     except Exception:
@@ -333,8 +356,8 @@ def upgrade():
     try:
         # Policy status validation
         op.execute("""
-            ALTER TABLE generated_policies 
-            ADD CONSTRAINT ck_generated_policy_status 
+            ALTER TABLE generated_policies
+            ADD CONSTRAINT ck_generated_policy_status
             CHECK (status IN ('draft', 'reviewed', 'approved', 'implemented', 'deprecated'))
         """)
     except Exception:
@@ -343,8 +366,8 @@ def upgrade():
     try:
         # Policy type validation
         op.execute("""
-            ALTER TABLE generated_policies 
-            ADD CONSTRAINT ck_generated_policy_type 
+            ALTER TABLE generated_policies
+            ADD CONSTRAINT ck_generated_policy_type
             CHECK (policy_type IN ('comprehensive', 'specific', 'update', 'template'))
         """)
     except Exception:
@@ -353,8 +376,8 @@ def upgrade():
     try:
         # Generation time validation (0.1 seconds to 1 hour)
         op.execute("""
-            ALTER TABLE generated_policies 
-            ADD CONSTRAINT ck_generated_policy_generation_time 
+            ALTER TABLE generated_policies
+            ADD CONSTRAINT ck_generated_policy_generation_time
             CHECK (generation_time_seconds >= 0.1 AND generation_time_seconds <= 3600)
         """)
     except Exception:
@@ -363,8 +386,8 @@ def upgrade():
     try:
         # Word count validation
         op.execute("""
-            ALTER TABLE generated_policies 
-            ADD CONSTRAINT ck_generated_policy_word_count 
+            ALTER TABLE generated_policies
+            ADD CONSTRAINT ck_generated_policy_word_count
             CHECK (word_count >= 0 AND word_count <= 100000)
         """)
     except Exception:
@@ -373,8 +396,8 @@ def upgrade():
     try:
         # Compliance coverage validation (0-1 score)
         op.execute("""
-            ALTER TABLE generated_policies 
-            ADD CONSTRAINT ck_generated_policy_coverage 
+            ALTER TABLE generated_policies
+            ADD CONSTRAINT ck_generated_policy_coverage
             CHECK (compliance_coverage >= 0.0 AND compliance_coverage <= 1.0)
         """)
     except Exception:
@@ -384,8 +407,8 @@ def upgrade():
     try:
         # Chat conversation status validation
         op.execute("""
-            ALTER TABLE chat_conversations 
-            ADD CONSTRAINT ck_chat_conversation_status_values 
+            ALTER TABLE chat_conversations
+            ADD CONSTRAINT ck_chat_conversation_status_values
             CHECK (status IN ('active', 'archived', 'deleted'))
         """)
     except Exception:
@@ -394,8 +417,8 @@ def upgrade():
     try:
         # Title length validation
         op.execute("""
-            ALTER TABLE chat_conversations 
-            ADD CONSTRAINT ck_chat_conversation_title_length 
+            ALTER TABLE chat_conversations
+            ADD CONSTRAINT ck_chat_conversation_title_length
             CHECK (length(title) >= 1 AND length(title) <= 255)
         """)
     except Exception:
@@ -406,8 +429,8 @@ def upgrade():
     # Evidence items date logic
     try:
         op.execute("""
-            ALTER TABLE evidence_items 
-            ADD CONSTRAINT ck_evidence_item_collection_dates 
+            ALTER TABLE evidence_items
+            ADD CONSTRAINT ck_evidence_item_collection_dates
             CHECK (collected_at IS NULL OR collected_at >= created_at)
         """)
     except Exception:
@@ -415,8 +438,8 @@ def upgrade():
 
     try:
         op.execute("""
-            ALTER TABLE evidence_items 
-            ADD CONSTRAINT ck_evidence_item_review_dates 
+            ALTER TABLE evidence_items
+            ADD CONSTRAINT ck_evidence_item_review_dates
             CHECK (reviewed_at IS NULL OR collected_at IS NULL OR reviewed_at >= collected_at)
         """)
     except Exception:
@@ -424,8 +447,8 @@ def upgrade():
 
     try:
         op.execute("""
-            ALTER TABLE evidence_items 
-            ADD CONSTRAINT ck_evidence_item_approval_dates 
+            ALTER TABLE evidence_items
+            ADD CONSTRAINT ck_evidence_item_approval_dates
             CHECK (approved_at IS NULL OR reviewed_at IS NULL OR approved_at >= reviewed_at)
         """)
     except Exception:
@@ -434,8 +457,8 @@ def upgrade():
     # Assessment session date logic
     try:
         op.execute("""
-            ALTER TABLE assessment_sessions 
-            ADD CONSTRAINT ck_assessment_session_activity_dates 
+            ALTER TABLE assessment_sessions
+            ADD CONSTRAINT ck_assessment_session_activity_dates
             CHECK (last_activity >= started_at)
         """)
     except Exception:
@@ -443,8 +466,8 @@ def upgrade():
 
     try:
         op.execute("""
-            ALTER TABLE assessment_sessions 
-            ADD CONSTRAINT ck_assessment_session_completion_dates 
+            ALTER TABLE assessment_sessions
+            ADD CONSTRAINT ck_assessment_session_completion_dates
             CHECK (completed_at IS NULL OR completed_at >= started_at)
         """)
     except Exception:
@@ -453,8 +476,8 @@ def upgrade():
     # Evidence collection date logic
     try:
         op.execute("""
-            ALTER TABLE evidence_collections 
-            ADD CONSTRAINT ck_evidence_collection_dates 
+            ALTER TABLE evidence_collections
+            ADD CONSTRAINT ck_evidence_collection_dates
             CHECK (started_at IS NULL OR started_at >= created_at)
         """)
     except Exception:
@@ -462,8 +485,8 @@ def upgrade():
 
     try:
         op.execute("""
-            ALTER TABLE evidence_collections 
-            ADD CONSTRAINT ck_evidence_collection_completion_dates 
+            ALTER TABLE evidence_collections
+            ADD CONSTRAINT ck_evidence_collection_completion_dates
             CHECK (completed_at IS NULL OR started_at IS NULL OR completed_at >= started_at)
         """)
     except Exception:
@@ -472,8 +495,8 @@ def upgrade():
     # Generated policy date logic
     try:
         op.execute("""
-            ALTER TABLE generated_policies 
-            ADD CONSTRAINT ck_generated_policy_review_dates 
+            ALTER TABLE generated_policies
+            ADD CONSTRAINT ck_generated_policy_review_dates
             CHECK (reviewed_at IS NULL OR reviewed_at >= generated_at)
         """)
     except Exception:
@@ -481,8 +504,8 @@ def upgrade():
 
     try:
         op.execute("""
-            ALTER TABLE generated_policies 
-            ADD CONSTRAINT ck_generated_policy_approval_dates 
+            ALTER TABLE generated_policies
+            ADD CONSTRAINT ck_generated_policy_approval_dates
             CHECK (approved_at IS NULL OR reviewed_at IS NULL OR approved_at >= reviewed_at)
         """)
     except Exception:
@@ -491,8 +514,8 @@ def upgrade():
     # Chat conversation date logic
     try:
         op.execute("""
-            ALTER TABLE chat_conversations 
-            ADD CONSTRAINT ck_chat_conversation_update_dates 
+            ALTER TABLE chat_conversations
+            ADD CONSTRAINT ck_chat_conversation_update_dates
             CHECK (updated_at >= created_at)
         """)
     except Exception:
@@ -501,7 +524,7 @@ def upgrade():
     print("✅ Successfully added CHECK constraints for data integrity")
 
 
-def downgrade():
+def downgrade() -> None:
     """Remove CHECK constraints."""
 
     # Drop all constraints in reverse order

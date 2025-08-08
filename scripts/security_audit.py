@@ -14,14 +14,14 @@ from typing import Dict, Any
 class SecurityAuditor:
     """Automated security audit for backend fixes"""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.results = {
             "timestamp": datetime.now().isoformat(),
             "summary": {"total_checks": 0, "passed": 0, "failed": 0, "warnings": 0},
             "details": [],
         }
 
-    def log_result(self, check_name: str, status: str, details: str = ""):
+    def log_result(self, check_name: str, status: str, details: str = "") -> None:
         """Log audit result"""
         self.results["summary"]["total_checks"] += 1
 
@@ -324,7 +324,7 @@ Generated: {self.results["timestamp"]}
         return report
 
 
-def main():
+def main() -> None:
     """Main audit execution"""
     auditor = SecurityAuditor()
     results = auditor.run_comprehensive_audit()

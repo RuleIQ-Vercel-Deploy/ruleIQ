@@ -26,7 +26,7 @@ settings = get_settings()
 class AIRateLimiter:
     """Advanced rate limiter specifically designed for AI endpoints."""
 
-    def __init__(self, requests_per_minute: int, burst_allowance: int = 2):
+    def __init__(self, requests_per_minute: int, burst_allowance: int = 2) -> None:
         self.requests_per_minute = requests_per_minute
         self.burst_allowance = burst_allowance
         self.window_size = 60  # 1 minute window
@@ -79,7 +79,7 @@ class AIRateLimiter:
 
             return False, max(1, retry_after)
 
-    async def record_request(self, user_id: str):
+    async def record_request(self, user_id: str) -> None:
         """Record a successful request for the user."""
         # Request is already recorded in check_rate_limit
         pass
@@ -110,7 +110,7 @@ def create_ai_rate_limit_dependency(limiter: AIRateLimiter, operation_name: str)
 
     async def ai_rate_limit_check(
         request: Request, current_user: User = Depends(get_current_active_user)
-    ):
+    ) -> None:
         # Skip rate limiting in testing environment
         if settings.is_testing:
             return
@@ -179,14 +179,14 @@ async def add_rate_limit_headers(request: Request, response):
 class AIRateLimitStats:
     """Statistics and monitoring for AI rate limiting."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.total_requests = 0
         self.rate_limited_requests = 0
         self.requests_by_operation: Dict[str, int] = defaultdict(int)
         self.rate_limits_by_operation: Dict[str, int] = defaultdict(int)
         self.start_time = time.time()
 
-    def record_request(self, operation: str, rate_limited: bool = False):
+    def record_request(self, operation: str, rate_limited: bool = False) -> None:
         """Record a request for statistics."""
         self.total_requests += 1
         self.requests_by_operation[operation] += 1

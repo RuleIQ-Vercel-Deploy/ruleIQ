@@ -44,7 +44,7 @@ PERFORMANCE_INDEXES = [
 ]
 
 
-async def create_performance_indexes(db: AsyncSession):
+async def create_performance_indexes(db: AsyncSession) -> None:
     """
     Create performance indexes to speed up common queries.
 
@@ -93,7 +93,7 @@ async def create_performance_indexes(db: AsyncSession):
         raise
 
 
-async def analyze_tables(db: AsyncSession):
+async def analyze_tables(db: AsyncSession) -> None:
     """
     Run ANALYZE on tables to update statistics for better query planning.
     """

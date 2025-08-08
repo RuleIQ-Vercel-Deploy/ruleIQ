@@ -73,7 +73,7 @@ class ComplianceRecommendation:
 class GapAnalysisTool(BaseTool):
     """Tool for extracting and analyzing compliance gaps from assessment responses"""
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__(
             name="extract_compliance_gaps",
             description="Extract compliance gaps from assessment responses and analyze their severity and impact",
@@ -250,7 +250,7 @@ class GapAnalysisTool(BaseTool):
 class RecommendationGenerationTool(BaseTool):
     """Tool for generating prioritized compliance recommendations"""
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__(
             name="generate_compliance_recommendations",
             description="Generate prioritized compliance recommendations based on assessment analysis",

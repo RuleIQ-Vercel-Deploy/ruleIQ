@@ -114,11 +114,11 @@ class Sprint:
 class SprintManager:
     """Main sprint management system"""
 
-    def __init__(self, data_dir: str = ".sprint_data"):
+    def __init__(self, data_dir: str = ".sprint_data") -> None:
         self.data_dir = data_dir
         self.ensure_data_dir()
 
-    def ensure_data_dir(self):
+    def ensure_data_dir(self) -> None:
         """Ensure sprint data directory exists"""
         os.makedirs(self.data_dir, exist_ok=True)
 
@@ -142,20 +142,6 @@ class SprintManager:
         """Generate user stories for the sprint based on roadmap and priorities"""
 
         # Current ruleIQ project context based on memory analysis
-        current_state = {
-            "completed_features": [
-                "UK Compliance Frameworks Loading",
-                "AI Policy Generation Assistant"
-            ],
-            "in_progress": [
-                "Role-Based Access Control (RBAC)"
-            ],
-            "next_priorities": [
-                "Frontend Teal Design System Migration",
-                "Evidence Auto-Classifier",
-                "Compliance Insights Engine"
-            ]
-        }
 
         stories = []
 
@@ -438,7 +424,7 @@ class SprintManager:
 
         return progress
 
-    def _save_sprint(self, sprint: Sprint):
+    def _save_sprint(self, sprint: Sprint) -> None:
         """Save sprint to disk"""
         filepath = os.path.join(self.data_dir, f"{sprint.id}.json")
         with open(filepath, 'w') as f:
@@ -469,13 +455,13 @@ class SprintManager:
             return None
 
         with open(filepath, 'r') as f:
-            sprint_dict = json.load(f)
+            json.load(f)
 
         # TODO: Implement proper deserialization from dict to Sprint dataclass
         # This is a simplified version - full implementation would handle all conversions
         return None
 
-def main():
+def main() -> None:
     """CLI interface for sprint management"""
     import sys
 

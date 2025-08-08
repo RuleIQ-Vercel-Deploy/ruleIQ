@@ -28,7 +28,7 @@ T = TypeVar("T")
 class AIResponseProcessor:
     """Processes and validates AI responses with comprehensive schema validation."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.validation_stats = {
             "total_processed": 0,
             "validation_successes": 0,
@@ -444,7 +444,7 @@ class AIResponseProcessor:
             "fallback_rate": self.validation_stats["fallback_uses"] / total if total > 0 else 0.0,
         }
 
-    def reset_stats(self):
+    def reset_stats(self) -> None:
         """Reset validation statistics."""
         self.validation_stats = {
             "total_processed": 0,
@@ -484,10 +484,4 @@ def process_ai_response(
     )
 
 
-class SchemaValidationException(AIParsingException):
-    """Exception raised when schema validation fails."""
-
-    def __init__(self, message: str, response_type: str, validation_errors: List[str]):
-        super().__init__(message, "SchemaValidation")
-        self.response_type = response_type
-        self.validation_errors = validation_errors
+# SchemaValidationException imported from exceptions above

@@ -3,7 +3,7 @@ import subprocess
 import sys
 import os
 
-def install_missing_dependencies():
+def install_missing_dependencies() -> None:
     """Install all missing dependencies"""
     print("🔧 Installing missing dependencies...")
 
@@ -31,7 +31,7 @@ def install_missing_dependencies():
 
     print("✅ All dependencies installed!")
 
-def create_minimal_backend():
+def create_minimal_backend() -> None:
     """Create a minimal working backend"""
     print("🚀 Creating minimal backend...")
 
@@ -125,7 +125,7 @@ if __name__ == "__main__":
 
     print("✅ Minimal backend created!")
 
-def main():
+def main() -> None:
     print("🚨 RuleIQ Emergency Fix Script")
     print("=" * 40)
 

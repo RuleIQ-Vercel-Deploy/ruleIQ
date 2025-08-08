@@ -42,15 +42,15 @@ class ComplianceAgentResponse(AgentResponse):
 class BaseComplianceAgent:
     """
     Base class for ruleIQ compliance agents with RAG integration
-    
+
     Trust Levels:
     - Level 0: Observe and learn only
-    - Level 1: Make suggestions with explanations  
+    - Level 1: Make suggestions with explanations
     - Level 2: Collaborate on decisions
     - Level 3: Take autonomous actions
     """
 
-    def __init__(self, trust_level: int, rag_system: Optional[AgenticRAGSystem] = None):
+    def __init__(self, trust_level: int, rag_system: Optional[AgenticRAGSystem] = None) -> None:
         self.trust_level = trust_level
         self.rag_system = rag_system
 
@@ -65,16 +65,16 @@ class BaseComplianceAgent:
         """Build system prompt based on trust level and capabilities"""
         base_prompt = f"""
         You are a UK compliance agent operating at trust level {self.trust_level}.
-        
+
         Trust Level Guidelines:
         - Level 0: Observe and learn only - provide insights but no actions
-        - Level 1: Make suggestions with detailed explanations 
+        - Level 1: Make suggestions with detailed explanations
         - Level 2: Collaborate on decisions - propose specific actions
         - Level 3: Take autonomous actions within defined boundaries
-        
+
         Your expertise covers UK regulations including GDPR, Companies House requirements,
         employment law, data protection, and industry-specific compliance frameworks.
-        
+
         Always provide:
         1. Clear recommendations appropriate to your trust level
         2. Confidence scores based on available information
@@ -142,12 +142,12 @@ class BaseComplianceAgent:
             if rag_result.confidence > 0.3:  # Only use if reasonably confident
                 enhanced_request = f"""
                 User Request: {request}
-                
+
                 Relevant Compliance Knowledge:
                 {rag_result.answer}
-                
+
                 Sources: {', '.join([s['id'] for s in rag_result.sources])}
-                
+
                 Please provide guidance considering both the user's specific request and the relevant compliance knowledge above.
                 """
                 return enhanced_request
@@ -194,7 +194,7 @@ class BaseComplianceAgent:
         request: str,
         response: ComplianceAgentResponse,
         context: AgentContext
-    ):
+    ) -> None:
         """Log interaction for learning and audit purposes"""
         try:
             interaction_log = {
@@ -225,10 +225,10 @@ class GDPRComplianceAgent(BaseComplianceAgent):
     def _build_system_prompt(self) -> str:
         base_prompt = super()._build_system_prompt()
         gdpr_specifics = """
-        
+
         GDPR Specialization:
         You are specifically trained on UK GDPR and data protection requirements.
-        
+
         Key Areas of Expertise:
         - Data processing lawful basis assessment
         - Privacy impact assessments (PIAs)
@@ -238,7 +238,7 @@ class GDPRComplianceAgent(BaseComplianceAgent):
         - International data transfers
         - Data retention policies
         - Privacy by design principles
-        
+
         Always consider:
         - Proportionality of data processing
         - Legitimate interests vs. privacy rights
@@ -254,10 +254,10 @@ class CompaniesHouseAgent(BaseComplianceAgent):
     def _build_system_prompt(self) -> str:
         base_prompt = super()._build_system_prompt()
         companies_house_specifics = """
-        
+
         Companies House Specialization:
         You are specifically trained on UK Companies House requirements and corporate compliance.
-        
+
         Key Areas of Expertise:
         - Annual filing requirements (confirmation statements, accounts)
         - Director and shareholder obligations
@@ -267,7 +267,7 @@ class CompaniesHouseAgent(BaseComplianceAgent):
         - Statutory registers maintenance
         - Dissolution and strike-off procedures
         - Corporate governance requirements
-        
+
         Always consider:
         - Filing deadlines and penalties
         - Public disclosure implications
@@ -283,10 +283,10 @@ class EmploymentLawAgent(BaseComplianceAgent):
     def _build_system_prompt(self) -> str:
         base_prompt = super()._build_system_prompt()
         employment_specifics = """
-        
+
         Employment Law Specialization:
         You are specifically trained on UK employment law and workplace compliance.
-        
+
         Key Areas of Expertise:
         - Employment contracts and terms
         - Working time regulations
@@ -296,7 +296,7 @@ class EmploymentLawAgent(BaseComplianceAgent):
         - Disciplinary and grievance procedures
         - Redundancy and TUPE
         - Holiday and sick pay entitlements
-        
+
         Always consider:
         - ACAS codes of practice
         - Tribunal risks and costs
@@ -311,7 +311,7 @@ class AgentOrchestrator:
     Orchestrates multiple specialized agents based on request type
     """
 
-    def __init__(self, trust_level: int, rag_system: Optional[AgenticRAGSystem] = None):
+    def __init__(self, trust_level: int, rag_system: Optional[AgenticRAGSystem] = None) -> None:
         self.trust_level = trust_level
         self.rag_system = rag_system
 

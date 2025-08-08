@@ -21,13 +21,14 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from config.logging_config import get_logger, setup_logging  # noqa: E402
 from database.db_setup import get_async_db  # noqa: E402
 from services.framework_service import initialize_default_frameworks  # noqa: E402
+from typing import Optional
 
 # Setup logging first
 setup_logging()
 logger = get_logger(__name__)
 
 
-async def create_tables():
+async def create_tables() -> Optional[bool]:
     """Run Alembic migrations to create/update database tables."""
     logger.info("Running database migrations...")
     try:
@@ -50,7 +51,7 @@ async def create_tables():
         return False
 
 
-async def populate_default_data():
+async def populate_default_data() -> Optional[bool]:
     """Populate database with default frameworks and data asynchronously."""
     logger.info("Populating default data...")
     try:
@@ -65,7 +66,7 @@ async def populate_default_data():
         return False
 
 
-async def test_connection():
+async def test_connection() -> Optional[bool]:
     """Test database connection asynchronously."""
     logger.info("Testing database connection...")
     try:
@@ -78,7 +79,7 @@ async def test_connection():
         return False
 
 
-async def main():
+async def main() -> bool:
     """Main asynchronous initialization function."""
     logger.info("ComplianceGPT Database Initialization")
     logger.info("========================================")

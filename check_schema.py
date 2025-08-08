@@ -12,7 +12,7 @@ os.environ["DATABASE_URL"] = (
     "postgresql://neondb_owner:npg_s0JhnfGNy3Ze@ep-wild-grass-a8o37wq8-pooler.eastus2.azure.neon.tech/neondb?sslmode=require"
 )
 
-def main():
+def main() -> None:
     print("=== Schema Comparison Analysis ===")
 
     # Database connection

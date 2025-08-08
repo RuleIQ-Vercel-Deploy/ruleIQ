@@ -9,6 +9,7 @@ import shutil
 from pathlib import Path
 from datetime import datetime
 from typing import List, Dict
+import sys
 
 # Migration patterns based on our schema
 MIGRATION_PATTERNS = [
@@ -252,7 +253,7 @@ def create_backup(file_path: Path) -> Path:
     shutil.copy2(file_path, backup_path)
     return backup_path
 
-def main():
+def main() -> int:
     parser = argparse.ArgumentParser(description="Migrate single file to Stack Auth")
     parser.add_argument('--file', required=True, help='Path to file to migrate')
     parser.add_argument('--dry-run', action='store_true', default=True,
@@ -306,4 +307,4 @@ def main():
     return 0
 
 if __name__ == "__main__":
-    exit(main())
+    sys.exit(main())

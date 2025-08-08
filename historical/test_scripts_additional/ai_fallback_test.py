@@ -21,7 +21,7 @@ class TestAIFallback(unittest.TestCase):
     @patch("services.ai.assistant.get_instruction_manager")
     def test_model_fallback_logic(
         self, mock_get_instruction_manager, mock_circuit_breaker, mock_get_ai_model
-    ):
+    ) -> None:
         """
         Test the AI model fallback mechanism by simulating model failures.
         """
@@ -52,11 +52,11 @@ class TestAIFallback(unittest.TestCase):
 
         # Assert
         # Check that the returned model is the fallback model
-        self.assertEqual(model.model_name, ModelType.GEMINI_25_FLASH.value)
-        self.assertEqual(instruction_id, "fallback_default")
+        assert model.model_name == ModelType.GEMINI_25_FLASH.value
+        assert instruction_id == "fallback_default"
 
         # Verify that the circuit breaker was checked for both models
-        self.assertEqual(mock_circuit_breaker.return_value.is_model_available.call_count, 2)
+        assert mock_circuit_breaker.return_value.is_model_available.call_count == 2
 
         # Verify that get_ai_model was called once for the fallback
         mock_get_ai_model.assert_called_once()

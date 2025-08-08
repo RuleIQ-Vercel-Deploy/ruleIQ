@@ -23,7 +23,7 @@ logger = get_logger(__name__)
 class ReportGenerator:
     """Generate compliance reports asynchronously."""
 
-    def __init__(self, db: AsyncSession):
+    def __init__(self, db: AsyncSession) -> None:
         self.db = db
 
     async def generate_report(

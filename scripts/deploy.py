@@ -30,25 +30,25 @@ logger = get_logger(__name__)  # Global logger for the script
 class DeploymentChecker:
     """Comprehensive deployment readiness checker."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.checks_passed = 0
         self.checks_failed = 0
         self.warnings = []
         self.errors = []
         # No need for self.logger if using global logger, or self.logger = get_logger(self.__class__.__name__)
 
-    def log_success(self, message: str):
+    def log_success(self, message: str) -> None:
         """Log a successful check."""
         logger.info(f"✅ {message}")
         self.checks_passed += 1
 
-    def log_error(self, message: str, exc_info_flag: bool = False):
+    def log_error(self, message: str, exc_info_flag: bool = False) -> None:
         """Log a failed check."""
         logger.error(f"❌ {message}", exc_info=exc_info_flag)
         self.checks_failed += 1
         self.errors.append(message)
 
-    def log_warning(self, message: str):
+    def log_warning(self, message: str) -> None:
         """Log a warning."""
         logger.warning(f"⚠️  {message}")
         self.warnings.append(message)
@@ -240,7 +240,7 @@ class DeploymentChecker:
         }
 
 
-def create_docker_environment_file():
+def create_docker_environment_file() -> None:
     """Create an example .env file for Docker Compose."""
     logger.info("\n📄 Creating example .env file for Docker ('.env.example')...")
     env_template = """# ComplianceGPT Environment Variables Example
@@ -285,7 +285,7 @@ LOG_LEVEL=INFO # DEBUG, INFO, WARNING, ERROR, CRITICAL
         logger.error(f"Failed to create {env_file}: {e}", exc_info_flag=True)
 
 
-def main():
+def main() -> None:
     """Main deployment preparation function."""
     import argparse
 

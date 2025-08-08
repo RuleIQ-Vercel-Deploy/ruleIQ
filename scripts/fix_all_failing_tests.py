@@ -19,7 +19,7 @@ project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
 
 
-def fix_fixture_scope_in_file(file_path):
+def fix_fixture_scope_in_file(file_path) -> bool:
     """Fix fixtures defined inside test classes."""
     print(f"Fixing fixtures in {file_path.name}...")
 
@@ -34,7 +34,7 @@ def fix_fixture_scope_in_file(file_path):
     fixtures_to_move = []
     for class_match in re.finditer(class_pattern, content, re.DOTALL):
         class_content = content[class_match.start() : class_match.end()]
-        class_name = class_match.group(1)
+        class_match.group(1)
 
         for fixture_match in re.finditer(fixture_pattern, class_content, re.DOTALL):
             fixture_name = fixture_match.group(2)
@@ -92,7 +92,7 @@ def {fixture["name"]}{fixture["body"].strip()}
     return True
 
 
-def fix_cache_strategy_tests():
+def fix_cache_strategy_tests() -> None:
     """Fix cache strategy and cached content tests."""
     print("\n1. Fixing Cache Strategy Tests...")
 
@@ -116,7 +116,7 @@ def fix_cache_strategy_tests():
             print(f"  ✗ {test_file.name} not found!")
 
 
-def fix_compliance_accuracy_tests():
+def fix_compliance_accuracy_tests() -> None:
     """Fix AI compliance accuracy tests."""
     print("\n2. Fixing AI Compliance Accuracy Tests...")
 
@@ -162,7 +162,7 @@ def fix_compliance_accuracy_tests():
         print("  ✓ No fixture scope issues detected")
 
 
-def fix_optimization_performance_tests():
+def fix_optimization_performance_tests() -> None:
     """Fix AI optimization performance tests."""
     print("\n3. Fixing AI Optimization Performance Tests...")
 
@@ -189,7 +189,7 @@ def fix_optimization_performance_tests():
         print("  ✗ Circuit breaker module missing!")
 
 
-def fix_database_performance_tests():
+def fix_database_performance_tests() -> None:
     """Fix database performance tests."""
     print("\n4. Fixing Database Performance Tests...")
 
@@ -238,7 +238,7 @@ def fix_database_performance_tests():
         print("  ✗ EvidenceItem model not found!")
 
 
-def create_comprehensive_test_runner():
+def create_comprehensive_test_runner() -> None:
     """Create a comprehensive test runner."""
     print("\n5. Creating Test Runner...")
 
@@ -275,32 +275,32 @@ def run_test_category(category_name, test_files):
     print(f"\\n{'='*60}")
     print(f"Running {category_name} Tests")
     print('='*60)
-    
+
     results = []
     for test_file in test_files:
         if not Path(test_file).exists():
             print(f"\\n❌ {test_file} - FILE NOT FOUND")
             results.append({"file": test_file, "passed": False, "error": "File not found"})
             continue
-        
+
         print(f"\\n▶ Running {test_file}...")
-        
+
         cmd = [
-            sys.executable, "-m", "pytest", 
-            test_file, 
-            "-v", 
+            sys.executable, "-m", "pytest",
+            test_file,
+            "-v",
             "--tb=short",
             "--no-header",
             "--no-summary",
             "-q"
         ]
-        
+
         result = subprocess.run(cmd, capture_output=True, text=True)
-        
+
         # Parse results
         output = result.stdout + result.stderr
         passed = result.returncode == 0
-        
+
         if passed:
             # Count passed tests
             passed_count = output.count(" PASSED")
@@ -309,65 +309,65 @@ def run_test_category(category_name, test_files):
             # Extract failure info
             failed_count = output.count(" FAILED")
             error_count = output.count(" ERROR")
-            
+
             print(f"  ❌ Tests failed (Failed: {failed_count}, Errors: {error_count})")
-            
+
             # Show first few error lines
             error_lines = [line for line in output.split('\\n') if 'FAILED' in line or 'ERROR' in line][:3]
             for line in error_lines:
                 print(f"     {line.strip()}")
-        
+
         results.append({
             "file": test_file,
             "passed": passed,
             "output": output
         })
-    
+
     return results
 
 def main():
     """Run all test categories and provide summary."""
     print("🧪 Running All Failing Tests")
     print("="*60)
-    
+
     all_results = {}
-    
+
     # Set environment
     os.environ["ENV"] = "testing"
     os.environ["USE_MOCK_AI"] = "true"
     os.environ["PYTHONDONTWRITEBYTECODE"] = "1"
-    
+
     # Run each category
     for category, test_files in TEST_CATEGORIES.items():
         results = run_test_category(category, test_files)
         all_results[category] = results
-    
+
     # Summary
     print(f"\\n{'='*60}")
     print("📊 TEST SUMMARY")
     print('='*60)
-    
+
     total_files = 0
     passed_files = 0
-    
+
     for category, results in all_results.items():
         category_passed = sum(1 for r in results if r["passed"])
         category_total = len(results)
         total_files += category_total
         passed_files += category_passed
-        
+
         status = "✅" if category_passed == category_total else "❌"
         print(f"{status} {category}: {category_passed}/{category_total} files passed")
-    
+
     print(f"\\n📈 Overall: {passed_files}/{total_files} test files passed")
-    
+
     if passed_files < total_files:
         print("\\n❌ Failed test files:")
         for category, results in all_results.items():
             for result in results:
                 if not result["passed"]:
                     print(f"  - {result['file']}")
-    
+
     return passed_files == total_files
 
 if __name__ == "__main__":
@@ -383,7 +383,7 @@ if __name__ == "__main__":
     print(f"  ✓ Created comprehensive test runner at {runner_path}")
 
 
-def main():
+def main() -> None:
     """Main function to apply all fixes."""
     print("🔧 Applying Comprehensive Test Fixes")
     print("=" * 60)

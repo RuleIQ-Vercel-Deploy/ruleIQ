@@ -1,7 +1,7 @@
 """Create freemium tables for AI Assessment Strategy
 
 Revision ID: freemium_001
-Revises: 
+Revises:
 Create Date: 2025-08-05
 
 This migration creates the necessary tables for the AI Assessment Freemium Strategy:
@@ -59,8 +59,19 @@ def upgrade() -> None:
         sa.Column('consent_date', sa.DateTime(timezone=True), nullable=True),
 
         # Timestamps
-        sa.Column('created_at', sa.DateTime(timezone=True), server_default=sa.func.now(), nullable=False),
-        sa.Column('updated_at', sa.DateTime(timezone=True), server_default=sa.func.now(), onupdate=sa.func.now(), nullable=False),
+        sa.Column(
+            'created_at', 
+            sa.DateTime(timezone=True), 
+            server_default=sa.func.now(), 
+            nullable=False
+        ),
+        sa.Column(
+            'updated_at', 
+            sa.DateTime(timezone=True), 
+            server_default=sa.func.now(), 
+            onupdate=sa.func.now(), 
+            nullable=False
+        ),
         sa.Column('last_activity_at', sa.DateTime(timezone=True), nullable=True),
 
         # Constraints
@@ -72,18 +83,24 @@ def upgrade() -> None:
         'freemium_assessment_sessions',
         sa.Column('id', postgresql.UUID(as_uuid=True), primary_key=True, default=uuid.uuid4),
         sa.Column('session_token', sa.String(255), nullable=False, unique=True, index=True),
-        sa.Column('lead_id', postgresql.UUID(as_uuid=True),
-                 sa.ForeignKey('assessment_leads.id', ondelete='CASCADE'), nullable=False),
+        sa.Column(
+            'lead_id', 
+            postgresql.UUID(as_uuid=True),
+            sa.ForeignKey('assessment_leads.id', ondelete='CASCADE'), 
+            nullable=False
+        ),
 
         # Assessment progress
-        sa.Column('status', sa.String(20), default='started'),  # started, in_progress, completed, abandoned
+        # started, in_progress, completed, abandoned
+        sa.Column('status', sa.String(20), default='started'),
         sa.Column('current_question_id', sa.String(100), nullable=True),
         sa.Column('total_questions', sa.Integer, default=0),
         sa.Column('questions_answered', sa.Integer, default=0),
         sa.Column('progress_percentage', sa.Float, default=0.0),
 
         # AI-generated content
-        sa.Column('assessment_type', sa.String(50), default='general'),  # general, specific_industry, etc.
+        # general, specific_industry, etc.
+        sa.Column('assessment_type', sa.String(50), default='general'),
         sa.Column('questions_data', sa.JSON, nullable=True),  # Serialized questions and answers
         sa.Column('ai_responses', sa.JSON, nullable=True),  # AI-generated responses
         sa.Column('personalization_data', sa.JSON, nullable=True),  # User preferences for AI
@@ -110,8 +127,19 @@ def upgrade() -> None:
         sa.Column('session_data', sa.JSON, nullable=True),  # Additional session info
 
         # Timestamps
-        sa.Column('created_at', sa.DateTime(timezone=True), server_default=sa.func.now(), nullable=False),
-        sa.Column('updated_at', sa.DateTime(timezone=True), server_default=sa.func.now(), onupdate=sa.func.now(), nullable=False),
+        sa.Column(
+            'created_at', 
+            sa.DateTime(timezone=True), 
+            server_default=sa.func.now(), 
+            nullable=False
+        ),
+        sa.Column(
+            'updated_at', 
+            sa.DateTime(timezone=True), 
+            server_default=sa.func.now(), 
+            onupdate=sa.func.now(), 
+            nullable=False
+        ),
         sa.Column('completed_at', sa.DateTime(timezone=True), nullable=True),
         sa.Column('expires_at', sa.DateTime(timezone=True), nullable=False),  # Session expiration
 
@@ -128,22 +156,26 @@ def upgrade() -> None:
         sa.Column('question_id', sa.String(100), nullable=False, unique=True),
         sa.Column('category', sa.String(50), nullable=False),  # gdpr, security, data_handling, etc.
         sa.Column('subcategory', sa.String(50), nullable=True),
-        sa.Column('question_type', sa.String(20), nullable=False),  # multiple_choice, yes_no, text, scale
+        # multiple_choice, yes_no, text, scale
+        sa.Column('question_type', sa.String(20), nullable=False),
 
         # Question content
         sa.Column('question_text', sa.Text, nullable=False),
         sa.Column('question_context', sa.Text, nullable=True),  # Additional context for AI
         sa.Column('answer_options', sa.JSON, nullable=True),  # For multiple choice questions
-        sa.Column('expected_answer_type', sa.String(20), nullable=True),  # string, integer, boolean, json
+        # string, integer, boolean, json
+        sa.Column('expected_answer_type', sa.String(20), nullable=True),
 
         # AI generation parameters
         sa.Column('ai_prompt_template', sa.Text, nullable=True),
-        sa.Column('personalization_rules', sa.JSON, nullable=True),  # Rules for personalizing questions
+        # Rules for personalizing questions
+        sa.Column('personalization_rules', sa.JSON, nullable=True),
         sa.Column('follow_up_logic', sa.JSON, nullable=True),  # Logic for follow-up questions
 
         # Scoring and weighting
         sa.Column('risk_weight', sa.Float, default=1.0),  # Weight in risk calculation
-        sa.Column('compliance_impact', sa.String(20), default='medium'),  # low, medium, high, critical
+        # low, medium, high, critical
+        sa.Column('compliance_impact', sa.String(20), default='medium'),
         sa.Column('scoring_rules', sa.JSON, nullable=True),  # How to score different answers
 
         # Usage and performance tracking
@@ -165,8 +197,19 @@ def upgrade() -> None:
         sa.Column('deprecated_at', sa.DateTime(timezone=True), nullable=True),
 
         # Timestamps
-        sa.Column('created_at', sa.DateTime(timezone=True), server_default=sa.func.now(), nullable=False),
-        sa.Column('updated_at', sa.DateTime(timezone=True), server_default=sa.func.now(), onupdate=sa.func.now(), nullable=False),
+        sa.Column(
+            'created_at', 
+            sa.DateTime(timezone=True), 
+            server_default=sa.func.now(), 
+            nullable=False
+        ),
+        sa.Column(
+            'updated_at', 
+            sa.DateTime(timezone=True), 
+            server_default=sa.func.now(), 
+            onupdate=sa.func.now(), 
+            nullable=False
+        ),
 
         # Indexes
         sa.Index('ix_ai_questions_category', 'category'),
@@ -178,14 +221,24 @@ def upgrade() -> None:
     op.create_table(
         'lead_scoring_events',
         sa.Column('id', postgresql.UUID(as_uuid=True), primary_key=True, default=uuid.uuid4),
-        sa.Column('lead_id', postgresql.UUID(as_uuid=True),
-                 sa.ForeignKey('assessment_leads.id', ondelete='CASCADE'), nullable=False),
-        sa.Column('session_id', postgresql.UUID(as_uuid=True),
-                 sa.ForeignKey('freemium_assessment_sessions.id', ondelete='CASCADE'), nullable=True),
+        sa.Column(
+            'lead_id', 
+            postgresql.UUID(as_uuid=True),
+            sa.ForeignKey('assessment_leads.id', ondelete='CASCADE'), 
+            nullable=False
+        ),
+        sa.Column(
+            'session_id', 
+            postgresql.UUID(as_uuid=True),
+            sa.ForeignKey('freemium_assessment_sessions.id', ondelete='CASCADE'), 
+            nullable=True
+        ),
 
         # Event details
-        sa.Column('event_type', sa.String(50), nullable=False),  # page_view, button_click, form_submit, etc.
-        sa.Column('event_category', sa.String(50), nullable=False),  # engagement, conversion, assessment
+        # page_view, button_click, form_submit, etc.
+        sa.Column('event_type', sa.String(50), nullable=False),
+        # engagement, conversion, assessment
+        sa.Column('event_category', sa.String(50), nullable=False),
         sa.Column('event_action', sa.String(100), nullable=False),  # specific action taken
         sa.Column('event_label', sa.String(200), nullable=True),  # additional context
         sa.Column('event_value', sa.Float, nullable=True),  # numeric value if applicable
@@ -203,13 +256,15 @@ def upgrade() -> None:
 
         # Conversion tracking
         sa.Column('is_conversion_event', sa.Boolean, default=False),
-        sa.Column('conversion_type', sa.String(50), nullable=True),  # email_signup, assessment_complete, etc.
+        # email_signup, assessment_complete, etc.
+        sa.Column('conversion_type', sa.String(50), nullable=True),
         sa.Column('conversion_value', sa.Float, nullable=True),  # Monetary or score value
 
         # Session context
         sa.Column('session_duration', sa.Integer, nullable=True),  # Duration up to this event
         sa.Column('page_view_count', sa.Integer, nullable=True),  # Number of pages viewed
-        sa.Column('previous_event_id', postgresql.UUID(as_uuid=True), nullable=True),  # Link to previous event
+        # Link to previous event
+        sa.Column('previous_event_id', postgresql.UUID(as_uuid=True), nullable=True),
 
         # Device and environment
         sa.Column('device_type', sa.String(20), nullable=True),
@@ -224,8 +279,18 @@ def upgrade() -> None:
         sa.Column('campaign_id', sa.String(100), nullable=True),  # Marketing campaign ID
 
         # Timestamps
-        sa.Column('created_at', sa.DateTime(timezone=True), server_default=sa.func.now(), nullable=False),
-        sa.Column('event_timestamp', sa.DateTime(timezone=True), server_default=sa.func.now(), nullable=False),
+        sa.Column(
+            'created_at', 
+            sa.DateTime(timezone=True), 
+            server_default=sa.func.now(), 
+            nullable=False
+        ),
+        sa.Column(
+            'event_timestamp', 
+            sa.DateTime(timezone=True), 
+            server_default=sa.func.now(), 
+            nullable=False
+        ),
 
         # Indexes for analytics queries
         sa.Index('ix_lead_events_lead_id', 'lead_id'),

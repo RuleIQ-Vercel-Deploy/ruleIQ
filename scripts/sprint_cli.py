@@ -18,7 +18,7 @@ from sprint_management import SprintManager, Priority, TaskType
 class SprintCLI:
     """Command-line interface for sprint management"""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.manager = SprintManager()
 
     def init_sprint(self, args):
@@ -67,7 +67,7 @@ class SprintCLI:
 
         return stories
 
-    def analyze_stories(self, args):
+    def analyze_stories(self, args) -> None:
         """Analyze user stories for completeness and risks"""
         print("🔍 Analyzing sprint stories...")
 
@@ -116,7 +116,7 @@ class SprintCLI:
             for dep in analysis['dependencies']:
                 print(f"   • {dep}")
 
-    def decompose_stories(self, args):
+    def decompose_stories(self, args) -> None:
         """Break down stories into implementation tasks"""
         print("🔧 Decomposing stories into implementation tasks...")
 
@@ -168,7 +168,7 @@ class SprintCLI:
             print(f"   📊 Total task hours: {total_task_hours}h")
             print()
 
-    def track_sprint_implementation(self, args):
+    def track_sprint_implementation(self, args) -> None:
         """Track sprint implementation progress"""
         print("📈 Tracking sprint implementation progress...")
 
@@ -224,7 +224,7 @@ class SprintCLI:
             for rec in progress['recommendations']:
                 print(f"   • {rec}")
 
-    def show_current_status(self, args):
+    def show_current_status(self, args) -> None:
         """Show current project status and next steps"""
         print("📊 ruleIQ Project Status Dashboard")
         print("=" * 50)
@@ -349,7 +349,7 @@ class SprintCLI:
             ]
         }
 
-def main():
+def main() -> None:
     """Main CLI entry point"""
     parser = argparse.ArgumentParser(
         description="ruleIQ Sprint Management System",
@@ -358,22 +358,22 @@ def main():
 Examples:
   # Initialize a new sprint interactively
   python sprint_cli.py init-sprint --interactive
-  
-  # Generate stories for current sprint  
+
+  # Generate stories for current sprint
   python sprint_cli.py generate-stories
-  
+
   # Analyze stories for risks and completeness
   python sprint_cli.py analyze-stories
-  
+
   # Break down all stories into tasks
   python sprint_cli.py decompose-stories
-  
+
   # Break down specific story
   python sprint_cli.py decompose-stories --story-id STORY-001
-  
+
   # Track sprint progress
   python sprint_cli.py track-progress
-  
+
   # Show current project status
   python sprint_cli.py status
         """
@@ -403,7 +403,7 @@ Examples:
     track_parser.add_argument('--sprint-id', help='Sprint ID (default: current_sprint)')
 
     # Status command
-    status_parser = subparsers.add_parser('status', help='Show current project status')
+    subparsers.add_parser('status', help='Show current project status')
 
     args = parser.parse_args()
 

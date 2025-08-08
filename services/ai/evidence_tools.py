@@ -73,7 +73,7 @@ class ComplianceScore:
 class EvidenceMapperTool(BaseTool):
     """Tool for mapping evidence requirements to compliance controls"""
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__(
             name="map_evidence_requirements",
             description="Map evidence requirements to compliance controls and create collection plans",
@@ -337,7 +337,7 @@ class EvidenceMapperTool(BaseTool):
 
             if priority == "critical" or frequency == "one-time":
                 timeline["immediate"].append(item)
-            elif frequency == "quarterly" or frequency == "monthly":
+            elif frequency in {"quarterly", "monthly"}:
                 timeline["quarterly"].append(item)
             elif frequency == "continuous":
                 timeline["continuous"].append(item)
@@ -383,7 +383,7 @@ class EvidenceMapperTool(BaseTool):
 class ComplianceScoringTool(BaseTool):
     """Tool for calculating compliance scores and maturity levels"""
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__(
             name="calculate_compliance_score",
             description="Calculate compliance scores and maturity levels based on assessment results",

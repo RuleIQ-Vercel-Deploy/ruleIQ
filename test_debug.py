@@ -4,12 +4,13 @@
 import sys
 import traceback
 from pathlib import Path
+from typing import Optional
 
 # Add project root to Python path
 project_root = Path(__file__).parent
 sys.path.insert(0, str(project_root))
 
-def test_imports():
+def test_imports() -> Optional[bool]:
     """Test all necessary imports."""
     print("=== Testing Imports ===")
     try:
@@ -25,7 +26,7 @@ def test_imports():
         traceback.print_exc()
         return False
 
-def test_database_connection():
+def test_database_connection() -> Optional[bool]:
     """Test database connection."""
     print("\n=== Testing Database Connection ===")
     try:
@@ -47,7 +48,7 @@ def test_database_connection():
         traceback.print_exc()
         return False
 
-def test_model_creation():
+def test_model_creation() -> Optional[bool]:
     """Test creating model instances."""
     print("\n=== Testing Model Creation ===")
     try:
@@ -63,7 +64,7 @@ def test_model_creation():
         traceback.print_exc()
         return False
 
-def test_database_operations():
+def test_database_operations() -> Optional[bool]:
     """Test actual database operations."""
     print("\n=== Testing Database Operations ===")
     try:
@@ -94,7 +95,7 @@ def test_database_operations():
         traceback.print_exc()
         return False
 
-def test_pytest_fixture():
+def test_pytest_fixture() -> Optional[bool]:
     """Test the pytest fixture itself."""
     print("\n=== Testing Pytest Fixture ===")
     try:

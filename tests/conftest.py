@@ -398,7 +398,6 @@ def setup_database(event_loop):
         os.chdir(original_dir)
 
     # Ensure all tables are created (including freemium tables)
-    from database import Base
     Base.metadata.create_all(bind=engine)
 
     # Initialize default frameworks

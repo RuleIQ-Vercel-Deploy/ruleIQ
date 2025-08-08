@@ -21,7 +21,7 @@ from services.ai.instruction_templates import (
 )
 
 
-def test_instruction_templates():
+def test_instruction_templates() -> None:
     """Test the instruction template system"""
     print("Testing System Instruction Templates...")
 
@@ -59,7 +59,7 @@ def test_instruction_templates():
     print("System Instruction Templates: PASSED\n")
 
 
-def test_instruction_monitor():
+def test_instruction_monitor() -> None:
     """Test the instruction monitoring system"""
     print("Testing Instruction Performance Monitor...")
 
@@ -118,7 +118,7 @@ def test_instruction_monitor():
     print("Instruction Performance Monitor: PASSED\n")
 
 
-def test_instruction_integration():
+def test_instruction_integration() -> None:
     """Test the instruction integration system"""
     print("Testing Instruction Integration...")
 
@@ -170,7 +170,7 @@ def test_instruction_integration():
     print("Instruction Integration: PASSED\n")
 
 
-def test_prompt_templates_integration():
+def test_prompt_templates_integration() -> None:
     """Test that prompt templates work with system instructions"""
     print("Testing Prompt Templates Integration...")
 
@@ -209,7 +209,7 @@ def test_prompt_templates_integration():
         print(f"⚠ Prompt templates integration test skipped due to import error: {e}\n")
 
 
-def main():
+def main() -> None:
     """Run all tests"""
     print("=" * 50)
     print("Phase 5 System Instructions Implementation Test")

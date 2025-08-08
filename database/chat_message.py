@@ -36,5 +36,5 @@ class ChatMessage(Base):
     # Relationships
     conversation = relationship("ChatConversation", back_populates="messages")
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"<ChatMessage(id={self.id}, role='{self.role}', conversation_id={self.conversation_id})>"

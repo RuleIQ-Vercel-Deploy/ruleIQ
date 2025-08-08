@@ -55,7 +55,7 @@ class Integration(Base):
         UniqueConstraint("user_id", "provider", name="unique_user_provider"),
     )
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"<Integration {self.provider} for user {self.user_id}>"
 
 
@@ -102,7 +102,7 @@ class EvidenceCollection(Base):
         Index("idx_collection_created", "created_at"),
     )
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"<EvidenceCollection {self.id} - {self.status}>"
 
 
@@ -149,7 +149,7 @@ class IntegrationEvidenceItem(Base):
         ),  # GIN index for JSON array
     )
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"<EvidenceItem {self.evidence_type}:{self.resource_id}>"
 
 
@@ -175,7 +175,7 @@ class IntegrationHealthLog(Base):
         Index("idx_health_status", "status"),
     )
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"<HealthLog {self.integration_id} - {self.status}>"
 
 
@@ -209,5 +209,5 @@ class EvidenceAuditLog(Base):
         Index("idx_audit_request", "request_id"),
     )
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"<AuditLog {self.action} on {self.resource_type}:{self.resource_id}>"

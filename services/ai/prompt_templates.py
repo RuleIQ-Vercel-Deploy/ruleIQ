@@ -43,7 +43,7 @@ class SecurityAnalysis:
 class AdvancedPromptSanitizer:
     """Enhanced prompt sanitization with multi-layer defense."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize with comprehensive threat patterns."""
         self.injection_patterns = {
             # Direct instruction overrides
@@ -484,7 +484,7 @@ def _get_recommended_action(analysis: SecurityAnalysis) -> str:
 class PromptTemplates:
     """Manages and formats prompts for different AI tasks."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize prompt templates with system instruction support"""
         self._instruction_cache = {}
         self._safety_enabled = True  # Enable safety validation by default
@@ -609,15 +609,15 @@ class PromptTemplates:
 
         user_prompt = f'''
         Please classify this user message and extract relevant entities.
-        
+
         User message: """{sanitize_input(message)}"""
-        
+
         Business context: {json.dumps(context.get("business_profile", {}), indent=2)}
-        
+
         Recent evidence: {json.dumps(context.get("recent_evidence", []), indent=2)}
-        
+
         Classification options: 'evidence_query', 'compliance_check', 'guidance_request', 'general_query'
-        
+
         Return a JSON object with this exact format:
         {{"type": "evidence_query|compliance_check|guidance_request|general_query", "confidence": 0.9, "entities": {{"frameworks": ["ISO27001"], "evidence_types": ["policies"]}}}}
         '''
@@ -659,17 +659,17 @@ class PromptTemplates:
 
         user_prompt = f'''
         User question: """{sanitize_input(message)}"""
-        
+
         Business context:
         - Company: {business_info.get("name", "Unknown")}
         - Industry: {business_info.get("industry", "Unknown")}
         - Frameworks: {", ".join(business_info.get("frameworks", []))}
-        
+
         Found evidence ({len(evidence_items)} items):
         {evidence_summary}
-        
+
         Compliance status: {json.dumps(context.get("compliance_status", {}), indent=2)}
-        
+
         Please provide a helpful response addressing their question about this evidence.
         '''
 
@@ -685,7 +685,7 @@ class PromptTemplates:
         """Creates the prompt for compliance status checks."""
         system_prompt = """
         You are ComplianceGPT, a compliance expert. Provide a comprehensive compliance status overview based on the user's current state.
-        
+
         Guidelines:
         - Assess overall compliance readiness
         - Highlight strengths and weaknesses
@@ -701,18 +701,18 @@ class PromptTemplates:
 
         user_prompt = f'''
         User question: """{sanitize_input(message)}"""
-        
+
         Business profile:
         - Company: {business_info.get("name", "Unknown")}
         - Industry: {business_info.get("industry", "Unknown")}
         - Target frameworks: {", ".join(business_info.get("frameworks", []))}
-        
+
         Current compliance scores:
         {json.dumps(compliance_status, indent=2)}
-        
+
         Recent evidence activity ({len(recent_evidence)} items):
         {json.dumps(recent_evidence, indent=2)}
-        
+
         Please provide a comprehensive compliance status assessment and recommendations.
         '''
 
@@ -722,7 +722,7 @@ class PromptTemplates:
         """Creates the prompt for providing compliance guidance."""
         system_prompt = """
         You are ComplianceGPT, a knowledgeable compliance consultant. Provide expert guidance and recommendations based on the user's specific needs.
-        
+
         Guidelines:
         - Offer practical, actionable advice
         - Reference relevant standards and best practices
@@ -736,14 +736,14 @@ class PromptTemplates:
 
         user_prompt = f'''
         User request: """{sanitize_input(message)}"""
-        
+
         Business context:
         - Company: {business_info.get("name", "Unknown")}
         - Industry: {business_info.get("industry", "Unknown")}
         - Frameworks: {", ".join(business_info.get("frameworks", []))}
-        
+
         Current compliance status: {json.dumps(context.get("compliance_status", {}), indent=2)}
-        
+
         Please provide expert guidance tailored to their specific situation and requirements.
         '''
 
@@ -755,7 +755,7 @@ class PromptTemplates:
         """Creates the prompt for handling general questions."""
         system_prompt = """
         You are ComplianceGPT, a friendly and knowledgeable compliance assistant. Answer the user's question considering the conversation history and their business context.
-        
+
         Guidelines:
         - Be helpful and informative
         - Reference previous conversation context when relevant
@@ -778,14 +778,14 @@ class PromptTemplates:
         user_prompt = f"""
         Recent conversation history:
         {history_str}
-        
+
         User's new message: {sanitized_message}
-        
+
         Business context:
         - Company: {business_info.get("name", "Unknown")}
         - Industry: {business_info.get("industry", "Unknown")}
         - Frameworks: {", ".join(business_info.get("frameworks", []))}
-        
+
         Please provide a helpful response that considers the conversation context and their compliance needs.
         """
 
@@ -797,7 +797,7 @@ class PromptTemplates:
         """Creates prompts for recommending evidence collection."""
         system_prompt = """
         You are ComplianceGPT, an expert in compliance frameworks. Recommend specific evidence items to collect based on the framework and business context.
-        
+
         Guidelines:
         - Provide specific, actionable recommendations
         - Prioritize by importance and feasibility
@@ -808,10 +808,10 @@ class PromptTemplates:
 
         user_prompt = f"""
         Framework: {framework}
-        
+
         Business context:
         {json.dumps(business_context, indent=2)}
-        
+
         Please recommend the top 10 most important evidence items to collect for this framework, prioritized by compliance impact and ease of collection.
         """
 

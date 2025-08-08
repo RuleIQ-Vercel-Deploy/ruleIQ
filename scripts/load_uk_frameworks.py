@@ -67,19 +67,19 @@ def load_uk_gdpr_framework() -> Dict[str, Any]:
         "estimated_cost_": "£15,000-£75,000",
         "policy_template": """
         # UK GDPR Privacy Policy Template
-        
+
         ## 1. Data Controller Information
         [Organization Name]
         [Address]
         [ICO Registration Number]
-        
+
         ## 2. Legal Basis for Processing
         We process personal data under the following legal bases:
         - Consent (Article 6(1)(a))
         - Contract performance (Article 6(1)(b))
         - Legal obligation (Article 6(1)(c))
         - Legitimate interests (Article 6(1)(f))
-        
+
         ## 3. Data Subject Rights
         You have the right to:
         - Access your personal data
@@ -221,7 +221,7 @@ def load_iso27001_uk_framework() -> Dict[str, Any]:
         "name": "ISO27001_UK",
         "display_name": "ISO 27001:2022 (UK Adaptation)",
         "description": """
-        International standard for Information Security Management Systems (ISMS) 
+        International standard for Information Security Management Systems (ISMS)
         adapted for UK regulatory context and integrated with ISO 27001 templates.
         """,
         "category": "Cybersecurity",
@@ -321,4 +321,4 @@ if __name__ == "__main__":
         print("✅ UK compliance frameworks loaded successfully")
     else:
         print("❌ Failed to load UK compliance frameworks")
-        exit(1)
+        sys.exit(1)

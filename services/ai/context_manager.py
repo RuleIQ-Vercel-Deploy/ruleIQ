@@ -9,57 +9,71 @@ from uuid import UUID
 from sqlalchemy import and_, desc, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from config.logging_config import get_logger
 from database.business_profile import BusinessProfile
 from database.evidence_item import EvidenceItem
+
+logger = get_logger(__name__)
 
 
 class ContextManager:
     """Gathers relevant data to build a context for AI conversations asynchronously."""
 
-    def __init__(self, db: AsyncSession):
+    def __init__(self, db: AsyncSession) -> None:
         self.db = db
 
     async def get_conversation_context(
         self, conversation_id: UUID, business_profile_id: UUID
     ) -> Dict[str, Any]:
         """Assembles the full context for a given conversation asynchronously."""
-        profile_stmt = select(BusinessProfile).where(BusinessProfile.id == business_profile_id)
-        profile_res = await self.db.execute(profile_stmt)
-        profile = profile_res.scalars().first()
+        try:
+            profile_stmt = select(BusinessProfile).where(BusinessProfile.id == business_profile_id)
+            profile_res = await self.db.execute(profile_stmt)
+            profile = profile_res.scalars().first()
 
-        if not profile:
-            return self._get_default_context(conversation_id, business_profile_id)
+            if not profile:
+                return self._get_default_context(conversation_id, business_profile_id)
 
-        # Get recent evidence (last 30 days)
-        recent_evidence_stmt = (
-            select(EvidenceItem)
-            .where(
-                and_(
-                    EvidenceItem.user_id == profile.user_id,
-                    EvidenceItem.created_at > datetime.utcnow() - timedelta(days=30),
+            # Get recent evidence (last 30 days) with error handling
+            try:
+                recent_evidence_stmt = (
+                    select(EvidenceItem)
+                    .where(
+                        and_(
+                            EvidenceItem.user_id == profile.user_id,
+                            EvidenceItem.created_at > datetime.utcnow() - timedelta(days=30),
+                        )
+                    )
+                    .order_by(desc(EvidenceItem.created_at))
+                    .limit(10)
                 )
-            )
-            .order_by(desc(EvidenceItem.created_at))
-            .limit(10)
-        )
-        recent_evidence_res = await self.db.execute(recent_evidence_stmt)
-        recent_evidence = recent_evidence_res.scalars().all()
+                recent_evidence_res = await self.db.execute(recent_evidence_stmt)
+                recent_evidence = recent_evidence_res.scalars().all()
+            except Exception as evidence_error:
+                # Log error but continue with empty evidence list
+                logger.warning(f"Failed to fetch recent evidence: {evidence_error}")
+                recent_evidence = []
 
-        # In a real app, this would call the async readiness service
-        compliance_status = {"overall_score": 75, "framework_scores": {"ISO27001": 80}}
+            # In a real app, this would call the async readiness service
+            compliance_status = {"overall_score": 75, "framework_scores": {"ISO27001": 80}}
 
-        return {
-            "conversation_id": str(conversation_id),
-            "business_profile_id": str(business_profile_id),
-            "business_profile": {
-                "name": profile.company_name,
-                "industry": profile.industry,
-                "frameworks": (profile.existing_frameworks or [])
-                + (profile.planned_frameworks or []),
-            },
-            "recent_evidence": [item.to_dict() for item in recent_evidence],
-            "compliance_status": compliance_status,
-        }
+            return {
+                "conversation_id": str(conversation_id),
+                "business_profile_id": str(business_profile_id),
+                "business_profile": {
+                    "name": profile.company_name,
+                    "industry": profile.industry,
+                    "frameworks": (profile.existing_frameworks or [])
+                    + (profile.planned_frameworks or []),
+                },
+                "recent_evidence": [item.to_dict() for item in recent_evidence],
+                "compliance_status": compliance_status,
+            }
+
+        except Exception as context_error:
+            logger.error(f"Error assembling conversation context: {context_error}", exc_info=True)
+            # Fallback to default context if anything goes wrong
+            return self._get_default_context(conversation_id, business_profile_id)
 
     def _get_default_context(
         self, conversation_id: UUID, business_profile_id: UUID

@@ -120,24 +120,24 @@ app = FastAPI(
     title="ruleIQ Compliance Automation API",
     description="""
     **ruleIQ API** provides comprehensive compliance automation for UK Small and Medium Businesses (SMBs).
-    
+
     ## Features
     - 🤖 **AI-Powered Assessments** with 6 specialized AI tools
-    - 📋 **Policy Generation** with 25+ compliance frameworks  
+    - 📋 **Policy Generation** with 25+ compliance frameworks
     - 📁 **Evidence Management** with automated validation
     - 🔐 **RBAC Security** with JWT authentication
     - 📊 **Real-time Analytics** and compliance scoring
-    
+
     ## Authentication
     All endpoints require JWT bearer token authentication except `/api/auth/*` endpoints.
-    
+
     Get your access token via `/api/auth/token` endpoint.
-    
+
     ## Rate Limiting
     - **General endpoints**: 100 requests/minute
     - **AI endpoints**: 3-20 requests/minute (tiered)
     - **Authentication**: 5 requests/minute
-    
+
     ## Support
     - **Documentation**: See `/docs/api/` for detailed guides
     - **Interactive Testing**: Use this Swagger UI to test endpoints
@@ -358,6 +358,83 @@ async def serve_debug_suite():
         return FileResponse(debug_file_path, media_type="text/html")
     else:
         raise HTTPException(status_code=404, detail="Debug suite not found")
+
+
+@app.get("/api/v1/health", response_model=HealthCheckResponse, summary="API v1 Health Check")
+async def api_health_check():
+    """API v1 health check endpoint"""
+    from datetime import datetime
+    return HealthCheckResponse(
+        status="healthy",
+        message="API v1 operational",
+        timestamp=datetime.utcnow().isoformat(),
+        version="2.0.0"
+    )
+
+
+@app.get("/api/v1/health/detailed", response_model=HealthCheckResponse, summary="Detailed API v1 Health Check")
+async def api_detailed_health_check():
+    """Detailed API v1 health check with component status"""
+    try:
+        from datetime import datetime
+        from database.db_setup import get_engine_info
+        from monitoring.database_monitor import get_database_monitor
+
+        # Get database monitoring status
+        monitor = get_database_monitor()
+        monitoring_summary = monitor.get_monitoring_summary()
+        
+        # Get basic database engine info
+        engine_info = get_engine_info()
+        
+        # Extract key metrics from monitoring summary
+        current_metrics = monitoring_summary.get("current_metrics", {})
+        alerts = monitoring_summary.get("alerts", [])
+        
+        # Count alerts by severity
+        critical_alerts = len([a for a in alerts if a.get("severity") == "critical"])
+        warning_alerts = len([a for a in alerts if a.get("severity") == "warning"])
+        
+        # Determine overall status
+        if critical_alerts > 0:
+            status = "degraded"
+            message = f"Critical database issues detected ({critical_alerts} alerts)"
+        elif warning_alerts > 0:
+            status = "warning"
+            message = f"Database warnings detected ({warning_alerts} alerts)"
+        elif not engine_info.get("async_engine_initialized"):
+            status = "degraded"
+            message = "Database engine not properly initialized"
+        else:
+            status = "healthy"
+            message = "All API v1 components operational"
+        
+        health_data = {
+            "status": status,
+            "message": message,
+            "timestamp": datetime.utcnow().isoformat(),
+            "version": "2.0.0",
+            "api_version": "v1",
+            "database": {
+                "engine_initialized": engine_info.get("async_engine_initialized", False),
+                "recent_alerts": {
+                    "critical": critical_alerts,
+                    "warning": warning_alerts,
+                    "total": len(alerts)
+                },
+            },
+        }
+        
+        return HealthCheckResponse(**health_data)
+    
+    except Exception as e:
+        logger.error(f"API v1 detailed health check failed: {e}")
+        return HealthCheckResponse(
+            status="error", 
+            message=f"API v1 health check failed: {e!s}",
+            timestamp=datetime.utcnow().isoformat(),
+            version="2.0.0"
+        )
 
 
 if __name__ == "__main__":

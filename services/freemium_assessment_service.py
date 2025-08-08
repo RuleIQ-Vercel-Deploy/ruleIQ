@@ -16,6 +16,7 @@ Integrates with:
 """
 
 import uuid
+from uuid import UUID
 from datetime import datetime, timedelta
 from typing import Dict, List, Optional, Any
 
@@ -37,12 +38,12 @@ logger = get_logger(__name__)
 class FreemiumAssessmentService:
     """
     Core service for managing freemium AI assessments.
-    
+
     Orchestrates the complete assessment flow from session creation
     to results generation with AI-powered personalization.
     """
 
-    def __init__(self, db_session: AsyncSession):
+    def __init__(self, db_session: AsyncSession) -> None:
         self.db = db_session
         self.assistant = ComplianceAssistant(db_session)
         self.circuit_breaker = AICircuitBreaker()
@@ -63,14 +64,14 @@ class FreemiumAssessmentService:
     ) -> FreemiumAssessmentSession:
         """
         Create a new AI assessment session for a lead.
-        
+
         Args:
             lead_id: UUID of the assessment lead
             business_type: Type of business (technology, healthcare, finance, etc.)
             company_size: Company size category (1-10, 11-50, etc.)
             assessment_type: Type of assessment (general, gdpr, security, compliance)
             personalization_data: Additional data for AI personalization
-            
+
         Returns:
             FreemiumAssessmentSession: Created session with initial AI questions
         """
@@ -147,14 +148,14 @@ class FreemiumAssessmentService:
     ) -> Dict[str, Any]:
         """
         Process a submitted answer and determine next question.
-        
+
         Args:
             session_id: UUID of the assessment session
             question_id: ID of the answered question
             answer: User's answer
             answer_confidence: User's confidence level (low, medium, high)
             time_spent_seconds: Time spent on the question
-            
+
         Returns:
             Dict containing next question, progress update, and any insights
         """
@@ -249,10 +250,10 @@ class FreemiumAssessmentService:
     async def generate_results(self, session_id: uuid.UUID) -> Dict[str, Any]:
         """
         Generate comprehensive assessment results with AI insights.
-        
+
         Args:
             session_id: UUID of the completed assessment session
-            
+
         Returns:
             Dict containing complete assessment results and recommendations
         """
@@ -371,12 +372,12 @@ class FreemiumAssessmentService:
     ) -> int:
         """
         Calculate the scoring impact of a specific answer.
-        
+
         Args:
             question_id: ID of the answered question
             answer: User's answer
             confidence: User's confidence level
-            
+
         Returns:
             int: Score impact points (can be negative)
         """
@@ -584,7 +585,9 @@ class FreemiumAssessmentService:
         try:
             if self.circuit_breaker.is_model_available("gemini-2.5-flash"):
                 analysis = await self.assistant.analyze_assessment_results(
-                    assessment_context=assessment_context
+                    assessment_results=assessment_context.get("responses", {}),
+                    framework_id=assessment_context.get("framework_id", "general"),
+                    business_profile_id=UUID(assessment_context.get("business_profile_id")) if assessment_context.get("business_profile_id") else UUID("00000000-0000-0000-0000-000000000000")
                 )
                 return analysis
             else:

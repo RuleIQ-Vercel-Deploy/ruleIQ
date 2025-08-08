@@ -168,7 +168,7 @@ async def disconnect_integration(
     provider: str,
     current_user: User = Depends(get_current_active_user),
     db: AsyncSession = Depends(get_async_db),
-):
+) -> None:
     provider_key = provider.lower()
     if provider_key not in AVAILABLE_PROVIDERS:
         raise HTTPException(

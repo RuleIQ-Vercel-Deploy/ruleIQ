@@ -8,7 +8,7 @@ from typing import Any, Dict, List, Optional
 class TemplateManager:
     """Manage report templates and customization options"""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.templates = self._load_default_templates()
 
     def _load_default_templates(self) -> Dict[str, Dict]:

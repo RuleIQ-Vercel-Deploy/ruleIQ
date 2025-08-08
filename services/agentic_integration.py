@@ -23,7 +23,7 @@ class AgenticIntegrationService:
     Provides the interface for seamless Claude integration
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         # Initialize RAG system
         self.rag_system = AgenticRAGSystem()
 
@@ -46,7 +46,7 @@ class AgenticIntegrationService:
         self.fact_checker = None
         self.self_critic_enabled = os.getenv("ENABLE_RAG_SELF_CRITIC", "true").lower() == "true"
 
-    async def initialize(self):
+    async def initialize(self) -> None:
         """Initialize the service and process documentation if needed"""
         try:
             logger.info("Initializing Agentic Integration Service...")
@@ -83,14 +83,14 @@ class AgenticIntegrationService:
     ) -> ComplianceAgentResponse:
         """
         Process a compliance request using the appropriate agent
-        
+
         Args:
             request: User's compliance question or request
             user_id: ID of the requesting user
             session_id: Optional session ID for context tracking
             trust_level: Agent trust level (0-3)
             business_context: Additional business context
-        
+
         Returns:
             ComplianceAgentResponse with recommendations and reasoning
         """
@@ -146,12 +146,12 @@ class AgenticIntegrationService:
     ) -> Dict[str, Any]:
         """
         Query the RAG documentation system directly
-        
+
         Args:
             query: Documentation question
             source_filter: Filter by 'langgraph' or 'pydantic_ai'
             query_type: 'documentation', 'code_examples', or 'hybrid'
-        
+
         Returns:
             RAG response with answer and sources
         """
@@ -188,11 +188,11 @@ class AgenticIntegrationService:
     ) -> str:
         """
         Get specific implementation guidance for LangGraph or Pydantic AI
-        
+
         Args:
             topic: What to implement (e.g., "state management", "agent design")
             framework: "langgraph" or "pydantic_ai"
-        
+
         Returns:
             Detailed implementation guidance with code examples
         """
@@ -219,11 +219,11 @@ class AgenticIntegrationService:
     ) -> Dict[str, Any]:
         """
         Find specific code examples for a task
-        
+
         Args:
             task_description: Description of what you want to implement
             framework: Optional framework filter
-        
+
         Returns:
             Code examples with explanations
         """
@@ -257,19 +257,19 @@ class AgenticIntegrationService:
     ) -> str:
         """
         Validate a technical approach against best practices
-        
+
         Args:
             approach_description: Description of your proposed approach
-        
+
         Returns:
             Validation feedback and suggestions
         """
         try:
             validation_query = f"""
             Is this a good approach for LangGraph/Pydantic AI implementation?
-            
+
             Proposed approach: {approach_description}
-            
+
             Please provide detailed feedback, suggestions for improvement, and any potential issues.
             """
 
@@ -296,13 +296,13 @@ class AgenticIntegrationService:
     ) -> Dict[str, Any]:
         """
         Fact-check a RAG response using the self-critic system
-        
+
         Args:
             response_text: The response to fact-check
             sources: Source documents used for the response
             original_query: The original user query
             quick_check: If True, use quick fact-checking for real-time use
-        
+
         Returns:
             Fact-check results with approval status and confidence scores
         """
@@ -372,14 +372,14 @@ class AgenticIntegrationService:
     ) -> Dict[str, Any]:
         """
         Query documentation with automatic fact-checking validation
-        
+
         Args:
             query: Documentation question
             source_filter: Filter by 'langgraph' or 'pydantic_ai'
             query_type: 'documentation', 'code_examples', or 'hybrid'
             enable_fact_check: Whether to run fact-checking
             quick_validation: Use quick fact-check for better performance
-        
+
         Returns:
             RAG response with validation results
         """
@@ -467,7 +467,7 @@ class AgenticIntegrationService:
         request: str,
         response: ComplianceAgentResponse,
         context: AgentContext
-    ):
+    ) -> None:
         """Log request for analytics and improvement"""
         try:
             # This could be expanded to log to database for analytics
@@ -534,7 +534,7 @@ class AgenticIntegrationService:
                 "error": str(e)
             }
 
-    def cleanup_inactive_sessions(self, max_age_hours: int = 24):
+    def cleanup_inactive_sessions(self, max_age_hours: int = 24) -> None:
         """Clean up old inactive sessions"""
         try:
             current_time = datetime.utcnow()

@@ -28,7 +28,7 @@ def validate_configuration() -> Tuple[bool, List[str]]:
 
     try:
         settings = get_settings()
-        security_config = SecurityConfig()
+        SecurityConfig()
         encryption = get_credential_encryption()
 
         # Validate database configuration
@@ -89,7 +89,7 @@ def validate_configuration() -> Tuple[bool, List[str]]:
     return is_valid, issues
 
 
-def print_validation_report():
+def print_validation_report() -> int:
     """Print a comprehensive validation report"""
     print("🔍 ruleIQ Backend Configuration Validation")
     print("=" * 50)

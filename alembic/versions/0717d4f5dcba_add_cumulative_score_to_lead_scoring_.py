@@ -16,11 +16,11 @@ branch_labels = None
 depends_on = None
 
 
-def upgrade():
+def upgrade() -> None:
     # Add cumulative_score column to lead_scoring_events table
     op.add_column('lead_scoring_events', sa.Column('cumulative_score', sa.Integer(), nullable=True))
 
 
-def downgrade():
+def downgrade() -> None:
     # Remove cumulative_score column from lead_scoring_events table
     op.drop_column('lead_scoring_events', 'cumulative_score')

@@ -14,7 +14,7 @@ from services.framework_service import get_relevant_frameworks
 
 
 class AssessmentService:
-    def __init__(self):
+    def __init__(self) -> None:
         pass  # db session will be passed to methods
 
     async def start_assessment_session(

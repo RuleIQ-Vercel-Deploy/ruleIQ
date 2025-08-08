@@ -6,11 +6,12 @@ Run this after each file migration to verify correctness
 import re
 from pathlib import Path
 from typing import Dict, Tuple
+import sys
 
 class MigrationValidator:
     """Validates that migrations were applied correctly"""
 
-    def __init__(self, file_path: Path):
+    def __init__(self, file_path: Path) -> None:
         self.file_path = file_path
         self.content = file_path.read_text()
         self.lines = self.content.split('\n')
@@ -34,7 +35,7 @@ class MigrationValidator:
             'summary': self._get_summary()
         }
 
-    def _check_no_old_imports(self):
+    def _check_no_old_imports(self) -> None:
         """Ensure no old auth imports remain"""
         old_patterns = [
             r'from api\.dependencies\.auth import get_current_active_user',
@@ -50,7 +51,7 @@ class MigrationValidator:
         if not any('get_current_active_user' in e for e in self.errors):
             self.success.append("✅ No old auth imports found")
 
-    def _check_no_old_dependencies(self):
+    def _check_no_old_dependencies(self) -> None:
         """Ensure no old dependencies remain"""
         old_patterns = [
             r'Depends\(get_current_active_user\)',
@@ -65,7 +66,7 @@ class MigrationValidator:
         if not any('Depends(' in e for e in self.errors):
             self.success.append("✅ All dependencies updated to Stack Auth")
 
-    def _check_no_user_type_hints(self):
+    def _check_no_user_type_hints(self) -> None:
         """Check for User type hints that should be dict"""
         # Look for : User patterns (but not in comments or strings)
         pattern = r':\s*User\s*[=\),]'
@@ -85,7 +86,7 @@ class MigrationValidator:
         if not any('User type hint should be dict' in e for e in self.errors):
             self.success.append("✅ Type hints properly updated")
 
-    def _check_attribute_access(self):
+    def _check_attribute_access(self) -> None:
         """Check that user attributes are accessed correctly"""
         # Common user variable names
         user_vars = ['current_user', 'user', 'auth_user', 'authenticated_user']
@@ -111,7 +112,7 @@ class MigrationValidator:
         if not any('Direct attribute access' in e for e in self.errors):
             self.success.append("✅ All user attributes accessed correctly")
 
-    def _check_stack_auth_imports(self):
+    def _check_stack_auth_imports(self) -> None:
         """Ensure Stack Auth imports are present"""
         has_stack_import = False
 
@@ -124,7 +125,7 @@ class MigrationValidator:
         if not has_stack_import and any('Depends' in line for line in self.lines):
             self.warnings.append("⚠️  No Stack Auth imports found but file uses dependencies")
 
-    def _check_no_jwt_references(self):
+    def _check_no_jwt_references(self) -> None:
         """Ensure no JWT references remain"""
         jwt_patterns = [
             r'jwt',
@@ -142,7 +143,7 @@ class MigrationValidator:
                     if not line.strip().startswith('#'):
                         self.warnings.append(f"Line {i+1}: Possible JWT reference: {line.strip()}")
 
-    def _get_summary(self):
+    def _get_summary(self) -> str:
         """Get validation summary"""
         if self.errors:
             return f"❌ {len(self.errors)} errors found - migration incomplete"
@@ -187,7 +188,7 @@ def validate_file(file_path: str) -> bool:
 
     return is_valid
 
-def main():
+def main() -> int:
     """Run validation on Phase 1 files"""
     import argparse
 
@@ -234,4 +235,4 @@ def main():
     return 0 if all_valid else 1
 
 if __name__ == "__main__":
-    exit(main())
+    sys.exit(main())

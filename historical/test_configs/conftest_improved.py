@@ -57,7 +57,7 @@ from database.evidence_item import EvidenceItem
 class DatabaseTestManager:
     """Manages database connections and cleanup for tests."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self._engine: Optional[AsyncEngine] = None
         self._connection_count = 0
         self._max_connections = 10
@@ -101,13 +101,13 @@ class DatabaseTestManager:
             # Don't dispose here - let session manager handle it
             pass
 
-    async def create_tables(self):
+    async def create_tables(self) -> None:
         """Create database tables for tests."""
         async with self.get_engine() as engine:
             async with engine.begin() as conn:
                 await conn.run_sync(Base.metadata.create_all)
 
-    async def drop_tables(self):
+    async def drop_tables(self) -> None:
         """Drop database tables after tests."""
         if self._engine is None:
             return
@@ -124,7 +124,7 @@ class DatabaseTestManager:
             except Exception as schema_error:
                 print(f"Warning: Schema cleanup failed: {schema_error}")
 
-    async def dispose(self):
+    async def dispose(self) -> None:
         """Dispose of the database engine."""
         if self._engine is not None:
             try:

@@ -222,7 +222,7 @@ def test_api_endpoints():
     return results
 
 
-def run_all_tests():
+def run_all_tests() -> None:
     """Run all test phases and save the report."""
     print("🚀 Starting AI Service Test Suite")
     print("=" * 40)

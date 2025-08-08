@@ -82,7 +82,7 @@ class ServiceHealthMonitor:
     Comprehensive health monitoring for AI services
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.logger = logging.getLogger(__name__)
 
         # Service health tracking
@@ -100,7 +100,7 @@ class ServiceHealthMonitor:
         # Initialize default health checks
         self._initialize_default_checks()
 
-    def _initialize_default_checks(self):
+    def _initialize_default_checks(self) -> None:
         """Initialize default health checks for AI services"""
         # Google AI API health check
         self.add_health_check(
@@ -139,7 +139,7 @@ class ServiceHealthMonitor:
             )
         )
 
-    def add_health_check(self, health_check: HealthCheck):
+    def add_health_check(self, health_check: HealthCheck) -> None:
         """Add a new health check"""
         self.health_checks[health_check.name] = health_check
         self.services[health_check.name] = HealthMetrics()
@@ -147,7 +147,7 @@ class ServiceHealthMonitor:
 
         self.logger.info(f"Added health check: {health_check.name}")
 
-    def remove_health_check(self, service_name: str):
+    def remove_health_check(self, service_name: str) -> None:
         """Remove a health check"""
         if service_name in self.health_checks:
             del self.health_checks[service_name]
@@ -161,7 +161,7 @@ class ServiceHealthMonitor:
 
             self.logger.info(f"Removed health check: {service_name}")
 
-    async def start_monitoring(self):
+    async def start_monitoring(self) -> None:
         """Start health monitoring for all services"""
         if self.is_monitoring:
             self.logger.warning("Health monitoring is already running")
@@ -176,7 +176,7 @@ class ServiceHealthMonitor:
 
         self.logger.info(f"Started health monitoring for {len(self.health_checks)} services")
 
-    async def stop_monitoring(self):
+    async def stop_monitoring(self) -> None:
         """Stop health monitoring"""
         self.is_monitoring = False
 
@@ -191,7 +191,7 @@ class ServiceHealthMonitor:
         self.monitoring_tasks.clear()
         self.logger.info("Stopped health monitoring")
 
-    async def _monitoring_loop(self, service_name: str, health_check: HealthCheck):
+    async def _monitoring_loop(self, service_name: str, health_check: HealthCheck) -> None:
         """Main monitoring loop for a service"""
         try:
             while self.is_monitoring:
@@ -202,7 +202,7 @@ class ServiceHealthMonitor:
         except Exception as e:
             self.logger.error(f"Error in health monitoring loop for {service_name}: {e}")
 
-    async def _perform_health_check(self, service_name: str, health_check: HealthCheck):
+    async def _perform_health_check(self, service_name: str, health_check: HealthCheck) -> None:
         """Perform a single health check"""
         self.services[service_name]
         start_time = time.time()
@@ -233,7 +233,7 @@ class ServiceHealthMonitor:
 
     async def _update_health_metrics(
         self, service_name: str, result: Dict[str, Any], response_time: float
-    ):
+    ) -> None:
         """Update health metrics for a service"""
         metrics = self.services[service_name]
         health_check = self.health_checks[service_name]
@@ -286,7 +286,7 @@ class ServiceHealthMonitor:
 
     async def _update_performance_metrics(
         self, service_name: str, response_time: float, success: bool
-    ):
+    ) -> None:
         """Update performance metrics"""
         metrics = self.services[service_name]
         history = self.health_history[service_name]
@@ -317,7 +317,7 @@ class ServiceHealthMonitor:
 
     def _store_health_history(
         self, service_name: str, metrics: HealthMetrics, result: Dict[str, Any]
-    ):
+    ) -> None:
         """Store health check result in history"""
         history_entry = {
             "timestamp": datetime.now().isoformat(),
@@ -547,7 +547,7 @@ def get_health_monitor() -> ServiceHealthMonitor:
     return _health_monitor
 
 
-def reset_health_monitor():
+def reset_health_monitor() -> None:
     """Reset global health monitor (for testing)"""
     global _health_monitor
     _health_monitor = None

@@ -26,7 +26,7 @@ class RedisRateLimiter:
         window_seconds: int = 60,
         redis_url: Optional[str] = None,
         key_prefix: str = "rate_limit",
-    ):
+    ) -> None:
         """
         Initialize Redis rate limiter.
 
@@ -133,7 +133,7 @@ class RedisRateLimiter:
         except redis.RedisError:
             return False
 
-    async def close(self):
+    async def close(self) -> None:
         """Close Redis connection."""
         if self.redis_client:
             await self.redis_client.close()
@@ -207,7 +207,7 @@ def redis_rate_limit(
         key_prefix=key_prefix,
     )
 
-    async def check_limit(request: Request):
+    async def check_limit(request: Request) -> None:
         # Skip rate limiting in testing environment
         if settings.is_testing:
             return
@@ -232,7 +232,7 @@ def redis_rate_limit(
 def auth_redis_rate_limit():
     """Redis-based auth endpoint rate limiting."""
 
-    async def check_auth_limit(request: Request):
+    async def check_auth_limit(request: Request) -> None:
         # Skip rate limiting in testing environment
         if settings.is_testing:
             return

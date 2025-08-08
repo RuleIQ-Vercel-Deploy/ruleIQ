@@ -119,6 +119,6 @@ class EvidenceItem(Base):
         return self.evidence_name
 
     @title.setter
-    def title(self, value):
+    def title(self, value) -> None:
         """Setter to map 'title' field from API to 'evidence_name' in database."""
         self.evidence_name = value

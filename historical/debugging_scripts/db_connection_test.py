@@ -11,7 +11,7 @@ load_dotenv(".env.local")
 DATABASE_URL = os.getenv("DATABASE_URL")
 
 
-async def test_connection():
+async def test_connection() -> None:
     """Tests the database connection and prints detailed error information."""
     print(f"Attempting to connect to database: {DATABASE_URL}")
     try:

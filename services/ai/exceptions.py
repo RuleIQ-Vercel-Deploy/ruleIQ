@@ -16,7 +16,7 @@ class AIServiceException(IntegrationException):
         service_name: str = "AI Service",
         error_code: Optional[str] = None,
         context: Optional[Dict[str, Any]] = None,
-    ):
+    ) -> None:
         super().__init__(message)
         self.service_name = service_name
         self.error_code = error_code
@@ -31,7 +31,7 @@ class AITimeoutException(AIServiceException):
         timeout_seconds: float,
         service_name: str = "AI Service",
         context: Optional[Dict[str, Any]] = None,
-    ):
+    ) -> None:
         message = f"{service_name} request timed out after {timeout_seconds} seconds"
         super().__init__(
             message=message, service_name=service_name, error_code="AI_TIMEOUT", context=context
@@ -47,7 +47,7 @@ class AIQuotaExceededException(AIServiceException):
         quota_type: str = "requests",
         service_name: str = "AI Service",
         context: Optional[Dict[str, Any]] = None,
-    ):
+    ) -> None:
         message = f"{service_name} {quota_type} quota exceeded"
         super().__init__(
             message=message,
@@ -67,7 +67,7 @@ class AIModelException(AIServiceException):
         model_error: str,
         service_name: str = "AI Service",
         context: Optional[Dict[str, Any]] = None,
-    ):
+    ) -> None:
         message = f"{service_name} model '{model_name}' error: {model_error}"
         super().__init__(
             message=message, service_name=service_name, error_code="AI_MODEL_ERROR", context=context
@@ -84,7 +84,7 @@ class AIContentFilterException(AIServiceException):
         filter_reason: str,
         service_name: str = "AI Service",
         context: Optional[Dict[str, Any]] = None,
-    ):
+    ) -> None:
         message = f"{service_name} content filtered: {filter_reason}"
         super().__init__(
             message=message,
@@ -104,7 +104,7 @@ class AIParsingException(BusinessLogicException):
         expected_format: str,
         parsing_error: str,
         context: Optional[Dict[str, Any]] = None,
-    ):
+    ) -> None:
         message = f"Failed to parse AI response as {expected_format}: {parsing_error}"
         super().__init__(message)
         self.response_text = response_text
@@ -121,7 +121,7 @@ class AIValidationException(BusinessLogicException):
         validation_errors: list,
         response_data: Dict[str, Any],
         context: Optional[Dict[str, Any]] = None,
-    ):
+    ) -> None:
         message = f"AI response validation failed: {', '.join(validation_errors)}"
         super().__init__(message)
         self.validation_errors = validation_errors
@@ -139,7 +139,7 @@ class ModelUnavailableException(AIServiceException):
         reason: str = "Circuit breaker open",
         service_name: str = "AI Service",
         context: Optional[Dict[str, Any]] = None,
-    ):
+    ) -> None:
         message = f"Model '{model_name}' is unavailable: {reason}"
         super().__init__(
             message=message,
@@ -161,7 +161,7 @@ class ModelTimeoutException(AIServiceException):
         operation: str = "generate_content",
         service_name: str = "AI Service",
         context: Optional[Dict[str, Any]] = None,
-    ):
+    ) -> None:
         message = f"Model '{model_name}' timed out after {timeout_seconds}s during {operation}"
         super().__init__(
             message=message, service_name=service_name, error_code="MODEL_TIMEOUT", context=context
@@ -180,7 +180,7 @@ class ModelOverloadedException(AIServiceException):
         retry_after: Optional[int] = None,
         service_name: str = "AI Service",
         context: Optional[Dict[str, Any]] = None,
-    ):
+    ) -> None:
         message = f"Model '{model_name}' is overloaded"
         if retry_after:
             message += f", retry after {retry_after} seconds"
@@ -204,7 +204,7 @@ class ModelConfigurationException(AIServiceException):
         config_error: str,
         service_name: str = "AI Service",
         context: Optional[Dict[str, Any]] = None,
-    ):
+    ) -> None:
         message = f"Model '{model_name}' configuration error: {config_error}"
         super().__init__(
             message=message,
@@ -226,7 +226,7 @@ class CircuitBreakerException(AIServiceException):
         failure_count: Optional[int] = None,
         service_name: str = "AI Circuit Breaker",
         context: Optional[Dict[str, Any]] = None,
-    ):
+    ) -> None:
         if model_name:
             message = f"Circuit breaker {circuit_state} for model '{model_name}'"
         else:
@@ -257,7 +257,7 @@ class SchemaValidationException(AIServiceException):
         model_name: str = "unknown",
         service_name: str = "AI Schema Validator",
         context: Optional[Dict[str, Any]] = None,
-    ):
+    ) -> None:
         error_summary = f"Schema validation failed for {response_type}"
         if validation_errors:
             error_summary += f": {', '.join(validation_errors[:3])}"
@@ -308,7 +308,7 @@ class ResponseProcessingException(AIServiceException):
         model_name: str = "unknown",
         service_name: str = "AI Response Processor",
         context: Optional[Dict[str, Any]] = None,
-    ):
+    ) -> None:
         message = f"Response processing failed at {processing_stage} for {response_type}: {original_error}"
 
         super().__init__(
@@ -333,7 +333,7 @@ class ModelRetryExhaustedException(AIServiceException):
         last_error: str,
         service_name: str = "AI Service",
         context: Optional[Dict[str, Any]] = None,
-    ):
+    ) -> None:
         message = f"Model '{model_name}' retry exhausted after {attempts} attempts. Last error: {last_error}"
         super().__init__(
             message=message,

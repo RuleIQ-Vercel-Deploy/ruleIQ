@@ -60,7 +60,7 @@ class OptimizationRecommendation:
 class AIPerformanceOptimizer:
     """
     Comprehensive AI performance optimization system.
-    
+
     Analyzes and optimizes:
     - Model selection efficiency
     - Token usage patterns
@@ -69,12 +69,12 @@ class AIPerformanceOptimizer:
     - Cost optimization
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.performance_history: List[AIPerformanceMetrics] = []
         self.model_performance_cache: Dict[str, ModelPerformance] = {}
         self.optimization_cache_ttl = 3600  # 1 hour
 
-    async def initialize(self):
+    async def initialize(self) -> None:
         """Initialize AI performance optimizer."""
         self.cost_manager = await get_cost_manager()
         self.circuit_breaker = await get_circuit_breaker()
@@ -85,7 +85,7 @@ class AIPerformanceOptimizer:
     async def analyze_model_performance(self) -> List[ModelPerformance]:
         """
         Analyze performance of different AI models.
-        
+
         Returns detailed metrics for each model used.
         """
         try:
@@ -138,7 +138,7 @@ class AIPerformanceOptimizer:
     def _estimate_quality_score(self, model_name: str, model_data: Dict) -> float:
         """
         Estimate quality score based on model characteristics and performance.
-        
+
         This would be enhanced with actual quality metrics in production.
         """
         base_scores = {
@@ -235,7 +235,7 @@ class AIPerformanceOptimizer:
 
             # Analyze cache patterns
             hit_rate = cache_metrics.get("hit_rate", 0)
-            miss_rate = cache_metrics.get("miss_rate", 0)
+            cache_metrics.get("miss_rate", 0)
             eviction_rate = cache_metrics.get("eviction_rate", 0)
 
             # Calculate potential savings

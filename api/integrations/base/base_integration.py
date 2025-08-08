@@ -42,7 +42,7 @@ class IntegrationConfig:
 
 
 class BaseIntegration(ABC):
-    def __init__(self, config: IntegrationConfig):
+    def __init__(self, config: IntegrationConfig) -> None:
         self.config = config
         self.cipher = get_cipher_suite()
         if not self.cipher:

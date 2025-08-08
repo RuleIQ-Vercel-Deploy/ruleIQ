@@ -20,6 +20,7 @@ os.environ["SECRET_KEY"] = "test_secret_key_for_pytest_sessions"
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.pool import StaticPool
+from typing import Optional
 
 # Get database URL and convert to sync (same as conftest.py)
 db_url = os.environ["DATABASE_URL"]
@@ -39,7 +40,7 @@ engine = create_engine(
 # Create session factory (same as conftest.py)
 TestSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
-def test_with_exact_setup():
+def test_with_exact_setup() -> Optional[bool]:
     """Test using the exact same setup as pytest conftest."""
     print("=== Using Exact Test Setup ===")
 
@@ -81,7 +82,7 @@ def test_with_exact_setup():
     finally:
         session.close()
 
-def simulate_pytest_test():
+def simulate_pytest_test() -> Optional[bool]:
     """Simulate the exact pytest test that's failing."""
     print("\n=== Simulating Pytest Test ===")
 

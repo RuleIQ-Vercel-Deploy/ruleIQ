@@ -27,13 +27,25 @@ class ConversionEvent(Base):
 
     # Primary identifier
     id = Column(PG_UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    lead_id = Column(PG_UUID(as_uuid=True), ForeignKey("assessment_leads.id", ondelete="CASCADE"), nullable=False, index=True)
-    session_id = Column(PG_UUID(as_uuid=True), ForeignKey("freemium_assessment_sessions.id", ondelete="SET NULL"), nullable=True)
+    lead_id = Column(
+        PG_UUID(as_uuid=True), 
+        ForeignKey("assessment_leads.id", ondelete="CASCADE"), 
+        nullable=False, 
+        index=True
+    )
+    session_id = Column(
+        PG_UUID(as_uuid=True), 
+        ForeignKey("freemium_assessment_sessions.id", ondelete="SET NULL"), 
+        nullable=True
+    )
 
     # Conversion classification
-    conversion_type = Column(String(100), nullable=False, index=True)  # trial_signup, paid_subscription, consultation_request
-    conversion_stage = Column(String(50), nullable=False, default="initial")  # initial, confirmed, completed, cancelled
-    conversion_source = Column(String(200), nullable=False)  # freemium_results_page, email_follow_up, etc.
+    # trial_signup, paid_subscription, consultation_request
+    conversion_type = Column(String(100), nullable=False, index=True)
+    # initial, confirmed, completed, cancelled
+    conversion_stage = Column(String(50), nullable=False, default="initial")
+    # freemium_results_page, email_follow_up, etc.
+    conversion_source = Column(String(200), nullable=False)
 
     # Revenue and value tracking
     conversion_value = Column(Numeric(10, 2), nullable=True)  # Revenue value in primary currency
@@ -42,7 +54,8 @@ class ConversionEvent(Base):
     billing_frequency = Column(String(20), nullable=True)  # monthly, annually, one-time
 
     # Attribution and tracking
-    attribution_model = Column(String(50), default="first_touch", nullable=False)  # first_touch, last_touch, multi_touch
+    # first_touch, last_touch, multi_touch
+    attribution_model = Column(String(50), default="first_touch", nullable=False)
     conversion_path = Column(JSONB, nullable=True)  # Journey steps leading to conversion
     days_to_convert = Column(Integer, nullable=True)  # Days from first touch to conversion
     touchpoint_count = Column(Integer, default=1, nullable=False)  # Number of touchpoints
@@ -70,7 +83,7 @@ class ConversionEvent(Base):
     completed_at = Column(DateTime, nullable=True)
     cancelled_at = Column(DateTime, nullable=True)
 
-    def __init__(self, **kwargs):
+    def __init__(self, **kwargs) -> None:
         """Initialize conversion event with default values."""
         super().__init__(**kwargs)
         if not self.conversion_metadata:
@@ -78,13 +91,13 @@ class ConversionEvent(Base):
         if not self.conversion_path:
             self.conversion_path = []
 
-    def add_metadata(self, key: str, value):
+    def add_metadata(self, key: str, value) -> None:
         """Add metadata to the conversion event."""
         if not self.conversion_metadata:
             self.conversion_metadata = {}
         self.conversion_metadata[key] = value
 
-    def add_touchpoint(self, touchpoint: dict):
+    def add_touchpoint(self, touchpoint: dict) -> None:
         """Add a touchpoint to conversion path."""
         if not self.conversion_path:
             self.conversion_path = []
@@ -94,24 +107,24 @@ class ConversionEvent(Base):
         })
         self.touchpoint_count = len(self.conversion_path)
 
-    def confirm_conversion(self):
+    def confirm_conversion(self) -> None:
         """Mark conversion as confirmed."""
         self.conversion_stage = "confirmed"
         self.confirmed_at = datetime.utcnow()
 
-    def complete_conversion(self):
+    def complete_conversion(self) -> None:
         """Mark conversion as completed."""
         self.conversion_stage = "completed"
         self.completed_at = datetime.utcnow()
 
-    def cancel_conversion(self, reason: str = None):
+    def cancel_conversion(self, reason: str = None) -> None:
         """Mark conversion as cancelled."""
         self.conversion_stage = "cancelled"
         self.cancelled_at = datetime.utcnow()
         if reason:
             self.add_metadata("cancellation_reason", reason)
 
-    def calculate_days_to_convert(self, first_touch_date: datetime):
+    def calculate_days_to_convert(self, first_touch_date: datetime) -> None:
         """Calculate days from first touch to conversion."""
         if first_touch_date:
             delta = self.created_at - first_touch_date
@@ -136,7 +149,13 @@ class ConversionEvent(Base):
         return self.conversion_stage == "cancelled"
 
     @classmethod
-    def create_trial_signup(cls, lead_id: uuid.UUID, session_id: uuid.UUID = None, source: str = "freemium_results", metadata: dict = None):
+    def create_trial_signup(
+        cls, 
+        lead_id: uuid.UUID, 
+        session_id: uuid.UUID = None, 
+        source: str = "freemium_results", 
+        metadata: dict = None
+    ):
         """Factory method for trial signup conversions."""
         return cls(
             lead_id=lead_id,
@@ -148,7 +167,14 @@ class ConversionEvent(Base):
         )
 
     @classmethod
-    def create_paid_subscription(cls, lead_id: uuid.UUID, plan: str, value: Decimal, frequency: str = "monthly", metadata: dict = None):
+    def create_paid_subscription(
+        cls, 
+        lead_id: uuid.UUID, 
+        plan: str, 
+        value: Decimal, 
+        frequency: str = "monthly", 
+        metadata: dict = None
+    ):
         """Factory method for paid subscription conversions."""
         return cls(
             lead_id=lead_id,
@@ -161,7 +187,12 @@ class ConversionEvent(Base):
         )
 
     @classmethod
-    def create_consultation_request(cls, lead_id: uuid.UUID, session_id: uuid.UUID = None, metadata: dict = None):
+    def create_consultation_request(
+        cls, 
+        lead_id: uuid.UUID, 
+        session_id: uuid.UUID = None, 
+        metadata: dict = None
+    ):
         """Factory method for consultation request conversions."""
         return cls(
             lead_id=lead_id,
@@ -171,5 +202,8 @@ class ConversionEvent(Base):
             conversion_metadata=metadata or {}
         )
 
-    def __repr__(self):
-        return f"<ConversionEvent(type='{self.conversion_type}', stage='{self.conversion_stage}', value={self.conversion_value})>"
+    def __repr__(self) -> str:
+        return (
+            f"<ConversionEvent(type='{self.conversion_type}', "
+            f"stage='{self.conversion_stage}', value={self.conversion_value})>"
+        )

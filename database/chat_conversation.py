@@ -38,5 +38,5 @@ class ChatConversation(Base):
         "ChatMessage", back_populates="conversation", cascade="all, delete-orphan"
     )
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"<ChatConversation(id={self.id}, title='{self.title}', status='{self.status}')>"

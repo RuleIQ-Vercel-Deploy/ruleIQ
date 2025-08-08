@@ -411,7 +411,7 @@ class CostForecast(Base):
 
 
 # Extend User model to include cost-related relationships
-def extend_user_model():
+def extend_user_model() -> None:
     """Extend the User model with cost-related relationships."""
     from database.user import User
 

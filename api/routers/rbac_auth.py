@@ -75,7 +75,7 @@ async def login_with_roles(
 ):
     """
     Authenticate user and return JWT tokens with role claims.
-    
+
     The access token includes user roles and permissions for client-side
     authorization checks and server-side RBAC enforcement.
     """
@@ -207,7 +207,7 @@ async def refresh_access_token(
 ):
     """
     Refresh access token using refresh token.
-    
+
     Re-evaluates user roles and permissions to ensure token is up-to-date.
     """
     from api.dependencies.auth import decode_token

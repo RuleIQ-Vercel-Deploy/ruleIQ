@@ -7,6 +7,7 @@ This creates the test database and user needed for local testing.
 import subprocess
 import sys
 import os
+from typing import Optional
 
 
 def run_sql_command(sql, database="postgres", user="postgres"):
@@ -29,7 +30,7 @@ def run_sql_command(sql, database="postgres", user="postgres"):
         return False, str(e)
 
 
-def setup_test_database():
+def setup_test_database() -> Optional[bool]:
     """Set up the test database and user."""
     print("Setting up local test database for pytest...")
     print("=" * 60)

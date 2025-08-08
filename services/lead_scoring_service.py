@@ -35,12 +35,12 @@ logger = get_logger(__name__)
 class LeadScoringService:
     """
     Advanced lead scoring service for freemium assessment funnel.
-    
+
     Implements behavioral analytics, engagement tracking, and
     conversion probability prediction based on user interactions.
     """
 
-    def __init__(self, db_session):
+    def __init__(self, db_session) -> None:
         self.db = db_session
         self.cache_manager = None  # Will be initialized async
 
@@ -96,7 +96,7 @@ class LeadScoringService:
     ) -> LeadScoringEvent:
         """
         Track a lead scoring event and update lead score.
-        
+
         Args:
             lead_id: UUID of the lead
             event_type: Type of event (assessment_start, question_answered, etc.)
@@ -107,7 +107,7 @@ class LeadScoringService:
             metadata: Additional event metadata
             page_url: Page where event occurred
             user_agent: User agent string
-            
+
         Returns:
             LeadScoringEvent: Created event record
         """
@@ -167,10 +167,10 @@ class LeadScoringService:
     async def calculate_lead_score(self, lead_id: uuid.UUID) -> Dict[str, Any]:
         """
         Calculate comprehensive lead score based on all tracked events.
-        
+
         Args:
             lead_id: UUID of the lead to score
-            
+
         Returns:
             Dict containing detailed scoring breakdown
         """
@@ -261,11 +261,11 @@ class LeadScoringService:
     ) -> Dict[str, Any]:
         """
         Get comprehensive analytics for a specific lead.
-        
+
         Args:
             lead_id: UUID of the lead
             days_back: Number of days to include in analysis
-            
+
         Returns:
             Dict containing detailed lead analytics
         """
@@ -335,12 +335,12 @@ class LeadScoringService:
     ) -> Dict[str, Any]:
         """
         Get cohort analysis for leads acquired in a time period.
-        
+
         Args:
             start_date: Start of analysis period
-            end_date: End of analysis period  
+            end_date: End of analysis period
             cohort_type: Type of cohort (daily, weekly, monthly)
-            
+
         Returns:
             Dict containing cohort analytics
         """
@@ -443,7 +443,7 @@ class LeadScoringService:
 
         return int(base_score * multiplier)
 
-    async def _update_lead_score(self, lead_id: uuid.UUID, score_impact: int, event_type: str):
+    async def _update_lead_score(self, lead_id: uuid.UUID, score_impact: int, event_type: str) -> None:
         """Update lead score and status based on new event."""
         from sqlalchemy import select
 
@@ -462,7 +462,7 @@ class LeadScoringService:
             lead.lead_status = new_status
             logger.info(f"Lead {lead_id} status updated to: {new_status}")
 
-    async def _update_cached_metrics(self, lead_id: uuid.UUID, event_type: str, score_impact: int):
+    async def _update_cached_metrics(self, lead_id: uuid.UUID, event_type: str, score_impact: int) -> None:
         """Update cached metrics for real-time analytics."""
         try:
             if not self.cache_manager:

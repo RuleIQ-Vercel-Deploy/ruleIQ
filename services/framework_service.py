@@ -110,7 +110,7 @@ async def get_relevant_frameworks(db: AsyncSession, user: User) -> List[Dict]:
         raise DatabaseException("Failed to retrieve relevant frameworks.") from e
 
 
-async def initialize_default_frameworks(db: AsyncSession):
+async def initialize_default_frameworks(db: AsyncSession) -> None:
     """Populate the database with a default set of compliance frameworks."""
     frameworks_data = [
         {

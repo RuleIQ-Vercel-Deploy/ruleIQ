@@ -21,12 +21,13 @@ class MessageResponse(BaseModel):
     id: UUID
     role: str = Field(..., pattern="^(user|assistant)$")
     content: str
-    metadata: Optional[Dict[str, Any]] = None
+    metadata: Optional[Dict[str, Any]] = Field(None, alias="message_metadata")
     sequence_number: int
     created_at: datetime
 
     class Config:
         from_attributes = True
+        populate_by_name = True
 
 
 class ConversationSummary(BaseModel):

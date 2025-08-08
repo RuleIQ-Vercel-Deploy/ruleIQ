@@ -25,7 +25,7 @@ logger = get_logger(__name__)
 class EvidenceProcessor:
     """Processes raw evidence to add scores, tags, and mappings asynchronously."""
 
-    def __init__(self, db: AsyncSession):
+    def __init__(self, db: AsyncSession) -> None:
         self.db = db
         self.quality_scorer = QualityScorer()  # QualityScorer is synchronous and CPU-bound
         self.ai_model = None  # Lazy-loaded AI model

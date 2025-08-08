@@ -16,19 +16,19 @@ class APIVersioning:
     DEFAULT_VERSION = "v1"
     LATEST_VERSION = "v2"
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.version_routes = {}
         self.deprecated_endpoints = {}
         self.version_headers = {}
 
-    def register_version(self, version: str, routes: Dict[str, Any]):
+    def register_version(self, version: str, routes: Dict[str, Any]) -> None:
         """Register routes for a specific API version."""
         if version not in self.SUPPORTED_VERSIONS:
             raise ValueError(f"Unsupported version: {version}")
 
         self.version_routes[version] = routes
 
-    def mark_deprecated(self, endpoint: str, version: str, replacement: Optional[str] = None):
+    def mark_deprecated(self, endpoint: str, version: str, replacement: Optional[str] = None) -> None:
         """Mark an endpoint as deprecated."""
         self.deprecated_endpoints[endpoint] = {
             "version": version,
@@ -104,7 +104,7 @@ class APIVersioning:
 class VersionMiddleware:
     """FastAPI middleware for API versioning."""
 
-    def __init__(self, versioning: APIVersioning):
+    def __init__(self, versioning: APIVersioning) -> None:
         self.versioning = versioning
 
     async def __call__(self, request: Request, call_next):
@@ -171,11 +171,11 @@ def version_route(version: str):
 class VersionRouter:
     """Router that handles version-specific endpoints."""
 
-    def __init__(self, prefix: str = "/api"):
+    def __init__(self, prefix: str = "/api") -> None:
         self.prefix = prefix
         self.routes = {}
 
-    def add_route(self, path: str, endpoint: Any, version: str, **kwargs):
+    def add_route(self, path: str, endpoint: Any, version: str, **kwargs) -> None:
         """Add a version-specific route."""
         version_path = f"{self.prefix}/{version}{path}"
 

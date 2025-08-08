@@ -10,8 +10,9 @@ and statistical power calculations.
 import numpy as np
 from scipy import stats
 from scipy.stats import ttest_ind, chi2_contingency, mannwhitneyu
-from typing import Dict, List
+from typing import Dict, List, Optional
 import warnings
+import sys
 
 # Suppress scipy warnings for cleaner output
 warnings.filterwarnings("ignore")
@@ -184,7 +185,7 @@ def perform_mann_whitney_test(
     }
 
 
-def test_statistical_scenarios():
+def test_statistical_scenarios() -> bool:
     """Test various statistical scenarios with known outcomes."""
     print("🧪 Testing Statistical Analysis Components\n")
 
@@ -259,7 +260,7 @@ def test_statistical_scenarios():
     return True
 
 
-def test_power_analysis():
+def test_power_analysis() -> bool:
     """Test statistical power calculations."""
     print("\n⚡ Testing Statistical Power Analysis\n")
 
@@ -308,7 +309,7 @@ def test_power_analysis():
     return True
 
 
-def main():
+def main() -> Optional[bool]:
     """Run comprehensive statistical testing validation."""
     print("🚀 Statistical Analysis Framework Validation")
     print("=" * 50)
@@ -356,4 +357,4 @@ def main():
 
 if __name__ == "__main__":
     success = main()
-    exit(0 if success else 1)
+    sys.exit(0 if success else 1)

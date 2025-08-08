@@ -165,7 +165,7 @@ import logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-def safe_autodiscover():
+def safe_autodiscover() -> None:
     """Safely discover tasks with error handling to prevent startup failures."""
     try:
         # First try to import each module individually to catch specific errors

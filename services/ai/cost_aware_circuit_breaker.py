@@ -35,7 +35,7 @@ class CostAwareCircuitBreakerConfig(CircuitBreakerConfig):
         cost_spike_threshold: float = 3.0,  # 3x normal cost triggers circuit
         track_cost_efficiency: bool = True,
         **kwargs
-    ):
+    ) -> None:
         super().__init__(failure_threshold, recovery_timeout, success_threshold, time_window)
         self.cost_threshold_per_minute = cost_threshold_per_minute
         self.budget_enforcement = budget_enforcement
@@ -46,12 +46,12 @@ class CostAwareCircuitBreakerConfig(CircuitBreakerConfig):
 class CostAwareCircuitBreaker(AICircuitBreaker):
     """
     Enhanced circuit breaker with cost tracking and budget awareness.
-    
+
     Integrates cost management into circuit breaker decisions, providing
     budget enforcement and cost-based circuit tripping.
     """
 
-    def __init__(self, config: Optional[CostAwareCircuitBreakerConfig] = None):
+    def __init__(self, config: Optional[CostAwareCircuitBreakerConfig] = None) -> None:
         # Initialize base circuit breaker
         base_config = CircuitBreakerConfig(
             failure_threshold=config.failure_threshold if config else 5,
@@ -88,7 +88,7 @@ class CostAwareCircuitBreaker(AICircuitBreaker):
     ) -> Any:
         """
         Execute operation with both circuit breaker protection and cost tracking.
-        
+
         Args:
             model_name: Name of the AI model being used
             service_name: Name of the service (for cost categorization)
@@ -99,10 +99,10 @@ class CostAwareCircuitBreaker(AICircuitBreaker):
             session_id: Session identifier
             request_id: Request identifier
             *args, **kwargs: Arguments for the operation
-            
+
         Returns:
             Result of the operation
-            
+
         Raises:
             CircuitBreakerException: If circuit is open
             AIServiceException: If budget is exceeded or operation fails
@@ -121,7 +121,6 @@ class CostAwareCircuitBreaker(AICircuitBreaker):
 
         # Execute operation with timing
         start_time = time.time()
-        error_occurred = False
 
         try:
             result = await operation(*args, **kwargs) if asyncio.iscoroutinefunction(operation) else operation(*args, **kwargs)
@@ -145,7 +144,6 @@ class CostAwareCircuitBreaker(AICircuitBreaker):
             return result
 
         except Exception as error:
-            error_occurred = True
             response_time = time.time() - start_time
 
             # Track failed usage and cost (still incurs cost even on failure)
@@ -397,12 +395,12 @@ class CostAwareCircuitBreaker(AICircuitBreaker):
     ) -> str:
         """
         Select optimal model considering both availability and cost efficiency.
-        
+
         Args:
             available_models: List of available models
             task_complexity: Complexity of the task
             max_cost_per_request: Maximum acceptable cost per request
-            
+
         Returns:
             Optimal model name
         """
@@ -488,7 +486,7 @@ async def execute_with_cost_and_circuit_protection(
 ) -> Any:
     """
     Convenience function to execute AI operations with cost tracking and circuit breaker protection.
-    
+
     Args:
         model_name: Name of the AI model
         service_name: Name of the service
@@ -499,7 +497,7 @@ async def execute_with_cost_and_circuit_protection(
         session_id: Session identifier
         request_id: Request identifier
         *args, **kwargs: Arguments for the operation
-        
+
     Returns:
         Result of the operation
     """

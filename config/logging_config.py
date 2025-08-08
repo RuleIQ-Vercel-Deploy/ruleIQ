@@ -19,7 +19,7 @@ from config.settings import settings
 
 
 class CustomJsonFormatter(jsonlogger.JsonFormatter):
-    def add_fields(self, log_record, record, message_dict):
+    def add_fields(self, log_record, record, message_dict) -> None:
         super().add_fields(log_record, record, message_dict)
         if not log_record.get("timestamp"):
             log_record["timestamp"] = record.created
@@ -111,10 +111,10 @@ def setup_logging() -> None:
 class ComplianceLogger:
     """A wrapper around the standard logger to provide structured logging for specific event types."""
 
-    def __init__(self, name: str):
+    def __init__(self, name: str) -> None:
         self.logger = logging.getLogger(name)
 
-    def log_user_action(self, user_id: str, action: str, details: Optional[Dict[str, Any]] = None):
+    def log_user_action(self, user_id: str, action: str, details: Optional[Dict[str, Any]] = None) -> None:
         """Log user actions for audit purposes."""
         self.logger.info(
             f"User action: {action}",
@@ -128,7 +128,7 @@ class ComplianceLogger:
 
     def log_compliance_event(
         self, event_type: str, framework: str, details: Optional[Dict[str, Any]] = None
-    ):
+    ) -> None:
         """Log compliance-related events."""
         self.logger.info(
             f"Compliance event: {event_type}",
@@ -140,7 +140,7 @@ class ComplianceLogger:
             },
         )
 
-    def log_ai_interaction(self, model: str, prompt_type: str, tokens_used: Optional[int] = None):
+    def log_ai_interaction(self, model: str, prompt_type: str, tokens_used: Optional[int] = None) -> None:
         """Log AI model interactions."""
         self.logger.info(
             f"AI interaction with {model}",
@@ -152,7 +152,7 @@ class ComplianceLogger:
             },
         )
 
-    def log_error(self, error: Exception, context: Optional[Dict[str, Any]] = None):
+    def log_error(self, error: Exception, context: Optional[Dict[str, Any]] = None) -> None:
         """Log errors with additional context."""
         self.logger.error(
             f"Error: {type(error).__name__}",

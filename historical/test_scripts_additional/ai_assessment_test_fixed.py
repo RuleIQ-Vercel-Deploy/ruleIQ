@@ -34,7 +34,7 @@ def create_test_token():
     return jwt.encode(payload, JWT_SECRET, algorithm="HS256")
 
 
-def test_diagnostic_endpoint():
+def test_diagnostic_endpoint() -> None:
     """Test the diagnostic endpoint to verify server configuration."""
     url = "http://localhost:8000/debug/config"
     print(f"--- Testing {url} ---")
@@ -47,7 +47,7 @@ def test_diagnostic_endpoint():
     print("-" * 40)
 
 
-def test_endpoint(endpoint, payload, token, stream=False):
+def test_endpoint(endpoint, payload, token, stream=False) -> None:
     """Helper function to test an endpoint."""
     url = f"{BASE_URL}/ai-assessments{endpoint}"
     headers = {"Authorization": f"Bearer {token}"}

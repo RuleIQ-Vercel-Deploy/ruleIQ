@@ -54,7 +54,10 @@ async def _process_evidence_item_async(
             await db.refresh(new_evidence)
 
             logger.info(
-                f"Successfully processed and saved new evidence {new_evidence.id} for user {user_id}"
+                (
+                    f"Successfully processed and saved new evidence {new_evidence.id} "
+                    f"for user {user_id}"
+                )
             )
             return {"status": "processed", "evidence_id": str(new_evidence.id)}
 

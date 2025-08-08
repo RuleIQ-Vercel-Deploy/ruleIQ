@@ -18,7 +18,7 @@ from database.report_schedule import ReportSchedule
 class ReportScheduler:
     """Service to create, manage, and delete report schedules from the database."""
 
-    def __init__(self, db: AsyncSession):
+    def __init__(self, db: AsyncSession) -> None:
         self.db = db
 
     async def create_schedule(

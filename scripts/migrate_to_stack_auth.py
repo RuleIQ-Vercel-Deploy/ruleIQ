@@ -86,7 +86,6 @@ def migrate_file(file_path: Path, dry_run: bool = False) -> List[str]:
     """Migrate a single file from JWT to Stack Auth"""
     changes = []
     content = file_path.read_text()
-    original_content = content
 
     for pattern, replacement in REPLACEMENTS:
         matches = list(re.finditer(pattern, content))
@@ -136,7 +135,7 @@ def generate_migration_report(results: dict) -> None:
     report_path.write_text("\n".join(report))
     print(f"\n📄 Migration report saved to: {report_path}")
 
-def main():
+def main() -> None:
     """Run the migration"""
     print("🚀 Stack Auth Migration Script")
     print("=" * 50)

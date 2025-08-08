@@ -62,7 +62,7 @@ class APIMetrics:
 class PerformanceMonitor:
     """
     Comprehensive performance monitoring system.
-    
+
     Tracks and analyzes:
     - API response times
     - Database performance
@@ -71,14 +71,14 @@ class PerformanceMonitor:
     - Performance trends
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.response_times: List[float] = []
         self.api_metrics: Dict[str, List[float]] = {}
         self.slow_query_threshold = 0.1  # 100ms
         self.performance_history: List[PerformanceMetrics] = []
         self.monitoring_active = False
 
-    async def initialize(self):
+    async def initialize(self) -> None:
         """Initialize performance monitoring."""
         self.cache_manager = await get_cache_manager()
         logger.info("Performance monitoring initialized")
@@ -93,7 +93,7 @@ class PerformanceMonitor:
             duration = time.time() - start_time
             await self.record_api_call(endpoint, duration)
 
-    async def record_api_call(self, endpoint: str, duration: float):
+    async def record_api_call(self, endpoint: str, duration: float) -> None:
         """Record API call performance metrics."""
         if endpoint not in self.api_metrics:
             self.api_metrics[endpoint] = []
@@ -135,7 +135,7 @@ class PerformanceMonitor:
             try:
                 slow_queries_result = await db.execute(text("""
                     SELECT count(*) as slow_count
-                    FROM pg_stat_statements 
+                    FROM pg_stat_statements
                     WHERE mean_exec_time > :threshold
                 """), {"threshold": self.slow_query_threshold * 1000})  # Convert to ms
                 slow_queries_count = slow_queries_result.scalar() or 0
@@ -360,7 +360,7 @@ class PerformanceMonitor:
 
         return recommendations
 
-    async def start_monitoring(self, interval: int = 60):
+    async def start_monitoring(self, interval: int = 60) -> None:
         """Start continuous performance monitoring."""
         self.monitoring_active = True
         logger.info(f"Starting performance monitoring with {interval}s interval")
@@ -397,7 +397,7 @@ class PerformanceMonitor:
 
             await asyncio.sleep(interval)
 
-    def stop_monitoring(self):
+    def stop_monitoring(self) -> None:
         """Stop performance monitoring."""
         self.monitoring_active = False
         logger.info("Performance monitoring stopped")

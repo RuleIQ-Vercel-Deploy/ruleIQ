@@ -107,12 +107,12 @@ class TestPolicyGenerationService:
         mock_google.return_value.generate_policy.return_value = {
             "policy_content": """
             # TechCorp Ltd Privacy Policy
-            
+
             ## 1. Data Controller Information
             TechCorp Ltd
             123 Tech Street, London, UK
             ICO Registration: ZA123456
-            
+
             ## 2. Legal Basis for Processing
             We process personal data under the following legal bases:
             - Consent for marketing communications
@@ -258,15 +258,15 @@ class TestPolicyGenerationService:
         # Test valid UK policy
         valid_policy = """
         # Privacy Policy
-        
+
         ## Data Controller
         TechCorp Ltd
         123 Tech Street, London, UK
         ICO Registration: ZA123456
-        
+
         ## Legal Basis
         We process personal data under Article 6(1)(b) GDPR.
-        
+
         ## Data Subject Rights
         You have the right to access, rectify, and erase your personal data.
         """

@@ -114,7 +114,7 @@ MODEL_METADATA = {
 class AIConfig:
     """AI Configuration Manager"""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.google_api_key = os.getenv("GOOGLE_API_KEY")
         self.default_model = ModelType.GEMINI_25_FLASH.value  # Updated default
         self.default_model_type = ModelType.GEMINI_25_FLASH  # For test compatibility
@@ -203,7 +203,7 @@ class AIConfig:
             == "true",
         }
 
-    def _initialize_google_ai(self):
+    def _initialize_google_ai(self) -> None:
         """Initialize Google Generative AI with API key"""
         # Skip actual API initialization if using mock AI in tests
         if os.getenv("USE_MOCK_AI", "false").lower() == "true":
@@ -265,7 +265,7 @@ class AIConfig:
             # Try once more with the same parameters (for test compatibility)
             return genai.GenerativeModel(**model_params)
 
-    def update_generation_config(self, **kwargs):
+    def update_generation_config(self, **kwargs) -> None:
         """Update generation configuration parameters"""
         self.generation_config.update(kwargs)
 
@@ -378,13 +378,13 @@ class AIConfig:
             30.0,  # Default timeout
         )
 
-    def update_retry_config(self, operation_type: str, **kwargs):
+    def update_retry_config(self, operation_type: str, **kwargs) -> None:
         """Update retry configuration for specific operation type"""
         if operation_type not in self.retry_config:
             self.retry_config[operation_type] = self.retry_config["default"].copy()
         self.retry_config[operation_type].update(kwargs)
 
-    def update_circuit_breaker_config(self, **kwargs):
+    def update_circuit_breaker_config(self, **kwargs) -> None:
         """Update circuit breaker configuration"""
         self.circuit_breaker_config.update(kwargs)
 
@@ -392,7 +392,7 @@ class AIConfig:
         """Get offline mode configuration"""
         return self.offline_config.copy()
 
-    def update_offline_config(self, **kwargs):
+    def update_offline_config(self, **kwargs) -> None:
         """Update offline mode configuration"""
         self.offline_config.update(kwargs)
 

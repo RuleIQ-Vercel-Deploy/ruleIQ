@@ -3,8 +3,9 @@
 Create a test user for TestSprite testing
 """
 import requests
+from typing import Optional
 
-def create_test_user():
+def create_test_user() -> Optional[bool]:
     """Create test user via API"""
     url = "http://localhost:8000/api/v1/auth/register"
 

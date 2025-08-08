@@ -58,7 +58,7 @@ class GoogleCachedContentManager:
     and framework information for improved AI performance and cost reduction.
     """
 
-    def __init__(self, lifecycle_config: Optional[CacheLifecycleConfig] = None):
+    def __init__(self, lifecycle_config: Optional[CacheLifecycleConfig] = None) -> None:
         self.config = lifecycle_config or CacheLifecycleConfig()
         self.active_caches: Dict[str, genai.caching.CachedContent] = {}
         self.cache_metadata: Dict[str, Dict[str, Any]] = {}
@@ -592,7 +592,7 @@ class GoogleCachedContentManager:
         except Exception:
             return False
 
-    async def _remove_cache(self, cache_key: str):
+    async def _remove_cache(self, cache_key: str) -> None:
         """Remove cache and clean up resources."""
         try:
             if cache_key in self.active_caches:
@@ -612,7 +612,7 @@ class GoogleCachedContentManager:
         except Exception as e:
             logger.warning(f"Error removing cache {cache_key}: {e}")
 
-    def _remove_cache_sync(self, cache_key: str):
+    def _remove_cache_sync(self, cache_key: str) -> None:
         """Synchronous version of cache removal for use in sync contexts."""
         try:
             if cache_key in self.active_caches:
@@ -736,7 +736,7 @@ class GoogleCachedContentManager:
     # Cache Strategy Optimization
     # ==============================
 
-    def record_cache_performance(self, cache_key: str, response_time_ms: int, hit: bool = True):
+    def record_cache_performance(self, cache_key: str, response_time_ms: int, hit: bool = True) -> None:
         """Record cache performance for TTL optimization."""
         if not self.config.performance_based_ttl:
             return
@@ -789,7 +789,7 @@ class GoogleCachedContentManager:
 
     def add_to_warming_queue(
         self, content_type: CacheContentType, context: Dict[str, Any], priority: int = 5
-    ):
+    ) -> None:
         """Add cache entry to warming queue for proactive caching."""
         if not self.config.cache_warming_enabled:
             return
@@ -879,7 +879,7 @@ class GoogleCachedContentManager:
 
         return False
 
-    async def _warm_cache_entry(self, entry: Dict[str, Any]):
+    async def _warm_cache_entry(self, entry: Dict[str, Any]) -> None:
         """Create cache entry for warming queue item."""
         content_type = entry["content_type"]
         context = entry["context"]
@@ -904,7 +904,7 @@ class GoogleCachedContentManager:
             logger.error(f"Failed to warm cache for {content_type.value}: {e}")
             raise
 
-    def trigger_intelligent_invalidation(self, trigger_type: str, context: Dict[str, Any]):
+    def trigger_intelligent_invalidation(self, trigger_type: str, context: Dict[str, Any]) -> None:
         """Trigger intelligent cache invalidation based on business logic."""
         if not self.config.intelligent_invalidation:
             return
@@ -931,7 +931,7 @@ class GoogleCachedContentManager:
 
         logger.info(f"Intelligent invalidation triggered: {trigger_type}")
 
-    def _invalidate_business_profile_caches(self, business_profile_id: str):
+    def _invalidate_business_profile_caches(self, business_profile_id: str) -> None:
         """Invalidate caches related to a specific business profile."""
         keys_to_invalidate = []
 
@@ -941,7 +941,7 @@ class GoogleCachedContentManager:
 
         self._invalidate_cache_keys(keys_to_invalidate, "business_profile_update")
 
-    def _invalidate_framework_caches(self, framework_id: str):
+    def _invalidate_framework_caches(self, framework_id: str) -> None:
         """Invalidate caches related to a specific framework."""
         keys_to_invalidate = []
 
@@ -951,7 +951,7 @@ class GoogleCachedContentManager:
 
         self._invalidate_cache_keys(keys_to_invalidate, "framework_update")
 
-    def _invalidate_assessment_caches(self, framework_id: str, business_profile_id: str):
+    def _invalidate_assessment_caches(self, framework_id: str, business_profile_id: str) -> None:
         """Invalidate assessment-specific caches."""
         keys_to_invalidate = []
 
@@ -965,7 +965,7 @@ class GoogleCachedContentManager:
 
         self._invalidate_cache_keys(keys_to_invalidate, "assessment_completion")
 
-    def _invalidate_regulatory_caches(self, regulation_id: str):
+    def _invalidate_regulatory_caches(self, regulation_id: str) -> None:
         """Invalidate caches related to regulatory changes."""
         keys_to_invalidate = []
 
@@ -975,7 +975,7 @@ class GoogleCachedContentManager:
 
         self._invalidate_cache_keys(keys_to_invalidate, "regulatory_change")
 
-    def _invalidate_cache_keys(self, cache_keys: List[str], reason: str):
+    def _invalidate_cache_keys(self, cache_keys: List[str], reason: str) -> None:
         """Invalidate specific cache keys."""
         invalidated_count = 0
 

@@ -28,10 +28,10 @@ async def cleanup_test_users(
     """
     Clean up test users from the database.
     Only works in test/development environments.
-    
+
     Args:
         email_pattern: Pattern to match test user emails (default: @example.com)
-    
+
     Returns:
         dict: Number of users deleted
     """
@@ -97,11 +97,11 @@ async def create_test_user(
     """
     Create a test user for testing purposes.
     Only works in test/development environments.
-    
+
     Args:
         email: Email for the test user
         password: Password for the test user (default: TestPassword123!)
-    
+
     Returns:
         dict: Created user info
     """
@@ -145,7 +145,7 @@ async def clear_rate_limits():
     """
     Clear all rate limit data.
     Only works in test/development environments.
-    
+
     Returns:
         dict: Success status
     """

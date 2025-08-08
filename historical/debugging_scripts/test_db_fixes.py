@@ -4,6 +4,7 @@
 import sys
 import os
 import asyncio
+from typing import Optional
 
 # Add project root to path
 sys.path.insert(0, ".")
@@ -15,7 +16,7 @@ os.environ["DATABASE_URL"] = (
 )
 
 
-async def test_database_connection():
+async def test_database_connection() -> Optional[bool]:
     """Test database connection with our fixes."""
     try:
         print("1. Testing database connection...")

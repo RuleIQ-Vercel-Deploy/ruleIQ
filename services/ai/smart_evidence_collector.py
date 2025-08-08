@@ -93,7 +93,7 @@ class SmartEvidenceCollector:
     - Performance analytics
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.active_plans: Dict[str, CollectionPlan] = {}
         self.task_queue: List[EvidenceTask] = []
         self.automation_rules: Dict[str, Dict[str, Any]] = {}
@@ -109,7 +109,7 @@ class SmartEvidenceCollector:
             "efficiency_score": 0.0,
         }
 
-    def _initialize_automation_rules(self):
+    def _initialize_automation_rules(self) -> None:
         """Initialize automation rules for different evidence types."""
         self.automation_rules = {
             "policy_document": {

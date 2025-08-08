@@ -39,7 +39,10 @@ async def _update_all_compliance_scores_async() -> Dict[str, Any]:
                 try:
                     readiness_data = await generate_readiness_assessment(profile.id, db)
                     logger.debug(
-                        f"Updated compliance score for profile {profile.id}: {readiness_data.get('overall_score', 0)}"
+                        (
+                            f"Updated compliance score for profile {profile.id}: "
+                            f"{readiness_data.get('overall_score', 0)}"
+                        )
                     )
                     updated_count += 1
                 except ApplicationException as e:
@@ -50,7 +53,10 @@ async def _update_all_compliance_scores_async() -> Dict[str, Any]:
                     failed_count += 1
 
             logger.info(
-                f"Finished compliance score update. Total: {total_profiles}, Updated: {updated_count}, Failed: {failed_count}"
+                (
+                    f"Finished compliance score update. Total: {total_profiles}, "
+                    f"Updated: {updated_count}, Failed: {failed_count}"
+                )
             )
             return {
                 "status": "completed",
@@ -84,7 +90,10 @@ async def _check_compliance_alerts_async() -> Dict[str, Any]:
                         }
                         alerts.append(alert)
                         logger.warning(
-                            f"Compliance alert for profile {profile.id}: Score is {readiness_data['overall_score']}"
+                            (
+                                f"Compliance alert for profile {profile.id}: "
+                                f"Score is {readiness_data['overall_score']}"
+                            )
                         )
                 except ApplicationException as e:
                     logger.warning(

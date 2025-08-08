@@ -44,17 +44,17 @@ class AgenticRAGResponse(BaseModel):
 class AgenticRAGSystem:
     """
     Custom Agentic RAG System for ruleIQ
-    
+
     Features:
     - LangGraph documentation processing
-    - Pydantic AI documentation integration  
+    - Pydantic AI documentation integration
     - Knowledge graph for code understanding
     - Multi-modal RAG (text + code)
     - Context-aware embeddings
     - Hybrid search capabilities
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         # Supabase connections
         supabase_url = os.getenv("SUPABASE_URL")
         supabase_key = os.getenv("SUPABASE_SERVICE_KEY")
@@ -123,7 +123,7 @@ class AgenticRAGSystem:
         # Initialize database schema
         self._initialize_database()
 
-    def _initialize_database(self):
+    def _initialize_database(self) -> None:
         """Initialize the vector database schema"""
         try:
             with self.engine.connect() as conn:
@@ -136,8 +136,8 @@ class AgenticRAGSystem:
                 # Check if table exists and get its current dimension
                 try:
                     result = conn.execute(text("""
-                        SELECT column_name, data_type 
-                        FROM information_schema.columns 
+                        SELECT column_name, data_type
+                        FROM information_schema.columns
                         WHERE table_name = 'documentation_chunks' AND column_name = 'embedding'
                     """))
                     existing_table = result.fetchone()
@@ -166,8 +166,8 @@ class AgenticRAGSystem:
 
                 # Create index for vector similarity search
                 conn.execute(text("""
-                    CREATE INDEX IF NOT EXISTS documentation_chunks_embedding_idx 
-                    ON documentation_chunks USING ivfflat (embedding vector_cosine_ops) 
+                    CREATE INDEX IF NOT EXISTS documentation_chunks_embedding_idx
+                    ON documentation_chunks USING ivfflat (embedding vector_cosine_ops)
                     WITH (lists = 100)
                 """))
 
@@ -188,8 +188,8 @@ class AgenticRAGSystem:
 
                 # Create index for code examples
                 conn.execute(text("""
-                    CREATE INDEX IF NOT EXISTS code_examples_embedding_idx 
-                    ON code_examples USING ivfflat (embedding vector_cosine_ops) 
+                    CREATE INDEX IF NOT EXISTS code_examples_embedding_idx
+                    ON code_examples USING ivfflat (embedding vector_cosine_ops)
                     WITH (lists = 100)
                 """))
 
@@ -199,7 +199,7 @@ class AgenticRAGSystem:
             logger.error(f"Failed to initialize database schema: {e}")
             raise
 
-    async def process_documentation_files(self):
+    async def process_documentation_files(self) -> None:
         """Process LangGraph and Pydantic AI documentation files"""
         docs_path = Path("/home/omar/Documents/ruleIQ/docs/DEPENDENCY_DOCUMENTATION")
 
@@ -213,7 +213,7 @@ class AgenticRAGSystem:
         if pydantic_file.exists():
             await self._process_markdown_file(pydantic_file, "pydantic_ai")
 
-    async def _process_markdown_file(self, file_path: Path, framework: str):
+    async def _process_markdown_file(self, file_path: Path, framework: str) -> None:
         """Process a markdown documentation file"""
         try:
             content = file_path.read_text(encoding='utf-8')
@@ -326,14 +326,14 @@ class AgenticRAGSystem:
         """Add contextual information to chunk for better embeddings"""
         try:
             prompt = f"""
-            You are analyzing a chunk from {framework} documentation. 
-            
+            You are analyzing a chunk from {framework} documentation.
+
             Full document context (first 1000 chars):
             {full_document[:1000]}...
-            
+
             Current chunk:
             {chunk}
-            
+
             Provide enriched context for this chunk that would help with semantic search.
             Include relevant technical terms, concepts, and relationships to other parts of the documentation.
             Keep it concise but informative.
@@ -383,7 +383,7 @@ class AgenticRAGSystem:
         metadata: Dict[str, Any],
         source: str,
         chunk_type: str
-    ):
+    ) -> None:
         """Store documentation chunk in database"""
         try:
             # Use Supabase client for upsert operation
@@ -409,7 +409,7 @@ class AgenticRAGSystem:
             try:
                 with self.engine.connect() as conn:
                     conn.execute(text("""
-                        INSERT INTO documentation_chunks 
+                        INSERT INTO documentation_chunks
                         (id, content, embedding, metadata, source, chunk_type)
                         VALUES (:id, :content, :embedding, :metadata, :source, :chunk_type)
                         ON CONFLICT (id) DO UPDATE SET
@@ -430,7 +430,7 @@ class AgenticRAGSystem:
                 logger.error(f"Fallback also failed for chunk {chunk_id}: {fallback_error}")
                 raise
 
-    async def _extract_and_store_code_examples(self, content: str, framework: str, parent_chunk_id: str):
+    async def _extract_and_store_code_examples(self, content: str, framework: str, parent_chunk_id: str) -> None:
         """Extract and store code examples for agentic RAG"""
         try:
             # Find code blocks
@@ -495,7 +495,7 @@ class AgenticRAGSystem:
             prompt = f"""
             Summarize this {framework} code example in 2-3 sentences.
             Focus on what it does, key concepts used, and when you'd use it.
-            
+
             Code:
             {code}
             """
@@ -538,7 +538,7 @@ class AgenticRAGSystem:
         framework: str,
         example_type: str,
         metadata: Dict[str, Any]
-    ):
+    ) -> None:
         """Store code example in database"""
         try:
             # Use Supabase client for upsert operation
@@ -566,7 +566,7 @@ class AgenticRAGSystem:
             try:
                 with self.engine.connect() as conn:
                     conn.execute(text("""
-                        INSERT INTO code_examples 
+                        INSERT INTO code_examples
                         (id, code_content, summary, embedding, metadata, source, framework, example_type)
                         VALUES (:id, :code_content, :summary, :embedding, :metadata, :source, :framework, :example_type)
                         ON CONFLICT (id) DO UPDATE SET
@@ -598,7 +598,7 @@ class AgenticRAGSystem:
     ) -> AgenticRAGResponse:
         """
         Query the RAG system for documentation
-        
+
         Args:
             query: User's question
             source_filter: Filter by source ('langgraph', 'pydantic_ai', etc.)
@@ -879,13 +879,13 @@ class AgenticRAGSystem:
 
             prompt = f"""
             You are an expert assistant helping with LangGraph and Pydantic AI implementation.
-            
+
             User Question: {query}
-            
+
             Relevant Documentation:
             {context}
-            
-            Provide a comprehensive answer based on the documentation provided. 
+
+            Provide a comprehensive answer based on the documentation provided.
             Include code examples when relevant and cite specific sources.
             Focus on practical implementation guidance.
             If the question involves both LangGraph and Pydantic AI, explain how they work together.
@@ -978,7 +978,7 @@ class AgenticRAGSystem:
             logger.error(f"Failed to get framework statistics: {e}")
             return {}
 
-    def close(self):
+    def close(self) -> None:
         """Close database connections"""
         if self.neo4j_driver:
             self.neo4j_driver.close()

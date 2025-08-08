@@ -38,7 +38,7 @@ class ComplianceMetric(Enum):
 class AIModelTester:
     """A/B testing utilities for AI model comparisons."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.framework = get_ab_testing_framework()
         self.analytics = get_analytics_monitor()
         self.active_experiments: Dict[str, str] = {}  # model_pair -> experiment_id
@@ -134,7 +134,7 @@ class AIModelTester:
 class PromptOptimizationTester:
     """A/B testing utilities for prompt optimization."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.framework = get_ab_testing_framework()
         self.analytics = get_analytics_monitor()
 
@@ -224,7 +224,7 @@ class PromptOptimizationTester:
 class ComplianceEffectivenessTester:
     """A/B testing for compliance methodology effectiveness."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.framework = get_ab_testing_framework()
         self.analytics = get_analytics_monitor()
 
@@ -319,7 +319,7 @@ class ComplianceEffectivenessTester:
 class ABTestingManager:
     """Central manager for all A/B testing activities in ruleIQ."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.framework = get_ab_testing_framework()
         self.model_tester = AIModelTester()
         self.prompt_tester = PromptOptimizationTester()

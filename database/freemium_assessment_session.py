@@ -74,7 +74,7 @@ class FreemiumAssessmentSession(Base):
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
     completed_at = Column(DateTime, nullable=True)
 
-    def __init__(self, **kwargs):
+    def __init__(self, **kwargs) -> None:
         """Initialize session with secure token and default expiration."""
         super().__init__(**kwargs)
         if not self.session_token:
@@ -105,13 +105,13 @@ class FreemiumAssessmentSession(Base):
         """Check if session is active (not expired and not completed)."""
         return not self.is_expired() and self.status not in ["completed", "expired"]
 
-    def mark_completed(self):
+    def mark_completed(self) -> None:
         """Mark session as completed and set completion timestamp."""
         self.status = "completed"
         from datetime import timezone
         self.completed_at = datetime.now(timezone.utc)
 
-    def extend_expiry(self, hours: int = 2):
+    def extend_expiry(self, hours: int = 2) -> None:
         """Extend session expiry by specified hours."""
         if self.is_active():
             from datetime import timezone
@@ -124,7 +124,7 @@ class FreemiumAssessmentSession(Base):
         return self.status
 
     @completion_status.setter
-    def completion_status(self, value):
+    def completion_status(self, value) -> None:
         """Alias setter for status."""
         self.status = value
 
@@ -134,9 +134,9 @@ class FreemiumAssessmentSession(Base):
         return self.session_data or {}
 
     @user_answers.setter
-    def user_answers(self, value):
+    def user_answers(self, value) -> None:
         """Alias setter for session_data."""
         self.session_data = value
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"<FreemiumAssessmentSession(id='{self.id}', status='{self.status}', assessment_type='{self.assessment_type}')>"

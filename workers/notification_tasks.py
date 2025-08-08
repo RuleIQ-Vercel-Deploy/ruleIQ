@@ -52,7 +52,8 @@ def _prepare_alert_content(
     subject = f"Compliance Alert: {alert_type.replace('_', ' ').title()}"
     body = f"""Dear {user.full_name or "User"},
 
-A new compliance alert requires your attention: {alert_data.get("details", "No details provided")}."""
+A new compliance alert requires your attention: """
+    body += f"""{alert_data.get("details", "No details provided")}."""
     return subject, body
 
 

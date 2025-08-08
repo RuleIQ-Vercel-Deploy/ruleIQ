@@ -80,7 +80,7 @@ class AssessmentConversation:
 class AgenticAssessmentService:
     """
     Service that provides agentic, conversational assessments
-    
+
     This service transforms the traditional static assessment process into
     an ongoing conversation that:
     1. Adapts to user communication style and preferences
@@ -90,13 +90,13 @@ class AgenticAssessmentService:
     5. Automates routine parts for trusted users
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.context_service = None
         self.assessment_service = AssessmentService()
         self.llm_service = ComplianceAssistant()
         self._conversation_templates = self._load_conversation_templates()
 
-    async def initialize(self):
+    async def initialize(self) -> None:
         """Initialize the agentic assessment service"""
         try:
             self.context_service = await get_context_service()
@@ -115,14 +115,14 @@ class AgenticAssessmentService:
     ) -> Dict[str, Any]:
         """
         Start a new conversational assessment or resume an existing one
-        
+
         Args:
             user_id: User identifier
             business_profile_id: Business profile to assess
             session_id: Session identifier
             framework_types: List of frameworks to assess (ISO27001, GDPR, etc.)
             resume_previous: Whether to resume a previous incomplete assessment
-            
+
         Returns:
             Dict containing conversation state and first question
         """
@@ -205,12 +205,12 @@ class AgenticAssessmentService:
     ) -> Dict[str, Any]:
         """
         Process user response in the conversation and determine next action
-        
+
         Args:
             session_id: Session identifier
             user_response: User's response to current question
             additional_context: Optional additional context
-            
+
         Returns:
             Dict containing next question or conversation completion
         """
@@ -365,15 +365,24 @@ class AgenticAssessmentService:
         """Generate a personalized opening message based on user patterns"""
         try:
             if not user_patterns:
-                return f"I'll help you complete your {', '.join(framework_types)} compliance assessment. Let's start with some questions about your business."
+                return (
+                    f"I'll help you complete your {', '.join(framework_types)} compliance "
+                    "assessment. Let's start with some questions about your business."
+                )
 
             # Personalize based on communication style
             if user_patterns.communication_style == CommunicationStyle.CASUAL:
                 greeting = "Hi! Ready to tackle your compliance assessment?"
             elif user_patterns.communication_style == CommunicationStyle.TECHNICAL:
-                greeting = f"Let's conduct a comprehensive {', '.join(framework_types)} compliance evaluation."
+                greeting = (
+                    f"Let's conduct a comprehensive {', '.join(framework_types)} "
+                    "compliance evaluation."
+                )
             else:
-                greeting = f"Good day. I'll assist you with your {', '.join(framework_types)} compliance assessment."
+                greeting = (
+                    f"Good day. I'll assist you with your {', '.join(framework_types)} "
+                    "compliance assessment."
+                )
 
             # Add trust-based context
             if user_patterns.trust_level in [TrustLevel.TRUSTING, TrustLevel.DELEGATING]:
@@ -502,17 +511,17 @@ class AgenticAssessmentService:
             # Create prompt for LLM to extract structured data
             extraction_prompt = f"""
             Extract structured information from this user response to the compliance question.
-            
+
             Question: {current_question.question_text}
             Framework Area: {current_question.framework_area}
             User Response: {user_response}
-            
+
             Please extract:
             1. The main answer/value
             2. Any additional details mentioned
             3. Confidence level in the response (high/medium/low)
             4. Whether clarification might be needed
-            
+
             Return as JSON.
             """
 
@@ -576,7 +585,7 @@ class AgenticAssessmentService:
                 }
 
             # Check if we have enough information to complete
-            framework_types = conversation.context_gathered.get("framework_types", [])
+            conversation.context_gathered.get("framework_types", [])
             total_questions_needed = self._estimate_total_questions(conversation)
             answered_count = len(conversation.answered_questions)
 
@@ -641,7 +650,7 @@ class AgenticAssessmentService:
 
         return user_index >= required_index
 
-    async def _store_conversation(self, conversation: AssessmentConversation):
+    async def _store_conversation(self, conversation: AssessmentConversation) -> None:
         """Store conversation state in context service"""
         await self.context_service.update_session_context(
             conversation.session_id,
@@ -721,7 +730,7 @@ class AgenticAssessmentService:
             logger.error(f"Failed to generate final assessment: {e}")
             return {"error": str(e)}
 
-    async def _update_conversation_context(self, conversation: AssessmentConversation, processed_response: Dict[str, Any]):
+    async def _update_conversation_context(self, conversation: AssessmentConversation, processed_response: Dict[str, Any]) -> None:
         """Update conversation context with new information"""
         # Extract business context from responses
         structured_data = processed_response.get("structured_data", {})

@@ -968,7 +968,7 @@ Can you provide guidance on how to answer this question correctly?`;
     options: StreamingOptions,
   ): Promise<void> {
     try {
-      const eventSource = new EventSource('/api/ai/assessments/analysis/stream', {
+      const eventSource = new EventSource('/api/v1/ai-assessments/analysis/stream', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -1019,7 +1019,7 @@ Can you provide guidance on how to answer this question correctly?`;
     options: StreamingOptions,
   ): Promise<void> {
     try {
-      const eventSource = new EventSource('/api/ai/assessments/recommendations/stream', {
+      const eventSource = new EventSource('/api/v1/ai-assessments/recommendations/stream', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -1071,7 +1071,7 @@ Can you provide guidance on how to answer this question correctly?`;
     options: StreamingOptions,
   ): Promise<void> {
     try {
-      const eventSource = new EventSource(`/api/ai/assessments/${frameworkId}/help/stream`, {
+      const eventSource = new EventSource(`/api/v1/ai-assessments/${frameworkId}/help/stream`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -11,6 +11,7 @@ from dotenv import load_dotenv
 
 # Use the same JWT library as the server
 from jose import jwt
+import sys
 
 print("=" * 60)
 print("Direct JWT Authentication Test")
@@ -23,13 +24,13 @@ if env_path.exists():
     print(f"✓ Loaded environment from: {env_path}")
 else:
     print(f"✗ Environment file not found: {env_path}")
-    exit(1)
+    sys.exit(1)
 
 # Get JWT secret
 JWT_SECRET = os.getenv("JWT_SECRET")
 if not JWT_SECRET:
     print("✗ JWT_SECRET not found in environment")
-    exit(1)
+    sys.exit(1)
 
 print(f"✓ JWT_SECRET loaded: {JWT_SECRET[:10]}...")
 print(f"  Length: {len(JWT_SECRET)} characters")
@@ -48,7 +49,7 @@ try:
     print(f"  Token: {token[:50]}...")
 except Exception as e:
     print(f"✗ Failed to create token: {e}")
-    exit(1)
+    sys.exit(1)
 
 # Test 2: Verify the token
 print("\n2. Verifying JWT token...")
@@ -58,7 +59,7 @@ try:
     print(f"  Payload: {decoded}")
 except Exception as e:
     print(f"✗ Failed to verify token: {e}")
-    exit(1)
+    sys.exit(1)
 
 # Test 3: Simulate server-side verification
 print("\n3. Simulating server-side verification...")

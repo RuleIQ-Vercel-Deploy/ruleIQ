@@ -241,7 +241,7 @@ monitoring_schedule = {
 }
 
 
-def register_monitoring_tasks():
+def register_monitoring_tasks() -> None:
     """Register monitoring tasks with Celery beat scheduler."""
     try:
         from celery_app import celery_app

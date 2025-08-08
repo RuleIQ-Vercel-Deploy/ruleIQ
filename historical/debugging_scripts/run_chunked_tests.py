@@ -58,7 +58,7 @@ TEST_GROUPS = {
 
 
 class TestRunner:
-    def __init__(self):
+    def __init__(self) -> None:
         self.results: Dict[str, Dict] = {}
         self.start_time = time.time()
 
@@ -182,7 +182,7 @@ class TestRunner:
 
         return 0, 0, 0
 
-    async def run_all_groups(self):
+    async def run_all_groups(self) -> None:
         """Run all test groups concurrently."""
         print("🧪 Starting ruleIQ Chunked Test Execution")
         print(f"📊 Running {len(TEST_GROUPS)} test groups asynchronously")
@@ -206,7 +206,7 @@ class TestRunner:
 
         self._print_summary()
 
-    def _print_summary(self):
+    def _print_summary(self) -> None:
         """Print comprehensive test execution summary."""
         total_duration = time.time() - self.start_time
 
@@ -256,7 +256,7 @@ class TestRunner:
         print("=" * 60)
 
 
-async def main():
+async def main() -> None:
     """Main execution function."""
     runner = TestRunner()
     await runner.run_all_groups()

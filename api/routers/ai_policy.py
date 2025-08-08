@@ -21,7 +21,7 @@ from api.dependencies.auth import get_current_active_user
 from api.middleware.rate_limiter import RateLimited
 
 
-router = APIRouter(prefix="/api/v1/ai", tags=["AI Policy Generation"])
+router = APIRouter(prefix="/policies", tags=["AI Policy Generation"])
 
 
 @router.post(
@@ -40,7 +40,7 @@ async def generate_policy(
 ):
     """
     Generate compliance policy using AI with dual provider fallback.
-    
+
     Requires authentication. Limited to 20 requests per minute per user.
     Uses Google AI (primary) with OpenAI fallback for reliability.
     """
@@ -99,7 +99,7 @@ async def refine_policy(
 ):
     """
     Refine existing policy based on feedback.
-    
+
     Requires authentication. Limited to 30 requests per minute per user.
     """
     # Validate framework exists
@@ -143,11 +143,11 @@ async def get_policy_templates(
 ):
     """
     Get available policy templates.
-    
+
     Can be filtered by framework and policy type.
     Limited to 100 requests per minute.
     """
-    processor = TemplateProcessor()
+    TemplateProcessor()
 
     # Base templates available
     templates = [
@@ -243,7 +243,7 @@ async def get_policy_templates(
 async def get_ai_metrics():
     """
     Get AI policy generation metrics and performance data.
-    
+
     Requires authentication. Shows provider performance, costs, and usage.
     """
     # This would typically come from a metrics service
@@ -308,7 +308,7 @@ async def validate_policy(
 ):
     """
     Validate policy against framework requirements.
-    
+
     Requires authentication. Limited to 50 requests per minute.
     """
     framework = db.query(ComplianceFramework)\
@@ -338,10 +338,10 @@ async def _log_generation_metrics(
     result: PolicyGenerationResponse,
     framework_id: str,
     framework_name: str
-):
+) -> None:
     """
     Log policy generation metrics in background.
-    
+
     Args:
         result: Policy generation result
         framework_id: Framework ID used
@@ -353,11 +353,13 @@ async def _log_generation_metrics(
     import logging
     logger = logging.getLogger(__name__)
 
-    logger.info(f"Policy generated: framework={framework_name}, "
-               f"provider={result.provider_used}, "
-               f"confidence={result.confidence_score}, "
-               f"time={result.generation_time_ms}ms, "
-               f"cost=${result.estimated_cost or 0:.3f}")
+    logger.info(
+        f"Policy generated: framework={framework_name}, "
+        f"provider={result.provider_used}, "
+        f"confidence={result.confidence_score}, "
+        f"time={result.generation_time_ms}ms, "
+        f"cost=${result.estimated_cost or 0:.3f}"
+    )
 
 
 # Background task for policy generation analytics
@@ -375,7 +377,7 @@ async def export_analytics(
 ):
     """
     Export policy generation analytics.
-    
+
     Limited to 5 exports per hour. Requires admin permissions.
     """
     if format not in ["csv", "json", "xlsx"]:

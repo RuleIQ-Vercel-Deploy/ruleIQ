@@ -35,7 +35,7 @@ class DatabaseOptimizer:
     and improving query performance.
     """
 
-    def __init__(self, database_url: str, dry_run: bool = False):
+    def __init__(self, database_url: str, dry_run: bool = False) -> None:
         """
         Initialize the database optimizer.
 
@@ -198,7 +198,7 @@ class DatabaseOptimizer:
         """Check if an index already exists."""
         query = text("""
             SELECT EXISTS (
-                SELECT 1 FROM pg_indexes 
+                SELECT 1 FROM pg_indexes
                 WHERE indexname = :index_name
             )
         """)
@@ -209,14 +209,14 @@ class DatabaseOptimizer:
         """Check if a table exists."""
         query = text("""
             SELECT EXISTS (
-                SELECT 1 FROM information_schema.tables 
+                SELECT 1 FROM information_schema.tables
                 WHERE table_name = :table_name
             )
         """)
         result = await session.execute(query, {"table_name": table_name})
         return result.scalar()
 
-    async def create_extensions(self, session: AsyncSession):
+    async def create_extensions(self, session: AsyncSession) -> None:
         """Create required PostgreSQL extensions."""
         logger.info("Creating required PostgreSQL extensions...")
 
@@ -276,7 +276,7 @@ class DatabaseOptimizer:
             logger.error(f"Failed to create index {name}: {e}")
             return False
 
-    async def analyze_tables(self, session: AsyncSession):
+    async def analyze_tables(self, session: AsyncSession) -> None:
         """Update table statistics after creating indexes."""
         tables = [
             "evidence_items",
@@ -301,7 +301,7 @@ class DatabaseOptimizer:
                 except Exception as e:
                     logger.error(f"Failed to analyze table {table}: {e}")
 
-    async def optimize_database(self, priority_levels: List[str] = None):
+    async def optimize_database(self, priority_levels: List[str] = None) -> None:
         """
         Run the complete database optimization process.
 
@@ -360,12 +360,12 @@ class DatabaseOptimizer:
                 await session.rollback()
                 raise
 
-    async def close(self):
+    async def close(self) -> None:
         """Close the database connection."""
         await self.engine.dispose()
 
 
-async def main():
+async def main() -> None:
     """Main entry point for the database optimization script."""
 
     # Get configuration from environment

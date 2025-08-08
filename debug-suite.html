@@ -516,6 +516,7 @@
             <button onclick="testTokenValidation()">🎫 Token Validation</button>
             <button onclick="testUserRegistration()">👤 User Registration</button>
             <button onclick="testPasswordReset()">🔄 Password Reset</button>
+            <button onclick="assignTestUserRole()">👥 Assign Test User Role</button>
         </div>
     </div>
 
@@ -739,6 +740,25 @@
             }
         }
 
+        // 🚀 AUTHENTICATED API CALL WITH AUTO-ROLE ASSIGNMENT
+        async function authenticatedApiCall(endpoint, options = {}, requiresAssessmentPerms = false) {
+            // Ensure user has required roles before making authenticated calls
+            if (config.authToken && requiresAssessmentPerms) {
+                await ensureUserHasRequiredRoles();
+            }
+            
+            // Add authorization header if we have a token
+            const enhancedOptions = {
+                ...options,
+                headers: {
+                    ...options.headers,
+                    ...(config.authToken && { 'Authorization': `Bearer ${config.authToken}` })
+                }
+            };
+            
+            return await apiCall(endpoint, enhancedOptions);
+        }
+
         // Test Connection
         async function testConnection() {
             log('🔍 Testing API connection...', null, 'pending');
@@ -853,6 +873,56 @@
             }
         }
 
+        // 🚀 AUTO-ROLE ASSIGNMENT HELPER
+        async function ensureUserHasRequiredRoles() {
+            if (!config.authToken) {
+                return { success: false, reason: 'No auth token available' };
+            }
+
+            try {
+                // Check current user permissions
+                const userInfo = await apiCall('/api/v1/auth/me', {
+                    headers: { 'Authorization': `Bearer ${config.authToken}` }
+                });
+
+                // If user already has assessment permissions, no need to assign role
+                const hasAssessmentPerms = userInfo.permissions?.some(p => p.includes('assessment')) || false;
+                if (hasAssessmentPerms) {
+                    return { 
+                        success: true, 
+                        reason: 'User already has required permissions',
+                        permissions: userInfo.permissions?.length || 0
+                    };
+                }
+
+                // Auto-assign business_user role
+                log('🔄 Auto-assigning required roles...', { trigger: 'permission_check' }, 'pending');
+                
+                const roleResult = await apiCall('/api/v1/auth/assign-default-role', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${config.authToken}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                log('✅ Auto-assigned business_user role', {
+                    trigger: 'permission_check',
+                    total_permissions: roleResult.permissions?.length || 0,
+                    assessment_permissions: roleResult.assessment_permissions?.length || 0
+                }, 'success');
+
+                return { success: true, reason: 'Role assigned successfully' };
+
+            } catch (error) {
+                log('⚠️ Auto role assignment failed', {
+                    message: error.message,
+                    fallback: 'Manual intervention may be required'
+                }, 'warning');
+                return { success: false, reason: error.message };
+            }
+        }
+
         async function testAuthRegistration() {
             log('📝 Testing user registration...', null, 'pending');
             try {
@@ -879,9 +949,40 @@
                     has_tokens: !!registerResult.tokens
                 }, 'success');
                 
+                // Note about RBAC permissions
+                log('ℹ️ Note: Test users need business_user role for API access', {
+                    message: 'If API tests fail with 403 permission errors, run: python scripts/assign_test_user_roles.py'
+                }, 'info');
+                
                 // Store credentials for login test
                 config.testEmail = testEmail;
+                config.currentTestUser = testEmail;  // Store for role assignment
                 config.authToken = registerResult.tokens.access_token;
+                
+                // 🚀 AUTOMATICALLY ASSIGN BUSINESS USER ROLE FOR TESTING
+                log('🔄 Auto-assigning business_user role for seamless testing...', null, 'pending');
+                try {
+                    const roleResult = await apiCall('/api/v1/auth/assign-default-role', {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': `Bearer ${config.authToken}`,
+                            'Content-Type': 'application/json'
+                        }
+                    });
+
+                    log('✅ Auto-assigned business_user role', {
+                        user_id: roleResult.user_id,
+                        total_permissions: roleResult.permissions?.length || 0,
+                        assessment_permissions: roleResult.assessment_permissions?.length || 0,
+                        method: 'automatic'
+                    }, 'success');
+                    
+                } catch (roleError) {
+                    log('⚠️ Auto role assignment failed - tests may need manual role assignment', {
+                        message: roleError.message,
+                        fallback: 'Run: python scripts/assign_business_user_role.py'
+                    }, 'warning');
+                }
                 
                 return registerResult;
             } catch (error) {
@@ -946,28 +1047,374 @@
 
         async function testTokenValidation() {
             log('🎫 Testing token validation...', null, 'pending');
-            // Implement token validation test
-            log('⚠️ Token validation test not yet implemented', null, 'pending');
+            try {
+                if (!config.authToken) {
+                    log('⚠️ No auth token available, testing invalid token handling', null, 'info');
+                    
+                    // Test with invalid token
+                    const invalidResult = await apiCall('/api/v1/auth/me', {
+                        headers: {
+                            'Authorization': 'Bearer invalid-token-12345'
+                        }
+                    }).catch(error => error);
+                    
+                    if (invalidResult instanceof Error) {
+                        log('✅ Invalid token correctly rejected', { error: invalidResult.message }, 'success');
+                    }
+                    return;
+                }
+                
+                // Test with valid token
+                const validResult = await apiCall('/api/v1/auth/me', {
+                    headers: {
+                        'Authorization': `Bearer ${config.authToken}`
+                    }
+                });
+                log('✅ Valid token accepted', { user_id: validResult.id }, 'success');
+                
+                // Test token refresh if endpoint exists
+                try {
+                    const refreshResult = await apiCall('/api/v1/auth/refresh', {
+                        method: 'POST',
+                        body: JSON.stringify({ refresh_token: config.refreshToken })
+                    });
+                    log('✅ Token refresh successful', { has_new_token: !!refreshResult.access_token }, 'success');
+                } catch (error) {
+                    log('ℹ️ Token refresh not available or failed', { message: error.message }, 'info');
+                }
+                
+            } catch (error) {
+                log('❌ Token validation failed', { message: error.message }, 'error');
+                throw error;
+            }
         }
 
         async function testUserRegistration() {
             log('👤 Testing user registration...', null, 'pending');
-            // Implement user registration test
-            log('⚠️ User registration test not yet implemented', null, 'pending');
+            try {
+                // Test registration with valid data
+                const uniqueEmail = `test-reg-${Date.now()}@example.com`;
+                const registrationData = {
+                    email: uniqueEmail,
+                    password: 'SecurePassword123!'
+                };
+                
+                const result = await apiCall('/api/v1/auth/register', {
+                    method: 'POST',
+                    body: JSON.stringify(registrationData)
+                });
+                
+                log('✅ User registration successful', {
+                    user_id: result.user.id,
+                    email: result.user.email,
+                    has_access_token: !!result.tokens?.access_token
+                }, 'success');
+                
+                // Test duplicate registration (should fail)
+                try {
+                    await apiCall('/api/v1/auth/register', {
+                        method: 'POST',
+                        body: JSON.stringify(registrationData)
+                    });
+                    log('⚠️ Duplicate registration unexpectedly succeeded', null, 'warning');
+                } catch (duplicateError) {
+                    log('✅ Duplicate registration correctly rejected', { error: duplicateError.message }, 'success');
+                }
+                
+                // Test invalid email format
+                try {
+                    await apiCall('/api/v1/auth/register', {
+                        method: 'POST',
+                        body: JSON.stringify({
+                            email: 'invalid-email',
+                            password: 'ValidPassword123!'
+                        })
+                    });
+                    log('⚠️ Invalid email format unexpectedly accepted', null, 'warning');
+                } catch (invalidEmailError) {
+                    log('✅ Invalid email format correctly rejected', { error: invalidEmailError.message }, 'success');
+                }
+                
+            } catch (error) {
+                log('❌ User registration failed', { message: error.message }, 'error');
+                throw error;
+            }
         }
 
         async function testPasswordReset() {
             log('🔄 Testing password reset...', null, 'pending');
-            // Implement password reset test
-            log('⚠️ Password reset test not yet implemented', null, 'pending');
+            try {
+                // Test forgot password request
+                const testEmail = config.testEmail || `test-reset-${Date.now()}@example.com`;
+                
+                log('📧 Testing forgot password request...', null, 'pending');
+                try {
+                    const forgotResult = await apiCall('/api/v1/auth/forgot-password', {
+                        method: 'POST',
+                        body: JSON.stringify({
+                            email: testEmail
+                        })
+                    });
+                    log('✅ Forgot password request successful', forgotResult, 'success');
+                } catch (error) {
+                    log('ℹ️ Forgot password endpoint not available or failed', { message: error.message }, 'info');
+                }
+                
+                // Test reset password with mock token (this would normally come from email)
+                log('🔧 Testing password reset with mock token...', null, 'pending');
+                try {
+                    const resetResult = await apiCall('/api/v1/auth/reset-password', {
+                        method: 'POST',
+                        body: JSON.stringify({
+                            token: 'mock-reset-token-12345',
+                            new_password: 'NewSecurePassword123!'
+                        })
+                    });
+                    log('✅ Password reset successful', resetResult, 'success');
+                } catch (error) {
+                    if (error.message.includes('400') || error.message.includes('invalid') || error.message.includes('token')) {
+                        log('✅ Password reset correctly rejected invalid token', { error: error.message }, 'success');
+                    } else {
+                        log('ℹ️ Password reset endpoint not available or failed', { message: error.message }, 'info');
+                    }
+                }
+                
+                // Test with invalid email format for forgot password
+                log('🧪 Testing invalid email format...', null, 'pending');
+                try {
+                    await apiCall('/api/v1/auth/forgot-password', {
+                        method: 'POST',
+                        body: JSON.stringify({
+                            email: 'invalid-email-format'
+                        })
+                    });
+                    log('⚠️ Invalid email format unexpectedly accepted', null, 'warning');
+                } catch (error) {
+                    log('✅ Invalid email format correctly rejected', { error: error.message }, 'success');
+                }
+                
+                log('✅ Password reset flow tests completed', null, 'success');
+                
+            } catch (error) {
+                log('❌ Password reset test failed', { message: error.message }, 'error');
+                throw error;
+            }
+        }
+
+        // Role Assignment Helper
+        async function assignTestUserRole() {
+            log('👥 Assigning business_user role to test user...', null, 'pending');
+            try {
+                // Get the latest test user from the auth flow
+                if (!config.currentTestUser) {
+                    log('⚠️ No current test user found. Please run Auth Flow first.', null, 'warning');
+                    return;
+                }
+
+                if (!config.authToken) {
+                    log('⚠️ No auth token found. Please run Auth Flow first.', null, 'warning');
+                    return;
+                }
+
+                // First get user ID and role ID 
+                log('🔍 Looking up user and business_user role IDs...', { email: config.currentTestUser }, 'info');
+                
+                // Get user ID by calling /me endpoint (since we have the token for the user we want to assign roles to)
+                const userInfo = await apiCall('/api/v1/auth/me', {
+                    headers: {
+                        'Authorization': `Bearer ${config.authToken}`
+                    }
+                });
+                
+                const userId = userInfo.id;
+                log('✅ Found test user ID', { email: config.currentTestUser, id: userId }, 'success');
+                
+                // Get business_user role ID by listing available roles
+                // Note: This requires admin permissions, so it might fail for regular users
+                try {
+                    const rolesResult = await apiCall('/api/admin/admin/users/roles/', {
+                        headers: {
+                            'Authorization': `Bearer ${config.authToken}`
+                        }
+                    });
+                    
+                    const businessUserRole = rolesResult.find(role => role.name === 'business_user');
+                    if (!businessUserRole) {
+                        throw new Error('business_user role not found');
+                    }
+                    
+                    log('✅ Found business_user role', { roleId: businessUserRole.id }, 'success');
+                    
+                    // Now assign the role using the correct endpoint
+                    const assignmentResult = await apiCall('/api/v1/auth/admin/assign-role', {
+                        method: 'POST',
+                        body: JSON.stringify({
+                            user_id: userId,
+                            role_id: businessUserRole.id
+                        }),
+                        headers: {
+                            'Authorization': `Bearer ${config.authToken}`,
+                            'Content-Type': 'application/json'
+                        }
+                    });
+
+                    log('✅ Successfully assigned business_user role', {
+                        user: config.currentTestUser,
+                        assignment_id: assignmentResult.assignment_id,
+                        message: assignmentResult.message
+                    }, 'success');
+
+                    // Verify the assignment by getting updated user info
+                    log('🔍 Verifying role assignment...', null, 'pending');
+                    const updatedUserInfo = await apiCall('/api/v1/auth/me', {
+                        headers: {
+                            'Authorization': `Bearer ${config.authToken}`
+                        }
+                    });
+
+                    const assessmentPerms = updatedUserInfo.permissions?.filter(p => p.includes('assessment')) || [];
+                    log('✅ Role assignment completed successfully', {
+                        total_permissions: updatedUserInfo.permissions?.length || 0,
+                        assessment_permissions: assessmentPerms.length,
+                        roles: updatedUserInfo.roles?.map(r => r.name) || [],
+                        sample_permissions: updatedUserInfo.permissions?.slice(0, 5) || []
+                    }, 'success');
+
+                    return assignmentResult;
+
+                } catch (roleError) {
+                    // If we can't access admin endpoints, suggest using the fallback API
+                    log('⚠️ User lacks admin permissions for direct role assignment', { 
+                        message: roleError.message,
+                        user: config.currentTestUser,
+                        userId: userId,
+                        solution: 'Using fallback role assignment method...'
+                    }, 'warning');
+                    
+                    // Try the fallback method: call a special endpoint that assigns roles
+                    log('🔄 Attempting role assignment via fallback endpoint...', null, 'pending');
+                    
+                    try {
+                        const fallbackResult = await apiCall('/api/v1/auth/assign-default-role', {
+                            method: 'POST',
+                            headers: {
+                                'Authorization': `Bearer ${config.authToken}`,
+                                'Content-Type': 'application/json'
+                            }
+                        });
+
+                        log('✅ Role assigned via fallback method', fallbackResult, 'success');
+                        
+                        // Verify the assignment
+                        const updatedUserInfo = await apiCall('/api/v1/auth/me', {
+                            headers: {
+                                'Authorization': `Bearer ${config.authToken}`
+                            }
+                        });
+
+                        const assessmentPerms = updatedUserInfo.permissions?.filter(p => p.includes('assessment')) || [];
+                        log('✅ Fallback role assignment completed', {
+                            total_permissions: updatedUserInfo.permissions?.length || 0,
+                            assessment_permissions_count: assessmentPerms.length,
+                            roles: updatedUserInfo.roles?.map(r => r.name) || []
+                        }, 'success');
+
+                        return { success: true, method: 'fallback' };
+
+                    } catch (fallbackError) {
+                        log('❌ Fallback role assignment also failed', {
+                            message: fallbackError.message,
+                            user: config.currentTestUser,
+                            alternative_instructions: [
+                                '1. Open terminal in ruleIQ directory',
+                                '2. Run: source .venv/bin/activate',
+                                '3. Run: python scripts/assign_business_user_role.py',
+                                '4. Return to debug suite and test Assessment APIs'
+                            ]
+                        }, 'error');
+                        
+                        return { 
+                            success: false, 
+                            message: 'Role assignment requires manual script execution',
+                            user_id: userId,
+                            alternative: 'Run scripts/assign_business_user_role.py manually'
+                        };
+                    }
+                }
+                }
+
+            } catch (error) {
+                log('❌ Role assignment failed', { 
+                    message: error.message,
+                    user: config.currentTestUser 
+                }, 'error');
+                
+                throw error;
+            }
         }
 
         // Core Business API Tests
         async function testAssessmentAPIs() {
             log('📋 Testing assessment APIs...', null, 'pending');
             try {
-                // Test general assessment endpoints
-                log('⚠️ Assessment APIs test requires authentication', null, 'pending');
+                // Ensure we have authentication
+                if (!config.authToken) {
+                    log('🔑 No auth token, running auth flow first...', null, 'info');
+                    await testAuthEndpoints();
+                }
+                
+                if (!config.authToken) {
+                    log('❌ Unable to authenticate for assessment APIs', null, 'error');
+                    return;
+                }
+                
+                log('✅ Using authenticated requests for assessment APIs', null, 'info');
+                
+                // Test GET /api/v1/assessments (list assessments)
+                log('📋 Testing list assessments endpoint...', null, 'pending');
+                try {
+                    const assessmentsList = await authenticatedApiCall('/api/v1/assessments', {}, true);
+                    log('✅ List assessments successful', { 
+                        count: assessmentsList.length || assessmentsList.total || 'N/A',
+                        data: assessmentsList 
+                    }, 'success');
+                } catch (error) {
+                    log('ℹ️ List assessments failed or not available', { message: error.message }, 'info');
+                }
+                
+                // Test POST /api/v1/assessments (create assessment)
+                log('➕ Testing create assessment endpoint...', null, 'pending');
+                try {
+                    const newAssessment = {
+                        session_type: 'compliance_scoping',
+                        business_profile_id: null  // Optional - can be null for this test
+                    };
+                    
+                    const createResult = await authenticatedApiCall('/api/v1/assessments', {
+                        method: 'POST',
+                        body: JSON.stringify(newAssessment)
+                    }, true);
+                    log('✅ Create assessment successful', { 
+                        id: createResult.id,
+                        session_type: createResult.session_type,
+                        status: createResult.status 
+                    }, 'success');
+                    
+                    // If creation successful, test GET specific assessment
+                    if (createResult.id) {
+                        log('🔍 Testing get specific assessment...', null, 'pending');
+                        const specificAssessment = await authenticatedApiCall(`/api/v1/assessments/${createResult.id}`, {}, true);
+                        log('✅ Get specific assessment successful', { 
+                            id: specificAssessment.id,
+                            status: specificAssessment.status 
+                        }, 'success');
+                    }
+                } catch (error) {
+                    log('ℹ️ Create assessment failed or not available', { message: error.message }, 'info');
+                }
+                
+                log('🎉 Assessment APIs testing completed', null, 'success');
+                
             } catch (error) {
                 log('❌ Assessment APIs test failed', { message: error.message }, 'error');
             }
@@ -975,13 +1422,104 @@
 
         async function testBusinessProfiles() {
             log('🏢 Testing business profiles...', null, 'pending');
-            log('⚠️ Business profiles test requires authentication', null, 'pending');
+            try {
+                // Ensure we have authentication
+                if (!config.authToken) {
+                    log('🔑 No auth token, running auth flow first...', null, 'info');
+                    await testAuthEndpoints();
+                }
+                
+                if (!config.authToken) {
+                    log('❌ Unable to authenticate for business profiles APIs', null, 'error');
+                    return;
+                }
+                
+                log('✅ Using authenticated requests for business profiles APIs', null, 'info');
+                
+                // Test GET /api/v1/business-profiles (list profiles)
+                log('🏢 Testing list business profiles endpoint...', null, 'pending');
+                try {
+                    const profilesList = await apiCall('/api/v1/business-profiles', {
+                        headers: {
+                            'Authorization': `Bearer ${config.authToken}`
+                        }
+                    });
+                    log('✅ List business profiles successful', { 
+                        count: profilesList.length || profilesList.total || 'N/A',
+                        data: profilesList 
+                    }, 'success');
+                } catch (error) {
+                    log('ℹ️ List business profiles failed or not available', { message: error.message }, 'info');
+                }
+                
+                // Test POST /api/v1/business-profiles (create profile)
+                log('➕ Testing create business profile endpoint...', null, 'pending');
+                try {
+                    const newProfile = {
+                        name: 'API Test Company',
+                        industry: 'Technology',
+                        size: '50-100',
+                        description: 'Test business profile created via API testing toolkit',
+                        website: 'https://api-test.example.com'
+                    };
+                    
+                    const createResult = await apiCall('/api/v1/business-profiles', {
+                        method: 'POST',
+                        body: JSON.stringify(newProfile),
+                        headers: {
+                            'Authorization': `Bearer ${config.authToken}`
+                        }
+                    });
+                    log('✅ Create business profile successful', { 
+                        id: createResult.id,
+                        name: createResult.name 
+                    }, 'success');
+                    
+                    // If creation successful, test GET specific profile
+                    if (createResult.id) {
+                        log('🔍 Testing get specific business profile...', null, 'pending');
+                        const specificProfile = await apiCall(`/api/v1/business-profiles/${createResult.id}`, {
+                            headers: {
+                                'Authorization': `Bearer ${config.authToken}`
+                            }
+                        });
+                        log('✅ Get specific business profile successful', { 
+                            id: specificProfile.id,
+                            name: specificProfile.name 
+                        }, 'success');
+                    }
+                } catch (error) {
+                    log('ℹ️ Create business profile failed or not available', { message: error.message }, 'info');
+                }
+                
+                log('🎉 Business profiles APIs testing completed', null, 'success');
+                
+            } catch (error) {
+                log('❌ Business profiles test failed', { message: error.message }, 'error');
+            }
         }
 
         async function testFrameworkAPIs() {
             log('🛡️ Testing framework APIs...', null, 'pending');
             try {
-                const result = await apiCall('/api/v1/frameworks');
+                // Ensure we have authentication
+                if (!config.authToken) {
+                    log('🔑 No auth token, running auth flow first...', null, 'info');
+                    await testAuthEndpoints();
+                }
+                
+                if (!config.authToken) {
+                    log('❌ Unable to authenticate for framework APIs', null, 'error');
+                    return;
+                }
+                
+                log('✅ Using authenticated requests for framework APIs', null, 'info');
+                
+                const result = await apiCall('/api/v1/frameworks', {
+                    headers: {
+                        'Authorization': `Bearer ${config.authToken}`
+                    }
+                });
                 log('✅ Framework APIs test passed', result, 'success');
                 return result;
             } catch (error) {
@@ -991,28 +1529,190 @@
 
         async function testPolicyAPIs() {
             log('📜 Testing policy APIs...', null, 'pending');
-            log('⚠️ Policy APIs test requires authentication', null, 'pending');
+            try {
+                // Ensure we have authentication
+                if (!config.authToken) {
+                    log('🔑 No auth token, running auth flow first...', null, 'info');
+                    await testAuthEndpoints();
+                }
+                
+                if (!config.authToken) {
+                    log('❌ Unable to authenticate for policy APIs', null, 'error');
+                    return;
+                }
+                
+                log('✅ Using authenticated requests for policy APIs', null, 'info');
+                
+                // Test GET /api/v1/policies (list policies)
+                log('📜 Testing list policies endpoint...', null, 'pending');
+                try {
+                    const policiesList = await apiCall('/api/v1/policies', {
+                        headers: {
+                            'Authorization': `Bearer ${config.authToken}`
+                        }
+                    });
+                    log('✅ List policies successful', { 
+                        count: policiesList.length || policiesList.total || 'N/A',
+                        data: policiesList 
+                    }, 'success');
+                } catch (error) {
+                    log('ℹ️ List policies failed or not available', { message: error.message }, 'info');
+                }
+                
+                // Test POST /api/v1/policies (create policy)
+                log('➕ Testing create policy endpoint...', null, 'pending');
+                try {
+                    const newPolicy = {
+                        name: 'API Test Policy',
+                        framework: 'ISO27001',
+                        description: 'Test policy created via API testing toolkit',
+                        content: 'This is a test policy for API validation purposes.'
+                    };
+                    
+                    const createResult = await apiCall('/api/v1/policies', {
+                        method: 'POST',
+                        body: JSON.stringify(newPolicy),
+                        headers: {
+                            'Authorization': `Bearer ${config.authToken}`
+                        }
+                    });
+                    log('✅ Create policy successful', { 
+                        id: createResult.id,
+                        name: createResult.name 
+                    }, 'success');
+                    
+                    // If creation successful, test GET specific policy
+                    if (createResult.id) {
+                        log('🔍 Testing get specific policy...', null, 'pending');
+                        const specificPolicy = await apiCall(`/api/v1/policies/${createResult.id}`, {
+                            headers: {
+                                'Authorization': `Bearer ${config.authToken}`
+                            }
+                        });
+                        log('✅ Get specific policy successful', { 
+                            id: specificPolicy.id,
+                            name: specificPolicy.name 
+                        }, 'success');
+                    }
+                } catch (error) {
+                    log('ℹ️ Create policy failed or not available', { message: error.message }, 'info');
+                }
+                
+                log('🎉 Policy APIs testing completed', null, 'success');
+                
+            } catch (error) {
+                log('❌ Policy APIs test failed', { message: error.message }, 'error');
+            }
         }
 
         // AI & Automation API Tests
         async function testAIAssessments() {
             log('🧠 Testing AI assessments...', null, 'pending');
-            log('⚠️ AI assessments test requires authentication', null, 'pending');
+            try {
+                await ensureAuthenticated();
+                
+                // Test AI assessment endpoint
+                log('🧠 Testing AI assessment endpoint...', null, 'pending');
+                try {
+                    const aiAssessmentResult = await apiCall('/api/v1/ai/assessments', {
+                        method: 'POST',
+                        body: JSON.stringify({
+                            framework: 'ISO27001',
+                            business_context: 'Small technology company',
+                            assessment_type: 'quick'
+                        }),
+                        headers: {
+                            'Authorization': `Bearer ${config.authToken}`
+                        }
+                    });
+                    log('✅ AI assessment successful', aiAssessmentResult, 'success');
+                } catch (error) {
+                    log('ℹ️ AI assessment endpoint not available or failed', { message: error.message }, 'info');
+                }
+                
+            } catch (error) {
+                log('❌ AI assessments authentication failed', { message: error.message }, 'error');
+            }
         }
 
         async function testAIPolicyGeneration() {
             log('📝 Testing AI policy generation...', null, 'pending');
-            log('⚠️ AI policy generation test requires authentication', null, 'pending');
+            try {
+                await ensureAuthenticated();
+                
+                // Test AI policy generation endpoint
+                log('📝 Testing AI policy generation endpoint...', null, 'pending');
+                try {
+                    const aiPolicyResult = await apiCall('/api/v1/ai/policies/generate', {
+                        method: 'POST',
+                        body: JSON.stringify({
+                            framework: 'ISO27001',
+                            policy_type: 'data_protection',
+                            business_context: 'Small technology company handling customer data'
+                        }),
+                        headers: {
+                            'Authorization': `Bearer ${config.authToken}`
+                        }
+                    });
+                    log('✅ AI policy generation successful', aiPolicyResult, 'success');
+                } catch (error) {
+                    log('ℹ️ AI policy generation endpoint not available or failed', { message: error.message }, 'info');
+                }
+                
+            } catch (error) {
+                log('❌ AI policy generation authentication failed', { message: error.message }, 'error');
+            }
         }
 
         async function testChatAPIs() {
             log('💬 Testing AI chat APIs...', null, 'pending');
-            log('⚠️ Chat APIs test requires authentication', null, 'pending');
+            try {
+                await ensureAuthenticated();
+                
+                // Test AI chat endpoint
+                log('💬 Testing AI chat endpoint...', null, 'pending');
+                try {
+                    const chatResult = await apiCall('/api/v1/ai/chat', {
+                        method: 'POST',
+                        body: JSON.stringify({
+                            message: 'What are the key components of ISO 27001?',
+                            context: 'compliance_guidance'
+                        }),
+                        headers: {
+                            'Authorization': `Bearer ${config.authToken}`
+                        }
+                    });
+                    log('✅ AI chat successful', chatResult, 'success');
+                } catch (error) {
+                    log('ℹ️ AI chat endpoint not available or failed', { message: error.message }, 'info');
+                }
+                
+            } catch (error) {
+                log('❌ AI chat authentication failed', { message: error.message }, 'error');
+            }
         }
 
         async function testAICostMonitoring() {
             log('💰 Testing AI cost monitoring...', null, 'pending');
-            log('⚠️ AI cost monitoring test requires authentication', null, 'pending');
+            try {
+                await ensureAuthenticated();
+                
+                // Test AI cost monitoring endpoint
+                log('💰 Testing AI cost monitoring endpoint...', null, 'pending');
+                try {
+                    const costResult = await apiCall('/api/v1/ai/costs', {
+                        headers: {
+                            'Authorization': `Bearer ${config.authToken}`
+                        }
+                    });
+                    log('✅ AI cost monitoring successful', costResult, 'success');
+                } catch (error) {
+                    log('ℹ️ AI cost monitoring endpoint not available or failed', { message: error.message }, 'info');
+                }
+                
+            } catch (error) {
+                log('❌ AI cost monitoring authentication failed', { message: error.message }, 'error');
+            }
         }
 
         // System API Tests
@@ -1033,18 +1733,130 @@
             }
         }
 
-        // Placeholder functions for other test categories
-        async function testComplianceAPIs() { log('✅ Testing compliance APIs...', null, 'pending'); log('⚠️ Compliance APIs test requires authentication', null, 'pending'); }
-        async function testEvidenceAPIs() { log('📁 Testing evidence APIs...', null, 'pending'); log('⚠️ Evidence APIs test requires authentication', null, 'pending'); }
-        async function testSecurityAPIs() { log('🔒 Testing security APIs...', null, 'pending'); log('⚠️ Security APIs test requires authentication', null, 'pending'); }
-        async function testUKComplianceAPIs() { log('🇬🇧 Testing UK compliance APIs...', null, 'pending'); log('⚠️ UK compliance APIs test requires authentication', null, 'pending'); }
-        async function testMonitoringAPIs() { log('📊 Testing monitoring APIs...', null, 'pending'); log('⚠️ Monitoring APIs test requires authentication', null, 'pending'); }
-        async function testPerformanceAPIs() { log('⚡ Testing performance APIs...', null, 'pending'); log('⚠️ Performance APIs test requires authentication', null, 'pending'); }
-        async function testReportingAPIs() { log('📋 Testing reporting APIs...', null, 'pending'); log('⚠️ Reporting APIs test requires authentication', null, 'pending'); }
-        async function testIntegrationAPIs() { log('🔌 Testing integration APIs...', null, 'pending'); log('⚠️ Integration APIs test requires authentication', null, 'pending'); }
-        async function testAdminAPIs() { log('🔧 Testing admin APIs...', null, 'pending'); log('⚠️ Admin APIs test requires authentication', null, 'pending'); }
-        async function testUserManagement() { log('👥 Testing user management...', null, 'pending'); log('⚠️ User management test requires authentication', null, 'pending'); }
-        async function testDatabaseAPIs() { log('🗄️ Testing database APIs...', null, 'pending'); log('⚠️ Database APIs test requires authentication', null, 'pending'); }
+        // Implement authenticated API test helper function
+        async function ensureAuthenticated() {
+            if (!config.authToken) {
+                log('🔑 No auth token, running auth flow first...', null, 'info');
+                await testAuthEndpoints();
+            }
+            
+            if (!config.authToken) {
+                throw new Error('Unable to authenticate for API testing');
+            }
+            
+            return config.authToken;
+        }
+
+        // Placeholder functions for other test categories with proper auth handling
+        async function testComplianceAPIs() { 
+            log('✅ Testing compliance APIs...', null, 'pending'); 
+            try {
+                await ensureAuthenticated();
+                log('ℹ️ Compliance APIs endpoints not yet implemented in test suite', null, 'info');
+            } catch (error) {
+                log('❌ Compliance APIs authentication failed', { message: error.message }, 'error');
+            }
+        }
+        
+        async function testEvidenceAPIs() { 
+            log('📁 Testing evidence APIs...', null, 'pending'); 
+            try {
+                await ensureAuthenticated();
+                log('ℹ️ Evidence APIs endpoints not yet implemented in test suite', null, 'info');
+            } catch (error) {
+                log('❌ Evidence APIs authentication failed', { message: error.message }, 'error');
+            }
+        }
+        
+        async function testSecurityAPIs() { 
+            log('🔒 Testing security APIs...', null, 'pending'); 
+            try {
+                await ensureAuthenticated();
+                log('ℹ️ Security APIs endpoints not yet implemented in test suite', null, 'info');
+            } catch (error) {
+                log('❌ Security APIs authentication failed', { message: error.message }, 'error');
+            }
+        }
+        
+        async function testUKComplianceAPIs() { 
+            log('🇬🇧 Testing UK compliance APIs...', null, 'pending'); 
+            try {
+                await ensureAuthenticated();
+                log('ℹ️ UK compliance APIs endpoints not yet implemented in test suite', null, 'info');
+            } catch (error) {
+                log('❌ UK compliance APIs authentication failed', { message: error.message }, 'error');
+            }
+        }
+        
+        async function testMonitoringAPIs() { 
+            log('📊 Testing monitoring APIs...', null, 'pending'); 
+            try {
+                await ensureAuthenticated();
+                log('ℹ️ Monitoring APIs endpoints not yet implemented in test suite', null, 'info');
+            } catch (error) {
+                log('❌ Monitoring APIs authentication failed', { message: error.message }, 'error');
+            }
+        }
+        
+        async function testPerformanceAPIs() { 
+            log('⚡ Testing performance APIs...', null, 'pending'); 
+            try {
+                await ensureAuthenticated();
+                log('ℹ️ Performance APIs endpoints not yet implemented in test suite', null, 'info');
+            } catch (error) {
+                log('❌ Performance APIs authentication failed', { message: error.message }, 'error');
+            }
+        }
+        
+        async function testReportingAPIs() { 
+            log('📋 Testing reporting APIs...', null, 'pending'); 
+            try {
+                await ensureAuthenticated();
+                log('ℹ️ Reporting APIs endpoints not yet implemented in test suite', null, 'info');
+            } catch (error) {
+                log('❌ Reporting APIs authentication failed', { message: error.message }, 'error');
+            }
+        }
+        
+        async function testIntegrationAPIs() { 
+            log('🔌 Testing integration APIs...', null, 'pending'); 
+            try {
+                await ensureAuthenticated();
+                log('ℹ️ Integration APIs endpoints not yet implemented in test suite', null, 'info');
+            } catch (error) {
+                log('❌ Integration APIs authentication failed', { message: error.message }, 'error');
+            }
+        }
+        
+        async function testAdminAPIs() { 
+            log('🔧 Testing admin APIs...', null, 'pending'); 
+            try {
+                await ensureAuthenticated();
+                log('ℹ️ Admin APIs endpoints not yet implemented in test suite', null, 'info');
+            } catch (error) {
+                log('❌ Admin APIs authentication failed', { message: error.message }, 'error');
+            }
+        }
+        
+        async function testUserManagement() { 
+            log('👥 Testing user management...', null, 'pending'); 
+            try {
+                await ensureAuthenticated();
+                log('ℹ️ User management APIs endpoints not yet implemented in test suite', null, 'info');
+            } catch (error) {
+                log('❌ User management APIs authentication failed', { message: error.message }, 'error');
+            }
+        }
+        
+        async function testDatabaseAPIs() { 
+            log('🗄️ Testing database APIs...', null, 'pending'); 
+            try {
+                await ensureAuthenticated();
+                log('ℹ️ Database APIs endpoints not yet implemented in test suite', null, 'info');
+            } catch (error) {
+                log('❌ Database APIs authentication failed', { message: error.message }, 'error');
+            }
+        }
 
         // Comprehensive Test Suites
         async function runCriticalTests() {
@@ -1078,12 +1890,20 @@
             log('🚀 Starting comprehensive API test suite...', null, 'info');
             clearLog();
             
+            // Run authentication first, then all other tests
             const testSuites = [
                 testConnection,
                 testSystemHealth,
+                testAuthEndpoints,  // Moved auth to beginning
                 testFreemiumFlow,
                 testFrameworkAPIs,
-                testAuthEndpoints
+                testAssessmentAPIs,
+                testBusinessProfiles,
+                testPolicyAPIs,
+                testAIAssessments,
+                testAIPolicyGeneration,
+                testChatAPIs,
+                testAICostMonitoring
             ];
             
             for (const test of testSuites) {

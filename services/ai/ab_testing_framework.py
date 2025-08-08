@@ -8,6 +8,7 @@ Includes t-tests, chi-squared tests, and comprehensive experiment management.
 
 import hashlib
 import numpy as np
+from collections import defaultdict
 from dataclasses import dataclass, field
 from datetime import datetime
 from enum import Enum
@@ -33,11 +34,7 @@ class ExperimentType(Enum):
     ASSESSMENT_METHODOLOGY = "assessment_methodology"
 
 
-class MetricType(Enum):
-    """Types of metrics for A/B testing."""
-
-    CONTINUOUS = "continuous"  # Response time, scores, accuracy
-    BINARY = "binary"  # Success/failure, completion rates
+# MetricType imported from analytics_monitor above
     CATEGORICAL = "categorical"  # User preferences, status categories
     COUNT = "count"  # Number of actions, events
 
@@ -144,7 +141,7 @@ class ExperimentData:
 class ABTestingFramework:
     """Comprehensive A/B Testing Framework with rigorous statistical analysis."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize the A/B testing framework."""
         self.experiments: Dict[str, ExperimentConfig] = {}
         self.experiment_data: Dict[str, List[ExperimentData]] = {}
@@ -485,7 +482,7 @@ class ABTestingFramework:
 
             return StatisticalTest.T_TEST
 
-        elif metric_type == MetricType.BINARY or metric_type == MetricType.CATEGORICAL:
+        elif metric_type in (MetricType.BINARY, MetricType.CATEGORICAL):
             # Use chi-squared for categorical data
             return StatisticalTest.CHI_SQUARED
 

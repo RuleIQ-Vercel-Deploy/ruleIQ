@@ -104,4 +104,4 @@ if __name__ == "__main__":
         print("\n⚠️  Phase 2 migration needs attention")
         print("   Some endpoints are not properly protected")
 
-    exit(0 if success else 1)
+    sys.exit(0 if success else 1)

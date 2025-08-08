@@ -151,7 +151,7 @@ async def track_ai_usage(
 ):
     """
     Track AI usage and calculate costs.
-    
+
     Records token usage, calculates costs, and provides efficiency metrics.
     Limited to 100 requests per minute.
     """
@@ -203,7 +203,7 @@ async def get_daily_cost_analytics(
 ):
     """
     Get comprehensive daily cost analytics.
-    
+
     Provides detailed breakdown of costs by service, model, and time.
     """
     try:
@@ -250,7 +250,7 @@ async def get_cost_trends(
 ):
     """
     Get cost trends and patterns over time.
-    
+
     Analyzes cost trends, growth rates, and identifies anomalies.
     """
     try:
@@ -309,7 +309,7 @@ async def configure_budget(
 ):
     """
     Configure budget limits and constraints.
-    
+
     Set daily, monthly, and service-specific budget limits.
     """
     try:
@@ -345,7 +345,7 @@ async def configure_budget(
 async def get_budget_status():
     """
     Get current budget status and usage.
-    
+
     Shows current usage against budget limits and projections.
     """
     try:
@@ -413,7 +413,7 @@ async def get_budget_status():
 async def get_budget_alerts():
     """
     Get current budget alerts and warnings.
-    
+
     Returns active alerts for budget limits, cost spikes, and unusual patterns.
     """
     try:
@@ -451,7 +451,7 @@ async def get_budget_alerts():
 async def get_optimization_recommendations():
     """
     Get cost optimization recommendations.
-    
+
     Analyzes usage patterns and suggests optimizations to reduce costs.
     """
     try:
@@ -488,7 +488,7 @@ async def get_optimization_recommendations():
 async def select_optimal_model(request: ModelRoutingRequest):
     """
     Select optimal model based on task requirements and cost constraints.
-    
+
     Intelligently routes requests to cost-effective models based on complexity.
     """
     try:
@@ -537,7 +537,7 @@ async def generate_monthly_report(
 ):
     """
     Generate comprehensive monthly cost report.
-    
+
     Provides detailed analysis of monthly AI costs with optimization insights.
     """
     try:
@@ -574,7 +574,7 @@ async def get_usage_by_service(
 ):
     """
     Get usage metrics for specific service over time range.
-    
+
     Analyzes usage patterns and costs for a specific AI service.
     """
     try:
@@ -633,7 +633,7 @@ async def get_usage_by_service(
 async def cost_monitoring_health():
     """
     Health check for cost monitoring system.
-    
+
     Verifies that cost tracking services are operational.
     """
     try:
@@ -671,7 +671,7 @@ async def cost_monitoring_health():
 async def clear_cost_cache():
     """
     Clear cost monitoring cache.
-    
+
     Administrative endpoint to clear cached cost data.
     Limited to 5 requests per hour.
     """

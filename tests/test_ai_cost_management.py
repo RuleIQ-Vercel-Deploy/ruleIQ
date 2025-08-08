@@ -705,7 +705,7 @@ class TestCostOptimizationStrategies:
         and sharing. The policy should be compliant with GDPR, CCPA, and UK data 
         protection regulations. Make sure to include detailed sections on user rights, 
         data retention, cookies, third-party integrations, and contact information.
-        
+
         Business details:
         - E-commerce platform
         - Collects personal information during checkout

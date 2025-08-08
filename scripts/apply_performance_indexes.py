@@ -22,6 +22,7 @@ load_dotenv()
 
 from config.logging_config import get_logger, setup_logging
 from database.db_setup import _init_async_db
+from typing import Optional
 
 # Setup logging
 setup_logging()
@@ -32,7 +33,7 @@ async def check_index_exists(db, index_name: str, table_name: str) -> bool:
     """Check if an index already exists."""
     try:
         query = text("""
-            SELECT 1 FROM pg_indexes 
+            SELECT 1 FROM pg_indexes
             WHERE indexname = :index_name AND tablename = :table_name
         """)
         result = await db.execute(query, {"index_name": index_name, "table_name": table_name})
@@ -182,7 +183,7 @@ async def apply_performance_indexes():
     return success_count == total_count
 
 
-async def verify_indexes():
+async def verify_indexes() -> bool:
     """Verify that the critical indexes were created successfully."""
     logger.info("Verifying index creation...")
 
@@ -211,7 +212,7 @@ async def verify_indexes():
     return True
 
 
-async def main():
+async def main() -> Optional[bool]:
     """Main function to apply performance indexes."""
     logger.info("Phase 4: Performance Optimization - Database Index Creation")
     logger.info("=" * 60)

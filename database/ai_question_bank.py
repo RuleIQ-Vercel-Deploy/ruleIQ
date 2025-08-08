@@ -63,7 +63,7 @@ class AIQuestionBank(Base):
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
 
-    def __init__(self, **kwargs):
+    def __init__(self, **kwargs) -> None:
         """Initialize question with default values and validation."""
         super().__init__(**kwargs)
         if not self.context_tags:
@@ -73,28 +73,28 @@ class AIQuestionBank(Base):
         elif self.difficulty_level > 10:
             self.difficulty_level = 10
 
-    def add_context_tag(self, tag: str):
+    def add_context_tag(self, tag: str) -> None:
         """Add a context tag to the question."""
         if not self.context_tags:
             self.context_tags = []
         if tag not in self.context_tags:
             self.context_tags.append(tag)
 
-    def increment_usage(self):
+    def increment_usage(self) -> None:
         """Increment usage frequency counter."""
         self.usage_frequency += 1
 
-    def mark_validated(self, score: float = None):
+    def mark_validated(self, score: float = None) -> None:
         """Mark question as validated with optional score."""
         self.is_validated = True
         if score is not None:
             self.validation_score = Decimal(str(score))
 
-    def mark_human_reviewed(self):
+    def mark_human_reviewed(self) -> None:
         """Mark question as reviewed by human expert."""
         self.human_reviewed = True
 
-    def deactivate(self):
+    def deactivate(self) -> None:
         """Deactivate question (soft delete)."""
         self.is_active = False
         self.expiry_date = datetime.utcnow()
@@ -124,5 +124,5 @@ class AIQuestionBank(Base):
         else:
             return "Expert"
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"<AIQuestionBank(category='{self.category}', type='{self.question_type}', difficulty={self.difficulty_level})>"

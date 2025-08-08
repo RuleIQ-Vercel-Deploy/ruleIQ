@@ -597,7 +597,7 @@ class TestFreemiumSecurityAndValidation:
 
         response = await async_client.post("/api/v1/freemium/answer-question", json=payload)
 
-        assert response.status_code == 413 or response.status_code == 422
+        assert response.status_code in {413, 422}
 
     @async_test
     async def test_token_expiration_security(self, async_client: AsyncClient):

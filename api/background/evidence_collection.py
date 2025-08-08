@@ -20,7 +20,7 @@ logger = get_logger(__name__)
 
 async def execute_foundation_evidence_collection(
     collection_id: str, user_id: str, integration_map: Dict[str, Any], evidence_types: List[str]
-):
+) -> None:
     """
     Execute foundation evidence collection in background
 

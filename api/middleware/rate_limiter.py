@@ -6,7 +6,7 @@ from fastapi.responses import JSONResponse
 
 
 class RateLimiter:
-    def __init__(self, requests_per_minute: int = 60):
+    def __init__(self, requests_per_minute: int = 60) -> None:
         self.requests_per_minute = requests_per_minute
         self.requests: Dict[str, list] = {}
         self.cleanup_interval = 300  # Clean up old entries every 5 minutes
@@ -39,7 +39,7 @@ class RateLimiter:
         self.requests[identifier].append(current_time)
         return True, 0
 
-    async def _cleanup_old_entries(self):
+    async def _cleanup_old_entries(self) -> None:
         """Remove entries with no recent requests"""
         current_time = time.time()
         minute_ago = current_time - 60
@@ -121,7 +121,7 @@ async def rate_limit_middleware(request: Request, call_next):
 def auth_rate_limit():
     """Dependency for auth endpoint rate limiting"""
 
-    async def check_limit(request: Request):
+    async def check_limit(request: Request) -> None:
         # Skip rate limiting in testing environment
         if settings.is_testing:
             return
@@ -148,7 +148,7 @@ def rate_limit(requests_per_minute: int = 60):
     """Create a custom rate limit dependency with specified limit."""
     custom_limiter = RateLimiter(requests_per_minute=requests_per_minute)
 
-    async def check_custom_limit(request: Request):
+    async def check_custom_limit(request: Request) -> None:
         # Skip rate limiting in testing environment for most tests
         # But still enforce for specific rate limit tests
         if settings.is_testing and requests_per_minute > 10:
@@ -170,10 +170,10 @@ def rate_limit(requests_per_minute: int = 60):
 class RateLimited:
     """Rate limiting dependency class for FastAPI endpoints"""
 
-    def __init__(self, requests: int, window: int = 60):
+    def __init__(self, requests: int, window: int = 60) -> None:
         """
         Initialize rate limiter
-        
+
         Args:
             requests: Number of requests allowed per window
             window: Time window in seconds (default: 60)

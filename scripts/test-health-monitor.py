@@ -7,9 +7,10 @@ Comprehensive testing status assessment and production readiness validation
 import subprocess
 from datetime import datetime
 from typing import Dict, Any, Tuple
+import sys
 
 class TestHealthMonitor:
-    def __init__(self):
+    def __init__(self) -> None:
         self.metrics = {
             'backend_pass_rate': 0,
             'frontend_pass_rate': 0,
@@ -201,7 +202,7 @@ class TestHealthMonitor:
 - **Infrastructure**: {'✅ Ready' if self.metrics['backend_total_tests'] > 0 else '❌ Issues'}
 - **Validation Tests**: {'✅ Passing' if self.metrics['backend_pass_rate'] > 0 else '❌ Failing'}
 
-#### Frontend Tests  
+#### Frontend Tests
 - **Total Tests**: {self.metrics['frontend_total_tests']}
 - **Passing**: {self.metrics['frontend_passing_tests']}
 - **Failing**: {self.metrics['frontend_failing_tests']}
@@ -281,7 +282,7 @@ if __name__ == "__main__":
 
     if is_ready:
         print("\n🎉 SUCCESS: System is production ready!")
-        exit(0)
+        sys.exit(0)
     else:
         print("\n⚠️  WARNING: System needs fixes before production")
-        exit(1)
+        sys.exit(1)

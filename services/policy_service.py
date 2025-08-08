@@ -40,7 +40,10 @@ def build_policy_generation_prompt(
 ) -> str:
     """Builds the AI prompt for policy generation."""
     # This helper function remains synchronous as it's CPU-bound.
-    return f"Generate a {policy_type} compliance policy for a {profile.industry} company named {profile.company_name}."
+    return (
+        f"Generate a {policy_type} compliance policy for a {profile.industry} company "
+        f"named {profile.company_name}."
+    )
 
 
 async def generate_compliance_policy(
@@ -142,7 +145,9 @@ async def get_user_policies(db: AsyncSession, user_id: UUID) -> List[GeneratedPo
         return policies
     except SQLAlchemyError as e:
         # Log the error e.g., logging.error(f"Database error fetching policies for user {user_id}: {e}")
-        raise DatabaseException(f"Failed to retrieve policies for user {user_id}.") from e
+        raise DatabaseException(
+            f"Failed to retrieve policies for user {user_id}."
+        ) from e
 
 
 async def regenerate_policy_section(
@@ -166,7 +171,10 @@ async def regenerate_policy_section(
             "Section not found",
         )
 
-        prompt = f'Regenerate the "{section_title}" section of a compliance policy. Current content: "{section_content}". Additional context: "{additional_context}"'
+        prompt = (
+            f'Regenerate the "{section_title}" section of a compliance policy. '
+            f'Current content: "{section_content}". Additional context: "{additional_context}"'
+        )
         new_content = await _generate_policy_with_protection(prompt)
 
         updated = False

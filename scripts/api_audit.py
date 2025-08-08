@@ -10,7 +10,7 @@ from typing import Dict, List
 import json
 
 class APIEndpointAnalyzer:
-    def __init__(self, api_dir: str = "api/routers"):
+    def __init__(self, api_dir: str = "api/routers") -> None:
         self.api_dir = Path(api_dir)
         self.endpoints = []
         self.auth_patterns = {
@@ -160,7 +160,7 @@ class APIEndpointAnalyzer:
 
         return report
 
-def main():
+def main() -> None:
     """Main function to run the API audit"""
     print("🔍 Starting Comprehensive API Audit...")
 
@@ -195,13 +195,13 @@ def main():
     generate_markdown_docs(report)
     print("📄 API documentation saved to: API_ENDPOINTS_DOCUMENTATION.md")
 
-def generate_markdown_docs(report: Dict):
+def generate_markdown_docs(report: Dict) -> None:
     """Generate markdown documentation for all endpoints"""
 
     md_content = f"""# ruleIQ API Endpoints Documentation
 
-**Generated**: {__import__('datetime').datetime.now().strftime('%Y-%m-%d %H:%M:%S')}  
-**Total Endpoints**: {report['summary']['total_endpoints']}  
+**Generated**: {__import__('datetime').datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+**Total Endpoints**: {report['summary']['total_endpoints']}
 **Authentication Status**: {report['summary']['authenticated_endpoints']} authenticated, {report['summary']['public_endpoints']} public
 
 ## Summary

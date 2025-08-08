@@ -1150,19 +1150,6 @@ export const createFreemiumStore = () => {
         set({ analyticsEvents: [...currentEvents, event] });
       },
       recordBehavioralEvent: async () => {},
-      isSessionExpired: () => {
-        const sessionExpiry = get().sessionExpiry;
-        if (!sessionExpiry) return false;
-        return new Date() > new Date(sessionExpiry);
-      },
-      canStartAssessment: () => {
-        const state = get();
-        return !!(state.email && (state.consentTerms || state.hasNewsletterConsent) && state.token);
-      },
-      hasValidSession: () => {
-        const state = get();
-        return !!(state.token);
-      },
       getCompletionPercentage: () => get().progress.progress_percentage,
       getResponseCount: () => {
         const responses = get().responses;

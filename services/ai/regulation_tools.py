@@ -69,7 +69,7 @@ class ComplianceRequirement:
 class IndustryRegulationLookupTool(BaseTool):
     """Tool for looking up industry-specific regulations"""
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__(
             name="lookup_industry_regulations",
             description="Look up regulations applicable to specific industries and business contexts",
@@ -441,7 +441,7 @@ class IndustryRegulationLookupTool(BaseTool):
 class ComplianceRequirementsTool(BaseTool):
     """Tool for checking specific compliance requirements"""
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__(
             name="check_compliance_requirements",
             description="Check specific compliance requirements for given frameworks and business context",

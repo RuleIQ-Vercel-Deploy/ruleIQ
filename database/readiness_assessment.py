@@ -36,5 +36,5 @@ class ReadinessAssessment(Base):
     framework = relationship("ComplianceFramework")
     business_profile = relationship("BusinessProfile")
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"<ReadinessAssessment(id={self.id}, user_id={self.user_id}, framework_id={self.framework_id}, score={self.overall_score})>"

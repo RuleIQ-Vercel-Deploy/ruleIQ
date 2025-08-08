@@ -67,7 +67,7 @@ class CircuitBreakerMonitor:
 
     def __init__(
         self, circuit_breaker: AICircuitBreaker, config: Optional[MonitoringConfig] = None
-    ):
+    ) -> None:
         self.circuit_breaker = circuit_breaker
         self.config = config or MonitoringConfig()
         self.logger = logging.getLogger(__name__)
@@ -85,7 +85,7 @@ class CircuitBreakerMonitor:
         self.is_monitoring = False
         self.monitoring_task: Optional[asyncio.Task] = None
 
-    async def start_monitoring(self):
+    async def start_monitoring(self) -> None:
         """Start continuous monitoring"""
         if self.is_monitoring:
             self.logger.warning("Monitoring is already running")
@@ -95,7 +95,7 @@ class CircuitBreakerMonitor:
         self.monitoring_task = asyncio.create_task(self._monitoring_loop())
         self.logger.info("Circuit breaker monitoring started")
 
-    async def stop_monitoring(self):
+    async def stop_monitoring(self) -> None:
         """Stop continuous monitoring"""
         self.is_monitoring = False
         if self.monitoring_task:
@@ -104,7 +104,7 @@ class CircuitBreakerMonitor:
                 await self.monitoring_task
         self.logger.info("Circuit breaker monitoring stopped")
 
-    async def _monitoring_loop(self):
+    async def _monitoring_loop(self) -> None:
         """Main monitoring loop"""
         try:
             while self.is_monitoring:
@@ -117,7 +117,7 @@ class CircuitBreakerMonitor:
         except Exception as e:
             self.logger.error(f"Error in monitoring loop: {e}")
 
-    async def _collect_metrics(self):
+    async def _collect_metrics(self) -> None:
         """Collect current metrics from circuit breaker"""
         try:
             health_status = self.circuit_breaker.get_health_status()
@@ -146,7 +146,7 @@ class CircuitBreakerMonitor:
         except Exception as e:
             self.logger.error(f"Error collecting metrics: {e}")
 
-    def _update_performance_trends(self, metrics: Dict[str, Any]):
+    def _update_performance_trends(self, metrics: Dict[str, Any]) -> None:
         """Update performance trend analysis"""
         metrics["timestamp"]
 
@@ -160,7 +160,7 @@ class CircuitBreakerMonitor:
         if len(self.performance_trends["failure_rate"]) > 100:
             self.performance_trends["failure_rate"] = self.performance_trends["failure_rate"][-100:]
 
-    async def _check_health(self):
+    async def _check_health(self) -> None:
         """Perform health checks and generate alerts if needed"""
         try:
             health_status = self.circuit_breaker.get_health_status()
@@ -205,7 +205,7 @@ class CircuitBreakerMonitor:
         except Exception as e:
             self.logger.error(f"Error during health check: {e}")
 
-    async def _evaluate_alerts(self):
+    async def _evaluate_alerts(self) -> None:
         """Evaluate and process pending alerts"""
         # Clean up old resolved alerts
         cutoff_time = datetime.now() - timedelta(hours=24)
@@ -225,7 +225,7 @@ class CircuitBreakerMonitor:
         message: str,
         model_name: Optional[str] = None,
         context: Optional[Dict[str, Any]] = None,
-    ):
+    ) -> None:
         """Create and process a new alert"""
         alert_key = f"{title}_{model_name or 'global'}"
 
@@ -252,7 +252,7 @@ class CircuitBreakerMonitor:
         # Send alert through configured channels
         await self._send_alert(alert)
 
-    async def _send_alert(self, alert: Alert):
+    async def _send_alert(self, alert: Alert) -> None:
         """Send alert through configured channels"""
         try:
             # Log alert
@@ -281,7 +281,7 @@ class CircuitBreakerMonitor:
         except Exception as e:
             self.logger.error(f"Error sending alert: {e}")
 
-    async def _send_webhook_alert(self, alert: Alert):
+    async def _send_webhook_alert(self, alert: Alert) -> None:
         """Send alert via webhook"""
         import aiohttp
 
@@ -315,7 +315,7 @@ class CircuitBreakerMonitor:
 
         return sorted(alerts, key=lambda x: x.timestamp, reverse=True)
 
-    def acknowledge_alert(self, alert_id: str):
+    def acknowledge_alert(self, alert_id: str) -> bool:
         """Acknowledge an alert"""
         for alert in self.alerts:
             if alert.id == alert_id:
@@ -324,7 +324,7 @@ class CircuitBreakerMonitor:
                 return True
         return False
 
-    def resolve_alert(self, alert_id: str):
+    def resolve_alert(self, alert_id: str) -> bool:
         """Mark an alert as resolved"""
         for alert in self.alerts:
             if alert.id == alert_id:
@@ -381,7 +381,7 @@ def get_circuit_breaker_monitor(circuit_breaker: AICircuitBreaker) -> CircuitBre
     return _monitor_instance
 
 
-def reset_monitor():
+def reset_monitor() -> None:
     """Reset global monitor (for testing)"""
     global _monitor_instance
     _monitor_instance = None

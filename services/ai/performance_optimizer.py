@@ -68,7 +68,7 @@ class AIPerformanceOptimizer:
     - Performance monitoring and analytics
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.batch_queue: List[BatchRequest] = []
         self.batch_size = 5
         self.batch_timeout = 2.0  # seconds
@@ -287,7 +287,7 @@ class AIPerformanceOptimizer:
 
         return age >= self.batch_timeout
 
-    async def _process_batch(self):
+    async def _process_batch(self) -> None:
         """Process the current batch of requests."""
         if not self.batch_queue:
             return
@@ -323,7 +323,7 @@ class AIPerformanceOptimizer:
         self.last_request_time = time.time()
         return True
 
-    def release_rate_limit(self):
+    def release_rate_limit(self) -> None:
         """Release rate limiting resources."""
         try:
             self.request_semaphore.release()
@@ -370,7 +370,7 @@ class AIPerformanceOptimizer:
             },
         }
 
-    def update_performance_metrics(self, response_time: float, token_count: int = 0):
+    def update_performance_metrics(self, response_time: float, token_count: int = 0) -> None:
         """Update performance metrics with new data."""
         self.performance_metrics.request_count += 1
         self.performance_metrics.total_response_time += response_time

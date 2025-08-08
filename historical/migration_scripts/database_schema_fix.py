@@ -21,7 +21,7 @@ logger = logging.getLogger(__name__)
 class DatabaseSchemaFixer:
     """Handles database schema fixes for column name truncation issues."""
 
-    def __init__(self, database_url: str, async_database_url: str):
+    def __init__(self, database_url: str, async_database_url: str) -> None:
         self.database_url = database_url
         self.async_database_url = async_database_url
         self.engine = create_engine(database_url)
@@ -35,9 +35,9 @@ class DatabaseSchemaFixer:
             # Check assessment_sessions table columns
             assessment_result = await conn.execute(
                 text("""
-                SELECT column_name 
-                FROM information_schema.columns 
-                WHERE table_name = 'assessment_sessions' 
+                SELECT column_name
+                FROM information_schema.columns
+                WHERE table_name = 'assessment_sessions'
                 AND column_name IN ('business_profil', 'questions_answe', 'calculated_scor', 'recommended_fra')
             """)
             )
@@ -47,9 +47,9 @@ class DatabaseSchemaFixer:
             # Check business_profiles table columns
             business_result = await conn.execute(
                 text("""
-                SELECT column_name 
-                FROM information_schema.columns 
-                WHERE table_name = 'business_profiles' 
+                SELECT column_name
+                FROM information_schema.columns
+                WHERE table_name = 'business_profiles'
                 AND column_name IN ('handles_persona', 'processes_payme', 'stores_health_d')
             """)
             )
@@ -70,8 +70,8 @@ class DatabaseSchemaFixer:
             table_exists = await conn.execute(
                 text("""
                 SELECT EXISTS (
-                    SELECT FROM information_schema.tables 
-                    WHERE table_schema = 'public' 
+                    SELECT FROM information_schema.tables
+                    WHERE table_schema = 'public'
                     AND table_name = 'alembic_version'
                 )
             """)
@@ -123,7 +123,7 @@ class DatabaseSchemaFixer:
                 # Backup assessment_sessions table
                 await conn.execute(
                     text("""
-                    CREATE TABLE IF NOT EXISTS assessment_sessions_backup_20250109 
+                    CREATE TABLE IF NOT EXISTS assessment_sessions_backup_20250109
                     AS SELECT * FROM assessment_sessions
                 """)
                 )
@@ -131,7 +131,7 @@ class DatabaseSchemaFixer:
                 # Backup business_profiles table
                 await conn.execute(
                     text("""
-                    CREATE TABLE IF NOT EXISTS business_profiles_backup_20250109 
+                    CREATE TABLE IF NOT EXISTS business_profiles_backup_20250109
                     AS SELECT * FROM business_profiles
                 """)
                 )
@@ -154,9 +154,9 @@ class DatabaseSchemaFixer:
                 # Check that assessment_sessions has correct column names
                 assessment_result = await conn.execute(
                     text("""
-                    SELECT column_name 
-                    FROM information_schema.columns 
-                    WHERE table_name = 'assessment_sessions' 
+                    SELECT column_name
+                    FROM information_schema.columns
+                    WHERE table_name = 'assessment_sessions'
                     AND column_name IN ('business_profile_id', 'questions_answered', 'calculated_scores', 'recommended_frameworks')
                 """)
                 )
@@ -166,9 +166,9 @@ class DatabaseSchemaFixer:
                 # Check that business_profiles has correct column names
                 business_result = await conn.execute(
                     text("""
-                    SELECT column_name 
-                    FROM information_schema.columns 
-                    WHERE table_name = 'business_profiles' 
+                    SELECT column_name
+                    FROM information_schema.columns
+                    WHERE table_name = 'business_profiles'
                     AND column_name IN ('handles_personal_data', 'processes_payments', 'stores_health_data')
                 """)
                 )
@@ -234,13 +234,13 @@ class DatabaseSchemaFixer:
         logger.info("🎉 Database schema fix completed successfully!")
         return True
 
-    async def cleanup(self):
+    async def cleanup(self) -> None:
         """Clean up database connections."""
         await self.async_engine.dispose()
         self.engine.dispose()
 
 
-async def main():
+async def main() -> None:
     """Main function to run the database schema fix."""
     from config.settings import get_settings
 

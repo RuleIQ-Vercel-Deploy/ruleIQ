@@ -9,11 +9,12 @@ import sys
 import json
 from datetime import datetime
 from pathlib import Path
+from typing import Optional
 
 # Add project root to path
 sys.path.append(str(Path(__file__).parent.parent))
 
-async def verify_backend_auth():
+async def verify_backend_auth() -> Optional[bool]:
     """Verify backend authentication system"""
     print("🔍 Verifying Backend Authentication System...")
 
@@ -71,7 +72,7 @@ async def verify_backend_auth():
         print(f"❌ Backend verification failed: {e}")
         return False
 
-def verify_frontend_auth():
+def verify_frontend_auth() -> Optional[bool]:
     """Verify frontend authentication components"""
     print("\n🔍 Verifying Frontend Authentication Components...")
 
@@ -125,7 +126,7 @@ def verify_frontend_auth():
         print(f"❌ Frontend verification failed: {e}")
         return False
 
-def verify_stack_auth_removal():
+def verify_stack_auth_removal() -> Optional[bool]:
     """Verify Stack Auth has been completely removed"""
     print("\n🔍 Verifying Stack Auth Removal...")
 
@@ -180,7 +181,7 @@ def verify_stack_auth_removal():
         print(f"❌ Stack Auth removal verification failed: {e}")
         return False
 
-def verify_environment_config():
+def verify_environment_config() -> Optional[bool]:
     """Verify environment configuration is correct"""
     print("\n🔍 Verifying Environment Configuration...")
 
@@ -232,7 +233,7 @@ def verify_environment_config():
         print(f"❌ Environment configuration verification failed: {e}")
         return False
 
-def verify_api_endpoints():
+def verify_api_endpoints() -> Optional[bool]:
     """Verify API endpoints are properly configured"""
     print("\n🔍 Verifying API Endpoints...")
 
@@ -273,7 +274,7 @@ def verify_api_endpoints():
         print(f"❌ API endpoint verification failed: {e}")
         return False
 
-def generate_verification_report():
+def generate_verification_report() -> None:
     """Generate a comprehensive verification report"""
     print("\n📊 Generating Verification Report...")
 
@@ -309,7 +310,7 @@ def generate_verification_report():
 
     print("✅ Verification report saved to authentication_verification_report.json")
 
-async def main():
+async def main() -> None:
     """Main verification function"""
     print("🚀 ruleIQ Authentication System Verification")
     print("=" * 50)

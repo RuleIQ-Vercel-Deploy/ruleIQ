@@ -19,7 +19,7 @@ except ImportError:
     GOOGLE_AVAILABLE = False
 
     class Credentials:
-        def __init__(self, *args, **kwargs):
+        def __init__(self, *args, **kwargs) -> None:
             self.expired = False
             self.refresh_token = None
             self.valid = True
@@ -29,7 +29,7 @@ except ImportError:
         def from_authorized_user_info(cls, info, scopes):
             return cls()
 
-        def refresh(self, request):
+        def refresh(self, request) -> None:
             pass
 
     class Request:

@@ -46,7 +46,7 @@ class CircuitBreakerOpenException(APIError):
 
     def __init__(
         self, service_name: str, failure_count: int, recovery_time: Optional[float] = None
-    ):
+    ) -> None:
         message = f"Circuit breaker open for {service_name} (failures: {failure_count})"
         if recovery_time:
             message += f", recovery in {recovery_time:.1f}s"
@@ -64,7 +64,7 @@ class CircuitBreakerOpenException(APIError):
 class CircuitBreaker:
     """Circuit breaker for external service calls."""
 
-    def __init__(self, name: str, config: CircuitBreakerConfig = None):
+    def __init__(self, name: str, config: CircuitBreakerConfig = None) -> None:
         self.name = name
         self.config = config or CircuitBreakerConfig()
         self._state = CircuitBreakerState.CLOSED
@@ -109,7 +109,7 @@ class CircuitBreaker:
             await self._on_failure(e)
             raise
 
-    async def _on_success(self):
+    async def _on_success(self) -> None:
         """Handle successful call."""
         async with self._lock:
             self._last_success_time = time.time()
@@ -121,7 +121,7 @@ class CircuitBreaker:
                     self._failure_count = 0
                     logger.info(f"Circuit breaker {self.name} closed after recovery")
 
-    async def _on_failure(self, exception: Exception):
+    async def _on_failure(self, exception: Exception) -> None:
         """Handle failed call."""
         async with self._lock:
             self._failure_count += 1

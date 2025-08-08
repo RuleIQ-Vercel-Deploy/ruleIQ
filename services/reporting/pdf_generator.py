@@ -24,7 +24,7 @@ from reportlab.platypus import (
 class PDFGenerator:
     """Generate PDF reports from structured data"""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.colors = self._setup_colors()
         self.styles = self._setup_styles()
 
@@ -268,8 +268,8 @@ class PDFGenerator:
 
         business_profile = report_data.get("business_profile", {})
         overview_text = f"""
-        This executive summary provides a high-level overview of compliance status for {business_profile.get("name", "your organization")}, 
-        a {business_profile.get("industry", "technology")} company with {business_profile.get("employee_count", "unknown")} employees 
+        This executive summary provides a high-level overview of compliance status for {business_profile.get("name", "your organization")},
+        a {business_profile.get("industry", "technology")} company with {business_profile.get("employee_count", "unknown")} employees
         based in {business_profile.get("country", "the UK")}.
         """
         story.append(Paragraph(overview_text, self.styles["ReportBodyText"]))
@@ -354,8 +354,8 @@ class PDFGenerator:
 
                 rec_text = f"""
                 <b>Description:</b> {rec.get("description", "No description available")}<br/>
-                <b>Impact:</b> {rec.get("impact", "Unknown")} | 
-                <b>Effort:</b> {rec.get("effort", "Unknown")} | 
+                <b>Impact:</b> {rec.get("impact", "Unknown")} |
+                <b>Effort:</b> {rec.get("effort", "Unknown")} |
                 <b>Framework:</b> {rec.get("framework", "General")}
                 """
                 story.append(Paragraph(rec_text, self.styles["ReportBodyText"]))
@@ -372,8 +372,8 @@ class PDFGenerator:
         # Summary statistics
         summary = report_data.get("summary", {})
         summary_text = f"""
-        This analysis identified <b>{summary.get("total_gaps", 0)} total compliance gaps</b> across your 
-        compliance frameworks, including {summary.get("critical_gaps", 0)} critical gaps, 
+        This analysis identified <b>{summary.get("total_gaps", 0)} total compliance gaps</b> across your
+        compliance frameworks, including {summary.get("critical_gaps", 0)} critical gaps,
         {summary.get("high_gaps", 0)} high-priority gaps, and {summary.get("medium_gaps", 0)} medium-priority gaps.
         """
         story.append(Paragraph(summary_text, self.styles["ReportBodyText"]))
@@ -699,7 +699,7 @@ class PDFGenerator:
         else:
             return self.colors["accent"]
 
-    def _add_page_template(self, canvas, doc):
+    def _add_page_template(self, canvas, doc) -> None:
         """Add header and footer to each page."""
         canvas.saveState()
 

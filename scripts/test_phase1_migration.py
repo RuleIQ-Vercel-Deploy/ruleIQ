@@ -37,7 +37,7 @@ def run_dry_run(file_path: str) -> bool:
     print(result.stdout)
     return True
 
-def main():
+def main() -> int:
     print("🚀 Stack Auth Migration - Phase 1 Test")
     print("Testing migration approach on core user endpoints")
     print("=" * 80)
@@ -72,4 +72,4 @@ def main():
     return 0
 
 if __name__ == "__main__":
-    exit(main())
+    sys.exit(main())

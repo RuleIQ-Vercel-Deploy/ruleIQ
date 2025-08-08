@@ -75,7 +75,7 @@ class AlertThresholds:
 class DatabaseMonitor:
     """Database connection pool monitoring service."""
 
-    def __init__(self, alert_thresholds: Optional[AlertThresholds] = None):
+    def __init__(self, alert_thresholds: Optional[AlertThresholds] = None) -> None:
         self.alert_thresholds = alert_thresholds or AlertThresholds()
         self.metrics_history: List[PoolMetrics] = []
         self.health_history: List[ConnectionHealthCheck] = []
@@ -90,7 +90,6 @@ class DatabaseMonitor:
 
         # Sync pool metrics
         if engine_info.get("sync_engine_initialized") and _ENGINE:
-            pool = _ENGINE.pool
             pool_size = engine_info.get("sync_pool_size", 0)
             checked_out = engine_info.get("sync_pool_checked_out", 0)
             overflow = engine_info.get("sync_pool_overflow", 0)
@@ -110,7 +109,6 @@ class DatabaseMonitor:
 
         # Async pool metrics
         if engine_info.get("async_engine_initialized") and _ASYNC_ENGINE:
-            pool = _ASYNC_ENGINE.pool
             pool_size = engine_info.get("async_pool_size", 0)
             checked_out = engine_info.get("async_pool_checked_out", 0)
             overflow = engine_info.get("async_pool_overflow", 0)
@@ -314,7 +312,7 @@ class DatabaseMonitor:
             }
         }
 
-    async def start_monitoring_loop(self, interval_seconds: int = 30):
+    async def start_monitoring_loop(self, interval_seconds: int = 30) -> None:
         """Start continuous monitoring loop."""
         logger.info(f"Starting database monitoring loop with {interval_seconds}s interval")
 
@@ -334,7 +332,7 @@ class DatabaseMonitor:
 
                 # Log summary every 5 minutes (10 cycles at 30s interval)
                 if len(self.metrics_history) % 10 == 0:
-                    summary = self.get_monitoring_summary()
+                    self.get_monitoring_summary()
                     logger.info(f"Database monitoring summary: {len(alerts)} active alerts")
 
                 await asyncio.sleep(interval_seconds)
@@ -356,7 +354,7 @@ def get_database_monitor() -> DatabaseMonitor:
     return _monitor
 
 
-async def start_database_monitoring(interval_seconds: int = 30):
+async def start_database_monitoring(interval_seconds: int = 30) -> None:
     """Start database monitoring service."""
     monitor = get_database_monitor()
     await monitor.start_monitoring_loop(interval_seconds)

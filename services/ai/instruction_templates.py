@@ -51,7 +51,7 @@ class InstructionContext:
 class SystemInstructionTemplates:
     """Manages system instruction templates for different AI tasks"""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.base_instructions = self._initialize_base_instructions()
         self.framework_specifics = self._initialize_framework_specifics()
         self.persona_adaptations = self._initialize_persona_adaptations()

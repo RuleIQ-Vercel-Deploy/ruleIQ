@@ -25,11 +25,18 @@ class LeadScoringEvent(Base):
 
     # Primary identifier
     id = Column(PG_UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    lead_id = Column(PG_UUID(as_uuid=True), ForeignKey("assessment_leads.id", ondelete="CASCADE"), nullable=False, index=True)
+    lead_id = Column(
+        PG_UUID(as_uuid=True), 
+        ForeignKey("assessment_leads.id", ondelete="CASCADE"), 
+        nullable=False, 
+        index=True
+    )
 
     # Event classification
-    event_type = Column(String(100), nullable=False, index=True)  # assessment_start, question_answered, etc.
-    event_category = Column(String(50), nullable=False, index=True)  # engagement, assessment, conversion
+    # assessment_start, question_answered, etc.
+    event_type = Column(String(100), nullable=False, index=True)
+    # engagement, assessment, conversion
+    event_category = Column(String(50), nullable=False, index=True)
     event_action = Column(String(100), nullable=False)  # specific action taken
     event_label = Column(String(200), nullable=True)  # additional context
 
@@ -54,7 +61,7 @@ class LeadScoringEvent(Base):
     # Timestamp
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False, index=True)
 
-    def __init__(self, **kwargs):
+    def __init__(self, **kwargs) -> None:
         """Initialize scoring event with default values."""
         super().__init__(**kwargs)
         if not self.event_metadata:
@@ -62,13 +69,13 @@ class LeadScoringEvent(Base):
         if not self.session_context:
             self.session_context = {}
 
-    def add_metadata(self, key: str, value):
+    def add_metadata(self, key: str, value) -> None:
         """Add metadata to the event."""
         if not self.event_metadata:
             self.event_metadata = {}
         self.event_metadata[key] = value
 
-    def add_session_context(self, key: str, value):
+    def add_session_context(self, key: str, value) -> None:
         """Add session context data."""
         if not self.session_context:
             self.session_context = {}
@@ -100,7 +107,12 @@ class LeadScoringEvent(Base):
         return self.event_category == "conversion"
 
     @classmethod
-    def create_assessment_start_event(cls, lead_id: uuid.UUID, session_id: str = None, metadata: dict = None):
+    def create_assessment_start_event(
+        cls, 
+        lead_id: uuid.UUID, 
+        session_id: str = None, 
+        metadata: dict = None
+    ):
         """Factory method for assessment start events."""
         return cls(
             lead_id=lead_id,
@@ -113,7 +125,13 @@ class LeadScoringEvent(Base):
         )
 
     @classmethod
-    def create_question_answered_event(cls, lead_id: uuid.UUID, question_type: str, score_impact: int = 5, metadata: dict = None):
+    def create_question_answered_event(
+        cls, 
+        lead_id: uuid.UUID, 
+        question_type: str, 
+        score_impact: int = 5, 
+        metadata: dict = None
+    ):
         """Factory method for question answered events."""
         return cls(
             lead_id=lead_id,
@@ -125,7 +143,12 @@ class LeadScoringEvent(Base):
         )
 
     @classmethod
-    def create_assessment_completed_event(cls, lead_id: uuid.UUID, completion_rate: float, metadata: dict = None):
+    def create_assessment_completed_event(
+        cls, 
+        lead_id: uuid.UUID, 
+        completion_rate: float, 
+        metadata: dict = None
+    ):
         """Factory method for assessment completion events."""
         # Higher score for complete assessments
         score_impact = 50 if completion_rate >= 1.0 else int(completion_rate * 30)
@@ -142,5 +165,8 @@ class LeadScoringEvent(Base):
             }
         )
 
-    def __repr__(self):
-        return f"<LeadScoringEvent(type='{self.event_type}', action='{self.event_action}', impact={self.score_impact})>"
+    def __repr__(self) -> str:
+        return (
+            f"<LeadScoringEvent(type='{self.event_type}', "
+            f"action='{self.event_action}', impact={self.score_impact})>"
+        )

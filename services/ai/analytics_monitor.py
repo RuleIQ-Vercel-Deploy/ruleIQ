@@ -90,7 +90,7 @@ class AIAnalyticsMonitor:
     - Comprehensive dashboard data
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         # Metric storage (in production, this would use a time-series database)
         self.metrics: deque = deque(maxlen=10000)  # Keep last 10k metrics
         self.alerts: List[Alert] = []
@@ -123,7 +123,7 @@ class AIAnalyticsMonitor:
         metadata: Optional[Dict[str, Any]] = None,
         user_id: Optional[str] = None,
         session_id: Optional[str] = None,
-    ):
+    ) -> None:
         """Record a new metric event."""
 
         event = MetricEvent(
@@ -146,7 +146,7 @@ class AIAnalyticsMonitor:
 
         logger.debug(f"Recorded metric: {metric_type.value}.{name} = {value}")
 
-    async def _update_aggregated_metrics(self, event: MetricEvent):
+    async def _update_aggregated_metrics(self, event: MetricEvent) -> None:
         """Update hourly and daily aggregated metrics."""
 
         # Get time keys
@@ -161,7 +161,7 @@ class AIAnalyticsMonitor:
         self.daily_metrics[day_key][f"{event.metric_type.value}.{event.name}"] += event.value
         self.daily_metrics[day_key]["count"] += 1
 
-    async def _check_alert_conditions(self, event: MetricEvent):
+    async def _check_alert_conditions(self, event: MetricEvent) -> None:
         """Check if the metric event triggers any alerts."""
 
         # Response time alerts
@@ -194,7 +194,7 @@ class AIAnalyticsMonitor:
         title: str,
         description: str,
         metadata: Optional[Dict[str, Any]] = None,
-    ):
+    ) -> None:
         """Create a new alert."""
 
         alert = Alert(

@@ -17,7 +17,7 @@ logger = get_logger(__name__)
 class SecurityMiddleware(BaseHTTPMiddleware):
     """Comprehensive security middleware"""
 
-    def __init__(self, app):
+    def __init__(self, app) -> None:
         super().__init__(app)
 
     async def dispatch(self, request: Request, call_next):
@@ -70,7 +70,7 @@ class SecurityMiddleware(BaseHTTPMiddleware):
 class RateLimitMiddleware(BaseHTTPMiddleware):
     """Rate limiting middleware"""
 
-    def __init__(self, app, max_requests: int = 100, window_seconds: int = 60):
+    def __init__(self, app, max_requests: int = 100, window_seconds: int = 60) -> None:
         super().__init__(app)
         self.max_requests = max_requests
         self.window_seconds = window_seconds
@@ -105,7 +105,7 @@ class RateLimitMiddleware(BaseHTTPMiddleware):
 class CORSMiddleware(BaseHTTPMiddleware):
     """CORS middleware with security checks"""
 
-    def __init__(self, app, allowed_origins: list):
+    def __init__(self, app, allowed_origins: list) -> None:
         super().__init__(app)
         self.allowed_origins = allowed_origins
 

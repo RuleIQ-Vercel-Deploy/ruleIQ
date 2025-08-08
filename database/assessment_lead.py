@@ -62,5 +62,5 @@ class AssessmentLead(Base):
     updated_at = Column(DateTime, server_default=func.now(), onupdate=func.now(), nullable=False)
     last_activity_at = Column(DateTime, nullable=True)
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"<AssessmentLead(email='{self.email}', score={self.lead_score})>"

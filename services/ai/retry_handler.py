@@ -96,7 +96,7 @@ class RetryHandler:
     Advanced retry handler with exponential backoff and model fallback
     """
 
-    def __init__(self, config: Optional[RetryConfig] = None):
+    def __init__(self, config: Optional[RetryConfig] = None) -> None:
         self.config = config or RetryConfig()
         self.logger = logging.getLogger(__name__)
 
@@ -381,7 +381,7 @@ class RetryHandler:
         # Sort by frequency
         return dict(sorted(exception_counts.items(), key=lambda x: x[1], reverse=True))
 
-    def clear_history(self):
+    def clear_history(self) -> None:
         """Clear retry history (useful for testing)"""
         self.retry_history.clear()
 

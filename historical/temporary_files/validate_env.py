@@ -6,9 +6,10 @@ without revealing the actual secret value.
 
 import os
 import re
+from typing import Optional
 
 
-def check_env_file(filepath):
+def check_env_file(filepath) -> Optional[str]:
     """Check if an env file has proper JWT_SECRET configuration."""
     if not os.path.exists(filepath):
         return f"File {filepath} does not exist"

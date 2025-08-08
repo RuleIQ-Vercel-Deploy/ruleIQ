@@ -20,7 +20,10 @@ import uvicorn
 
 from api.routers import (
     ai_assessments,
+    ai_cost_monitoring,
+    ai_cost_websocket,
     ai_optimization,
+    ai_policy,
     assessments,
     auth,
     business_profiles,
@@ -30,14 +33,22 @@ from api.routers import (
     evidence_collection,
     foundation_evidence,
     frameworks,
+    freemium,
     implementation,
     integrations,
     monitoring,
     policies,
     readiness,
+    rbac_auth,
     reporting,
     security,
+    uk_compliance,
     users,
+)
+from api.routers.admin import (
+    data_access,
+    user_management,
+    token_management,
 )
 from api.middleware.error_handler import error_handler_middleware
 from api.middleware.rate_limiter import rate_limit_middleware
@@ -162,6 +173,19 @@ app.include_router(policies.router, prefix="/api/v1/policies", tags=["policies"]
 app.include_router(readiness.router, prefix="/api/v1/readiness", tags=["readiness"])
 app.include_router(reporting.router, prefix="/api/v1/reporting", tags=["reporting"])
 app.include_router(security.router, prefix="/api/v1/security", tags=["security"])
+
+# Missing AI and other routers
+app.include_router(ai_policy.router, prefix="/api/v1/ai", tags=["ai", "policy"])
+app.include_router(ai_cost_monitoring.router, prefix="/api/v1/ai", tags=["ai", "cost-monitoring"])
+app.include_router(ai_cost_websocket.router, prefix="/api/v1/ai", tags=["ai", "websocket"])
+app.include_router(freemium.router, prefix="/api/v1/freemium", tags=["freemium"])
+app.include_router(rbac_auth.router, prefix="/api/v1/rbac", tags=["rbac", "authentication"])
+app.include_router(uk_compliance.router, prefix="/api/v1/uk-compliance", tags=["compliance", "uk"])
+
+# Admin routers
+app.include_router(user_management.router, prefix="/api/admin", tags=["admin", "user-management"])
+app.include_router(data_access.router, prefix="/api/admin", tags=["admin", "data-access"])
+app.include_router(token_management.router, prefix="/api/admin", tags=["admin", "token-management"])
 
 
 # Global exception handlers
@@ -305,7 +329,7 @@ async def root() -> Dict[str, Any]:
 
 # Startup event to set start time
 @app.on_event("startup")
-async def startup_event():
+async def startup_event() -> None:
     """Set application start time"""
     app.state.start_time = time.time()
 

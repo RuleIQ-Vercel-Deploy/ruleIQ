@@ -207,7 +207,7 @@ async def capture_lead(
 ) -> LeadResponse:
     """
     Capture lead information and UTM parameters for freemium assessment funnel.
-    
+
     Creates or updates an AssessmentLead record with:
     - Email validation and deduplication
     - UTM parameter tracking for attribution
@@ -310,7 +310,7 @@ async def start_assessment_session(
 ) -> SessionResponse:
     """
     Start a new freemium assessment session for a lead.
-    
+
     Creates a FreemiumAssessmentSession with:
     - Secure session token generation
     - AI-driven question personalization
@@ -392,7 +392,7 @@ async def get_session_progress(
 ) -> SessionResponse:
     """
     Get current assessment session progress and state.
-    
+
     Returns:
     - Session progress percentage
     - Current question information
@@ -446,7 +446,7 @@ async def submit_assessment_answer(
 ) -> dict:
     """
     Submit an answer to the current assessment question.
-    
+
     Processes:
     - Answer validation and storage
     - AI-driven question progression
@@ -537,7 +537,7 @@ async def get_assessment_results(
 ) -> AssessmentResultsResponse:
     """
     Generate and return comprehensive assessment results.
-    
+
     Provides:
     - AI-generated compliance score and risk assessment
     - Personalized recommendations based on answers

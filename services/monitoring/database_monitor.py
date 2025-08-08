@@ -73,7 +73,7 @@ class DatabaseAlert:
 class DatabaseMonitor:
     """Database connection pool and session monitoring service."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.pool_metrics_history: List[PoolMetrics] = []
         self.session_metrics_history: List[SessionMetrics] = []
         self.alerts: List[DatabaseAlert] = []
@@ -155,9 +155,10 @@ class DatabaseMonitor:
 
         return metrics
 
-    def _check_pool_alerts(self, metrics: PoolMetrics):
-        """Check pool metrics against thresholds and generate alerts."""
-        datetime.utcnow()
+    def _check_pool_alerts(self, metrics: PoolMetrics) -> None:
+        """Check pool metrics against thresholds and create alerts"""
+        if not metrics or not self.thresholds:
+            return
 
         # Pool utilization alerts
         if metrics.utilization_percent >= self.thresholds["pool_utilization_critical"]:
@@ -166,8 +167,10 @@ class DatabaseMonitor:
                 "pool_utilization",
                 metrics.utilization_percent,
                 self.thresholds["pool_utilization_critical"],
-                f"Critical pool utilization: {metrics.utilization_percent:.1f}% "
-                f"({metrics.total_connections}/{metrics.pool_size} connections)",
+                (
+                    f"Critical pool utilization: {metrics.utilization_percent:.1f}% "
+                    f"({metrics.total_connections}/{metrics.pool_size} connections)"
+                ),
             )
         elif metrics.utilization_percent >= self.thresholds["pool_utilization_warning"]:
             self._create_alert(
@@ -175,8 +178,10 @@ class DatabaseMonitor:
                 "pool_utilization",
                 metrics.utilization_percent,
                 self.thresholds["pool_utilization_warning"],
-                f"High pool utilization: {metrics.utilization_percent:.1f}% "
-                f"({metrics.total_connections}/{metrics.pool_size} connections)",
+                (
+                    f"High pool utilization: {metrics.utilization_percent:.1f}% "
+                    f"({metrics.total_connections}/{metrics.pool_size} connections)"
+                ),
             )
 
         # Overflow alerts
@@ -197,32 +202,41 @@ class DatabaseMonitor:
                 f"Pool overflow detected: {metrics.overflow} overflow connections",
             )
 
-    def _check_session_alerts(self, metrics: SessionMetrics):
-        """Check session metrics against thresholds and generate alerts."""
-        # Long-running sessions alert
-        if metrics.long_running_sessions > 0:
+    def _check_session_alerts(self, metrics: SessionMetrics) -> None:
+        """Check session metrics against thresholds and create alerts"""
+        if not metrics or not self.thresholds:
+            return
+
+        # Long-running session alerts
+        if (
+            metrics.long_running_sessions
+            >= self.thresholds["long_running_session_critical"]
+        ):
+            self._create_alert(
+                AlertLevel.CRITICAL,
+                "long_running_sessions",
+                metrics.long_running_sessions,
+                self.thresholds["long_running_session_critical"],
+                (
+                    f"Long-running sessions detected: {metrics.long_running_sessions} sessions "
+                    f"running longer than {self.thresholds['long_running_session_warning']}s"
+                ),
+            )
+        elif (
+            metrics.long_running_sessions
+            >= self.thresholds["long_running_session_warning"]
+        ):
             self._create_alert(
                 AlertLevel.WARNING,
                 "long_running_sessions",
                 metrics.long_running_sessions,
-                1,
-                f"Long-running sessions detected: {metrics.long_running_sessions} sessions "
-                f"running longer than {self.thresholds['long_running_session_warning']}s",
-            )
-
-        # Session leak detection
-        if metrics.active_sessions >= self.thresholds["session_leak_warning"]:
-            self._create_alert(
-                AlertLevel.WARNING,
-                "session_leak",
-                metrics.active_sessions,
-                self.thresholds["session_leak_warning"],
+                self.thresholds["long_running_session_warning"],
                 f"Potential session leak: {metrics.active_sessions} active sessions",
             )
 
     def _create_alert(
         self, level: AlertLevel, metric: str, value: float, threshold: float, message: str
-    ):
+    ) -> None:
         """Create and store an alert."""
         alert = DatabaseAlert(
             timestamp=datetime.utcnow(),
@@ -248,7 +262,7 @@ class DatabaseMonitor:
         cutoff = datetime.utcnow() - timedelta(hours=24)
         self.alerts = [a for a in self.alerts if a.timestamp > cutoff]
 
-    def _cleanup_old_metrics(self):
+    def _cleanup_old_metrics(self) -> None:
         """Remove old metrics to prevent memory growth."""
         cutoff = datetime.utcnow() - timedelta(hours=self.metrics_retention_hours)
 
@@ -284,18 +298,18 @@ class DatabaseMonitor:
 class SessionTracker:
     """Track async session lifecycle for monitoring."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.active_sessions: Dict[str, datetime] = {}
         self.total_created = 0
         self.total_closed = 0
         self.session_durations: List[float] = []
 
-    def session_created(self, session_id: str):
+    def session_created(self, session_id: str) -> None:
         """Record session creation."""
         self.active_sessions[session_id] = datetime.utcnow()
         self.total_created += 1
 
-    def session_closed(self, session_id: str):
+    def session_closed(self, session_id: str) -> None:
         """Record session closure."""
         if session_id in self.active_sessions:
             start_time = self.active_sessions.pop(session_id)

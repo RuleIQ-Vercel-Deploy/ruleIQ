@@ -36,7 +36,7 @@ class EvidenceService:
             return db.execute(stmt)
 
     @staticmethod
-    async def _commit_session(db):
+    async def _commit_session(db) -> None:
         """Commit session with async/sync compatibility."""
         if EvidenceService._is_async_session(db):
             await db.commit()
@@ -44,7 +44,7 @@ class EvidenceService:
             db.commit()
 
     @staticmethod
-    async def _refresh_object(db, obj):
+    async def _refresh_object(db, obj) -> None:
         """Refresh object with async/sync compatibility."""
         if EvidenceService._is_async_session(db):
             await db.refresh(obj)
@@ -52,7 +52,7 @@ class EvidenceService:
             db.refresh(obj)
 
     @staticmethod
-    async def _delete_object(db, obj):
+    async def _delete_object(db, obj) -> None:
         """Delete object with async/sync compatibility."""
         if EvidenceService._is_async_session(db):
             await db.delete(obj)
@@ -647,48 +647,7 @@ class EvidenceService:
 
         return dashboard_data
 
-    @staticmethod
-    async def bulk_update_evidence_status(
-        db: Union[AsyncSession, Session],
-        user: User,
-        evidence_ids: List[UUID],
-        status: str,
-        reason: Optional[str] = None,
-    ) -> tuple[int, int, List[UUID]]:
-        """
-        Bulk update evidence status for multiple items.
-        Returns (updated_count, failed_count, failed_ids)
-        """
-        updated_count = 0
-        failed_count = 0
-        failed_ids = []
-
-        for evidence_id in evidence_ids:
-            try:
-                item, auth_status = await EvidenceService.get_evidence_item_with_auth_check(
-                    db, evidence_id, user.id
-                )
-
-                if auth_status == "found":
-                    item.status = status
-                    # Note: Reason is provided but not stored since EvidenceItem doesn't have metadata field
-                    # TODO: Add metadata field to EvidenceItem model if needed
-                    updated_count += 1
-                else:
-                    failed_count += 1
-                    failed_ids.append(evidence_id)
-            except Exception:
-                failed_count += 1
-                failed_ids.append(evidence_id)
-
-        if updated_count > 0:
-            await EvidenceService._commit_session(db)
-
-            # Invalidate user cache after bulk update
-            cache = await get_cache_manager()
-            await cache.invalidate_user_cache(str(user.id))
-
-        return updated_count, failed_count, failed_ids
+    # Duplicate bulk_update_evidence_status removed - original exists at line 457
 
     @staticmethod
     async def get_evidence_statistics(

@@ -97,7 +97,7 @@ def mock_streaming_chunks():
     """Mock streaming chunks for testing."""
 
     class MockChunk:
-        def __init__(self, text=None, candidates=None):
+        def __init__(self, text=None, candidates=None) -> None:
             self.text = text
             self.candidates = candidates or []
 
@@ -161,7 +161,7 @@ def performance_test_config():
 class MockStreamingResponse:
     """Mock streaming response iterator for testing."""
 
-    def __init__(self, chunks: List[Any], fail_at: int = -1):
+    def __init__(self, chunks: List[Any], fail_at: int = -1) -> None:
         self.chunks = chunks
         self.fail_at = fail_at
         self.current = 0

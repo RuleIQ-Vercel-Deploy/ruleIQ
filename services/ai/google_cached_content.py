@@ -40,7 +40,7 @@ class GoogleCachedContentManager:
     and regulatory content using Google's native caching system.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.config = get_ai_config()
         self.cache_registry: Dict[str, CacheMetadata] = {}
 

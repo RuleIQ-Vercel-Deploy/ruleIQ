@@ -239,7 +239,7 @@ class FieldValidator:
 class WhitelistValidator:
     """Validates input against predefined whitelists for secure field updates."""
 
-    def __init__(self, model_name: str):
+    def __init__(self, model_name: str) -> None:
         self.model_name = model_name
         self.field_definitions = self._get_field_definitions()
 
@@ -524,7 +524,7 @@ class SecurityValidator:
     def validate_no_dangerous_content(data: Dict[str, Any]) -> None:
         """Validate that input data contains no dangerous patterns."""
 
-        def check_value(val):
+        def check_value(val) -> None:
             if isinstance(val, str):
                 if SecurityValidator.scan_for_dangerous_patterns(val):
                     raise ValidationError("Input contains potentially dangerous content")

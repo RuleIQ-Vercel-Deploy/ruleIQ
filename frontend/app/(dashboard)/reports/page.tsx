@@ -1,49 +1,41 @@
 'use client';
 
-import { BarChart3, Download, FileText, Eye, RefreshCw, Filter } from 'lucide-react';
+import { BarChart3, Download, FileText, Eye, RefreshCw, Filter, Plus, AlertCircle } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Skeleton } from '@/components/ui/skeleton';
+import { useReports, useDownloadReport, useGenerateReport } from '@/lib/tanstack-query/hooks/use-reports';
+import { useToast } from '@/hooks/use-toast';
 
 export default function ReportsPage() {
-  const reports = [
-    {
-      name: 'Monthly Compliance Report',
-      type: 'Compliance Overview',
-      period: 'January 2024',
-      status: 'Ready',
-      description: 'Comprehensive monthly compliance status report',
-      lastGenerated: '2024-02-01',
-      size: '2.4 MB',
-    },
-    {
-      name: 'GDPR Audit Report',
-      type: 'Data Protection',
-      period: 'Q4 2023',
-      status: 'Generated',
-      description: 'Detailed GDPR compliance audit findings',
-      lastGenerated: '2024-01-15',
-      size: '1.8 MB',
-    },
-    {
-      name: 'Risk Assessment Summary',
-      type: 'Risk Management',
-      period: '2023 Annual',
-      status: 'Processing',
-      description: 'Annual risk assessment and mitigation strategies',
-      lastGenerated: '2024-01-10',
-      size: '3.2 MB',
-    },
-  ];
+  const router = useRouter();
+  const { toast } = useToast();
+  
+  // Fetch reports using API hook
+  const { data: reportsData, isLoading, error } = useReports({
+    page: 1,
+    page_size: 50,
+  });
+  
+  const downloadReportMutation = useDownloadReport();
+  const generateReportMutation = useGenerateReport();
+
+  const reports = reportsData?.items || [];
 
   const getStatusIcon = (status: string) => {
     switch (status) {
-      case 'Ready':
+      case 'ready':
+      case 'completed':
         return <Download className="h-4 w-4" />;
-      case 'Generated':
+      case 'generated':
         return <FileText className="h-4 w-4" />;
-      case 'Processing':
+      case 'processing':
+      case 'generating':
         return <RefreshCw className="h-4 w-4 animate-spin" />;
       default:
         return null;
@@ -52,15 +44,47 @@ export default function ReportsPage() {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'Ready':
+      case 'ready':
+      case 'completed':
         return 'text-success border-success/20 bg-success/10';
-      case 'Generated':
+      case 'generated':
         return 'text-info border-info/20 bg-info/10';
-      case 'Processing':
+      case 'processing':
+      case 'generating':
         return 'text-warning border-warning/20 bg-warning/10';
+      case 'failed':
+        return 'text-destructive border-destructive/20 bg-destructive/10';
       default:
         return '';
     }
+  };
+
+  const formatStatus = (status: string) => {
+    return status.charAt(0).toUpperCase() + status.slice(1);
+  };
+
+  const handleDownload = async (reportId: string, format: 'pdf' | 'excel' | 'csv' = 'pdf') => {
+    try {
+      await downloadReportMutation.mutateAsync({ id: reportId, format });
+      toast({
+        title: 'Download started',
+        description: `Your report is being downloaded as ${format.toUpperCase()}.`,
+      });
+    } catch (error) {
+      toast({
+        title: 'Download failed',
+        description: 'There was an error downloading the report. Please try again.',
+        variant: 'destructive',
+      });
+    }
+  };
+
+  const handleGenerateReport = () => {
+    router.push('/reports/new');
+  };
+
+  const handleViewReport = (reportId: string) => {
+    router.push(`/reports/${reportId}`);
   };
 
   return (
@@ -75,74 +99,107 @@ export default function ReportsPage() {
             <Filter className="mr-2 h-4 w-4" />
             Filter
           </Button>
-          <Button className="bg-gold text-navy hover:bg-gold-dark">
-            <BarChart3 className="mr-2 h-4 w-4" />
+          <Button className="bg-gold text-navy hover:bg-gold-dark" onClick={handleGenerateReport}>
+            <Plus className="mr-2 h-4 w-4" />
             Generate Report
           </Button>
         </div>
       </div>
 
-      {/* Reports Grid */}
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {reports.map((report, index) => (
-          <Card key={index} className="transition-all duration-200 hover:shadow-lg">
-            <CardHeader>
-              <div className="flex items-start justify-between">
-                <div className="flex items-center gap-2">
-                  <BarChart3 className="h-5 w-5 text-gold" />
-                  <CardTitle className="text-lg text-navy">{report.name}</CardTitle>
-                </div>
-                <Badge variant="outline" className={`gap-1 ${getStatusColor(report.status)}`}>
-                  {getStatusIcon(report.status)}
-                  {report.status}
-                </Badge>
-              </div>
-              <CardDescription className="mt-2">{report.description}</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              {/* Metadata */}
-              <div className="space-y-2 text-sm text-muted-foreground">
-                <div className="flex items-center justify-between">
-                  <span>Type</span>
-                  <span className="font-medium text-foreground">{report.type}</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span>Period</span>
-                  <span className="font-medium text-foreground">{report.period}</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span>Generated</span>
-                  <span className="font-medium text-foreground">{report.lastGenerated}</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span>Size</span>
-                  <span className="font-medium text-foreground">{report.size}</span>
-                </div>
-              </div>
+      {/* Error Alert */}
+      {error && (
+        <Alert variant="destructive">
+          <AlertCircle className="h-4 w-4" />
+          <AlertDescription>
+            {error instanceof Error ? error.message : 'Failed to load reports'}
+          </AlertDescription>
+        </Alert>
+      )}
 
-              {/* Actions */}
-              <div className="flex items-center gap-2 pt-2">
-                <Button variant="outline" size="sm" className="flex-1">
-                  <Eye className="mr-2 h-4 w-4" />
-                  View
-                </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="flex-1"
-                  disabled={report.status === 'Processing'}
-                >
-                  <Download className="mr-2 h-4 w-4" />
-                  Export
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
+      {/* Loading State */}
+      {isLoading && (
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {[...Array(6)].map((_, i) => (
+            <Skeleton key={i} className="h-64" />
+          ))}
+        </div>
+      )}
+
+      {/* Reports Grid */}
+      {!isLoading && reports.length > 0 && (
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {reports.map((report) => (
+            <Card key={report.id} className="transition-all duration-200 hover:shadow-lg">
+              <CardHeader>
+                <div className="flex items-start justify-between">
+                  <div className="flex items-center gap-2">
+                    <BarChart3 className="h-5 w-5 text-gold" />
+                    <CardTitle className="text-lg text-navy">{report.name || report.title}</CardTitle>
+                  </div>
+                  <Badge variant="outline" className={`gap-1 ${getStatusColor(report.status)}`}>
+                    {getStatusIcon(report.status)}
+                    {formatStatus(report.status)}
+                  </Badge>
+                </div>
+                <CardDescription className="mt-2">{report.description}</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {/* Metadata */}
+                <div className="space-y-2 text-sm text-muted-foreground">
+                  <div className="flex items-center justify-between">
+                    <span>Type</span>
+                    <span className="font-medium text-foreground">{report.type || 'Compliance'}</span>
+                  </div>
+                  {report.period && (
+                    <div className="flex items-center justify-between">
+                      <span>Period</span>
+                      <span className="font-medium text-foreground">{report.period}</span>
+                    </div>
+                  )}
+                  <div className="flex items-center justify-between">
+                    <span>Generated</span>
+                    <span className="font-medium text-foreground">
+                      {new Date(report.created_at || report.lastGenerated).toLocaleDateString()}
+                    </span>
+                  </div>
+                  {report.file_size && (
+                    <div className="flex items-center justify-between">
+                      <span>Size</span>
+                      <span className="font-medium text-foreground">{report.file_size}</span>
+                    </div>
+                  )}
+                </div>
+
+                {/* Actions */}
+                <div className="flex items-center gap-2 pt-2">
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    className="flex-1"
+                    onClick={() => handleViewReport(report.id)}
+                  >
+                    <Eye className="mr-2 h-4 w-4" />
+                    View
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="flex-1"
+                    disabled={report.status === 'processing' || report.status === 'generating'}
+                    onClick={() => handleDownload(report.id, 'pdf')}
+                  >
+                    <Download className="mr-2 h-4 w-4" />
+                    Export
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      )}
 
       {/* Empty State */}
-      {reports.length === 0 && (
+      {!isLoading && reports.length === 0 && (
         <Card className="border-dashed">
           <CardContent className="flex flex-col items-center justify-center py-12">
             <FileText className="mb-4 h-12 w-12 text-muted-foreground" />
@@ -151,7 +208,7 @@ export default function ReportsPage() {
               Generate your first compliance report to start tracking your organization's compliance
               status.
             </p>
-            <Button className="bg-gold text-navy hover:bg-gold-dark">
+            <Button className="bg-gold text-navy hover:bg-gold-dark" onClick={handleGenerateReport}>
               <BarChart3 className="mr-2 h-4 w-4" />
               Generate Your First Report
             </Button>

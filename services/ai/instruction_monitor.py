@@ -48,13 +48,13 @@ class InstructionPersistence(abc.ABC):
 class MemoryPersistence(InstructionPersistence):
     """Development/testing persistence - in memory only"""
 
-    def save_metrics(self, metrics: List["InstructionMetric"]):
+    def save_metrics(self, metrics: List["InstructionMetric"]) -> None:
         pass  # No-op for memory persistence
 
     def load_metrics(self) -> List["InstructionMetric"]:
         return []
 
-    def save_performance_data(self, data: Dict[str, "InstructionPerformanceData"]):
+    def save_performance_data(self, data: Dict[str, "InstructionPerformanceData"]) -> None:
         pass  # No-op for memory persistence
 
     def load_performance_data(self) -> Dict[str, "InstructionPerformanceData"]:
@@ -64,13 +64,13 @@ class MemoryPersistence(InstructionPersistence):
 class FilePersistence(InstructionPersistence):
     """Production-ready file-based persistence"""
 
-    def __init__(self, data_dir: str = "./data/instructions"):
+    def __init__(self, data_dir: str = "./data/instructions") -> None:
         self.data_dir = data_dir
         os.makedirs(data_dir, exist_ok=True)
         self.metrics_file = os.path.join(data_dir, "metrics.json")
         self.performance_file = os.path.join(data_dir, "performance.json")
 
-    def save_metrics(self, metrics: List["InstructionMetric"]):
+    def save_metrics(self, metrics: List["InstructionMetric"]) -> None:
         try:
             with open(self.metrics_file, "w") as f:
                 json.dump([asdict(m) for m in metrics], f, indent=4)
@@ -87,7 +87,7 @@ class FilePersistence(InstructionPersistence):
             logger.error(f"Failed to load metrics: {e}")
         return []
 
-    def save_performance_data(self, data: Dict[str, "InstructionPerformanceData"]):
+    def save_performance_data(self, data: Dict[str, "InstructionPerformanceData"]) -> None:
         try:
             with open(self.performance_file, "w") as f:
                 json.dump({k: asdict(v) for k, v in data.items()}, f, indent=4)
@@ -199,7 +199,7 @@ class InstructionPerformanceMonitor:
 
     def __init__(
         self, max_metrics_history: int = 10000, persistence: Optional[InstructionPersistence] = None
-    ):
+    ) -> None:
         self.persistence = persistence or MemoryPersistence()
         self.metrics_history: deque = deque(maxlen=max_metrics_history)
         self.performance_cache: Dict[str, InstructionPerformanceData] = {}
@@ -259,7 +259,7 @@ class InstructionPerformanceMonitor:
         context: Dict[str, Any],
         session_id: Optional[str] = None,
         user_id: Optional[str] = None,
-    ):
+    ) -> None:
         """
         Record a performance metric for an instruction
 
@@ -537,7 +537,7 @@ class InstructionPerformanceMonitor:
 
         return hashlib.sha256(content.encode()).hexdigest()[:16]
 
-    def _update_performance_cache(self, instruction_id: str):
+    def _update_performance_cache(self, instruction_id: str) -> None:
         """Update cached performance data for an instruction"""
         metrics = [m for m in self.metrics_history if m.instruction_id == instruction_id]
 
@@ -586,7 +586,7 @@ class InstructionPerformanceMonitor:
 
         self.performance_cache[instruction_id] = performance
 
-    def _update_ab_test_metrics(self, metric: InstructionMetric):
+    def _update_ab_test_metrics(self, metric: InstructionMetric) -> None:
         """Update A/B test data with new metric"""
         for test_id, test_config in self.active_ab_tests.items():
             if metric.instruction_id in [
@@ -612,7 +612,7 @@ class InstructionPerformanceMonitor:
 
         return False
 
-    def _complete_ab_test(self, test_id: str):
+    def _complete_ab_test(self, test_id: str) -> None:
         """Complete an A/B test and generate results"""
         test_config = self.active_ab_tests.get(test_id)
         if not test_config:
@@ -921,7 +921,7 @@ class InstructionPerformanceMonitor:
 
         return recent_results[:limit]
 
-    def _load_data(self):
+    def _load_data(self) -> None:
         """Load existing data from persistence"""
         try:
             # Load metrics
@@ -937,7 +937,7 @@ class InstructionPerformanceMonitor:
         except Exception as e:
             logger.error(f"Failed to load instruction data: {e}")
 
-    def _save_data(self):
+    def _save_data(self) -> None:
         """Save current data to persistence"""
         try:
             # Save metrics

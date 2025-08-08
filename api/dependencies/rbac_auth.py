@@ -30,7 +30,7 @@ class UserWithRoles:
     Enhanced user object that includes role and permission information.
     """
 
-    def __init__(self, user: User, roles: List[Dict], permissions: List[str], accessible_frameworks: List[Dict]):
+    def __init__(self, user: User, roles: List[Dict], permissions: List[str], accessible_frameworks: List[Dict]) -> None:
         self.user = user
         self.roles = roles
         self.permissions = permissions
@@ -90,12 +90,12 @@ class UserWithRoles:
 def create_access_token_with_roles(user_id: UUID, roles: List[Dict], permissions: List[str]) -> str:
     """
     Create access token with embedded role and permission claims.
-    
+
     Args:
         user_id: User ID
         roles: List of user roles
         permissions: List of user permissions
-        
+
     Returns:
         JWT access token with role claims
     """
@@ -119,10 +119,10 @@ def create_access_token_with_roles(user_id: UUID, roles: List[Dict], permissions
 def create_refresh_token_with_roles(user_id: UUID) -> str:
     """
     Create refresh token (roles will be re-evaluated on refresh).
-    
+
     Args:
         user_id: User ID
-        
+
     Returns:
         JWT refresh token
     """
@@ -135,11 +135,11 @@ async def get_current_user_with_roles(
 ) -> Optional[UserWithRoles]:
     """
     Get current user with role and permission information from token.
-    
+
     Args:
         token: JWT access token
         async_db: Async database session
-        
+
     Returns:
         UserWithRoles instance or None if not authenticated
     """
@@ -187,13 +187,13 @@ async def get_current_active_user_with_roles(
 ) -> UserWithRoles:
     """
     Get current active user with roles, raising exception if not authenticated.
-    
+
     Args:
         current_user: Current user with roles
-        
+
     Returns:
         UserWithRoles instance
-        
+
     Raises:
         HTTPException: If not authenticated or user is inactive
     """
@@ -216,10 +216,10 @@ async def get_current_active_user_with_roles(
 def require_permission(permission: str):
     """
     Dependency factory for requiring specific permissions.
-    
+
     Args:
         permission: Required permission name
-        
+
     Returns:
         FastAPI dependency function
     """
@@ -239,10 +239,10 @@ def require_permission(permission: str):
 def require_any_permission(permissions: List[str]):
     """
     Dependency factory for requiring any of the specified permissions.
-    
+
     Args:
         permissions: List of permission names (user needs at least one)
-        
+
     Returns:
         FastAPI dependency function
     """
@@ -262,10 +262,10 @@ def require_any_permission(permissions: List[str]):
 def require_all_permissions(permissions: List[str]):
     """
     Dependency factory for requiring all of the specified permissions.
-    
+
     Args:
         permissions: List of permission names (user needs all)
-        
+
     Returns:
         FastAPI dependency function
     """
@@ -286,10 +286,10 @@ def require_all_permissions(permissions: List[str]):
 def require_role(role: str):
     """
     Dependency factory for requiring specific roles.
-    
+
     Args:
         role: Required role name
-        
+
     Returns:
         FastAPI dependency function
     """
@@ -309,10 +309,10 @@ def require_role(role: str):
 def require_any_role(roles: List[str]):
     """
     Dependency factory for requiring any of the specified roles.
-    
+
     Args:
         roles: List of role names (user needs at least one)
-        
+
     Returns:
         FastAPI dependency function
     """
@@ -332,11 +332,11 @@ def require_any_role(roles: List[str]):
 def require_framework_access(framework_id: str, access_level: str = "read"):
     """
     Dependency factory for requiring framework access.
-    
+
     Args:
         framework_id: Framework ID to check access for
         access_level: Required access level (read, write, admin)
-        
+
     Returns:
         FastAPI dependency function
     """
@@ -356,12 +356,12 @@ def require_framework_access(framework_id: str, access_level: str = "read"):
 def check_framework_access_permission(user: UserWithRoles, framework_id: str, required_level: str = "read") -> bool:
     """
     Check if user has access to a specific framework with the required level.
-    
+
     Args:
         user: User with roles and permissions
         framework_id: Framework ID to check
         required_level: Required access level (read, write, admin)
-        
+
     Returns:
         True if user has required access level
     """
@@ -379,11 +379,11 @@ def check_framework_access_permission(user: UserWithRoles, framework_id: str, re
 def require_framework_access_level(framework_id: str, access_level: str = "read"):
     """
     Dependency factory for requiring framework access with specific level.
-    
+
     Args:
         framework_id: Framework ID to check access for
         access_level: Required access level (read, write, admin)
-        
+
     Returns:
         FastAPI dependency function
     """
@@ -405,7 +405,7 @@ class RBACMiddleware:
     Middleware for automatic RBAC enforcement and audit logging.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.protected_paths = {
             "/api/v1/admin": ["admin_roles", "admin_permissions", "admin_audit"],
             "/api/v1/frameworks": ["framework_list"],
@@ -417,11 +417,11 @@ class RBACMiddleware:
     async def check_path_permissions(self, path: str, user: UserWithRoles) -> bool:
         """
         Check if user has permission to access a specific path.
-        
+
         Args:
             path: Request path
             user: User with roles
-            
+
         Returns:
             True if access allowed
         """

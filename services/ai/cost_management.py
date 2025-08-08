@@ -270,7 +270,7 @@ class CostOptimization:
 class CostTrackingService:
     """Core service for tracking AI usage and costs."""
 
-    def __init__(self, redis_client: Optional[Redis] = None):
+    def __init__(self, redis_client: Optional[Redis] = None) -> None:
         self.redis = redis_client or self._get_redis_client()
         self.model_configs = self._load_model_configs()
         self.usage_buffer: List[AIUsageMetrics] = []
@@ -609,7 +609,7 @@ class CostTrackingService:
 class BudgetAlertService:
     """Service for managing budgets and generating alerts."""
 
-    def __init__(self, redis_client: Optional[Redis] = None):
+    def __init__(self, redis_client: Optional[Redis] = None) -> None:
         self.redis = redis_client or self._get_redis_client()
         self.cost_tracker = CostTrackingService(self.redis)
 
@@ -745,7 +745,7 @@ class BudgetAlertService:
 class CostOptimizationService:
     """Service for analyzing usage patterns and recommending optimizations."""
 
-    def __init__(self, redis_client: Optional[Redis] = None):
+    def __init__(self, redis_client: Optional[Redis] = None) -> None:
         self.redis = redis_client or self._get_redis_client()
         self.cost_tracker = CostTrackingService(self.redis)
 
@@ -963,7 +963,7 @@ class CostOptimizationService:
 class AICostManager:
     """Main orchestrator for AI cost management."""
 
-    def __init__(self, redis_client: Optional[Redis] = None):
+    def __init__(self, redis_client: Optional[Redis] = None) -> None:
         self.redis = redis_client or self._get_redis_client()
         self.cost_tracker = CostTrackingService(self.redis)
         self.budget_service = BudgetAlertService(self.redis)
@@ -1158,7 +1158,7 @@ class AICostManager:
 class IntelligentModelRouter:
     """Routes requests to optimal models based on task complexity and cost."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.model_configs = CostTrackingService()._load_model_configs()
 
     async def select_optimal_model(

@@ -192,7 +192,7 @@ class DatabaseConfig:
             return sync_kwargs
 
 
-def _init_sync_db():
+def _init_sync_db() -> None:
     """Initializes synchronous database engine and session maker if not already initialized."""
     global _ENGINE, _SESSION_LOCAL
     if _ENGINE is None:
@@ -208,7 +208,7 @@ def _init_sync_db():
             raise
 
 
-def _init_async_db():
+def _init_async_db() -> None:
     """Initializes asynchronous database engine and session maker if not already initialized."""
     global _ASYNC_ENGINE, _ASYNC_SESSION_LOCAL
     if _ASYNC_ENGINE is None:
@@ -345,7 +345,7 @@ def get_db_context():
         db.close()
 
 
-async def cleanup_db_connections():
+async def cleanup_db_connections() -> None:
     """Cleanup database connections and dispose engines."""
     global _ENGINE, _ASYNC_ENGINE
 

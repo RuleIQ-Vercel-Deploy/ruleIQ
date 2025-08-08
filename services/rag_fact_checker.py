@@ -66,7 +66,7 @@ class QualityAssessment(BaseModel):
 class RAGFactChecker:
     """
     Advanced fact-checking and self-critique system for RAG responses
-    
+
     Features:
     - Multi-source fact verification
     - Cross-reference validation
@@ -76,7 +76,7 @@ class RAGFactChecker:
     - Bias detection
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         # Initialize AI clients
         self.openai_client = None
         self.mistral_client = None
@@ -107,7 +107,7 @@ class RAGFactChecker:
     ) -> QualityAssessment:
         """
         Perform comprehensive fact-checking and quality assessment
-        
+
         Args:
             response_text: The RAG system's response
             sources: List of source documents used
@@ -188,10 +188,10 @@ class RAGFactChecker:
             Analyze the following text and extract specific factual claims that can be verified.
             Focus on concrete statements about how things work, specific features, capabilities, or limitations.
             Exclude opinions, general guidance, or subjective statements.
-            
+
             Text to analyze:
             {response_text}
-            
+
             Return a JSON list of factual claims. Each claim should be a specific, verifiable statement.
             Example: ["LangGraph supports PostgreSQL checkpointers", "State management requires TypedDict classes"]
             """
@@ -253,15 +253,15 @@ class RAGFactChecker:
 
             prompt = f"""
             You are a fact-checking expert. Verify the following claim against the provided sources.
-            
+
             Claim to verify: {claim}
-            
+
             Available sources:
             {source_context}
-            
+
             Full response context:
             {full_response[:500]}...
-            
+
             Analyze and respond with a JSON object containing:
             {{
                 "is_factual": boolean,
@@ -271,7 +271,7 @@ class RAGFactChecker:
                 "source_reliability": float between 0 and 1,
                 "reasoning": "detailed explanation of your analysis"
             }}
-            
+
             Be thorough and conservative in your assessment.
             """
 
@@ -362,16 +362,16 @@ class RAGFactChecker:
 
             prompt = f"""
             You are a critical reviewer analyzing a RAG system response.
-            
+
             Original Query: {original_query}
-            
+
             Response to analyze:
             {response_text}
-            
+
             Available sources count: {len(sources)}
-            
+
             Focus on: {aspect_prompts.get(aspect, aspect)}
-            
+
             Provide a critical analysis in JSON format:
             {{
                 "score": float between 0 and 1 (1 = excellent, 0 = poor),
@@ -380,7 +380,7 @@ class RAGFactChecker:
                 "suggestions": ["list of specific improvement suggestions"],
                 "reasoning": "detailed explanation of your assessment"
             }}
-            
+
             Be constructively critical and identify both strengths and weaknesses.
             """
 

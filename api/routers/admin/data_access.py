@@ -191,7 +191,7 @@ async def audit_data_access(
     # Get summary statistics
     total_access_records = db.query(func.count(DataAccess.id)).scalar()
     active_access_records = db.query(func.count(DataAccess.id)).filter(
-        DataAccess.is_active == True
+        DataAccess.is_active
     ).scalar()
 
     # Get access level distribution
@@ -199,7 +199,7 @@ async def audit_data_access(
         DataAccess.access_type,
         func.count(DataAccess.id).label('count')
     ).filter(
-        DataAccess.is_active == True
+        DataAccess.is_active
     ).group_by(DataAccess.access_type).all()
 
     return {

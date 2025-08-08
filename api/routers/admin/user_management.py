@@ -174,7 +174,7 @@ async def list_users(
 
     if role:
         query = query.join(UserRole).join(Role).filter(
-            and_(Role.name == role, UserRole.is_active == True)
+            and_(Role.name == role, UserRole.is_active)
         )
 
     # Pagination
@@ -397,7 +397,7 @@ async def delete_user(
     # Revoke all active roles
     rbac = RBACService(db)
     user_roles = db.query(UserRole).filter(
-        and_(UserRole.user_id == user_id, UserRole.is_active == True)
+        and_(UserRole.user_id == user_id, UserRole.is_active)
     ).all()
 
     for user_role in user_roles:
@@ -420,7 +420,7 @@ async def list_roles(
     db: Session = Depends(get_db)
 ):
     """List all roles with permission and user count information."""
-    roles = db.query(Role).filter(Role.is_active == True).all()
+    roles = db.query(Role).filter(Role.is_active).all()
 
     role_responses = []
     for role in roles:
@@ -428,7 +428,7 @@ async def list_roles(
         permissions = db.query(Permission).join(RolePermission).filter(
             and_(
                 RolePermission.role_id == role.id,
-                Permission.is_active == True
+                Permission.is_active
             )
         ).all()
 
@@ -444,7 +444,7 @@ async def list_roles(
 
         # Get user count for role
         user_count = db.query(UserRole).filter(
-            and_(UserRole.role_id == role.id, UserRole.is_active == True)
+            and_(UserRole.role_id == role.id, UserRole.is_active)
         ).count()
 
         role_responses.append(RoleResponse(
@@ -588,18 +588,18 @@ async def get_admin_statistics(
     """Get comprehensive admin statistics."""
     # User statistics
     total_users = db.query(User).count()
-    active_users = db.query(User).filter(User.is_active == True).count()
-    verified_users = db.query(User).filter(User.is_verified == True).count()
+    active_users = db.query(User).filter(User.is_active).count()
+    verified_users = db.query(User).filter(User.is_verified).count()
 
     # Role statistics
-    total_roles = db.query(Role).filter(Role.is_active == True).count()
+    total_roles = db.query(Role).filter(Role.is_active).count()
     system_roles = db.query(Role).filter(
-        and_(Role.is_active == True, Role.is_system_role == True)
+        and_(Role.is_active, Role.is_system_role)
     ).count()
     custom_roles = total_roles - system_roles
 
     # Permission statistics
-    total_permissions = db.query(Permission).filter(Permission.is_active == True).count()
+    total_permissions = db.query(Permission).filter(Permission.is_active).count()
 
     # Recent activity (last 7 days)
     week_ago = datetime.utcnow() - timedelta(days=7)

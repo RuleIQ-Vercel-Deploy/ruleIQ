@@ -43,7 +43,7 @@ class BudgetAlertMessage(WebSocketMessage):
 class ConnectionManager:
     """Manages WebSocket connections for real-time cost monitoring."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.active_connections: Dict[str, Dict[str, Any]] = {}
         self.user_connections: Dict[str, List[str]] = {}  # user_id -> connection_ids
         self.cost_manager = AICostManager()
@@ -81,7 +81,7 @@ class ConnectionManager:
 
         return connection_id
 
-    async def disconnect(self, connection_id: str):
+    async def disconnect(self, connection_id: str) -> None:
         """Remove WebSocket connection."""
         if connection_id in self.active_connections:
             connection = self.active_connections[connection_id]
@@ -99,11 +99,11 @@ class ConnectionManager:
             del self.active_connections[connection_id]
             logger.info(f"WebSocket connection {connection_id} disconnected")
 
-    async def _send_initial_data(self, connection_id: str):
+    async def _send_initial_data(self, connection_id: str) -> None:
         """Send initial cost data to newly connected client."""
         try:
             connection = self.active_connections[connection_id]
-            user_id = connection["user_id"]
+            connection["user_id"]
 
             # Get recent cost data
             from datetime import date
@@ -138,8 +138,14 @@ class ConnectionManager:
                     for trend in trends
                 ],
                 "budget_status": {
-                    "daily_limit": str(budget_config.get("daily_limit")) if budget_config.get("daily_limit") else None,
-                    "monthly_limit": str(budget_config.get("monthly_limit")) if budget_config.get("monthly_limit") else None
+                    "daily_limit": (
+                        str(budget_config.get("daily_limit"))
+                        if budget_config.get("daily_limit") else None
+                    ),
+                    "monthly_limit": (
+                        str(budget_config.get("monthly_limit"))
+                        if budget_config.get("monthly_limit") else None
+                    )
                 }
             }
 
@@ -155,7 +161,7 @@ class ConnectionManager:
         except Exception as e:
             logger.error(f"Failed to send initial data to {connection_id}: {str(e)}")
 
-    async def send_personal_message(self, connection_id: str, message: Dict[str, Any]):
+    async def send_personal_message(self, connection_id: str, message: Dict[str, Any]) -> None:
         """Send message to specific connection."""
         if connection_id in self.active_connections:
             try:
@@ -168,13 +174,13 @@ class ConnectionManager:
                 logger.error(f"Failed to send message to {connection_id}: {str(e)}")
                 await self.disconnect(connection_id)
 
-    async def send_to_user(self, user_id: str, message: Dict[str, Any]):
+    async def send_to_user(self, user_id: str, message: Dict[str, Any]) -> None:
         """Send message to all connections for a specific user."""
         if user_id in self.user_connections:
             for connection_id in self.user_connections[user_id].copy():
                 await self.send_personal_message(connection_id, message)
 
-    async def broadcast(self, message: Dict[str, Any], connection_type: Optional[str] = None):
+    async def broadcast(self, message: Dict[str, Any], connection_type: Optional[str] = None) -> None:
         """Broadcast message to all connections or specific connection type."""
         disconnected = []
 
@@ -196,18 +202,18 @@ class ConnectionManager:
         for connection_id in disconnected:
             await self.disconnect(connection_id)
 
-    async def subscribe_to_events(self, connection_id: str, event_types: List[str]):
+    async def subscribe_to_events(self, connection_id: str, event_types: List[str]) -> None:
         """Subscribe connection to specific event types."""
         if connection_id in self.active_connections:
             self.active_connections[connection_id]["subscriptions"].update(event_types)
 
-    async def unsubscribe_from_events(self, connection_id: str, event_types: List[str]):
+    async def unsubscribe_from_events(self, connection_id: str, event_types: List[str]) -> None:
         """Unsubscribe connection from specific event types."""
         if connection_id in self.active_connections:
             for event_type in event_types:
                 self.active_connections[connection_id]["subscriptions"].discard(event_type)
 
-    async def ping_connections(self):
+    async def ping_connections(self) -> None:
         """Send ping to all connections to keep them alive."""
         ping_message = {
             "type": "ping",
@@ -247,10 +253,10 @@ async def realtime_cost_dashboard(
     websocket: WebSocket,
     user_id: str = Query(..., description="User ID for connection"),
     dashboard_type: str = Query("general", description="Type of dashboard (general, admin, service)")
-):
+) -> None:
     """
     WebSocket endpoint for real-time cost monitoring dashboard.
-    
+
     Provides live updates of cost metrics, budget status, and alerts.
     """
     connection_id = None
@@ -301,10 +307,10 @@ async def realtime_cost_dashboard(
 async def budget_alerts_websocket(
     websocket: WebSocket,
     user_id: str = Query(..., description="User ID for connection")
-):
+) -> None:
     """
     WebSocket endpoint for real-time budget alerts.
-    
+
     Sends immediate notifications when budget thresholds are exceeded.
     """
     connection_id = None
@@ -360,10 +366,10 @@ async def service_cost_monitoring(
     websocket: WebSocket,
     service_name: str,
     user_id: str = Query(..., description="User ID for connection")
-):
+) -> None:
     """
     WebSocket endpoint for monitoring specific service costs.
-    
+
     Provides real-time cost updates for a specific AI service.
     """
     connection_id = None
@@ -407,7 +413,7 @@ async def service_cost_monitoring(
             await connection_manager.disconnect(connection_id)
 
 
-async def handle_websocket_message(connection_id: str, message: Dict[str, Any]):
+async def handle_websocket_message(connection_id: str, message: Dict[str, Any]) -> None:
     """Handle incoming WebSocket messages."""
 
     message_type = message.get("type")
@@ -432,7 +438,7 @@ async def handle_websocket_message(connection_id: str, message: Dict[str, Any]):
             connection_manager.active_connections[connection_id]["last_ping"] = datetime.now()
 
 
-async def send_current_stats(connection_id: str):
+async def send_current_stats(connection_id: str) -> None:
     """Send current cost statistics to connection."""
 
     try:
@@ -461,14 +467,17 @@ async def send_current_stats(connection_id: str):
         logger.error(f"Failed to send current stats: {str(e)}")
 
 
-async def send_cost_forecast(connection_id: str):
+async def send_cost_forecast(connection_id: str) -> None:
     """Send cost forecast to connection."""
 
     try:
         # Generate mock forecast data
         forecast_data = {
             "next_7_days": [
-                {"date": (datetime.now() + timedelta(days=i)).date().isoformat(), "predicted_cost": f"{25.0 + i * 2.5:.2f}"}
+                {
+                    "date": (datetime.now() + timedelta(days=i)).date().isoformat(),
+                    "predicted_cost": f"{25.0 + i * 2.5:.2f}"
+                }
                 for i in range(7)
             ],
             "confidence_level": 85.5,
@@ -487,7 +496,7 @@ async def send_cost_forecast(connection_id: str):
         logger.error(f"Failed to send cost forecast: {str(e)}")
 
 
-async def send_service_initial_data(connection_id: str, service_name: str):
+async def send_service_initial_data(connection_id: str, service_name: str) -> None:
     """Send initial data for service monitoring."""
 
     try:
@@ -511,7 +520,9 @@ async def send_service_initial_data(connection_id: str, service_name: str):
             "service_name": service_name,
             "total_cost_7d": str(total_cost),
             "total_requests_7d": total_requests,
-            "average_cost_per_request": str(total_cost / total_requests) if total_requests > 0 else "0",
+            "average_cost_per_request": (
+                str(total_cost / total_requests) if total_requests > 0 else "0"
+            ),
             "daily_breakdown": [
                 {
                     "date": usage.timestamp.date().isoformat(),
@@ -534,7 +545,7 @@ async def send_service_initial_data(connection_id: str, service_name: str):
         logger.error(f"Failed to send service initial data: {str(e)}")
 
 
-async def send_service_stats(connection_id: str, service_name: str):
+async def send_service_stats(connection_id: str, service_name: str) -> None:
     """Send current service statistics."""
 
     try:
@@ -563,7 +574,7 @@ async def send_service_stats(connection_id: str, service_name: str):
 
 
 # Background task for broadcasting cost updates
-async def broadcast_cost_updates():
+async def broadcast_cost_updates() -> None:
     """Background task to broadcast real-time cost updates."""
 
     while True:

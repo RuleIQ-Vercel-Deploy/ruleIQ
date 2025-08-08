@@ -1,0 +1,204 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__serena__find_symbol",
+      "Bash(source:*)",
+      "Bash(python:*)",
+      "mcp__serena__read_memory",
+      "mcp__serena__execute_shell_command",
+      "mcp__serena__read_file",
+      "mcp__serena__find_file",
+      "mcp__serena__list_dir",
+      "mcp__serena__write_memory",
+      "mcp__serena__create_text_file",
+      "mcp__serena__search_for_pattern",
+      "mcp__serena__replace_lines",
+      "mcp__serena__replace_regex",
+      "Bash(alembic revision:*)",
+      "Bash(alembic upgrade:*)",
+      "Bash(alembic current:*)",
+      "Bash(alembic history:*)",
+      "Bash(alembic stamp:*)",
+      "Bash(ls:*)",
+      "mcp__serena__insert_after_symbol",
+      "mcp__serena__check_onboarding_performed",
+      "Bash(docker-compose:*)",
+      "Bash(find:*)",
+      "Bash(pnpm dev:*)",
+      "mcp__serena__replace_symbol_body",
+      "mcp__serena__get_symbols_overview",
+      "mcp__serena__initial_instructions",
+      "Bash(curl:*)",
+      "Bash(pytest:*)",
+      "Bash(pkill:*)",
+      "Bash(pnpm run:*)",
+      "mcp__desktop-commander__start_process",
+      "mcp__desktop-commander__read_file",
+      "mcp__serena__get_current_config",
+      "mcp__automated-ui-debuger-and-tester__enhanced_page_analyzer",
+      "mcp__automated-ui-debuger-and-tester__screenshot_url",
+      "mcp__cloudflare-playwright__browser_navigate",
+      "mcp__browser-tools__takeScreenshot",
+      "Bash(pnpm typecheck:*)",
+      "mcp__serena__activate_project",
+      "Bash(grep:*)",
+      "Bash(sed:*)",
+      "Bash(rm:*)",
+      "Bash(pnpm lint:*)",
+      "Bash(timeout:*)",
+      "Bash(ss:*)",
+      "Bash(ruff check:*)",
+      "mcp__desktop-commander__read_process_output",
+      "Bash(kill:*)",
+      "Bash(pnpm test:*)",
+      "Bash(pnpm list:*)",
+      "Bash(node:*)",
+      "Bash(serena:*)",
+      "mcp__TestSprite__testsprite_bootstrap_tests",
+      "mcp__TestSprite__testsprite_generate_code_summary",
+      "mcp__TestSprite__testsprite_generate_prd",
+      "WebFetch(domain:docs.testsprite.com)",
+      "mcp__tavily-mcp-server__tavily-crawl",
+      "mcp__tavily-mcp-server__tavily-map",
+      "mcp__tavily-mcp-server__tavily-search",
+      "Bash(pnpm vitest:*)",
+      "mcp__automated-ui-debuger-and-tester__ui_workflow_validator",
+      "mcp__automated-ui-debuger-and-tester__navigation_flow_validator",
+      "mcp__automated-ui-debuger-and-tester__playwright_navigate",
+      "Bash(for file in lib/api/policies.service.ts lib/api/monitoring.service.ts lib/api/reports.service.ts lib/api/readiness.service.ts lib/api/payment.service.ts)",
+      "Bash(do)",
+      "Bash(echo:*)",
+      "Bash(done)",
+      "mcp__neon-database__run_sql",
+      "Bash(make test:*)",
+      "Bash(cp:*)",
+      "mcp__serena__find_referencing_symbols",
+      "Bash(true)",
+      "Bash(/home/omar/Documents/ruleIQ/.venv/bin/python -c \"\nimport sys\ntry:\n    from api.main import app\n    print(''✅ FastAPI app loads successfully'')\nexcept Exception as e:\n    print(f''❌ FastAPI app load error: {e}'')\n    sys.exit(1)\n\")",
+      "Bash(/home/omar/Documents/ruleIQ/.venv/bin/python -c \"\nimport requests\n\n# Test the fixed business profiles endpoint\nprint(''Testing business profiles endpoint...'')\n\n# Login\nlogin_response = requests.post(\n    ''http://localhost:8000/api/v1/auth/login'',\n    json={''email'': ''test@ruleiq.dev'', ''password'': ''TestPassword123!''},\n    timeout=5\n)\n\nif login_response.status_code == 200:\n    token = login_response.json()[''access_token'']\n    headers = {''Authorization'': f''Bearer {token}''}\n    \n    # Test business profiles\n    bp_response = requests.get(\n        ''http://localhost:8000/api/v1/business-profiles/'',\n        headers=headers,\n        timeout=5\n    )\n    \n    print(f''Business profiles status: {bp_response.status_code}'')\n    if bp_response.status_code == 404:\n        print(''✅ Business profiles endpoint working (404 expected for test user)'')\n    elif bp_response.status_code == 200:\n        print(''✅ Business profiles endpoint working (profile found)'')\n    else:\n        print(f''❌ Business profiles error: {bp_response.text}'')\n        \n    # Test frameworks  \n    fw_response = requests.get(\n        ''http://localhost:8000/api/v1/frameworks/'',\n        headers=headers,\n        timeout=5\n    )\n    \n    print(f''Frameworks status: {fw_response.status_code}'')\n    if fw_response.status_code == 200:\n        frameworks = fw_response.json()\n        print(f''✅ Frameworks working: {len(frameworks.get(\"\"items\"\", []))} items'')\n    else:\n        print(f''❌ Frameworks error: {fw_response.text}'')\n        \nelse:\n    print(f''❌ Login failed: {login_response.status_code}'')\n    print(f''Response: {login_response.text}'')\n\")",
+      "Bash(/home/omar/Documents/ruleIQ/.venv/bin/python -c \"\nimport asyncio\nimport sys\nsys.path.append(''/home/omar/Documents/ruleIQ'')\nfrom database.db_setup import get_async_db\nfrom database.user import User\nfrom sqlalchemy.future import select\n\nasync def check_users():\n    async for db in get_async_db():\n        try:\n            result = await db.execute(select(User.email, User.id))\n            users = result.fetchall()\n            print(f''Found {len(users)} users:'')\n            for email, user_id in users:\n                print(f''  - {email} ({user_id})'')\n            break\n        except Exception as e:\n            print(f''Error checking users: {e}'')\n\nasyncio.run(check_users())\n\")",
+      "Bash(/home/omar/Documents/ruleIQ/.venv/bin/python:*)",
+      "Bash(pnpm build:*)",
+      "WebFetch(domain:docs.anthropic.com)",
+      "Bash(mv:*)",
+      "Bash(# Test creating conversation without initial message first\ncat > /tmp/simple_conv.json << ''EOF''\n{\"\"title\"\": \"\"Simple Test Chat\"\"}\nEOF\n\n# Get token again\nLOGIN_RESPONSE=$(curl -s -X POST \"\"http://localhost:8000/api/v1/auth/login\"\" \\\n  -H \"\"Content-Type: application/json\"\" \\\n  -d ''{\"\"email\"\": \"\"test@ruleiq.dev\"\", \"\"password\"\": \"\"password123\"\"}'')\n\nTOKEN=$(echo \"\"$LOGIN_RESPONSE\"\" | python3 -c \"\"import sys, json; data=json.load(sys.stdin); print(data.get(''access_token'', ''''))\"\" 2>/dev/null)\n\necho \"\"Testing conversation creation WITHOUT initial message...\"\"\n\nCONV_RESPONSE=$(curl -s -X POST \"\"http://localhost:8000/api/v1/chat/conversations\"\" \\\n  -H \"\"Content-Type: application/json\"\" \\\n  -H \"\"Authorization: Bearer $TOKEN\"\" \\\n  -d @/tmp/simple_conv.json)\n\necho \"\"Simple conversation response:\"\"\necho \"\"$CONV_RESPONSE\"\" | python3 -m json.tool 2>/dev/null || echo \"\"$CONV_RESPONSE\"\"\n\nrm -f /tmp/simple_conv.json)"
+    ]
+  },
+  "enableAllProjectMcpServers": true,
+  "enabledMcpjsonServers": [
+    "desktop-commander",
+    "serena",
+    "magic-ui-component-server",
+    "fetch",
+    "cloudflare-playwright",
+    "neon-database",
+    "shadcn-vue-mcp-server",
+    "browser-tools",
+    "mem0-memory",
+    "context-7",
+    "postgre-sql-database-management-server",
+    "tavily-mcp-server",
+    "redis",
+    "automated-ui-debuger-and-tester",
+    "github"
+  ],
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if [[ \"$CLAUDE_PROJECT_DIR\" == */ruleIQ* ]]; then echo '🚀 ruleIQ Project Session Started'; echo '📋 IMMACULATE CODE PROTOCOL: Active'; echo '🧠 Serena MCP: Checking status...'; mcp__serena__get_current_config 2>/dev/null | grep -q 'Active project: ruleIQ' || { echo 'Activating Serena MCP...'; mcp__serena__activate_project ruleIQ 2>/dev/null; }; echo '✅ Ready for enterprise-grade development'; fi || true",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if [[ \"$CLAUDE_PROJECT_DIR\" == */ruleIQ* ]]; then echo '🔍 PRE-EXECUTION VALIDATION:'; echo '  📋 Ensure Serena MCP active for enhanced code intelligence'; echo '  🎯 Follow TEST-FIRST mandate: Write tests before implementation'; echo '  🚨 Maintain IMMACULATE CODE standards: Zero warnings required'; echo '  🔒 Security: No hardcoded secrets allowed'; echo '  📐 Design compliance: Follow exact spec interfaces only'; fi || true",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Write|Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if [[ \"$CLAUDE_PROJECT_DIR\" == */ruleIQ* ]]; then echo '🔍 Security scan: Checking for hardcoded secrets...'; ! grep -rE '(password|secret|api_key|token|key)\\s*[=:]\\s*[\"'\\'''][^\"'\\'''\\n]{8,}[\"'\\''']' \"$CLAUDE_PROJECT_DIR\" --include='*.py' --include='*.ts' --include='*.tsx' --include='*.js' --exclude-dir=node_modules --exclude-dir=.git --exclude-dir=.venv 2>/dev/null | grep -v '.env' | grep -v 'template' | grep -v 'example' >/dev/null || { echo '❌ SECURITY VIOLATION: Hardcoded secrets detected!'; exit 2; }; echo '✅ Security check passed'; fi",
+            "timeout": 15
+          }
+        ]
+      },
+      {
+        "matcher": "Write|Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if [[ \"$CLAUDE_PROJECT_DIR\" == */ruleIQ* ]]; then echo '🔍 Field mapper validation...'; ! grep -r 'handles_persona\\|compliance_budge\\|privacy_polic\\|data_retentio\\|security_polic' \"$CLAUDE_PROJECT_DIR\" --include='*.py' --include='*.ts' --include='*.tsx' 2>/dev/null | grep -v field-mapper >/dev/null || { echo '❌ FIELD MAPPER VIOLATION: Use field mappers for truncated DB columns!'; echo '📍 Location: frontend/lib/api/business-profile/field-mapper.ts'; exit 2; }; echo '✅ Field mapper validation passed'; fi",
+            "timeout": 10
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if [[ \"$CLAUDE_PROJECT_DIR\" == */ruleIQ* ]] && echo \"$1\" | grep -q python && [[ \"$VIRTUAL_ENV\" != */ruleIQ/.venv ]]; then echo '⚠️ ENVIRONMENT WARNING: Python virtual environment not activated'; echo '📍 Run: source \"$CLAUDE_PROJECT_DIR/.venv/bin/activate\"'; fi || true",
+            "timeout": 3
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Edit|MultiEdit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if [[ \"$CLAUDE_PROJECT_DIR\" == */ruleIQ* ]] && find \"$CLAUDE_PROJECT_DIR\" -name '*.py' -newer /tmp/.ruleiq_py_check 2>/dev/null | head -1 | grep -q .; then echo '🔍 Python code quality check...'; cd \"$CLAUDE_PROJECT_DIR\" && source .venv/bin/activate 2>/dev/null && ruff check . --quiet && ruff format . --quiet && touch /tmp/.ruleiq_py_check && echo '✅ Python: IMMACULATE STANDARD maintained' || { echo '❌ Python code quality issues detected'; exit 1; }; fi 2>/dev/null || true",
+            "timeout": 30
+          }
+        ]
+      },
+      {
+        "matcher": "Edit|MultiEdit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if [[ \"$CLAUDE_PROJECT_DIR\" == */ruleIQ/frontend* ]] && find \"$CLAUDE_PROJECT_DIR/frontend\" -name '*.ts' -o -name '*.tsx' -newer /tmp/.ruleiq_fe_check 2>/dev/null | head -1 | grep -q .; then echo '🔍 Frontend code quality check...'; cd \"$CLAUDE_PROJECT_DIR/frontend\" && pnpm lint --quiet && pnpm typecheck --quiet && touch /tmp/.ruleiq_fe_check && echo '✅ Frontend: IMMACULATE STANDARD maintained' || { echo '❌ Frontend code quality issues detected'; exit 1; }; fi 2>/dev/null || true",
+            "timeout": 45
+          }
+        ]
+      },
+      {
+        "matcher": "Write|Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if [[ \"$CLAUDE_PROJECT_DIR\" == */ruleIQ* ]]; then echo '🧪 Quick validation tests...'; cd \"$CLAUDE_PROJECT_DIR\" && { [[ -f Makefile ]] && timeout 60s make test-fast --quiet 2>/dev/null && echo 'Backend tests: ✅' || echo 'Backend tests: ⚠️ Check required'; } && { [[ -d frontend ]] && cd frontend && timeout 30s pnpm test --run --silent 2>/dev/null && echo 'Frontend tests: ✅' || echo 'Frontend tests: ⚠️ Check required'; } || true; echo 'Validation complete'; fi 2>/dev/null || true",
+            "timeout": 120
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if [[ \"$CLAUDE_PROJECT_DIR\" == */ruleIQ* ]]; then echo ''; echo '🎯 IMMACULATE CODE COMPLETION CHECKLIST:'; echo ''; echo '📋 TEST-FIRST MANDATE:'; echo '  [ ] Tests written FIRST and approved ✅'; echo '  [ ] Implementation matches test specifications'; echo ''; echo '🔧 IMMACULATE CODE STANDARD:'; echo '  [ ] Zero warnings from ruff/eslint'; echo '  [ ] Type checking passed (tsc/mypy)'; echo '  [ ] Code compiles successfully'; echo '  [ ] No hardcoded secrets or magic values'; echo ''; echo '📐 DESIGN COMPLIANCE:'; echo '  [ ] Follows EXACT spec interfaces'; echo '  [ ] No unauthorized API changes'; echo '  [ ] Strict scope adherence (PRD/ticket only)'; echo ''; echo '🏗️ ENTERPRISE ARCHITECTURE:'; echo '  [ ] Modular, independently testable components'; echo '  [ ] Interface-driven design with clear I/O'; echo '  [ ] Stateless implementation where feasible'; echo '  [ ] Structured error handling implemented'; echo ''; echo '✅ QUALITY GATES:'; echo '  [ ] Self-reviewed for edge cases & performance'; echo '  [ ] Project style guide compliance'; echo '  [ ] Field mappers used (ruleIQ DB columns)'; echo '  [ ] Rate limiting considered for new endpoints'; echo ''; echo '🚨 CRITICAL REMINDERS:'; echo '  • NO implementation without approved tests'; echo '  • ESCALATE conflicts between rules and instructions'; echo '  • Maintain enterprise-grade compliance standards'; echo ''; echo '🚀 ruleIQ: AI-powered compliance automation platform'; echo '📊 Status: 98% production-ready | 671+ tests | <200ms API | 8.5/10 security'; fi || true",
+            "timeout": 5
+          }
+        ]
+      }
+    ]
+  }
+}

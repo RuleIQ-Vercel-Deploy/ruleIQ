@@ -1,5 +1,5 @@
 from datetime import timedelta
-from datetime import datetime
+from datetime import datetime, timedelta
 from uuid import UUID, uuid4
 
 from fastapi import APIRouter, Depends, HTTPException, Request, status
@@ -19,7 +19,12 @@ from api.middleware.rate_limiter import auth_rate_limit
 from api.schemas.models import Token, UserCreate, UserResponse
 from database.db_setup import get_db
 from database.user import User
+from database.rbac import Role
 from services.auth_service import auth_service
+from services.rbac_service import RBACService
+from config.logging_config import get_logger
+
+logger = get_logger(__name__)
 
 
 class LoginRequest(BaseModel):
@@ -53,6 +58,27 @@ async def register(user: UserCreate, db: Session = Depends(get_db)):
     db.add(db_user)
     db.commit()
     db.refresh(db_user)
+
+    # FIXED: Auto-assign business_user role to new users
+    from database.rbac import Role
+    from services.rbac_service import RBACService
+    
+    try:
+        rbac_service = RBACService(db)
+        business_user_role = db.query(Role).filter(Role.name == "business_user").first()
+        
+        if business_user_role:
+            rbac_service.assign_role_to_user(
+                user_id=db_user.id,
+                role_id=business_user_role.id,
+                granted_by=db_user.id  # Self-assignment for registration
+            )
+            logger.info(f"Assigned business_user role to new user: {db_user.email}")
+        else:
+            logger.warning("business_user role not found - user registered without default role")
+    except Exception as e:
+        logger.error(f"Failed to assign role to new user {db_user.email}: {e}")
+        # Don't fail registration if role assignment fails
 
     # Create tokens for the new user (auto-login after registration)
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
@@ -186,12 +212,34 @@ async def get_current_user(db: Session = Depends(get_db), token: str = Depends(o
             headers={"WWW-Authenticate": "Bearer"},
         )
 
-    return UserResponse(
+    # Get user roles and permissions for enhanced response
+    try:
+        rbac = RBACService(db)
+        roles = rbac.get_user_roles(user.id)
+        permissions = rbac.get_user_permissions(user.id)
+    except Exception:
+        # Fallback if RBAC service fails
+        roles = []
+        permissions = []
+
+    # Create enhanced response with role information
+    response_data = UserResponse(
         id=user.id,
         email=user.email,
         is_active=user.is_active,
         created_at=user.created_at,
     )
+    
+    # Add roles and permissions to the response dict
+    response_dict = response_data.dict()
+    response_dict.update({
+        "roles": roles,
+        "permissions": permissions,
+        "total_permissions": len(permissions),
+        "assessment_permissions": [p for p in permissions if 'assessment' in p.lower()]
+    })
+    
+    return response_dict
 
 
 @router.post("/logout")
@@ -220,3 +268,92 @@ async def logout(request: Request, token: str = Depends(oauth2_scheme)):
             pass
 
     return {"message": "Successfully logged out"}
+
+
+@router.post("/assign-default-role")
+async def assign_default_role(
+    db: Session = Depends(get_db), 
+    token: str = Depends(oauth2_scheme)
+):
+    """
+    Assign the business_user role to the current authenticated user.
+    
+    This endpoint allows test users to self-assign the business_user role
+    without requiring admin permissions, making testing seamless.
+    """
+    from api.dependencies.auth import decode_token
+    
+    # Decode the JWT token to get user ID
+    payload = decode_token(token)
+    if not payload:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Could not validate credentials",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+
+    user_id = payload.get("sub")
+    if not user_id:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Could not validate credentials",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+
+    # Verify user exists and is active
+    user = db.query(User).filter(User.id == user_id).first()
+    if not user or not user.is_active:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="User not found or inactive",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+
+    try:
+        # Get RBAC service and business_user role
+        rbac = RBACService(db)
+        business_user_role = db.query(Role).filter(Role.name == "business_user").first()
+        
+        if not business_user_role:
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail="business_user role not found. Please contact administrator."
+            )
+
+        # Check if user already has the role
+        existing_roles = rbac.get_user_roles(user.id)
+        if any(role['name'] == 'business_user' for role in existing_roles):
+            return {
+                "success": True,
+                "message": "User already has business_user role",
+                "user_id": str(user.id),
+                "email": user.email,
+                "roles": existing_roles
+            }
+
+        # Assign the business_user role (self-assignment)
+        rbac.assign_role_to_user(
+            user_id=user.id,
+            role_id=business_user_role.id,
+            granted_by=user.id  # Self-assignment
+        )
+
+        # Get updated user roles and permissions
+        updated_roles = rbac.get_user_roles(user.id)
+        updated_permissions = rbac.get_user_permissions(user.id)
+
+        return {
+            "success": True,
+            "message": "business_user role assigned successfully",
+            "user_id": str(user.id),
+            "email": user.email,
+            "roles": updated_roles,
+            "permissions": updated_permissions,
+            "assessment_permissions": [p for p in updated_permissions if 'assessment' in p.lower()]
+        }
+
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to assign role: {str(e)}"
+        )

@@ -5,6 +5,7 @@ import sys
 import os
 import asyncio
 from pathlib import Path
+from typing import Optional
 
 # Add project root to path
 sys.path.insert(0, ".")
@@ -13,7 +14,7 @@ sys.path.insert(0, ".")
 os.environ["ENVIRONMENT"] = "test"
 
 
-async def test_basic_functionality():
+async def test_basic_functionality() -> Optional[bool]:
     """Test basic functionality that's failing in pytest."""
     try:
         # Test imports

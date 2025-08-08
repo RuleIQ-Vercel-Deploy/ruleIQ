@@ -11,7 +11,7 @@ Example:
 from cryptography.fernet import Fernet
 
 
-def generate_key():
+def generate_key() -> None:
     """Generates a new Fernet key."""
     key = Fernet.generate_key()
     print("Generated Fernet Key (store this securely!):")

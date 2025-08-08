@@ -22,7 +22,7 @@ sys.path.append(str(PROJECT_ROOT))
 class ContextMonitor:
     """Monitor file changes and detect context-affecting modifications."""
 
-    def __init__(self, project_root: Path = PROJECT_ROOT):
+    def __init__(self, project_root: Path = PROJECT_ROOT) -> None:
         self.project_root = project_root
         self.context_dir = project_root / "docs" / "context"
         self.config_file = self.context_dir / "monitor_config.json"
@@ -127,7 +127,7 @@ class ContextMonitor:
                 return json.load(f)
         return {"file_hashes": {}, "last_scan": None, "context_updates_needed": []}
 
-    def _save_state(self):
+    def _save_state(self) -> None:
         """Save current monitoring state."""
         with open(self.state_file, "w") as f:
             json.dump(self.state, f, indent=2)
@@ -384,7 +384,7 @@ class ContextMonitor:
 
         return report
 
-    def _update_change_log(self, impact_analysis: List[Dict]):
+    def _update_change_log(self, impact_analysis: List[Dict]) -> None:
         """Update the context change log with new changes."""
         change_log_file = self.context_dir / "CHANGE_LOG.md"
 
@@ -436,7 +436,7 @@ class ContextMonitor:
             f.write("\n".join(lines))
 
 
-def main():
+def main() -> None:
     """Main entry point for context monitoring."""
     if len(sys.argv) > 1 and sys.argv[1] == "--help":
         print("""
