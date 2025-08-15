@@ -174,3 +174,25 @@ debug-suite.html
 
 # Debug and testing tools - keep out of version control  
 debug-suite.html
+
+# Tool-specific session files (Added for cleanup)
+.claude/serena-*.sh
+.claude/serena-*.json
+.claude/serena-*.flag
+.serena/memories/
+.cursor/rules/
+.windsurfrules
+.augment-guidelines/
+
+# Design iterations and generated files
+.superdesign/
+ruleIQ*.html
+
+# Runtime and schedule files
+celerybeat-schedule*
+
+# Context and analysis files (auto-generated)
+.context/
+
+# Legacy and migration folders
+frontend/legacy/

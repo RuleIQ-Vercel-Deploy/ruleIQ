@@ -25,6 +25,12 @@ fi
 # Activate virtual environment
 source .venv/bin/activate
 
+# Check if Python dependencies are installed
+if ! python -c "import uvicorn" 2>/dev/null; then
+    echo "Installing backend dependencies..."
+    pip install -r requirements.txt
+fi
+
 # Check if node_modules exists in frontend
 if [ \! -d "frontend/node_modules" ]; then
     echo "Installing frontend dependencies..."

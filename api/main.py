@@ -36,6 +36,7 @@ from api.routers import (
     freemium,
     implementation,
     integrations,
+    iq_agent,
     monitoring,
     policies,
     readiness,
@@ -103,6 +104,14 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     # Shutdown
     logger.info("Shutting down ruleIQ API...")
 
+    # Cleanup IQ agent resources if needed
+    try:
+        from api.routers.iq_agent import cleanup_iq_agent
+        await cleanup_iq_agent()
+        logger.info("IQ agent resources cleaned up")
+    except Exception as e:
+        logger.warning(f"IQ agent cleanup warning: {e}")
+
     # Close database connections
     await cleanup_db_connections()
     logger.info("Database connections closed")
@@ -168,6 +177,7 @@ app.include_router(
 app.include_router(frameworks.router, prefix="/api/v1/frameworks", tags=["frameworks"])
 app.include_router(implementation.router, prefix="/api/v1/implementation", tags=["implementation"])
 app.include_router(integrations.router, prefix="/api/v1/integrations", tags=["integrations"])
+app.include_router(iq_agent.router, prefix="/api/v1/iq", tags=["iq-agent", "graphrag"])
 app.include_router(monitoring.router, prefix="/api/v1/monitoring", tags=["monitoring"])
 app.include_router(policies.router, prefix="/api/v1/policies", tags=["policies"])
 app.include_router(readiness.router, prefix="/api/v1/readiness", tags=["readiness"])
