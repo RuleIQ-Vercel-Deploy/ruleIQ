@@ -15,6 +15,10 @@ const clientSchema = z.object({
   NEXT_PUBLIC_ENABLE_MOCK_DATA: z.string().transform((val) => val === 'true'),
   NEXT_PUBLIC_ENV: z.enum(['development', 'production', 'test']).default('development'),
   NEXT_PUBLIC_VERCEL_ANALYTICS_ID: z.string().optional(),
+  NEXT_PUBLIC_USE_NEW_THEME: z
+    .string()
+    .transform((val) => val === 'true')
+    .optional(),
 });
 
 /**
@@ -28,7 +32,6 @@ const serverSchema = z.object({
   SENTRY_PROJECT: z.string().optional(),
   SENTRY_AUTH_TOKEN: z.string().optional(),
 });
-
 /**
  * You can't destruct `process.env` as a regular object in the Next.js
  * middleware, so you have to do it manually here.
@@ -44,6 +47,7 @@ const processEnv = {
   NEXT_PUBLIC_ENABLE_MOCK_DATA: process.env['NEXT_PUBLIC_ENABLE_MOCK_DATA'],
   NEXT_PUBLIC_ENV: process.env['NEXT_PUBLIC_ENV'],
   NEXT_PUBLIC_VERCEL_ANALYTICS_ID: process.env['NEXT_PUBLIC_VERCEL_ANALYTICS_ID'],
+  NEXT_PUBLIC_USE_NEW_THEME: process.env['NEXT_PUBLIC_USE_NEW_THEME'],
   // Server
   NODE_ENV: process.env['NODE_ENV'],
   SENTRY_DSN: process.env['SENTRY_DSN'],
@@ -77,7 +81,9 @@ if (!!process.env['SKIP_ENV_VALIDATION'] === false) {
 
   env = parsed.data;
 } else {
-  env = processEnv as MergedOutput;
+  // When validation is skipped, we still need to transform the values
+  // to match the expected output types (e.g., string to boolean conversions)
+  env = combinedSchema.parse(processEnv);
 }
 
 export { env };
