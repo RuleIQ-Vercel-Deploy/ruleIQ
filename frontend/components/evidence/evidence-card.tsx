@@ -62,6 +62,7 @@ export function EvidenceCard({ evidence, isSelected, onSelectionChange }: Eviden
               alt={evidence.uploadedBy}
               width={24}
               height={24}
+              sizes="24px"
               className="rounded-full"
             />
             <span>{evidence.uploadedBy}</span>

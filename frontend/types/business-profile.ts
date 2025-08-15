@@ -18,6 +18,7 @@ export interface BusinessProfile {
 
   // Data Sensitivity Classification
   data_sensitivity: 'Low' | 'Moderate' | 'High' | 'Confidential';
+  data_types: string[];
 
   // Business Characteristics - Using full, descriptive names
   handles_personal_data: boolean;

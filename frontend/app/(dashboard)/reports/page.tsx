@@ -29,14 +29,14 @@ export default function ReportsPage() {
 
   const getStatusIcon = (status: string) => {
     switch (status) {
-      case 'ready':
       case 'completed':
         return <Download className="h-4 w-4" />;
-      case 'generated':
-        return <FileText className="h-4 w-4" />;
-      case 'processing':
       case 'generating':
         return <RefreshCw className="h-4 w-4 animate-spin" />;
+      case 'failed':
+        return <AlertCircle className="h-4 w-4" />;
+      case 'scheduled':
+        return <FileText className="h-4 w-4" />;
       default:
         return null;
     }
@@ -44,12 +44,10 @@ export default function ReportsPage() {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'ready':
       case 'completed':
         return 'text-success border-success/20 bg-success/10';
-      case 'generated':
+      case 'scheduled':
         return 'text-info border-info/20 bg-info/10';
-      case 'processing':
       case 'generating':
         return 'text-warning border-warning/20 bg-warning/10';
       case 'failed':
@@ -134,7 +132,7 @@ export default function ReportsPage() {
                 <div className="flex items-start justify-between">
                   <div className="flex items-center gap-2">
                     <BarChart3 className="h-5 w-5 text-gold" />
-                    <CardTitle className="text-lg text-navy">{report.name || report.title}</CardTitle>
+                    <CardTitle className="text-lg text-navy">{report.title}</CardTitle>
                   </div>
                   <Badge variant="outline" className={`gap-1 ${getStatusColor(report.status)}`}>
                     {getStatusIcon(report.status)}
@@ -148,18 +146,20 @@ export default function ReportsPage() {
                 <div className="space-y-2 text-sm text-muted-foreground">
                   <div className="flex items-center justify-between">
                     <span>Type</span>
-                    <span className="font-medium text-foreground">{report.type || 'Compliance'}</span>
+                    <span className="font-medium text-foreground">{report.report_type || 'compliance'}</span>
                   </div>
-                  {report.period && (
+                  {report.date_range && (
                     <div className="flex items-center justify-between">
                       <span>Period</span>
-                      <span className="font-medium text-foreground">{report.period}</span>
+                      <span className="font-medium text-foreground">
+                        {new Date(report.date_range.start_date).toLocaleDateString()} - {new Date(report.date_range.end_date).toLocaleDateString()}
+                      </span>
                     </div>
                   )}
                   <div className="flex items-center justify-between">
                     <span>Generated</span>
                     <span className="font-medium text-foreground">
-                      {new Date(report.created_at || report.lastGenerated).toLocaleDateString()}
+                      {new Date(report.created_at).toLocaleDateString()}
                     </span>
                   </div>
                   {report.file_size && (
@@ -185,7 +185,7 @@ export default function ReportsPage() {
                     variant="outline"
                     size="sm"
                     className="flex-1"
-                    disabled={report.status === 'processing' || report.status === 'generating'}
+                    disabled={report.status === 'generating'}
                     onClick={() => handleDownload(report.id, 'pdf')}
                   >
                     <Download className="mr-2 h-4 w-4" />

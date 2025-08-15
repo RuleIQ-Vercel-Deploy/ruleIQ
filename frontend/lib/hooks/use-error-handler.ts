@@ -10,7 +10,7 @@ import { toast } from 'sonner';
 
 import { APIError } from '@/lib/api/client';
 import {
-  EnhancedAPIError,
+  EnhancedApiError,
   ErrorType,
   ErrorSeverity,
   getContextualErrorMessage,
@@ -19,41 +19,41 @@ import {
 interface UseErrorHandlerOptions {
   context?: string;
   showToast?: boolean;
-  onError?: (error: EnhancedAPIError | APIError) => void;
+  onError?: (error: EnhancedApiError | APIError) => void;
   onRetry?: () => void;
 }
 
 export function useErrorHandler(options: UseErrorHandlerOptions = {}) {
   const { context, showToast = true, onError, onRetry } = options;
-  const [error, setError] = useState<EnhancedAPIError | APIError | null>(null);
+  const [error, setError] = useState<EnhancedApiError | APIError | null>(null);
   const [isRetrying, setIsRetrying] = useState(false);
 
   const handleError = useCallback(
     (error: any) => {
-      let processedError: EnhancedAPIError | APIError;
+      let processedError: EnhancedApiError | APIError;
 
       // Check if it's already an enhanced error
-      if (error instanceof EnhancedAPIError) {
+      if (error instanceof EnhancedApiError) {
         processedError = error;
       } else if (error instanceof APIError) {
         processedError = error;
       } else {
         // Create a generic error
-        processedError = new APIError(0, error.message || 'An unexpected error occurred', error);
+        processedError = new APIError(error.message || 'An unexpected error occurred', 0, error);
       }
 
       setError(processedError);
 
       // Get appropriate error message
       const message =
-        processedError instanceof EnhancedAPIError
+        processedError instanceof EnhancedApiError
           ? getContextualErrorMessage(processedError, context)
-          : processedError.detail;
+          : processedError.message;
 
       // Show toast notification
       if (showToast) {
         // Determine toast type based on error severity
-        if (processedError instanceof EnhancedAPIError) {
+        if (processedError instanceof EnhancedApiError) {
           switch (processedError.severity) {
             case ErrorSeverity.CRITICAL:
             case ErrorSeverity.HIGH:
@@ -179,7 +179,7 @@ export function useFormError(context: string = 'form') {
         });
 
         setFieldErrors(fieldErrorMap);
-      } else if (error instanceof EnhancedAPIError && error.type === ErrorType.VALIDATION) {
+      } else if (error instanceof EnhancedApiError && error.type === ErrorType.VALIDATION) {
         // Show general validation error
         toast.error(error.userMessage);
       } else {

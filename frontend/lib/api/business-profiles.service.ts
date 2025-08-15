@@ -1,8 +1,11 @@
 import { BusinessProfileFieldMapper } from './business-profile/field-mapper';
 import { apiClient } from './client';
 
-import type { BusinessProfile } from '@/types/api';
-import type { BusinessProfileFormData, FrameworkRecommendation } from '@/types/business-profile';
+import type { 
+  BusinessProfile, 
+  BusinessProfileFormData, 
+  FrameworkRecommendation 
+} from '@/types/business-profile';
 
 export interface CreateBusinessProfileRequest {
   company_name: string;
@@ -115,11 +118,19 @@ class BusinessProfileService {
       const existingProfile = await this.getProfile();
 
       if (existingProfile) {
-        // Update existing profile
-        return await this.updateProfile(existingProfile, data as any);
+        // Update existing profile  
+        return await this.updateProfile(existingProfile, data);
       } else {
-        // Create new profile
-        return await this.createBusinessProfile(data as any);
+        // Create new profile - transform to API format
+        const apiData = BusinessProfileFieldMapper.transformFormDataForAPI(data);
+        const response = await apiClient.post<any>('/business-profiles', apiData);
+        
+        // Transform response back to frontend format
+        const transformed = BusinessProfileFieldMapper.transformAPIResponseForFrontend(response);
+        if (!transformed) {
+          throw new Error('Failed to transform business profile data');
+        }
+        return transformed;
       }
     } catch (error) {
       console.error('Failed to save profile:', error);
@@ -134,9 +145,10 @@ class BusinessProfileService {
     profile: BusinessProfile,
     updates: Partial<BusinessProfileFormData>,
   ): Promise<BusinessProfile> {
-    // Create update payload with only changed fields
-    const updatePayload = BusinessProfileFieldMapper.createUpdatePayload(profile, updates);
-    return await this.updateBusinessProfile(profile.id, updatePayload);
+    // Create update payload with only changed fields - exclude frontend-only fields
+    const { assessment_completed, assessment_data, ...frontendUpdates } = updates;
+    const updatePayload = BusinessProfileFieldMapper.createUpdatePayload(profile, frontendUpdates as Partial<BusinessProfile>);
+    return await this.updateBusinessProfile(profile.id!, updatePayload);
   }
 
   /**
@@ -145,7 +157,7 @@ class BusinessProfileService {
   async deleteProfile(): Promise<void> {
     try {
       const profile = await this.getProfile();
-      if (profile) {
+      if (profile && profile.id) {
         await this.deleteBusinessProfile(profile.id);
       }
     } catch (error) {

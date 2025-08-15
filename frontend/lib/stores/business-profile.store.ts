@@ -18,15 +18,16 @@ import {
   formatValidationErrors,
 } from '@/lib/validations/business-profile';
 import {
-  type BusinessProfile,
+  type BusinessProfile as FrontendBusinessProfile,
   type BusinessProfileFormData,
   WIZARD_STEPS,
   type FrameworkRecommendation,
 } from '@/types/business-profile';
+import { type BusinessProfile as APIBusinessProfile } from '@/types/api';
 
 export interface BusinessProfileState {
   // Profile Data
-  profile: BusinessProfile | null;
+  profile: FrontendBusinessProfile | null;
   draftProfile: Partial<BusinessProfileFormData> | null;
   formData: Partial<BusinessProfileFormData>;
 
@@ -60,7 +61,7 @@ export interface BusinessProfileState {
   updateProfileAsync: (updates: Partial<BusinessProfileFormData>) => Promise<void>; // Async version
   deleteProfile: () => Promise<void>;
   clearProfile: () => void;
-  setProfile: (profile: BusinessProfile | null) => void;
+  setProfile: (profile: FrontendBusinessProfile | null) => void;
 
   // Actions - Form Data Management
   updateFormData: (data: Partial<BusinessProfileFormData>) => void;
@@ -324,7 +325,7 @@ export const useBusinessProfileStore = create<BusinessProfileState>()(
           );
         },
 
-        setProfile: (profile: BusinessProfile | null) => {
+        setProfile: (profile: FrontendBusinessProfile | null) => {
           set(
             {
               profile,

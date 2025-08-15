@@ -12,7 +12,7 @@ const CustomClassesComponent = () => (
   <div>
     <button className="hover:bg-primary-dark bg-primary text-white">Primary Button</button>
     <div className="bg-gold text-primary hover:bg-gold-dark">Gold Accent</div>
-    <div className="bg-cyan text-primary-dark">Cyan Accent</div>
+    <div className="bg-teal-500 text-primary-dark">Teal Accent</div>
     <div className="bg-neutral-light border-neutral-medium">Neutral Colors</div>
   </div>
 );
@@ -21,7 +21,7 @@ const RingColorComponent = () => (
   <div>
     <button className="focus:ring-2 focus:ring-primary focus:ring-offset-2">Primary Ring</button>
     <button className="focus:ring-2 focus:ring-gold focus:ring-offset-2">Gold Ring</button>
-    <button className="focus:ring-cyan focus:ring-2 focus:ring-opacity-50">Cyan Ring</button>
+    <button className="focus:ring-teal-500 focus:ring-2 focus:ring-opacity-50">Teal Ring</button>
     <input className="focus:ring-2 focus:ring-primary/20" placeholder="Input with ring" />
   </div>
 );
@@ -69,7 +69,7 @@ const ExtendedColorComponent = () => (
       <div className="py-2">Item 2</div>
       <div className="py-2">Item 3</div>
     </div>
-    <div className="from-cyan/20 to-cyan/5 bg-gradient-to-br">Cyan Gradient with Opacity</div>
+    <div className="from-teal-500/20 to-teal-500/5 bg-gradient-to-br">Teal Gradient with Opacity</div>
   </div>
 );
 
@@ -90,10 +90,10 @@ describe('Tailwind CSS Integration Tests', () => {
       expect(goldDiv).toHaveClass('hover:bg-gold-dark');
       expect(goldDiv).toHaveClass('text-primary');
 
-      // Test cyan color
-      const cyanDiv = container.querySelector('.bg-cyan');
-      expect(cyanDiv).toBeInTheDocument();
-      expect(cyanDiv).toHaveClass('text-primary-dark');
+      // Test teal color
+      const tealDiv = container.querySelector('.bg-teal-500');
+      expect(tealDiv).toBeInTheDocument();
+      expect(tealDiv).toHaveClass('text-primary-dark');
 
       // Test neutral colors
       const neutralDiv = container.querySelector('.bg-neutral-light');
@@ -168,10 +168,10 @@ describe('Tailwind CSS Integration Tests', () => {
       expect(goldRing).toHaveClass('focus:ring-2');
       expect(goldRing).toHaveClass('focus:ring-offset-2');
 
-      // Test cyan ring with opacity
-      const cyanRing = container.querySelector('.focus\\:ring-cyan');
-      expect(cyanRing).toBeInTheDocument();
-      expect(cyanRing).toHaveClass('focus:ring-opacity-50');
+      // Test teal ring with opacity
+      const tealRing = container.querySelector('.focus\\:ring-teal-500');
+      expect(tealRing).toBeInTheDocument();
+      expect(tealRing).toHaveClass('focus:ring-opacity-50');
 
       // Test ring with opacity modifier
       const inputRing = container.querySelector('.focus\\:ring-primary\\/20');
@@ -296,7 +296,7 @@ describe('Tailwind CSS Integration Tests', () => {
   describe('Utility Class Combinations', () => {
     it('should handle complex state combinations', () => {
       const { container } = render(
-        <button className="hover:bg-primary-dark active:bg-primary-light active:text-cyan transform bg-primary text-white transition-all duration-200 ease-in-out hover:scale-105 hover:text-gold focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 active:scale-95 disabled:cursor-not-allowed disabled:opacity-50">
+        <button className="hover:bg-primary-dark active:bg-primary-light active:text-teal-500 transform bg-primary text-white transition-all duration-200 ease-in-out hover:scale-105 hover:text-gold focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 active:scale-95 disabled:cursor-not-allowed disabled:opacity-50">
           Complex Button
         </button>,
       );
@@ -311,7 +311,7 @@ describe('Tailwind CSS Integration Tests', () => {
       // Text states
       expect(button).toHaveClass('text-white');
       expect(button).toHaveClass('hover:text-gold');
-      expect(button).toHaveClass('active:text-cyan');
+      expect(button).toHaveClass('active:text-teal-500');
 
       // Transform states
       expect(button).toHaveClass('transform');
@@ -436,8 +436,8 @@ describe('Tailwind CSS Integration Tests', () => {
       expect(container.querySelector('.divide-neutral-light')).toBeInTheDocument();
 
       // Gradient with opacity
-      expect(container.querySelector('.from-cyan\\/20')).toBeInTheDocument();
-      expect(container.querySelector('.to-cyan\\/5')).toBeInTheDocument();
+      expect(container.querySelector('.from-teal-500\\/20')).toBeInTheDocument();
+      expect(container.querySelector('.to-teal-500\\/5')).toBeInTheDocument();
     });
   });
 });

@@ -17,7 +17,7 @@
  * - Type safety with meaningful names
  */
 
-import { type BusinessProfile } from '@/types/api';
+import { type BusinessProfile } from '@/types/business-profile';
 
 export class BusinessProfileFieldMapper {
   /**
@@ -208,6 +208,7 @@ export class BusinessProfileFieldMapper {
 
     // Ensure arrays have default values
     const arrayFields: (keyof BusinessProfile)[] = [
+      'data_types',
       'cloud_providers',
       'saas_tools',
       'development_tools',
@@ -245,6 +246,10 @@ export class BusinessProfileFieldMapper {
     if (!transformed.country) {
       transformed.country = 'United Kingdom';
     }
+
+    // Add frontend-specific properties that don't exist in API
+    (transformed as any).assessment_completed = false;
+    (transformed as any).assessment_data = {};
 
     return transformed;
   }

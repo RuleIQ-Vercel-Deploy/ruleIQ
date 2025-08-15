@@ -122,7 +122,7 @@ export function useFormValidation<T extends Record<string, any>>(
   const [errors, setErrors] = React.useState<Partial<Record<keyof T, string>>>({});
   const [touched, setTouched] = React.useState<Partial<Record<keyof T, boolean>>>({});
 
-  const validateField = (name: keyof T, value: any) => {
+  const validateField = (name: keyof T, value: any): { isValid: boolean; error?: string } => {
     const rules = validationRules[name];
     if (!rules) return { isValid: true };
 

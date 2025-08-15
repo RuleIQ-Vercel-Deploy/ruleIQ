@@ -33,11 +33,11 @@ import { useAppStore } from '@/lib/stores/app.store';
 import { useBusinessProfileStore } from '@/lib/stores/business-profile.store';
 import { 
   useComplianceStatus,
-  useComplianceScore,
   useComplianceRequirements,
   useFrameworks,
   useRunComplianceCheck,
 } from '@/lib/tanstack-query/hooks';
+import { useComplianceScore } from '@/lib/tanstack-query/hooks/use-compliance';
 import { cn } from '@/lib/utils';
 
 // Question types
@@ -245,7 +245,7 @@ export default function ComplianceWizardPage() {
   // Fetch frameworks and compliance data
   const { data: frameworksData, isLoading: frameworksLoading } = useFrameworks();
   const { data: complianceStatus } = useComplianceStatus(profile?.id);
-  const { data: complianceScore } = useComplianceScore(profile?.id);
+  const { data: complianceScore } = useComplianceScore(profile?.id, undefined);
   const { mutate: runComplianceCheck, isPending: isRunningCheck } = useRunComplianceCheck();
 
   // Load saved draft on mount

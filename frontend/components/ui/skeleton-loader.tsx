@@ -38,7 +38,7 @@ export function Skeleton({
     <div className={cn(baseClasses, variantClasses[variant], className)} style={style}>
       {animation && (
         <motion.div
-          className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/10 to-transparent"
+          className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-teal-100/20 to-transparent"
           variants={shimmer}
           initial="initial"
           animate="animate"

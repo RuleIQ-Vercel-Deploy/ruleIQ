@@ -25,18 +25,18 @@ export const buttonVariants = {
 
     // Secondary actions - less emphasis
     secondary:
-      'bg-surface-secondary text-text-on-dark border-2 border-turquoise hover:bg-turquoise hover:text-text-on-turquoise active:bg-turquoise-dark',
+      'bg-surface-secondary text-text-on-dark border-2 border-teal-500 hover:bg-teal-500 hover:text-white active:bg-teal-600',
 
-    // Accent actions - turquoise brand accent
+    // Accent actions - teal brand accent
     accent:
-      'bg-turquoise text-text-on-turquoise hover:bg-turquoise-dark active:bg-turquoise-dark shadow-sm hover:shadow-md',
+      'bg-teal-500 text-white hover:bg-teal-600 active:bg-teal-700 shadow-sm hover:shadow-md',
 
     // Outlined - minimal emphasis
     outline:
-      'border-2 border-outline-primary text-turquoise bg-transparent hover:bg-turquoise/10 active:bg-turquoise/20',
+      'border-2 border-teal-500 text-teal-600 bg-transparent hover:bg-teal-500/10 active:bg-teal-500/20',
 
     // Ghost - subtle actions
-    ghost: 'text-turquoise hover:bg-turquoise/10 active:bg-turquoise/15',
+    ghost: 'text-teal-600 hover:bg-teal-500/10 active:bg-teal-500/15',
 
     // Destructive - dangerous actions
     destructive: 'bg-error text-white hover:bg-error/90 active:bg-error/80 shadow-sm',
@@ -45,7 +45,7 @@ export const buttonVariants = {
     success: 'bg-success text-white hover:bg-success/90 active:bg-success/80 shadow-sm',
 
     // Link - text-only actions
-    link: 'text-turquoise underline-offset-4 hover:underline focus-visible:ring-1',
+    link: 'text-teal-600 underline-offset-4 hover:underline focus-visible:ring-1',
   },
 
   sizes: {
@@ -63,7 +63,7 @@ export const cardStyles = {
   header: 'px-6 py-4 border-b border-neutral-medium',
   content: 'p-6',
   footer: 'px-6 py-4 border-t border-neutral-medium bg-neutral-light/20',
-  trust: 'border-turquoise/20 shadow-[0_0_20px_rgba(0,188,212,0.15)]', // Turquoise trust shadow
+  trust: 'border-teal-500/20 shadow-[0_0_20px_rgba(44,122,123,0.15)]', // Teal trust shadow
 };
 
 // Form Styles
@@ -87,7 +87,7 @@ export const statusStyles = {
     pending: 'bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400',
     approved: 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400',
     rejected: 'bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400',
-    active: 'bg-cyan/20 text-cyan-600 dark:bg-cyan/10 dark:text-cyan',
+    active: 'bg-teal-500/20 text-teal-600 dark:bg-teal-500/10 dark:text-teal-500',
     inactive: 'bg-gray-100 text-gray-800 dark:bg-gray-900/20 dark:text-gray-400',
   },
 };
@@ -112,8 +112,8 @@ export const widgetStyles = {
 
 // Navigation Styles
 export const navStyles = {
-  item: 'flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors hover:bg-turquoise/10 hover:text-turquoise',
-  itemActive: 'bg-turquoise/20 text-turquoise font-semibold', // Turquoise accent for active
+  item: 'flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors hover:bg-teal-500/10 hover:text-teal-600',
+  itemActive: 'bg-teal-500/20 text-teal-600 font-semibold', // Teal accent for active
   group: 'space-y-1',
   groupLabel: 'px-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider',
 };
@@ -125,7 +125,7 @@ export const tableStyles = {
   header: 'border-b bg-neutral-light/30',
   headerCell: 'h-12 px-4 text-left align-middle font-medium text-muted-foreground',
   body: 'border-b',
-  row: 'border-b transition-colors hover:bg-neutral-light/20 data-[state=selected]:bg-turquoise/10',
+  row: 'border-b transition-colors hover:bg-neutral-light/20 data-[state=selected]:bg-teal-500/10',
   cell: 'p-4 align-middle',
 };
 
@@ -137,6 +137,7 @@ export const animationClasses = {
   pulse: 'animate-pulse',
   spin: 'animate-spin',
   bounce: 'animate-bounce',
+  shimmer: 'animate-shimmer', // Teal shimmer loading effect
 };
 
 // Shadow Classes (Professional)
@@ -153,8 +154,8 @@ export const shadowClasses = {
   gold: 'shadow-[0_0_20px_rgba(203,150,62,0.15)]', // Gold glow effect
 };
 
-// Skeleton Loading Styles
-export const skeletonStyles = 'animate-pulse bg-neutral-light rounded';
+// Skeleton Loading Styles - Updated with Teal Shimmer
+export const skeletonStyles = 'animate-shimmer bg-gradient-to-r from-neutral-200 via-teal-100 to-neutral-200 bg-[length:200%_100%] rounded';
 
 // Trust Indicator Styles
 export const trustStyles = {
@@ -254,7 +255,7 @@ export function getStatusColor(status: string): string {
     'in-progress': 'text-blue-600',
     pending: 'text-amber-600',
     overdue: 'text-red-600',
-    active: 'text-cyan-600',
+    active: 'text-teal-600',
     inactive: 'text-gray-600',
   };
   return statusMap[status.toLowerCase()] || 'text-gray-600';

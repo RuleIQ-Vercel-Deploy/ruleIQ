@@ -23,8 +23,8 @@ export function LoadingShowcase() {
       {/* Stat Card Skeleton */}
       <Card className="ruleiq-card">
         <CardHeader>
-          <CardTitle style={{ color: '#F0EAD6' }}>Stat Card Skeleton</CardTitle>
-          <CardDescription style={{ color: '#6C757D' }}>
+          <CardTitle className="text-foreground">Stat Card Skeleton</CardTitle>
+          <CardDescription className="text-muted-foreground">
             Provides a visual placeholder while stat card data is loading.
           </CardDescription>
         </CardHeader>
@@ -41,8 +41,8 @@ export function LoadingShowcase() {
       {/* Table Loading Skeleton */}
       <Card className="ruleiq-card">
         <CardHeader>
-          <CardTitle style={{ color: '#F0EAD6' }}>Table Loading Skeleton</CardTitle>
-          <CardDescription style={{ color: '#6C757D' }}>
+          <CardTitle className="text-foreground">Table Loading Skeleton</CardTitle>
+          <CardDescription className="text-muted-foreground">
             Replicates the table structure to indicate that data is being fetched.
           </CardDescription>
         </CardHeader>
@@ -54,8 +54,8 @@ export function LoadingShowcase() {
       {/* Button Loading Spinner */}
       <Card className="ruleiq-card">
         <CardHeader>
-          <CardTitle style={{ color: '#F0EAD6' }}>Button Loading Spinner</CardTitle>
-          <CardDescription style={{ color: '#6C757D' }}>
+          <CardTitle className="text-foreground">Button Loading Spinner</CardTitle>
+          <CardDescription className="text-muted-foreground">
             Indicates an action is in progress within a button. Click to see the loading state.
           </CardDescription>
         </CardHeader>

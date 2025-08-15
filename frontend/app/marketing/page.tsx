@@ -326,8 +326,10 @@ export default function MarketingPage() {
               alt="Product demo"
               height={800}
               width={1200}
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px"
               className="mx-auto h-full rounded-2xl object-cover object-left-top shadow-2xl"
               draggable={false}
+              priority
             />
           </div>
         </div>
@@ -395,6 +397,7 @@ export default function MarketingPage() {
                       alt={t.name}
                       width={40}
                       height={40}
+                      sizes="40px"
                       className="rounded-full"
                     />
                     <div>

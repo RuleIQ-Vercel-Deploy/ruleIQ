@@ -19,7 +19,6 @@ import {
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import React, { useState, useEffect, useRef } from 'react';
-import Image from 'next/image';
 
 import { Button } from '@/components/ui/button';
 import { EmailCaptureForm } from '@/components/marketing/email-capture-form';
@@ -47,10 +46,10 @@ const HeroSection = ({ showEmailCapture, setShowEmailCapture }: HeroSectionProps
 
   const handleEmailSuccess = async (leadId: string, email: string) => {
     console.log('🔄 handleEmailSuccess called with:', { leadId, email });
-    
+
     try {
       console.log('📞 Starting assessment via freemiumService...');
-      
+
       // Start assessment session
       const session = await freemiumService.startAssessment({
         lead_email: email,
@@ -63,17 +62,17 @@ const HeroSection = ({ showEmailCapture, setShowEmailCapture }: HeroSectionProps
 
       // Hide email capture form before redirecting
       setShowEmailCapture(false);
-      
+
       // Add a small delay to ensure state updates
       setTimeout(() => {
         console.log('🚀 Executing navigation...');
         console.log('🔧 Current URL:', window.location.href);
         console.log('🔧 Target URL:', `/assessment?token=${session.session_token}`);
-        
+
         // Try Next.js router first
         router.push(`/assessment?token=${session.session_token}`);
         console.log('🚀 Next.js router.push() called');
-        
+
         // Add fallback navigation after short delay
         setTimeout(() => {
           console.log('🔧 Checking if navigation happened...');
@@ -85,13 +84,12 @@ const HeroSection = ({ showEmailCapture, setShowEmailCapture }: HeroSectionProps
           }
         }, 500);
       }, 100);
-      
     } catch (error) {
       console.error('❌ Failed to start assessment:', error);
       console.error('❌ Error details:', JSON.stringify(error, null, 2));
-      
+
       // Show error message and reset form to try again
-      alert('Sorry, we couldn\'t start your assessment right now. Please try again.');
+      alert("Sorry, we couldn't start your assessment right now. Please try again.");
       setShowEmailCapture(false);
       setTimeout(() => setShowEmailCapture(true), 1000);
     }
@@ -105,13 +103,13 @@ const HeroSection = ({ showEmailCapture, setShowEmailCapture }: HeroSectionProps
     >
       {/* Enhanced Clean Background with Gradient */}
       <div className="absolute inset-0 bg-gradient-to-br from-teal-50 via-white to-neutral-50" />
-      
+
       {/* Animated Background Elements */}
       <div className="absolute inset-0">
         {[...Array(3)].map((_, i) => (
           <div
             key={i}
-            className="absolute rounded-full bg-gradient-to-br from-teal-400/20 to-teal-600/20 blur-3xl animate-float"
+            className="absolute animate-float rounded-full bg-gradient-to-br from-teal-400/20 to-teal-600/20 blur-3xl"
             style={{
               width: `${300 + i * 100}px`,
               height: `${300 + i * 100}px`,
@@ -123,7 +121,6 @@ const HeroSection = ({ showEmailCapture, setShowEmailCapture }: HeroSectionProps
         ))}
       </div>
 
-
       {/* Grid Pattern Overlay */}
       <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center [mask-image:radial-gradient(ellipse_at_center,transparent_20%,black)]" />
 
@@ -134,7 +131,7 @@ const HeroSection = ({ showEmailCapture, setShowEmailCapture }: HeroSectionProps
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="glass-white shadow-elevation-low mb-8 inline-flex items-center gap-2 rounded-full px-4 py-2 hover:shadow-elevation-medium transition-all duration-250"
+          className="glass-white mb-8 inline-flex items-center gap-2 rounded-full px-4 py-2 shadow-elevation-low transition-all duration-250 hover:shadow-elevation-medium"
         >
           <Sparkles className="h-4 w-4 text-teal-600" />
           <span className="text-sm font-medium text-neutral-900">
@@ -147,9 +144,9 @@ const HeroSection = ({ showEmailCapture, setShowEmailCapture }: HeroSectionProps
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.1 }}
-          className="mb-6 text-6xl font-semibold tracking-heading md:text-8xl animate-slide-up-fade"
+          className="mb-6 animate-slide-up-fade text-6xl font-semibold tracking-heading md:text-8xl"
         >
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-700 via-teal-600 to-teal-400">
+          <span className="bg-gradient-to-r from-teal-700 via-teal-600 to-teal-400 bg-clip-text text-transparent">
             Transform
           </span>
           <br />
@@ -185,11 +182,7 @@ const HeroSection = ({ showEmailCapture, setShowEmailCapture }: HeroSectionProps
                 Go to Dashboard
                 <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
               </Button>
-              <Button
-                size="lg"
-                variant="outline"
-                onClick={() => router.push('/demo')}
-              >
+              <Button size="lg" variant="outline" onClick={() => router.push('/demo')}>
                 Watch Demo
                 <ChevronRight className="ml-2 h-5 w-5" />
               </Button>
@@ -208,37 +201,22 @@ const HeroSection = ({ showEmailCapture, setShowEmailCapture }: HeroSectionProps
                     <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
                   </Button>
                   <div className="flex gap-4">
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      onClick={() => router.push('/login')}
-                    >
+                    <Button size="sm" variant="ghost" onClick={() => router.push('/login')}>
                       Already have an account?
                     </Button>
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      onClick={() => router.push('/demo')}
-                    >
+                    <Button size="sm" variant="ghost" onClick={() => router.push('/demo')}>
                       Watch Demo
                     </Button>
                   </div>
                 </div>
               ) : (
                 <div className="glass-white rounded-2xl p-6 shadow-elevation-medium">
-                  <h3 className="mb-4 text-xl font-semibold text-center">
+                  <h3 className="mb-4 text-center text-xl font-semibold">
                     Start Your Free AI Assessment
                   </h3>
-                  <EmailCaptureForm
-                    onSuccess={handleEmailSuccess}
-                    variant="modal"
-                  />
+                  <EmailCaptureForm onSuccess={handleEmailSuccess} variant="modal" />
                   <div className="mt-4 text-center">
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => setShowEmailCapture(false)}
-                    >
+                    <Button variant="ghost" size="sm" onClick={() => setShowEmailCapture(false)}>
                       ← Back
                     </Button>
                   </div>
@@ -457,23 +435,58 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-surface-base">
+      {/* Skip Links for Accessibility */}
+      <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[100] focus:px-4 focus:py-2 focus:bg-teal-600 focus:text-white focus:rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2">
+        Skip to main content
+      </a>
+      <a href="#features" className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-32 focus:z-[100] focus:px-4 focus:py-2 focus:bg-teal-600 focus:text-white focus:rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2">
+        Skip to features
+      </a>
+      <a href="#pricing" className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-56 focus:z-[100] focus:px-4 focus:py-2 focus:bg-teal-600 focus:text-white focus:rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2">
+        Skip to pricing
+      </a>
+
       {/* Navigation */}
-      <header className="glass-card fixed left-0 right-0 top-0 z-50 border-b border-glass-border">
-        <div className="container mx-auto flex h-16 items-center justify-between px-4">
+      <header className="glass-card border-glass-border fixed left-0 right-0 top-0 z-50 border-b" role="banner">
+        <div className="container mx-auto grid h-16 grid-cols-[1fr_auto_1fr] items-center px-4">
           <Link href="/" className="flex items-center">
             <div className="relative h-12 w-auto md:h-14 lg:h-16">
-              <Image
-                src="/assets/logo.svg"
+              <img
                 alt="ruleIQ"
-                width={180}
-                height={50}
-                sizes="(max-width: 640px) 120px, (max-width: 1024px) 160px, 180px"
-                className="h-full w-full object-contain"
-                style={{ objectFit: 'contain' }}
-                priority
+                width="250"
+                height="250"
+                decoding="async"
+                data-nimg="1"
+                className="ai-style-change-1 h-full w-full object-contain"
+                src="/assets/logo.svg"
+                style={{ color: 'transparent', objectFit: 'contain' }}
               />
             </div>
           </Link>
+
+          {/* Center nav in its own grid cell without flex so it centers naturally */}
+          <div className="col-start-2 col-end-3">
+            <nav className="hidden justify-center gap-8 md:flex" aria-label="Main navigation">
+              <Link
+                href="#features"
+                className="text-muted-foreground transition-colors hover:text-foreground"
+              >
+                Features
+              </Link>
+              <Link
+                href="#pricing"
+                className="text-muted-foreground transition-colors hover:text-foreground"
+              >
+                Pricing
+              </Link>
+              <Link
+                href="#testimonials"
+                className="text-muted-foreground transition-colors hover:text-foreground"
+              >
+                Testimonials
+              </Link>
+            </nav>
+          </div>
 
           <nav className="hidden items-center justify-center gap-8 md:flex">
             <Link
@@ -504,8 +517,8 @@ export default function HomePage() {
             >
               Sign In
             </Button>
-            <Button 
-              className="btn-gradient" 
+            <Button
+              className="btn-gradient"
               onClick={() => {
                 const element = document.getElementById('hero-section');
                 element?.scrollIntoView({ behavior: 'smooth' });
@@ -518,11 +531,10 @@ export default function HomePage() {
         </div>
       </header>
 
-      {/* Hero Section */}
-      <HeroSection 
-        showEmailCapture={showEmailCapture}
-        setShowEmailCapture={setShowEmailCapture}
-      />
+      {/* Main Content */}
+      <main id="main-content" role="main">
+        {/* Hero Section */}
+        <HeroSection showEmailCapture={showEmailCapture} setShowEmailCapture={setShowEmailCapture} />
 
       {/* Stats Section */}
       <StatsSection />
@@ -730,7 +742,7 @@ export default function HomePage() {
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-glass-border py-16">
+      <footer className="border-glass-border border-t py-16">
         <div className="container mx-auto px-4">
           <div className="mb-8 grid gap-8 md:grid-cols-4">
             <div>
@@ -804,11 +816,12 @@ export default function HomePage() {
             </div>
           </div>
 
-          <div className="border-t border-glass-border pt-8 text-center text-muted-foreground">
+          <div className="border-glass-border border-t pt-8 text-center text-muted-foreground">
             <p>&copy; 2025 ruleIQ. All rights reserved.</p>
           </div>
         </div>
       </footer>
+      </main>
     </div>
   );
 }

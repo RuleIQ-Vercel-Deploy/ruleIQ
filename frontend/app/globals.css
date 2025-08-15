@@ -7,34 +7,34 @@
     /* Base font size - 112.5% = 18px on 16px browser default */
     font-size: 112.5%;
 
-    /* LIGHT THEME - Professional Teal Design (Default) - High Contrast */
+    /* LIGHT THEME - Beautiful Teal Design System - Premium Look */
     --background: 0 0% 100%; /* Pure white background #FFFFFF */
-    --foreground: 220 13% 18%; /* Dark charcoal text #1F2937 for high contrast */
+    --foreground: 184 23% 15%; /* Deep teal-charcoal text #1F3A3A for high contrast */
 
-    --card: 0 0% 100%; /* White cards */
-    --card-foreground: 220 13% 18%; /* Dark text on white cards */
+    --card: 180 20% 99%; /* Subtle teal-tinted white cards #FAFFFE */
+    --card-foreground: 184 23% 15%; /* Deep teal-charcoal text */
 
-    --popover: 0 0% 100%; /* White popover */
-    --popover-foreground: 220 13% 18%; /* Dark text */
+    --popover: 180 20% 99%; /* Subtle teal-tinted white popover */
+    --popover-foreground: 184 23% 15%; /* Deep teal-charcoal text */
 
-    --primary: 186 37% 32%; /* teal-600 #2C7A7B - main brand */
+    --primary: 174 72% 41%; /* Vibrant teal #19A89B - main brand */
     --primary-foreground: 0 0% 100%; /* White text on teal */
 
-    --secondary: 210 40% 98%; /* Very light gray-blue #F8FAFC */
-    --secondary-foreground: 220 13% 18%; /* Dark text */
+    --secondary: 173 41% 96%; /* Very light teal #EDF9F8 */
+    --secondary-foreground: 175 47% 26%; /* Deep teal text #234E4B */
 
-    --muted: 210 40% 96%; /* Light gray-blue background #F1F5F9 */
-    --muted-foreground: 215 16% 47%; /* Medium gray text #64748B - WCAG AA compliant */
+    --muted: 174 30% 94%; /* Light teal background #E8F5F3 */
+    --muted-foreground: 175 25% 40%; /* Medium teal text #4C6B68 - WCAG AA compliant */
 
-    --accent: 186 100% 94%; /* Very light teal #E6FFFA */
-    --accent-foreground: 186 40% 25%; /* Dark teal text #234E52 */
+    --accent: 172 82% 88%; /* Light vibrant teal #B8F4EE */
+    --accent-foreground: 176 47% 20%; /* Very dark teal text #1A3D39 */
 
     --destructive: 0 84% 60%; /* Error red #EF4444 */
     --destructive-foreground: 0 0% 100%;
 
-    --border: 214 32% 91%; /* Light gray borders #E2E8F0 */
-    --input: 214 32% 91%; /* Input borders */
-    --ring: 186 37% 32%; /* teal-600 focus ring */
+    --border: 174 20% 91%; /* Light teal borders #E0EEEC */
+    --input: 174 20% 91%; /* Input borders with teal tint */
+    --ring: 174 72% 41%; /* Vibrant teal focus ring */
 
     --radius: 0.5rem;
 
@@ -45,33 +45,33 @@
 
   /* Light theme (default - no class needed) */
   .light {
-    --background: 0 0% 100%; /* White background */
-    --foreground: 220 13% 18%; /* Dark charcoal text #1F2937 */
+    --background: 0 0% 100%; /* Pure white background */
+    --foreground: 184 23% 15%; /* Deep teal-charcoal text #1F3A3A */
 
-    --card: 0 0% 100%; /* White cards */
-    --card-foreground: 220 13% 18%; /* Dark text on cards */
+    --card: 180 20% 99%; /* Subtle teal-tinted white cards #FAFFFE */
+    --card-foreground: 184 23% 15%; /* Deep teal-charcoal text */
 
-    --popover: 0 0% 100%; /* White popover */
-    --popover-foreground: 220 13% 18%; /* Dark text */
+    --popover: 180 20% 99%; /* Subtle teal-tinted white popover */
+    --popover-foreground: 184 23% 15%; /* Deep teal-charcoal text */
 
-    --primary: 186 37% 32%; /* teal-600 #2C7A7B - main brand */
+    --primary: 174 72% 41%; /* Vibrant teal #19A89B - main brand */
     --primary-foreground: 0 0% 100%; /* White text on teal */
 
-    --secondary: 210 40% 98%; /* Very light gray-blue #F8FAFC */
-    --secondary-foreground: 220 13% 18%; /* Dark text */
+    --secondary: 173 41% 96%; /* Very light teal #EDF9F8 */
+    --secondary-foreground: 175 47% 26%; /* Deep teal text #234E4B */
 
-    --muted: 210 40% 96%; /* Light backgrounds #F1F5F9 */
-    --muted-foreground: 215 16% 47%; /* Medium gray text #64748B */
+    --muted: 174 30% 94%; /* Light teal backgrounds #E8F5F3 */
+    --muted-foreground: 175 25% 40%; /* Medium teal text #4C6B68 */
 
-    --accent: 186 100% 94%; /* teal-100 #E6FFFA - light accent */
-    --accent-foreground: 186 40% 25%; /* Dark teal text #234E52 */
+    --accent: 172 82% 88%; /* Light vibrant teal #B8F4EE */
+    --accent-foreground: 176 47% 20%; /* Very dark teal text #1A3D39 */
 
     --destructive: 0 84% 60%; /* Error red */
     --destructive-foreground: 0 0% 100%;
 
-    --border: 214 32% 91%; /* Light gray borders #E2E8F0 */
-    --input: 214 32% 91%; /* Input borders */
-    --ring: 186 37% 32%; /* teal-600 focus ring */
+    --border: 174 20% 91%; /* Light teal borders #E0EEEC */
+    --input: 174 20% 91%; /* Input borders with teal tint */
+    --ring: 174 72% 41%; /* Vibrant teal focus ring */
   }
   .theme {
     --animate-shimmer-slide: shimmer-slide var(--speed) ease-in-out infinite alternate;
@@ -226,17 +226,19 @@
 
   /* Neon Glow Effects */
   .glow-purple {
+    /* Updated to teal glow to match new design system */
     box-shadow:
-      0 0 20px rgba(25, 39, 52, 0.5),
-      0 0 40px rgba(25, 39, 52, 0.3),
-      0 0 60px rgba(25, 39, 52, 0.1);
+      0 0 20px hsl(var(--primary) / 0.5),
+      0 0 40px hsl(var(--primary) / 0.3),
+      0 0 60px hsl(var(--primary) / 0.15);
   }
 
   .glow-cyan {
+    /* Updated to teal glow to match new design system */
     box-shadow:
-      0 0 20px rgba(6, 182, 212, 0.5),
-      0 0 40px rgba(6, 182, 212, 0.3),
-      0 0 60px rgba(6, 182, 212, 0.1);
+      0 0 20px hsl(var(--primary) / 0.5),
+      0 0 40px hsl(var(--primary) / 0.3),
+      0 0 60px hsl(var(--primary) / 0.15);
   }
 
   /* Modern Button Styles */
@@ -261,10 +263,10 @@
   /* Mesh Gradient Background */
   .mesh-gradient {
     background-image:
-      radial-gradient(at 40% 20%, hsla(262, 83%, 58%, 0.3) 0px, transparent 50%),
+      radial-gradient(at 40% 20%, hsl(var(--primary) / 0.25) 0px, transparent 50%),
       radial-gradient(at 80% 0%, hsla(188, 95%, 43%, 0.3) 0px, transparent 50%),
       radial-gradient(at 0% 50%, hsla(158, 76%, 42%, 0.3) 0px, transparent 50%),
-      radial-gradient(at 80% 50%, hsla(262, 83%, 58%, 0.2) 0px, transparent 50%),
+      radial-gradient(at 80% 50%, hsl(var(--primary) / 0.2) 0px, transparent 50%),
       radial-gradient(at 0% 100%, hsla(188, 95%, 43%, 0.2) 0px, transparent 50%);
   }
 
@@ -458,5 +460,66 @@
     content: '';
     @apply absolute inset-y-0 left-0 w-1;
     @apply bg-gradient-to-b from-teal-700 via-teal-600 to-teal-400;
+  }
+}
+
+/* Accessibility: Prefers Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  
+  /* Disable parallax effects */
+  .parallax,
+  [data-parallax] {
+    transform: none !important;
+  }
+  
+  /* Disable auto-playing videos */
+  video[autoplay] {
+    display: none;
+  }
+  
+  /* Simplify hover states */
+  button:hover,
+  a:hover {
+    transform: none !important;
+  }
+  
+  /* Remove smooth scrolling */
+  html {
+    scroll-behavior: auto !important;
+  }
+  
+  /* Disable animated gradients */
+  .animated-gradient,
+  .gradient-animation {
+    animation: none !important;
+    background-size: auto !important;
+  }
+  
+  /* Disable shimmer effects */
+  .shimmer,
+  [class*="shimmer"] {
+    animation: none !important;
+    background: var(--muted) !important;
+  }
+  
+  /* Disable loading spinners - show static state */
+  .spinner,
+  [class*="spinner"],
+  [class*="loading"] {
+    animation: none !important;
+  }
+  
+  /* Framer Motion specific */
+  [data-framer-motion] {
+    transform: none !important;
+    opacity: 1 !important;
   }
 }

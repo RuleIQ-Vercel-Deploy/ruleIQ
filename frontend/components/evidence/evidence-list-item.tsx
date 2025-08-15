@@ -48,6 +48,7 @@ export function EvidenceListItem({
           alt={evidence.uploadedBy}
           width={24}
           height={24}
+          sizes="24px"
           className="rounded-full"
         />
         <span className="text-eggshell-white/60 hidden text-sm lg:inline">

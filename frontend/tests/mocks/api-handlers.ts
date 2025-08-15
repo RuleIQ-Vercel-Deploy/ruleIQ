@@ -484,6 +484,106 @@ export const authHandlers = [
       name: 'Test User'
     }, { status: 200 });
   }),
+  
+  // Freemium endpoints
+  http.post(`${baseURL}/freemium/capture-email`, async ({ request }) => {
+    const body = await request.json() as any;
+    
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!body.email || !emailRegex.test(body.email)) {
+      return HttpResponse.json(
+        { detail: 'Invalid email format' },
+        { status: 400 }
+      );
+    }
+    
+    // Validate consent
+    if (!body.consent) {
+      return HttpResponse.json(
+        { detail: 'Consent is required' },
+        { status: 400 }
+      );
+    }
+    
+    return HttpResponse.json({
+      success: true,
+      token: 'mock-session-token',
+      session_id: 'session-123',
+    });
+  }),
+  
+  http.post(`${baseURL}/freemium/start-assessment`, async ({ request }) => {
+    const body = await request.json() as any;
+    
+    // Validate business type
+    const validBusinessTypes = ['technology', 'retail', 'healthcare', 'finance', 'other'];
+    if (!body.business_type || !validBusinessTypes.includes(body.business_type)) {
+      return HttpResponse.json(
+        { detail: 'Invalid business type' },
+        { status: 400 }
+      );
+    }
+    
+    // Validate company size
+    const validSizes = ['1-10', '10-50', '50-200', '200-500', '500+'];
+    if (!body.company_size || !validSizes.includes(body.company_size)) {
+      return HttpResponse.json(
+        { detail: 'Invalid company size' },
+        { status: 400 }
+      );
+    }
+    
+    return HttpResponse.json({
+      session_id: 'session-123',
+      session_token: 'mock-session-token',
+      question_id: 'q1',
+      question_text: 'Do you process customer personal data?',
+      question_type: 'yes_no',
+      progress: {
+        current_question: 1,
+        total_questions_estimate: 10,
+        progress_percentage: 10,
+      },
+    });
+  }),
+  
+  http.post(`${baseURL}/freemium/answer-question`, async ({ request }) => {
+    const body = await request.json() as any;
+    
+    if (!body.session_token || !body.question_id || !body.answer) {
+      return HttpResponse.json(
+        { detail: 'Missing required fields' },
+        { status: 400 }
+      );
+    }
+    
+    return HttpResponse.json({
+      next_question: {
+        question_id: 'q2',
+        question_text: 'What type of data do you collect?',
+        question_type: 'multiple_choice',
+        options: ['Personal', 'Financial', 'Health', 'Other'],
+      },
+      progress: {
+        current_question: 2,
+        total_questions_estimate: 10,
+        progress_percentage: 20,
+      },
+    });
+  }),
+  
+  http.get(`${baseURL}/freemium/results/:token`, ({ params }) => {
+    return HttpResponse.json({
+      compliance_score: 75,
+      risk_score: 25,
+      recommendations: [
+        'Implement data encryption',
+        'Create privacy policy',
+        'Set up access controls',
+      ],
+    });
+  }),
 ];
 
 // Add auth handlers to main handlers array

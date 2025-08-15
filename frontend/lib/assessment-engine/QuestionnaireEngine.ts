@@ -227,7 +227,7 @@ export class QuestionnaireEngine {
       value,
       timestamp: new Date(),
       source: isAIQuestion ? 'ai' : 'framework',
-      ...(isAIQuestion && { metadata: { reasoning: currentQuestion?.metadata?.['reasoning'] } }),
+      metadata: isAIQuestion ? { reasoning: currentQuestion?.metadata?.['reasoning'] } : undefined,
     };
 
     this.context.answers.set(questionId, answer);
@@ -469,26 +469,24 @@ export class QuestionnaireEngine {
       questionId: question.id,
       questionText: question.text,
       section: section?.title || 'Unknown',
-      category: section?.category || 'General',
+      category: question.category || 'General',
       severity: score === 0 ? 'critical' : score < 0.5 ? 'high' : 'medium',
       description: question.text,
       impact: this.assessImpact(question, score),
       currentState: answer ? `Score: ${Math.round(score * 100)}%` : 'Not answered',
       targetState: '100% compliance',
       expectedAnswer: this.getExpectedAnswer(question),
-      actualAnswer: answer?.text || undefined,
+      actualAnswer: answer?.value ? String(answer.value) : undefined,
     };
   }
 
   private getExpectedAnswer(question: Question): string {
     // For boolean questions, the expected answer is typically the highest-scoring option
-    if (question.type === 'boolean') return 'Yes';
-    if (question.type === 'single_choice') {
-      // Return the option with the highest points as expected
-      const bestOption = question.options?.reduce((best, current) => 
-        (current.points || 0) > (best?.points || 0) ? current : best
-      );
-      return bestOption?.text || 'Best practice option';
+    if (question.type === 'radio') return 'Yes';
+    if (question.type === 'select') {
+      // Return the option with the highest value as expected
+      const bestOption = question.options?.[question.options.length - 1];
+      return bestOption?.label || 'Best practice option';
     }
     return 'Full compliance';
   }
@@ -794,6 +792,20 @@ export class QuestionnaireEngine {
   }
 
   private estimateEffort(gap: Gap): string {
+    switch (gap.severity) {
+      case 'critical':
+        return '1-2 weeks';
+      case 'high':
+        return '2-4 weeks';
+      case 'medium':
+        return '1-2 months';
+      default:
+        return '2-3 months';
+    }
+  }
+
+  private estimateTime(gap: Gap): string {
+    // Similar to estimateEffort but could have different logic if needed
     switch (gap.severity) {
       case 'critical':
         return '1-2 weeks';
