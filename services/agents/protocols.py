@@ -260,10 +260,15 @@ class AgentRegistry:
             raise TypeError(f"Agent must implement ComplianceAgent protocol")
         
         self._agents[agent_id] = agent
-        
-        # Update capability map asynchronously would be better
-        # For now, we'll leave it as a TODO
-    
+
+        # Index capabilities for routing
+        try:
+            metadata = agent.get_capabilities()
+            for cap in metadata.capabilities:
+                self._capability_map.setdefault(cap, []).append(agent_id)
+        except Exception:
+            # Non-fatal: capability-based routing will fall back
+            pass
     def get_agent(self, agent_id: str) -> Optional[ComplianceAgent]:
         """Get an agent by ID."""
         return self._agents.get(agent_id)
