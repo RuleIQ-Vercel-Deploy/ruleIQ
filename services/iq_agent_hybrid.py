@@ -9,7 +9,8 @@ from typing import Dict, List, Optional, Any, Literal
 from enum import Enum
 
 from services.iq_agent import IQComplianceAgent
-from services.assessment_agent_react import ReActAssessmentAgent, ComplianceTools
+from services.agents.react_assessment_agent import ReactAssessmentAgent
+from services.agents.services import QueryClassificationService
 from config.logging_config import get_logger
 
 logger = get_logger(__name__)
@@ -36,44 +37,35 @@ class HybridIQAgent(IQComplianceAgent):
         # Initialize parent IQ Agent
         super().__init__(neo4j_service, postgres_session, llm_model)
         
-        # Initialize ReAct components
-        self.react_agent = ReActAssessmentAgent(
-            neo4j_service=neo4j_service,
-            postgres_session=postgres_session,
-            model_name=llm_model
+        # Initialize repositories
+        from services.agents.repositories import (
+            ComplianceRepository,
+            BusinessProfileRepository,
+            EvidenceRepository
         )
         
-        # Query classifier
-        self.query_classifier = self._create_query_classifier()
+        self.compliance_repo = ComplianceRepository(neo4j_service)
+        self.business_repo = BusinessProfileRepository(postgres_session) if postgres_session else None
+        self.evidence_repo = EvidenceRepository(postgres_session) if postgres_session else None
+        
+        # Initialize ReAct agent with repositories
+        if postgres_session:
+            self.react_agent = ReactAssessmentAgent(
+                compliance_repo=self.compliance_repo,
+                evidence_repo=self.evidence_repo,
+                business_repo=self.business_repo,
+                model_name=llm_model
+            )
+        else:
+            # Fallback without full repository support
+            self.react_agent = None
+        
+        # Query classifier service
+        self.query_classifier = QueryClassificationService()
         
         logger.info("Hybrid IQ Agent initialized with structured + ReAct capabilities")
     
-    def _create_query_classifier(self):
-        """Create a classifier to determine query type."""
-        return {
-            "keywords": {
-                QueryType.STRUCTURED_ASSESSMENT: [
-                    "assessment", "audit", "full review", "compliance check",
-                    "evaluate", "comprehensive", "analyze our compliance"
-                ],
-                QueryType.EXPLORATORY: [
-                    "what if", "how about", "explore", "research", "tell me about",
-                    "explain", "what are the options", "alternatives"
-                ],
-                QueryType.QUICK_ANSWER: [
-                    "what is", "define", "meaning of", "quick question",
-                    "simple", "just tell me"
-                ],
-                QueryType.EVIDENCE_CHECK: [
-                    "do we have", "check documents", "evidence for",
-                    "proof of", "documentation", "certificates"
-                ],
-                QueryType.RISK_ANALYSIS: [
-                    "risk", "threat", "vulnerability", "exposure",
-                    "what could go wrong", "potential issues"
-                ]
-            }
-        }
+
     
     async def process_intelligent_query(
         self,
@@ -137,19 +129,21 @@ class HybridIQAgent(IQComplianceAgent):
     
     def _classify_query(self, query: str) -> QueryType:
         """Classify the query type based on content."""
-        query_lower = query.lower()
+        result = self.query_classifier.classify_query(query)
         
-        # Check keywords for each type
-        scores = {}
-        for query_type, keywords in self.query_classifier["keywords"].items():
-            score = sum(1 for keyword in keywords if keyword in query_lower)
-            scores[query_type] = score
+        # Map classification to QueryType
+        category = result["primary_category"]
         
-        # Return type with highest score, default to exploratory
-        if max(scores.values()) == 0:
+        if category == "assessment":
+            return QueryType.STRUCTURED_ASSESSMENT
+        elif category == "evidence":
+            return QueryType.EVIDENCE_CHECK
+        elif category == "risk":
+            return QueryType.RISK_ANALYSIS
+        elif category == "plan":
             return QueryType.EXPLORATORY
-        
-        return max(scores, key=scores.get)
+        else:
+            return QueryType.QUICK_ANSWER
     
     async def _process_structured(
         self,
@@ -183,25 +177,31 @@ class HybridIQAgent(IQComplianceAgent):
         """Process using ReAct architecture."""
         logger.info("Using ReAct reasoning architecture")
         
-        # Get business context if available
-        business_context = None
-        if business_profile_id and self.has_postgres_access:
-            try:
-                business_context = await self.retrieve_business_context(
-                    business_profile_id
-                )
-            except Exception as e:
-                logger.warning(f"Could not retrieve business context: {e}")
+        if not self.react_agent:
+            # Fallback if ReAct agent not available
+            return await self._process_quick_answer(query)
         
-        # Use ReAct agent
-        result = await self.react_agent.conduct_assessment(
-            user_query=query,
-            business_context=business_context,
-            session_id=session_id or f"hybrid_{query_type.value}"
-        )
+        # Create context for the agent
+        from services.agents.protocols import ComplianceContext
         
-        result["reasoning_method"] = "ReAct (Reasoning and Acting)"
-        return result
+        context = None
+        if business_profile_id:
+            context = ComplianceContext(
+                business_profile_id=business_profile_id,
+                session_id=session_id or f"hybrid_{query_type.value}"
+            )
+        
+        # Use ReAct agent with new protocol
+        response = await self.react_agent.process_query(query, context)
+        
+        # Convert response to expected format
+        return {
+            "status": response.status.value,
+            "message": response.message,
+            "reasoning_method": "ReAct (Reasoning and Acting)",
+            "data": response.data,
+            "session_id": response.session_id
+        }
     
     async def _check_evidence_quick(
         self,
@@ -209,38 +209,58 @@ class HybridIQAgent(IQComplianceAgent):
         business_profile_id: Optional[str]
     ) -> Dict[str, Any]:
         """Quick evidence availability check."""
-        if not business_profile_id or not self.has_postgres_access:
+        if not business_profile_id or not self.evidence_repo:
             return {
                 "status": "error",
-                "message": "Business profile ID required for evidence check",
+                "message": "Business profile ID and database access required for evidence check",
                 "reasoning_method": "direct_check"
             }
         
         # Extract what evidence they're asking about
-        # Simple keyword extraction for now
         evidence_keywords = ["policy", "certificate", "audit", "report", "document"]
         requested_evidence = [kw for kw in evidence_keywords if kw in query.lower()]
         
         if not requested_evidence:
             requested_evidence = ["general documents"]
         
-        # Use the React tool directly
-        tools = ComplianceTools(self.neo4j, self.postgres_session)
-        
-        results = {}
-        for requirement in requested_evidence:
-            result = await tools.check_evidence_availability(
-                business_id=business_profile_id,
-                requirement=requirement
+        # Use evidence repository to check
+        try:
+            evidence_items = await self.evidence_repo.get_by_business_profile(
+                business_profile_id
             )
-            results[requirement] = result
-        
-        return {
-            "status": "success",
-            "evidence_check": results,
-            "reasoning_method": "direct_evidence_check",
-            "summary": self._summarize_evidence_results(results)
-        }
+            
+            results = {}
+            for requirement in requested_evidence:
+                matching = [
+                    e for e in evidence_items
+                    if requirement.lower() in e.title.lower()
+                ]
+                results[requirement] = {
+                    "has_evidence": len(matching) > 0,
+                    "evidence_count": len(matching),
+                    "evidence": [
+                        {
+                            "title": item.title,
+                            "type": item.evidence_type,
+                            "uploaded": item.created_at.isoformat()
+                        }
+                        for item in matching
+                    ]
+                }
+            
+            return {
+                "status": "success",
+                "evidence_check": results,
+                "reasoning_method": "direct_evidence_check",
+                "summary": self._summarize_evidence_results(results)
+            }
+        except Exception as e:
+            logger.error(f"Evidence check failed: {e}")
+            return {
+                "status": "error",
+                "message": str(e),
+                "reasoning_method": "direct_check"
+            }
     
     async def _process_quick_answer(self, query: str) -> Dict[str, Any]:
         """Process simple questions with minimal overhead."""

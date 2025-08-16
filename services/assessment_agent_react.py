@@ -13,6 +13,8 @@ from langchain_google_genai import ChatGoogleGenerativeAI
 
 from services.neo4j_service import Neo4jGraphRAGService
 from services.ai.circuit_breaker import AICircuitBreaker
+from services.agents.services import RiskAnalysisService, CompliancePlanService
+from services.agents.repositories import ComplianceRepository, EvidenceRepository
 from config.logging_config import get_logger
 
 logger = get_logger(__name__)

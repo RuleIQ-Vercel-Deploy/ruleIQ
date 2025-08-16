@@ -253,7 +253,7 @@ class ReactAssessmentAgent(ComplianceAgent):
         self.agent = create_react_agent(
             model=self.model,
             tools=self.tools,
-            messages_modifier=self._create_system_prompt()
+            prompt=self._create_system_prompt()
         )
         
         # Agent metadata
