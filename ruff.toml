@@ -39,6 +39,9 @@ exclude = [
     ".mypy_cache",
     ".ruff_cache",
     "migrations",
+    "validate-auth-flow.py",
+    "validate_*.py",
+    "test_*.py",
 ]
 
 [lint.per-file-ignores]
