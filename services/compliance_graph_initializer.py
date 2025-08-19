@@ -14,8 +14,7 @@ Schema includes 20+ node types covering:
 import asyncio
 import logging
 from typing import Dict, List, Any, Optional
-from datetime import datetime, timedelta
-from neo4j import AsyncGraphDatabase
+from datetime import datetime
 from dataclasses import dataclass, asdict
 
 from services.neo4j_service import Neo4jGraphRAGService
@@ -27,6 +26,7 @@ logger = logging.getLogger(__name__)
 @dataclass
 class ComplianceDomain:
     """Core compliance domain structure"""
+
     name: str
     description: str
     risk_level: str  # high, medium, low
@@ -38,6 +38,7 @@ class ComplianceDomain:
 @dataclass
 class Jurisdiction:
     """Legal jurisdiction structure"""
+
     name: str
     code: str  # ISO country codes
     regulatory_authority: str
@@ -49,6 +50,7 @@ class Jurisdiction:
 @dataclass
 class Regulation:
     """Regulatory framework structure"""
+
     name: str
     code: str
     jurisdiction: str
@@ -63,6 +65,7 @@ class Regulation:
 @dataclass
 class Requirement:
     """Specific regulatory requirement"""
+
     regulation_code: str
     section: str
     title: str
@@ -76,6 +79,7 @@ class Requirement:
 @dataclass
 class Control:
     """Control measure for compliance"""
+
     name: str
     control_type: str  # preventive, detective, corrective
     requirements: List[str]  # requirement IDs
@@ -88,6 +92,7 @@ class Control:
 @dataclass
 class ComplianceMetric:
     """Compliance measurement and KPI"""
+
     name: str
     metric_type: str  # effectiveness, efficiency, coverage
     calculation_method: str
@@ -99,21 +104,21 @@ class ComplianceMetric:
 
 class ComplianceGraphInitializer:
     """Initializes Neo4j graph with CCO compliance playbook data"""
-    
-    def __init__(self, neo4j_service: Neo4jGraphRAGService):
+
+    def __init__(self, neo4j_service: Neo4jGraphRAGService) -> None:
         self.neo4j = neo4j_service
-        
+
     async def initialize_full_compliance_graph(self) -> Dict[str, Any]:
         """Initialize complete compliance graph with all CCO data"""
         try:
             logger.info("Starting full compliance graph initialization")
-            
+
             # Clear existing data (optional - for fresh start)
             await self._clear_existing_data()
-            
+
             # Create schema constraints and indexes
             await self._create_schema_constraints()
-            
+
             # Load core compliance data
             domains_created = await self._load_compliance_domains()
             jurisdictions_created = await self._load_jurisdictions()
@@ -121,17 +126,17 @@ class ComplianceGraphInitializer:
             requirements_created = await self._load_requirements()
             controls_created = await self._load_controls()
             metrics_created = await self._load_metrics()
-            
+
             # Create relationships
             relationships_created = await self._create_relationships()
-            
+
             # Load risk assessments and enforcement data
             risks_created = await self._load_risk_assessments()
             enforcement_created = await self._load_enforcement_cases()
-            
+
             # Create temporal relationships for regulatory changes
             temporal_created = await self._create_temporal_relationships()
-            
+
             result = {
                 "status": "success",
                 "timestamp": datetime.utcnow().isoformat(),
@@ -143,36 +148,32 @@ class ComplianceGraphInitializer:
                     "controls": controls_created,
                     "metrics": metrics_created,
                     "risk_assessments": risks_created,
-                    "enforcement_cases": enforcement_created
+                    "enforcement_cases": enforcement_created,
                 },
                 "relationships_created": relationships_created + temporal_created,
-                "message": "Compliance graph initialization completed successfully"
+                "message": "Compliance graph initialization completed successfully",
             }
-            
+
             logger.info(f"Compliance graph initialization completed: {result}")
             return result
-            
+
         except Exception as e:
             logger.error(f"Failed to initialize compliance graph: {str(e)}")
-            return {
-                "status": "error",
-                "error": str(e),
-                "timestamp": datetime.utcnow().isoformat()
-            }
-    
+            return {"status": "error", "error": str(e), "timestamp": datetime.utcnow().isoformat()}
+
     async def _clear_existing_data(self) -> None:
-        """Clear existing compliance data (optional)"""
+        """Clear existing compliance data (optional - for fresh start)"""
         query = """
-        MATCH (n) 
+        MATCH (n)
         WHERE any(label IN labels(n) WHERE label IN [
             'ComplianceDomain', 'Jurisdiction', 'Regulation', 'Requirement',
             'Control', 'Metric', 'RiskAssessment', 'EnforcementCase'
         ])
         DETACH DELETE n
         """
-        await self.neo4j.execute_query(query)
+        await self.neo4j.execute_query(query, read_only=False)
         logger.info("Cleared existing compliance data")
-    
+
     async def _create_schema_constraints(self) -> None:
         """Create Neo4j schema constraints and indexes"""
         constraints = [
@@ -181,30 +182,30 @@ class ComplianceGraphInitializer:
             "CREATE CONSTRAINT regulation_code IF NOT EXISTS FOR (r:Regulation) REQUIRE r.code IS UNIQUE",
             "CREATE CONSTRAINT requirement_id IF NOT EXISTS FOR (req:Requirement) REQUIRE req.id IS UNIQUE",
             "CREATE CONSTRAINT control_name IF NOT EXISTS FOR (c:Control) REQUIRE c.name IS UNIQUE",
-            "CREATE CONSTRAINT metric_name IF NOT EXISTS FOR (m:Metric) REQUIRE m.name IS UNIQUE"
+            "CREATE CONSTRAINT metric_name IF NOT EXISTS FOR (m:Metric) REQUIRE m.name IS UNIQUE",
         ]
-        
+
         indexes = [
             "CREATE INDEX regulation_jurisdiction IF NOT EXISTS FOR (r:Regulation) ON (r.jurisdiction)",
             "CREATE INDEX requirement_risk IF NOT EXISTS FOR (req:Requirement) ON (req.risk_level)",
             "CREATE INDEX control_type IF NOT EXISTS FOR (c:Control) ON (c.control_type)",
-            "CREATE INDEX metric_type IF NOT EXISTS FOR (m:Metric) ON (m.metric_type)"
+            "CREATE INDEX metric_type IF NOT EXISTS FOR (m:Metric) ON (m.metric_type)",
         ]
-        
+
         for constraint in constraints:
             try:
-                await self.neo4j.execute_query(constraint)
+                await self.neo4j.execute_query(constraint, read_only=False)
             except Exception as e:
                 logger.warning(f"Constraint creation warning: {e}")
-        
+
         for index in indexes:
             try:
-                await self.neo4j.execute_query(index)
+                await self.neo4j.execute_query(index, read_only=False)
             except Exception as e:
                 logger.warning(f"Index creation warning: {e}")
-        
+
         logger.info("Schema constraints and indexes created")
-    
+
     async def _load_compliance_domains(self) -> int:
         """Load compliance domains from CCO playbook"""
         domains = [
@@ -214,7 +215,7 @@ class ComplianceGraphInitializer:
                 risk_level="high",
                 regulatory_scope=["6AMLD", "MLR2017", "FATF"],
                 business_impact="critical",
-                oversight_body="FCA"
+                oversight_body="FCA",
             ),
             ComplianceDomain(
                 name="Data Protection",
@@ -222,7 +223,7 @@ class ComplianceGraphInitializer:
                 risk_level="high",
                 regulatory_scope=["GDPR", "DPA2018", "PECR"],
                 business_impact="critical",
-                oversight_body="ICO"
+                oversight_body="ICO",
             ),
             ComplianceDomain(
                 name="Operational Risk",
@@ -230,7 +231,7 @@ class ComplianceGraphInitializer:
                 risk_level="high",
                 regulatory_scope=["DORA", "PRA", "FCA"],
                 business_impact="significant",
-                oversight_body="PRA"
+                oversight_body="PRA",
             ),
             ComplianceDomain(
                 name="Consumer Protection",
@@ -238,7 +239,7 @@ class ComplianceGraphInitializer:
                 risk_level="medium",
                 regulatory_scope=["FCA_PRIN", "CONC", "MCOB"],
                 business_impact="significant",
-                oversight_body="FCA"
+                oversight_body="FCA",
             ),
             ComplianceDomain(
                 name="Market Conduct",
@@ -246,7 +247,7 @@ class ComplianceGraphInitializer:
                 risk_level="medium",
                 regulatory_scope=["MiFID2", "MAR", "COBS"],
                 business_impact="moderate",
-                oversight_body="FCA"
+                oversight_body="FCA",
             ),
             ComplianceDomain(
                 name="Financial Crime",
@@ -254,10 +255,10 @@ class ComplianceGraphInitializer:
                 risk_level="high",
                 regulatory_scope=["PCA2002", "FSMA", "SFO"],
                 business_impact="critical",
-                oversight_body="SFO"
-            )
+                oversight_body="SFO",
+            ),
         ]
-        
+
         query = """
         UNWIND $domains AS domain
         CREATE (d:ComplianceDomain {
@@ -270,12 +271,12 @@ class ComplianceGraphInitializer:
             created_at: datetime()
         })
         """
-        
+
         domain_dicts = [asdict(domain) for domain in domains]
-        await self.neo4j.execute_query(query, {"domains": domain_dicts})
+        await self.neo4j.execute_query(query, {"domains": domain_dicts}, read_only=False)
         logger.info(f"Created {len(domains)} compliance domains")
         return len(domains)
-    
+
     async def _load_jurisdictions(self) -> int:
         """Load legal jurisdictions"""
         jurisdictions = [
@@ -285,7 +286,7 @@ class ComplianceGraphInitializer:
                 regulatory_authority="FCA, PRA, ICO",
                 enforcement_approach="principles-based",
                 penalties_framework="proportionate",
-                data_localization=False
+                data_localization=False,
             ),
             Jurisdiction(
                 name="European Union",
@@ -293,7 +294,7 @@ class ComplianceGraphInitializer:
                 regulatory_authority="EBA, ESMA, EIOPA",
                 enforcement_approach="rules-based",
                 penalties_framework="standardized",
-                data_localization=True
+                data_localization=True,
             ),
             Jurisdiction(
                 name="United States",
@@ -301,10 +302,10 @@ class ComplianceGraphInitializer:
                 regulatory_authority="FinCEN, CFTC, SEC",
                 enforcement_approach="enforcement-led",
                 penalties_framework="punitive",
-                data_localization=False
-            )
+                data_localization=False,
+            ),
         ]
-        
+
         query = """
         UNWIND $jurisdictions AS jurisdiction
         CREATE (j:Jurisdiction {
@@ -317,12 +318,14 @@ class ComplianceGraphInitializer:
             created_at: datetime()
         })
         """
-        
+
         jurisdiction_dicts = [asdict(jurisdiction) for jurisdiction in jurisdictions]
-        await self.neo4j.execute_query(query, {"jurisdictions": jurisdiction_dicts})
+        await self.neo4j.execute_query(
+            query, {"jurisdictions": jurisdiction_dicts}, read_only=False
+        )
         logger.info(f"Created {len(jurisdictions)} jurisdictions")
         return len(jurisdictions)
-    
+
     async def _load_regulations(self) -> int:
         """Load regulatory frameworks from CCO playbook"""
         regulations = [
@@ -335,7 +338,7 @@ class ComplianceGraphInitializer:
                 last_updated="2024-01-15",
                 risk_rating="critical",
                 penalty_framework="up to 4 years imprisonment",
-                extraterritorial_reach=True
+                extraterritorial_reach=True,
             ),
             Regulation(
                 name="General Data Protection Regulation",
@@ -346,7 +349,7 @@ class ComplianceGraphInitializer:
                 last_updated="2024-03-01",
                 risk_rating="critical",
                 penalty_framework="up to 4% of annual turnover",
-                extraterritorial_reach=True
+                extraterritorial_reach=True,
             ),
             Regulation(
                 name="Digital Operational Resilience Act",
@@ -357,7 +360,7 @@ class ComplianceGraphInitializer:
                 last_updated="2024-12-15",
                 risk_rating="high",
                 penalty_framework="up to 1% of annual turnover",
-                extraterritorial_reach=False
+                extraterritorial_reach=False,
             ),
             Regulation(
                 name="Bank Secrecy Act",
@@ -368,7 +371,7 @@ class ComplianceGraphInitializer:
                 last_updated="2024-06-01",
                 risk_rating="critical",
                 penalty_framework="criminal and civil penalties",
-                extraterritorial_reach=True
+                extraterritorial_reach=True,
             ),
             Regulation(
                 name="Money Laundering Regulations 2017",
@@ -379,7 +382,7 @@ class ComplianceGraphInitializer:
                 last_updated="2024-02-20",
                 risk_rating="critical",
                 penalty_framework="unlimited fines and imprisonment",
-                extraterritorial_reach=False
+                extraterritorial_reach=False,
             ),
             Regulation(
                 name="Data Protection Act 2018",
@@ -390,10 +393,10 @@ class ComplianceGraphInitializer:
                 last_updated="2024-01-10",
                 risk_rating="high",
                 penalty_framework="up to £17.5m or 4% of turnover",
-                extraterritorial_reach=False
-            )
+                extraterritorial_reach=False,
+            ),
         ]
-        
+
         query = """
         UNWIND $regulations AS regulation
         CREATE (r:Regulation {
@@ -409,12 +412,12 @@ class ComplianceGraphInitializer:
             created_at: datetime()
         })
         """
-        
+
         regulation_dicts = [asdict(regulation) for regulation in regulations]
-        await self.neo4j.execute_query(query, {"regulations": regulation_dicts})
+        await self.neo4j.execute_query(query, {"regulations": regulation_dicts}, read_only=False)
         logger.info(f"Created {len(regulations)} regulations")
         return len(regulations)
-    
+
     async def _load_requirements(self) -> int:
         """Load specific regulatory requirements"""
         requirements = [
@@ -427,7 +430,7 @@ class ComplianceGraphInitializer:
                 mandatory=True,
                 deadline_type="ongoing",
                 risk_level="critical",
-                business_function="onboarding"
+                business_function="onboarding",
             ),
             Requirement(
                 regulation_code="6AMLD",
@@ -437,7 +440,7 @@ class ComplianceGraphInitializer:
                 mandatory=True,
                 deadline_type="ongoing",
                 risk_level="high",
-                business_function="operations"
+                business_function="operations",
             ),
             # GDPR Requirements
             Requirement(
@@ -448,7 +451,7 @@ class ComplianceGraphInitializer:
                 mandatory=True,
                 deadline_type="ongoing",
                 risk_level="high",
-                business_function="data_processing"
+                business_function="data_processing",
             ),
             Requirement(
                 regulation_code="GDPR",
@@ -458,7 +461,7 @@ class ComplianceGraphInitializer:
                 mandatory=True,
                 deadline_type="event-driven",
                 risk_level="critical",
-                business_function="incident_response"
+                business_function="incident_response",
             ),
             # DORA Requirements
             Requirement(
@@ -469,7 +472,7 @@ class ComplianceGraphInitializer:
                 mandatory=True,
                 deadline_type="ongoing",
                 risk_level="high",
-                business_function="technology"
+                business_function="technology",
             ),
             Requirement(
                 regulation_code="DORA",
@@ -479,10 +482,10 @@ class ComplianceGraphInitializer:
                 mandatory=True,
                 deadline_type="event-driven",
                 risk_level="high",
-                business_function="incident_response"
-            )
+                business_function="incident_response",
+            ),
         ]
-        
+
         query = """
         UNWIND $requirements AS req
         CREATE (r:Requirement {
@@ -498,12 +501,12 @@ class ComplianceGraphInitializer:
             created_at: datetime()
         })
         """
-        
+
         requirement_dicts = [asdict(requirement) for requirement in requirements]
-        await self.neo4j.execute_query(query, {"requirements": requirement_dicts})
+        await self.neo4j.execute_query(query, {"requirements": requirement_dicts}, read_only=False)
         logger.info(f"Created {len(requirements)} requirements")
         return len(requirements)
-    
+
     async def _load_controls(self) -> int:
         """Load control measures for compliance"""
         controls = [
@@ -514,7 +517,7 @@ class ComplianceGraphInitializer:
                 implementation_guidance="Risk-based approach with enhanced verification for high-risk customers",
                 testing_frequency="quarterly",
                 automation_level="semi-automated",
-                cost_impact="medium"
+                cost_impact="medium",
             ),
             Control(
                 name="Real-time Transaction Monitoring",
@@ -523,7 +526,7 @@ class ComplianceGraphInitializer:
                 implementation_guidance="AI-powered transaction monitoring with configurable rules",
                 testing_frequency="continuous",
                 automation_level="fully-automated",
-                cost_impact="high"
+                cost_impact="high",
             ),
             Control(
                 name="Consent Management System",
@@ -532,7 +535,7 @@ class ComplianceGraphInitializer:
                 implementation_guidance="Granular consent with audit trail and withdrawal mechanisms",
                 testing_frequency="monthly",
                 automation_level="fully-automated",
-                cost_impact="medium"
+                cost_impact="medium",
             ),
             Control(
                 name="Data Breach Response Plan",
@@ -541,7 +544,7 @@ class ComplianceGraphInitializer:
                 implementation_guidance="Automated breach detection with escalation procedures",
                 testing_frequency="semi-annually",
                 automation_level="semi-automated",
-                cost_impact="low"
+                cost_impact="low",
             ),
             Control(
                 name="ICT Risk Assessment Framework",
@@ -550,10 +553,10 @@ class ComplianceGraphInitializer:
                 implementation_guidance="Comprehensive risk assessment covering all ICT assets",
                 testing_frequency="annually",
                 automation_level="manual",
-                cost_impact="medium"
-            )
+                cost_impact="medium",
+            ),
         ]
-        
+
         query = """
         UNWIND $controls AS control
         CREATE (c:Control {
@@ -567,12 +570,12 @@ class ComplianceGraphInitializer:
             created_at: datetime()
         })
         """
-        
+
         control_dicts = [asdict(control) for control in controls]
-        await self.neo4j.execute_query(query, {"controls": control_dicts})
+        await self.neo4j.execute_query(query, {"controls": control_dicts}, read_only=False)
         logger.info(f"Created {len(controls)} controls")
         return len(controls)
-    
+
     async def _load_metrics(self) -> int:
         """Load compliance metrics and KPIs"""
         metrics = [
@@ -583,7 +586,7 @@ class ComplianceGraphInitializer:
                 target_value="< 30% high-risk customers",
                 reporting_frequency="monthly",
                 data_source="CRM system",
-                controls=["Enhanced Customer Due Diligence"]
+                controls=["Enhanced Customer Due Diligence"],
             ),
             ComplianceMetric(
                 name="Suspicious Transaction Detection Rate",
@@ -592,7 +595,7 @@ class ComplianceGraphInitializer:
                 target_value="> 95% accuracy",
                 reporting_frequency="daily",
                 data_source="Transaction monitoring system",
-                controls=["Real-time Transaction Monitoring"]
+                controls=["Real-time Transaction Monitoring"],
             ),
             ComplianceMetric(
                 name="Consent Withdrawal Response Time",
@@ -601,7 +604,7 @@ class ComplianceGraphInitializer:
                 target_value="< 24 hours",
                 reporting_frequency="weekly",
                 data_source="Consent management system",
-                controls=["Consent Management System"]
+                controls=["Consent Management System"],
             ),
             ComplianceMetric(
                 name="Data Breach Notification Compliance",
@@ -610,10 +613,10 @@ class ComplianceGraphInitializer:
                 target_value="100% compliance",
                 reporting_frequency="incident-based",
                 data_source="Incident management system",
-                controls=["Data Breach Response Plan"]
-            )
+                controls=["Data Breach Response Plan"],
+            ),
         ]
-        
+
         query = """
         UNWIND $metrics AS metric
         CREATE (m:Metric {
@@ -627,12 +630,12 @@ class ComplianceGraphInitializer:
             created_at: datetime()
         })
         """
-        
+
         metric_dicts = [asdict(metric) for metric in metrics]
-        await self.neo4j.execute_query(query, {"metrics": metric_dicts})
+        await self.neo4j.execute_query(query, {"metrics": metric_dicts}, read_only=False)
         logger.info(f"Created {len(metrics)} metrics")
         return len(metrics)
-    
+
     async def _create_relationships(self) -> int:
         """Create relationships between compliance entities"""
         relationship_queries = [
@@ -642,59 +645,53 @@ class ComplianceGraphInitializer:
             WHERE r.compliance_domain = d.name
             CREATE (r)-[:GOVERNED_BY]->(d)
             """,
-            
             # Jurisdiction to Regulation relationships
             """
             MATCH (j:Jurisdiction), (r:Regulation)
             WHERE r.jurisdiction = j.code OR r.jurisdiction = j.name
             CREATE (r)-[:ENFORCED_IN]->(j)
             """,
-            
             # Regulation to Requirement relationships
             """
             MATCH (reg:Regulation), (req:Requirement)
             WHERE req.regulation_code = reg.code
             CREATE (req)-[:MANDATED_BY]->(reg)
             """,
-            
             # Requirement to Control relationships
             """
             MATCH (req:Requirement), (c:Control)
             WHERE req.id IN c.requirements
             CREATE (c)-[:ADDRESSES]->(req)
             """,
-            
             # Control to Metric relationships
             """
             MATCH (c:Control), (m:Metric)
             WHERE c.name IN m.controls
             CREATE (m)-[:MEASURES]->(c)
             """,
-            
             # Risk level relationships
             """
             MATCH (req1:Requirement), (req2:Requirement)
             WHERE req1.risk_level = req2.risk_level AND req1 <> req2
             CREATE (req1)-[:SIMILAR_RISK]->(req2)
             """,
-            
             # Business function relationships
             """
             MATCH (req1:Requirement), (req2:Requirement)
             WHERE req1.business_function = req2.business_function AND req1 <> req2
             CREATE (req1)-[:SAME_FUNCTION]->(req2)
-            """
+            """,
         ]
-        
+
         total_relationships = 0
         for query in relationship_queries:
-            result = await self.neo4j.execute_query(query)
+            await self.neo4j.execute_query(query, read_only=False)
             # Neo4j returns summary statistics if available
             total_relationships += 1
-        
+
         logger.info(f"Created relationship patterns: {len(relationship_queries)}")
         return len(relationship_queries)
-    
+
     async def _load_risk_assessments(self) -> int:
         """Load risk assessment data"""
         query = """
@@ -738,11 +735,11 @@ class ComplianceGraphInitializer:
             created_at: datetime()
         })
         """
-        
-        await self.neo4j.execute_query(query)
+
+        await self.neo4j.execute_query(query, read_only=False)
         logger.info("Created 3 risk assessments")
         return 3
-    
+
     async def _load_enforcement_cases(self) -> int:
         """Load enforcement case data for learning"""
         query = """
@@ -789,47 +786,56 @@ class ComplianceGraphInitializer:
             created_at: datetime()
         })
         """
-        
-        await self.neo4j.execute_query(query)
+
+        await self.neo4j.execute_query(query, read_only=False)
         logger.info("Created 3 enforcement cases")
         return 3
-    
+
     async def _create_temporal_relationships(self) -> int:
         """Create temporal relationships for regulatory changes"""
-        query = """
-        // Link risk assessments to regulations
-        MATCH (ra:RiskAssessment), (r:Regulation)
-        WHERE ra.regulation_code = r.code
-        CREATE (ra)-[:ASSESSES]->(r)
-        
-        // Link enforcement cases to regulations
-        MATCH (ec:EnforcementCase), (r:Regulation)
-        WHERE ec.regulation_code = r.code
-        CREATE (ec)-[:VIOLATES]->(r)
-        
-        // Create temporal sequence for enforcement cases
-        MATCH (ec1:EnforcementCase), (ec2:EnforcementCase)
-        WHERE ec1.case_date < ec2.case_date AND ec1.regulation_code = ec2.regulation_code
-        CREATE (ec1)-[:PRECEDES]->(ec2)
-        
-        // Link similar violations across jurisdictions
-        MATCH (ec1:EnforcementCase), (ec2:EnforcementCase)
-        WHERE ec1.violation_type = ec2.violation_type AND ec1 <> ec2
-        CREATE (ec1)-[:SIMILAR_VIOLATION]->(ec2)
-        """
-        
-        await self.neo4j.execute_query(query)
+
+        # Split into separate queries to avoid WITH clause issues
+        queries = [
+            # Link risk assessments to regulations
+            """
+            MATCH (ra:RiskAssessment), (r:Regulation)
+            WHERE ra.regulation_code = r.code
+            CREATE (ra)-[:ASSESSES]->(r)
+            """,
+            # Link enforcement cases to regulations
+            """
+            MATCH (ec:EnforcementCase), (r:Regulation)
+            WHERE ec.regulation_code = r.code
+            CREATE (ec)-[:VIOLATES]->(r)
+            """,
+            # Create temporal sequence for enforcement cases
+            """
+            MATCH (ec1:EnforcementCase), (ec2:EnforcementCase)
+            WHERE ec1.case_date < ec2.case_date AND ec1.regulation_code = ec2.regulation_code
+            CREATE (ec1)-[:PRECEDES]->(ec2)
+            """,
+            # Link similar violations across jurisdictions
+            """
+            MATCH (ec1:EnforcementCase), (ec2:EnforcementCase)
+            WHERE ec1.violation_type = ec2.violation_type AND ec1 <> ec2
+            CREATE (ec1)-[:SIMILAR_VIOLATION]->(ec2)
+            """,
+        ]
+
+        for query in queries:
+            await self.neo4j.execute_query(query, read_only=False)
+
         logger.info("Created temporal relationships")
-        return 4  # Number of relationship patterns created
+        return len(queries)  # Number of relationship patterns created
 
 
 async def initialize_compliance_graph() -> Dict[str, Any]:
     """Standalone function to initialize compliance graph"""
     neo4j_service = Neo4jGraphRAGService()
     initializer = ComplianceGraphInitializer(neo4j_service)
-    
+
     try:
-        await neo4j_service.connect()
+        await neo4j_service.initialize()  # Changed from connect() to initialize()
         result = await initializer.initialize_full_compliance_graph()
         return result
     finally:
@@ -838,8 +844,8 @@ async def initialize_compliance_graph() -> Dict[str, Any]:
 
 if __name__ == "__main__":
     # For standalone execution
-    async def main():
+    async def main() -> None:
         result = await initialize_compliance_graph()
         print(f"Initialization result: {result}")
-    
+
     asyncio.run(main())

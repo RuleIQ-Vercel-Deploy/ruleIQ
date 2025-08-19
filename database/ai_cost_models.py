@@ -7,8 +7,18 @@ alerts, and optimization insights.
 
 from datetime import datetime
 from sqlalchemy import (
-    Column, Integer, String, Text, DateTime, Date, Boolean,
-    Numeric, JSON, ForeignKey, Index, CheckConstraint
+    Column,
+    Integer,
+    String,
+    Text,
+    DateTime,
+    Date,
+    Boolean,
+    Numeric,
+    JSON,
+    ForeignKey,
+    Index,
+    CheckConstraint,
 )
 from sqlalchemy.orm import relationship
 
@@ -63,17 +73,19 @@ class AIUsageLog(Base):
 
     # Constraints
     __table_args__ = (
-        CheckConstraint('input_tokens >= 0', name='check_input_tokens_positive'),
-        CheckConstraint('output_tokens >= 0', name='check_output_tokens_positive'),
-        CheckConstraint('total_tokens >= 0', name='check_total_tokens_positive'),
-        CheckConstraint('cost_usd >= 0', name='check_cost_positive'),
-        CheckConstraint('response_quality_score >= 0 AND response_quality_score <= 1',
-                       name='check_quality_score_range'),
-        Index('idx_usage_service_date', 'service_name', 'date_key'),
-        Index('idx_usage_model_date', 'model_name', 'date_key'),
-        Index('idx_usage_user_date', 'user_id', 'date_key'),
-        Index('idx_usage_timestamp', 'timestamp'),
-        Index('idx_usage_cost_analysis', 'service_name', 'model_name', 'date_key', 'cost_usd'),
+        CheckConstraint("input_tokens >= 0", name="check_input_tokens_positive"),
+        CheckConstraint("output_tokens >= 0", name="check_output_tokens_positive"),
+        CheckConstraint("total_tokens >= 0", name="check_total_tokens_positive"),
+        CheckConstraint("cost_usd >= 0", name="check_cost_positive"),
+        CheckConstraint(
+            "response_quality_score >= 0 AND response_quality_score <= 1",
+            name="check_quality_score_range",
+        ),
+        Index("idx_usage_service_date", "service_name", "date_key"),
+        Index("idx_usage_model_date", "model_name", "date_key"),
+        Index("idx_usage_user_date", "user_id", "date_key"),
+        Index("idx_usage_timestamp", "timestamp"),
+        Index("idx_usage_cost_analysis", "service_name", "model_name", "date_key", "cost_usd"),
     )
 
 
@@ -116,14 +128,14 @@ class AIModelConfig(Base):
 
     # Constraints
     __table_args__ = (
-        CheckConstraint('input_cost_per_million >= 0', name='check_input_cost_positive'),
-        CheckConstraint('output_cost_per_million >= 0', name='check_output_cost_positive'),
-        CheckConstraint('context_window > 0', name='check_context_window_positive'),
-        CheckConstraint('max_output_tokens > 0', name='check_max_output_positive'),
-        CheckConstraint('reliability_score >= 0 AND reliability_score <= 1',
-                       name='check_reliability_range'),
-        CheckConstraint('quality_score >= 0 AND quality_score <= 1',
-                       name='check_quality_range'),
+        CheckConstraint("input_cost_per_million >= 0", name="check_input_cost_positive"),
+        CheckConstraint("output_cost_per_million >= 0", name="check_output_cost_positive"),
+        CheckConstraint("context_window > 0", name="check_context_window_positive"),
+        CheckConstraint("max_output_tokens > 0", name="check_max_output_positive"),
+        CheckConstraint(
+            "reliability_score >= 0 AND reliability_score <= 1", name="check_reliability_range"
+        ),
+        CheckConstraint("quality_score >= 0 AND quality_score <= 1", name="check_quality_range"),
     )
 
 
@@ -161,16 +173,20 @@ class BudgetConfiguration(Base):
 
     # Constraints
     __table_args__ = (
-        CheckConstraint('daily_limit >= 0', name='check_daily_limit_positive'),
-        CheckConstraint('weekly_limit >= 0', name='check_weekly_limit_positive'),
-        CheckConstraint('monthly_limit >= 0', name='check_monthly_limit_positive'),
-        CheckConstraint('yearly_limit >= 0', name='check_yearly_limit_positive'),
-        CheckConstraint('warning_threshold >= 0 AND warning_threshold <= 100',
-                       name='check_warning_threshold_range'),
-        CheckConstraint('critical_threshold >= 0 AND critical_threshold <= 100',
-                       name='check_critical_threshold_range'),
-        Index('idx_budget_user_service', 'user_id', 'service_name'),
-        Index('idx_budget_global', 'is_global', 'is_active'),
+        CheckConstraint("daily_limit >= 0", name="check_daily_limit_positive"),
+        CheckConstraint("weekly_limit >= 0", name="check_weekly_limit_positive"),
+        CheckConstraint("monthly_limit >= 0", name="check_monthly_limit_positive"),
+        CheckConstraint("yearly_limit >= 0", name="check_yearly_limit_positive"),
+        CheckConstraint(
+            "warning_threshold >= 0 AND warning_threshold <= 100",
+            name="check_warning_threshold_range",
+        ),
+        CheckConstraint(
+            "critical_threshold >= 0 AND critical_threshold <= 100",
+            name="check_critical_threshold_range",
+        ),
+        Index("idx_budget_user_service", "user_id", "service_name"),
+        Index("idx_budget_global", "is_global", "is_active"),
     )
 
 
@@ -182,7 +198,9 @@ class CostAlert(Base):
     id = Column(Integer, primary_key=True, index=True)
 
     # Alert identification
-    alert_type = Column(String(50), nullable=False, index=True)  # budget_warning, budget_exceeded, etc.
+    alert_type = Column(
+        String(50), nullable=False, index=True
+    )  # budget_warning, budget_exceeded, etc.
     severity = Column(String(20), nullable=False, index=True)  # info, warning, critical
 
     # Scope
@@ -220,13 +238,15 @@ class CostAlert(Base):
 
     # Constraints
     __table_args__ = (
-        CheckConstraint('current_usage >= 0', name='check_current_usage_positive'),
-        CheckConstraint('budget_limit >= 0', name='check_budget_limit_positive'),
-        CheckConstraint('threshold_percentage >= 0 AND threshold_percentage <= 100',
-                       name='check_threshold_range'),
-        Index('idx_alert_status_date', 'is_resolved', 'date_key'),
-        Index('idx_alert_severity_type', 'severity', 'alert_type'),
-        Index('idx_alert_user_date', 'user_id', 'date_key'),
+        CheckConstraint("current_usage >= 0", name="check_current_usage_positive"),
+        CheckConstraint("budget_limit >= 0", name="check_budget_limit_positive"),
+        CheckConstraint(
+            "threshold_percentage >= 0 AND threshold_percentage <= 100",
+            name="check_threshold_range",
+        ),
+        Index("idx_alert_status_date", "is_resolved", "date_key"),
+        Index("idx_alert_severity_type", "severity", "alert_type"),
+        Index("idx_alert_user_date", "user_id", "date_key"),
     )
 
 
@@ -259,7 +279,9 @@ class CostOptimizationInsight(Base):
     analysis_end_date = Column(Date, nullable=False)
 
     # Status
-    status = Column(String(20), nullable=False, default='pending')  # pending, implemented, dismissed
+    status = Column(
+        String(20), nullable=False, default="pending"
+    )  # pending, implemented, dismissed
     implemented_at = Column(DateTime, nullable=True)
     implemented_by = Column(Integer, ForeignKey("users.id"), nullable=True)
     actual_savings_usd = Column(Numeric(10, 2), nullable=True)
@@ -280,13 +302,14 @@ class CostOptimizationInsight(Base):
 
     # Constraints
     __table_args__ = (
-        CheckConstraint('potential_savings_usd >= 0', name='check_potential_savings_positive'),
-        CheckConstraint('confidence_score >= 0 AND confidence_score <= 1',
-                       name='check_confidence_range'),
-        CheckConstraint('actual_savings_usd >= 0', name='check_actual_savings_positive'),
-        Index('idx_optimization_status_priority', 'status', 'priority'),
-        Index('idx_optimization_strategy_date', 'strategy', 'created_at'),
-        Index('idx_optimization_service_date', 'service_name', 'analysis_start_date'),
+        CheckConstraint("potential_savings_usd >= 0", name="check_potential_savings_positive"),
+        CheckConstraint(
+            "confidence_score >= 0 AND confidence_score <= 1", name="check_confidence_range"
+        ),
+        CheckConstraint("actual_savings_usd >= 0", name="check_actual_savings_positive"),
+        Index("idx_optimization_status_priority", "status", "priority"),
+        Index("idx_optimization_strategy_date", "strategy", "created_at"),
+        Index("idx_optimization_service_date", "service_name", "analysis_start_date"),
     )
 
 
@@ -331,19 +354,19 @@ class CostAggregation(Base):
 
     # Constraints
     __table_args__ = (
-        CheckConstraint('total_cost >= 0', name='check_total_cost_positive'),
-        CheckConstraint('total_requests >= 0', name='check_total_requests_positive'),
-        CheckConstraint('total_tokens >= 0', name='check_total_tokens_positive'),
-        CheckConstraint('cost_per_request >= 0', name='check_cost_per_request_positive'),
-        CheckConstraint('cost_per_token >= 0', name='check_cost_per_token_positive'),
-        CheckConstraint('cache_hit_rate >= 0 AND cache_hit_rate <= 100',
-                       name='check_cache_hit_rate_range'),
-        CheckConstraint('error_rate >= 0 AND error_rate <= 100',
-                       name='check_error_rate_range'),
-        Index('idx_agg_type_date', 'aggregation_type', 'date_key'),
-        Index('idx_agg_service_date', 'service_name', 'date_key'),
-        Index('idx_agg_user_date', 'user_id', 'date_key'),
-        Index('idx_agg_cost_analysis', 'service_name', 'model_name', 'date_key', 'total_cost'),
+        CheckConstraint("total_cost >= 0", name="check_total_cost_positive"),
+        CheckConstraint("total_requests >= 0", name="check_total_requests_positive"),
+        CheckConstraint("total_tokens >= 0", name="check_total_tokens_positive"),
+        CheckConstraint("cost_per_request >= 0", name="check_cost_per_request_positive"),
+        CheckConstraint("cost_per_token >= 0", name="check_cost_per_token_positive"),
+        CheckConstraint(
+            "cache_hit_rate >= 0 AND cache_hit_rate <= 100", name="check_cache_hit_rate_range"
+        ),
+        CheckConstraint("error_rate >= 0 AND error_rate <= 100", name="check_error_rate_range"),
+        Index("idx_agg_type_date", "aggregation_type", "date_key"),
+        Index("idx_agg_service_date", "service_name", "date_key"),
+        Index("idx_agg_user_date", "user_id", "date_key"),
+        Index("idx_agg_cost_analysis", "service_name", "model_name", "date_key", "total_cost"),
     )
 
 
@@ -396,17 +419,18 @@ class CostForecast(Base):
 
     # Constraints
     __table_args__ = (
-        CheckConstraint('predicted_cost >= 0', name='check_predicted_cost_positive'),
-        CheckConstraint('lower_bound_cost >= 0', name='check_lower_bound_positive'),
-        CheckConstraint('upper_bound_cost >= 0', name='check_upper_bound_positive'),
-        CheckConstraint('lower_bound_cost <= predicted_cost', name='check_bounds_logical'),
-        CheckConstraint('predicted_cost <= upper_bound_cost', name='check_bounds_logical2'),
-        CheckConstraint('confidence_level > 0 AND confidence_level <= 100',
-                       name='check_confidence_level_range'),
-        CheckConstraint('training_data_points > 0', name='check_training_points_positive'),
-        Index('idx_forecast_date_type', 'forecast_date', 'forecast_type'),
-        Index('idx_forecast_service_date', 'service_name', 'forecast_date'),
-        Index('idx_forecast_accuracy', 'forecasting_model', 'model_accuracy'),
+        CheckConstraint("predicted_cost >= 0", name="check_predicted_cost_positive"),
+        CheckConstraint("lower_bound_cost >= 0", name="check_lower_bound_positive"),
+        CheckConstraint("upper_bound_cost >= 0", name="check_upper_bound_positive"),
+        CheckConstraint("lower_bound_cost <= predicted_cost", name="check_bounds_logical"),
+        CheckConstraint("predicted_cost <= upper_bound_cost", name="check_bounds_logical2"),
+        CheckConstraint(
+            "confidence_level > 0 AND confidence_level <= 100", name="check_confidence_level_range"
+        ),
+        CheckConstraint("training_data_points > 0", name="check_training_points_positive"),
+        Index("idx_forecast_date_type", "forecast_date", "forecast_type"),
+        Index("idx_forecast_service_date", "service_name", "forecast_date"),
+        Index("idx_forecast_accuracy", "forecasting_model", "model_accuracy"),
     )
 
 
@@ -415,9 +439,11 @@ def extend_user_model() -> None:
     """Extend the User model with cost-related relationships."""
     from database.user import User
 
-    if not hasattr(User, 'ai_usage_logs'):
+    if not hasattr(User, "ai_usage_logs"):
         User.ai_usage_logs = relationship("AIUsageLog", back_populates="user")
-        User.budget_configs = relationship("BudgetConfiguration", foreign_keys="BudgetConfiguration.user_id", back_populates="user")
+        User.budget_configs = relationship(
+            "BudgetConfiguration", foreign_keys="BudgetConfiguration.user_id", back_populates="user"
+        )
         User.cost_aggregations = relationship("CostAggregation", back_populates="user")
 
 

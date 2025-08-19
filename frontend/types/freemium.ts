@@ -251,11 +251,7 @@ export interface FreemiumState {
   utmTerm: string | null;
   utmContent: string | null;
   
-  // Computed properties for test compatibility
-  isSessionExpired: boolean;
-  canStartAssessment: boolean;
-  hasValidSession: boolean;
-  responseCount: number;
+  // Computed properties are handled by getters in the store
 }
 
 // ============================================================================
@@ -274,7 +270,7 @@ export interface FreemiumActions {
   clearSession: () => void;
   
   // Question flow
-  submitAnswer: (answerData: AssessmentAnswerRequest) => Promise<void>;
+  submitAnswer: (answerData: AssessmentAnswerRequest) => Promise<{ is_complete: boolean }>;
   skipQuestion: () => void;
   goToPreviousQuestion: () => void;
   

@@ -28,7 +28,9 @@ class APIVersioning:
 
         self.version_routes[version] = routes
 
-    def mark_deprecated(self, endpoint: str, version: str, replacement: Optional[str] = None) -> None:
+    def mark_deprecated(
+        self, endpoint: str, version: str, replacement: Optional[str] = None
+    ) -> None:
         """Mark an endpoint as deprecated."""
         self.deprecated_endpoints[endpoint] = {
             "version": version,

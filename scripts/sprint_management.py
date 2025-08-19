@@ -11,11 +11,13 @@ from dataclasses import dataclass, asdict
 from enum import Enum
 import os
 
+
 class Priority(Enum):
     CRITICAL = "CRITICAL"
     HIGH = "HIGH"
     MEDIUM = "MEDIUM"
     LOW = "LOW"
+
 
 class StoryStatus(Enum):
     PENDING = "PENDING"
@@ -23,6 +25,7 @@ class StoryStatus(Enum):
     BLOCKED = "BLOCKED"
     TESTING = "TESTING"
     DONE = "DONE"
+
 
 class TaskType(Enum):
     FEATURE = "FEATURE"
@@ -32,16 +35,20 @@ class TaskType(Enum):
     TESTING = "TESTING"
     DOCUMENTATION = "DOCUMENTATION"
 
+
 @dataclass
 class AcceptanceCriteria:
     """Acceptance criteria for user stories"""
+
     description: str
     testable: bool = True
     automated_test: Optional[str] = None
 
+
 @dataclass
 class Task:
     """Individual implementation task"""
+
     id: str
     title: str
     description: str
@@ -60,9 +67,11 @@ class Task:
         if self.created_at is None:
             self.created_at = datetime.datetime.now()
 
+
 @dataclass
 class UserStory:
     """User story with acceptance criteria and tasks"""
+
     id: str
     title: str
     description: str
@@ -88,9 +97,11 @@ class UserStory:
         if self.created_at is None:
             self.created_at = datetime.datetime.now()
 
+
 @dataclass
 class Sprint:
     """Sprint definition with goals and capacity"""
+
     id: str
     name: str
     goal: str
@@ -110,6 +121,7 @@ class Sprint:
             self.stories = []
         if self.created_at is None:
             self.created_at = datetime.datetime.now()
+
 
 class SprintManager:
     """Main sprint management system"""
@@ -132,13 +144,15 @@ class SprintManager:
             end_date=datetime.datetime.strptime(sprint_data.get("end_date"), "%Y-%m-%d").date(),
             capacity_hours=sprint_data.get("capacity_hours", 80.0),
             team_members=sprint_data.get("team_members", ["Development Team"]),
-            velocity_target=sprint_data.get("velocity_target", 20)
+            velocity_target=sprint_data.get("velocity_target", 20),
         )
 
         self._save_sprint(sprint)
         return sprint
 
-    def generate_sprint_stories(self, sprint_id: str, roadmap_context: Dict[str, Any]) -> List[UserStory]:
+    def generate_sprint_stories(
+        self, sprint_id: str, roadmap_context: Dict[str, Any]
+    ) -> List[UserStory]:
         """Generate user stories for the sprint based on roadmap and priorities"""
 
         # Current ruleIQ project context based on memory analysis
@@ -158,10 +172,10 @@ class SprintManager:
                 AcceptanceCriteria("Admin can assign permissions to roles"),
                 AcceptanceCriteria("Users are automatically assigned permissions based on roles"),
                 AcceptanceCriteria("API endpoints are protected by RBAC middleware"),
-                AcceptanceCriteria("Audit logs capture all permission changes")
+                AcceptanceCriteria("Audit logs capture all permission changes"),
             ],
             technical_complexity="HIGH",
-            estimated_hours=32.0
+            estimated_hours=32.0,
         )
         stories.append(rbac_story)
 
@@ -178,10 +192,10 @@ class SprintManager:
                 AcceptanceCriteria("Aceternity components removed from codebase"),
                 AcceptanceCriteria("Feature flag NEXT_PUBLIC_USE_NEW_THEME implemented"),
                 AcceptanceCriteria("WCAG 2.2 AA compliance maintained"),
-                AcceptanceCriteria("Bundle size increase <5%")
+                AcceptanceCriteria("Bundle size increase <5%"),
             ],
             technical_complexity="MEDIUM",
-            estimated_hours=40.0
+            estimated_hours=40.0,
         )
         stories.append(design_story)
 
@@ -195,13 +209,15 @@ class SprintManager:
             feature_area="Evidence Management",
             acceptance_criteria=[
                 AcceptanceCriteria("AI classifies uploaded documents by type and relevance"),
-                AcceptanceCriteria("Evidence is automatically mapped to relevant framework controls"),
+                AcceptanceCriteria(
+                    "Evidence is automatically mapped to relevant framework controls"
+                ),
                 AcceptanceCriteria("Classification confidence scores are displayed"),
                 AcceptanceCriteria("Users can override AI classifications"),
-                AcceptanceCriteria("Bulk processing handles multiple files efficiently")
+                AcceptanceCriteria("Bulk processing handles multiple files efficiently"),
             ],
             technical_complexity="HIGH",
-            estimated_hours=64.0
+            estimated_hours=64.0,
         )
         stories.append(evidence_story)
 
@@ -218,10 +234,10 @@ class SprintManager:
                 AcceptanceCriteria("System identifies compliance gaps and priorities"),
                 AcceptanceCriteria("AI provides actionable recommendations"),
                 AcceptanceCriteria("Export capabilities for compliance reports"),
-                AcceptanceCriteria("Real-time alerts for critical compliance issues")
+                AcceptanceCriteria("Real-time alerts for critical compliance issues"),
             ],
             technical_complexity="MEDIUM",
-            estimated_hours=40.0
+            estimated_hours=40.0,
         )
         stories.append(insights_story)
 
@@ -238,10 +254,10 @@ class SprintManager:
                 AcceptanceCriteria("Database queries are optimized with proper indexing"),
                 AcceptanceCriteria("Comprehensive performance monitoring dashboard"),
                 AcceptanceCriteria("Automated alerts for performance degradation"),
-                AcceptanceCriteria("Load testing validates performance under stress")
+                AcceptanceCriteria("Load testing validates performance under stress"),
             ],
             technical_complexity="MEDIUM",
-            estimated_hours=24.0
+            estimated_hours=24.0,
         )
         stories.append(performance_story)
 
@@ -258,7 +274,7 @@ class SprintManager:
             "feature_area_breakdown": {},
             "recommendations": [],
             "risks": [],
-            "dependencies": []
+            "dependencies": [],
         }
 
         # Priority breakdown
@@ -285,11 +301,15 @@ class SprintManager:
 
         # Generate recommendations
         if analysis["total_story_points"] > 50:
-            analysis["recommendations"].append("Consider splitting sprint - current scope exceeds typical team capacity")
+            analysis["recommendations"].append(
+                "Consider splitting sprint - current scope exceeds typical team capacity"
+            )
 
         critical_stories = [s for s in stories if s.priority == Priority.CRITICAL]
         if len(critical_stories) > 2:
-            analysis["recommendations"].append("Too many critical priority stories - consider prioritization")
+            analysis["recommendations"].append(
+                "Too many critical priority stories - consider prioritization"
+            )
 
         high_complexity_stories = [s for s in stories if s.technical_complexity == "CRITICAL"]
         if len(high_complexity_stories) > 1:
@@ -300,7 +320,9 @@ class SprintManager:
         for story in stories:
             for dep in story.dependencies:
                 if dep not in all_story_ids:
-                    analysis["dependencies"].append(f"Story {story.id} depends on external item {dep}")
+                    analysis["dependencies"].append(
+                        f"Story {story.id} depends on external item {dep}"
+                    )
 
         return analysis
 
@@ -310,52 +332,262 @@ class SprintManager:
         for story in stories:
             if story.id == "STORY-001":  # RBAC Story
                 story.tasks = [
-                    Task("TASK-001-01", "Implement RBAC database schema", "Create tables for roles, permissions, user_roles", TaskType.TECHNICAL, story.id, 8.0),
-                    Task("TASK-001-02", "Build RBAC service layer", "Implement role and permission management logic", TaskType.FEATURE, story.id, 12.0),
-                    Task("TASK-001-03", "Create RBAC middleware", "Implement API route protection", TaskType.TECHNICAL, story.id, 6.0),
-                    Task("TASK-001-04", "Build admin interface", "Create UI for role management", TaskType.FEATURE, story.id, 8.0),
-                    Task("TASK-001-05", "Implement audit logging", "Track all permission changes", TaskType.FEATURE, story.id, 4.0),
-                    Task("TASK-001-06", "Write comprehensive tests", "Unit and integration tests for RBAC", TaskType.TESTING, story.id, 6.0)
+                    Task(
+                        "TASK-001-01",
+                        "Implement RBAC database schema",
+                        "Create tables for roles, permissions, user_roles",
+                        TaskType.TECHNICAL,
+                        story.id,
+                        8.0,
+                    ),
+                    Task(
+                        "TASK-001-02",
+                        "Build RBAC service layer",
+                        "Implement role and permission management logic",
+                        TaskType.FEATURE,
+                        story.id,
+                        12.0,
+                    ),
+                    Task(
+                        "TASK-001-03",
+                        "Create RBAC middleware",
+                        "Implement API route protection",
+                        TaskType.TECHNICAL,
+                        story.id,
+                        6.0,
+                    ),
+                    Task(
+                        "TASK-001-04",
+                        "Build admin interface",
+                        "Create UI for role management",
+                        TaskType.FEATURE,
+                        story.id,
+                        8.0,
+                    ),
+                    Task(
+                        "TASK-001-05",
+                        "Implement audit logging",
+                        "Track all permission changes",
+                        TaskType.FEATURE,
+                        story.id,
+                        4.0,
+                    ),
+                    Task(
+                        "TASK-001-06",
+                        "Write comprehensive tests",
+                        "Unit and integration tests for RBAC",
+                        TaskType.TESTING,
+                        story.id,
+                        6.0,
+                    ),
                 ]
 
             elif story.id == "STORY-002":  # Design System Story
                 story.tasks = [
-                    Task("TASK-002-01", "Update Tailwind configuration", "Replace purple/cyan with teal in config", TaskType.TECHNICAL, story.id, 4.0),
-                    Task("TASK-002-02", "Remove Aceternity components", "Delete and replace with shadcn/ui", TaskType.TECHNICAL, story.id, 8.0),
-                    Task("TASK-002-03", "Implement feature flag system", "Add NEXT_PUBLIC_USE_NEW_THEME support", TaskType.TECHNICAL, story.id, 6.0),
-                    Task("TASK-002-04", "Migrate component colors", "Update all components to use teal palette", TaskType.DESIGN, story.id, 16.0),
-                    Task("TASK-002-05", "Accessibility testing", "Ensure WCAG 2.2 AA compliance maintained", TaskType.TESTING, story.id, 8.0),
-                    Task("TASK-002-06", "Performance optimization", "Keep bundle size increase under 5%", TaskType.TECHNICAL, story.id, 4.0)
+                    Task(
+                        "TASK-002-01",
+                        "Update Tailwind configuration",
+                        "Replace purple/cyan with teal in config",
+                        TaskType.TECHNICAL,
+                        story.id,
+                        4.0,
+                    ),
+                    Task(
+                        "TASK-002-02",
+                        "Remove Aceternity components",
+                        "Delete and replace with shadcn/ui",
+                        TaskType.TECHNICAL,
+                        story.id,
+                        8.0,
+                    ),
+                    Task(
+                        "TASK-002-03",
+                        "Implement feature flag system",
+                        "Add NEXT_PUBLIC_USE_NEW_THEME support",
+                        TaskType.TECHNICAL,
+                        story.id,
+                        6.0,
+                    ),
+                    Task(
+                        "TASK-002-04",
+                        "Migrate component colors",
+                        "Update all components to use teal palette",
+                        TaskType.DESIGN,
+                        story.id,
+                        16.0,
+                    ),
+                    Task(
+                        "TASK-002-05",
+                        "Accessibility testing",
+                        "Ensure WCAG 2.2 AA compliance maintained",
+                        TaskType.TESTING,
+                        story.id,
+                        8.0,
+                    ),
+                    Task(
+                        "TASK-002-06",
+                        "Performance optimization",
+                        "Keep bundle size increase under 5%",
+                        TaskType.TECHNICAL,
+                        story.id,
+                        4.0,
+                    ),
                 ]
 
             elif story.id == "STORY-003":  # Evidence Auto-Classifier
                 story.tasks = [
-                    Task("TASK-003-01", "Design AI classification API", "Define endpoints and data structures", TaskType.TECHNICAL, story.id, 8.0),
-                    Task("TASK-003-02", "Implement document analysis", "Extract text and metadata from uploads", TaskType.FEATURE, story.id, 16.0),
-                    Task("TASK-003-03", "Build classification model", "AI logic for document categorization", TaskType.FEATURE, story.id, 20.0),
-                    Task("TASK-003-04", "Control mapping logic", "Map evidence to framework controls", TaskType.FEATURE, story.id, 12.0),
-                    Task("TASK-003-05", "Build confidence scoring", "Display AI confidence levels", TaskType.FEATURE, story.id, 6.0),
-                    Task("TASK-003-06", "Create override interface", "Allow manual classification changes", TaskType.FEATURE, story.id, 8.0),
-                    Task("TASK-003-07", "Implement bulk processing", "Handle multiple file uploads", TaskType.TECHNICAL, story.id, 6.0)
+                    Task(
+                        "TASK-003-01",
+                        "Design AI classification API",
+                        "Define endpoints and data structures",
+                        TaskType.TECHNICAL,
+                        story.id,
+                        8.0,
+                    ),
+                    Task(
+                        "TASK-003-02",
+                        "Implement document analysis",
+                        "Extract text and metadata from uploads",
+                        TaskType.FEATURE,
+                        story.id,
+                        16.0,
+                    ),
+                    Task(
+                        "TASK-003-03",
+                        "Build classification model",
+                        "AI logic for document categorization",
+                        TaskType.FEATURE,
+                        story.id,
+                        20.0,
+                    ),
+                    Task(
+                        "TASK-003-04",
+                        "Control mapping logic",
+                        "Map evidence to framework controls",
+                        TaskType.FEATURE,
+                        story.id,
+                        12.0,
+                    ),
+                    Task(
+                        "TASK-003-05",
+                        "Build confidence scoring",
+                        "Display AI confidence levels",
+                        TaskType.FEATURE,
+                        story.id,
+                        6.0,
+                    ),
+                    Task(
+                        "TASK-003-06",
+                        "Create override interface",
+                        "Allow manual classification changes",
+                        TaskType.FEATURE,
+                        story.id,
+                        8.0,
+                    ),
+                    Task(
+                        "TASK-003-07",
+                        "Implement bulk processing",
+                        "Handle multiple file uploads",
+                        TaskType.TECHNICAL,
+                        story.id,
+                        6.0,
+                    ),
                 ]
 
             elif story.id == "STORY-004":  # Compliance Insights
                 story.tasks = [
-                    Task("TASK-004-01", "Design analytics data model", "Schema for compliance metrics and trends", TaskType.TECHNICAL, story.id, 6.0),
-                    Task("TASK-004-02", "Build compliance scoring engine", "Calculate and track compliance scores", TaskType.FEATURE, story.id, 12.0),
-                    Task("TASK-004-03", "Implement gap analysis", "Identify and prioritize compliance gaps", TaskType.FEATURE, story.id, 10.0),
-                    Task("TASK-004-04", "Create insights dashboard", "Visual display of compliance analytics", TaskType.FEATURE, story.id, 12.0),
-                    Task("TASK-004-05", "Build recommendation engine", "AI-powered actionable insights", TaskType.FEATURE, story.id, 8.0),
-                    Task("TASK-004-06", "Implement export features", "PDF/Excel report generation", TaskType.FEATURE, story.id, 6.0)
+                    Task(
+                        "TASK-004-01",
+                        "Design analytics data model",
+                        "Schema for compliance metrics and trends",
+                        TaskType.TECHNICAL,
+                        story.id,
+                        6.0,
+                    ),
+                    Task(
+                        "TASK-004-02",
+                        "Build compliance scoring engine",
+                        "Calculate and track compliance scores",
+                        TaskType.FEATURE,
+                        story.id,
+                        12.0,
+                    ),
+                    Task(
+                        "TASK-004-03",
+                        "Implement gap analysis",
+                        "Identify and prioritize compliance gaps",
+                        TaskType.FEATURE,
+                        story.id,
+                        10.0,
+                    ),
+                    Task(
+                        "TASK-004-04",
+                        "Create insights dashboard",
+                        "Visual display of compliance analytics",
+                        TaskType.FEATURE,
+                        story.id,
+                        12.0,
+                    ),
+                    Task(
+                        "TASK-004-05",
+                        "Build recommendation engine",
+                        "AI-powered actionable insights",
+                        TaskType.FEATURE,
+                        story.id,
+                        8.0,
+                    ),
+                    Task(
+                        "TASK-004-06",
+                        "Implement export features",
+                        "PDF/Excel report generation",
+                        TaskType.FEATURE,
+                        story.id,
+                        6.0,
+                    ),
                 ]
 
             elif story.id == "STORY-005":  # Performance Optimization
                 story.tasks = [
-                    Task("TASK-005-01", "Database query optimization", "Add indexes and optimize slow queries", TaskType.TECHNICAL, story.id, 8.0),
-                    Task("TASK-005-02", "API response optimization", "Reduce response times to <200ms", TaskType.TECHNICAL, story.id, 6.0),
-                    Task("TASK-005-03", "Implement performance monitoring", "Real-time performance dashboards", TaskType.TECHNICAL, story.id, 8.0),
-                    Task("TASK-005-04", "Set up automated alerts", "Alert system for performance issues", TaskType.TECHNICAL, story.id, 4.0),
-                    Task("TASK-005-05", "Conduct load testing", "Validate performance under load", TaskType.TESTING, story.id, 6.0)
+                    Task(
+                        "TASK-005-01",
+                        "Database query optimization",
+                        "Add indexes and optimize slow queries",
+                        TaskType.TECHNICAL,
+                        story.id,
+                        8.0,
+                    ),
+                    Task(
+                        "TASK-005-02",
+                        "API response optimization",
+                        "Reduce response times to <200ms",
+                        TaskType.TECHNICAL,
+                        story.id,
+                        6.0,
+                    ),
+                    Task(
+                        "TASK-005-03",
+                        "Implement performance monitoring",
+                        "Real-time performance dashboards",
+                        TaskType.TECHNICAL,
+                        story.id,
+                        8.0,
+                    ),
+                    Task(
+                        "TASK-005-04",
+                        "Set up automated alerts",
+                        "Alert system for performance issues",
+                        TaskType.TECHNICAL,
+                        story.id,
+                        4.0,
+                    ),
+                    Task(
+                        "TASK-005-05",
+                        "Conduct load testing",
+                        "Validate performance under load",
+                        TaskType.TESTING,
+                        story.id,
+                        6.0,
+                    ),
                 ]
 
         return stories
@@ -375,17 +607,23 @@ class SprintManager:
             "days_remaining": (sprint.end_date - datetime.date.today()).days,
             "total_stories": len(sprint.stories),
             "completed_stories": len([s for s in sprint.stories if s.status == StoryStatus.DONE]),
-            "in_progress_stories": len([s for s in sprint.stories if s.status == StoryStatus.IN_PROGRESS]),
+            "in_progress_stories": len(
+                [s for s in sprint.stories if s.status == StoryStatus.IN_PROGRESS]
+            ),
             "blocked_stories": len([s for s in sprint.stories if s.status == StoryStatus.BLOCKED]),
-            "story_points_completed": sum(s.story_points for s in sprint.stories if s.status == StoryStatus.DONE),
+            "story_points_completed": sum(
+                s.story_points for s in sprint.stories if s.status == StoryStatus.DONE
+            ),
             "story_points_total": sum(s.story_points for s in sprint.stories),
             "hours_spent": sum(s.actual_hours for s in sprint.stories),
             "hours_estimated": sum(s.estimated_hours for s in sprint.stories),
-            "velocity_current": sum(s.story_points for s in sprint.stories if s.status == StoryStatus.DONE),
+            "velocity_current": sum(
+                s.story_points for s in sprint.stories if s.status == StoryStatus.DONE
+            ),
             "velocity_target": sprint.velocity_target,
             "stories_by_status": {},
             "blockers": [],
-            "recommendations": []
+            "recommendations": [],
         }
 
         # Story status breakdown
@@ -394,57 +632,72 @@ class SprintManager:
             progress["stories_by_status"][status.value] = {
                 "count": len(stories_in_status),
                 "story_points": sum(s.story_points for s in stories_in_status),
-                "stories": [{"id": s.id, "title": s.title, "points": s.story_points} for s in stories_in_status]
+                "stories": [
+                    {"id": s.id, "title": s.title, "points": s.story_points}
+                    for s in stories_in_status
+                ],
             }
 
         # Identify blockers
         blocked_stories = [s for s in sprint.stories if s.status == StoryStatus.BLOCKED]
         for story in blocked_stories:
-            progress["blockers"].append({
-                "story_id": story.id,
-                "title": story.title,
-                "dependencies": story.dependencies,
-                "priority": story.priority.value
-            })
+            progress["blockers"].append(
+                {
+                    "story_id": story.id,
+                    "title": story.title,
+                    "dependencies": story.dependencies,
+                    "priority": story.priority.value,
+                }
+            )
 
         # Generate recommendations
-        completion_rate = progress["completed_stories"] / progress["total_stories"] if progress["total_stories"] > 0 else 0
+        completion_rate = (
+            progress["completed_stories"] / progress["total_stories"]
+            if progress["total_stories"] > 0
+            else 0
+        )
         days_elapsed = (datetime.date.today() - sprint.start_date).days
         sprint_duration = (sprint.end_date - sprint.start_date).days
         expected_completion = days_elapsed / sprint_duration if sprint_duration > 0 else 0
 
         if completion_rate < expected_completion - 0.2:
-            progress["recommendations"].append("Sprint is behind schedule - consider scope reduction or timeline extension")
+            progress["recommendations"].append(
+                "Sprint is behind schedule - consider scope reduction or timeline extension"
+            )
 
         if len(blocked_stories) > 0:
-            progress["recommendations"].append("Address blocked stories to maintain sprint momentum")
+            progress["recommendations"].append(
+                "Address blocked stories to maintain sprint momentum"
+            )
 
         if progress["hours_spent"] > progress["hours_estimated"] * 1.2:
-            progress["recommendations"].append("Actual effort exceeding estimates - review story complexity")
+            progress["recommendations"].append(
+                "Actual effort exceeding estimates - review story complexity"
+            )
 
         return progress
 
     def _save_sprint(self, sprint: Sprint) -> None:
         """Save sprint to disk"""
         filepath = os.path.join(self.data_dir, f"{sprint.id}.json")
-        with open(filepath, 'w') as f:
+        with open(filepath, "w") as f:
             # Convert dataclass to dict for JSON serialization
             sprint_dict = asdict(sprint)
             # Handle datetime serialization
-            sprint_dict['start_date'] = sprint.start_date.isoformat()
-            sprint_dict['end_date'] = sprint.end_date.isoformat()
-            sprint_dict['created_at'] = sprint.created_at.isoformat()
+            sprint_dict["start_date"] = sprint.start_date.isoformat()
+            sprint_dict["end_date"] = sprint.end_date.isoformat()
+            sprint_dict["created_at"] = sprint.created_at.isoformat()
 
             # Handle nested dataclasses
-            for i, story in enumerate(sprint_dict['stories']):
-                story['created_at'] = sprint.stories[i].created_at.isoformat()
-                story['priority'] = story['priority']
-                story['status'] = story['status']
+            for i, story in enumerate(sprint_dict["stories"]):
+                story["created_at"] = sprint.stories[i].created_at.isoformat()
+                story["priority"] = story["priority"]
+                story["status"] = story["status"]
 
-                for j, task in enumerate(story['tasks']):
-                    task['created_at'] = sprint.stories[i].tasks[j].created_at.isoformat()
-                    task['type'] = task['type']
-                    task['status'] = task['status']
+                for j, task in enumerate(story["tasks"]):
+                    task["created_at"] = sprint.stories[i].tasks[j].created_at.isoformat()
+                    task["type"] = task["type"]
+                    task["status"] = task["status"]
 
             json.dump(sprint_dict, f, indent=2)
 
@@ -454,12 +707,13 @@ class SprintManager:
         if not os.path.exists(filepath):
             return None
 
-        with open(filepath, 'r') as f:
+        with open(filepath, "r") as f:
             json.load(f)
 
         # TODO: Implement proper deserialization from dict to Sprint dataclass
         # This is a simplified version - full implementation would handle all conversions
         return None
+
 
 def main() -> None:
     """CLI interface for sprint management"""
@@ -467,7 +721,9 @@ def main() -> None:
 
     if len(sys.argv) < 2:
         print("Usage: python sprint_management.py <command> [args]")
-        print("Commands: init_sprint, generate_stories, analyze_stories, decompose_stories, track_progress")
+        print(
+            "Commands: init_sprint, generate_stories, analyze_stories, decompose_stories, track_progress"
+        )
         return
 
     command = sys.argv[1]
@@ -483,7 +739,7 @@ def main() -> None:
             "end_date": "2025-08-15",
             "capacity_hours": 120.0,
             "team_members": ["Lead Developer", "Frontend Developer", "AI Engineer"],
-            "velocity_target": 40
+            "velocity_target": 40,
         }
         sprint = manager.init_sprint(sprint_data)
         print(f"Initialized sprint: {sprint.name}")
@@ -502,7 +758,7 @@ def main() -> None:
         print(f"Total story points: {analysis['total_story_points']}")
         print(f"Total estimated hours: {analysis['total_estimated_hours']}")
         print("Recommendations:")
-        for rec in analysis['recommendations']:
+        for rec in analysis["recommendations"]:
             print(f"- {rec}")
 
     elif command == "decompose_stories":
@@ -517,6 +773,7 @@ def main() -> None:
     elif command == "track_progress":
         # This would track actual sprint progress - requires saved sprint data
         print("Sprint progress tracking requires saved sprint data")
+
 
 if __name__ == "__main__":
     main()

@@ -10,6 +10,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+
 class AbacusRAGClient:
     """Client for querying the Abacus.AI agentic RAG agent for LangGraph/Pydantic docs."""
 
@@ -25,11 +26,10 @@ class AbacusRAGClient:
 
         # Correct headers for prediction/RAG queries
         self.headers = {
-            'deploymentId': self.deployment_id,
-            'deploymentToken': self.deployment_token,
-            'Content-Type': 'application/json'
+            "deploymentId": self.deployment_id,
+            "deploymentToken": self.deployment_token,
+            "Content-Type": "application/json",
         }
-
 
     def query_documentation(self, question: str) -> Optional[Dict[str, Any]]:
         """
@@ -43,17 +43,10 @@ class AbacusRAGClient:
         """
         try:
             # Use correct prediction endpoint format
-            payload = {
-                'inputs': [{
-                    'question': question
-                }]
-            }
+            payload = {"inputs": [{"question": question}]}
 
             response = requests.post(
-                self.predict_endpoint,
-                headers=self.headers,
-                json=payload,
-                timeout=30
+                self.predict_endpoint, headers=self.headers, json=payload, timeout=30
             )
 
             if response.status_code == 200:
@@ -61,7 +54,9 @@ class AbacusRAGClient:
                 logger.info(f"Successfully queried RAG agent for: {question[:50]}...")
                 return result
             else:
-                logger.warning(f"RAG query failed with status {response.status_code}: {response.text[:200]}")
+                logger.warning(
+                    f"RAG query failed with status {response.status_code}: {response.text[:200]}"
+                )
                 return self._fallback_response(question)
 
         except Exception as e:
@@ -143,7 +138,7 @@ for chunk in app.stream(input_data, config, stream_mode="values"):
         human_input = await get_human_input()
         app.update_state(config, {"human_feedback": human_input})
 ```"""
-                }
+                },
             },
             "pydantic": {
                 "agent design": {
@@ -204,7 +199,7 @@ async def process_request(self, request, context):
         return await self._take_action(request, context)
 ```"""
                 }
-            }
+            },
         }
 
         # Simple keyword matching for fallback responses
@@ -212,9 +207,15 @@ async def process_request(self, request, context):
 
         if "langgraph" in question_lower:
             if "state" in question_lower or "persistence" in question_lower:
-                return {"success": True, "result": fallback_responses["langgraph"]["state management"]}
+                return {
+                    "success": True,
+                    "result": fallback_responses["langgraph"]["state management"],
+                }
             elif "workflow" in question_lower or "orchestration" in question_lower:
-                return {"success": True, "result": fallback_responses["langgraph"]["workflow orchestration"]}
+                return {
+                    "success": True,
+                    "result": fallback_responses["langgraph"]["workflow orchestration"],
+                }
 
         elif "pydantic" in question_lower:
             if "agent" in question_lower or "design" in question_lower:
@@ -225,7 +226,7 @@ async def process_request(self, request, context):
             "success": True,
             "result": {
                 "answer": f"I'm currently unable to access the RAG documentation agent. For the question '{question}', I recommend checking the official LangGraph and Pydantic AI documentation at:\n\n- LangGraph: https://langchain-ai.github.io/langgraph/\n- Pydantic AI: https://ai.pydantic.dev/\n\nOr consult our technical implementation plan in docs/agentic-implementation/ for detailed examples."
-            }
+            },
         }
 
     def get_langgraph_guidance(self, topic: str) -> Optional[str]:
@@ -233,8 +234,8 @@ async def process_request(self, request, context):
         question = f"How do I implement {topic} in LangGraph? Please provide code examples and best practices."
         result = self.query_documentation(question)
 
-        if result and result.get('success'):
-            return result.get('result', {}).get('answer', '')
+        if result and result.get("success"):
+            return result.get("result", {}).get("answer", "")
         return None
 
     def get_pydantic_guidance(self, topic: str) -> Optional[str]:
@@ -242,8 +243,8 @@ async def process_request(self, request, context):
         question = f"How do I implement {topic} in Pydantic AI? Please provide code examples and best practices."
         result = self.query_documentation(question)
 
-        if result and result.get('success'):
-            return result.get('result', {}).get('answer', '')
+        if result and result.get("success"):
+            return result.get("result", {}).get("answer", "")
         return None
 
     def validate_implementation_approach(self, approach_description: str) -> Optional[str]:
@@ -251,8 +252,8 @@ async def process_request(self, request, context):
         question = f"Is this a good approach for LangGraph/Pydantic AI implementation? {approach_description}. Please provide feedback and suggestions."
         result = self.query_documentation(question)
 
-        if result and result.get('success'):
-            return result.get('result', {}).get('answer', '')
+        if result and result.get("success"):
+            return result.get("result", {}).get("answer", "")
         return None
 
 
@@ -260,17 +261,25 @@ async def process_request(self, request, context):
 def get_state_management_guidance() -> Optional[str]:
     """Get guidance on LangGraph state management for compliance workflows."""
     client = AbacusRAGClient()
-    return client.get_langgraph_guidance("state management with PostgreSQL checkpointer for compliance workflows")
+    return client.get_langgraph_guidance(
+        "state management with PostgreSQL checkpointer for compliance workflows"
+    )
+
 
 def get_agent_design_patterns() -> Optional[str]:
     """Get guidance on Pydantic AI agent design patterns."""
     client = AbacusRAGClient()
-    return client.get_pydantic_guidance("agent design patterns with trust levels and context accumulation")
+    return client.get_pydantic_guidance(
+        "agent design patterns with trust levels and context accumulation"
+    )
+
 
 def get_workflow_orchestration_guidance() -> Optional[str]:
     """Get guidance on LangGraph workflow orchestration."""
     client = AbacusRAGClient()
-    return client.get_langgraph_guidance("workflow orchestration with human-in-the-loop capabilities")
+    return client.get_langgraph_guidance(
+        "workflow orchestration with human-in-the-loop capabilities"
+    )
 
 
 if __name__ == "__main__":

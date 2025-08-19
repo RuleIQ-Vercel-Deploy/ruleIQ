@@ -6,23 +6,23 @@ Tests ruleIQ API endpoints with proper authentication.
 
 import asyncio
 import aiohttp
-import json
 from typing import Dict, Optional
 
+
 class APITester:
-    def __init__(self, base_url: str = "http://localhost:8000"):
+    def __init__(self, base_url: str = "http://localhost:8000") -> None:
         self.base_url = base_url
         self.session = None
         self.auth_token = None
-    
+
     async def __aenter__(self):
         self.session = aiohttp.ClientSession()
         return self
-    
+
     async def __aexit__(self, exc_type, exc_val, exc_tb):
         if self.session:
             await self.session.close()
-    
+
     async def register_test_user(self) -> bool:
         """Register a test user for authentication."""
         try:
@@ -31,12 +31,11 @@ class APITester:
                 "password": "TestPassword123!",
                 "first_name": "Test",
                 "last_name": "User",
-                "company_name": "Test Company"
+                "company_name": "Test Company",
             }
-            
+
             async with self.session.post(
-                f"{self.base_url}/api/v1/auth/register",
-                json=register_data
+                f"{self.base_url}/api/v1/auth/register", json=register_data
             ) as response:
                 if response.status == 201:
                     print("✅ Test user registered successfully")
@@ -52,18 +51,14 @@ class APITester:
         except Exception as e:
             print(f"❌ Registration error: {e}")
             return False
-    
+
     async def login(self) -> bool:
         """Login with test user credentials."""
         try:
-            login_data = {
-                "email": "test@example.com", 
-                "password": "TestPassword123!"
-            }
-            
+            login_data = {"email": "test@example.com", "password": "TestPassword123!"}
+
             async with self.session.post(
-                f"{self.base_url}/api/v1/auth/login",
-                json=login_data
+                f"{self.base_url}/api/v1/auth/login", json=login_data
             ) as response:
                 if response.status == 200:
                     data = await response.json()
@@ -77,21 +72,20 @@ class APITester:
         except Exception as e:
             print(f"❌ Login error: {e}")
             return False
-    
-    async def test_authenticated_endpoint(self, method: str, endpoint: str, data: Optional[Dict] = None) -> bool:
+
+    async def test_authenticated_endpoint(
+        self, method: str, endpoint: str, data: Optional[Dict] = None
+    ) -> bool:
         """Test an endpoint with authentication."""
         if not self.auth_token:
             print(f"❌ No auth token for {endpoint}")
             return False
-        
+
         headers = {"Authorization": f"Bearer {self.auth_token}"}
-        
+
         try:
             async with self.session.request(
-                method, 
-                f"{self.base_url}{endpoint}",
-                headers=headers,
-                json=data
+                method, f"{self.base_url}{endpoint}", headers=headers, json=data
             ) as response:
                 if response.status < 400:
                     print(f"✅ {method} {endpoint} - Status: {response.status}")
@@ -104,19 +98,20 @@ class APITester:
             print(f"❌ {method} {endpoint} - Error: {e}")
             return False
 
-async def main():
+
+async def main() -> None:
     """Run authenticated API tests."""
     print("🔐 Testing ruleIQ API with Authentication")
     print("=" * 50)
-    
+
     async with APITester() as tester:
         # Step 1: Register/Login
         if not await tester.register_test_user():
             return
-        
+
         if not await tester.login():
             return
-        
+
         # Step 2: Test authenticated endpoints
         endpoints_to_test = [
             ("GET", "/api/v1/assessments"),
@@ -128,13 +123,14 @@ async def main():
             ("GET", "/api/v1/monitoring/health"),
             ("GET", "/api/v1/integrations"),
         ]
-        
+
         success_count = 0
         for method, endpoint in endpoints_to_test:
             if await tester.test_authenticated_endpoint(method, endpoint):
                 success_count += 1
-        
+
         print(f"\n📊 Results: {success_count}/{len(endpoints_to_test)} endpoints working")
+
 
 if __name__ == "__main__":
     asyncio.run(main())

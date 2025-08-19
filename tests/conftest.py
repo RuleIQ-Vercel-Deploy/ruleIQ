@@ -338,8 +338,14 @@ except ImportError:
 # Import RBAC models
 try:
     from database.rbac import (
-        Role, Permission, UserRole, RolePermission, 
-        FrameworkAccess, AuditLog, UserSession, DataAccess
+        Role,
+        Permission,
+        UserRole,
+        RolePermission,
+        FrameworkAccess,
+        AuditLog,
+        UserSession,
+        DataAccess,
     )
 except ImportError:
     # RBAC models might not exist in all branches
@@ -1028,7 +1034,7 @@ def test_client(client):
     return client
 
 
-@pytest.fixture 
+@pytest.fixture
 def db(db_session):
     """Alias for RBAC tests compatibility."""
     return db_session

@@ -139,12 +139,13 @@ export const formatPrice = (amount: number, currency: string = 'gbp'): string =>
   }).format(amount);
 };
 
-export const getPlanFeatures = (planId: PricingPlan): string[] => {
+export const getPlanFeatures = (planId: PricingPlan): readonly string[] => {
   return PRICING_PLANS[planId]?.features || [];
 };
 
 export const isPlanPopular = (planId: PricingPlan): boolean => {
-  return PRICING_PLANS[planId]?.popular === true;
+  const plan = PRICING_PLANS[planId];
+  return 'popular' in plan ? plan.popular === true : false;
 };
 
 export const getPlanByPriceId = (stripePriceId: string): PricingPlanDetails | null => {

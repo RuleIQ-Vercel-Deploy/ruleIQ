@@ -3,12 +3,10 @@ Core constants for LangGraph compliance agent.
 Defines SLOs, cost limits, router thresholds, and tenancy keys.
 """
 
-from typing import Dict, List
-
 # Performance SLOs
 SLO_P95_LATENCY_MS = 2500  # P95 ≤ 2.5s end-to-end
-SLO_FIRST_TOKEN_MS = 500   # Stream first token fast
-SLO_AVAILABILITY = 0.999   # 99.9% uptime
+SLO_FIRST_TOKEN_MS = 500  # Stream first token fast
+SLO_AVAILABILITY = 0.999  # 99.9% uptime
 
 # Cost Management
 COST_LIMITS = {
@@ -20,16 +18,16 @@ COST_LIMITS = {
 
 # Router Decision Thresholds
 ROUTER_THRESHOLDS = {
-    "rules_confidence": 0.95,      # Deterministic rule matching
+    "rules_confidence": 0.95,  # Deterministic rule matching
     "classifier_confidence": 0.80,  # Lightweight ML classifier
-    "llm_fallback_threshold": 0.70, # When to use expensive LLM
-    "unknown_threshold": 0.50,     # Log as unknown for training
+    "llm_fallback_threshold": 0.70,  # When to use expensive LLM
+    "unknown_threshold": 0.50,  # Log as unknown for training
 }
 
 # Tenancy and Security
 TENANCY_KEYS = {
     "company_id_header": "X-Company-ID",
-    "thread_id_header": "X-Thread-ID", 
+    "thread_id_header": "X-Thread-ID",
     "user_id_header": "X-User-ID",
     "tenant_isolation_required": True,
 }
@@ -37,7 +35,7 @@ TENANCY_KEYS = {
 # Graph Node Types
 GRAPH_NODES = {
     "router": "router",
-    "compliance_analyzer": "compliance_analyzer", 
+    "compliance_analyzer": "compliance_analyzer",
     "obligation_finder": "obligation_finder",
     "evidence_collector": "evidence_collector",
     "legal_reviewer": "legal_reviewer",
@@ -48,14 +46,14 @@ GRAPH_NODES = {
 # Interrupt Types
 INTERRUPT_TYPES = {
     "legal_review": "legal_review",
-    "evidence_validation": "evidence_validation", 
+    "evidence_validation": "evidence_validation",
     "framework_selection": "framework_selection",
 }
 
 # Route Classifications
 ROUTE_TYPES = [
     "compliance_analysis",
-    "obligation_search", 
+    "obligation_search",
     "evidence_collection",
     "legal_review",
     "policy_generation",
@@ -64,11 +62,11 @@ ROUTE_TYPES = [
 
 # Retrieval Configuration
 RETRIEVAL_CONFIG = {
-    "default_k": 6,                # Number of results to return
-    "max_fanout": 3,               # Parallel framework searches
-    "vector_dimension": 1536,      # OpenAI embedding dimension
-    "similarity_threshold": 0.7,   # Minimum similarity score
-    "max_context_tokens": 8000,    # Maximum context length
+    "default_k": 6,  # Number of results to return
+    "max_fanout": 3,  # Parallel framework searches
+    "vector_dimension": 1536,  # OpenAI embedding dimension
+    "similarity_threshold": 0.7,  # Minimum similarity score
+    "max_context_tokens": 8000,  # Maximum context length
 }
 
 # Security Configuration
@@ -85,13 +83,13 @@ RATE_LIMITS = {
     "general_per_minute": 100,
     "ai_endpoints_per_minute": 20,
     "auth_endpoints_per_minute": 5,
-    "langgraph_per_minute": 30,    # New limit for LangGraph endpoints
+    "langgraph_per_minute": 30,  # New limit for LangGraph endpoints
 }
 
 # Model Configuration
 MODEL_CONFIG = {
-    "primary_model": "gemini-1.5-pro",     # Aligned with ruleIQ
-    "fallback_model": "gpt-4o-mini",      # Aligned with ruleIQ
+    "primary_model": "gemini-1.5-pro",  # Aligned with ruleIQ
+    "fallback_model": "gpt-4o-mini",  # Aligned with ruleIQ
     "streaming_models": ["gemini-1.5-pro", "gpt-4o"],
     "json_mode_models": ["gpt-4o", "gpt-4o-mini"],
     "max_tokens": 4000,
@@ -101,7 +99,7 @@ MODEL_CONFIG = {
 # Compliance Frameworks (UK focus aligned with ruleIQ)
 COMPLIANCE_FRAMEWORKS = [
     "GDPR",
-    "UK_GDPR", 
+    "UK_GDPR",
     "DPA_2018",
     "PECR",
     "ISO_27001",
@@ -114,7 +112,7 @@ COMPLIANCE_FRAMEWORKS = [
 # Business Sectors (aligned with ruleIQ business profiles)
 BUSINESS_SECTORS = [
     "retail",
-    "healthcare", 
+    "healthcare",
     "finance",
     "technology",
     "manufacturing",
@@ -127,9 +125,9 @@ BUSINESS_SECTORS = [
 
 # Agent Autonomy Levels (aligned with Agentic Vision)
 AUTONOMY_LEVELS = {
-    "transparent_helper": 1,    # Shows all reasoning, asks confirmation
-    "trusted_advisor": 2,       # Makes confident suggestions, learns preferences  
-    "autonomous_partner": 3,    # Takes initiative, manages workflows
+    "transparent_helper": 1,  # Shows all reasoning, asks confirmation
+    "trusted_advisor": 2,  # Makes confident suggestions, learns preferences
+    "autonomous_partner": 3,  # Takes initiative, manages workflows
 }
 
 # Turn and Tool Limits
@@ -143,7 +141,7 @@ EXECUTION_LIMITS = {
 # Monitoring and Metrics
 METRIC_TAGS = [
     "node_type",
-    "company_id", 
+    "company_id",
     "route_type",
     "model_name",
     "autonomy_level",
@@ -153,7 +151,7 @@ METRIC_TAGS = [
 # Error Categories
 ERROR_CATEGORIES = {
     "validation_error": "validation_error",
-    "authentication_error": "authentication_error", 
+    "authentication_error": "authentication_error",
     "authorization_error": "authorization_error",
     "rate_limit_error": "rate_limit_error",
     "model_error": "model_error",
@@ -165,7 +163,7 @@ ERROR_CATEGORIES = {
 # Database Configuration (PostgreSQL checkpointer)
 DATABASE_CONFIG = {
     "checkpointer_table": "langgraph_checkpoints",
-    "writes_table": "langgraph_writes", 
+    "writes_table": "langgraph_writes",
     "isolation_level": "READ_COMMITTED",
     "pool_size": 5,
     "max_overflow": 10,

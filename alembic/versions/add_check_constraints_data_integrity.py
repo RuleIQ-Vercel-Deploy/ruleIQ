@@ -79,7 +79,7 @@ def upgrade() -> None:
             ALTER TABLE compliance_frameworks
             ADD CONSTRAINT ck_compliance_framework_employee_threshold
             CHECK (
-                employee_threshold IS NULL OR 
+                employee_threshold IS NULL OR
                 (employee_threshold > 0 AND employee_threshold <= 1000000)
             )
         """)
@@ -103,7 +103,7 @@ def upgrade() -> None:
             ALTER TABLE evidence_items
             ADD CONSTRAINT ck_evidence_item_type
             CHECK (evidence_type IN (
-                'Policy', 'Procedure', 'Log', 'Certificate', 
+                'Policy', 'Procedure', 'Log', 'Certificate',
                 'Configuration', 'Audit Report', 'Training Record', 'Other'
             ))
         """)
@@ -116,7 +116,7 @@ def upgrade() -> None:
             ALTER TABLE evidence_items
             ADD CONSTRAINT ck_evidence_item_status
             CHECK (status IN (
-                'not_started', 'in_progress', 'collected', 'under_review', 
+                'not_started', 'in_progress', 'collected', 'under_review',
                 'approved', 'rejected', 'expired'
             ))
         """)
@@ -171,7 +171,7 @@ def upgrade() -> None:
             ALTER TABLE evidence_items
             ADD CONSTRAINT ck_evidence_item_file_size
             CHECK (
-                file_size_bytes IS NULL OR 
+                file_size_bytes IS NULL OR
                 (file_size_bytes >= 0 AND file_size_bytes <= 5368709120)
             )
         """)
@@ -185,7 +185,7 @@ def upgrade() -> None:
             ALTER TABLE assessment_sessions
             ADD CONSTRAINT ck_assessment_session_type
             CHECK (session_type IN (
-                'compliance_scoping', 'readiness_assessment', 
+                'compliance_scoping', 'readiness_assessment',
                 'gap_analysis', 'risk_assessment'
             ))
         """)
@@ -270,7 +270,7 @@ def upgrade() -> None:
             ALTER TABLE integrations
             ADD CONSTRAINT ck_integration_provider
             CHECK (provider IN (
-                'aws', 'okta', 'google_workspace', 'microsoft_365', 
+                'aws', 'okta', 'google_workspace', 'microsoft_365',
                 'azure', 'github', 'gitlab'
             ))
         """)
@@ -325,7 +325,7 @@ def upgrade() -> None:
             ALTER TABLE integration_evidence_items
             ADD CONSTRAINT ck_integration_evidence_source
             CHECK (source_system IN (
-                'aws', 'okta', 'google_workspace', 'microsoft_365', 
+                'aws', 'okta', 'google_workspace', 'microsoft_365',
                 'azure', 'github', 'gitlab', 'manual'
             ))
         """)

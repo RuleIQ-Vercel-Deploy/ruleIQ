@@ -116,13 +116,13 @@ async def _check_compliance_alerts_async() -> Dict[str, Any]:
     bind=True,
     autoretry_for=(DatabaseException, Exception),
     retry_kwargs={
-        'max_retries': 5,
-        'countdown': 90,  # Start with 90 seconds
+        "max_retries": 5,
+        "countdown": 90,  # Start with 90 seconds
     },
     retry_backoff=True,
     retry_backoff_max=600,
     retry_jitter=True,
-    rate_limit='3/m',  # 3 compliance score updates per minute
+    rate_limit="3/m",  # 3 compliance score updates per minute
 )
 def update_all_compliance_scores(self):
     """Updates compliance scores for all business profiles by running the async helper."""
@@ -148,13 +148,13 @@ def update_all_compliance_scores(self):
     bind=True,
     autoretry_for=(DatabaseException, Exception),
     retry_kwargs={
-        'max_retries': 5,
-        'countdown': 60,  # Start with 60 seconds
+        "max_retries": 5,
+        "countdown": 60,  # Start with 60 seconds
     },
     retry_backoff=True,
     retry_backoff_max=600,
     retry_jitter=True,
-    rate_limit='5/m',  # 5 alert checks per minute
+    rate_limit="5/m",  # 5 alert checks per minute
 )
 def check_compliance_alerts(self):
     """Checks for compliance issues that require immediate attention by running the async helper."""

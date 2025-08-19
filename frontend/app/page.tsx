@@ -471,62 +471,66 @@ export default function HomePage() {
       </div>
 
       {/* Navigation */}
-      <header className="glass-card border-glass-border fixed left-0 right-0 top-12 z-50 border-b" role="banner">
-        <div className="container mx-auto flex items-center justify-between px-4 py-3">
-          <Link href="/" className="flex items-center">
-            <div className="relative h-8 w-auto">
+      <header className="glass-card border-glass-border fixed left-0 right-0 top-12 z-50 border-b py-3" role="banner">
+        <div className="container mx-auto relative">
+          <div className="absolute left-4 top-1/2 transform -translate-y-1/2">
+            <Link href="/" className="block">
               <img
                 alt="ruleIQ"
-                width="100"
-                height="32"
+                width="800"
+                height="160"
                 decoding="async"
                 data-nimg="1"
-                className="h-full w-auto object-contain"
+                className="object-contain"
                 src="/assets/logo.svg"
-                style={{ color: 'transparent' }}
+                style={{ 
+                  height: '250px', 
+                  width: 'auto'
+                }}
               />
+            </Link>
+          </div>
+          <div className="flex items-center justify-end gap-4 pr-4">
+            <nav className="hidden items-center gap-8 md:flex" aria-label="Main navigation">
+              <Link
+                href="#features"
+                className="text-muted-foreground transition-colors hover:text-foreground"
+              >
+                Features
+              </Link>
+              <Link
+                href="#pricing"
+                className="text-muted-foreground transition-colors hover:text-foreground"
+              >
+                Pricing
+              </Link>
+              <Link
+                href="#testimonials"
+                className="text-muted-foreground transition-colors hover:text-foreground"
+              >
+                Testimonials
+              </Link>
+            </nav>
+
+            <div className="flex items-center gap-4">
+              <Button
+                variant="ghost"
+                className="text-muted-foreground hover:text-foreground"
+                onClick={() => router.push('/login')}
+              >
+                Sign In
+              </Button>
+              <Button
+                className="btn-gradient"
+                onClick={() => {
+                  const element = document.getElementById('hero-section');
+                  element?.scrollIntoView({ behavior: 'smooth' });
+                  setTimeout(() => setShowEmailCapture(true), 500);
+                }}
+              >
+                Get Started
+              </Button>
             </div>
-          </Link>
-
-          <nav className="hidden items-center gap-8 md:flex" aria-label="Main navigation">
-            <Link
-              href="#features"
-              className="text-muted-foreground transition-colors hover:text-foreground"
-            >
-              Features
-            </Link>
-            <Link
-              href="#pricing"
-              className="text-muted-foreground transition-colors hover:text-foreground"
-            >
-              Pricing
-            </Link>
-            <Link
-              href="#testimonials"
-              className="text-muted-foreground transition-colors hover:text-foreground"
-            >
-              Testimonials
-            </Link>
-          </nav>
-
-          <div className="flex items-center gap-4">
-            <Button
-              variant="ghost"
-              className="text-muted-foreground hover:text-foreground"
-              onClick={() => router.push('/login')}
-            >
-              Sign In
-            </Button>
-            <Button
-              className="btn-gradient"
-              onClick={() => {
-                const element = document.getElementById('hero-section');
-                element?.scrollIntoView({ behavior: 'smooth' });
-                setTimeout(() => setShowEmailCapture(true), 500);
-              }}
-            >
-              Get Started
-            </Button>
           </div>
         </div>
       </header>

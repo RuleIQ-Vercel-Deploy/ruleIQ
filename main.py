@@ -9,8 +9,6 @@ from api.dependencies.auth import get_current_active_user
 from api.middleware.error_handler import error_handler_middleware
 from api.request_id_middleware import RequestIDMiddleware
 from api.routers import (
-    # agentic_assessments,
-    # agentic_rag,
     ai_assessments,
     ai_cost_monitoring,
     ai_cost_websocket,
@@ -72,14 +70,15 @@ async def lifespan(app: FastAPI):
 
     # Initialize cache manager
     from config.cache import get_cache_manager
+
     await get_cache_manager()
     logger.info("Cache manager initialized.")
 
     # Initialize agentic integration service
-    from services.agentic_integration import initialize_agentic_service
+    # from services.agentic_integration import initialize_agentic_service
     try:
-        await initialize_agentic_service()
-        logger.info("Agentic RAG service initialized.")
+        # await initialize_agentic_service()
+        logger.info("Agentic RAG service skipped (module not found).")
     except Exception as e:
         logger.warning(f"Failed to initialize agentic RAG service: {e}")
 
@@ -106,7 +105,7 @@ async def lifespan(app: FastAPI):
     logger.info("Shutting down ComplianceGPT API...")
 
     # Cancel monitoring task if it exists
-    if hasattr(app.state, 'monitoring_task'):
+    if hasattr(app.state, "monitoring_task"):
         try:
             app.state.monitoring_task.cancel()
             await app.state.monitoring_task
@@ -151,22 +150,13 @@ app = FastAPI(
     contact={
         "name": "ruleIQ API Support",
         "url": "https://docs.ruleiq.com",
-        "email": "api-support@ruleiq.com"
+        "email": "api-support@ruleiq.com",
     },
-    license_info={
-        "name": "Proprietary",
-        "url": "https://ruleiq.com/license"
-    },
+    license_info={"name": "Proprietary", "url": "https://ruleiq.com/license"},
     servers=[
-        {
-            "url": "http://localhost:8000",
-            "description": "Development server"
-        },
-        {
-            "url": "https://api.ruleiq.com",
-            "description": "Production server"
-        }
-    ]
+        {"url": "http://localhost:8000", "description": "Development server"},
+        {"url": "https://api.ruleiq.com", "description": "Production server"},
+    ],
 )
 
 
@@ -209,44 +199,53 @@ app.include_router(
 )
 app.include_router(assessments.router, prefix="/api/v1/assessments", tags=["Assessments"])
 app.include_router(freemium.router, prefix="/api/v1", tags=["Freemium Assessment"])
-app.include_router(ai_assessments.router, prefix="/api/v1/ai-assessments", tags=["AI Assessment Assistant"])
-app.include_router(ai_optimization.router, prefix="/api/v1/ai/optimization", tags=["AI Optimization"])
+app.include_router(
+    ai_assessments.router, prefix="/api/v1/ai-assessments", tags=["AI Assessment Assistant"]
+)
+app.include_router(
+    ai_optimization.router, prefix="/api/v1/ai/optimization", tags=["AI Optimization"]
+)
 app.include_router(frameworks.router, prefix="/api/v1/frameworks", tags=["Compliance Frameworks"])
 app.include_router(policies.router, prefix="/api/v1/policies", tags=["Policies"])
 app.include_router(
     implementation.router, prefix="/api/v1/implementation", tags=["Implementation Plans"]
 )
 app.include_router(evidence.router, prefix="/api/v1/evidence", tags=["Evidence"])
-app.include_router(evidence_collection.router, prefix="/api/v1/evidence-collection", tags=["Evidence Collection"])
+app.include_router(
+    evidence_collection.router, prefix="/api/v1/evidence-collection", tags=["Evidence Collection"]
+)
 app.include_router(compliance.router, prefix="/api/v1/compliance", tags=["Compliance Status"])
 app.include_router(readiness.router, prefix="/api/v1/readiness", tags=["Readiness Assessment"])
 app.include_router(reporting.router, prefix="/api/v1/reports", tags=["Reports"])
 app.include_router(integrations.router, prefix="/api/v1/integrations", tags=["Integrations"])
 app.include_router(
-    foundation_evidence.router, prefix="/api/v1/foundation-evidence", tags=["Foundation Evidence Collection"]
+    foundation_evidence.router,
+    prefix="/api/v1/foundation-evidence",
+    tags=["Foundation Evidence Collection"],
 )
 app.include_router(monitoring.router, prefix="/api/v1/monitoring", tags=["Monitoring"])
 app.include_router(security.router, prefix="/api/v1/security", tags=["Security"])
 app.include_router(chat.router, prefix="/api/v1/chat", tags=["AI Assistant"])
 app.include_router(ai_cost_monitoring.router, prefix="/api/v1/ai/cost", tags=["AI Cost Monitoring"])
-app.include_router(ai_cost_websocket.router, prefix="/api/v1/ai/cost-websocket", tags=["AI Cost WebSocket"])
+app.include_router(
+    ai_cost_websocket.router, prefix="/api/v1/ai/cost-websocket", tags=["AI Cost WebSocket"]
+)
 app.include_router(ai_policy.router, prefix="/api/v1/ai/policies", tags=["AI Policy Generation"])
-app.include_router(performance_monitoring.router, prefix="/api/v1/performance", tags=["Performance Monitoring"])
+app.include_router(
+    performance_monitoring.router, prefix="/api/v1/performance", tags=["Performance Monitoring"]
+)
 app.include_router(uk_compliance.router, prefix="/api/v1/uk-compliance", tags=["UK Compliance"])
-# app.include_router(agentic_assessments.router, prefix="/api", tags=["Agentic Assessments"])
-# app.include_router(agentic_rag.router, prefix="/api", tags=["Agentic RAG"])
 app.include_router(admin_router)
 
 # Test utilities (only in development/test environments)
 import os
+
 if os.getenv("ENVIRONMENT", "production").lower() in ["development", "test", "testing", "local"]:
     app.include_router(test_utils.router, prefix="/api/test-utils", tags=["Test Utilities"])
 
 
 @app.get("/api/dashboard")
-async def get_dashboard(
-    current_user: User = Depends(get_current_active_user)
-):
+async def get_dashboard(current_user: User = Depends(get_current_active_user)):
     """Get user dashboard data"""
     # For now, return a simple response
     # In production, you'd fetch real data based on the user
@@ -254,14 +253,9 @@ async def get_dashboard(
         "user": {
             "id": current_user["id"],
             "email": current_user["primaryEmail"],
-            "name": current_user.get("displayName", "")
+            "name": current_user.get("displayName", ""),
         },
-        "stats": {
-            "assessments": 0,
-            "policies": 0,
-            "compliance_score": 0,
-            "recent_activities": []
-        }
+        "stats": {"assessments": 0, "policies": 0, "compliance_score": 0, "recent_activities": []},
     }
 
 
@@ -334,7 +328,7 @@ async def health_check():
                 "recent_alerts": {
                     "critical": critical_alerts,
                     "warning": warning_alerts,
-                    "total": len(alerts)
+                    "total": len(alerts),
                 },
             },
             "timestamp": monitoring_summary.get("timestamp", datetime.utcnow().isoformat()),
@@ -364,15 +358,20 @@ async def serve_debug_suite():
 async def api_health_check():
     """API v1 health check endpoint"""
     from datetime import datetime
+
     return HealthCheckResponse(
         status="healthy",
         message="API v1 operational",
         timestamp=datetime.utcnow().isoformat(),
-        version="2.0.0"
+        version="2.0.0",
     )
 
 
-@app.get("/api/v1/health/detailed", response_model=HealthCheckResponse, summary="Detailed API v1 Health Check")
+@app.get(
+    "/api/v1/health/detailed",
+    response_model=HealthCheckResponse,
+    summary="Detailed API v1 Health Check",
+)
 async def api_detailed_health_check():
     """Detailed API v1 health check with component status"""
     try:
@@ -383,18 +382,18 @@ async def api_detailed_health_check():
         # Get database monitoring status
         monitor = get_database_monitor()
         monitoring_summary = monitor.get_monitoring_summary()
-        
+
         # Get basic database engine info
         engine_info = get_engine_info()
-        
+
         # Extract key metrics from monitoring summary
-        current_metrics = monitoring_summary.get("current_metrics", {})
+        monitoring_summary.get("current_metrics", {})
         alerts = monitoring_summary.get("alerts", [])
-        
+
         # Count alerts by severity
         critical_alerts = len([a for a in alerts if a.get("severity") == "critical"])
         warning_alerts = len([a for a in alerts if a.get("severity") == "warning"])
-        
+
         # Determine overall status
         if critical_alerts > 0:
             status = "degraded"
@@ -408,7 +407,7 @@ async def api_detailed_health_check():
         else:
             status = "healthy"
             message = "All API v1 components operational"
-        
+
         health_data = {
             "status": status,
             "message": message,
@@ -420,20 +419,20 @@ async def api_detailed_health_check():
                 "recent_alerts": {
                     "critical": critical_alerts,
                     "warning": warning_alerts,
-                    "total": len(alerts)
+                    "total": len(alerts),
                 },
             },
         }
-        
+
         return HealthCheckResponse(**health_data)
-    
+
     except Exception as e:
         logger.error(f"API v1 detailed health check failed: {e}")
         return HealthCheckResponse(
-            status="error", 
+            status="error",
             message=f"API v1 health check failed: {e!s}",
             timestamp=datetime.utcnow().isoformat(),
-            version="2.0.0"
+            version="2.0.0",
         )
 
 

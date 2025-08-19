@@ -208,10 +208,7 @@ class DatabaseMonitor:
             return
 
         # Long-running session alerts
-        if (
-            metrics.long_running_sessions
-            >= self.thresholds["long_running_session_critical"]
-        ):
+        if metrics.long_running_sessions >= self.thresholds["long_running_session_critical"]:
             self._create_alert(
                 AlertLevel.CRITICAL,
                 "long_running_sessions",
@@ -222,10 +219,7 @@ class DatabaseMonitor:
                     f"running longer than {self.thresholds['long_running_session_warning']}s"
                 ),
             )
-        elif (
-            metrics.long_running_sessions
-            >= self.thresholds["long_running_session_warning"]
-        ):
+        elif metrics.long_running_sessions >= self.thresholds["long_running_session_warning"]:
             self._create_alert(
                 AlertLevel.WARNING,
                 "long_running_sessions",

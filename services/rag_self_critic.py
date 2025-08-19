@@ -14,8 +14,9 @@ from pathlib import Path
 # Add project root to path
 sys.path.append(str(Path(__file__).parent.parent))
 
-from services.agentic_rag import AgenticRAGSystem
+# from services.agentic_rag import AgenticRAGSystem  # DEPRECATED: Use canonical RAG services
 from services.rag_fact_checker import RAGFactChecker, QualityAssessment
+
 
 class RAGSelfCriticCommands:
     """
@@ -37,7 +38,7 @@ class RAGSelfCriticCommands:
         """Initialize RAG system and fact checker"""
         try:
             print("🔧 Initializing RAG Self-Critic System...")
-            self.rag_system = AgenticRAGSystem()
+            # self.rag_system = AgenticRAGSystem()  # DEPRECATED: Use canonical RAG services
             self.fact_checker = RAGFactChecker()
             print("✅ System initialized successfully")
             return True
@@ -60,8 +61,7 @@ class RAGSelfCriticCommands:
             # Get RAG response
             print("📝 Generating RAG response...")
             rag_response = await self.rag_system.query_documentation(
-                query=query,
-                max_results=max_results
+                query=query, max_results=max_results
             )
 
             print(f"✅ RAG response generated ({len(rag_response.sources)} sources)")
@@ -72,7 +72,7 @@ class RAGSelfCriticCommands:
             assessment = await self.fact_checker.comprehensive_fact_check(
                 response_text=rag_response.answer,
                 sources=rag_response.sources,
-                original_query=query
+                original_query=query,
             )
 
             # Display results
@@ -82,7 +82,7 @@ class RAGSelfCriticCommands:
                 "query": query,
                 "rag_response": rag_response.dict(),
                 "fact_check_assessment": assessment.dict(),
-                "approved": assessment.approved_for_use
+                "approved": assessment.approved_for_use,
             }
 
         except Exception as e:
@@ -105,8 +105,7 @@ class RAGSelfCriticCommands:
 
             # Run quick fact-check
             is_reliable = await self.fact_checker.quick_fact_check(
-                response_text=rag_response.answer,
-                sources=rag_response.sources
+                response_text=rag_response.answer, sources=rag_response.sources
             )
 
             # Display results
@@ -120,7 +119,7 @@ class RAGSelfCriticCommands:
                 "query": query,
                 "response": rag_response.answer,
                 "is_reliable": is_reliable,
-                "rag_confidence": rag_response.confidence
+                "rag_confidence": rag_response.confidence,
             }
 
         except Exception as e:
@@ -145,7 +144,7 @@ class RAGSelfCriticCommands:
             assessment = await self.fact_checker.comprehensive_fact_check(
                 response_text=rag_response.answer,
                 sources=rag_response.sources,
-                original_query=query
+                original_query=query,
             )
 
             # Display critique results
@@ -154,7 +153,7 @@ class RAGSelfCriticCommands:
             return {
                 "query": query,
                 "critiques": [critique.dict() for critique in assessment.self_critiques],
-                "overall_score": assessment.overall_score
+                "overall_score": assessment.overall_score,
             }
 
         except Exception as e:
@@ -179,7 +178,7 @@ class RAGSelfCriticCommands:
             assessment = await self.fact_checker.comprehensive_fact_check(
                 response_text=rag_response.answer,
                 sources=rag_response.sources,
-                original_query=query
+                original_query=query,
             )
 
             # Display comprehensive results
@@ -188,7 +187,7 @@ class RAGSelfCriticCommands:
             return {
                 "query": query,
                 "rag_response": rag_response.dict(),
-                "assessment": assessment.dict()
+                "assessment": assessment.dict(),
             }
 
         except Exception as e:
@@ -214,14 +213,14 @@ class RAGSelfCriticCommands:
             "How do I handle errors in LangGraph workflows?",
             "Can I use async functions with Pydantic AI?",
             "How do I implement conditional logic in LangGraph?",
-            "What embedding models does Pydantic AI support?"
+            "What embedding models does Pydantic AI support?",
         ]
 
         results = []
         total_time = 0
 
         for i, query in enumerate(test_queries[:num_queries]):
-            print(f"\n📝 Test {i+1}/{num_queries}: {query[:50]}...")
+            print(f"\n📝 Test {i + 1}/{num_queries}: {query[:50]}...")
 
             start_time = datetime.now()
 
@@ -234,45 +233,47 @@ class RAGSelfCriticCommands:
                 elapsed = (datetime.now() - start_time).total_seconds()
                 total_time += elapsed
 
-                results.append({
-                    "query": query,
-                    "success": success,
-                    "time_seconds": elapsed,
-                    "overall_score": result.get("assessment", {}).get("overall_score", 0.0),
-                    "approved": result.get("assessment", {}).get("approved_for_use", False)
-                })
+                results.append(
+                    {
+                        "query": query,
+                        "success": success,
+                        "time_seconds": elapsed,
+                        "overall_score": result.get("assessment", {}).get("overall_score", 0.0),
+                        "approved": result.get("assessment", {}).get("approved_for_use", False),
+                    }
+                )
 
                 status = "✅" if success else "❌"
                 print(f"{status} Completed in {elapsed:.2f}s")
 
             except Exception as e:
                 print(f"❌ Failed: {e}")
-                results.append({
-                    "query": query,
-                    "success": False,
-                    "error": str(e)
-                })
+                results.append({"query": query, "success": False, "error": str(e)})
 
         # Summary
         successful = sum(1 for r in results if r.get("success", False))
         avg_time = total_time / len(results) if results else 0
         avg_score = sum(r.get("overall_score", 0) for r in results) / len(results) if results else 0
-        approval_rate = sum(1 for r in results if r.get("approved", False)) / len(results) if results else 0
+        approval_rate = (
+            sum(1 for r in results if r.get("approved", False)) / len(results) if results else 0
+        )
 
         print("\n📊 Benchmark Summary:")
-        print(f"   Success Rate: {successful}/{len(results)} ({successful/len(results)*100:.1f}%)")
+        print(
+            f"   Success Rate: {successful}/{len(results)} ({successful / len(results) * 100:.1f}%)"
+        )
         print(f"   Average Time: {avg_time:.2f}s")
         print(f"   Average Score: {avg_score:.3f}")
-        print(f"   Approval Rate: {approval_rate*100:.1f}%")
+        print(f"   Approval Rate: {approval_rate * 100:.1f}%")
 
         return {
             "benchmark_results": results,
             "summary": {
-                "success_rate": successful/len(results),
+                "success_rate": successful / len(results),
                 "average_time": avg_time,
                 "average_score": avg_score,
-                "approval_rate": approval_rate
-            }
+                "approval_rate": approval_rate,
+            },
         }
 
     def _display_fact_check_results(self, assessment: QualityAssessment, rag_response) -> None:
@@ -286,11 +287,11 @@ class RAGSelfCriticCommands:
         print("\n🔍 Factual Claims Analysis:")
         for i, fact_check in enumerate(assessment.fact_check_results):
             status = "✅" if fact_check.is_factual else "❌"
-            confidence_emoji = {
-                "high": "🟢", "medium": "🟡", "low": "🟠", "uncertain": "🔴"
-            }.get(fact_check.confidence.value, "⚪")
+            confidence_emoji = {"high": "🟢", "medium": "🟡", "low": "🟠", "uncertain": "🔴"}.get(
+                fact_check.confidence.value, "⚪"
+            )
 
-            print(f"   {i+1}. {status} {confidence_emoji} {fact_check.claim[:80]}...")
+            print(f"   {i + 1}. {status} {confidence_emoji} {fact_check.claim[:80]}...")
             if fact_check.contradictions:
                 print(f"      ⚠️ Contradictions: {len(fact_check.contradictions)}")
 
@@ -317,7 +318,9 @@ class RAGSelfCriticCommands:
             if critique.suggestions:
                 print(f"      Suggestion: {critique.suggestions[0]}")
 
-    def _display_comprehensive_assessment(self, assessment: QualityAssessment, rag_response) -> None:
+    def _display_comprehensive_assessment(
+        self, assessment: QualityAssessment, rag_response
+    ) -> None:
         """Display comprehensive assessment results"""
         self._display_fact_check_results(assessment, rag_response)
         self._display_critique_results(assessment.self_critiques)
@@ -326,16 +329,24 @@ class RAGSelfCriticCommands:
         print(f"   Overall Quality: {assessment.overall_score:.3f}/1.0")
         print(f"   Response Reliability: {assessment.response_reliability:.3f}/1.0")
         print(f"   Processing Time: {rag_response.processing_time:.2f}s")
-        print(f"   Final Status: {'✅ APPROVED FOR USE' if assessment.approved_for_use else '⚠️ REQUIRES REVIEW'}")
+        print(
+            f"   Final Status: {'✅ APPROVED FOR USE' if assessment.approved_for_use else '⚠️ REQUIRES REVIEW'}"
+        )
+
 
 async def main() -> None:
     """Main CLI interface"""
     parser = argparse.ArgumentParser(description="RAG Self-Critic Commands")
-    parser.add_argument("command", choices=["fact-check", "quick-check", "critique", "assess", "benchmark"],
-                       help="Command to run")
+    parser.add_argument(
+        "command",
+        choices=["fact-check", "quick-check", "critique", "assess", "benchmark"],
+        help="Command to run",
+    )
     parser.add_argument("--query", type=str, help="Query to test (required for most commands)")
     parser.add_argument("--max-results", type=int, default=5, help="Maximum number of sources")
-    parser.add_argument("--num-queries", type=int, default=5, help="Number of queries for benchmark")
+    parser.add_argument(
+        "--num-queries", type=int, default=5, help="Number of queries for benchmark"
+    )
     parser.add_argument("--output", type=str, help="Output file for results (JSON)")
 
     args = parser.parse_args()
@@ -376,7 +387,7 @@ async def main() -> None:
 
         # Save output if requested
         if args.output:
-            with open(args.output, 'w') as f:
+            with open(args.output, "w") as f:
                 json.dump(result, f, indent=2, default=str)
             print(f"\n💾 Results saved to {args.output}")
 
@@ -389,6 +400,7 @@ async def main() -> None:
         # Cleanup
         if critic.rag_system:
             critic.rag_system.close()
+
 
 if __name__ == "__main__":
     asyncio.run(main())

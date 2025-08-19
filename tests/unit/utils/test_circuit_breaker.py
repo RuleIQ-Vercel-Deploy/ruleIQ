@@ -455,7 +455,7 @@ class TestCircuitBreakerConcurrency:
         breaker = CircuitBreaker("test_service", config)
 
         call_count = 0
-        
+
         async def concurrent_function():
             nonlocal call_count
             call_count += 1
@@ -470,7 +470,7 @@ class TestCircuitBreakerConcurrency:
             # Create coroutine for each call
             task = asyncio.create_task(breaker.call(concurrent_function))
             tasks.append(task)
-        
+
         results = await asyncio.gather(*tasks, return_exceptions=True)
 
         # Some calls should fail with ConnectionError, others might be blocked by circuit breaker
@@ -481,7 +481,9 @@ class TestCircuitBreakerConcurrency:
         success_results = sum(1 for r in results if isinstance(r, str))
 
         # All results should be either connection errors or circuit breaker errors (no successes)
-        assert connection_errors + circuit_breaker_errors == len(results), f"Got unexpected successes: {success_results}"
+        assert connection_errors + circuit_breaker_errors == len(results), (
+            f"Got unexpected successes: {success_results}"
+        )
         # Circuit should be open after processing
         assert breaker.state == CircuitBreakerState.OPEN
 

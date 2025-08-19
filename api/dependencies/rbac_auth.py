@@ -13,8 +13,11 @@ from fastapi import Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from api.dependencies.auth import (
-    create_access_token, create_refresh_token, decode_token,
-    oauth2_scheme, get_current_user as base_get_current_user
+    create_access_token,
+    create_refresh_token,
+    decode_token,
+    oauth2_scheme,
+    get_current_user as base_get_current_user,
 )
 from core.exceptions import NotAuthenticatedException
 from database.db_setup import get_async_db, get_db
@@ -30,7 +33,13 @@ class UserWithRoles:
     Enhanced user object that includes role and permission information.
     """
 
-    def __init__(self, user: User, roles: List[Dict], permissions: List[str], accessible_frameworks: List[Dict]) -> None:
+    def __init__(
+        self,
+        user: User,
+        roles: List[Dict],
+        permissions: List[str],
+        accessible_frameworks: List[Dict],
+    ) -> None:
         self.user = user
         self.roles = roles
         self.permissions = permissions
@@ -83,7 +92,7 @@ class UserWithRoles:
             "created_at": self.created_at.isoformat() if self.created_at else None,
             "roles": self.roles,
             "permissions": self.permissions,
-            "accessible_frameworks": self.accessible_frameworks
+            "accessible_frameworks": self.accessible_frameworks,
         }
 
 
@@ -103,14 +112,14 @@ def create_access_token_with_roles(user_id: UUID, roles: List[Dict], permissions
     role_claims = {
         "roles": [role["name"] for role in roles],
         "permissions": permissions,
-        "role_details": roles
+        "role_details": roles,
     }
 
     token_data = {
         "sub": str(user_id),
         "roles": role_claims["roles"],
         "permissions": permissions,
-        "role_details": role_claims["role_details"]
+        "role_details": role_claims["role_details"],
     }
 
     return create_access_token(token_data)
@@ -130,8 +139,7 @@ def create_refresh_token_with_roles(user_id: UUID) -> str:
 
 
 async def get_current_user_with_roles(
-    token: Optional[str] = Depends(oauth2_scheme),
-    async_db: AsyncSession = Depends(get_async_db)
+    token: Optional[str] = Depends(oauth2_scheme), async_db: AsyncSession = Depends(get_async_db)
 ) -> Optional[UserWithRoles]:
     """
     Get current user with role and permission information from token.
@@ -169,8 +177,10 @@ async def get_current_user_with_roles(
             current_roles = set(role["name"] for role in roles)
 
             if token_roles != current_roles:
-                logger.warning(f"Token roles mismatch for user {user.id}: "
-                             f"token={token_roles}, db={current_roles}")
+                logger.warning(
+                    f"Token roles mismatch for user {user.id}: "
+                    f"token={token_roles}, db={current_roles}"
+                )
                 # Could force re-authentication here, but for now just use DB roles
 
             return UserWithRoles(user, roles, permissions, accessible_frameworks)
@@ -183,7 +193,7 @@ async def get_current_user_with_roles(
 
 
 async def get_current_active_user_with_roles(
-    current_user: Optional[UserWithRoles] = Depends(get_current_user_with_roles)
+    current_user: Optional[UserWithRoles] = Depends(get_current_user_with_roles),
 ) -> UserWithRoles:
     """
     Get current active user with roles, raising exception if not authenticated.
@@ -205,10 +215,7 @@ async def get_current_active_user_with_roles(
         )
 
     if not current_user.is_active:
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Inactive user"
-        )
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Inactive user")
 
     return current_user
 
@@ -223,13 +230,13 @@ def require_permission(permission: str):
     Returns:
         FastAPI dependency function
     """
+
     async def check_permission(
-        current_user: UserWithRoles = Depends(get_current_active_user_with_roles)
+        current_user: UserWithRoles = Depends(get_current_active_user_with_roles),
     ) -> UserWithRoles:
         if not current_user.has_permission(permission):
             raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN,
-                detail=f"Permission '{permission}' required"
+                status_code=status.HTTP_403_FORBIDDEN, detail=f"Permission '{permission}' required"
             )
         return current_user
 
@@ -246,13 +253,14 @@ def require_any_permission(permissions: List[str]):
     Returns:
         FastAPI dependency function
     """
+
     async def check_permissions(
-        current_user: UserWithRoles = Depends(get_current_active_user_with_roles)
+        current_user: UserWithRoles = Depends(get_current_active_user_with_roles),
     ) -> UserWithRoles:
         if not current_user.has_any_permission(permissions):
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,
-                detail=f"One of these permissions required: {', '.join(permissions)}"
+                detail=f"One of these permissions required: {', '.join(permissions)}",
             )
         return current_user
 
@@ -269,14 +277,15 @@ def require_all_permissions(permissions: List[str]):
     Returns:
         FastAPI dependency function
     """
+
     async def check_permissions(
-        current_user: UserWithRoles = Depends(get_current_active_user_with_roles)
+        current_user: UserWithRoles = Depends(get_current_active_user_with_roles),
     ) -> UserWithRoles:
         if not current_user.has_all_permissions(permissions):
             missing = [p for p in permissions if not current_user.has_permission(p)]
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,
-                detail=f"Missing required permissions: {', '.join(missing)}"
+                detail=f"Missing required permissions: {', '.join(missing)}",
             )
         return current_user
 
@@ -293,13 +302,13 @@ def require_role(role: str):
     Returns:
         FastAPI dependency function
     """
+
     async def check_role(
-        current_user: UserWithRoles = Depends(get_current_active_user_with_roles)
+        current_user: UserWithRoles = Depends(get_current_active_user_with_roles),
     ) -> UserWithRoles:
         if not current_user.has_role(role):
             raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN,
-                detail=f"Role '{role}' required"
+                status_code=status.HTTP_403_FORBIDDEN, detail=f"Role '{role}' required"
             )
         return current_user
 
@@ -316,13 +325,14 @@ def require_any_role(roles: List[str]):
     Returns:
         FastAPI dependency function
     """
+
     async def check_roles(
-        current_user: UserWithRoles = Depends(get_current_active_user_with_roles)
+        current_user: UserWithRoles = Depends(get_current_active_user_with_roles),
     ) -> UserWithRoles:
         if not current_user.has_any_role(roles):
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,
-                detail=f"One of these roles required: {', '.join(roles)}"
+                detail=f"One of these roles required: {', '.join(roles)}",
             )
         return current_user
 
@@ -340,20 +350,23 @@ def require_framework_access(framework_id: str, access_level: str = "read"):
     Returns:
         FastAPI dependency function
     """
+
     async def check_framework_access(
-        current_user: UserWithRoles = Depends(get_current_active_user_with_roles)
+        current_user: UserWithRoles = Depends(get_current_active_user_with_roles),
     ) -> UserWithRoles:
         if not current_user.can_access_framework(framework_id, access_level):
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,
-                detail=f"Framework access required: {framework_id} ({access_level})"
+                detail=f"Framework access required: {framework_id} ({access_level})",
             )
         return current_user
 
     return check_framework_access
 
 
-def check_framework_access_permission(user: UserWithRoles, framework_id: str, required_level: str = "read") -> bool:
+def check_framework_access_permission(
+    user: UserWithRoles, framework_id: str, required_level: str = "read"
+) -> bool:
     """
     Check if user has access to a specific framework with the required level.
 
@@ -387,13 +400,14 @@ def require_framework_access_level(framework_id: str, access_level: str = "read"
     Returns:
         FastAPI dependency function
     """
+
     async def check_access(
-        current_user: UserWithRoles = Depends(get_current_active_user_with_roles)
+        current_user: UserWithRoles = Depends(get_current_active_user_with_roles),
     ) -> UserWithRoles:
         if not check_framework_access_permission(current_user, framework_id, access_level):
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,
-                detail=f"Framework access required: {framework_id} ({access_level} level)"
+                detail=f"Framework access required: {framework_id} ({access_level} level)",
             )
         return current_user
 

@@ -129,6 +129,7 @@ class EvidenceProcessor:
         """Lazy-load AI model to avoid initialization overhead."""
         if self.ai_model is None:
             from config.ai_config import get_ai_model
+
             self.ai_model = get_ai_model()
         return self.ai_model
 

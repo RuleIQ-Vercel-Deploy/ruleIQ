@@ -16,23 +16,29 @@ from mistralai import Mistral
 
 logger = logging.getLogger(__name__)
 
+
 class FactCheckConfidence(Enum):
     """Confidence levels for fact checking"""
+
     HIGH = "high"
     MEDIUM = "medium"
     LOW = "low"
     UNCERTAIN = "uncertain"
 
+
 class CriticSeverity(Enum):
     """Severity levels for self-criticism"""
+
     CRITICAL = "critical"
     HIGH = "high"
     MEDIUM = "medium"
     LOW = "low"
     INFO = "info"
 
+
 class FactCheckResult(BaseModel):
     """Result of fact checking analysis"""
+
     claim: str
     is_factual: bool
     confidence: FactCheckConfidence
@@ -42,8 +48,10 @@ class FactCheckResult(BaseModel):
     reasoning: str
     timestamp: datetime = Field(default_factory=datetime.now)
 
+
 class SelfCritique(BaseModel):
     """Self-critique analysis result"""
+
     aspect: str  # "accuracy", "completeness", "relevance", "clarity"
     score: float = Field(ge=0.0, le=1.0)
     severity: CriticSeverity
@@ -51,8 +59,10 @@ class SelfCritique(BaseModel):
     suggestions: List[str]
     reasoning: str
 
+
 class QualityAssessment(BaseModel):
     """Overall quality assessment of RAG response"""
+
     overall_score: float = Field(ge=0.0, le=1.0)
     fact_check_results: List[FactCheckResult]
     self_critiques: List[SelfCritique]
@@ -62,6 +72,7 @@ class QualityAssessment(BaseModel):
     flagged_issues: List[str]
     approved_for_use: bool
     assessment_timestamp: datetime = Field(default_factory=datetime.now)
+
 
 class RAGFactChecker:
     """
@@ -100,10 +111,7 @@ class RAGFactChecker:
         self.approval_threshold = 0.75
 
     async def comprehensive_fact_check(
-        self,
-        response_text: str,
-        sources: List[Dict[str, Any]],
-        original_query: str
+        self, response_text: str, sources: List[Dict[str, Any]], original_query: str
     ) -> QualityAssessment:
         """
         Perform comprehensive fact-checking and quality assessment
@@ -146,14 +154,11 @@ class RAGFactChecker:
             )
 
             # Identify critical issues
-            flagged_issues = self._identify_flagged_issues(
-                fact_check_results, self_critiques
-            )
+            flagged_issues = self._identify_flagged_issues(fact_check_results, self_critiques)
 
             # Determine approval status
-            approved_for_use = (
-                overall_score >= self.approval_threshold and
-                not any(issue.startswith("CRITICAL") for issue in flagged_issues)
+            approved_for_use = overall_score >= self.approval_threshold and not any(
+                issue.startswith("CRITICAL") for issue in flagged_issues
             )
 
             return QualityAssessment(
@@ -164,7 +169,7 @@ class RAGFactChecker:
                 response_reliability=response_reliability,
                 recommendations=recommendations,
                 flagged_issues=flagged_issues,
-                approved_for_use=approved_for_use
+                approved_for_use=approved_for_use,
             )
 
         except Exception as e:
@@ -178,7 +183,7 @@ class RAGFactChecker:
                 response_reliability=0.0,
                 recommendations=["Fact-checking system encountered an error"],
                 flagged_issues=["CRITICAL: Fact-checking system failure"],
-                approved_for_use=False
+                approved_for_use=False,
             )
 
     async def _extract_factual_claims(self, response_text: str) -> List[str]:
@@ -201,7 +206,7 @@ class RAGFactChecker:
                     model=self.fact_check_model,
                     messages=[{"role": "user", "content": prompt}],
                     max_tokens=500,
-                    temperature=0.1
+                    temperature=0.1,
                 )
 
                 claims_text = response.choices[0].message.content.strip()
@@ -224,32 +229,40 @@ class RAGFactChecker:
     def _manual_claim_extraction(self, text: str) -> List[str]:
         """Manual fallback for claim extraction"""
         claims = []
-        sentences = text.split('.')
+        sentences = text.split(".")
 
         for sentence in sentences:
             sentence = sentence.strip()
-            if (len(sentence) > 20 and
-                any(keyword in sentence.lower() for keyword in [
-                    'supports', 'requires', 'provides', 'enables', 'uses',
-                    'implements', 'includes', 'allows', 'prevents'
-                ])):
+            if len(sentence) > 20 and any(
+                keyword in sentence.lower()
+                for keyword in [
+                    "supports",
+                    "requires",
+                    "provides",
+                    "enables",
+                    "uses",
+                    "implements",
+                    "includes",
+                    "allows",
+                    "prevents",
+                ]
+            ):
                 claims.append(sentence)
 
         return claims[:10]  # Limit to 10 claims
 
     async def _fact_check_claim(
-        self,
-        claim: str,
-        sources: List[Dict[str, Any]],
-        full_response: str
+        self, claim: str, sources: List[Dict[str, Any]], full_response: str
     ) -> FactCheckResult:
         """Fact-check a specific claim against sources"""
         try:
             # Prepare source context
-            source_context = "\n\n".join([
-                f"Source {i+1} ({source.get('source', 'unknown')}):\n{source.get('content', '')[:1000]}"
-                for i, source in enumerate(sources[:3])
-            ])
+            source_context = "\n\n".join(
+                [
+                    f"Source {i + 1} ({source.get('source', 'unknown')}):\n{source.get('content', '')[:1000]}"
+                    for i, source in enumerate(sources[:3])
+                ]
+            )
 
             prompt = f"""
             You are a fact-checking expert. Verify the following claim against the provided sources.
@@ -280,7 +293,7 @@ class RAGFactChecker:
                     model=self.fact_check_model,
                     messages=[{"role": "user", "content": prompt}],
                     max_tokens=600,
-                    temperature=0.1
+                    temperature=0.1,
                 )
 
                 result_text = response.choices[0].message.content.strip()
@@ -295,7 +308,7 @@ class RAGFactChecker:
                         evidence=result_data.get("evidence", []),
                         contradictions=result_data.get("contradictions", []),
                         source_reliability=float(result_data.get("source_reliability", 0.5)),
-                        reasoning=result_data.get("reasoning", "Analysis completed")
+                        reasoning=result_data.get("reasoning", "Analysis completed"),
                     )
 
                 except (json.JSONDecodeError, ValueError) as e:
@@ -317,39 +330,25 @@ class RAGFactChecker:
             evidence=["Unable to verify - AI analysis unavailable"],
             contradictions=[],
             source_reliability=0.5,
-            reasoning="Fact-checking service unavailable, claim not verified"
+            reasoning="Fact-checking service unavailable, claim not verified",
         )
 
     async def _perform_self_criticism(
-        self,
-        response_text: str,
-        sources: List[Dict[str, Any]],
-        original_query: str
+        self, response_text: str, sources: List[Dict[str, Any]], original_query: str
     ) -> List[SelfCritique]:
         """Perform comprehensive self-criticism analysis"""
-        critique_aspects = [
-            "accuracy",
-            "completeness",
-            "relevance",
-            "clarity"
-        ]
+        critique_aspects = ["accuracy", "completeness", "relevance", "clarity"]
 
         critiques = []
 
         for aspect in critique_aspects:
-            critique = await self._analyze_aspect(
-                aspect, response_text, sources, original_query
-            )
+            critique = await self._analyze_aspect(aspect, response_text, sources, original_query)
             critiques.append(critique)
 
         return critiques
 
     async def _analyze_aspect(
-        self,
-        aspect: str,
-        response_text: str,
-        sources: List[Dict[str, Any]],
-        original_query: str
+        self, aspect: str, response_text: str, sources: List[Dict[str, Any]], original_query: str
     ) -> SelfCritique:
         """Analyze a specific aspect of the response"""
         try:
@@ -357,7 +356,7 @@ class RAGFactChecker:
                 "accuracy": "How accurate is this response? Are there any technical inaccuracies or misleading statements?",
                 "completeness": "How complete is this response? What important information might be missing?",
                 "relevance": "How relevant is this response to the original query? Does it address all parts of the question?",
-                "clarity": "How clear and understandable is this response? Are there confusing or ambiguous parts?"
+                "clarity": "How clear and understandable is this response? Are there confusing or ambiguous parts?",
             }
 
             prompt = f"""
@@ -389,7 +388,7 @@ class RAGFactChecker:
                     model=self.critic_model,
                     messages=[{"role": "user", "content": prompt}],
                     max_tokens=500,
-                    temperature=0.2
+                    temperature=0.2,
                 )
 
                 result_text = response.choices[0].message.content.strip()
@@ -403,7 +402,7 @@ class RAGFactChecker:
                         severity=CriticSeverity(result_data.get("severity", "medium")),
                         issues=result_data.get("issues", []),
                         suggestions=result_data.get("suggestions", []),
-                        reasoning=result_data.get("reasoning", "Analysis completed")
+                        reasoning=result_data.get("reasoning", "Analysis completed"),
                     )
 
                 except (json.JSONDecodeError, ValueError) as e:
@@ -424,7 +423,7 @@ class RAGFactChecker:
             severity=CriticSeverity.INFO,
             issues=["Unable to analyze - AI criticism unavailable"],
             suggestions=["Manual review recommended"],
-            reasoning="Self-criticism service unavailable"
+            reasoning="Self-criticism service unavailable",
         )
 
     async def _assess_source_quality(self, sources: List[Dict[str, Any]]) -> float:
@@ -438,28 +437,28 @@ class RAGFactChecker:
             score = 0.0
 
             # Source type quality
-            source_type = source.get('chunk_type', 'unknown')
-            if source_type == 'documentation':
+            source_type = source.get("chunk_type", "unknown")
+            if source_type == "documentation":
                 score += 0.3
-            elif source_type == 'code_example':
+            elif source_type == "code_example":
                 score += 0.4
-            elif source_type == 'api_reference':
+            elif source_type == "api_reference":
                 score += 0.3
 
             # Similarity score (how relevant to query)
-            similarity = source.get('similarity', 0.0)
+            similarity = source.get("similarity", 0.0)
             score += similarity * 0.4
 
             # Content length (more content can be better)
-            content_length = len(source.get('content', ''))
+            content_length = len(source.get("content", ""))
             if content_length > 1000:
                 score += 0.2
             elif content_length > 500:
                 score += 0.1
 
             # Framework/source reliability
-            framework = source.get('source', '').lower()
-            if framework in ['langgraph', 'pydantic_ai']:
+            framework = source.get("source", "").lower()
+            if framework in ["langgraph", "pydantic_ai"]:
                 score += 0.1  # Trusted sources
 
             total_score += min(1.0, score)
@@ -470,35 +469,32 @@ class RAGFactChecker:
         self,
         fact_check_results: List[FactCheckResult],
         self_critiques: List[SelfCritique],
-        source_quality_score: float
+        source_quality_score: float,
     ) -> float:
         """Calculate overall quality score"""
-        weights = {
-            'fact_accuracy': 0.4,
-            'self_critique': 0.4,
-            'source_quality': 0.2
-        }
+        weights = {"fact_accuracy": 0.4, "self_critique": 0.4, "source_quality": 0.2}
 
         # Fact accuracy score
         if fact_check_results:
             fact_score = sum(
-                1.0 if result.is_factual else 0.3
-                for result in fact_check_results
+                1.0 if result.is_factual else 0.3 for result in fact_check_results
             ) / len(fact_check_results)
         else:
             fact_score = 0.8  # Default if no claims to check
 
         # Self-critique score
         if self_critiques:
-            critique_score = sum(critique.score for critique in self_critiques) / len(self_critiques)
+            critique_score = sum(critique.score for critique in self_critiques) / len(
+                self_critiques
+            )
         else:
             critique_score = 0.5  # Default if no critiques
 
         # Calculate weighted average
         overall_score = (
-            weights['fact_accuracy'] * fact_score +
-            weights['self_critique'] * critique_score +
-            weights['source_quality'] * source_quality_score
+            weights["fact_accuracy"] * fact_score
+            + weights["self_critique"] * critique_score
+            + weights["source_quality"] * source_quality_score
         )
 
         return round(overall_score, 3)
@@ -529,7 +525,7 @@ class RAGFactChecker:
         self,
         fact_check_results: List[FactCheckResult],
         self_critiques: List[SelfCritique],
-        source_quality_score: float
+        source_quality_score: float,
     ) -> List[str]:
         """Generate improvement recommendations"""
         recommendations = []
@@ -539,14 +535,20 @@ class RAGFactChecker:
         if false_claims:
             recommendations.append(f"Review {len(false_claims)} potentially inaccurate claims")
 
-        uncertain_claims = [r for r in fact_check_results if r.confidence == FactCheckConfidence.UNCERTAIN]
+        uncertain_claims = [
+            r for r in fact_check_results if r.confidence == FactCheckConfidence.UNCERTAIN
+        ]
         if uncertain_claims:
-            recommendations.append(f"Verify {len(uncertain_claims)} uncertain claims with additional sources")
+            recommendations.append(
+                f"Verify {len(uncertain_claims)} uncertain claims with additional sources"
+            )
 
         # Critique-based recommendations
         for critique in self_critiques:
             if critique.score < 0.6:
-                recommendations.append(f"Improve {critique.aspect}: {critique.suggestions[0] if critique.suggestions else 'needs attention'}")
+                recommendations.append(
+                    f"Improve {critique.aspect}: {critique.suggestions[0] if critique.suggestions else 'needs attention'}"
+                )
 
         # Source quality recommendations
         if source_quality_score < 0.5:
@@ -555,9 +557,7 @@ class RAGFactChecker:
         return recommendations[:5]  # Limit to top 5 recommendations
 
     def _identify_flagged_issues(
-        self,
-        fact_check_results: List[FactCheckResult],
-        self_critiques: List[SelfCritique]
+        self, fact_check_results: List[FactCheckResult], self_critiques: List[SelfCritique]
     ) -> List[str]:
         """Identify critical issues that should flag the response"""
         flagged_issues = []
@@ -565,7 +565,9 @@ class RAGFactChecker:
         # Critical fact-checking issues
         false_claims = [r for r in fact_check_results if not r.is_factual]
         if false_claims:
-            flagged_issues.append(f"CRITICAL: {len(false_claims)} factually incorrect claims detected")
+            flagged_issues.append(
+                f"CRITICAL: {len(false_claims)} factually incorrect claims detected"
+            )
 
         # Critical self-critique issues
         critical_critiques = [c for c in self_critiques if c.severity == CriticSeverity.CRITICAL]
@@ -573,7 +575,9 @@ class RAGFactChecker:
             flagged_issues.append(f"CRITICAL: {len(critical_critiques)} critical quality issues")
 
         # High severity issues
-        high_severity = [c for c in self_critiques if c.severity == CriticSeverity.HIGH and c.score < 0.3]
+        high_severity = [
+            c for c in self_critiques if c.severity == CriticSeverity.HIGH and c.score < 0.3
+        ]
         if high_severity:
             flagged_issues.append(f"HIGH: {len(high_severity)} high-severity quality issues")
 

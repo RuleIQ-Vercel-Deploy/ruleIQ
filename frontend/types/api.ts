@@ -275,6 +275,17 @@ export interface Integration {
 }
 
 // Smart Evidence Collection (from backend analysis)
+export interface CollectionPlanSummary {
+  id: string;
+  framework: string;
+  status: string;
+  progress_percentage: number;
+  total_tasks: number;
+  completed_tasks: number;
+  target_completion_date?: string;
+  created_at: string;
+}
+
 export interface EvidenceCollectionPlan {
   plan_id: string;
   business_profile_id: string;
@@ -487,6 +498,51 @@ export interface ApiResponse<T = any> {
   data: T;
   message?: string;
   status: number;
+}
+
+// Request Types
+export interface CreateAssessmentRequest {
+  business_profile_id: string;
+  framework_id: string;
+  assessment_type?: string;
+  metadata?: Record<string, any>;
+}
+
+export interface UpdateAssessmentRequest {
+  status?: Assessment['status'];
+  responses?: AssessmentResponse[];
+  metadata?: Record<string, any>;
+}
+
+export interface SubmitResponseRequest {
+  question_id: string;
+  answer: string;
+  evidence_items?: string[];
+  metadata?: Record<string, any>;
+}
+
+export interface CreateBusinessProfileRequest {
+  company_name: string;
+  industry: string;
+  employee_count: number;
+  annual_revenue: string;
+  country: string;
+  data_sensitivity: 'Low' | 'Moderate' | 'High' | 'Confidential';
+  handles_personal_data?: boolean;
+  processes_payments?: boolean;
+  stores_health_data?: boolean;
+}
+
+export interface UpdateBusinessProfileRequest {
+  company_name?: string;
+  industry?: string;
+  employee_count?: number;
+  annual_revenue?: string;
+  country?: string;
+  data_sensitivity?: 'Low' | 'Moderate' | 'High' | 'Confidential';
+  handles_personal_data?: boolean;
+  processes_payments?: boolean;
+  stores_health_data?: boolean;
 }
 
 // API Error

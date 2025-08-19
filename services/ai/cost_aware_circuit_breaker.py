@@ -34,7 +34,7 @@ class CostAwareCircuitBreakerConfig(CircuitBreakerConfig):
         budget_enforcement: bool = True,
         cost_spike_threshold: float = 3.0,  # 3x normal cost triggers circuit
         track_cost_efficiency: bool = True,
-        **kwargs
+        **kwargs,
     ) -> None:
         super().__init__(failure_threshold, recovery_timeout, success_threshold, time_window)
         self.cost_threshold_per_minute = cost_threshold_per_minute
@@ -57,7 +57,7 @@ class CostAwareCircuitBreaker(AICircuitBreaker):
             failure_threshold=config.failure_threshold if config else 5,
             recovery_timeout=config.recovery_timeout if config else 60,
             success_threshold=config.success_threshold if config else 3,
-            time_window=config.time_window if config else 60
+            time_window=config.time_window if config else 60,
         )
         super().__init__(base_config)
 
@@ -84,7 +84,7 @@ class CostAwareCircuitBreaker(AICircuitBreaker):
         session_id: Optional[str] = None,
         request_id: Optional[str] = None,
         *args,
-        **kwargs
+        **kwargs,
     ) -> Any:
         """
         Execute operation with both circuit breaker protection and cost tracking.
@@ -112,7 +112,7 @@ class CostAwareCircuitBreaker(AICircuitBreaker):
         if not self.is_model_available(model_name):
             raise CircuitBreakerException(
                 f"Circuit breaker is OPEN for model {model_name}",
-                context={"model_name": model_name, "state": self.get_model_state(model_name).value}
+                context={"model_name": model_name, "state": self.get_model_state(model_name).value},
             )
 
         # Check budget constraints if enabled
@@ -123,7 +123,11 @@ class CostAwareCircuitBreaker(AICircuitBreaker):
         start_time = time.time()
 
         try:
-            result = await operation(*args, **kwargs) if asyncio.iscoroutinefunction(operation) else operation(*args, **kwargs)
+            result = (
+                await operation(*args, **kwargs)
+                if asyncio.iscoroutinefunction(operation)
+                else operation(*args, **kwargs)
+            )
             response_time = time.time() - start_time
 
             # Track successful usage and cost
@@ -135,7 +139,7 @@ class CostAwareCircuitBreaker(AICircuitBreaker):
                 response_time_ms=response_time * 1000,
                 user_id=user_id,
                 session_id=session_id,
-                request_id=request_id
+                request_id=request_id,
             )
 
             # Record success in circuit breaker
@@ -156,23 +160,26 @@ class CostAwareCircuitBreaker(AICircuitBreaker):
                 response_time_ms=response_time * 1000,
                 user_id=user_id,
                 session_id=session_id,
-                request_id=request_id
+                request_id=request_id,
             )
 
             # Record failure in circuit breaker
-            self.record_failure(model_name, error, {
-                "operation": operation.__name__ if hasattr(operation, '__name__') else str(operation),
-                "service_name": service_name,
-                "cost_incurred": True
-            })
+            self.record_failure(
+                model_name,
+                error,
+                {
+                    "operation": operation.__name__
+                    if hasattr(operation, "__name__")
+                    else str(operation),
+                    "service_name": service_name,
+                    "cost_incurred": True,
+                },
+            )
 
             raise
 
     async def _check_budget_constraints(
-        self,
-        model_name: str,
-        input_tokens: int,
-        output_tokens: int
+        self, model_name: str, input_tokens: int, output_tokens: int
     ) -> None:
         """Check if request would exceed budget constraints."""
 
@@ -188,6 +195,7 @@ class CostAwareCircuitBreaker(AICircuitBreaker):
             if daily_limit:
                 # Get current daily usage
                 from datetime import date
+
                 today_costs = await self.cost_tracker.calculate_daily_costs(date.today())
                 current_usage = today_costs["total_cost"]
 
@@ -199,8 +207,8 @@ class CostAwareCircuitBreaker(AICircuitBreaker):
                         context={
                             "current_usage": str(current_usage),
                             "estimated_cost": str(estimated_cost),
-                            "daily_limit": str(daily_limit)
-                        }
+                            "daily_limit": str(daily_limit),
+                        },
                     )
 
     async def _track_successful_usage(
@@ -212,7 +220,7 @@ class CostAwareCircuitBreaker(AICircuitBreaker):
         response_time_ms: float,
         user_id: Optional[str] = None,
         session_id: Optional[str] = None,
-        request_id: Optional[str] = None
+        request_id: Optional[str] = None,
     ) -> None:
         """Track successful AI usage with cost calculation."""
 
@@ -230,7 +238,7 @@ class CostAwareCircuitBreaker(AICircuitBreaker):
                 response_time_ms=response_time_ms,
                 cache_hit=False,
                 error_occurred=False,
-                metadata={"circuit_breaker": "cost_aware"}
+                metadata={"circuit_breaker": "cost_aware"},
             )
 
             # Track cost history for spike detection
@@ -249,7 +257,7 @@ class CostAwareCircuitBreaker(AICircuitBreaker):
         response_time_ms: float,
         user_id: Optional[str] = None,
         session_id: Optional[str] = None,
-        request_id: Optional[str] = None
+        request_id: Optional[str] = None,
     ) -> None:
         """Track failed AI usage (cost still incurred)."""
 
@@ -270,18 +278,15 @@ class CostAwareCircuitBreaker(AICircuitBreaker):
                 metadata={
                     "circuit_breaker": "cost_aware",
                     "error_type": type(error).__name__,
-                    "error_message": str(error)
-                }
+                    "error_message": str(error),
+                },
             )
 
         except Exception as e:
             logger.error(f"Failed to track failed usage: {str(e)}")
 
     async def _update_cost_history(
-        self,
-        model_name: str,
-        service_name: str,
-        total_tokens: int
+        self, model_name: str, service_name: str, total_tokens: int
     ) -> None:
         """Update cost history for spike detection."""
 
@@ -292,18 +297,19 @@ class CostAwareCircuitBreaker(AICircuitBreaker):
                 self._cost_history[key] = []
 
             # Add current usage
-            self._cost_history[key].append({
-                "timestamp": datetime.now(),
-                "tokens": total_tokens,
-                "model_name": model_name,
-                "service_name": service_name
-            })
+            self._cost_history[key].append(
+                {
+                    "timestamp": datetime.now(),
+                    "tokens": total_tokens,
+                    "model_name": model_name,
+                    "service_name": service_name,
+                }
+            )
 
             # Keep only recent history (last hour)
             cutoff_time = datetime.now() - timedelta(hours=1)
             self._cost_history[key] = [
-                entry for entry in self._cost_history[key]
-                if entry["timestamp"] > cutoff_time
+                entry for entry in self._cost_history[key] if entry["timestamp"] > cutoff_time
             ]
 
     async def check_cost_spike(self, model_name: str, service_name: str) -> bool:
@@ -340,10 +346,12 @@ class CostAwareCircuitBreaker(AICircuitBreaker):
                 "budget_enforcement": self.cost_config.budget_enforcement,
                 "cost_spike_threshold": self.cost_config.cost_spike_threshold,
                 "track_cost_efficiency": self.cost_config.track_cost_efficiency,
-                "cost_threshold_per_minute": str(self.cost_config.cost_threshold_per_minute) if self.cost_config.cost_threshold_per_minute else None
+                "cost_threshold_per_minute": str(self.cost_config.cost_threshold_per_minute)
+                if self.cost_config.cost_threshold_per_minute
+                else None,
             },
             "cost_history_keys": list(self._cost_history.keys()),
-            "cost_tracking_active": True
+            "cost_tracking_active": True,
         }
 
         return {**base_status, "cost_awareness": cost_status}
@@ -366,15 +374,19 @@ class CostAwareCircuitBreaker(AICircuitBreaker):
                 return {
                     "average_daily_cost": avg_recent_cost,
                     "cost_per_request": cost_per_request,
-                    "cost_trend": "increasing" if len(recent_costs) >= 2 and recent_costs[-1] > recent_costs[0] else "stable",
-                    "efficiency_score": max(0, 1 - (cost_per_request / 0.1))  # Normalize against $0.10 baseline
+                    "cost_trend": "increasing"
+                    if len(recent_costs) >= 2 and recent_costs[-1] > recent_costs[0]
+                    else "stable",
+                    "efficiency_score": max(
+                        0, 1 - (cost_per_request / 0.1)
+                    ),  # Normalize against $0.10 baseline
                 }
 
             return {
                 "average_daily_cost": 0,
                 "cost_per_request": 0,
                 "cost_trend": "stable",
-                "efficiency_score": 1.0
+                "efficiency_score": 1.0,
             }
 
         except Exception as e:
@@ -384,14 +396,14 @@ class CostAwareCircuitBreaker(AICircuitBreaker):
                 "cost_per_request": 0,
                 "cost_trend": "unknown",
                 "efficiency_score": 0.5,
-                "error": str(e)
+                "error": str(e),
             }
 
     async def optimize_model_selection(
         self,
         available_models: List[str],
         task_complexity: str = "medium",
-        max_cost_per_request: Optional[Decimal] = None
+        max_cost_per_request: Optional[Decimal] = None,
     ) -> str:
         """
         Select optimal model considering both availability and cost efficiency.
@@ -406,16 +418,13 @@ class CostAwareCircuitBreaker(AICircuitBreaker):
         """
 
         # Filter models by circuit breaker availability
-        available_models = [
-            model for model in available_models
-            if self.is_model_available(model)
-        ]
+        available_models = [model for model in available_models if self.is_model_available(model)]
 
         if not available_models:
             raise AIServiceException(
                 message="No AI models available - all circuits are open",
                 service_name="Cost-Aware Circuit Breaker",
-                error_code="NO_MODELS_AVAILABLE"
+                error_code="NO_MODELS_AVAILABLE",
             )
 
         # If cost constraint is specified, filter by cost
@@ -434,6 +443,7 @@ class CostAwareCircuitBreaker(AICircuitBreaker):
 
         # Use intelligent model router for final selection
         from services.ai.cost_management import IntelligentModelRouter
+
         router = IntelligentModelRouter()
 
         # Mock task description for routing
@@ -442,7 +452,7 @@ class CostAwareCircuitBreaker(AICircuitBreaker):
         routing_result = await router.select_optimal_model(
             task_description=task_description,
             task_type="general",
-            max_cost_per_request=max_cost_per_request
+            max_cost_per_request=max_cost_per_request,
         )
 
         recommended_model = routing_result["model"]
@@ -482,7 +492,7 @@ async def execute_with_cost_and_circuit_protection(
     session_id: Optional[str] = None,
     request_id: Optional[str] = None,
     *args,
-    **kwargs
+    **kwargs,
 ) -> Any:
     """
     Convenience function to execute AI operations with cost tracking and circuit breaker protection.
@@ -514,5 +524,5 @@ async def execute_with_cost_and_circuit_protection(
         session_id=session_id,
         request_id=request_id,
         *args,
-        **kwargs
+        **kwargs,
     )

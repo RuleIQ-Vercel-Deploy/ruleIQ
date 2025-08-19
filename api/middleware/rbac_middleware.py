@@ -14,9 +14,7 @@ import re
 from fastapi import Request, Response, HTTPException, status
 from starlette.middleware.base import BaseHTTPMiddleware
 
-from api.dependencies.rbac_auth import (
-    UserWithRoles
-)
+from api.dependencies.rbac_auth import UserWithRoles
 from database.db_setup import get_db
 from services.rbac_service import RBACService
 
@@ -50,7 +48,7 @@ class RBACMiddleware(BaseHTTPMiddleware):
             "/api/monitoring/prometheus",  # Public metrics for Prometheus scraping
             "/docs",
             "/redoc",
-            "/openapi.json"
+            "/openapi.json",
         }
 
         # Routes that require authentication but no specific permissions
@@ -58,7 +56,7 @@ class RBACMiddleware(BaseHTTPMiddleware):
             "/api/v1/auth/me",
             "/api/v1/auth/logout",
             "/api/v1/auth/permissions",
-            "/api/v1/auth/framework-access"
+            "/api/v1/auth/framework-access",
         }
 
     def _configure_route_permissions(self) -> Dict[Pattern, Dict[str, List[str]]]:
@@ -75,86 +73,73 @@ class RBACMiddleware(BaseHTTPMiddleware):
                 "POST": ["admin_roles", "admin_permissions"],
                 "PUT": ["admin_roles", "admin_permissions"],
                 "DELETE": ["admin_roles", "admin_permissions"],
-                "PATCH": ["admin_roles", "admin_permissions"]
+                "PATCH": ["admin_roles", "admin_permissions"],
             },
-
             # Monitoring routes - tiered access
             r"/api/monitoring/database.*": {
-                "GET": ["admin_roles", "monitoring_view"],  # Database monitoring requires elevated access
-                "POST": ["admin_roles", "monitoring_admin"]  # Testing endpoints require admin
+                "GET": [
+                    "admin_roles",
+                    "monitoring_view",
+                ],  # Database monitoring requires elevated access
+                "POST": ["admin_roles", "monitoring_admin"],  # Testing endpoints require admin
             },
             r"/api/monitoring/status.*": {
-                "GET": ["admin_roles", "monitoring_view"]  # Status overview requires monitoring access
+                "GET": [
+                    "admin_roles",
+                    "monitoring_view",
+                ]  # Status overview requires monitoring access
             },
-
             # User management routes
-            r"/api/users/?$": {
-                "GET": ["user_list"],
-                "POST": ["user_create"]
-            },
+            r"/api/users/?$": {"GET": ["user_list"], "POST": ["user_create"]},
             r"/api/users/[^/]+/?$": {
                 "GET": ["user_list"],
                 "PUT": ["user_update"],
                 "DELETE": ["user_delete"],
-                "PATCH": ["user_update"]
+                "PATCH": ["user_update"],
             },
-
             # Framework routes
-            r"/api/frameworks/?$": {
-                "GET": ["framework_list"],
-                "POST": ["framework_create"]
-            },
+            r"/api/frameworks/?$": {"GET": ["framework_list"], "POST": ["framework_create"]},
             r"/api/frameworks/[^/]+/?$": {
                 "GET": ["framework_list"],
                 "PUT": ["framework_update"],
                 "DELETE": ["framework_delete"],
-                "PATCH": ["framework_update"]
+                "PATCH": ["framework_update"],
             },
-
             # Assessment routes
-            r"/api/assessments/?$": {
-                "GET": ["assessment_list"],
-                "POST": ["assessment_create"]
-            },
+            r"/api/assessments/?$": {"GET": ["assessment_list"], "POST": ["assessment_create"]},
             r"/api/assessments/[^/]+/?$": {
                 "GET": ["assessment_list"],
                 "PUT": ["assessment_update"],
                 "DELETE": ["assessment_delete"],
-                "PATCH": ["assessment_update"]
+                "PATCH": ["assessment_update"],
             },
-
             # AI Policy routes
             r"/api/policies.*": {
                 "GET": ["policy_generate"],
                 "POST": ["policy_generate", "policy_refine"],
                 "PUT": ["policy_refine"],
-                "PATCH": ["policy_refine"]
+                "PATCH": ["policy_refine"],
             },
-
             # Report routes
             r"/api/reports.*": {
                 "GET": ["report_view"],
-                "POST": ["report_export", "report_schedule"]
+                "POST": ["report_export", "report_schedule"],
             },
-
             # Business profile routes - users can access their own, admins can access any
             r"/api/business-profiles/?$": {
                 "GET": ["user_list"],  # Admin level for listing all
-                "POST": []  # No special permission - users can create their own
+                "POST": [],  # No special permission - users can create their own
             },
             r"/api/business-profiles/[^/]+/?$": {
                 "GET": [],  # Will check ownership or admin permission
                 "PUT": [],  # Will check ownership or admin permission
                 "DELETE": ["user_delete"],  # Admin only
-                "PATCH": []  # Will check ownership or admin permission
-            }
+                "PATCH": [],  # Will check ownership or admin permission
+            },
         }
 
         # Compile regex patterns for efficient matching
-        return {
-            re.compile(pattern): permissions
-            for pattern, permissions in route_config.items()
-        }
+        return {re.compile(pattern): permissions for pattern, permissions in route_config.items()}
 
     async def dispatch(self, request: Request, call_next) -> Response:
         """
@@ -185,30 +170,24 @@ class RBACMiddleware(BaseHTTPMiddleware):
             if self._is_authenticated_only_route(request.url.path):
                 if current_user is None:
                     raise HTTPException(
-                        status_code=status.HTTP_401_UNAUTHORIZED,
-                        detail="Authentication required"
+                        status_code=status.HTTP_401_UNAUTHORIZED, detail="Authentication required"
                     )
                 # User is authenticated, proceed
                 return await call_next(request)
 
             # Check route permissions
-            required_permissions = self._get_required_permissions(
-                request.url.path,
-                request.method
-            )
+            required_permissions = self._get_required_permissions(request.url.path, request.method)
 
             if required_permissions:
                 if current_user is None:
                     raise HTTPException(
-                        status_code=status.HTTP_401_UNAUTHORIZED,
-                        detail="Authentication required"
+                        status_code=status.HTTP_401_UNAUTHORIZED, detail="Authentication required"
                     )
 
                 # Check if user has required permissions
                 if not self._check_permissions(current_user, required_permissions, request):
                     raise HTTPException(
-                        status_code=status.HTTP_403_FORBIDDEN,
-                        detail="Insufficient permissions"
+                        status_code=status.HTTP_403_FORBIDDEN, detail="Insufficient permissions"
                     )
 
             # Add user to request state for downstream handlers
@@ -221,8 +200,7 @@ class RBACMiddleware(BaseHTTPMiddleware):
             # Audit log successful access
             if self.enable_audit_logging and current_user:
                 await self._log_access(
-                    current_user, request, response.status_code,
-                    time.time() - start_time
+                    current_user, request, response.status_code, time.time() - start_time
                 )
 
             return response
@@ -231,8 +209,7 @@ class RBACMiddleware(BaseHTTPMiddleware):
             # Audit log failed access attempts
             if self.enable_audit_logging:
                 await self._log_access_failure(
-                    request, e.status_code, str(e.detail),
-                    time.time() - start_time
+                    request, e.status_code, str(e.detail), time.time() - start_time
                 )
             raise
 
@@ -242,13 +219,11 @@ class RBACMiddleware(BaseHTTPMiddleware):
 
             if self.enable_audit_logging:
                 await self._log_access_failure(
-                    request, 500, f"Internal error: {str(e)}",
-                    time.time() - start_time
+                    request, 500, f"Internal error: {str(e)}", time.time() - start_time
                 )
 
             raise HTTPException(
-                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                detail="Internal server error"
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Internal server error"
             )
 
     def _is_public_route(self, path: str) -> bool:
@@ -300,6 +275,7 @@ class RBACMiddleware(BaseHTTPMiddleware):
 
                 # Get user from database
                 from database.user import User
+
                 user = db.query(User).filter(User.id == user_id).first()
                 if not user or not user.is_active:
                     return None
@@ -336,7 +312,9 @@ class RBACMiddleware(BaseHTTPMiddleware):
 
         return []  # No specific permissions required
 
-    def _check_permissions(self, user: UserWithRoles, required_permissions: List[str], request: Request) -> bool:
+    def _check_permissions(
+        self, user: UserWithRoles, required_permissions: List[str], request: Request
+    ) -> bool:
         """
         Check if user has required permissions for the request.
 
@@ -388,8 +366,9 @@ class RBACMiddleware(BaseHTTPMiddleware):
         # For listing endpoint, require admin permission
         return False
 
-    async def _log_access(self, user: UserWithRoles, request: Request,
-                         status_code: int, duration: float) -> None:
+    async def _log_access(
+        self, user: UserWithRoles, request: Request, status_code: int, duration: float
+    ) -> None:
         """
         Log successful access for audit purposes.
 
@@ -414,16 +393,17 @@ class RBACMiddleware(BaseHTTPMiddleware):
                         "user_agent": request.headers.get("user-agent"),
                         "ip_address": getattr(request.client, "host", None),
                         "roles": [role["name"] for role in user.roles],
-                        "permissions_count": len(user.permissions)
-                    }
+                        "permissions_count": len(user.permissions),
+                    },
                 )
             finally:
                 db.close()
         except Exception as e:
             logger.error(f"Failed to log access: {e}")
 
-    async def _log_access_failure(self, request: Request, status_code: int,
-                                 reason: str, duration: float) -> None:
+    async def _log_access_failure(
+        self, request: Request, status_code: int, reason: str, duration: float
+    ) -> None:
         """
         Log failed access attempts for security monitoring.
 
@@ -447,8 +427,8 @@ class RBACMiddleware(BaseHTTPMiddleware):
                         "reason": reason,
                         "duration_ms": round(duration * 1000, 2),
                         "user_agent": request.headers.get("user-agent"),
-                        "ip_address": getattr(request.client, "host", None)
-                    }
+                        "ip_address": getattr(request.client, "host", None),
+                    },
                 )
             finally:
                 db.close()
@@ -475,9 +455,11 @@ class RBACRouteProtector:
         Returns:
             Route decorator
         """
+
         def decorator(func):
             func._required_permissions = permissions
             return func
+
         return decorator
 
     @staticmethod
@@ -492,9 +474,11 @@ class RBACRouteProtector:
         Returns:
             Route decorator
         """
+
         def decorator(func):
             func._required_framework_access = (framework_id, access_level)
             return func
+
         return decorator
 
     @staticmethod
@@ -517,9 +501,11 @@ def require_admin(func):
     """Decorator for admin-only routes."""
     return RBACRouteProtector.admin_only(func)
 
+
 def require_permissions(*permissions):
     """Decorator for routes requiring specific permissions."""
     return RBACRouteProtector.require_permissions(list(permissions))
+
 
 def require_framework_access(framework_id: str, access_level: str = "read"):
     """Decorator for routes requiring framework access."""

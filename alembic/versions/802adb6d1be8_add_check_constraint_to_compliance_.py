@@ -196,9 +196,7 @@ def upgrade() -> None:
             ["compliance_frameworks.id"],
             name=op.f("fk_evidence_framework_id_compliance_frameworks"),
         ),
-        sa.ForeignKeyConstraint(
-            ["user_id"], ["users.id"], name=op.f("fk_evidence_user_id_users")
-        ),
+        sa.ForeignKeyConstraint(["user_id"], ["users.id"], name=op.f("fk_evidence_user_id_users")),
         sa.PrimaryKeyConstraint("id", name=op.f("pk_evidence")),
     )
     op.create_table(
@@ -399,9 +397,7 @@ def upgrade() -> None:
             ["business_profiles.id"],
             name=op.f("fk_policies_business_profile_id_business_profiles"),
         ),
-        sa.ForeignKeyConstraint(
-            ["user_id"], ["users.id"], name=op.f("fk_policies_user_id_users")
-        ),
+        sa.ForeignKeyConstraint(["user_id"], ["users.id"], name=op.f("fk_policies_user_id_users")),
         sa.PrimaryKeyConstraint("id", name=op.f("pk_policies")),
     )
     op.create_table(

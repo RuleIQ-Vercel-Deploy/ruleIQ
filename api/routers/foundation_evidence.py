@@ -343,7 +343,9 @@ async def configure_microsoft_integration(
     except HTTPException:
         raise
     except Exception as e:
-        logger.error(f"Error configuring Microsoft 365 integration for user {str(current_user.id)}: {e}")
+        logger.error(
+            f"Error configuring Microsoft 365 integration for user {str(current_user.id)}: {e}"
+        )
         raise HTTPException(status_code=500, detail=f"Configuration failed: {str(e)}")
 
 
@@ -443,7 +445,9 @@ async def get_collection_status(
 
     try:
         evidence_service = EvidenceCollectionService(db)
-        collection = await evidence_service.get_collection_status(collection_id, str(current_user.id))
+        collection = await evidence_service.get_collection_status(
+            collection_id, str(current_user.id)
+        )
 
         if not collection:
             raise HTTPException(status_code=404, detail="Collection not found")
@@ -494,7 +498,9 @@ async def get_collection_results(
 
     try:
         evidence_service = EvidenceCollectionService(db)
-        collection = await evidence_service.get_collection_status(collection_id, str(current_user.id))
+        collection = await evidence_service.get_collection_status(
+            collection_id, str(current_user.id)
+        )
 
         if not collection:
             raise HTTPException(status_code=404, detail="Collection not found")

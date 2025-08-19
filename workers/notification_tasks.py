@@ -134,13 +134,13 @@ async def _broadcast_notification_async(subject: str, message: str) -> int:
     bind=True,
     autoretry_for=(DatabaseException, Exception),
     retry_kwargs={
-        'max_retries': 5,
-        'countdown': 30,  # Start with 30 seconds for notifications
+        "max_retries": 5,
+        "countdown": 30,  # Start with 30 seconds for notifications
     },
     retry_backoff=True,
     retry_backoff_max=300,  # Max 5 minutes for notifications
     retry_jitter=True,
-    rate_limit='20/m',  # 20 notifications per minute
+    rate_limit="20/m",  # 20 notifications per minute
 )
 def send_compliance_alert(self, user_id: str, alert_type: str, alert_data: Dict[str, Any]):
     """Sends a compliance alert to a specific user."""
@@ -163,13 +163,13 @@ def send_compliance_alert(self, user_id: str, alert_type: str, alert_data: Dict[
     bind=True,
     autoretry_for=(DatabaseException, Exception),
     retry_kwargs={
-        'max_retries': 5,
-        'countdown': 45,  # Start with 45 seconds for weekly summaries
+        "max_retries": 5,
+        "countdown": 45,  # Start with 45 seconds for weekly summaries
     },
     retry_backoff=True,
     retry_backoff_max=300,
     retry_jitter=True,
-    rate_limit='10/m',  # 10 weekly summaries per minute
+    rate_limit="10/m",  # 10 weekly summaries per minute
 )
 def send_weekly_summary(self, user_id: str):
     """Sends a weekly compliance summary to a user."""
@@ -192,13 +192,13 @@ def send_weekly_summary(self, user_id: str):
     bind=True,
     autoretry_for=(DatabaseException, Exception),
     retry_kwargs={
-        'max_retries': 5,
-        'countdown': 60,  # Start with 60 seconds for broadcasts
+        "max_retries": 5,
+        "countdown": 60,  # Start with 60 seconds for broadcasts
     },
     retry_backoff=True,
     retry_backoff_max=300,
     retry_jitter=True,
-    rate_limit='5/m',  # 5 broadcast notifications per minute
+    rate_limit="5/m",  # 5 broadcast notifications per minute
 )
 def broadcast_notification(self, subject: str, message: str):
     """Broadcasts a notification to all active users."""

@@ -2,6 +2,7 @@
 ConversionEvent model for tracking freemium to paid conversions.
 Records conversion events, revenue attribution, and funnel analytics.
 """
+
 import uuid
 from datetime import datetime
 from decimal import Decimal
@@ -23,20 +24,21 @@ class ConversionEvent(Base):
     Model for tracking freemium to paid conversion events.
     Records conversion types, revenue attribution, and source tracking for ROI analysis.
     """
+
     __tablename__ = "conversion_events"
 
     # Primary identifier
     id = Column(PG_UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     lead_id = Column(
-        PG_UUID(as_uuid=True), 
-        ForeignKey("assessment_leads.id", ondelete="CASCADE"), 
-        nullable=False, 
-        index=True
+        PG_UUID(as_uuid=True),
+        ForeignKey("assessment_leads.id", ondelete="CASCADE"),
+        nullable=False,
+        index=True,
     )
     session_id = Column(
-        PG_UUID(as_uuid=True), 
-        ForeignKey("freemium_assessment_sessions.id", ondelete="SET NULL"), 
-        nullable=True
+        PG_UUID(as_uuid=True),
+        ForeignKey("freemium_assessment_sessions.id", ondelete="SET NULL"),
+        nullable=True,
     )
 
     # Conversion classification
@@ -101,10 +103,7 @@ class ConversionEvent(Base):
         """Add a touchpoint to conversion path."""
         if not self.conversion_path:
             self.conversion_path = []
-        self.conversion_path.append({
-            "timestamp": datetime.utcnow().isoformat(),
-            **touchpoint
-        })
+        self.conversion_path.append({"timestamp": datetime.utcnow().isoformat(), **touchpoint})
         self.touchpoint_count = len(self.conversion_path)
 
     def confirm_conversion(self) -> None:
@@ -136,7 +135,7 @@ class ConversionEvent(Base):
             return f"{self.currency_code} {self.conversion_value:.2f}"
         return "No value"
 
-    def is_high_value_conversion(self, threshold: Decimal = Decimal('100.00')) -> bool:
+    def is_high_value_conversion(self, threshold: Decimal = Decimal("100.00")) -> bool:
         """Check if this is a high-value conversion."""
         return self.conversion_value and self.conversion_value >= threshold
 
@@ -150,11 +149,11 @@ class ConversionEvent(Base):
 
     @classmethod
     def create_trial_signup(
-        cls, 
-        lead_id: uuid.UUID, 
-        session_id: uuid.UUID = None, 
-        source: str = "freemium_results", 
-        metadata: dict = None
+        cls,
+        lead_id: uuid.UUID,
+        session_id: uuid.UUID = None,
+        source: str = "freemium_results",
+        metadata: dict = None,
     ):
         """Factory method for trial signup conversions."""
         return cls(
@@ -162,18 +161,18 @@ class ConversionEvent(Base):
             session_id=session_id,
             conversion_type="trial_signup",
             conversion_source=source,
-            conversion_value=Decimal('0.00'),  # Trial is free
-            conversion_metadata=metadata or {}
+            conversion_value=Decimal("0.00"),  # Trial is free
+            conversion_metadata=metadata or {},
         )
 
     @classmethod
     def create_paid_subscription(
-        cls, 
-        lead_id: uuid.UUID, 
-        plan: str, 
-        value: Decimal, 
-        frequency: str = "monthly", 
-        metadata: dict = None
+        cls,
+        lead_id: uuid.UUID,
+        plan: str,
+        value: Decimal,
+        frequency: str = "monthly",
+        metadata: dict = None,
     ):
         """Factory method for paid subscription conversions."""
         return cls(
@@ -183,15 +182,12 @@ class ConversionEvent(Base):
             conversion_value=value,
             subscription_plan=plan,
             billing_frequency=frequency,
-            conversion_metadata=metadata or {}
+            conversion_metadata=metadata or {},
         )
 
     @classmethod
     def create_consultation_request(
-        cls, 
-        lead_id: uuid.UUID, 
-        session_id: uuid.UUID = None, 
-        metadata: dict = None
+        cls, lead_id: uuid.UUID, session_id: uuid.UUID = None, metadata: dict = None
     ):
         """Factory method for consultation request conversions."""
         return cls(
@@ -199,7 +195,7 @@ class ConversionEvent(Base):
             session_id=session_id,
             conversion_type="consultation_request",
             conversion_source="freemium_consultation_cta",
-            conversion_metadata=metadata or {}
+            conversion_metadata=metadata or {},
         )
 
     def __repr__(self) -> str:

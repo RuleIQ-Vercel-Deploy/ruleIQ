@@ -22,4 +22,9 @@ admin_router.include_router(user_management_router)
 admin_router.include_router(token_management_router)
 admin_router.include_router(data_access_router)
 
-__all__ = ["admin_router", "user_management_router", "token_management_router", "data_access_router"]
+__all__ = [
+    "admin_router",
+    "user_management_router",
+    "token_management_router",
+    "data_access_router",
+]

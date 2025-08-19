@@ -4,7 +4,6 @@ Validates JSON schema export and SafeFallbackResponse behavior.
 """
 
 import json
-from datetime import datetime
 from uuid import uuid4
 
 import pytest
@@ -12,7 +11,7 @@ from pydantic import ValidationError
 
 from langgraph_agent.core.models import (
     ComplianceProfile,
-    Obligation, 
+    Obligation,
     EvidenceItem,
     LegalReviewTicket,
     SafeFallbackResponse,
@@ -23,35 +22,40 @@ from langgraph_agent.core.models import (
     RiskLevel,
     EvidenceType,
     get_model_schemas,
-    get_safe_fallback_schema
+    get_safe_fallback_schema,
 )
 from langgraph_agent.core.constants import (
     SLO_P95_LATENCY_MS,
     ROUTER_THRESHOLDS,
     GRAPH_NODES,
-    COMPLIANCE_FRAMEWORKS
+    COMPLIANCE_FRAMEWORKS,
 )
 
 
 class TestConstants:
     """Test core constants are properly defined."""
-    
-    def test_slo_constraints(self):
+
+    def test_slo_constraints(self) -> None:
         """Test SLO constants are within expected ranges."""
         assert SLO_P95_LATENCY_MS == 2500
         assert 0 < ROUTER_THRESHOLDS["rules_confidence"] <= 1.0
         assert 0 < ROUTER_THRESHOLDS["classifier_confidence"] <= 1.0
-        
-    def test_graph_nodes_defined(self):
+
+    def test_graph_nodes_defined(self) -> None:
         """Test all required graph nodes are defined."""
         required_nodes = [
-            "router", "compliance_analyzer", "obligation_finder", 
-            "evidence_collector", "legal_reviewer", "autonomy_policy", "model"
+            "router",
+            "compliance_analyzer",
+            "obligation_finder",
+            "evidence_collector",
+            "legal_reviewer",
+            "autonomy_policy",
+            "model",
         ]
         for node in required_nodes:
             assert node in GRAPH_NODES.values()
-            
-    def test_compliance_frameworks_align(self):
+
+    def test_compliance_frameworks_align(self) -> None:
         """Test constants align with model enums."""
         model_frameworks = [f.value for f in ComplianceFramework]
         for framework in COMPLIANCE_FRAMEWORKS:
@@ -60,8 +64,8 @@ class TestConstants:
 
 class TestComplianceProfile:
     """Test ComplianceProfile model validation."""
-    
-    def test_valid_profile_creation(self):
+
+    def test_valid_profile_creation(self) -> None:
         """Test creating a valid compliance profile."""
         profile = ComplianceProfile(
             company_id=uuid4(),
@@ -70,15 +74,15 @@ class TestComplianceProfile:
             frameworks=[ComplianceFramework.GDPR, ComplianceFramework.UK_GDPR],
             geographical_scope=["UK", "EU"],
             employee_count=50,
-            risk_tolerance=RiskLevel.MEDIUM
+            risk_tolerance=RiskLevel.MEDIUM,
         )
-        
+
         assert profile.business_name == "Test Company Ltd"
         assert profile.sector == BusinessSector.RETAIL
         assert ComplianceFramework.GDPR in profile.frameworks
         assert profile.created_at is not None
-        
-    def test_gdpr_requires_geographical_scope(self):
+
+    def test_gdpr_requires_geographical_scope(self) -> None:
         """Test GDPR compliance requires geographical scope."""
         with pytest.raises(ValidationError, match="Geographical scope required"):
             ComplianceProfile(
@@ -86,24 +90,24 @@ class TestComplianceProfile:
                 business_name="Test Company Ltd",
                 sector=BusinessSector.RETAIL,
                 frameworks=[ComplianceFramework.GDPR],
-                geographical_scope=[]  # Missing required scope
+                geographical_scope=[],  # Missing required scope
             )
-            
-    def test_frameworks_required(self):
+
+    def test_frameworks_required(self) -> None:
         """Test at least one framework is required."""
         with pytest.raises(ValidationError, match="At least one compliance framework"):
             ComplianceProfile(
                 company_id=uuid4(),
-                business_name="Test Company Ltd", 
+                business_name="Test Company Ltd",
                 sector=BusinessSector.RETAIL,
-                frameworks=[]  # Empty frameworks not allowed
+                frameworks=[],  # Empty frameworks not allowed
             )
 
 
 class TestObligation:
     """Test Obligation model validation."""
-    
-    def test_valid_obligation_creation(self):
+
+    def test_valid_obligation_creation(self) -> None:
         """Test creating a valid obligation."""
         obligation = Obligation(
             obligation_id="GDPR_DATA_001",
@@ -113,15 +117,15 @@ class TestObligation:
             category="data_processing",
             mandatory=True,
             risk_level=RiskLevel.HIGH,
-            applicable_sectors=[BusinessSector.RETAIL, BusinessSector.FINANCE]
+            applicable_sectors=[BusinessSector.RETAIL, BusinessSector.FINANCE],
         )
-        
+
         assert obligation.obligation_id == "GDPR_DATA_001"
         assert obligation.framework == ComplianceFramework.GDPR
         assert obligation.mandatory is True
         assert BusinessSector.RETAIL in obligation.applicable_sectors
-        
-    def test_obligation_id_format_validation(self):
+
+    def test_obligation_id_format_validation(self) -> None:
         """Test obligation ID follows required format."""
         with pytest.raises(ValidationError, match="Obligation ID must follow format"):
             Obligation(
@@ -129,47 +133,47 @@ class TestObligation:
                 framework=ComplianceFramework.GDPR,
                 title="Test Obligation",
                 description="Test description",
-                category="test"
+                category="test",
             )
 
 
 class TestSafeFallbackResponse:
     """Test SafeFallbackResponse behavior."""
-    
-    def test_safe_fallback_creation(self):
+
+    def test_safe_fallback_creation(self) -> None:
         """Test SafeFallbackResponse exactly as specified."""
         response = SafeFallbackResponse(
             error_message="Validation failed for user input",
-            error_details={"field": "business_name", "issue": "too_short"}
+            error_details={"field": "business_name", "issue": "too_short"},
         )
-        
+
         assert response.status == "needs_review"
         assert response.error_message == "Validation failed for user input"
         assert response.error_details["field"] == "business_name"
         assert response.timestamp is not None
-        
-    def test_safe_fallback_status_validation(self):
+
+    def test_safe_fallback_status_validation(self) -> None:
         """Test status must be exactly 'needs_review'."""
         with pytest.raises(ValidationError, match="String should match pattern"):
             SafeFallbackResponse(
                 status="invalid_status",  # Must be "needs_review"
                 error_message="Test error",
-                error_details={}
+                error_details={},
             )
-            
-    def test_safe_fallback_no_sensitive_data(self):
+
+    def test_safe_fallback_no_sensitive_data(self) -> None:
         """Test error details cannot contain sensitive information."""
         with pytest.raises(ValidationError, match="cannot contain sensitive key"):
             SafeFallbackResponse(
                 error_message="Test error",
-                error_details={"password": "secret123"}  # Sensitive key not allowed
+                error_details={"password": "secret123"},  # Sensitive key not allowed
             )
 
 
 class TestEvidenceItem:
     """Test EvidenceItem model validation."""
-    
-    def test_valid_evidence_creation(self):
+
+    def test_valid_evidence_creation(self) -> None:
         """Test creating valid evidence item."""
         evidence = EvidenceItem(
             company_id=uuid4(),
@@ -179,15 +183,15 @@ class TestEvidenceItem:
             created_by=uuid4(),
             file_path="/documents/privacy_policy.pdf",
             frameworks=[ComplianceFramework.GDPR],
-            related_obligations=["GDPR_PRIVACY_001"]
+            related_obligations=["GDPR_PRIVACY_001"],
         )
-        
+
         assert evidence.title == "Privacy Policy Document"
         assert evidence.evidence_type == EvidenceType.POLICY_DOCUMENT
         assert evidence.verified is False  # Default
         assert evidence.created_at is not None
-        
-    def test_file_path_validation(self):
+
+    def test_file_path_validation(self) -> None:
         """Test file path must be absolute or URL."""
         with pytest.raises(ValidationError, match="File path must be absolute or URL"):
             EvidenceItem(
@@ -195,14 +199,14 @@ class TestEvidenceItem:
                 title="Test Evidence",
                 evidence_type=EvidenceType.POLICY_DOCUMENT,
                 created_by=uuid4(),
-                file_path="relative/path.pdf"  # Invalid relative path
+                file_path="relative/path.pdf",  # Invalid relative path
             )
 
 
 class TestLegalReviewTicket:
     """Test LegalReviewTicket model validation."""
-    
-    def test_valid_ticket_creation(self):
+
+    def test_valid_ticket_creation(self) -> None:
         """Test creating valid legal review ticket."""
         ticket = LegalReviewTicket(
             company_id=uuid4(),
@@ -210,15 +214,15 @@ class TestLegalReviewTicket:
             description="Review updated privacy policy for GDPR compliance",
             requested_by=uuid4(),
             content_type="policy",
-            priority=RiskLevel.HIGH
+            priority=RiskLevel.HIGH,
         )
-        
+
         assert ticket.title == "Privacy Policy Review"
         assert ticket.status == "pending"  # Default
         assert ticket.priority == RiskLevel.HIGH
         assert ticket.created_at is not None
-        
-    def test_status_validation(self):
+
+    def test_status_validation(self) -> None:
         """Test status must be from allowed values."""
         with pytest.raises(ValidationError, match="Status must be one of"):
             LegalReviewTicket(
@@ -227,38 +231,38 @@ class TestLegalReviewTicket:
                 description="Test description",
                 requested_by=uuid4(),
                 content_type="policy",
-                status="invalid_status"  # Not in allowed list
+                status="invalid_status",  # Not in allowed list
             )
 
 
 class TestGraphMessage:
     """Test GraphMessage model validation."""
-    
-    def test_valid_message_creation(self):
+
+    def test_valid_message_creation(self) -> None:
         """Test creating valid graph message."""
         message = GraphMessage(
             role="user",
             content="What GDPR obligations apply to my retail business?",
-            tool_calls=None
+            tool_calls=None,
         )
-        
+
         assert message.role == "user"
         assert "GDPR" in message.content
         assert message.timestamp is not None
-        
-    def test_role_validation(self):
+
+    def test_role_validation(self) -> None:
         """Test role must be from allowed values."""
         with pytest.raises(ValidationError, match="String should match pattern"):
             GraphMessage(
                 role="invalid_role",  # Must be user/assistant/system/tool
-                content="Test message"
+                content="Test message",
             )
 
 
 class TestRouteDecision:
     """Test RouteDecision model validation."""
-    
-    def test_valid_decision_creation(self):
+
+    def test_valid_decision_creation(self) -> None:
         """Test creating valid route decision."""
         decision = RouteDecision(
             route="compliance_analyzer",
@@ -266,15 +270,15 @@ class TestRouteDecision:
             reasoning="High confidence match for compliance analysis keywords",
             method="rules",
             input_text="Analyze my business for GDPR compliance",
-            company_id=uuid4()
+            company_id=uuid4(),
         )
-        
+
         assert decision.route == "compliance_analyzer"
         assert decision.confidence == 0.95
         assert decision.method == "rules"
         assert decision.timestamp is not None
-        
-    def test_confidence_range_validation(self):
+
+    def test_confidence_range_validation(self) -> None:
         """Test confidence must be between 0 and 1."""
         with pytest.raises(ValidationError, match="greater than or equal to 0"):
             RouteDecision(
@@ -283,47 +287,50 @@ class TestRouteDecision:
                 reasoning="Test reasoning",
                 method="rules",
                 input_text="Test input",
-                company_id=uuid4()
+                company_id=uuid4(),
             )
 
 
 class TestJSONSchemaExport:
     """Test JSON schema export functionality."""
-    
-    def test_all_schemas_exportable(self):
+
+    def test_all_schemas_exportable(self) -> None:
         """Test all models export valid JSON schemas."""
         schemas = get_model_schemas()
-        
+
         required_models = [
-            "ComplianceProfile", "Obligation", "EvidenceItem", 
-            "LegalReviewTicket", "SafeFallbackResponse"
+            "ComplianceProfile",
+            "Obligation",
+            "EvidenceItem",
+            "LegalReviewTicket",
+            "SafeFallbackResponse",
         ]
-        
+
         for model_name in required_models:
             assert model_name in schemas
             schema = schemas[model_name]
             assert "properties" in schema
             assert "type" in schema
             assert schema["type"] == "object"
-            
-    def test_safe_fallback_schema(self):
+
+    def test_safe_fallback_schema(self) -> None:
         """Test SafeFallbackResponse schema export."""
         schema = get_safe_fallback_schema()
-        
+
         assert schema["type"] == "object"
         assert "status" in schema["properties"]
         assert "error_message" in schema["properties"]
         assert "error_details" in schema["properties"]
-        
+
         # Verify status has pattern constraint
         status_prop = schema["properties"]["status"]
         assert "pattern" in status_prop
         assert status_prop["pattern"] == "^needs_review$"
-        
-    def test_schemas_are_json_serializable(self):
+
+    def test_schemas_are_json_serializable(self) -> None:
         """Test all schemas can be JSON serialized."""
         schemas = get_model_schemas()
-        
+
         try:
             json_str = json.dumps(schemas)
             parsed = json.loads(json_str)

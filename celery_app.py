@@ -43,28 +43,28 @@ celery_app.conf.update(
     worker_send_task_events=True,
     task_send_sent_event=True,
     # Rate limiting and backoff configuration
-    task_default_rate_limit='10/m',  # 10 tasks per minute default
+    task_default_rate_limit="10/m",  # 10 tasks per minute default
     task_annotations={
-        '*': {
-            'rate_limit': '10/m',
-            'retry_kwargs': {
-                'max_retries': 5,
-                'countdown': 60,  # Wait 60 seconds between retries
+        "*": {
+            "rate_limit": "10/m",
+            "retry_kwargs": {
+                "max_retries": 5,
+                "countdown": 60,  # Wait 60 seconds between retries
             },
-            'retry_backoff': True,
-            'retry_backoff_max': 600,  # Max 10 minutes backoff
-            'retry_jitter': True,  # Add randomness to avoid thundering herd
+            "retry_backoff": True,
+            "retry_backoff_max": 600,  # Max 10 minutes backoff
+            "retry_jitter": True,  # Add randomness to avoid thundering herd
         },
         # Specific rate limits for different task types
-        'workers.evidence_tasks.*': {'rate_limit': '5/m'},
-        'workers.compliance_tasks.*': {'rate_limit': '3/m'},
-        'workers.notification_tasks.*': {'rate_limit': '20/m'},
-        'workers.reporting_tasks.*': {'rate_limit': '2/m'},
+        "workers.evidence_tasks.*": {"rate_limit": "5/m"},
+        "workers.compliance_tasks.*": {"rate_limit": "3/m"},
+        "workers.notification_tasks.*": {"rate_limit": "20/m"},
+        "workers.reporting_tasks.*": {"rate_limit": "2/m"},
     },
     # Additional worker settings for stability
     worker_disable_rate_limits=False,
-    worker_log_format='[%(asctime)s: %(levelname)s/%(processName)s] %(message)s',
-    worker_task_log_format='[%(asctime)s: %(levelname)s/%(processName)s][%(task_name)s(%(task_id)s)] %(message)s',
+    worker_log_format="[%(asctime)s: %(levelname)s/%(processName)s] %(message)s",
+    worker_task_log_format="[%(asctime)s: %(levelname)s/%(processName)s][%(task_name)s(%(task_id)s)] %(message)s",
 )
 
 # Define the schedule for periodic tasks using Celery Beat
@@ -162,8 +162,10 @@ celery_app.conf.task_send_sent_event = True
 
 # Safe task discovery to handle import errors gracefully
 import logging
+
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+
 
 def safe_autodiscover() -> None:
     """Safely discover tasks with error handling to prevent startup failures."""
@@ -195,9 +197,11 @@ def safe_autodiscover() -> None:
     except Exception as e:
         logger.error(f"Failed to autodiscover tasks: {e}")
         import traceback
+
         traceback.print_exc()
         # Don't fail completely, continue with manually imported tasks
         logger.warning("Continuing with manually imported task modules")
+
 
 # Run safe autodiscovery
 safe_autodiscover()

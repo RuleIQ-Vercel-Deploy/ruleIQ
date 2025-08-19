@@ -276,7 +276,7 @@ class GoogleCachedContentManager:
     def _generate_cache_key(self, content_type: str, *identifiers: str) -> str:
         """Generate a unique cache key."""
         key_data = f"{content_type}:{'|'.join(identifiers)}"
-        return hashlib.md5(key_data.encode()).hexdigest()
+        return hashlib.sha256(key_data.encode()).hexdigest()
 
     def _prepare_assessment_content(
         self,

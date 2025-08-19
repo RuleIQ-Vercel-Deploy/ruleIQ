@@ -44,7 +44,7 @@ export function useMutationWithToast<TData = unknown, TError = unknown, TVariabl
         });
       }
     },
-    onSuccess: (data, _variables) => {
+    onSuccess: (data, variables) => {
       // Show success toast
       const message = typeof successMessage === 'function' ? successMessage(data) : successMessage;
 

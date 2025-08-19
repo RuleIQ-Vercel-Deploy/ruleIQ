@@ -148,12 +148,13 @@ export function useDeleteAssessment(options?: BaseMutationOptions<void, unknown,
 
 // Hook to start quick assessment
 export function useStartQuickAssessment(
-  options?: BaseMutationOptions<Assessment, unknown, { framework_id: string }>,
+  options?: BaseMutationOptions<Assessment, unknown, { business_profile_id: string; framework_id: string }>,
 ) {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ framework_id }) => assessmentService.startQuickAssessment(framework_id),
+    mutationFn: ({ business_profile_id, framework_id }) => 
+      assessmentService.startQuickAssessment(business_profile_id, framework_id),
     onSuccess: () => {
       // Invalidate assessments list
       queryClient.invalidateQueries({ queryKey: assessmentKeys.lists() });

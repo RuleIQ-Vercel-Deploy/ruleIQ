@@ -48,25 +48,26 @@ async def create_conversation(
     """Create a new chat conversation with optimized database queries."""
     try:
         from sqlalchemy import func, select
-        from sqlalchemy.orm import selectinload
 
         # Optimized: Single query to get both business profile and conversation count
         user_id_str = str(current_user.id)
-        
+
         # Use a single query with subquery for better performance
         profile_stmt = select(BusinessProfile).where(BusinessProfile.user_id == user_id_str)
-        count_stmt = select(func.count(ChatConversation.id)).where(ChatConversation.user_id == user_id_str)
-        
+        count_stmt = select(func.count(ChatConversation.id)).where(
+            ChatConversation.user_id == user_id_str
+        )
+
         # Execute both queries concurrently
         profile_task = asyncio.create_task(db.execute(profile_stmt))
         count_task = asyncio.create_task(db.execute(count_stmt))
-        
+
         try:
             profile_result, count_result = await asyncio.gather(profile_task, count_task)
         except Exception as e:
             logger.error(f"Database query failed: {e}")
             raise HTTPException(status_code=500, detail="Database query failed")
-        
+
         business_profile = profile_result.scalars().first()
         conversation_count = count_result.scalar() or 0
 
@@ -106,7 +107,7 @@ async def create_conversation(
 
                 # Generate assistant response with enhanced error handling and timeout
                 logger.info(f"Processing initial message for conversation {conversation.id}")
-                
+
                 # Use asyncio timeout to prevent hanging
                 try:
                     response_task = asyncio.create_task(
@@ -117,10 +118,10 @@ async def create_conversation(
                             business_profile_id=business_profile.id,
                         )
                     )
-                    
+
                     # Aggressive timeout for conversation creation
                     response_text, metadata = await asyncio.wait_for(response_task, timeout=12.0)
-                    
+
                 except asyncio.TimeoutError:
                     logger.warning(f"AI processing timed out for conversation {conversation.id}")
                     # Use fallback response
@@ -128,18 +129,18 @@ async def create_conversation(
 
 I'm here to help with compliance questions about GDPR, ISO 27001, and other frameworks. Please feel free to ask specific questions about:
 • Data protection requirements
-• Security controls and policies  
+• Security controls and policies
 • Risk assessments
 • Audit preparations
 
 What specific compliance topic would you like to explore?"""
-                    
+
                     metadata = {
                         "timestamp": datetime.utcnow().isoformat(),
                         "fallback_used": True,
                         "timeout_occurred": True,
                         "intent": "general",
-                        "processing_time_ms": 12000
+                        "processing_time_ms": 12000,
                     }
 
                 # Add assistant message
@@ -155,7 +156,10 @@ What specific compliance topic would you like to explore?"""
                 messages = [user_message, assistant_message]
 
             except Exception as ai_error:
-                logger.error(f"AI processing failed for conversation {conversation.id}: {ai_error}", exc_info=True)
+                logger.error(
+                    f"AI processing failed for conversation {conversation.id}: {ai_error}",
+                    exc_info=True,
+                )
 
                 # Still add the user message but provide a fallback response
                 user_message = ChatMessage(
@@ -185,7 +189,7 @@ What specific compliance area can I assist you with?"""
                         "timestamp": datetime.utcnow().isoformat(),
                         "fallback_used": True,
                         "ai_error": str(ai_error),
-                        "intent": "fallback"
+                        "intent": "fallback",
                     },
                     sequence_number=2,
                 )
@@ -301,7 +305,8 @@ async def get_conversation(
         conversation = (
             db.query(ChatConversation)
             .filter(
-                ChatConversation["id"] == conversation_id, ChatConversation.user_id == str(current_user.id)
+                ChatConversation.id == conversation_id,
+                ChatConversation.user_id == str(current_user.id),
             )
             .first()
         )
@@ -356,7 +361,9 @@ async def send_message(
             raise HTTPException(status_code=404, detail="Conversation not found or inactive")
 
         # Get business profile
-        bp_stmt = select(BusinessProfile).where(BusinessProfile.user_id == str(str(current_user.id)))
+        bp_stmt = select(BusinessProfile).where(
+            BusinessProfile.user_id == str(str(current_user.id))
+        )
         bp_result = await db.execute(bp_stmt)
         business_profile = bp_result.scalars().first()
 
@@ -431,7 +438,8 @@ async def delete_conversation(
         conversation = (
             db.query(ChatConversation)
             .filter(
-                ChatConversation["id"] == conversation_id, ChatConversation.user_id == str(current_user.id)
+                ChatConversation.id == conversation_id,
+                ChatConversation.user_id == str(current_user.id),
             )
             .first()
         )
@@ -951,7 +959,9 @@ async def get_system_alerts(
 
 
 @router.post("/analytics/alerts/{alert_id}/resolve")
-async def resolve_system_alert(alert_id: str, current_user: User = Depends(get_current_active_user)):
+async def resolve_system_alert(
+    alert_id: str, current_user: User = Depends(get_current_active_user)
+):
     """
     Mark a system alert as resolved.
     """
@@ -1054,7 +1064,9 @@ async def create_smart_evidence_plan(
 
 
 @router.get("/smart-evidence/plan/{plan_id}")
-async def get_smart_evidence_plan(plan_id: str, current_user: User = Depends(get_current_active_user)):
+async def get_smart_evidence_plan(
+    plan_id: str, current_user: User = Depends(get_current_active_user)
+):
     """
     Get details of a smart evidence collection plan.
     """
@@ -1251,7 +1263,10 @@ async def submit_quality_feedback(
             feedback_type=feedback_type_enum,
             rating=rating,
             text_feedback=text_feedback,
-            metadata={"user_email": current_user.get("primaryEmail", current_user.get("email", "")), "submitted_via": "api"},
+            metadata={
+                "user_email": current_user.get("primaryEmail", current_user.get("email", "")),
+                "submitted_via": "api",
+            },
         )
 
         monitor = await get_quality_monitor()
@@ -1273,7 +1288,9 @@ async def submit_quality_feedback(
 
 
 @router.get("/quality/assessment/{response_id}")
-async def get_quality_assessment(response_id: str, current_user: User = Depends(get_current_active_user)):
+async def get_quality_assessment(
+    response_id: str, current_user: User = Depends(get_current_active_user)
+):
     """
     Get detailed quality assessment for a specific AI response.
     """

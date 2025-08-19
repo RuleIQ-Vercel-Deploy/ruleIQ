@@ -107,6 +107,7 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     # Cleanup IQ agent resources if needed
     try:
         from api.routers.iq_agent import cleanup_iq_agent
+
         await cleanup_iq_agent()
         logger.info("IQ agent resources cleaned up")
     except Exception as e:

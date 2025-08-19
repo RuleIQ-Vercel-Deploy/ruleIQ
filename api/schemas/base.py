@@ -18,6 +18,7 @@ class BaseSchema(BaseModel):
         from_attributes = True
         json_encoders = {datetime: lambda v: v.isoformat(), UUID: lambda v: str(v)}
 
+
 from typing import TypeVar, Generic
 
 T = TypeVar("T")

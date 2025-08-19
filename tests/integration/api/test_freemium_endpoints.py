@@ -3,7 +3,7 @@ Comprehensive tests for AI Assessment Freemium Strategy API endpoints.
 
 Tests all freemium-related endpoints:
 - POST /api/v1/freemium/capture-email
-- POST /api/v1/freemium/start-assessment  
+- POST /api/v1/freemium/start-assessment
 - POST /api/v1/freemium/answer-question
 - GET /api/v1/freemium/results/{token}
 - POST /api/v1/freemium/track-conversion
@@ -44,7 +44,7 @@ class TestFreemiumEmailCapture:
             "utm_term": "gdpr_compliance",
             "utm_content": "cta_button",
             "consent_marketing": True,
-            "consent_terms": True
+            "consent_terms": True,
         }
 
         response = await async_client.post("/api/v1/freemium/capture-email", json=payload)
@@ -68,7 +68,7 @@ class TestFreemiumEmailCapture:
         payload = {
             "email": "invalid-email-format",
             "consent_marketing": True,
-            "consent_terms": True
+            "consent_terms": True,
         }
 
         response = await async_client.post("/api/v1/freemium/capture-email", json=payload)
@@ -81,11 +81,7 @@ class TestFreemiumEmailCapture:
     @async_test
     async def test_capture_email_missing_consent(self, async_client: AsyncClient):
         """Test email capture without required consent."""
-        payload = {
-            "email": "test@example.com",
-            "consent_marketing": False,
-            "consent_terms": False
-        }
+        payload = {"email": "test@example.com", "consent_marketing": False, "consent_terms": False}
 
         response = await async_client.post("/api/v1/freemium/capture-email", json=payload)
 
@@ -99,7 +95,7 @@ class TestFreemiumEmailCapture:
         payload = {
             "email": "duplicate@example.com",
             "consent_marketing": True,
-            "consent_terms": True
+            "consent_terms": True,
         }
 
         # First capture
@@ -120,7 +116,7 @@ class TestFreemiumEmailCapture:
         payload = {
             "email": "ratelimit@example.com",
             "consent_marketing": True,
-            "consent_terms": True
+            "consent_terms": True,
         }
 
         # Make multiple rapid requests
@@ -142,7 +138,7 @@ class TestFreemiumEmailCapture:
         payload = {
             "email": "performance@example.com",
             "consent_marketing": True,
-            "consent_terms": True
+            "consent_terms": True,
         }
 
         start_time = time.time()
@@ -161,14 +157,16 @@ class TestFreemiumAssessmentStart:
         """Test successful assessment session start."""
         payload = {"token": freemium_token}
 
-        with patch('services.ai.assistant.ComplianceAssistant.generate_dynamic_question') as mock_ai:
+        with patch(
+            "services.ai.assistant.ComplianceAssistant.generate_dynamic_question"
+        ) as mock_ai:
             mock_ai.return_value = {
                 "question_id": "q1_business_type",
                 "question_text": "What type of business do you operate?",
-                "question_type": "multiple_choice", 
+                "question_type": "multiple_choice",
                 "options": ["E-commerce", "SaaS", "Healthcare", "Financial Services", "Other"],
                 "help_text": "Select the category that best describes your primary business model.",
-                "validation_rules": {"required": True}
+                "validation_rules": {"required": True},
             }
 
             response = await async_client.post("/api/v1/freemium/start-assessment", json=payload)
@@ -194,13 +192,12 @@ class TestFreemiumAssessmentStart:
         data = response.json()
         assert data["detail"] == "Invalid or expired token"
 
-    @async_test 
+    @async_test
     async def test_start_assessment_expired_token(self, async_client: AsyncClient):
         """Test assessment start with expired token."""
         # Create expired token
         expired_token = create_freemium_token(
-            email="expired@example.com",
-            expires_delta=timedelta(seconds=-1)
+            email="expired@example.com", expires_delta=timedelta(seconds=-1)
         )
 
         payload = {"token": expired_token}
@@ -212,11 +209,15 @@ class TestFreemiumAssessmentStart:
         assert data["detail"] == "Invalid or expired token"
 
     @async_test
-    async def test_start_assessment_ai_service_error(self, async_client: AsyncClient, freemium_token):
+    async def test_start_assessment_ai_service_error(
+        self, async_client: AsyncClient, freemium_token
+    ):
         """Test assessment start when AI service fails."""
         payload = {"token": freemium_token}
 
-        with patch('services.ai.assistant.ComplianceAssistant.generate_dynamic_question') as mock_ai:
+        with patch(
+            "services.ai.assistant.ComplianceAssistant.generate_dynamic_question"
+        ) as mock_ai:
             mock_ai.side_effect = CircuitBreakerError("AI service unavailable")
 
             response = await async_client.post("/api/v1/freemium/start-assessment", json=payload)
@@ -226,7 +227,9 @@ class TestFreemiumAssessmentStart:
             assert "AI service temporarily unavailable" in data["detail"]
 
     @async_test
-    async def test_start_assessment_resume_existing(self, async_client: AsyncClient, freemium_token, db_session):
+    async def test_start_assessment_resume_existing(
+        self, async_client: AsyncClient, freemium_token, db_session
+    ):
         """Test resuming existing assessment session."""
         # Create existing session in database
         token_data = verify_freemium_token(freemium_token)
@@ -236,21 +239,23 @@ class TestFreemiumAssessmentStart:
             current_question_id="q2_employee_count",
             progress=25,
             responses={"q1_business_type": "SaaS"},
-            status="in_progress"
+            status="in_progress",
         )
         db_session.add(existing_session)
         await db_session.commit()
 
         payload = {"token": freemium_token}
 
-        with patch('services.ai.assistant.ComplianceAssistant.generate_dynamic_question') as mock_ai:
+        with patch(
+            "services.ai.assistant.ComplianceAssistant.generate_dynamic_question"
+        ) as mock_ai:
             mock_ai.return_value = {
                 "question_id": "q2_employee_count",
                 "question_text": "How many employees do you have?",
                 "question_type": "multiple_choice",
                 "options": ["1-10", "11-50", "51-200", "200+"],
                 "help_text": "Include full-time, part-time, and contractors.",
-                "validation_rules": {"required": True}
+                "validation_rules": {"required": True},
             }
 
             response = await async_client.post("/api/v1/freemium/start-assessment", json=payload)
@@ -273,20 +278,17 @@ class TestFreemiumAnswerQuestion:
             "token": freemium_session["token"],
             "question_id": "q1_business_type",
             "answer": "SaaS",
-            "answer_metadata": {
-                "confidence": 0.9,
-                "time_spent": 15.5
-            }
+            "answer_metadata": {"confidence": 0.9, "time_spent": 15.5},
         }
 
-        with patch('services.ai.assistant.ComplianceAssistant.generate_next_question') as mock_ai:
+        with patch("services.ai.assistant.ComplianceAssistant.generate_next_question") as mock_ai:
             mock_ai.return_value = {
                 "question_id": "q2_employee_count",
                 "question_text": "How many employees do you have?",
                 "question_type": "multiple_choice",
                 "options": ["1-10", "11-50", "51-200", "200+"],
                 "progress": 20,
-                "assessment_complete": False
+                "assessment_complete": False,
             }
 
             response = await async_client.post("/api/v1/freemium/answer-question", json=payload)
@@ -299,12 +301,14 @@ class TestFreemiumAnswerQuestion:
             assert data["assessment_complete"] is False
 
     @async_test
-    async def test_answer_question_invalid_question_id(self, async_client: AsyncClient, freemium_session):
+    async def test_answer_question_invalid_question_id(
+        self, async_client: AsyncClient, freemium_session
+    ):
         """Test answer submission with wrong question ID."""
         payload = {
             "token": freemium_session["token"],
             "question_id": "wrong_question_id",
-            "answer": "SaaS"
+            "answer": "SaaS",
         }
 
         response = await async_client.post("/api/v1/freemium/answer-question", json=payload)
@@ -314,19 +318,21 @@ class TestFreemiumAnswerQuestion:
         assert "Invalid question ID" in data["detail"]
 
     @async_test
-    async def test_answer_question_assessment_complete(self, async_client: AsyncClient, freemium_session):
+    async def test_answer_question_assessment_complete(
+        self, async_client: AsyncClient, freemium_session
+    ):
         """Test final answer that completes assessment."""
         payload = {
             "token": freemium_session["token"],
             "question_id": "q5_compliance_goals",
-            "answer": "GDPR and ISO 27001"
+            "answer": "GDPR and ISO 27001",
         }
 
-        with patch('services.ai.assistant.ComplianceAssistant.generate_next_question') as mock_ai:
+        with patch("services.ai.assistant.ComplianceAssistant.generate_next_question") as mock_ai:
             mock_ai.return_value = {
                 "assessment_complete": True,
                 "redirect_to_results": True,
-                "progress": 100
+                "progress": 100,
             }
 
             response = await async_client.post("/api/v1/freemium/answer-question", json=payload)
@@ -339,12 +345,14 @@ class TestFreemiumAnswerQuestion:
             assert data["progress"] == 100
 
     @async_test
-    async def test_answer_question_validation_error(self, async_client: AsyncClient, freemium_session):
+    async def test_answer_question_validation_error(
+        self, async_client: AsyncClient, freemium_session
+    ):
         """Test answer submission with validation errors."""
         payload = {
             "token": freemium_session["token"],
             "question_id": "q1_business_type",
-            "answer": ""  # Empty answer
+            "answer": "",  # Empty answer
         }
 
         response = await async_client.post("/api/v1/freemium/answer-question", json=payload)
@@ -354,15 +362,17 @@ class TestFreemiumAnswerQuestion:
         assert "Answer is required" in data["detail"]
 
     @async_test
-    async def test_answer_question_ai_error_fallback(self, async_client: AsyncClient, freemium_session):
+    async def test_answer_question_ai_error_fallback(
+        self, async_client: AsyncClient, freemium_session
+    ):
         """Test fallback behavior when AI service fails."""
         payload = {
             "token": freemium_session["token"],
             "question_id": "q1_business_type",
-            "answer": "SaaS"
+            "answer": "SaaS",
         }
 
-        with patch('services.ai.assistant.ComplianceAssistant.generate_next_question') as mock_ai:
+        with patch("services.ai.assistant.ComplianceAssistant.generate_next_question") as mock_ai:
             mock_ai.side_effect = CircuitBreakerError("AI service down")
 
             # Should use fallback static questions
@@ -383,7 +393,9 @@ class TestFreemiumResults:
         """Test successful results retrieval."""
         token = completed_freemium_session["token"]
 
-        with patch('services.ai.assistant.ComplianceAssistant.analyze_freemium_responses') as mock_ai:
+        with patch(
+            "services.ai.assistant.ComplianceAssistant.analyze_freemium_responses"
+        ) as mock_ai:
             mock_ai.return_value = {
                 "compliance_gaps": [
                     {
@@ -391,15 +403,15 @@ class TestFreemiumResults:
                         "severity": "high",
                         "gap_description": "Missing data processing records",
                         "impact_score": 8.5,
-                        "remediation_effort": "medium"
+                        "remediation_effort": "medium",
                     },
                     {
                         "framework": "ISO 27001",
-                        "severity": "medium", 
+                        "severity": "medium",
                         "gap_description": "Incomplete risk assessment documentation",
                         "impact_score": 6.2,
-                        "remediation_effort": "low"
-                    }
+                        "remediation_effort": "low",
+                    },
                 ],
                 "risk_score": 7.3,
                 "risk_level": "high",
@@ -407,12 +419,12 @@ class TestFreemiumResults:
                 "recommendations": [
                     "Implement comprehensive data mapping",
                     "Establish formal risk management processes",
-                    "Create incident response procedures"
+                    "Create incident response procedures",
                 ],
                 "priority_actions": [
                     "Complete GDPR Article 30 documentation",
-                    "Conduct privacy impact assessments"
-                ]
+                    "Conduct privacy impact assessments",
+                ],
             }
 
             response = await async_client.get(f"/api/v1/freemium/results/{token}")
@@ -438,7 +450,9 @@ class TestFreemiumResults:
         assert data["detail"] == "Invalid or expired token"
 
     @async_test
-    async def test_get_results_incomplete_assessment(self, async_client: AsyncClient, freemium_session):
+    async def test_get_results_incomplete_assessment(
+        self, async_client: AsyncClient, freemium_session
+    ):
         """Test results retrieval for incomplete assessment."""
         token = freemium_session["token"]
 
@@ -453,7 +467,9 @@ class TestFreemiumResults:
         """Test results caching for performance."""
         token = completed_freemium_session["token"]
 
-        with patch('services.ai.assistant.ComplianceAssistant.analyze_freemium_responses') as mock_ai:
+        with patch(
+            "services.ai.assistant.ComplianceAssistant.analyze_freemium_responses"
+        ) as mock_ai:
             mock_ai.return_value = {"risk_score": 7.5, "compliance_gaps": []}
 
             # First request - should call AI
@@ -470,13 +486,17 @@ class TestFreemiumResults:
             assert response1.json() == response2.json()
 
     @async_test
-    async def test_get_results_performance(self, async_client: AsyncClient, completed_freemium_session):
+    async def test_get_results_performance(
+        self, async_client: AsyncClient, completed_freemium_session
+    ):
         """Test results endpoint performance."""
         import time
 
         token = completed_freemium_session["token"]
 
-        with patch('services.ai.assistant.ComplianceAssistant.analyze_freemium_responses') as mock_ai:
+        with patch(
+            "services.ai.assistant.ComplianceAssistant.analyze_freemium_responses"
+        ) as mock_ai:
             mock_ai.return_value = {"risk_score": 5.0, "compliance_gaps": []}
 
             start_time = time.time()
@@ -491,7 +511,9 @@ class TestFreemiumConversionTracking:
     """Test conversion event tracking endpoint."""
 
     @async_test
-    async def test_track_conversion_success(self, async_client: AsyncClient, completed_freemium_session):
+    async def test_track_conversion_success(
+        self, async_client: AsyncClient, completed_freemium_session
+    ):
         """Test successful conversion tracking."""
         payload = {
             "token": completed_freemium_session["token"],
@@ -500,11 +522,7 @@ class TestFreemiumConversionTracking:
             "conversion_value": 30,
             "page_url": "/freemium/results",
             "user_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)",
-            "metadata": {
-                "time_on_page": 45.2,
-                "scroll_depth": 0.8,
-                "results_viewed": True
-            }
+            "metadata": {"time_on_page": 45.2, "scroll_depth": 0.8, "results_viewed": True},
         }
 
         response = await async_client.post("/api/v1/freemium/track-conversion", json=payload)
@@ -516,13 +534,15 @@ class TestFreemiumConversionTracking:
         assert data["message"] == "Conversion event tracked successfully"
 
     @async_test
-    async def test_track_conversion_duplicate_event(self, async_client: AsyncClient, completed_freemium_session):
+    async def test_track_conversion_duplicate_event(
+        self, async_client: AsyncClient, completed_freemium_session
+    ):
         """Test duplicate conversion event tracking."""
         payload = {
             "token": completed_freemium_session["token"],
             "event_type": "cta_click",
             "cta_text": "Get Compliant Now - 30% Off",
-            "conversion_value": 30
+            "conversion_value": 30,
         }
 
         # First tracking
@@ -538,12 +558,14 @@ class TestFreemiumConversionTracking:
         assert data2["message"] == "Event already tracked"
 
     @async_test
-    async def test_track_conversion_invalid_event_type(self, async_client: AsyncClient, completed_freemium_session):
+    async def test_track_conversion_invalid_event_type(
+        self, async_client: AsyncClient, completed_freemium_session
+    ):
         """Test conversion tracking with invalid event type."""
         payload = {
             "token": completed_freemium_session["token"],
             "event_type": "invalid_event",
-            "conversion_value": 30
+            "conversion_value": 30,
         }
 
         response = await async_client.post("/api/v1/freemium/track-conversion", json=payload)
@@ -562,7 +584,7 @@ class TestFreemiumSecurityAndValidation:
         payload = {
             "email": "test'; DROP TABLE freemium_sessions; --@example.com",
             "consent_marketing": True,
-            "consent_terms": True
+            "consent_terms": True,
         }
 
         response = await async_client.post("/api/v1/freemium/capture-email", json=payload)
@@ -576,7 +598,7 @@ class TestFreemiumSecurityAndValidation:
         payload = {
             "token": freemium_session["token"],
             "question_id": "q1_business_type",
-            "answer": "<script>alert('xss')</script>SaaS"
+            "answer": "<script>alert('xss')</script>SaaS",
         }
 
         response = await async_client.post("/api/v1/freemium/answer-question", json=payload)
@@ -592,7 +614,7 @@ class TestFreemiumSecurityAndValidation:
         payload = {
             "token": freemium_session["token"],
             "question_id": "q1_business_type",
-            "answer": large_answer
+            "answer": large_answer,
         }
 
         response = await async_client.post("/api/v1/freemium/answer-question", json=payload)
@@ -604,8 +626,7 @@ class TestFreemiumSecurityAndValidation:
         """Test that expired tokens are properly rejected."""
         # Create token that expires in 1 second
         token = create_freemium_token(
-            email="expiry@example.com",
-            expires_delta=timedelta(seconds=1)
+            email="expiry@example.com", expires_delta=timedelta(seconds=1)
         )
 
         # Wait for expiration
@@ -623,9 +644,7 @@ class TestFreemiumSecurityAndValidation:
 async def freemium_token():
     """Create a valid freemium token for testing."""
     return create_freemium_token(
-        email="test@example.com",
-        utm_source="google",
-        utm_campaign="compliance_test"
+        email="test@example.com", utm_source="google", utm_campaign="compliance_test"
     )
 
 
@@ -641,15 +660,12 @@ async def freemium_session(freemium_token, db_session):
         responses={},
         status="in_progress",
         utm_source=token_data.get("utm_source"),
-        utm_campaign=token_data.get("utm_campaign")
+        utm_campaign=token_data.get("utm_campaign"),
     )
     db_session.add(session)
     await db_session.commit()
 
-    return {
-        "token": freemium_token,
-        "session": session
-    }
+    return {"token": freemium_token, "session": session}
 
 
 @pytest.fixture
@@ -663,7 +679,7 @@ async def completed_freemium_session(freemium_session, db_session):
         "q2_employee_count": "11-50",
         "q3_data_handling": "Customer personal data",
         "q4_current_compliance": "GDPR partially",
-        "q5_compliance_goals": "Full GDPR and ISO 27001"
+        "q5_compliance_goals": "Full GDPR and ISO 27001",
     }
     session.completed_at = datetime.utcnow()
 

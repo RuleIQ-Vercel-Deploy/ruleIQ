@@ -2,6 +2,7 @@
 LeadScoringEvent model for tracking behavioral analytics and lead scoring.
 Records user interactions and assigns scoring impact for lead qualification.
 """
+
 import uuid
 from datetime import datetime
 from sqlalchemy import (
@@ -21,15 +22,16 @@ class LeadScoringEvent(Base):
     Model for tracking lead scoring events and behavioral analytics.
     Records user interactions with scoring impact for lead qualification pipeline.
     """
+
     __tablename__ = "lead_scoring_events"
 
     # Primary identifier
     id = Column(PG_UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     lead_id = Column(
-        PG_UUID(as_uuid=True), 
-        ForeignKey("assessment_leads.id", ondelete="CASCADE"), 
-        nullable=False, 
-        index=True
+        PG_UUID(as_uuid=True),
+        ForeignKey("assessment_leads.id", ondelete="CASCADE"),
+        nullable=False,
+        index=True,
     )
 
     # Event classification
@@ -108,10 +110,7 @@ class LeadScoringEvent(Base):
 
     @classmethod
     def create_assessment_start_event(
-        cls, 
-        lead_id: uuid.UUID, 
-        session_id: str = None, 
-        metadata: dict = None
+        cls, lead_id: uuid.UUID, session_id: str = None, metadata: dict = None
     ):
         """Factory method for assessment start events."""
         return cls(
@@ -121,16 +120,12 @@ class LeadScoringEvent(Base):
             event_action="started_assessment",
             score_impact=10,
             session_id=session_id,
-            event_metadata=metadata or {}
+            event_metadata=metadata or {},
         )
 
     @classmethod
     def create_question_answered_event(
-        cls, 
-        lead_id: uuid.UUID, 
-        question_type: str, 
-        score_impact: int = 5, 
-        metadata: dict = None
+        cls, lead_id: uuid.UUID, question_type: str, score_impact: int = 5, metadata: dict = None
     ):
         """Factory method for question answered events."""
         return cls(
@@ -139,15 +134,12 @@ class LeadScoringEvent(Base):
             event_category="assessment",
             event_action=f"answered_{question_type}_question",
             score_impact=score_impact,
-            event_metadata=metadata or {}
+            event_metadata=metadata or {},
         )
 
     @classmethod
     def create_assessment_completed_event(
-        cls, 
-        lead_id: uuid.UUID, 
-        completion_rate: float, 
-        metadata: dict = None
+        cls, lead_id: uuid.UUID, completion_rate: float, metadata: dict = None
     ):
         """Factory method for assessment completion events."""
         # Higher score for complete assessments
@@ -159,10 +151,7 @@ class LeadScoringEvent(Base):
             event_category="conversion",
             event_action="completed_assessment",
             score_impact=score_impact,
-            event_metadata={
-                "completion_rate": completion_rate,
-                **(metadata or {})
-            }
+            event_metadata={"completion_rate": completion_rate, **(metadata or {})},
         )
 
     def __repr__(self) -> str:

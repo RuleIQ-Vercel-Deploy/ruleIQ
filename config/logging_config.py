@@ -114,7 +114,9 @@ class ComplianceLogger:
     def __init__(self, name: str) -> None:
         self.logger = logging.getLogger(name)
 
-    def log_user_action(self, user_id: str, action: str, details: Optional[Dict[str, Any]] = None) -> None:
+    def log_user_action(
+        self, user_id: str, action: str, details: Optional[Dict[str, Any]] = None
+    ) -> None:
         """Log user actions for audit purposes."""
         self.logger.info(
             f"User action: {action}",
@@ -140,7 +142,9 @@ class ComplianceLogger:
             },
         )
 
-    def log_ai_interaction(self, model: str, prompt_type: str, tokens_used: Optional[int] = None) -> None:
+    def log_ai_interaction(
+        self, model: str, prompt_type: str, tokens_used: Optional[int] = None
+    ) -> None:
         """Log AI model interactions."""
         self.logger.info(
             f"AI interaction with {model}",

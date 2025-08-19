@@ -253,7 +253,8 @@ def check_for_malicious_content(file_content: bytes, filename: str) -> bool:
                 if re.search(pattern, text_content, re.IGNORECASE):
                     logger.warning(f"Suspicious pattern found in {filename}")
                     return False
-        except:
+        except Exception as e:
+            logger.debug(f"Failed to analyze text content for suspicious patterns: {e}")
             pass
 
     return True

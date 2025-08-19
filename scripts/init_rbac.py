@@ -30,42 +30,74 @@ def assign_permissions_to_roles(db_session) -> None:
     role_permissions = {
         "admin": [
             # Admin has all permissions
-            "user_create", "user_update", "user_delete", "user_list",
-            "framework_create", "framework_update", "framework_delete", "framework_list",
-            "assessment_create", "assessment_update", "assessment_delete", "assessment_list",
-            "policy_generate", "policy_refine", "policy_validate",
-            "report_view", "report_export", "report_schedule",
-            "admin_roles", "admin_permissions", "admin_audit"
+            "user_create",
+            "user_update",
+            "user_delete",
+            "user_list",
+            "framework_create",
+            "framework_update",
+            "framework_delete",
+            "framework_list",
+            "assessment_create",
+            "assessment_update",
+            "assessment_delete",
+            "assessment_list",
+            "policy_generate",
+            "policy_refine",
+            "policy_validate",
+            "report_view",
+            "report_export",
+            "report_schedule",
+            "admin_roles",
+            "admin_permissions",
+            "admin_audit",
         ],
         "framework_manager": [
             # Framework managers can manage frameworks and policies
-            "framework_create", "framework_update", "framework_list",
-            "policy_generate", "policy_refine", "policy_validate",
-            "report_view", "report_export",
-            "user_list"  # Can view users but not manage them
+            "framework_create",
+            "framework_update",
+            "framework_list",
+            "policy_generate",
+            "policy_refine",
+            "policy_validate",
+            "report_view",
+            "report_export",
+            "user_list",  # Can view users but not manage them
         ],
         "assessor": [
             # Assessors can manage assessments and view frameworks
             "framework_list",
-            "assessment_create", "assessment_update", "assessment_delete", "assessment_list",
-            "policy_generate", "policy_refine",  # Can generate policies for assessments
-            "report_view", "report_export"
+            "assessment_create",
+            "assessment_update",
+            "assessment_delete",
+            "assessment_list",
+            "policy_generate",
+            "policy_refine",  # Can generate policies for assessments
+            "report_view",
+            "report_export",
         ],
         "viewer": [
             # Viewers have read-only access
             "framework_list",
             "assessment_list",
-            "report_view"
+            "report_view",
         ],
         "business_user": [
             # Business users can create assessments and policies for their organization
             # FIXED: Added missing permissions for business profiles and full functionality
             "framework_list",
-            "assessment_create", "assessment_update", "assessment_list",
-            "policy_generate", "policy_refine", "policy_validate",
-            "report_view", "report_export",
-            "user_create", "user_list", "user_update"  # Added: business profile management
-        ]
+            "assessment_create",
+            "assessment_update",
+            "assessment_list",
+            "policy_generate",
+            "policy_refine",
+            "policy_validate",
+            "report_view",
+            "report_export",
+            "user_create",
+            "user_list",
+            "user_update",  # Added: business profile management
+        ],
     }
 
     # Assign permissions to roles
@@ -133,6 +165,7 @@ def main() -> bool:
     except Exception as e:
         print(f"\n❌ Error initializing RBAC system: {e}")
         import traceback
+
         traceback.print_exc()
         return False
 

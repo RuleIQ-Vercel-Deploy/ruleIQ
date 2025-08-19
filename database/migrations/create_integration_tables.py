@@ -14,7 +14,9 @@ async def create_integration_tables() -> Optional[bool]:
     """Create all integration-related tables"""
     try:
         # This function is deprecated - use 'alembic upgrade head' instead
-        logger.warning("create_integration_tables is deprecated. Use 'alembic upgrade head' instead.")
+        logger.warning(
+            "create_integration_tables is deprecated. Use 'alembic upgrade head' instead."
+        )
         return True
 
     except Exception as e:

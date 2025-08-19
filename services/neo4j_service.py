@@ -20,7 +20,7 @@ class Neo4jGraphRAGService:
     """
     Production-ready Neo4j service for compliance intelligence with GraphRAG capabilities
     """
-    
+
     def __init__(self) -> None:
         self.driver: Optional[Driver] = None
         self.uri = os.getenv("NEO4J_URI", "bolt://localhost:7687")
@@ -28,7 +28,7 @@ class Neo4jGraphRAGService:
         self.password = os.getenv("NEO4J_PASSWORD", "please_change")
         self.database = os.getenv("NEO4J_DATABASE", "neo4j")
         self.executor = ThreadPoolExecutor(max_workers=10)
-    
+
     async def initialize(self) -> bool:
         """Initialize Neo4j connection and verify schema"""
         try:
@@ -38,25 +38,26 @@ class Neo4jGraphRAGService:
                 auth=(self.username, self.password),
                 max_connection_lifetime=3600,
                 max_connection_pool_size=50,
-                connection_acquisition_timeout=60
+                connection_acquisition_timeout=60,
             )
-            
+
             # Verify connection
             if not await self._verify_connection():
                 raise Exception("Neo4j connection verification failed")
-            
+
             # Initialize schema if needed
             await self._initialize_schema()
-            
+
             logger.info("Neo4j GraphRAG service initialized successfully")
             return True
-            
+
         except Exception as e:
             logger.error(f"Failed to initialize Neo4j service: {e}")
             return False
-    
+
     async def _verify_connection(self) -> bool:
         """Verify Neo4j connection is working"""
+
         def _test_connection() -> bool:
             if self.driver is None:
                 return False
@@ -66,46 +67,51 @@ class Neo4jGraphRAGService:
                 return record is not None and record["test"] == 1
 
         try:
-            result = await asyncio.get_event_loop().run_in_executor(
-                self.executor, _test_connection
-            )
+            result = await asyncio.get_event_loop().run_in_executor(self.executor, _test_connection)
             return result
         except Exception as e:
             logger.error(f"Neo4j connection test failed: {e}")
             return False
-    
+
     async def _initialize_schema(self) -> None:
         """Initialize Neo4j schema with indexes and constraints"""
         # Node indexes for performance
         indexes = [
-            ("CREATE INDEX regulation_jurisdiction IF NOT EXISTS "
-             "FOR (r:Regulation) ON (r.jurisdiction)"),
-            ("CREATE INDEX requirement_mandatory IF NOT EXISTS "
-             "FOR (req:Requirement) ON (req.mandatory)"),
-            ("CREATE INDEX control_status IF NOT EXISTS "
-             "FOR (c:Control) ON (c.implementation_status)"),
+            (
+                "CREATE INDEX regulation_jurisdiction IF NOT EXISTS "
+                "FOR (r:Regulation) ON (r.jurisdiction)"
+            ),
+            (
+                "CREATE INDEX requirement_mandatory IF NOT EXISTS "
+                "FOR (req:Requirement) ON (req.mandatory)"
+            ),
+            (
+                "CREATE INDEX control_status IF NOT EXISTS "
+                "FOR (c:Control) ON (c.implementation_status)"
+            ),
             "CREATE INDEX risk_score IF NOT EXISTS FOR (r:Risk) ON (r.risk_score)",
             "CREATE INDEX metric_type IF NOT EXISTS FOR (m:Metric) ON (m.type)",
-            ("CREATE INDEX vendor_criticality IF NOT EXISTS "
-             "FOR (v:Vendor) ON (v.criticality)"),
-            ("CREATE INDEX milestone_timeline IF NOT EXISTS "
-             "FOR (m:Milestone) ON (m.timeline)"),
-            ("CREATE INDEX domain_priority IF NOT EXISTS "
-             "FOR (d:ComplianceDomain) ON (d.priority)")
+            ("CREATE INDEX vendor_criticality IF NOT EXISTS FOR (v:Vendor) ON (v.criticality)"),
+            ("CREATE INDEX milestone_timeline IF NOT EXISTS FOR (m:Milestone) ON (m.timeline)"),
+            ("CREATE INDEX domain_priority IF NOT EXISTS FOR (d:ComplianceDomain) ON (d.priority)"),
         ]
 
         # Unique constraints
         constraints = [
-            ("CREATE CONSTRAINT regulation_name IF NOT EXISTS "
-             "FOR (r:Regulation) REQUIRE r.name IS UNIQUE"),
-            ("CREATE CONSTRAINT requirement_id IF NOT EXISTS "
-             "FOR (req:Requirement) REQUIRE req.id IS UNIQUE"),
-            ("CREATE CONSTRAINT control_id IF NOT EXISTS "
-             "FOR (c:Control) REQUIRE c.id IS UNIQUE"),
-            ("CREATE CONSTRAINT risk_id IF NOT EXISTS "
-             "FOR (r:Risk) REQUIRE r.id IS UNIQUE"),
-            ("CREATE CONSTRAINT domain_name IF NOT EXISTS "
-             "FOR (d:ComplianceDomain) REQUIRE d.name IS UNIQUE")
+            (
+                "CREATE CONSTRAINT regulation_name IF NOT EXISTS "
+                "FOR (r:Regulation) REQUIRE r.name IS UNIQUE"
+            ),
+            (
+                "CREATE CONSTRAINT requirement_id IF NOT EXISTS "
+                "FOR (req:Requirement) REQUIRE req.id IS UNIQUE"
+            ),
+            ("CREATE CONSTRAINT control_id IF NOT EXISTS FOR (c:Control) REQUIRE c.id IS UNIQUE"),
+            ("CREATE CONSTRAINT risk_id IF NOT EXISTS FOR (r:Risk) REQUIRE r.id IS UNIQUE"),
+            (
+                "CREATE CONSTRAINT domain_name IF NOT EXISTS "
+                "FOR (d:ComplianceDomain) REQUIRE d.name IS UNIQUE"
+            ),
         ]
 
         def _create_schema() -> None:
@@ -119,7 +125,7 @@ class Neo4jGraphRAGService:
                     except ClientError as e:
                         if "already exists" not in str(e):
                             logger.warning(f"Index creation warning: {e}")
-                
+
                 # Create constraints
                 for constraint_query in constraints:
                     try:
@@ -129,19 +135,14 @@ class Neo4jGraphRAGService:
                             logger.warning(f"Constraint creation warning: {e}")
 
         try:
-            await asyncio.get_event_loop().run_in_executor(
-                self.executor, _create_schema
-            )
+            await asyncio.get_event_loop().run_in_executor(self.executor, _create_schema)
             logger.info("Neo4j schema initialized")
         except Exception as e:
             logger.error(f"Schema initialization failed: {e}")
             raise
-    
+
     async def execute_query(
-        self,
-        query: str,
-        parameters: Optional[Dict[str, Any]] = None,
-        read_only: bool = True
+        self, query: str, parameters: Optional[Dict[str, Any]] = None, read_only: bool = True
     ) -> List[Dict[str, Any]]:
         """Execute a Cypher query and return results"""
 
@@ -156,22 +157,17 @@ class Neo4jGraphRAGService:
                 return [record.data() for record in result]
 
         try:
-            result = await asyncio.get_event_loop().run_in_executor(
-                self.executor, _run_query
-            )
+            result = await asyncio.get_event_loop().run_in_executor(self.executor, _run_query)
             return result
         except Exception as e:
             logger.error(f"Query execution failed: {e}")
             logger.error(f"Query: {query}")
             logger.error(f"Parameters: {parameters}")
             raise
-    
-    async def execute_transaction(
-        self,
-        queries: List[Tuple[str, Dict[str, Any]]]
-    ) -> bool:
+
+    async def execute_transaction(self, queries: List[Tuple[str, Dict[str, Any]]]) -> bool:
         """Execute multiple queries in a transaction"""
-        
+
         def _run_transaction() -> bool:
             if self.driver is None:
                 return False
@@ -181,23 +177,21 @@ class Neo4jGraphRAGService:
                         tx.run(query, params)
                     tx.commit()
                     return True
-        
+
         try:
-            result = await asyncio.get_event_loop().run_in_executor(
-                self.executor, _run_transaction
-            )
+            result = await asyncio.get_event_loop().run_in_executor(self.executor, _run_transaction)
             return result
         except Exception as e:
             logger.error(f"Transaction failed: {e}")
             return False
-    
+
     # ============================================
     # COMPLIANCE COVERAGE ANALYSIS
     # ============================================
-    
+
     async def get_compliance_coverage(self, domain_name: Optional[str] = None) -> Dict[str, Any]:
         """Get compliance coverage analysis for a domain"""
-        
+
         if domain_name:
             query = """
             MATCH (domain:ComplianceDomain {name: $domain_name})-[:GOVERNS]->(reg:Regulation)
@@ -223,13 +217,13 @@ class Neo4jGraphRAGService:
             ORDER BY domain.priority, coverage_percentage DESC
             """
             params = {}
-        
+
         results = await self.execute_query(query, params)
         return {"coverage_analysis": results}
-    
+
     async def get_unimplemented_requirements(self) -> Dict[str, Any]:
         """Find all unimplemented mandatory requirements"""
-        
+
         query = """
         MATCH (reg:Regulation)-[:REQUIRES {mandatory: true}]->(req:Requirement)
         WHERE NOT EXISTS((req)<-[:IMPLEMENTS]-(:Control))
@@ -239,41 +233,41 @@ class Neo4jGraphRAGService:
                req.description AS description
         ORDER BY req.deadline
         """
-        
+
         results = await self.execute_query(query)
         return {"unimplemented_requirements": results}
-    
+
     # ============================================
     # RISK ASSESSMENT QUERIES
     # ============================================
-    
+
     async def calculate_residual_risks(self) -> Dict[str, Any]:
         """Calculate residual risk across all domains"""
-        
+
         query = """
         MATCH (risk:Risk)
         OPTIONAL MATCH (risk)<-[m:MITIGATES]-(ctrl:Control)
-        WITH risk, 
+        WITH risk,
              risk.risk_score AS inherent_risk,
              COALESCE(AVG(m.mitigation_percentage), 0) AS avg_mitigation
         RETURN risk.name AS risk_name,
                risk.category AS category,
                inherent_risk,
                ROUND(inherent_risk * (1 - avg_mitigation/100.0), 2) AS residual_risk,
-               CASE 
+               CASE
                  WHEN inherent_risk * (1 - avg_mitigation/100.0) >= 15 THEN 'HIGH'
                  WHEN inherent_risk * (1 - avg_mitigation/100.0) >= 10 THEN 'MEDIUM'
                  ELSE 'LOW'
                END AS risk_level
         ORDER BY residual_risk DESC
         """
-        
+
         results = await self.execute_query(query)
         return {"residual_risks": results}
-    
+
     async def get_unmitigated_high_risks(self) -> Dict[str, Any]:
         """Find high-risk areas needing immediate attention"""
-        
+
         query = """
         MATCH (risk:Risk)
         WHERE risk.risk_score >= 15
@@ -284,37 +278,37 @@ class Neo4jGraphRAGService:
                risk.risk_score AS score
         ORDER BY risk.risk_score DESC
         """
-        
+
         results = await self.execute_query(query)
         return {"unmitigated_high_risks": results}
-    
+
     # ============================================
     # REGULATORY CONVERGENCE
     # ============================================
-    
+
     async def find_regulatory_convergence(self) -> Dict[str, Any]:
         """Find common requirements across jurisdictions"""
-        
+
         query = """
         MATCH (j1:Jurisdiction)-[:ENFORCES]->(r1:Regulation)-[:REQUIRES]->(req1:Requirement)
         MATCH (j2:Jurisdiction)-[:ENFORCES]->(r2:Regulation)-[:REQUIRES]->(req2:Requirement)
-        WHERE j1.code <> j2.code 
+        WHERE j1.code <> j2.code
           AND req1.description = req2.description
         RETURN DISTINCT req1.title AS common_requirement,
                COLLECT(DISTINCT j1.code + ':' + r1.name) AS regulations
         ORDER BY size(COLLECT(DISTINCT j1.code)) DESC
         """
-        
+
         results = await self.execute_query(query)
         return {"regulatory_convergence": results}
-    
+
     # ============================================
     # CONTROL EFFECTIVENESS
     # ============================================
-    
+
     async def analyze_control_effectiveness(self) -> Dict[str, Any]:
         """Analyze control effectiveness and automation levels"""
-        
+
         query = """
         MATCH (ctrl:Control)
         OPTIONAL MATCH (ctrl)-[impl:IMPLEMENTS]->(req:Requirement)
@@ -334,13 +328,13 @@ class Neo4jGraphRAGService:
                END AS automation_score
         ORDER BY COUNT(DISTINCT req) DESC, automation_score DESC
         """
-        
+
         results = await self.execute_query(query)
         return {"control_effectiveness": results}
-    
+
     async def get_manual_controls_needing_automation(self) -> Dict[str, Any]:
         """Find manual controls that need technology enablement"""
-        
+
         query = """
         MATCH (ctrl:Control {automation_level: 'MANUAL'})
         WHERE ctrl.implementation_status IN ['NOT_STARTED', 'IN_PROGRESS']
@@ -352,17 +346,17 @@ class Neo4jGraphRAGService:
                ctrl.frequency AS frequency
         ORDER BY COUNT(req) DESC
         """
-        
+
         results = await self.execute_query(query)
         return {"automation_candidates": results}
-    
+
     # ============================================
     # ENFORCEMENT ACTION LEARNING
     # ============================================
-    
+
     async def learn_from_enforcement_actions(self) -> Dict[str, Any]:
         """Extract lessons from enforcement actions"""
-        
+
         query = """
         MATCH (ea:EnforcementAction)-[:PRECEDENT_FOR]->(ctrl:Control)
         OPTIONAL MATCH (ctrl)-[:IMPLEMENTS]->(req:Requirement)
@@ -375,17 +369,17 @@ class Neo4jGraphRAGService:
                COLLECT(DISTINCT req.title) AS requirements_affected
         ORDER BY ea.penalty_amount DESC
         """
-        
+
         results = await self.execute_query(query)
         return {"enforcement_lessons": results}
-    
+
     # ============================================
     # METRIC PERFORMANCE TRACKING
     # ============================================
-    
+
     async def get_compliance_metrics_dashboard(self) -> Dict[str, Any]:
         """Get KPI/KRI dashboard data"""
-        
+
         query = """
         MATCH (m:Metric)
         OPTIONAL MATCH (m)-[:MEASURES]->(ctrl:Control)
@@ -395,7 +389,7 @@ class Neo4jGraphRAGService:
                m.target_value AS target,
                m.frequency AS frequency,
                m.owner AS owner,
-               CASE 
+               CASE
                  WHEN m.type = 'KPI' AND m.current_value < m.target_value THEN 'GREEN'
                  WHEN m.type = 'KRI' AND m.current_value > m.target_value THEN 'RED'
                  ELSE 'AMBER'
@@ -403,21 +397,19 @@ class Neo4jGraphRAGService:
                COLLECT(ctrl.name) AS related_controls
         ORDER BY m.type, status DESC
         """
-        
+
         results = await self.execute_query(query)
         return {"metrics_dashboard": results}
-    
+
     # ============================================
     # NATURAL LANGUAGE QUERY INTERFACE
     # ============================================
-    
+
     async def query_by_domain_and_jurisdiction(
-        self,
-        domain: str,
-        jurisdiction: str
+        self, domain: str, jurisdiction: str
     ) -> Dict[str, Any]:
         """Natural language query: What are the requirements for [DOMAIN] in [JURISDICTION]?"""
-        
+
         query = """
         MATCH (domain:ComplianceDomain {name: $domain})
               -[:GOVERNS]->(reg:Regulation {jurisdiction: $jurisdiction})
@@ -431,38 +423,38 @@ class Neo4jGraphRAGService:
                  article_reference: req.article_reference
                }) AS requirements
         """
-        
+
         params = {"domain": domain, "jurisdiction": jurisdiction}
         results = await self.execute_query(query, params)
         return {"domain_requirements": results}
-    
+
     async def query_controls_for_regulation(self, regulation: str) -> Dict[str, Any]:
         """Natural language query: What controls do we need for [REGULATION]?"""
-        
+
         query = """
         MATCH (reg:Regulation {name: $regulation})-[:REQUIRES]->(req:Requirement)
         OPTIONAL MATCH (req)<-[:IMPLEMENTS]-(ctrl:Control)
         RETURN req.title AS requirement,
                req.mandatory AS is_mandatory,
                COLLECT(ctrl.name) AS existing_controls,
-               CASE 
+               CASE
                  WHEN SIZE(COLLECT(ctrl)) = 0 THEN 'MISSING'
                  ELSE 'IMPLEMENTED'
                END AS status
         ORDER BY req.mandatory DESC, status
         """
-        
+
         params = {"regulation": regulation}
         results = await self.execute_query(query, params)
         return {"regulation_controls": results}
-    
+
     # ============================================
     # GRAPH PATTERN MATCHING
     # ============================================
-    
+
     async def find_compliance_gaps(self) -> Dict[str, Any]:
         """Use graph patterns to identify compliance gaps"""
-        
+
         query = """
         MATCH (domain:ComplianceDomain)-[:GOVERNS]->(reg:Regulation)
               -[:REQUIRES]->(req:Requirement)
@@ -475,13 +467,13 @@ class Neo4jGraphRAGService:
                COLLECT(req.title) AS unimplemented_requirements
         ORDER BY domain.priority, missing_controls DESC
         """
-        
+
         results = await self.execute_query(query)
         return {"compliance_gaps": results}
-    
+
     async def trace_risk_mitigation_chain(self, risk_name: str) -> Dict[str, Any]:
         """Trace risk mitigation through controls to technology"""
-        
+
         query = """
         MATCH (risk:Risk {name: $risk_name})<-[:MITIGATES]-(control:Control)
         OPTIONAL MATCH (control)<-[:MONITORS]-(tech:Technology)
@@ -492,38 +484,38 @@ class Neo4jGraphRAGService:
                tech.name AS technology,
                tech.category AS tech_category
         """
-        
+
         params = {"risk_name": risk_name}
         results = await self.execute_query(query, params)
         return {"mitigation_chain": results}
-    
+
     # ============================================
     # DATA MANAGEMENT
     # ============================================
-    
+
     async def bulk_load_compliance_data(self, data_file: str) -> bool:
         """Load compliance data from JSON file"""
         try:
-            with open(data_file, 'r') as f:
+            with open(data_file, "r") as f:
                 data = json.load(f)
-            
+
             # Load domains
-            if 'domains' in data:
+            if "domains" in data:
                 query = """
-                UNWIND $domains AS d 
+                UNWIND $domains AS d
                 CREATE (domain:ComplianceDomain {
-                    name: d.name, 
-                    description: d.description, 
+                    name: d.name,
+                    description: d.description,
                     priority: d.priority,
                     regulatory_severity: d.regulatory_severity
                 })
                 """
-                await self.execute_query(query, {"domains": data['domains']}, read_only=False)
-            
+                await self.execute_query(query, {"domains": data["domains"]}, read_only=False)
+
             # Load regulations
-            if 'regulations' in data:
+            if "regulations" in data:
                 query = """
-                UNWIND $regulations AS r 
+                UNWIND $regulations AS r
                 CREATE (reg:Regulation {
                     name: r.name,
                     full_name: r.full_name,
@@ -535,21 +527,128 @@ class Neo4jGraphRAGService:
                     status: r.status
                 })
                 """
-                await self.execute_query(query, {"regulations": data['regulations']}, read_only=False)
-            
+                await self.execute_query(
+                    query, {"regulations": data["regulations"]}, read_only=False
+                )
+
             logger.info(f"Successfully loaded compliance data from {data_file}")
             return True
-            
+
         except Exception as e:
             logger.error(f"Failed to load compliance data: {e}")
             return False
-    
-    async def close(self):
+
+    async def close(self) -> None:
         """Close Neo4j connection"""
         if self.driver:
             self.driver.close()
             self.executor.shutdown(wait=True)
             logger.info("Neo4j service closed")
+
+    async def get_graph_statistics(self) -> Dict[str, Any]:
+        """Get comprehensive graph statistics for monitoring and health checks"""
+        try:
+            # Count all node types
+            node_count_query = """
+            MATCH (n)
+            RETURN labels(n) as node_types, count(n) as count
+            ORDER BY count DESC
+            """
+
+            # Count all relationships
+            relationship_count_query = """
+            MATCH ()-[r]->()
+            RETURN type(r) as relationship_type, count(r) as count
+            ORDER BY count DESC
+            """
+
+            # Get total counts
+            total_nodes_query = "MATCH (n) RETURN count(n) as total_nodes"
+            total_relationships_query = "MATCH ()-[r]->() RETURN count(r) as total_relationships"
+
+            # Execute all queries
+            node_results = await self.execute_query(node_count_query)
+            relationship_results = await self.execute_query(relationship_count_query)
+            total_nodes_result = await self.execute_query(total_nodes_query)
+            total_relationships_result = await self.execute_query(total_relationships_query)
+
+            # Process node types
+            node_statistics = {}
+            for result in node_results:
+                node_types = result.get("node_types", [])
+                count = result.get("count", 0)
+                if node_types:
+                    # Handle multiple labels - take the first one as primary
+                    primary_type = (
+                        node_types[0] if isinstance(node_types, list) else str(node_types)
+                    )
+                    node_statistics[primary_type] = count
+
+            # Process relationship types
+            relationship_statistics = {}
+            for result in relationship_results:
+                rel_type = result.get("relationship_type", "Unknown")
+                count = result.get("count", 0)
+                relationship_statistics[rel_type] = count
+
+            # Get totals
+            total_nodes = total_nodes_result[0].get("total_nodes", 0) if total_nodes_result else 0
+            total_relationships = (
+                total_relationships_result[0].get("total_relationships", 0)
+                if total_relationships_result
+                else 0
+            )
+
+            statistics = {
+                "graph_health": {
+                    "total_nodes": total_nodes,
+                    "total_relationships": total_relationships,
+                    "node_types_count": len(node_statistics),
+                    "relationship_types_count": len(relationship_statistics),
+                },
+                "node_distribution": node_statistics,
+                "relationship_distribution": relationship_statistics,
+                "compliance_status": {
+                    "compliance_nodes": sum(
+                        count
+                        for node_type, count in node_statistics.items()
+                        if node_type
+                        in [
+                            "ComplianceDomain",
+                            "Jurisdiction",
+                            "Regulation",
+                            "Requirement",
+                            "Control",
+                            "Metric",
+                            "RiskAssessment",
+                            "EnforcementCase",
+                        ]
+                    ),
+                    "iq_knowledge_nodes": sum(
+                        count
+                        for node_type, count in node_statistics.items()
+                        if node_type
+                        in [
+                            "DecisionPattern",
+                            "LearningMemory",
+                            "RegulatoryInsight",
+                            "BusinessContext",
+                            "AdaptiveLearning",
+                        ]
+                    ),
+                },
+                "timestamp": "2025-08-18T07:30:00Z",
+            }
+
+            return statistics
+
+        except Exception as e:
+            logger.error(f"Failed to get graph statistics: {e}")
+            return {
+                "error": str(e),
+                "graph_health": {"total_nodes": 0, "total_relationships": 0},
+                "timestamp": "2025-08-18T07:30:00Z",
+            }
 
 
 # Global service instance

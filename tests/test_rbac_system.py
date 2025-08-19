@@ -3,7 +3,7 @@ Test Suite for RBAC System
 
 Comprehensive tests for role-based access control including:
 - Database models and relationships
-- RBAC service functionality  
+- RBAC service functionality
 - Authentication with role claims
 - API route protection
 - Middleware enforcement
@@ -19,8 +19,10 @@ from fastapi.testclient import TestClient
 from sqlalchemy.orm import Session
 
 from api.dependencies.rbac_auth import (
-    UserWithRoles, create_access_token_with_roles,
-    require_permission, require_any_permission
+    UserWithRoles,
+    create_access_token_with_roles,
+    require_permission,
+    require_any_permission,
 )
 from database.rbac import Role, Permission, UserRole, RolePermission, FrameworkAccess
 from database.user import User
@@ -36,7 +38,7 @@ class TestRBACModels:
             name="test_role",
             display_name="Test Role",
             description="Test role for unit testing",
-            is_active=True
+            is_active=True,
         )
         db.add(role)
         db.commit()
@@ -54,7 +56,7 @@ class TestRBACModels:
             display_name="Test Permission",
             description="Test permission for unit testing",
             category="test_category",
-            resource_type="test_resource"
+            resource_type="test_resource",
         )
         db.add(permission)
         db.commit()
@@ -68,10 +70,7 @@ class TestRBACModels:
         """Test UserRole relationship and assignment."""
         # Create test user
         user = User(
-            id=uuid4(),
-            email="test@example.com",
-            hashed_password="hashed_password",
-            is_active=True
+            id=uuid4(), email="test@example.com", hashed_password="hashed_password", is_active=True
         )
         db.add(user)
 
@@ -86,7 +85,7 @@ class TestRBACModels:
             role_id=role.id,
             granted_by=user.id,
             is_active=True,
-            expires_at=datetime.utcnow() + timedelta(days=30)
+            expires_at=datetime.utcnow() + timedelta(days=30),
         )
         db.add(user_role)
         db.commit()
@@ -106,16 +105,13 @@ class TestRBACModels:
             display_name="Test Permission",
             description="Test permission",
             category="test",
-            resource_type="test"
+            resource_type="test",
         )
         db.add_all([role, permission])
         db.commit()
 
         # Assign permission to role
-        role_permission = RolePermission(
-            role_id=role.id,
-            permission_id=permission.id
-        )
+        role_permission = RolePermission(role_id=role.id, permission_id=permission.id)
         db.add(role_permission)
         db.commit()
 
@@ -127,10 +123,7 @@ class TestRBACModels:
         """Test FrameworkAccess model."""
         # Create user and role
         user = User(
-            id=uuid4(),
-            email="test@example.com", 
-            hashed_password="hashed_password",
-            is_active=True
+            id=uuid4(), email="test@example.com", hashed_password="hashed_password", is_active=True
         )
         role = Role(name="test_role", display_name="Test Role", description="Test role")
         db.add_all([user, role])
@@ -138,23 +131,21 @@ class TestRBACModels:
 
         # Get existing framework or create one
         from database.compliance_framework import ComplianceFramework
+
         framework = db.query(ComplianceFramework).filter_by(name="ISO27001").first()
         if not framework:
             framework = ComplianceFramework(
                 name="ISO27001",
                 display_name="ISO/IEC 27001:2022",
                 description="Information security management systems",
-                category="Information Security"
+                category="Information Security",
             )
             db.add(framework)
             db.commit()
 
         # Create framework access
         framework_access = FrameworkAccess(
-            role_id=role.id,
-            framework_id=framework.id,
-            access_level="read",
-            granted_by=user.id
+            role_id=role.id, framework_id=framework.id, access_level="read", granted_by=user.id
         )
         db.add(framework_access)
         db.commit()
@@ -176,10 +167,7 @@ class TestRBACService:
     def test_user(self, db: Session):
         """Create test user."""
         user = User(
-            id=uuid4(),
-            email="test@example.com",
-            hashed_password="hashed_password",
-            is_active=True
+            id=uuid4(), email="test@example.com", hashed_password="hashed_password", is_active=True
         )
         db.add(user)
         db.commit()
@@ -195,8 +183,20 @@ class TestRBACService:
 
         # Create permissions
         permissions = [
-            Permission(name="user_list", display_name="List Users", description="List users", category="user_management", resource_type="user"),
-            Permission(name="user_create", display_name="Create User", description="Create user", category="user_management", resource_type="user")
+            Permission(
+                name="user_list",
+                display_name="List Users",
+                description="List users",
+                category="user_management",
+                resource_type="user",
+            ),
+            Permission(
+                name="user_create",
+                display_name="Create User",
+                description="Create user",
+                category="user_management",
+                resource_type="user",
+            ),
         ]
         db.add_all(permissions)
         db.flush()
@@ -209,13 +209,12 @@ class TestRBACService:
         db.commit()
         return role
 
-    def test_assign_role_to_user(self, rbac_service: RBACService, test_user: User, 
-                                test_role_with_permissions: Role):
+    def test_assign_role_to_user(
+        self, rbac_service: RBACService, test_user: User, test_role_with_permissions: Role
+    ):
         """Test assigning role to user."""
         user_role = rbac_service.assign_role_to_user(
-            user_id=test_user.id,
-            role_id=test_role_with_permissions.id,
-            granted_by=test_user.id
+            user_id=test_user.id, role_id=test_role_with_permissions.id, granted_by=test_user.id
         )
 
         assert user_role is not None
@@ -223,14 +222,13 @@ class TestRBACService:
         assert user_role.role_id == test_role_with_permissions.id
         assert user_role.is_active is True
 
-    def test_get_user_roles(self, rbac_service: RBACService, test_user: User,
-                           test_role_with_permissions: Role):
+    def test_get_user_roles(
+        self, rbac_service: RBACService, test_user: User, test_role_with_permissions: Role
+    ):
         """Test getting user roles."""
         # Assign role to user
         rbac_service.assign_role_to_user(
-            user_id=test_user.id,
-            role_id=test_role_with_permissions.id,
-            granted_by=test_user.id
+            user_id=test_user.id, role_id=test_role_with_permissions.id, granted_by=test_user.id
         )
 
         # Get user roles
@@ -240,14 +238,13 @@ class TestRBACService:
         assert roles[0]["name"] == "test_role"
         assert roles[0]["id"] == str(test_role_with_permissions.id)
 
-    def test_get_user_permissions(self, rbac_service: RBACService, test_user: User,
-                                 test_role_with_permissions: Role):
+    def test_get_user_permissions(
+        self, rbac_service: RBACService, test_user: User, test_role_with_permissions: Role
+    ):
         """Test getting user permissions."""
         # Assign role to user
         rbac_service.assign_role_to_user(
-            user_id=test_user.id,
-            role_id=test_role_with_permissions.id,
-            granted_by=test_user.id
+            user_id=test_user.id, role_id=test_role_with_permissions.id, granted_by=test_user.id
         )
 
         # Get user permissions
@@ -257,14 +254,13 @@ class TestRBACService:
         assert "user_list" in permissions
         assert "user_create" in permissions
 
-    def test_user_has_permission(self, rbac_service: RBACService, test_user: User,
-                                test_role_with_permissions: Role):
+    def test_user_has_permission(
+        self, rbac_service: RBACService, test_user: User, test_role_with_permissions: Role
+    ):
         """Test checking if user has specific permission."""
         # Assign role to user
         rbac_service.assign_role_to_user(
-            user_id=test_user.id,
-            role_id=test_role_with_permissions.id,
-            granted_by=test_user.id
+            user_id=test_user.id, role_id=test_role_with_permissions.id, granted_by=test_user.id
         )
 
         # Check permissions
@@ -272,14 +268,13 @@ class TestRBACService:
         assert rbac_service.user_has_permission(test_user.id, "user_create") is True
         assert rbac_service.user_has_permission(test_user.id, "admin_roles") is False
 
-    def test_revoke_role_from_user(self, rbac_service: RBACService, test_user: User,
-                                  test_role_with_permissions: Role):
+    def test_revoke_role_from_user(
+        self, rbac_service: RBACService, test_user: User, test_role_with_permissions: Role
+    ):
         """Test revoking role from user."""
         # Assign role
         rbac_service.assign_role_to_user(
-            user_id=test_user.id,
-            role_id=test_role_with_permissions.id,
-            granted_by=test_user.id
+            user_id=test_user.id, role_id=test_role_with_permissions.id, granted_by=test_user.id
         )
 
         # Verify role is assigned
@@ -287,23 +282,22 @@ class TestRBACService:
 
         # Revoke role
         success = rbac_service.revoke_role_from_user(
-            user_id=test_user.id,
-            role_id=test_role_with_permissions.id,
-            revoked_by=test_user.id
+            user_id=test_user.id, role_id=test_role_with_permissions.id, revoked_by=test_user.id
         )
 
         assert success is True
         assert len(rbac_service.get_user_roles(test_user.id)) == 0
 
-    def test_expired_role_cleanup(self, rbac_service: RBACService, test_user: User,
-                                 test_role_with_permissions: Role):
+    def test_expired_role_cleanup(
+        self, rbac_service: RBACService, test_user: User, test_role_with_permissions: Role
+    ):
         """Test cleanup of expired roles."""
         # Assign role with past expiration
         user_role = rbac_service.assign_role_to_user(
             user_id=test_user.id,
             role_id=test_role_with_permissions.id,
             granted_by=test_user.id,
-            expires_at=datetime.utcnow() - timedelta(days=1)  # Expired
+            expires_at=datetime.utcnow() - timedelta(days=1),  # Expired
         )
 
         # Verify role is assigned but inactive
@@ -322,22 +316,19 @@ class TestUserWithRoles:
     def user_with_roles(self):
         """Create UserWithRoles instance for testing."""
         user = User(
-            id=uuid4(),
-            email="test@example.com",
-            hashed_password="hashed_password",
-            is_active=True
+            id=uuid4(), email="test@example.com", hashed_password="hashed_password", is_active=True
         )
 
         roles = [
             {"id": str(uuid4()), "name": "admin", "description": "Administrator"},
-            {"id": str(uuid4()), "name": "user", "description": "Regular user"}
+            {"id": str(uuid4()), "name": "user", "description": "Regular user"},
         ]
 
         permissions = ["user_list", "user_create", "admin_roles"]
 
         accessible_frameworks = [
             {"id": "iso27001", "name": "ISO 27001", "access_level": "admin"},
-            {"id": "gdpr", "name": "GDPR", "access_level": "read"}
+            {"id": "gdpr", "name": "GDPR", "access_level": "read"},
         ]
 
         return UserWithRoles(user, roles, permissions, accessible_frameworks)
@@ -416,6 +407,7 @@ class TestRBACAuthentication:
 
         # Decode token to verify claims
         from api.dependencies.auth import decode_token
+
         payload = decode_token(token)
 
         assert payload["sub"] == str(user_id)
@@ -432,15 +424,12 @@ class TestRBACAuthentication:
             user=MagicMock(),
             roles=[{"name": "admin"}],
             permissions=["user_list"],
-            accessible_frameworks=[]
+            accessible_frameworks=[],
         )
 
         # Create mock user without permission
         user_without_permission = UserWithRoles(
-            user=MagicMock(),
-            roles=[{"name": "user"}],
-            permissions=[],
-            accessible_frameworks=[]
+            user=MagicMock(), roles=[{"name": "user"}], permissions=[], accessible_frameworks=[]
         )
 
         # Test with permission
@@ -461,14 +450,11 @@ class TestRBACAuthentication:
             user=MagicMock(),
             roles=[{"name": "user"}],
             permissions=["user_list"],
-            accessible_frameworks=[]
+            accessible_frameworks=[],
         )
 
         user_without_permissions = UserWithRoles(
-            user=MagicMock(),
-            roles=[{"name": "user"}],
-            permissions=[],
-            accessible_frameworks=[]
+            user=MagicMock(), roles=[{"name": "user"}], permissions=[], accessible_frameworks=[]
         )
 
         # Test with one of required permissions
@@ -489,6 +475,7 @@ class TestRBACMiddleware:
     def mock_app(self):
         """Create mock FastAPI app."""
         from fastapi import FastAPI
+
         app = FastAPI()
         return app
 
@@ -496,6 +483,7 @@ class TestRBACMiddleware:
     def rbac_middleware(self, mock_app):
         """Create RBAC middleware instance."""
         from api.middleware.rbac_middleware import RBACMiddleware
+
         return RBACMiddleware(mock_app, enable_audit_logging=False)
 
     def test_is_public_route(self, rbac_middleware):
@@ -541,12 +529,16 @@ class TestRBACIntegration:
             id=uuid4(),
             email="integration@example.com",
             hashed_password="hashed_password",
-            is_active=True
+            is_active=True,
         )
         db.add(user)
 
         # 2. Create role with permissions
-        role = Role(name="integration_role", display_name="Integration Role", description="Integration test role")
+        role = Role(
+            name="integration_role",
+            display_name="Integration Role",
+            description="Integration test role",
+        )
         db.add(role)
         db.flush()
 
@@ -555,7 +547,7 @@ class TestRBACIntegration:
             display_name="Integration Permission",
             description="Integration test permission",
             category="test_category",
-            resource_type="test"
+            resource_type="test",
         )
         db.add(permission)
         db.flush()
@@ -565,11 +557,7 @@ class TestRBACIntegration:
         db.commit()
 
         # 3. Assign role to user
-        user_role = rbac.assign_role_to_user(
-            user_id=user.id,
-            role_id=role.id,
-            granted_by=user.id
-        )
+        user_role = rbac.assign_role_to_user(user_id=user.id, role_id=role.id, granted_by=user.id)
         assert user_role is not None
 
         # 4. Verify user has permission
@@ -591,11 +579,7 @@ class TestRBACIntegration:
         assert token is not None
 
         # 8. Cleanup - revoke role
-        success = rbac.revoke_role_from_user(
-            user_id=user.id,
-            role_id=role.id,
-            revoked_by=user.id
-        )
+        success = rbac.revoke_role_from_user(user_id=user.id, role_id=role.id, revoked_by=user.id)
         assert success is True
         assert rbac.user_has_permission(user.id, "integration_permission") is False
 

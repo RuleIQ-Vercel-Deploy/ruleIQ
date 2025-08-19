@@ -2,11 +2,20 @@ import { apiClient } from './client';
 
 export interface DashboardStats {
   compliance_score: number;
+  policy_score?: number;
+  implementation_score?: number;
+  evidence_score?: number;
+  compliance_trend?: 'improving' | 'stable' | 'declining';
+  domain_scores?: Record<string, number>;
+  control_scores?: Record<string, number>;
+  framework_scores?: Record<string, number>;
   frameworks_active: number;
+  frameworks?: string[];
   policies_approved: number;
   evidence_collected: number;
   assessments_completed: number;
   tasks_pending: number;
+  pending_tasks?: number;
   upcoming_deadlines: number;
   risk_items: number;
 }

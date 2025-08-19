@@ -110,13 +110,13 @@ async def _sync_evidence_status_async() -> Dict[str, int]:
     bind=True,
     autoretry_for=(DatabaseException, Exception),
     retry_kwargs={
-        'max_retries': 5,
-        'countdown': 60,  # Start with 60 seconds
+        "max_retries": 5,
+        "countdown": 60,  # Start with 60 seconds
     },
     retry_backoff=True,
     retry_backoff_max=600,  # Max 10 minutes
     retry_jitter=True,
-    rate_limit='5/m',  # 5 tasks per minute for evidence processing
+    rate_limit="5/m",  # 5 tasks per minute for evidence processing
 )
 def process_evidence_item(
     self,
@@ -147,13 +147,13 @@ def process_evidence_item(
     bind=True,
     autoretry_for=(DatabaseException, Exception),
     retry_kwargs={
-        'max_retries': 5,
-        'countdown': 120,  # Start with 2 minutes for sync tasks
+        "max_retries": 5,
+        "countdown": 120,  # Start with 2 minutes for sync tasks
     },
     retry_backoff=True,
     retry_backoff_max=600,
     retry_jitter=True,
-    rate_limit='3/m',  # 3 sync tasks per minute
+    rate_limit="3/m",  # 3 sync tasks per minute
 )
 def sync_evidence_status(self):
     """Periodically syncs the status of evidence items by running the async helper."""

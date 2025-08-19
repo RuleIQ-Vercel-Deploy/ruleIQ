@@ -88,7 +88,7 @@ export function getClientIp(request: NextRequest): string {
     return realIp;
   }
 
-  return request.ip || 'unknown';
+  return request.headers.get('x-forwarded-for')?.split(',')[0] || 'unknown';
 }
 
 /**

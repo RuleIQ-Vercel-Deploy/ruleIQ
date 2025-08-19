@@ -33,7 +33,9 @@ async def get_compliance_status(
     """
     try:
         # Get user's business profile
-        profile_stmt = select(BusinessProfile).where(BusinessProfile.user_id == str(current_user.id))
+        profile_stmt = select(BusinessProfile).where(
+            BusinessProfile.user_id == str(current_user.id)
+        )
         profile_result = await db.execute(profile_stmt)
         profile = profile_result.scalars().first()
 
@@ -69,7 +71,8 @@ async def get_compliance_status(
         for framework in all_frameworks:
             # Get evidence for this framework
             framework_evidence_stmt = select(EvidenceItem).where(
-                EvidenceItem.user_id == str(current_user.id), EvidenceItem.framework_id == framework["id"]
+                EvidenceItem.user_id == str(current_user.id),
+                EvidenceItem.framework_id == framework["id"],
             )
             framework_evidence_result = await db.execute(framework_evidence_stmt)
             framework_evidence = framework_evidence_result.scalars().all()
@@ -128,7 +131,8 @@ async def get_compliance_status(
         recent_evidence_stmt = (
             select(EvidenceItem)
             .where(
-                EvidenceItem.user_id == str(current_user.id), EvidenceItem.updated_at >= recent_cutoff
+                EvidenceItem.user_id == str(current_user.id),
+                EvidenceItem.updated_at >= recent_cutoff,
             )
             .order_by(EvidenceItem.updated_at.desc())
             .limit(10)

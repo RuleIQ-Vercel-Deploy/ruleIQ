@@ -347,7 +347,7 @@ class BaseAPIClient(ABC):
     def _generate_request_id(self, request: APIRequest) -> str:
         """Generate unique request ID for tracking"""
         request_data = f"{request.method}:{request.endpoint}:{time.time()}"
-        return hashlib.md5(request_data.encode()).hexdigest()[:12]
+        return hashlib.sha256(request_data.encode()).hexdigest()[:12]
 
     async def collect_evidence(self, evidence_type: str, **kwargs) -> List[EvidenceItem]:
         """Collect specific evidence type from this API"""

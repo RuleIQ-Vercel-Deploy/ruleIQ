@@ -5,36 +5,28 @@ Integrates with Graphiti memory manager for comprehensive knowledge retrieval.
 
 import asyncio
 import logging
-from typing import Dict, List, Optional, Any, Union, Tuple, AsyncGenerator
+from typing import Dict, List, Optional, Any, Tuple
 from dataclasses import dataclass, field
-from datetime import datetime, timedelta
+from datetime import datetime
 from enum import Enum
 from uuid import UUID, uuid4
-import json
 import hashlib
 from pathlib import Path
 
-from pydantic import BaseModel, Field, ValidationError
-from langchain_core.documents import Document
 from langchain_core.vectorstores import VectorStore
 from langchain_core.embeddings import Embeddings
 from langchain_text_splitters import RecursiveCharacterTextSplitter
-from langchain_community.document_loaders import (
-    PyPDFLoader, 
-    TextLoader, 
-    JSONLoader,
-    CSVLoader
-)
+from langchain_community.document_loaders import PyPDFLoader, TextLoader, JSONLoader, CSVLoader
 
 from ..core.constants import MODEL_CONFIG, RAG_CONFIG
-from ..core.models import SafeFallbackResponse
-from .memory_manager import MemoryManager, MemoryType, MemoryImportance, MemoryEntry
+from .memory_manager import MemoryManager
 
 logger = logging.getLogger(__name__)
 
 
 class DocumentType(str, Enum):
     """Supported document types for processing."""
+
     PDF = "pdf"
     TXT = "txt"
     JSON = "json"
@@ -47,65 +39,67 @@ class DocumentType(str, Enum):
 
 class DocumentSource(str, Enum):
     """Document source types."""
-    UPLOADED = "uploaded"          # User uploaded documents
-    REGULATION = "regulation"      # Legal regulations and frameworks
-    TEMPLATE = "template"          # Compliance templates
-    GUIDANCE = "guidance"          # Guidance documents
-    POLICY = "policy"             # Company policies
-    EVIDENCE = "evidence"         # Compliance evidence
-    TRAINING = "training"         # Training materials
+
+    UPLOADED = "uploaded"  # User uploaded documents
+    REGULATION = "regulation"  # Legal regulations and frameworks
+    TEMPLATE = "template"  # Compliance templates
+    GUIDANCE = "guidance"  # Guidance documents
+    POLICY = "policy"  # Company policies
+    EVIDENCE = "evidence"  # Compliance evidence
+    TRAINING = "training"  # Training materials
 
 
 class RetrievalStrategy(str, Enum):
     """Document retrieval strategies."""
-    SEMANTIC = "semantic"          # Vector similarity search
-    KEYWORD = "keyword"           # Traditional keyword search
-    HYBRID = "hybrid"             # Combination of semantic + keyword
-    CONTEXTUAL = "contextual"     # Context-aware retrieval
-    TEMPORAL = "temporal"         # Time-based retrieval
+
+    SEMANTIC = "semantic"  # Vector similarity search
+    KEYWORD = "keyword"  # Traditional keyword search
+    HYBRID = "hybrid"  # Combination of semantic + keyword
+    CONTEXTUAL = "contextual"  # Context-aware retrieval
+    TEMPORAL = "temporal"  # Time-based retrieval
 
 
 @dataclass
 class DocumentMetadata:
     """Comprehensive document metadata."""
-    
+
     document_id: str
     title: str
     document_type: DocumentType
     source: DocumentSource
-    
+
     # Content properties
     content_hash: str
     file_size_bytes: int
     page_count: Optional[int] = None
     language: str = "en"
-    
+
     # Temporal data
     created_at: datetime = field(default_factory=datetime.utcnow)
     updated_at: Optional[datetime] = None
     indexed_at: datetime = field(default_factory=datetime.utcnow)
     last_accessed: Optional[datetime] = None
-    
+
     # Company and access control
     company_id: UUID
     access_level: str = "company"  # company, department, user
     tags: List[str] = field(default_factory=list)
-    
+
     # Compliance specific
     frameworks: List[str] = field(default_factory=list)  # GDPR, ISO27001, etc.
     compliance_areas: List[str] = field(default_factory=list)
     regulatory_version: Optional[str] = None
-    
+
     # Processing metadata
     processing_status: str = "pending"  # pending, processed, failed
     chunk_count: int = 0
     embedding_model: str = MODEL_CONFIG["embedding_model"]
-    
+
     # Search optimization
     keywords: List[str] = field(default_factory=list)
     entities: List[str] = field(default_factory=list)
     summary: Optional[str] = None
-    
+
     def to_dict(self) -> Dict[str, Any]:
         """Convert to dictionary for storage."""
         return {
@@ -132,38 +126,38 @@ class DocumentMetadata:
             "embedding_model": self.embedding_model,
             "keywords": self.keywords,
             "entities": self.entities,
-            "summary": self.summary
+            "summary": self.summary,
         }
 
 
 @dataclass
 class DocumentChunk:
     """Individual document chunk with metadata."""
-    
+
     chunk_id: str
     document_id: str
     content: str
-    
+
     # Position in document
     chunk_index: int
     start_char: int
     end_char: int
     page_number: Optional[int] = None
-    
+
     # Chunk metadata
     token_count: int = 0
     embedding: Optional[List[float]] = None
-    
+
     # Contextual information
     preceding_context: Optional[str] = None
     following_context: Optional[str] = None
     section_title: Optional[str] = None
-    
+
     # Search metadata
     relevance_score: float = 0.0
     last_retrieved: Optional[datetime] = None
     retrieval_count: int = 0
-    
+
     def to_dict(self) -> Dict[str, Any]:
         """Convert to dictionary for storage."""
         return {
@@ -181,32 +175,32 @@ class DocumentChunk:
             "section_title": self.section_title,
             "relevance_score": self.relevance_score,
             "last_retrieved": self.last_retrieved.isoformat() if self.last_retrieved else None,
-            "retrieval_count": self.retrieval_count
+            "retrieval_count": self.retrieval_count,
         }
 
 
 @dataclass
 class RetrievalResult:
     """Result from document retrieval."""
-    
+
     chunks: List[DocumentChunk]
     total_results: int
     query: str
     strategy: RetrievalStrategy
-    
+
     # Performance metrics
     retrieval_time_ms: int
     rerank_time_ms: Optional[int] = None
-    
+
     # Relevance metrics
     avg_relevance_score: float = 0.0
     min_relevance_score: float = 0.0
     max_relevance_score: float = 0.0
-    
+
     # Metadata aggregation
     document_sources: List[DocumentSource] = field(default_factory=list)
     frameworks_covered: List[str] = field(default_factory=list)
-    
+
     def to_dict(self) -> Dict[str, Any]:
         """Convert to dictionary for logging."""
         return {
@@ -220,23 +214,23 @@ class RetrievalResult:
             "max_relevance_score": self.max_relevance_score,
             "document_sources": [s.value for s in self.document_sources],
             "frameworks_covered": self.frameworks_covered,
-            "chunks": [chunk.to_dict() for chunk in self.chunks]
+            "chunks": [chunk.to_dict() for chunk in self.chunks],
         }
 
 
 class DocumentProcessor:
     """Advanced document processing pipeline."""
-    
+
     def __init__(
         self,
         chunk_size: int = RAG_CONFIG["chunk_size"],
         chunk_overlap: int = RAG_CONFIG["chunk_overlap"],
-        embedding_model: str = MODEL_CONFIG["embedding_model"]
-    ):
+        embedding_model: str = MODEL_CONFIG["embedding_model"],
+    ) -> None:
         self.chunk_size = chunk_size
         self.chunk_overlap = chunk_overlap
         self.embedding_model = embedding_model
-        
+
         # Initialize text splitter
         self.text_splitter = RecursiveCharacterTextSplitter(
             chunk_size=chunk_size,
@@ -245,84 +239,84 @@ class DocumentProcessor:
             is_separator_regex=False,
             separators=[
                 "\n\n",  # Paragraph breaks
-                "\n",    # Line breaks
-                " ",     # Word breaks
-                ".",     # Sentence breaks
-                ",",     # Clause breaks
-                "\u200b", # Zero-width space
-                "\uff0c", # Fullwidth comma
-                "\u3001", # Ideographic comma
-                "\uff0e", # Fullwidth full stop
-                "\u3002", # Ideographic full stop
-                ""       # Last resort
-            ]
+                "\n",  # Line breaks
+                " ",  # Word breaks
+                ".",  # Sentence breaks
+                ",",  # Clause breaks
+                "\u200b",  # Zero-width space
+                "\uff0c",  # Fullwidth comma
+                "\u3001",  # Ideographic comma
+                "\uff0e",  # Fullwidth full stop
+                "\u3002",  # Ideographic full stop
+                "",  # Last resort
+            ],
         )
-        
+
         # Document loaders by type
         self.loaders = {
             DocumentType.PDF: PyPDFLoader,
             DocumentType.TXT: TextLoader,
             DocumentType.JSON: JSONLoader,
-            DocumentType.CSV: CSVLoader
+            DocumentType.CSV: CSVLoader,
         }
-        
+
         logger.info(f"DocumentProcessor initialized with chunk_size={chunk_size}")
-    
+
     async def process_document(
-        self,
-        file_path: str,
-        document_metadata: DocumentMetadata
+        self, file_path: str, document_metadata: DocumentMetadata
     ) -> Tuple[DocumentMetadata, List[DocumentChunk]]:
         """
         Process a document into chunks with metadata.
-        
+
         Args:
             file_path: Path to the document file
             document_metadata: Document metadata
-            
+
         Returns:
             Tuple of updated metadata and document chunks
         """
         start_time = datetime.utcnow()
-        
+
         try:
             # Load document based on type
             document_type = document_metadata.document_type
             if document_type not in self.loaders:
                 raise ValueError(f"Unsupported document type: {document_type}")
-            
+
             loader_class = self.loaders[document_type]
             loader = loader_class(file_path)
             documents = await asyncio.to_thread(loader.load)
-            
+
             # Combine all document content
             full_content = "\n\n".join([doc.page_content for doc in documents])
-            
+
             # Generate content hash
             content_hash = hashlib.sha256(full_content.encode()).hexdigest()
             document_metadata.content_hash = content_hash
-            
+
             # Split into chunks
             text_chunks = self.text_splitter.split_text(full_content)
-            
+
             # Create DocumentChunk objects
             chunks = []
             char_position = 0
-            
+
             for i, chunk_text in enumerate(text_chunks):
                 chunk_id = f"{document_metadata.document_id}_chunk_{i:04d}"
-                
+
                 # Find start and end positions
                 start_char = full_content.find(chunk_text, char_position)
                 if start_char == -1:
                     start_char = char_position
-                
+
                 end_char = start_char + len(chunk_text)
                 char_position = end_char
-                
+
                 # Estimate page number (rough calculation)
-                page_number = (start_char // 2000) + 1 if document_type == DocumentType.PDF else None
-                
+                page_number = (
+                    (start_char // 2000) + 1 if document_type == DocumentType.PDF else None
+                )
+
                 # Create chunk
                 chunk = DocumentChunk(
                     chunk_id=chunk_id,
@@ -332,113 +326,136 @@ class DocumentProcessor:
                     start_char=start_char,
                     end_char=end_char,
                     page_number=page_number,
-                    token_count=len(chunk_text.split())  # Rough token count
+                    token_count=len(chunk_text.split()),  # Rough token count
                 )
-                
+
                 # Add contextual information
                 if i > 0:
-                    chunk.preceding_context = text_chunks[i-1][-100:]  # Last 100 chars of previous chunk
+                    chunk.preceding_context = text_chunks[i - 1][
+                        -100:
+                    ]  # Last 100 chars of previous chunk
                 if i < len(text_chunks) - 1:
-                    chunk.following_context = text_chunks[i+1][:100]  # First 100 chars of next chunk
-                
+                    chunk.following_context = text_chunks[i + 1][
+                        :100
+                    ]  # First 100 chars of next chunk
+
                 chunks.append(chunk)
-            
+
             # Update document metadata
             document_metadata.chunk_count = len(chunks)
             document_metadata.processing_status = "processed"
             document_metadata.indexed_at = datetime.utcnow()
-            
+
             # Extract basic keywords and entities (simple implementation)
             document_metadata.keywords = self._extract_keywords(full_content)
             document_metadata.entities = self._extract_entities(full_content)
             document_metadata.summary = self._generate_summary(full_content)
-            
+
             processing_time = int((datetime.utcnow() - start_time).total_seconds() * 1000)
-            logger.info(f"Processed document {document_metadata.document_id}: {len(chunks)} chunks in {processing_time}ms")
-            
+            logger.info(
+                f"Processed document {document_metadata.document_id}: {len(chunks)} chunks in {processing_time}ms"
+            )
+
             return document_metadata, chunks
-            
+
         except Exception as e:
             document_metadata.processing_status = "failed"
             logger.error(f"Failed to process document {document_metadata.document_id}: {e}")
             raise
-    
+
     def _extract_keywords(self, content: str) -> List[str]:
         """Extract key terms from content (simple implementation)."""
         # This is a basic implementation - could be enhanced with NLP
         import re
-        
+
         # Convert to lowercase and extract words
-        words = re.findall(r'\b[a-zA-Z]{3,}\b', content.lower())
-        
+        words = re.findall(r"\b[a-zA-Z]{3,}\b", content.lower())
+
         # Filter common compliance terms
         compliance_terms = [
-            "gdpr", "privacy", "data", "protection", "compliance", "regulation",
-            "consent", "processing", "controller", "processor", "breach",
-            "rights", "subject", "personal", "sensitive", "security",
-            "assessment", "impact", "policy", "procedure", "documentation"
+            "gdpr",
+            "privacy",
+            "data",
+            "protection",
+            "compliance",
+            "regulation",
+            "consent",
+            "processing",
+            "controller",
+            "processor",
+            "breach",
+            "rights",
+            "subject",
+            "personal",
+            "sensitive",
+            "security",
+            "assessment",
+            "impact",
+            "policy",
+            "procedure",
+            "documentation",
         ]
-        
+
         # Get unique terms that appear in compliance context
         keywords = []
         for term in compliance_terms:
             if term in words:
                 keywords.append(term)
-        
+
         # Add frequent non-common words
         word_freq = {}
         for word in words:
             if len(word) >= 4 and word.isalpha():
                 word_freq[word] = word_freq.get(word, 0) + 1
-        
+
         # Get top frequent words
         frequent_words = sorted(word_freq.items(), key=lambda x: x[1], reverse=True)[:10]
         keywords.extend([word for word, freq in frequent_words if word not in keywords])
-        
+
         return keywords[:20]  # Limit to 20 keywords
-    
+
     def _extract_entities(self, content: str) -> List[str]:
         """Extract named entities from content (simple implementation)."""
         # Basic entity extraction - could be enhanced with spaCy or similar
         import re
-        
+
         entities = []
-        
+
         # Extract organization names (simple pattern)
         org_patterns = [
-            r'\b[A-Z][a-z]+ (?:Ltd|Limited|Inc|Corporation|Corp|Company|Co)\b',
-            r'\b(?:ICO|GDPR|ISO|NIST|FTC|SEC)\b'
+            r"\b[A-Z][a-z]+ (?:Ltd|Limited|Inc|Corporation|Corp|Company|Co)\b",
+            r"\b(?:ICO|GDPR|ISO|NIST|FTC|SEC)\b",
         ]
-        
+
         for pattern in org_patterns:
             matches = re.findall(pattern, content)
             entities.extend(matches)
-        
+
         # Extract dates
-        date_pattern = r'\b\d{1,2}[/-]\d{1,2}[/-]\d{2,4}\b'
+        date_pattern = r"\b\d{1,2}[/-]\d{1,2}[/-]\d{2,4}\b"
         dates = re.findall(date_pattern, content)
         entities.extend(dates[:5])  # Limit dates
-        
+
         return list(set(entities))[:15]  # Unique entities, limited to 15
-    
+
     def _generate_summary(self, content: str) -> str:
         """Generate a brief summary of the content."""
         # Simple extractive summary - first few sentences
-        sentences = content.split('. ')
+        sentences = content.split(". ")
         summary_sentences = sentences[:3]  # First 3 sentences
-        summary = '. '.join(summary_sentences)
-        
+        summary = ". ".join(summary_sentences)
+
         # Limit summary length
         if len(summary) > 300:
             summary = summary[:297] + "..."
-        
+
         return summary
 
 
 class RAGSystem:
     """
     Advanced RAG system with document pipeline and retrieval optimization.
-    
+
     Features:
     - Multi-strategy retrieval (semantic, keyword, hybrid)
     - Document processing pipeline
@@ -446,43 +463,43 @@ class RAGSystem:
     - Performance optimization and caching
     - Compliance-specific ranking
     """
-    
+
     def __init__(
         self,
         memory_manager: MemoryManager,
         embeddings: Embeddings,
         vector_store: Optional[VectorStore] = None,
         enable_reranking: bool = True,
-        cache_ttl_hours: int = 24
-    ):
+        cache_ttl_hours: int = 24,
+    ) -> None:
         self.memory_manager = memory_manager
         self.embeddings = embeddings
         self.vector_store = vector_store
         self.enable_reranking = enable_reranking
         self.cache_ttl_hours = cache_ttl_hours
-        
+
         # Initialize components
         self.processor = DocumentProcessor()
-        
+
         # Document storage
         self.documents: Dict[str, DocumentMetadata] = {}
         self.chunks: Dict[str, DocumentChunk] = {}
-        
+
         # Performance caching
         self.query_cache: Dict[str, Tuple[RetrievalResult, datetime]] = {}
         self.embedding_cache: Dict[str, List[float]] = {}
-        
+
         # Statistics
         self.retrieval_stats = {
             "total_queries": 0,
             "cache_hits": 0,
             "avg_retrieval_time_ms": 0.0,
             "total_documents": 0,
-            "total_chunks": 0
+            "total_chunks": 0,
         }
-        
+
         logger.info("RAGSystem initialized with advanced retrieval capabilities")
-    
+
     async def add_document(
         self,
         file_path: str,
@@ -492,11 +509,11 @@ class RAGSystem:
         source: DocumentSource,
         frameworks: Optional[List[str]] = None,
         tags: Optional[List[str]] = None,
-        metadata_override: Optional[Dict[str, Any]] = None
+        metadata_override: Optional[Dict[str, Any]] = None,
     ) -> DocumentMetadata:
         """
         Add a document to the RAG system.
-        
+
         Args:
             file_path: Path to the document file
             company_id: Company UUID for access control
@@ -506,17 +523,17 @@ class RAGSystem:
             frameworks: Applicable compliance frameworks
             tags: Document tags
             metadata_override: Optional metadata overrides
-            
+
         Returns:
             Document metadata after processing
         """
         try:
             # Generate document ID
             document_id = f"doc_{uuid4()}"
-            
+
             # Get file size
             file_size = Path(file_path).stat().st_size
-            
+
             # Create document metadata
             metadata = DocumentMetadata(
                 document_id=document_id,
@@ -527,40 +544,40 @@ class RAGSystem:
                 file_size_bytes=file_size,
                 company_id=company_id,
                 frameworks=frameworks or [],
-                tags=tags or []
+                tags=tags or [],
             )
-            
+
             # Apply metadata overrides
             if metadata_override:
                 for key, value in metadata_override.items():
                     if hasattr(metadata, key):
                         setattr(metadata, key, value)
-            
+
             # Process document
             processed_metadata, chunks = await self.processor.process_document(file_path, metadata)
-            
+
             # Store document and chunks
             self.documents[document_id] = processed_metadata
             for chunk in chunks:
                 self.chunks[chunk.chunk_id] = chunk
-            
+
             # Generate embeddings for chunks
             await self._generate_chunk_embeddings(chunks)
-            
+
             # Store in memory manager as episodic memory
             await self._store_document_in_memory(processed_metadata, chunks)
-            
+
             # Update statistics
             self.retrieval_stats["total_documents"] += 1
             self.retrieval_stats["total_chunks"] += len(chunks)
-            
+
             logger.info(f"Added document {document_id}: {len(chunks)} chunks processed")
             return processed_metadata
-            
+
         except Exception as e:
             logger.error(f"Failed to add document: {e}")
             raise
-    
+
     async def retrieve_relevant_docs(
         self,
         query: str,
@@ -569,11 +586,11 @@ class RAGSystem:
         strategy: RetrievalStrategy = RetrievalStrategy.HYBRID,
         frameworks_filter: Optional[List[str]] = None,
         source_filter: Optional[List[DocumentSource]] = None,
-        min_relevance_score: float = 0.0
+        min_relevance_score: float = 0.0,
     ) -> RetrievalResult:
         """
         Retrieve relevant documents based on query.
-        
+
         Args:
             query: Search query
             company_id: Company UUID for access control
@@ -582,21 +599,23 @@ class RAGSystem:
             frameworks_filter: Filter by frameworks
             source_filter: Filter by document sources
             min_relevance_score: Minimum relevance threshold
-            
+
         Returns:
             Retrieval results with ranked chunks
         """
         start_time = datetime.utcnow()
-        
+
         # Check cache first
-        cache_key = self._generate_cache_key(query, company_id, k, strategy, frameworks_filter, source_filter)
+        cache_key = self._generate_cache_key(
+            query, company_id, k, strategy, frameworks_filter, source_filter
+        )
         if cache_key in self.query_cache:
             cached_result, cached_time = self.query_cache[cache_key]
             if (datetime.utcnow() - cached_time).total_seconds() < self.cache_ttl_hours * 3600:
                 self.retrieval_stats["cache_hits"] += 1
                 logger.info(f"Cache hit for query: {query[:50]}...")
                 return cached_result
-        
+
         try:
             # Execute retrieval strategy
             if strategy == RetrievalStrategy.SEMANTIC:
@@ -611,13 +630,17 @@ class RAGSystem:
                 chunks = await self._contextual_retrieval(query, company_id, k * 2)
             else:
                 chunks = await self._semantic_retrieval(query, company_id, k * 2)
-            
+
             # Apply filters
-            filtered_chunks = self._apply_filters(chunks, company_id, frameworks_filter, source_filter)
-            
+            filtered_chunks = self._apply_filters(
+                chunks, company_id, frameworks_filter, source_filter
+            )
+
             # Apply minimum relevance threshold
-            relevant_chunks = [chunk for chunk in filtered_chunks if chunk.relevance_score >= min_relevance_score]
-            
+            relevant_chunks = [
+                chunk for chunk in filtered_chunks if chunk.relevance_score >= min_relevance_score
+            ]
+
             # Rerank if enabled
             if self.enable_reranking and len(relevant_chunks) > k:
                 rerank_start = datetime.utcnow()
@@ -625,19 +648,19 @@ class RAGSystem:
                 rerank_time = int((datetime.utcnow() - rerank_start).total_seconds() * 1000)
             else:
                 rerank_time = None
-            
+
             # Limit to k results
             final_chunks = relevant_chunks[:k]
-            
+
             # Update access statistics
             for chunk in final_chunks:
                 chunk.last_retrieved = datetime.utcnow()
                 chunk.retrieval_count += 1
-            
+
             # Calculate metrics
             retrieval_time = int((datetime.utcnow() - start_time).total_seconds() * 1000)
             relevance_scores = [chunk.relevance_score for chunk in final_chunks]
-            
+
             # Create result
             result = RetrievalResult(
                 chunks=final_chunks,
@@ -646,72 +669,94 @@ class RAGSystem:
                 strategy=strategy,
                 retrieval_time_ms=retrieval_time,
                 rerank_time_ms=rerank_time,
-                avg_relevance_score=sum(relevance_scores) / len(relevance_scores) if relevance_scores else 0.0,
+                avg_relevance_score=sum(relevance_scores) / len(relevance_scores)
+                if relevance_scores
+                else 0.0,
                 min_relevance_score=min(relevance_scores) if relevance_scores else 0.0,
                 max_relevance_score=max(relevance_scores) if relevance_scores else 0.0,
-                document_sources=list(set([self.documents[chunk.document_id].source for chunk in final_chunks])),
-                frameworks_covered=list(set([fw for chunk in final_chunks for fw in self.documents[chunk.document_id].frameworks]))
+                document_sources=list(
+                    set([self.documents[chunk.document_id].source for chunk in final_chunks])
+                ),
+                frameworks_covered=list(
+                    set(
+                        [
+                            fw
+                            for chunk in final_chunks
+                            for fw in self.documents[chunk.document_id].frameworks
+                        ]
+                    )
+                ),
             )
-            
+
             # Cache result
             self.query_cache[cache_key] = (result, datetime.utcnow())
-            
+
             # Update statistics
             self.retrieval_stats["total_queries"] += 1
-            total_time = self.retrieval_stats["avg_retrieval_time_ms"] * (self.retrieval_stats["total_queries"] - 1)
-            self.retrieval_stats["avg_retrieval_time_ms"] = (total_time + retrieval_time) / self.retrieval_stats["total_queries"]
-            
-            logger.info(f"Retrieved {len(final_chunks)} chunks in {retrieval_time}ms using {strategy} strategy")
+            total_time = self.retrieval_stats["avg_retrieval_time_ms"] * (
+                self.retrieval_stats["total_queries"] - 1
+            )
+            self.retrieval_stats["avg_retrieval_time_ms"] = (
+                total_time + retrieval_time
+            ) / self.retrieval_stats["total_queries"]
+
+            logger.info(
+                f"Retrieved {len(final_chunks)} chunks in {retrieval_time}ms using {strategy} strategy"
+            )
             return result
-            
+
         except Exception as e:
             logger.error(f"Retrieval failed: {e}")
             raise
-    
-    async def _semantic_retrieval(self, query: str, company_id: UUID, k: int) -> List[DocumentChunk]:
+
+    async def _semantic_retrieval(
+        self, query: str, company_id: UUID, k: int
+    ) -> List[DocumentChunk]:
         """Perform semantic similarity search."""
         try:
             # Generate query embedding
             query_embedding = await self._get_embedding(query)
-            
+
             # Get chunks for company
             company_chunks = [
-                chunk for chunk in self.chunks.values()
+                chunk
+                for chunk in self.chunks.values()
                 if self.documents[chunk.document_id].company_id == company_id and chunk.embedding
             ]
-            
+
             # Calculate similarities
             similarities = []
             for chunk in company_chunks:
                 similarity = self._cosine_similarity(query_embedding, chunk.embedding)
                 chunk.relevance_score = similarity
                 similarities.append((chunk, similarity))
-            
+
             # Sort by similarity
             similarities.sort(key=lambda x: x[1], reverse=True)
-            
+
             return [chunk for chunk, _ in similarities[:k]]
-            
+
         except Exception as e:
             logger.error(f"Semantic retrieval failed: {e}")
             return []
-    
+
     async def _keyword_retrieval(self, query: str, company_id: UUID, k: int) -> List[DocumentChunk]:
         """Perform keyword-based search."""
         try:
             query_terms = set(query.lower().split())
-            
+
             # Get chunks for company
             company_chunks = [
-                chunk for chunk in self.chunks.values()
+                chunk
+                for chunk in self.chunks.values()
                 if self.documents[chunk.document_id].company_id == company_id
             ]
-            
+
             # Calculate keyword scores
             scored_chunks = []
             for chunk in company_chunks:
                 content_terms = set(chunk.content.lower().split())
-                
+
                 # Calculate term frequency score
                 matches = len(query_terms.intersection(content_terms))
                 if matches > 0:
@@ -720,24 +765,26 @@ class RAGSystem:
                     idf_boost = 1.0 + (matches / len(content_terms))
                     chunk.relevance_score = tf_score * idf_boost
                     scored_chunks.append(chunk)
-            
+
             # Sort by relevance
             scored_chunks.sort(key=lambda x: x.relevance_score, reverse=True)
-            
+
             return scored_chunks[:k]
-            
+
         except Exception as e:
             logger.error(f"Keyword retrieval failed: {e}")
             return []
-    
-    async def _contextual_retrieval(self, query: str, company_id: UUID, k: int) -> List[DocumentChunk]:
+
+    async def _contextual_retrieval(
+        self, query: str, company_id: UUID, k: int
+    ) -> List[DocumentChunk]:
         """Perform context-aware retrieval using memory system."""
         try:
             # Use memory manager to get contextual memories
             relevant_memories = await self.memory_manager.get_relevant_memories(
                 company_id, query, max_results=k
             )
-            
+
             # Extract chunk references from memories
             chunks = []
             for memory in relevant_memories:
@@ -745,33 +792,36 @@ class RAGSystem:
                 if "chunk_" in memory.content:
                     # Extract potential chunk IDs
                     import re
-                    chunk_ids = re.findall(r'doc_[a-f0-9-]+_chunk_\d{4}', memory.content)
+
+                    chunk_ids = re.findall(r"doc_[a-f0-9-]+_chunk_\d{4}", memory.content)
                     for chunk_id in chunk_ids:
                         if chunk_id in self.chunks:
                             chunk = self.chunks[chunk_id]
                             chunk.relevance_score = 0.8  # High relevance from memory
                             chunks.append(chunk)
-            
+
             # Fall back to semantic search if no memory chunks found
             if not chunks:
                 chunks = await self._semantic_retrieval(query, company_id, k)
-            
+
             return chunks[:k]
-            
+
         except Exception as e:
             logger.error(f"Contextual retrieval failed: {e}")
             return await self._semantic_retrieval(query, company_id, k)
-    
-    def _merge_results(self, semantic_chunks: List[DocumentChunk], keyword_chunks: List[DocumentChunk]) -> List[DocumentChunk]:
+
+    def _merge_results(
+        self, semantic_chunks: List[DocumentChunk], keyword_chunks: List[DocumentChunk]
+    ) -> List[DocumentChunk]:
         """Merge semantic and keyword search results."""
         # Combine results with weighted scores
         merged = {}
-        
+
         # Add semantic results (weight: 0.7)
         for chunk in semantic_chunks:
             merged[chunk.chunk_id] = chunk
             chunk.relevance_score = chunk.relevance_score * 0.7
-        
+
         # Add keyword results (weight: 0.3)
         for chunk in keyword_chunks:
             if chunk.chunk_id in merged:
@@ -780,52 +830,52 @@ class RAGSystem:
             else:
                 chunk.relevance_score = chunk.relevance_score * 0.3
                 merged[chunk.chunk_id] = chunk
-        
+
         # Sort by combined score
         result = list(merged.values())
         result.sort(key=lambda x: x.relevance_score, reverse=True)
-        
+
         return result
-    
+
     def _apply_filters(
         self,
         chunks: List[DocumentChunk],
         company_id: UUID,
         frameworks_filter: Optional[List[str]],
-        source_filter: Optional[List[DocumentSource]]
+        source_filter: Optional[List[DocumentSource]],
     ) -> List[DocumentChunk]:
         """Apply filters to chunk results."""
         filtered = []
-        
+
         for chunk in chunks:
             doc_metadata = self.documents[chunk.document_id]
-            
+
             # Company access control
             if doc_metadata.company_id != company_id:
                 continue
-            
+
             # Framework filter
             if frameworks_filter:
                 if not any(fw in doc_metadata.frameworks for fw in frameworks_filter):
                     continue
-            
+
             # Source filter
             if source_filter:
                 if doc_metadata.source not in source_filter:
                     continue
-            
+
             filtered.append(chunk)
-        
+
         return filtered
-    
+
     async def _rerank_chunks(self, query: str, chunks: List[DocumentChunk]) -> List[DocumentChunk]:
         """Rerank chunks for better relevance."""
         # Simple reranking based on query term frequency and position
         query_terms = set(query.lower().split())
-        
+
         for chunk in chunks:
             content_lower = chunk.content.lower()
-            
+
             # Position-based scoring (earlier mentions get higher scores)
             position_scores = []
             for term in query_terms:
@@ -834,62 +884,66 @@ class RAGSystem:
                     # Inverse position score (earlier = higher)
                     position_score = 1.0 - (pos / len(content_lower))
                     position_scores.append(position_score)
-            
+
             # Frequency-based scoring
             term_frequency = sum(content_lower.count(term) for term in query_terms)
             frequency_score = term_frequency / len(chunk.content.split())
-            
+
             # Combined reranking score
             position_bonus = sum(position_scores) / len(position_scores) if position_scores else 0
-            rerank_score = chunk.relevance_score * 0.7 + position_bonus * 0.2 + frequency_score * 0.1
-            
+            rerank_score = (
+                chunk.relevance_score * 0.7 + position_bonus * 0.2 + frequency_score * 0.1
+            )
+
             chunk.relevance_score = rerank_score
-        
+
         # Sort by new scores
         chunks.sort(key=lambda x: x.relevance_score, reverse=True)
         return chunks
-    
+
     async def _generate_chunk_embeddings(self, chunks: List[DocumentChunk]) -> None:
         """Generate embeddings for document chunks."""
         try:
             for chunk in chunks:
                 if not chunk.embedding:
                     chunk.embedding = await self._get_embedding(chunk.content)
-            
+
             logger.info(f"Generated embeddings for {len(chunks)} chunks")
-            
+
         except Exception as e:
             logger.error(f"Failed to generate embeddings: {e}")
-    
+
     async def _get_embedding(self, text: str) -> List[float]:
         """Get embedding for text with caching."""
         # Check cache first
         text_hash = hashlib.md5(text.encode()).hexdigest()
         if text_hash in self.embedding_cache:
             return self.embedding_cache[text_hash]
-        
+
         # Generate embedding
         embedding = await asyncio.to_thread(self.embeddings.embed_query, text)
-        
+
         # Cache result
         self.embedding_cache[text_hash] = embedding
-        
+
         return embedding
-    
+
     def _cosine_similarity(self, a: List[float], b: List[float]) -> float:
         """Calculate cosine similarity between two vectors."""
         import math
-        
+
         dot_product = sum(x * y for x, y in zip(a, b))
         magnitude_a = math.sqrt(sum(x * x for x in a))
         magnitude_b = math.sqrt(sum(x * x for x in b))
-        
+
         if magnitude_a == 0 or magnitude_b == 0:
             return 0.0
-        
+
         return dot_product / (magnitude_a * magnitude_b)
-    
-    async def _store_document_in_memory(self, metadata: DocumentMetadata, chunks: List[DocumentChunk]) -> None:
+
+    async def _store_document_in_memory(
+        self, metadata: DocumentMetadata, chunks: List[DocumentChunk]
+    ) -> None:
         """Store document information in memory manager."""
         try:
             # Create episode content for document
@@ -904,81 +958,85 @@ class RAGSystem:
                     "chunk_count": len(chunks),
                     "summary": metadata.summary,
                     "keywords": metadata.keywords,
-                    "entities": metadata.entities
+                    "entities": metadata.entities,
                 }
             }
-            
+
             # Store in memory manager
             await self.memory_manager.store_conversation(
                 company_id=metadata.company_id,
                 session_id=f"doc_index_{metadata.document_id}",
                 user_message=f"Document indexed: {metadata.title}",
                 agent_response=f"Successfully indexed {metadata.title} with {len(chunks)} chunks",
-                context={"document_metadata": episode_content}
+                context={"document_metadata": episode_content},
             )
-            
+
         except Exception as e:
             logger.error(f"Failed to store document in memory: {e}")
-    
+
     def _generate_cache_key(self, *args) -> str:
         """Generate cache key for query results."""
         key_string = str(args)
         return hashlib.md5(key_string.encode()).hexdigest()
-    
+
     async def get_document_by_id(self, document_id: str) -> Optional[DocumentMetadata]:
         """Get document metadata by ID."""
         return self.documents.get(document_id)
-    
+
     async def get_document_chunks(self, document_id: str) -> List[DocumentChunk]:
         """Get all chunks for a document."""
         return [chunk for chunk in self.chunks.values() if chunk.document_id == document_id]
-    
+
     async def delete_document(self, document_id: str, company_id: UUID) -> bool:
         """Delete a document and all its chunks."""
         try:
             if document_id not in self.documents:
                 return False
-            
+
             doc_metadata = self.documents[document_id]
-            
+
             # Check company access
             if doc_metadata.company_id != company_id:
                 return False
-            
+
             # Remove chunks
-            chunks_to_remove = [chunk_id for chunk_id, chunk in self.chunks.items() if chunk.document_id == document_id]
+            chunks_to_remove = [
+                chunk_id
+                for chunk_id, chunk in self.chunks.items()
+                if chunk.document_id == document_id
+            ]
             for chunk_id in chunks_to_remove:
                 del self.chunks[chunk_id]
-            
+
             # Remove document
             del self.documents[document_id]
-            
+
             # Update statistics
             self.retrieval_stats["total_documents"] -= 1
             self.retrieval_stats["total_chunks"] -= len(chunks_to_remove)
-            
+
             logger.info(f"Deleted document {document_id} and {len(chunks_to_remove)} chunks")
             return True
-            
+
         except Exception as e:
             logger.error(f"Failed to delete document {document_id}: {e}")
             return False
-    
+
     async def health_check(self) -> Dict[str, Any]:
         """Perform health check on RAG system."""
         health = {
             "status": "healthy",
             "timestamp": datetime.utcnow().isoformat(),
             "statistics": self.retrieval_stats.copy(),
-            "components": {}
+            "components": {},
         }
-        
+
         try:
             # Check memory manager
             if self.memory_manager:
                 memory_health = await self.memory_manager.health_check()
                 health["components"]["memory"] = memory_health
-            
+
             # Check embeddings
             try:
                 test_embedding = await self._get_embedding("test")
@@ -986,19 +1044,19 @@ class RAGSystem:
             except Exception:
                 health["components"]["embeddings"] = "failed"
                 health["status"] = "degraded"
-            
+
             # Add cache statistics
             health["cache_stats"] = {
                 "query_cache_size": len(self.query_cache),
-                "embedding_cache_size": len(self.embedding_cache)
+                "embedding_cache_size": len(self.embedding_cache),
             }
-            
+
         except Exception as e:
             health["status"] = "degraded"
             health["error"] = str(e)
-        
+
         return health
-    
+
     async def get_system_stats(self) -> Dict[str, Any]:
         """Get comprehensive system statistics."""
         return {
@@ -1006,21 +1064,25 @@ class RAGSystem:
                 "total": len(self.documents),
                 "by_type": self._get_documents_by_type(),
                 "by_source": self._get_documents_by_source(),
-                "total_size_bytes": sum(doc.file_size_bytes for doc in self.documents.values())
+                "total_size_bytes": sum(doc.file_size_bytes for doc in self.documents.values()),
             },
             "chunks": {
                 "total": len(self.chunks),
-                "avg_size_chars": sum(len(chunk.content) for chunk in self.chunks.values()) / len(self.chunks) if self.chunks else 0,
-                "total_tokens": sum(chunk.token_count for chunk in self.chunks.values())
+                "avg_size_chars": sum(len(chunk.content) for chunk in self.chunks.values())
+                / len(self.chunks)
+                if self.chunks
+                else 0,
+                "total_tokens": sum(chunk.token_count for chunk in self.chunks.values()),
             },
             "retrieval": self.retrieval_stats.copy(),
             "cache": {
                 "query_cache_size": len(self.query_cache),
                 "embedding_cache_size": len(self.embedding_cache),
-                "cache_hit_rate": self.retrieval_stats["cache_hits"] / max(self.retrieval_stats["total_queries"], 1)
-            }
+                "cache_hit_rate": self.retrieval_stats["cache_hits"]
+                / max(self.retrieval_stats["total_queries"], 1),
+            },
         }
-    
+
     def _get_documents_by_type(self) -> Dict[str, int]:
         """Get document count by type."""
         type_counts = {}
@@ -1028,7 +1090,7 @@ class RAGSystem:
             doc_type = doc.document_type.value
             type_counts[doc_type] = type_counts.get(doc_type, 0) + 1
         return type_counts
-    
+
     def _get_documents_by_source(self) -> Dict[str, int]:
         """Get document count by source."""
         source_counts = {}

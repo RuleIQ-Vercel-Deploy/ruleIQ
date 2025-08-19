@@ -2,6 +2,7 @@
 Comprehensive Performance Monitoring Service
 Tracks API response times, database performance, and system metrics
 """
+
 import asyncio
 import time
 import psutil
@@ -17,9 +18,11 @@ from config.logging_config import get_logger
 
 logger = get_logger(__name__)
 
+
 @dataclass
 class PerformanceMetrics:
     """Performance metrics data structure."""
+
     timestamp: datetime
     api_response_time: float
     database_query_time: float
@@ -29,9 +32,11 @@ class PerformanceMetrics:
     active_connections: int
     requests_per_second: float
 
+
 @dataclass
 class DatabaseMetrics:
     """Database-specific performance metrics."""
+
     connection_pool_size: int
     active_connections: int
     connection_pool_utilization: float
@@ -39,9 +44,11 @@ class DatabaseMetrics:
     slow_queries_count: int
     deadlocks_count: int
 
+
 @dataclass
 class CacheMetrics:
     """Cache performance metrics."""
+
     hit_rate: float
     miss_rate: float
     eviction_rate: float
@@ -49,15 +56,18 @@ class CacheMetrics:
     total_requests: int
     avg_response_time: float
 
+
 @dataclass
 class APIMetrics:
     """API performance metrics."""
+
     avg_response_time: float
     p95_response_time: float
     p99_response_time: float
     requests_per_second: float
     error_rate: float
     slowest_endpoints: List[Dict[str, Any]]
+
 
 class PerformanceMonitor:
     """
@@ -114,9 +124,9 @@ class PerformanceMonitor:
             {
                 "avg_time": statistics.mean(self.api_metrics[endpoint][-100:]),
                 "count": len(self.api_metrics[endpoint]),
-                "last_call": duration
+                "last_call": duration,
             },
-            ttl=60
+            ttl=60,
         )
 
     async def get_database_metrics(self) -> DatabaseMetrics:
@@ -133,11 +143,14 @@ class PerformanceMonitor:
         async with get_async_db() as db:
             # Get slow queries from pg_stat_statements if available
             try:
-                slow_queries_result = await db.execute(text("""
+                slow_queries_result = await db.execute(
+                    text("""
                     SELECT count(*) as slow_count
                     FROM pg_stat_statements
                     WHERE mean_exec_time > :threshold
-                """), {"threshold": self.slow_query_threshold * 1000})  # Convert to ms
+                """),
+                    {"threshold": self.slow_query_threshold * 1000},
+                )  # Convert to ms
                 slow_queries_count = slow_queries_result.scalar() or 0
             except Exception:
                 slow_queries_count = 0
@@ -153,18 +166,18 @@ class PerformanceMonitor:
             connection_pool_utilization=pool_utilization,
             avg_query_time=sample_query_time,
             slow_queries_count=slow_queries_count,
-            deadlocks_count=0  # Would need PostgreSQL log analysis
+            deadlocks_count=0,  # Would need PostgreSQL log analysis
         )
 
     async def get_cache_metrics(self) -> CacheMetrics:
         """Collect cache performance metrics."""
         try:
-            if hasattr(self.cache_manager, 'redis_client') and self.cache_manager.redis_client:
+            if hasattr(self.cache_manager, "redis_client") and self.cache_manager.redis_client:
                 # Get Redis INFO stats
                 info = await self.cache_manager.redis_client.info()
 
-                keyspace_hits = info.get('keyspace_hits', 0)
-                keyspace_misses = info.get('keyspace_misses', 0)
+                keyspace_hits = info.get("keyspace_hits", 0)
+                keyspace_misses = info.get("keyspace_misses", 0)
                 total_requests = keyspace_hits + keyspace_misses
 
                 hit_rate = keyspace_hits / total_requests if total_requests > 0 else 0
@@ -173,10 +186,12 @@ class PerformanceMonitor:
                 return CacheMetrics(
                     hit_rate=hit_rate,
                     miss_rate=miss_rate,
-                    eviction_rate=info.get('evicted_keys', 0) / total_requests if total_requests > 0 else 0,
-                    memory_usage=info.get('used_memory', 0),
+                    eviction_rate=info.get("evicted_keys", 0) / total_requests
+                    if total_requests > 0
+                    else 0,
+                    memory_usage=info.get("used_memory", 0),
                     total_requests=total_requests,
-                    avg_response_time=0.001  # Redis is typically very fast
+                    avg_response_time=0.001,  # Redis is typically very fast
                 )
             else:
                 # Memory cache fallback
@@ -186,7 +201,7 @@ class PerformanceMonitor:
                     eviction_rate=0.0,
                     memory_usage=len(self.cache_manager.memory_cache) * 1024,  # Estimate
                     total_requests=1000,  # Estimate
-                    avg_response_time=0.0001
+                    avg_response_time=0.0001,
                 )
         except Exception as e:
             logger.warning(f"Failed to get cache metrics: {e}")
@@ -204,12 +219,16 @@ class PerformanceMonitor:
             if times:
                 all_response_times.extend(times)
                 avg_time = statistics.mean(times)
-                slowest_endpoints.append({
-                    "endpoint": endpoint,
-                    "avg_response_time": avg_time,
-                    "call_count": len(times),
-                    "p95_time": sorted(times)[int(len(times) * 0.95)] if len(times) > 20 else avg_time
-                })
+                slowest_endpoints.append(
+                    {
+                        "endpoint": endpoint,
+                        "avg_response_time": avg_time,
+                        "call_count": len(times),
+                        "p95_time": sorted(times)[int(len(times) * 0.95)]
+                        if len(times) > 20
+                        else avg_time,
+                    }
+                )
 
         if not all_response_times:
             return APIMetrics(0, 0, 0, 0, 0, [])
@@ -222,7 +241,7 @@ class PerformanceMonitor:
             p99_response_time=sorted(all_response_times)[int(len(all_response_times) * 0.99)],
             requests_per_second=len(all_response_times) / 60,  # Rough estimate
             error_rate=0.0,  # Would need error tracking
-            slowest_endpoints=slowest_endpoints[:10]
+            slowest_endpoints=slowest_endpoints[:10],
         )
 
     def get_system_metrics(self) -> Dict[str, float]:
@@ -230,8 +249,8 @@ class PerformanceMonitor:
         return {
             "cpu_percent": psutil.cpu_percent(),
             "memory_percent": psutil.virtual_memory().percent,
-            "disk_percent": psutil.disk_usage('/').percent,
-            "load_average": psutil.getloadavg()[0] if hasattr(psutil, 'getloadavg') else 0,
+            "disk_percent": psutil.disk_usage("/").percent,
+            "load_average": psutil.getloadavg()[0] if hasattr(psutil, "getloadavg") else 0,
         }
 
     async def collect_comprehensive_metrics(self) -> Dict[str, Any]:
@@ -249,7 +268,7 @@ class PerformanceMonitor:
             "system": system_metrics,
             "performance_score": self.calculate_performance_score(
                 db_metrics, cache_metrics, api_metrics, system_metrics
-            )
+            ),
         }
 
     def calculate_performance_score(
@@ -257,7 +276,7 @@ class PerformanceMonitor:
         db_metrics: DatabaseMetrics,
         cache_metrics: CacheMetrics,
         api_metrics: APIMetrics,
-        system_metrics: Dict[str, float]
+        system_metrics: Dict[str, float],
     ) -> float:
         """Calculate overall performance score (0-100)."""
         scores = []
@@ -301,62 +320,72 @@ class PerformanceMonitor:
 
         # Database recommendations
         if metrics["database"]["connection_pool_utilization"] > 0.8:
-            recommendations.append({
-                "category": "database",
-                "priority": "high",
-                "issue": "Connection pool utilization high",
-                "recommendation": "Increase database connection pool size",
-                "current_value": metrics["database"]["connection_pool_size"],
-                "suggested_value": int(metrics["database"]["connection_pool_size"] * 1.5),
-                "impact": "Prevents connection timeouts under load"
-            })
+            recommendations.append(
+                {
+                    "category": "database",
+                    "priority": "high",
+                    "issue": "Connection pool utilization high",
+                    "recommendation": "Increase database connection pool size",
+                    "current_value": metrics["database"]["connection_pool_size"],
+                    "suggested_value": int(metrics["database"]["connection_pool_size"] * 1.5),
+                    "impact": "Prevents connection timeouts under load",
+                }
+            )
 
         if metrics["database"]["avg_query_time"] > 0.1:
-            recommendations.append({
-                "category": "database",
-                "priority": "high",
-                "issue": "Slow average query time",
-                "recommendation": "Review and optimize slow queries, add indexes",
-                "current_value": f"{metrics['database']['avg_query_time']:.3f}s",
-                "suggested_value": "<0.1s",
-                "impact": "Improves overall API response times"
-            })
+            recommendations.append(
+                {
+                    "category": "database",
+                    "priority": "high",
+                    "issue": "Slow average query time",
+                    "recommendation": "Review and optimize slow queries, add indexes",
+                    "current_value": f"{metrics['database']['avg_query_time']:.3f}s",
+                    "suggested_value": "<0.1s",
+                    "impact": "Improves overall API response times",
+                }
+            )
 
         # Cache recommendations
         if metrics["cache"]["hit_rate"] < 0.85:
-            recommendations.append({
-                "category": "cache",
-                "priority": "medium",
-                "issue": "Low cache hit rate",
-                "recommendation": "Optimize cache keys and TTL strategies",
-                "current_value": f"{metrics['cache']['hit_rate']:.2%}",
-                "suggested_value": ">85%",
-                "impact": "Reduces database load and improves response times"
-            })
+            recommendations.append(
+                {
+                    "category": "cache",
+                    "priority": "medium",
+                    "issue": "Low cache hit rate",
+                    "recommendation": "Optimize cache keys and TTL strategies",
+                    "current_value": f"{metrics['cache']['hit_rate']:.2%}",
+                    "suggested_value": ">85%",
+                    "impact": "Reduces database load and improves response times",
+                }
+            )
 
         # API recommendations
         if metrics["api"]["avg_response_time"] > 0.2:
-            recommendations.append({
-                "category": "api",
-                "priority": "high",
-                "issue": "Slow API response times",
-                "recommendation": "Implement response caching and optimize slow endpoints",
-                "current_value": f"{metrics['api']['avg_response_time']:.3f}s",
-                "suggested_value": "<0.2s",
-                "impact": "Better user experience and system efficiency"
-            })
+            recommendations.append(
+                {
+                    "category": "api",
+                    "priority": "high",
+                    "issue": "Slow API response times",
+                    "recommendation": "Implement response caching and optimize slow endpoints",
+                    "current_value": f"{metrics['api']['avg_response_time']:.3f}s",
+                    "suggested_value": "<0.2s",
+                    "impact": "Better user experience and system efficiency",
+                }
+            )
 
         # System recommendations
         if metrics["system"]["memory_percent"] > 80:
-            recommendations.append({
-                "category": "system",
-                "priority": "medium",
-                "issue": "High memory usage",
-                "recommendation": "Investigate memory leaks, optimize data structures",
-                "current_value": f"{metrics['system']['memory_percent']:.1f}%",
-                "suggested_value": "<80%",
-                "impact": "Prevents system instability and improves performance"
-            })
+            recommendations.append(
+                {
+                    "category": "system",
+                    "priority": "medium",
+                    "issue": "High memory usage",
+                    "recommendation": "Investigate memory leaks, optimize data structures",
+                    "current_value": f"{metrics['system']['memory_percent']:.1f}%",
+                    "suggested_value": "<80%",
+                    "impact": "Prevents system instability and improves performance",
+                }
+            )
 
         return recommendations
 
@@ -377,16 +406,18 @@ class PerformanceMonitor:
                     logger.warning(f"Performance score low: {metrics['performance_score']:.1f}/100")
 
                 # Store in history
-                self.performance_history.append(PerformanceMetrics(
-                    timestamp=datetime.utcnow(),
-                    api_response_time=metrics["api"]["avg_response_time"],
-                    database_query_time=metrics["database"]["avg_query_time"],
-                    cache_hit_rate=metrics["cache"]["hit_rate"],
-                    memory_usage_percent=metrics["system"]["memory_percent"],
-                    cpu_usage_percent=metrics["system"]["cpu_percent"],
-                    active_connections=metrics["database"]["active_connections"],
-                    requests_per_second=metrics["api"]["requests_per_second"]
-                ))
+                self.performance_history.append(
+                    PerformanceMetrics(
+                        timestamp=datetime.utcnow(),
+                        api_response_time=metrics["api"]["avg_response_time"],
+                        database_query_time=metrics["database"]["avg_query_time"],
+                        cache_hit_rate=metrics["cache"]["hit_rate"],
+                        memory_usage_percent=metrics["system"]["memory_percent"],
+                        cpu_usage_percent=metrics["system"]["cpu_percent"],
+                        active_connections=metrics["database"]["active_connections"],
+                        requests_per_second=metrics["api"]["requests_per_second"],
+                    )
+                )
 
                 # Keep only recent history
                 if len(self.performance_history) > 1440:  # 24 hours at 1-minute intervals
@@ -428,12 +459,14 @@ class PerformanceMonitor:
                     "avg": statistics.mean([m.database_query_time for m in recent_metrics]),
                     "min": min([m.database_query_time for m in recent_metrics]),
                     "max": max([m.database_query_time for m in recent_metrics]),
-                }
-            }
+                },
+            },
         }
+
 
 # Global performance monitor instance
 performance_monitor = PerformanceMonitor()
+
 
 async def get_performance_monitor() -> PerformanceMonitor:
     """Get the global performance monitor instance."""
@@ -441,9 +474,11 @@ async def get_performance_monitor() -> PerformanceMonitor:
         await performance_monitor.initialize()
     return performance_monitor
 
+
 # Performance monitoring decorator
 def monitor_performance(endpoint_name: str = None):
     """Decorator to monitor function performance."""
+
     def decorator(func):
         async def wrapper(*args, **kwargs):
             monitor = await get_performance_monitor()
@@ -453,4 +488,5 @@ def monitor_performance(endpoint_name: str = None):
                 return await func(*args, **kwargs)
 
         return wrapper
+
     return decorator

@@ -296,8 +296,9 @@ class OktaUserCollector(BaseEvidenceCollector):
                     score -= 0.3
                 elif days_since_login > 30:
                     score -= 0.1
-            except:
-                pass  # Ignore date parsing errors
+            except Exception as e:
+                self.logger.debug(f"Failed to parse last login date: {e}")
+                pass  # Ignore date parsing errors but log for debugging
 
         # Check if essential profile fields are filled
         profile = user.get("profile", {})

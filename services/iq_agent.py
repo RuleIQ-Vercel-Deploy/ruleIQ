@@ -19,10 +19,18 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from services.neo4j_service import Neo4jGraphRAGService
 from services.compliance_retrieval_queries import (
-    ComplianceRetrievalQueries, QueryCategory, execute_compliance_query
+    ComplianceRetrievalQueries,
+    QueryCategory,
+    execute_compliance_query,
 )
 from services.compliance_memory_manager import ComplianceMemoryManager
 from services.compliance_graph_initializer import initialize_compliance_graph
+from services.agents.services import (
+    BusinessContextService,
+    ComplianceSearchService,
+    RecommendationService,
+    ExecutionService,
+)
 
 
 logger = logging.getLogger(__name__)
@@ -30,6 +38,7 @@ logger = logging.getLogger(__name__)
 
 class IQState(Enum):
     """IQ Agent operational states"""
+
     PERCEIVE = "perceive"
     PLAN = "plan"
     ACT = "act"
@@ -40,6 +49,7 @@ class IQState(Enum):
 @dataclass
 class IQAgentState:
     """State management for IQ agent"""
+
     current_query: str
     graph_context: Dict[str, Any]
     compliance_posture: Dict[str, Any]
@@ -56,7 +66,7 @@ class IQAgentState:
 class IQComplianceAgent:
     """
     IQ - Autonomous Compliance Orchestrator with GraphRAG Intelligence
-    
+
     Core Architecture:
     - Knowledge Base: Neo4j graph with 20+ node types
     - Memory System: GraphRAG with semantic search and learning loops
@@ -68,19 +78,33 @@ class IQComplianceAgent:
         self,
         neo4j_service: Neo4jGraphRAGService,
         postgres_session: Optional[AsyncSession] = None,
-        llm_model: str = "gpt-4"
-    ):
+        llm_model: str = "gpt-4",
+        business_context_service: Optional[BusinessContextService] = None,
+        compliance_search_service: Optional[ComplianceSearchService] = None,
+        recommendation_service: Optional[RecommendationService] = None,
+        execution_service: Optional[ExecutionService] = None,
+    ) -> None:
         """
-        Initialize IQComplianceAgent with dual database access.
-        
+        Initialize IQComplianceAgent with dual database access and injected services.
+
         Args:
             neo4j_service: Neo4j service for compliance knowledge graph
             postgres_session: Optional PostgreSQL session for business data
             llm_model: LLM model to use for responses
+            business_context_service: Service for business context retrieval
+            compliance_search_service: Service for compliance resource searching
+            recommendation_service: Service for recommendation generation
+            execution_service: Service for task execution
         """
         self.neo4j = neo4j_service
         self.postgres_session = postgres_session
         self.has_postgres_access = postgres_session is not None
+
+        # Injected services (with fallback to None for backward compatibility)
+        self.business_context_service = business_context_service
+        self.compliance_search_service = compliance_search_service
+        self.recommendation_service = recommendation_service
+        self.execution_service = execution_service
 
         self.memory_manager = ComplianceMemoryManager(neo4j_service)
         self.retrieval_queries = ComplianceRetrievalQueries(neo4j_service)
@@ -96,8 +120,10 @@ class IQComplianceAgent:
         self.RISK_THRESHOLD = 7.0
         self.AUTONOMY_BUDGET = 10000.0
 
-        logger.info(f"IQComplianceAgent initialized with Neo4j and "
-                   f"{'PostgreSQL' if self.has_postgres_access else 'NO PostgreSQL'} access")
+        logger.info(
+            f"IQComplianceAgent initialized with Neo4j and "
+            f"{'PostgreSQL' if self.has_postgres_access else 'NO PostgreSQL'} access"
+        )
 
     def _get_iq_system_prompt(self) -> str:
         """IQ's core system prompt - his operational brain"""
@@ -191,7 +217,9 @@ Always provide:
 
         return workflow.compile()
 
-    async def process_query(self, user_query: str, context: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+    async def process_query(
+        self, user_query: str, context: Optional[Dict[str, Any]] = None
+    ) -> Dict[str, Any]:
         """Main entry point for processing compliance queries"""
 
         # For simplified testing, bypass the full workflow if it's not initialized
@@ -202,9 +230,9 @@ Always provide:
                 # Basic compliance query
                 query = """
                 MATCH (r:Regulation)-[:HAS_REQUIREMENT]->(req:Requirement)
-                WHERE toLower(r.name) CONTAINS toLower($query) 
+                WHERE toLower(r.name) CONTAINS toLower($query)
                    OR toLower(req.title) CONTAINS toLower($query)
-                RETURN r.code as regulation, 
+                RETURN r.code as regulation,
                        collect({
                            id: req.id,
                            title: req.title,
@@ -222,10 +250,10 @@ Always provide:
             try:
                 prompt = f"""
                 User Query: {user_query}
-                
+
                 Relevant Compliance Data:
                 {json.dumps(compliance_data, indent=2) if compliance_data else "No specific compliance data found"}
-                
+
                 Please provide compliance guidance.
                 """
                 response = await self.llm.ainvoke(prompt)
@@ -242,12 +270,10 @@ Always provide:
                     "risk_posture": "MEDIUM",
                     "compliance_score": 0.7,
                     "top_gaps": [],
-                    "immediate_actions": ["Review compliance requirements"]
+                    "immediate_actions": ["Review compliance requirements"],
                 },
-                "artifacts": {
-                    "compliance_data": compliance_data
-                },
-                "llm_response": llm_response
+                "artifacts": {"compliance_data": compliance_data},
+                "llm_response": llm_response,
             }
 
         except Exception as e:
@@ -259,8 +285,8 @@ Always provide:
                     "risk_posture": "UNKNOWN",
                     "compliance_score": 0.0,
                     "top_gaps": [],
-                    "immediate_actions": ["Contact support - processing error occurred"]
-                }
+                    "immediate_actions": ["Contact support - processing error occurred"],
+                },
             }
 
     async def _perceive_node(self, state: IQAgentState) -> IQAgentState:
@@ -271,15 +297,11 @@ Always provide:
         try:
             # Query current compliance posture
             coverage_analysis = await execute_compliance_query(
-                QueryCategory.REGULATORY_COVERAGE,
-                self.neo4j
+                QueryCategory.REGULATORY_COVERAGE, self.neo4j
             )
 
             # Identify compliance gaps
-            gap_analysis = await execute_compliance_query(
-                QueryCategory.COMPLIANCE_GAPS,
-                self.neo4j
-            )
+            gap_analysis = await execute_compliance_query(QueryCategory.COMPLIANCE_GAPS, self.neo4j)
 
             # Analyze cross-jurisdictional impacts
             if "regulations" in state.current_query.lower():
@@ -289,28 +311,32 @@ Always provide:
                     cross_jurisdictional = await execute_compliance_query(
                         QueryCategory.CROSS_JURISDICTIONAL,
                         self.neo4j,
-                        regulation_codes=regulation_codes
+                        regulation_codes=regulation_codes,
                     )
                     state.graph_context["cross_jurisdictional"] = cross_jurisdictional.data
 
             # Store perception results
-            state.graph_context.update({
-                "coverage_analysis": coverage_analysis.data,
-                "coverage_metadata": coverage_analysis.metadata,
-                "compliance_gaps": gap_analysis.data,
-                "gap_metadata": gap_analysis.metadata,
-                "perception_timestamp": datetime.utcnow().isoformat()
-            })
+            state.graph_context.update(
+                {
+                    "coverage_analysis": coverage_analysis.data,
+                    "coverage_metadata": coverage_analysis.metadata,
+                    "compliance_gaps": gap_analysis.data,
+                    "gap_metadata": gap_analysis.metadata,
+                    "perception_timestamp": datetime.utcnow().isoformat(),
+                }
+            )
 
             state.compliance_posture = {
                 "overall_coverage": coverage_analysis.metadata.get("overall_coverage", 0.0),
                 "total_gaps": gap_analysis.metadata.get("total_gaps", 0),
                 "critical_gaps": gap_analysis.metadata.get("critical_gaps", 0),
-                "high_risk_gaps": gap_analysis.metadata.get("high_risk_gaps", 0)
+                "high_risk_gaps": gap_analysis.metadata.get("high_risk_gaps", 0),
             }
 
-            logger.info(f"IQ PERCEIVE: Found {state.compliance_posture['total_gaps']} gaps, "
-                       f"coverage: {state.compliance_posture['overall_coverage']:.2f}")
+            logger.info(
+                f"IQ PERCEIVE: Found {state.compliance_posture['total_gaps']} gaps, "
+                f"coverage: {state.compliance_posture['overall_coverage']:.2f}"
+            )
 
         except Exception as e:
             logger.error(f"IQ PERCEIVE error: {str(e)}")
@@ -326,16 +352,12 @@ Always provide:
         try:
             # Risk convergence analysis for planning
             risk_convergence = await execute_compliance_query(
-                QueryCategory.RISK_CONVERGENCE,
-                self.neo4j
+                QueryCategory.RISK_CONVERGENCE, self.neo4j
             )
 
             # Temporal regulatory changes affecting planning
             temporal_changes = await execute_compliance_query(
-                QueryCategory.TEMPORAL_CHANGES,
-                self.neo4j,
-                lookback_months=6,
-                forecast_months=3
+                QueryCategory.TEMPORAL_CHANGES, self.neo4j, lookback_months=6, forecast_months=3
             )
 
             # Generate prioritized action plan
@@ -353,29 +375,33 @@ Always provide:
                     "severity_score": gap.get("gap_severity_score", 0),
                     "cost_estimate": self._estimate_action_cost(gap),
                     "timeline": self._estimate_timeline(gap),
-                    "graph_reference": gap["gap_id"]
+                    "graph_reference": gap["gap_id"],
                 }
                 action_plan.append(action)
 
             # Sort by priority and risk
-            action_plan.sort(key=lambda x: (
-                {"critical": 1, "high": 2, "medium": 3}.get(x["priority"], 4),
-                -x["severity_score"]
-            ))
+            action_plan.sort(
+                key=lambda x: (
+                    {"critical": 1, "high": 2, "medium": 3}.get(x["priority"], 4),
+                    -x["severity_score"],
+                )
+            )
 
             state.action_plan = action_plan
             state.risk_assessment = {
                 "convergence_patterns": len(risk_convergence.data),
                 "recent_regulatory_changes": temporal_changes.metadata.get("recent_changes", 0),
                 "overall_risk_level": self._calculate_overall_risk(state.compliance_posture),
-                "planning_horizon": "90_days"
+                "planning_horizon": "90_days",
             }
 
-            state.graph_context.update({
-                "risk_convergence": risk_convergence.data,
-                "temporal_changes": temporal_changes.data,
-                "planning_timestamp": datetime.utcnow().isoformat()
-            })
+            state.graph_context.update(
+                {
+                    "risk_convergence": risk_convergence.data,
+                    "temporal_changes": temporal_changes.data,
+                    "planning_timestamp": datetime.utcnow().isoformat(),
+                }
+            )
 
             logger.info(f"IQ PLAN: Generated {len(action_plan)} prioritized actions")
 
@@ -407,9 +433,9 @@ Always provide:
                     executed_actions.append(escalation)
 
             state.evidence_collected = executed_actions
-            state.graph_context["actions_executed"] = len([
-                a for a in executed_actions if a.get("status") == "executed"
-            ])
+            state.graph_context["actions_executed"] = len(
+                [a for a in executed_actions if a.get("status") == "executed"]
+            )
 
             logger.info(f"IQ ACT: Executed {len(executed_actions)} actions")
 
@@ -427,14 +453,12 @@ Always provide:
         try:
             # Learn from enforcement cases
             enforcement_learning = await execute_compliance_query(
-                QueryCategory.ENFORCEMENT_LEARNING,
-                self.neo4j
+                QueryCategory.ENFORCEMENT_LEARNING, self.neo4j
             )
 
             # Detect new patterns from recent activities
             patterns = self._detect_compliance_patterns(
-                state.graph_context,
-                state.evidence_collected
+                state.graph_context, state.evidence_collected
             )
 
             # Update control effectiveness based on execution results
@@ -443,12 +467,14 @@ Always provide:
             )
 
             state.patterns_detected = patterns
-            state.graph_context.update({
-                "enforcement_insights": enforcement_learning.data,
-                "patterns_detected": patterns,
-                "effectiveness_updates": effectiveness_updates,
-                "learning_timestamp": datetime.utcnow().isoformat()
-            })
+            state.graph_context.update(
+                {
+                    "enforcement_insights": enforcement_learning.data,
+                    "patterns_detected": patterns,
+                    "effectiveness_updates": effectiveness_updates,
+                    "learning_timestamp": datetime.utcnow().isoformat(),
+                }
+            )
 
             logger.info(f"IQ LEARN: Detected {len(patterns)} new patterns")
 
@@ -469,14 +495,12 @@ Always provide:
                 await self.memory_manager.store_knowledge_graph_memory(
                     graph_query_result=pattern,
                     query_category=QueryCategory.REGULATORY_COVERAGE,
-                    importance_score=0.7
+                    importance_score=0.7,
                 )
 
             # Retrieve relevant historical memories
             relevant_memories = await self.memory_manager.retrieve_contextual_memories(
-                query=state.current_query,
-                context=state.graph_context,
-                max_memories=5
+                query=state.current_query, context=state.graph_context, max_memories=5
             )
 
             state.memories_accessed = [m.id for m in relevant_memories.retrieved_memories]
@@ -486,11 +510,13 @@ Always provide:
                 consolidation = await self.memory_manager.consolidate_compliance_knowledge()
                 state.graph_context["knowledge_consolidation"] = consolidation
 
-            state.graph_context.update({
-                "memories_accessed": len(state.memories_accessed),
-                "memory_consolidation_due": state.step_count % 10 == 9,
-                "remember_timestamp": datetime.utcnow().isoformat()
-            })
+            state.graph_context.update(
+                {
+                    "memories_accessed": len(state.memories_accessed),
+                    "memory_consolidation_due": state.step_count % 10 == 9,
+                    "remember_timestamp": datetime.utcnow().isoformat(),
+                }
+            )
 
             logger.info(f"IQ REMEMBER: Accessed {len(state.memories_accessed)} relevant memories")
 
@@ -509,10 +535,9 @@ Always provide:
         response_prompt = self._create_response_prompt(state)
 
         try:
-            llm_response = await self.llm.ainvoke([
-                SystemMessage(content=self.system_prompt),
-                HumanMessage(content=response_prompt)
-            ])
+            llm_response = await self.llm.ainvoke(
+                [SystemMessage(content=self.system_prompt), HumanMessage(content=response_prompt)]
+            )
 
             state.messages.append(AIMessage(content=llm_response.content))
 
@@ -539,40 +564,38 @@ Always provide:
                     gap["requirement"]["title"]
                     for gap in state.graph_context.get("compliance_gaps", [])[:3]
                 ],
-                "immediate_actions": [
-                    action["target"]
-                    for action in state.action_plan[:3]
-                ]
+                "immediate_actions": [action["target"] for action in state.action_plan[:3]],
             },
             "artifacts": {
                 "compliance_posture": state.compliance_posture,
                 "action_plan": state.action_plan,
-                "risk_assessment": state.risk_assessment
+                "risk_assessment": state.risk_assessment,
             },
             "graph_context": {
                 "nodes_traversed": len(state.graph_context.get("coverage_analysis", [])),
                 "patterns_detected": state.patterns_detected,
                 "memories_accessed": state.memories_accessed,
-                "learnings_applied": len(state.evidence_collected)
+                "learnings_applied": len(state.evidence_collected),
             },
             "evidence": {
-                "controls_executed": len([
-                    e for e in state.evidence_collected
-                    if e.get("status") == "executed"
-                ]),
+                "controls_executed": len(
+                    [e for e in state.evidence_collected if e.get("status") == "executed"]
+                ),
                 "evidence_stored": len(state.evidence_collected),
-                "metrics_updated": state.graph_context.get("actions_executed", 0)
+                "metrics_updated": state.graph_context.get("actions_executed", 0),
             },
             "next_actions": [
                 {
                     "action": action["target"],
                     "priority": action["priority"].upper(),
                     "owner": "Compliance Team",
-                    "graph_reference": action["graph_reference"]
+                    "graph_reference": action["graph_reference"],
                 }
                 for action in state.action_plan[:5]
             ],
-            "llm_response": state.messages[-1].content if state.messages else "No response generated"
+            "llm_response": state.messages[-1].content
+            if state.messages
+            else "No response generated",
         }
 
     # Helper methods
@@ -596,7 +619,7 @@ Always provide:
             "critical": "30_days",
             "high": "60_days",
             "medium": "90_days",
-            "low": "180_days"
+            "low": "180_days",
         }
         return timeline_map.get(risk_level, "90_days")
 
@@ -616,42 +639,61 @@ Always provide:
 
     async def _should_auto_execute(self, action: Dict[str, Any]) -> bool:
         """Determine if action should be executed autonomously"""
-        # Simple autonomy decision based on risk and cost
+        # Use injected service if available
+        if self.execution_service:
+            return await self.execution_service.should_auto_execute(action)
+
+        # Fallback implementation
         risk_score = action.get("severity_score", 0)
         cost = action.get("cost_estimate", 0)
 
-        return (risk_score < self.RISK_THRESHOLD and
-                cost < self.AUTONOMY_BUDGET and
-                action["priority"] in ["high", "critical"])
+        return (
+            risk_score < self.RISK_THRESHOLD
+            and cost < self.AUTONOMY_BUDGET
+            and action["priority"] in ["high", "critical"]
+        )
 
     async def _execute_action(self, action: Dict[str, Any]) -> Dict[str, Any]:
         """Execute compliance action (placeholder)"""
-        # Simulate action execution
+        # Use injected service if available
+        if self.execution_service:
+            return await self.execution_service.execute_action(action)
+
+        # Fallback implementation
         return {
             "action_id": action["action_id"],
             "status": "executed",
             "timestamp": datetime.utcnow().isoformat(),
             "result": "success",
             "evidence_ref": f"evidence_{action['action_id']}",
-            "effectiveness": 0.85
+            "effectiveness": 0.85,
         }
 
     async def _create_escalation(self, action: Dict[str, Any]) -> Dict[str, Any]:
         """Create escalation for manual approval"""
+        # Use injected service if available
+        if self.execution_service:
+            return await self.execution_service.create_escalation(action)
+
+        # Fallback implementation
         return {
             "action_id": action["action_id"],
             "status": "escalated",
             "timestamp": datetime.utcnow().isoformat(),
             "reason": "Requires manual approval - high risk or cost",
-            "approval_required": True
+            "approval_required": True,
         }
 
-    async def _store_execution_evidence(self, action: Dict[str, Any], result: Dict[str, Any]) -> None:
+    async def _store_execution_evidence(
+        self, action: Dict[str, Any], result: Dict[str, Any]
+    ) -> None:
         """Store execution evidence in graph"""
         # Placeholder for evidence storage
         pass
 
-    def _detect_compliance_patterns(self, graph_context: Dict[str, Any], evidence: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    def _detect_compliance_patterns(
+        self, graph_context: Dict[str, Any], evidence: List[Dict[str, Any]]
+    ) -> List[Dict[str, Any]]:
         """Detect compliance patterns from current analysis"""
         patterns = []
 
@@ -665,26 +707,32 @@ Always provide:
 
             for domain, count in domain_gaps.items():
                 if count > 3:
-                    patterns.append({
-                        "pattern_type": "HIGH_GAP_CONCENTRATION",
-                        "domain": domain,
-                        "gap_count": count,
-                        "confidence": 0.8
-                    })
+                    patterns.append(
+                        {
+                            "pattern_type": "HIGH_GAP_CONCENTRATION",
+                            "domain": domain,
+                            "gap_count": count,
+                            "confidence": 0.8,
+                        }
+                    )
 
         return patterns
 
-    async def _update_control_effectiveness(self, evidence: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    async def _update_control_effectiveness(
+        self, evidence: List[Dict[str, Any]]
+    ) -> List[Dict[str, Any]]:
         """Update control effectiveness based on execution results"""
         updates = []
 
         for evidence_item in evidence:
             if evidence_item.get("status") == "executed":
-                updates.append({
-                    "control_id": evidence_item["action_id"],
-                    "effectiveness": evidence_item.get("effectiveness", 0.8),
-                    "updated_at": evidence_item["timestamp"]
-                })
+                updates.append(
+                    {
+                        "control_id": evidence_item["action_id"],
+                        "effectiveness": evidence_item.get("effectiveness", 0.8),
+                        "updated_at": evidence_item["timestamp"],
+                    }
+                )
 
         return updates
 
@@ -694,9 +742,9 @@ Always provide:
 Based on my analysis of the compliance landscape, please provide a comprehensive response to: "{state.current_query}"
 
 ## Current Compliance Posture:
-- Overall Coverage: {state.compliance_posture.get('overall_coverage', 0):.2%}
-- Total Gaps: {state.compliance_posture.get('total_gaps', 0)}
-- Critical Gaps: {state.compliance_posture.get('critical_gaps', 0)}
+- Overall Coverage: {state.compliance_posture.get("overall_coverage", 0):.2%}
+- Total Gaps: {state.compliance_posture.get("total_gaps", 0)}
+- Critical Gaps: {state.compliance_posture.get("critical_gaps", 0)}
 
 ## Top Priority Actions:
 {chr(10).join(f"- {action['target']} ({action['priority']} priority)" for action in state.action_plan[:3])}
@@ -715,7 +763,9 @@ Please provide:
 Focus on actionable insights derived from the graph analysis.
 """
 
-    def _determine_risk_posture(self, compliance_posture: Dict[str, Any], risk_assessment: Dict[str, Any]) -> str:
+    def _determine_risk_posture(
+        self, compliance_posture: Dict[str, Any], risk_assessment: Dict[str, Any]
+    ) -> str:
         """Determine overall risk posture"""
         coverage = compliance_posture.get("overall_coverage", 0.0)
         critical_gaps = compliance_posture.get("critical_gaps", 0)
@@ -737,17 +787,17 @@ Focus on actionable insights derived from the graph analysis.
         user_query: str,
         business_profile_id: Optional[str] = None,
         session_id: Optional[str] = None,
-        context: Optional[Dict[str, Any]] = None
+        context: Optional[Dict[str, Any]] = None,
     ) -> Dict[str, Any]:
         """
         Process query with business context from PostgreSQL.
-        
+
         Args:
             user_query: User's compliance question
             business_profile_id: Optional business profile ID to retrieve context
             session_id: Optional assessment session ID for history
             context: Additional context
-            
+
         Returns:
             Enhanced response with business context
         """
@@ -770,7 +820,7 @@ Focus on actionable insights derived from the graph analysis.
                     gap_query = """
                     MATCH (r:Regulation {code: 'GDPR'})-[:HAS_REQUIREMENT]->(req:Requirement)
                     WHERE req.risk_level IN ['high', 'critical']
-                    RETURN req.id as requirement_id, req.title as title, 
+                    RETURN req.id as requirement_id, req.title as title,
                            req.risk_level as risk_level, r.code as regulation
                     LIMIT 5
                     """
@@ -782,25 +832,37 @@ Focus on actionable insights derived from the graph analysis.
         # Build response using LLM with context
         # Safely serialize business context
         try:
-            business_context_str = json.dumps(business_context, indent=2) if business_context else "No business context available"
+            business_context_str = (
+                json.dumps(business_context, indent=2)
+                if business_context
+                else "No business context available"
+            )
         except (TypeError, ValueError):
             # Fallback to string representation if JSON serialization fails
-            business_context_str = str(business_context) if business_context else "No business context available"
+            business_context_str = (
+                str(business_context) if business_context else "No business context available"
+            )
 
         try:
-            compliance_gaps_str = json.dumps(compliance_gaps, indent=2) if compliance_gaps else "No specific gaps identified"
+            compliance_gaps_str = (
+                json.dumps(compliance_gaps, indent=2)
+                if compliance_gaps
+                else "No specific gaps identified"
+            )
         except (TypeError, ValueError):
-            compliance_gaps_str = str(compliance_gaps) if compliance_gaps else "No specific gaps identified"
+            compliance_gaps_str = (
+                str(compliance_gaps) if compliance_gaps else "No specific gaps identified"
+            )
 
         prompt = f"""
         User Query: {user_query}
-        
+
         Business Context:
         {business_context_str}
-        
+
         Compliance Gaps Identified:
         {compliance_gaps_str}
-        
+
         Please provide compliance guidance considering this business context.
         """
 
@@ -824,20 +886,18 @@ Focus on actionable insights derived from the graph analysis.
                 "immediate_actions": [
                     "Review compliance gaps",
                     "Update business profile",
-                    "Implement missing controls"
-                ]
+                    "Implement missing controls",
+                ],
             },
             "artifacts": {
                 "compliance_gaps": compliance_gaps,
                 "neo4j_data": {
                     "gaps_found": len(compliance_gaps),
-                    "regulations_checked": ["GDPR"] if business_context else []
-                }
+                    "regulations_checked": ["GDPR"] if business_context else [],
+                },
             },
-            "evidence": {
-                "available_evidence": 0
-            },
-            "llm_response": llm_response
+            "evidence": {"available_evidence": 0},
+            "llm_response": llm_response,
         }
 
         # Add evidence count from PostgreSQL if available
@@ -853,13 +913,20 @@ Focus on actionable insights derived from the graph analysis.
     async def retrieve_business_context(self, business_profile_id: str) -> Dict[str, Any]:
         """
         Retrieve business profile and evidence from PostgreSQL.
-        
+
         Args:
             business_profile_id: Business profile ID
-            
+
         Returns:
             Business context including profile and evidence
         """
+        # Use injected service if available
+        if self.business_context_service:
+            return await self.business_context_service.retrieve_business_context(
+                business_profile_id
+            )
+
+        # Fallback to legacy implementation
         if not self.has_postgres_access:
             return {}
 
@@ -869,9 +936,7 @@ Focus on actionable insights derived from the graph analysis.
 
         try:
             # Retrieve business profile
-            profile_stmt = select(BusinessProfile).where(
-                BusinessProfile.id == business_profile_id
-            )
+            profile_stmt = select(BusinessProfile).where(BusinessProfile.id == business_profile_id)
             result = await self.postgres_session.execute(profile_stmt)
             profile = result.scalars().first()
 
@@ -879,9 +944,12 @@ Focus on actionable insights derived from the graph analysis.
                 return {"error": "Business profile not found"}
 
             # Retrieve associated evidence
-            evidence_stmt = select(Evidence).where(
-                Evidence.business_profile_id == business_profile_id
-            ).order_by(Evidence.created_at.desc()).limit(10)
+            evidence_stmt = (
+                select(Evidence)
+                .where(Evidence.business_profile_id == business_profile_id)
+                .order_by(Evidence.created_at.desc())
+                .limit(10)
+            )
 
             evidence_result = await self.postgres_session.execute(evidence_stmt)
             evidence_items = evidence_result.scalars().all()
@@ -894,7 +962,7 @@ Focus on actionable insights derived from the graph analysis.
                     "company_size": profile.company_size,
                     "handles_personal_data": profile.handles_personal_data,
                     "data_processing_activities": profile.data_processing_activities,
-                    "created_at": profile.created_at.isoformat()
+                    "created_at": profile.created_at.isoformat(),
                 },
                 "evidence": [
                     {
@@ -903,10 +971,10 @@ Focus on actionable insights derived from the graph analysis.
                         "description": item.description,
                         "evidence_type": item.evidence_type,
                         "file_path": item.file_path,
-                        "created_at": item.created_at.isoformat()
+                        "created_at": item.created_at.isoformat(),
                     }
                     for item in evidence_items
-                ]
+                ],
             }
 
         except Exception as e:
@@ -916,13 +984,21 @@ Focus on actionable insights derived from the graph analysis.
     async def retrieve_session_context(self, session_id: str) -> Optional[Dict[str, Any]]:
         """
         Retrieve assessment session context from PostgreSQL.
-        
+
         Args:
             session_id: Assessment session ID
-            
+
         Returns:
             Session context or None
         """
+        # Use injected service if available
+        if self.business_context_service:
+            result = await self.business_context_service.retrieve_session_context(session_id)
+            if result.get("error"):
+                return None
+            return result
+
+        # Fallback to legacy implementation
         if not self.has_postgres_access:
             return None
 
@@ -930,9 +1006,7 @@ Focus on actionable insights derived from the graph analysis.
         from database.assessment_session import AssessmentSession
 
         try:
-            stmt = select(AssessmentSession).where(
-                AssessmentSession.id == session_id
-            )
+            stmt = select(AssessmentSession).where(AssessmentSession.id == session_id)
             result = await self.postgres_session.execute(stmt)
             session = result.scalars().first()
 
@@ -942,7 +1016,7 @@ Focus on actionable insights derived from the graph analysis.
                     "questions_answered": session.questions_answered,
                     "compliance_score": session.compliance_score,
                     "risk_level": session.risk_level,
-                    "created_at": session.created_at.isoformat()
+                    "created_at": session.created_at.isoformat(),
                 }
             return None
 
@@ -951,17 +1025,15 @@ Focus on actionable insights derived from the graph analysis.
             return None
 
     async def assess_compliance_with_context(
-        self,
-        business_profile_id: str,
-        regulations: List[str]
+        self, business_profile_id: str, regulations: List[str]
     ) -> Dict[str, Any]:
         """
         Assess compliance for a specific business against regulations.
-        
+
         Args:
             business_profile_id: Business profile ID
             regulations: List of regulation codes to assess
-            
+
         Returns:
             Contextualized compliance assessment
         """
@@ -974,7 +1046,7 @@ Focus on actionable insights derived from the graph analysis.
         regulation_query = f"""
         MATCH (r:Regulation)-[:HAS_REQUIREMENT]->(req:Requirement)
         WHERE r.code IN {regulations}
-        RETURN r.code as regulation, 
+        RETURN r.code as regulation,
                collect({{
                    id: req.id,
                    title: req.title,
@@ -994,37 +1066,37 @@ Focus on actionable insights derived from the graph analysis.
                 "business_specific_risks": self._identify_business_risks(business_context),
                 "requirements_analysis": neo4j_result.get("data", []),
                 "recommendations": self._generate_contextualized_recommendations(
-                    business_context,
-                    neo4j_result.get("data", [])
-                )
-            }
+                    business_context, neo4j_result.get("data", [])
+                ),
+            },
         }
 
         return assessment
 
     async def search_compliance_resources(
-        self,
-        query: str,
-        include_evidence: bool = True,
-        include_regulations: bool = True
+        self, query: str, include_evidence: bool = True, include_regulations: bool = True
     ) -> Dict[str, Any]:
         """
         Search across both databases for compliance resources.
-        
+
         Args:
             query: Search query
             include_evidence: Search PostgreSQL for evidence
             include_regulations: Search Neo4j for regulations
-            
+
         Returns:
             Combined search results
         """
-        results = {
-            "query": query,
-            "regulations": [],
-            "evidence": [],
-            "total_results": 0
-        }
+        # Use injected service if available
+        if self.compliance_search_service:
+            return await self.compliance_search_service.search_compliance_resources(
+                query=query,
+                regulations=None,  # Could be enhanced with regulation filtering
+                business_profile_id=None,  # Could be enhanced with context
+            )
+
+        # Fallback to legacy implementation
+        results = {"query": query, "regulations": [], "evidence": [], "total_results": 0}
 
         # Search Neo4j for regulations and requirements
         if include_regulations:
@@ -1044,15 +1116,15 @@ Focus on actionable insights derived from the graph analysis.
             from sqlalchemy import select, or_
             from database.models.evidence import Evidence
 
-            stmt = select(
-                Evidence.title,
-                Evidence.description
-            ).where(
-                or_(
-                    Evidence.title.ilike(f"%{query}%"),
-                    Evidence.description.ilike(f"%{query}%")
+            stmt = (
+                select(Evidence.title, Evidence.description)
+                .where(
+                    or_(
+                        Evidence.title.ilike(f"%{query}%"), Evidence.description.ilike(f"%{query}%")
+                    )
                 )
-            ).limit(10)
+                .limit(10)
+            )
 
             pg_result = await self.postgres_session.execute(stmt)
             evidence_items = pg_result.all()
@@ -1063,15 +1135,21 @@ Focus on actionable insights derived from the graph analysis.
             ]
 
         # Calculate total results
-        results["total_results"] = (
-            sum(r["matches"] for r in results["regulations"]) +
-            len(results["evidence"])
+        results["total_results"] = sum(r["matches"] for r in results["regulations"]) + len(
+            results["evidence"]
         )
 
         return results
 
     async def _count_available_evidence(self, business_profile_id: str) -> int:
         """Count available evidence for a business profile."""
+        # Use injected service if available
+        if self.compliance_search_service:
+            return await self.compliance_search_service.count_available_evidence(
+                business_profile_id
+            )
+
+        # Fallback implementation
         if not self.has_postgres_access:
             return 0
 
@@ -1108,11 +1186,16 @@ Focus on actionable insights derived from the graph analysis.
         return risks
 
     def _generate_contextualized_recommendations(
-        self,
-        business_context: Dict[str, Any],
-        requirements: List[Dict[str, Any]]
+        self, business_context: Dict[str, Any], requirements: List[Dict[str, Any]]
     ) -> List[str]:
         """Generate recommendations based on business context."""
+        # Use injected service if available
+        if self.recommendation_service:
+            return self.recommendation_service.generate_contextualized_recommendations(
+                business_context, requirements
+            )
+
+        # Fallback implementation
         recommendations = []
 
         if not business_context or "profile" not in business_context:
@@ -1125,7 +1208,9 @@ Focus on actionable insights derived from the graph analysis.
             recommendations.append("Upload privacy policy and data processing agreements")
 
         if len(requirements) > 10:
-            recommendations.append(f"Focus on {len(requirements)} regulatory requirements identified")
+            recommendations.append(
+                f"Focus on {len(requirements)} regulatory requirements identified"
+            )
 
         return recommendations
 
@@ -1137,7 +1222,7 @@ async def create_iq_agent(neo4j_service: Neo4jGraphRAGService) -> IQComplianceAg
 
     # Ensure graph is initialized
     try:
-        await neo4j_service.connect()
+        await neo4j_service.initialize()
         logger.info("IQ Agent: Neo4j connection established")
 
         # Initialize compliance graph if needed

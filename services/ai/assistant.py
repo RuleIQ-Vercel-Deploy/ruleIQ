@@ -400,7 +400,7 @@ class ComplianceAssistant:
         """Processes a user's message and generates a contextual response with performance optimizations."""
         try:
             processing_start = datetime.utcnow()
-            
+
             # Step 1: Quick adversarial input check (should be fast)
             adversarial_check = self._handle_adversarial_input(message)
             if adversarial_check["is_adversarial"]:
@@ -409,23 +409,24 @@ class ComplianceAssistant:
                     "context_used": False,
                     "safety_triggered": True,
                     "intent": "adversarial_blocked",
-                    "processing_time_ms": 0
+                    "processing_time_ms": 0,
                 }
 
             # Step 2: Execute independent operations in parallel for speed
             parallel_tasks = [
                 asyncio.create_task(asyncio.to_thread(self._classify_intent, message)),
                 asyncio.create_task(asyncio.to_thread(self._extract_entities, message)),
-                asyncio.create_task(self.context_manager.get_conversation_context(
-                    conversation_id, business_profile_id
-                ))
+                asyncio.create_task(
+                    self.context_manager.get_conversation_context(
+                        conversation_id, business_profile_id
+                    )
+                ),
             ]
-            
+
             # Wait for all parallel tasks with timeout
             try:
                 intent_result, entities, context = await asyncio.wait_for(
-                    asyncio.gather(*parallel_tasks),
-                    timeout=5.0
+                    asyncio.gather(*parallel_tasks), timeout=5.0
                 )
             except asyncio.TimeoutError:
                 logger.warning("Parallel processing timed out, using fallbacks")
@@ -438,13 +439,13 @@ class ComplianceAssistant:
             optimized_context = {
                 **context,
                 "timeout": 8.0,  # Aggressive timeout
-                "priority": "speed"
+                "priority": "speed",
             }
-            
+
             try:
                 response_text = await asyncio.wait_for(
                     self._generate_response(message, optimized_context, intent_result, entities),
-                    timeout=10.0
+                    timeout=10.0,
                 )
             except asyncio.TimeoutError:
                 logger.warning("Response generation timed out, using fallback")
@@ -453,8 +454,7 @@ class ComplianceAssistant:
             # Step 4: Quick safety validation with timeout
             try:
                 safety_check = await asyncio.wait_for(
-                    asyncio.to_thread(self._validate_response_safety, response_text),
-                    timeout=1.0
+                    asyncio.to_thread(self._validate_response_safety, response_text), timeout=1.0
                 )
                 if not safety_check["is_safe"]:
                     response_text = safety_check["modified_response"]
@@ -464,16 +464,15 @@ class ComplianceAssistant:
 
             # Step 5: Generate follow-ups asynchronously (don't block)
             follow_up_task = asyncio.create_task(
-                asyncio.to_thread(self._generate_follow_ups, {
-                    "intent": intent_result,
-                    "entities": entities,
-                    "context": context
-                })
+                asyncio.to_thread(
+                    self._generate_follow_ups,
+                    {"intent": intent_result, "entities": entities, "context": context},
+                )
             )
 
             processing_end = datetime.utcnow()
             processing_time = (processing_end - processing_start).total_seconds()
-            
+
             logger.info(f"Message processed in {processing_time:.3f}s (optimized)")
 
             # Get follow-ups with short timeout
@@ -494,9 +493,9 @@ class ComplianceAssistant:
                 "follow_up_suggestions": follow_ups,
                 "processing_time_ms": int(processing_time * 1000),
                 "optimized": True,
-                "performance_mode": "fast"
+                "performance_mode": "fast",
             }
-            
+
             return response_text, metadata
 
         except (NotFoundException, DatabaseException, IntegrationException) as e:
@@ -515,11 +514,16 @@ class ComplianceAssistant:
                 "error": "Processing failed",
                 "intent": "fallback",
                 "processing_time_ms": 1000,
-                "optimized": False
+                "optimized": False,
             }
 
     async def _generate_gemini_response(
-        self, prompt: str, context: Optional[Dict[str, Any]] = None
+        self,
+        prompt: str,
+        context: Optional[Dict[str, Any]] = None,
+        model_name: Optional[str] = None,
+        temperature: Optional[float] = None,
+        max_tokens: Optional[int] = None,
     ) -> str:
         """Sends a prompt to the Gemini model and returns the text response with optimized caching and performance."""
         try:
@@ -536,24 +540,26 @@ class ComplianceAssistant:
             # Apply performance optimization with timeout
             safe_context = context or {}
             priority = safe_context.get("priority", 1)
-            
+
             # Fast path: Try aggressive caching first for performance
-            cache_key = f"fast_{hash(prompt)}_{hash(str(safe_context))}"
+            import json
+
+            context_str = json.dumps(safe_context, sort_keys=True)
+            f"fast_{hash(prompt)}_{hash(context_str)}"
             try:
                 cached_response = await asyncio.wait_for(
                     self.ai_cache.get_cached_response(prompt, safe_context),
-                    timeout=0.5  # Quick cache check
+                    timeout=0.5,  # Quick cache check
                 )
                 if cached_response:
                     logger.debug("Using cached AI response (fast path)")
                     await self.analytics_monitor.record_metric(
-                        MetricType.CACHE, "cache_hit", 1,
-                        metadata={"fast_path": True}
+                        MetricType.CACHE, "cache_hit", 1, metadata={"fast_path": True}
                     )
                     return cached_response["response"]
             except asyncio.TimeoutError:
                 logger.debug("Cache check timed out, proceeding with generation")
-            
+
             # Optimize prompt with timeout
             try:
                 optimization_task = asyncio.create_task(
@@ -569,49 +575,61 @@ class ComplianceAssistant:
 
             # Record cache miss
             await self.analytics_monitor.record_metric(
-                MetricType.CACHE, "cache_miss", 1,
-                metadata={"fast_path": True}
+                MetricType.CACHE, "cache_miss", 1, metadata={"fast_path": True}
             )
 
             # Apply rate limiting with shorter timeout
             try:
                 await asyncio.wait_for(
-                    self.performance_optimizer.apply_rate_limiting(),
-                    timeout=1.0
+                    self.performance_optimizer.apply_rate_limiting(), timeout=1.0
                 )
             except asyncio.TimeoutError:
                 logger.warning("Rate limiting check timed out")
 
             try:
                 # Get model with faster configuration
-                model, instruction_id = self._get_task_appropriate_model(
-                    task_type="general", context=safe_context
-                )
+                # Use specified model_name or fall back to task-appropriate model
+                if model_name:
+                    # Try to get the specified model directly
+                    try:
+                        import google.generativeai as genai
 
-                # Configure for faster responses
+                        model = genai.GenerativeModel(model_name)
+                        instruction_id = "custom"
+                    except Exception as e:
+                        logger.warning(f"Failed to get specified model {model_name}: {e}")
+                        model, instruction_id = self._get_task_appropriate_model(
+                            task_type="general", context=safe_context
+                        )
+                else:
+                    model, instruction_id = self._get_task_appropriate_model(
+                        task_type="general", context=safe_context
+                    )
+
+                # Configure generation parameters
                 generation_config = {
-                    "temperature": 0.3,  # Lower for consistency and speed
-                    "max_output_tokens": 800,  # Reasonable limit
+                    "temperature": temperature or 0.3,  # Use provided temperature or default
+                    "max_output_tokens": max_tokens or 800,  # Use provided max_tokens or default
                     "top_p": 0.8,
-                    "top_k": 20
+                    "top_k": 20,
                 }
 
                 # Generate with timeout
                 start_time = datetime.utcnow()
-                
+
                 generation_task = asyncio.create_task(
                     asyncio.to_thread(
                         model.generate_content,
                         optimized_prompt,
                         safety_settings=self.safety_settings,
-                        generation_config=generation_config
+                        generation_config=generation_config,
                     )
                 )
-                
+
                 # Use aggressive timeout for initial response
                 timeout_seconds = safe_context.get("timeout", 8.0)
                 response = await asyncio.wait_for(generation_task, timeout=timeout_seconds)
-                
+
                 end_time = datetime.utcnow()
                 response_time = (end_time - start_time).total_seconds()
 
@@ -625,11 +643,13 @@ class ComplianceAssistant:
 
                 # Log performance metrics
                 logger.info(f"AI response generated in {response_time:.3f}s")
-                
+
                 # Update performance metrics
                 estimated_tokens = len(optimized_prompt) // 4 + len(response_text) // 4
-                if hasattr(self.performance_optimizer, 'update_performance_metrics'):
-                    self.performance_optimizer.update_performance_metrics(response_time, estimated_tokens)
+                if hasattr(self.performance_optimizer, "update_performance_metrics"):
+                    self.performance_optimizer.update_performance_metrics(
+                        response_time, estimated_tokens
+                    )
 
                 # Record analytics asynchronously (don't block)
                 asyncio.create_task(
@@ -643,13 +663,15 @@ class ComplianceAssistant:
                     "response_time_ms": int(response_time * 1000),
                     "prompt_length": len(prompt),
                     "response_length": len(response_text),
-                    "model": "gemini",
+                    "model": model_name or "gemini",
                     "optimized": True,
-                    "generation_config": generation_config
+                    "generation_config": generation_config,
                 }
-                
+
                 asyncio.create_task(
-                    self.ai_cache.cache_response(prompt, response_text, safe_context, cache_metadata)
+                    self.ai_cache.cache_response(
+                        prompt, response_text, safe_context, cache_metadata
+                    )
                 )
 
                 # Quality assessment in background
@@ -661,29 +683,33 @@ class ComplianceAssistant:
                 )
 
                 return response_text
-                
+
             except asyncio.TimeoutError:
                 logger.warning(f"AI generation timed out after {timeout_seconds}s, using fallback")
                 return self._get_fallback_response_text(optimized_prompt, safe_context)
-                
+
             finally:
                 # Always release rate limiting
-                if hasattr(self.performance_optimizer, 'release_rate_limit'):
+                if hasattr(self.performance_optimizer, "release_rate_limit"):
                     self.performance_optimizer.release_rate_limit()
 
         except Exception as e:
             logger.error(f"Gemini API call failed: {e}", exc_info=True)
             # Return fallback instead of raising exception
             return self._get_fallback_response_text(prompt, context or {})
-    
+
     def _get_fallback_response_text(self, prompt: str, context: Dict[str, Any]) -> str:
         """Generate a fallback response when AI generation fails"""
+        # Ensure prompt is a string
+        if not isinstance(prompt, str):
+            prompt = str(prompt)
+
         # Extract framework or topic from prompt
         prompt_lower = prompt.lower()
-        
+
         if "gdpr" in prompt_lower:
             return """Based on GDPR requirements, here are key considerations:
-            
+
 • Lawful basis for processing personal data
 • Data subject rights (access, rectification, erasure)
 • Privacy by design and by default
@@ -691,10 +717,10 @@ class ComplianceAssistant:
 • Records of processing activities
 
 I recommend consulting with a data protection specialist for specific guidance."""
-        
+
         elif "iso" in prompt_lower and "27001" in prompt_lower:
             return """For ISO 27001 implementation:
-            
+
 • Risk assessment and treatment
 • Information security policies
 • Security awareness and training
@@ -702,10 +728,10 @@ I recommend consulting with a data protection specialist for specific guidance."
 • Incident response procedures
 
 Consider engaging an ISO 27001 consultant for detailed implementation."""
-        
+
         else:
             return """I'm currently experiencing high demand. Here's general compliance guidance:
-            
+
 • Identify applicable regulations for your industry
 • Conduct gap analysis against requirements
 • Develop policies and procedures
@@ -821,9 +847,17 @@ Please try your question again or contact support for immediate assistance."""
             )
             business_context = context.get("business_profile", {})
 
-            prompt = self.prompt_templates.get_evidence_recommendation_prompt(
+            prompt_dict = self.prompt_templates.get_evidence_recommendation_prompt(
                 target_framework, business_context
             )
+
+            # Convert dict prompt to string for Gemini API
+            if isinstance(prompt_dict, dict):
+                system_prompt = prompt_dict.get("system", "")
+                user_prompt = prompt_dict.get("user", "")
+                prompt = system_prompt + "\n\n" + user_prompt
+            else:
+                prompt = str(prompt_dict)
 
             response = await self._generate_gemini_response(prompt)
 
@@ -4447,20 +4481,738 @@ Please try your question again or contact support for immediate assistance."""
             assessment_context=assessment_context,
         )
 
+    async def generate_contextual_question(
+        self, context: Dict[str, Any], previous_messages: List[Any]
+    ) -> Dict[str, Any]:
+        """
+        Generate a contextual question based on assessment context and conversation history.
+
+        This method is used by the assessment services to generate dynamic questions
+        based on the current state of the assessment and user responses.
+
+        Args:
+            context: Assessment context including business profile, previous answers, etc.
+            previous_messages: List of previous conversation messages
+
+        Returns:
+            Dictionary containing question data with structure:
+            {
+                "question_id": str,
+                "question_text": str,
+                "question_type": str,
+                "options": Optional[List[str]],
+                "context": Optional[str],
+                "category": str,
+                "difficulty_level": int
+            }
+        """
+        try:
+            # Extract key information from context
+            business_profile = context.get("business_profile", {})
+            business_type = business_profile.get("business_type", "general")
+            assessment_type = context.get("assessment_type", "general")
+            previous_answers = context.get("previous_answers", [])
+            compliance_needs = context.get("compliance_needs", [])
+
+            # Build contextual prompt for question generation
+            prompt = f"""
+            Generate a relevant compliance assessment question based on the following context:
+
+            Business Type: {business_type}
+            Assessment Type: {assessment_type}
+            Previous Questions: {len(previous_answers)} questions answered
+            Compliance Areas: {", ".join(compliance_needs[:3]) if compliance_needs else "General compliance"}
+
+            Generate a focused question that:
+            1. Builds on previous responses if available
+            2. Is appropriate for the business type and size
+            3. Helps identify specific compliance gaps or strengths
+            4. Is clear and actionable
+
+            Return a JSON object with:
+            - question_id: unique identifier
+            - question_text: the actual question
+            - question_type: "multiple_choice", "yes_no", "text", or "scale"
+            - options: array of options (if applicable)
+            - context: brief explanation of why this question matters
+            - category: compliance area (e.g., "data_protection", "security", "governance")
+            - difficulty_level: 1-5 scale of complexity
+            """
+
+            # Generate question using AI
+            if self.circuit_breaker.is_model_available("gemini-2.5-flash"):
+                response = await self._generate_gemini_response(
+                    prompt=prompt,
+                    context=context,
+                    model_name="gemini-2.5-flash",
+                    temperature=0.7,
+                    max_tokens=500,
+                )
+
+                # Parse AI response
+                question_data = self._parse_contextual_question_response(response)
+
+            else:
+                # Fallback to predefined question based on context
+                question_data = self._get_fallback_contextual_question(context)
+
+            # Validate question structure
+            required_fields = ["question_id", "question_text", "question_type", "category"]
+            if not all(field in question_data for field in required_fields):
+                logger.warning("Generated question missing required fields, using fallback")
+                question_data = self._get_fallback_contextual_question(context)
+
+            logger.info(
+                f"Generated contextual question: {question_data.get('question_id', 'unknown')}"
+            )
+            return question_data
+
+        except Exception as e:
+            logger.error(f"Error generating contextual question: {str(e)}")
+            return self._get_fallback_contextual_question(context)
+
+    async def analyze_conversation_context(
+        self, messages: List[Any], business_profile: Dict[str, Any]
+    ) -> Dict[str, Any]:
+        """
+        Analyze conversation context to extract insights and patterns.
+
+        Args:
+            messages: Recent conversation messages to analyze
+            business_profile: Current business profile data for context
+
+        Returns:
+            Analysis results with insights, patterns, and context understanding
+        """
+        try:
+            # Build context from recent messages
+            message_context = []
+            for msg in messages[-10:]:  # Analyze last 10 messages
+                if isinstance(msg, dict):
+                    content = msg.get("content", str(msg))
+                else:
+                    content = str(msg)
+                message_context.append(content)
+
+            # Create analysis prompt
+            prompt = f"""
+            Analyze the following conversation context to extract insights and patterns:
+
+            Business Profile Context:
+            - Company Name: {business_profile.get("company_name", "Unknown")}
+            - Industry: {business_profile.get("industry", "Not specified")}
+            - Size: {business_profile.get("company_size", "Not specified")}
+            - Location: {business_profile.get("location", "Not specified")}
+
+            Recent Conversation Messages:
+            {chr(10).join(message_context)}
+
+            Please analyze and provide:
+            1. Key topics and concerns discussed
+            2. Compliance areas of focus
+            3. User's expertise level
+            4. Business context insights
+            5. Recommended next steps
+
+            Respond with a JSON object containing:
+            {{
+                "key_topics": ["topic1", "topic2"],
+                "compliance_areas": ["area1", "area2"],
+                "user_expertise": "beginner|intermediate|advanced",
+                "business_insights": ["insight1", "insight2"],
+                "recommended_next_steps": ["step1", "step2"],
+                "conversation_tone": "formal|casual|technical",
+                "urgency_level": "low|medium|high"
+            }}
+            """
+
+            # Generate analysis using AI
+            context = {"task_type": "analysis", "priority": 2, "timeout": 10.0}
+
+            response_text = await self._generate_gemini_response(prompt, context)
+
+            # Parse response with safety filter detection
+            try:
+                import json
+
+                # Check if this is a safety filter fallback response
+                safety_indicators = [
+                    "I understand you're asking about compliance",
+                    "Let me provide general guidance",
+                    "I can help with compliance guidance",
+                    "I'm here to help with compliance",
+                    "temporarily unavailable due to system limitations",
+                    "I'm currently experiencing high demand",
+                ]
+
+                is_safety_fallback = any(
+                    indicator in response_text for indicator in safety_indicators
+                )
+
+                if is_safety_fallback:
+                    logger.debug(
+                        "Detected safety filter fallback in conversation analysis, using fallback"
+                    )
+                    analysis = self._get_fallback_conversation_analysis(messages, business_profile)
+                else:
+                    # Try to extract JSON from response
+                    if "```json" in response_text:
+                        json_start = response_text.find("```json") + 7
+                        json_end = response_text.find("```", json_start)
+                        json_str = response_text[json_start:json_end].strip()
+                    elif "{" in response_text and "}" in response_text:
+                        json_start = response_text.find("{")
+                        json_end = response_text.rfind("}") + 1
+                        json_str = response_text[json_start:json_end]
+                    else:
+                        logger.debug("No JSON structure found in analysis response, using fallback")
+                        analysis = self._get_fallback_conversation_analysis(
+                            messages, business_profile
+                        )
+                        json_str = None
+
+                    if json_str:
+                        analysis = json.loads(json_str)
+
+            except (json.JSONDecodeError, ValueError) as e:
+                logger.warning(f"Failed to parse analysis JSON: {e}")
+                # Fallback analysis
+                analysis = self._get_fallback_conversation_analysis(messages, business_profile)
+
+            # Ensure required fields
+            analysis.setdefault("key_topics", [])
+            analysis.setdefault("compliance_areas", [])
+            analysis.setdefault("user_expertise", "intermediate")
+            analysis.setdefault("business_insights", [])
+            analysis.setdefault("recommended_next_steps", [])
+            analysis.setdefault("conversation_tone", "professional")
+            analysis.setdefault("urgency_level", "medium")
+
+            return analysis
+
+        except Exception as e:
+            logger.error(f"Conversation analysis failed: {e}")
+            return self._get_fallback_conversation_analysis(messages, business_profile)
+
+    def _get_fallback_conversation_analysis(
+        self, messages: List[Any], business_profile: Dict[str, Any]
+    ) -> Dict[str, Any]:
+        """Provide fallback conversation analysis when AI fails."""
+        try:
+            # Basic analysis based on keywords and patterns
+            all_text = " ".join([str(msg) for msg in messages[-10:]])
+            text_lower = all_text.lower()
+
+            # Detect key topics
+            key_topics = []
+            if any(word in text_lower for word in ["gdpr", "data protection", "privacy"]):
+                key_topics.append("Data Protection")
+            if any(word in text_lower for word in ["security", "cybersecurity", "breach"]):
+                key_topics.append("Information Security")
+            if any(word in text_lower for word in ["policy", "procedure", "document"]):
+                key_topics.append("Policy Development")
+            if any(word in text_lower for word in ["assessment", "audit", "compliance"]):
+                key_topics.append("Compliance Assessment")
+
+            # Detect compliance areas
+            compliance_areas = []
+            if "gdpr" in text_lower:
+                compliance_areas.append("GDPR")
+            if any(word in text_lower for word in ["iso", "27001", "security standard"]):
+                compliance_areas.append("ISO 27001")
+            if any(word in text_lower for word in ["financial", "banking", "payment"]):
+                compliance_areas.append("Financial Regulations")
+
+            # Determine expertise level based on terminology used
+            user_expertise = "intermediate"
+            technical_terms = [
+                "dpo",
+                "controller",
+                "processor",
+                "lawful basis",
+                "impact assessment",
+            ]
+            if any(term in text_lower for term in technical_terms):
+                user_expertise = "advanced"
+            elif any(word in text_lower for word in ["help", "explain", "what is", "how do"]):
+                user_expertise = "beginner"
+
+            # Business insights from profile
+            business_insights = []
+            industry = business_profile.get("industry", "").lower()
+            if "health" in industry or "medical" in industry:
+                business_insights.append(
+                    "Healthcare industry requires additional privacy safeguards"
+                )
+            if "financial" in industry or "bank" in industry:
+                business_insights.append("Financial sector has strict regulatory requirements")
+            if "technology" in industry or "software" in industry:
+                business_insights.append(
+                    "Technology companies need robust data protection measures"
+                )
+
+            return {
+                "key_topics": key_topics or ["General Compliance"],
+                "compliance_areas": compliance_areas or ["General"],
+                "user_expertise": user_expertise,
+                "business_insights": business_insights
+                or ["Standard compliance requirements apply"],
+                "recommended_next_steps": [
+                    "Continue compliance assessment",
+                    "Review identified gaps",
+                    "Develop action plan",
+                ],
+                "conversation_tone": "professional",
+                "urgency_level": "medium",
+            }
+
+        except Exception as e:
+            logger.error(f"Fallback analysis failed: {e}")
+            return {
+                "key_topics": ["General Compliance"],
+                "compliance_areas": ["General"],
+                "user_expertise": "intermediate",
+                "business_insights": ["Standard analysis"],
+                "recommended_next_steps": ["Continue assessment"],
+                "conversation_tone": "professional",
+                "urgency_level": "medium",
+            }
+
+    async def generate_recommendations(
+        self,
+        business_profile: Dict[str, Any],
+        compliance_needs: List[str],
+        identified_risks: List[Dict[str, Any]],
+        compliance_score: float,
+    ) -> List[Dict[str, Any]]:
+        """
+        Generate compliance recommendations based on assessment results.
+
+        Args:
+            business_profile: Business profile information
+            compliance_needs: List of identified compliance requirements
+            identified_risks: List of identified risk areas
+            compliance_score: Current compliance score (0-100)
+
+        Returns:
+            List of recommendation objects with priority and implementation guidance
+        """
+        try:
+            # Build context for recommendations
+            risks_summary = []
+            for risk in identified_risks[:5]:  # Top 5 risks
+                risk_desc = risk.get("description", str(risk))
+                risk_level = risk.get("severity", "medium")
+                risks_summary.append(f"- {risk_desc} (Severity: {risk_level})")
+
+            # Create recommendation generation prompt
+            prompt = f"""
+            Generate specific compliance recommendations for the following business:
+
+            Business Profile:
+            - Company: {business_profile.get("company_name", "Unknown")}
+            - Industry: {business_profile.get("industry", "Not specified")}
+            - Size: {business_profile.get("company_size", "Not specified")}
+            - Current Compliance Score: {compliance_score:.1f}/100
+
+            Compliance Requirements:
+            {chr(10).join([f"- {need}" for need in compliance_needs])}
+
+            Identified Risks:
+            {chr(10).join(risks_summary)}
+
+            Please provide 5-7 specific, actionable recommendations prioritized by impact and urgency.
+
+            Respond with a JSON array of recommendations:
+            [
+                {{
+                    "title": "Recommendation title",
+                    "description": "Detailed description of what needs to be done",
+                    "priority": "high|medium|low",
+                    "category": "policy|technical|training|governance",
+                    "effort_estimate": "1-2 weeks|1-3 months|3-6 months|6+ months",
+                    "impact_score": 8.5,
+                    "implementation_steps": ["step1", "step2", "step3"],
+                    "resources_needed": ["resource1", "resource2"],
+                    "compliance_frameworks": ["GDPR", "ISO27001"],
+                    "success_metrics": ["metric1", "metric2"]
+                }}
+            ]
+            """
+
+            # Generate recommendations using AI
+            context = {"task_type": "recommendations", "priority": 1, "timeout": 12.0}
+
+            response_text = await self._generate_gemini_response(prompt, context)
+
+            # Parse response
+            try:
+                import json
+
+                # Try to extract JSON array from response
+                json_start = response_text.find("[")
+                json_end = response_text.rfind("]") + 1
+                if json_start != -1 and json_end > json_start:
+                    json_str = response_text[json_start:json_end]
+                    recommendations = json.loads(json_str)
+                else:
+                    raise ValueError("No JSON array found in response")
+
+            except (json.JSONDecodeError, ValueError) as e:
+                logger.warning(f"Failed to parse recommendations JSON: {e}")
+                # Fallback recommendations
+                recommendations = self._get_fallback_recommendations_list(
+                    business_profile, compliance_needs, identified_risks, compliance_score
+                )
+
+            # Validate and enhance recommendations
+            validated_recommendations = []
+            for i, rec in enumerate(recommendations[:7]):  # Max 7 recommendations
+                if isinstance(rec, dict):
+                    # Ensure required fields
+                    validated_rec = {
+                        "id": f"rec_{i + 1}",
+                        "title": rec.get("title", f"Recommendation {i + 1}"),
+                        "description": rec.get("description", "No description provided"),
+                        "priority": rec.get("priority", "medium"),
+                        "category": rec.get("category", "general"),
+                        "effort_estimate": rec.get("effort_estimate", "1-3 months"),
+                        "impact_score": float(rec.get("impact_score", 7.0)),
+                        "implementation_steps": rec.get("implementation_steps", []),
+                        "resources_needed": rec.get("resources_needed", []),
+                        "compliance_frameworks": rec.get("compliance_frameworks", []),
+                        "success_metrics": rec.get("success_metrics", []),
+                    }
+                    validated_recommendations.append(validated_rec)
+
+            # Sort by priority and impact
+            priority_order = {"high": 3, "medium": 2, "low": 1}
+            validated_recommendations.sort(
+                key=lambda x: (priority_order.get(x["priority"], 2), x["impact_score"]),
+                reverse=True,
+            )
+
+            return validated_recommendations
+
+        except Exception as e:
+            logger.error(f"Recommendation generation failed: {e}")
+            return self._get_fallback_recommendations_list(
+                business_profile, compliance_needs, identified_risks, compliance_score
+            )
+
+    def _get_fallback_recommendations_list(
+        self,
+        business_profile: Dict[str, Any],
+        compliance_needs: List[str],
+        identified_risks: List[Dict[str, Any]],
+        compliance_score: float,
+    ) -> List[Dict[str, Any]]:
+        """Provide fallback recommendations when AI generation fails."""
+        try:
+            recommendations = []
+
+            # Basic recommendations based on compliance score
+            if compliance_score < 30:
+                recommendations.append(
+                    {
+                        "id": "rec_1",
+                        "title": "Establish Fundamental Compliance Framework",
+                        "description": "Develop basic compliance policies and procedures as a foundation for regulatory adherence.",
+                        "priority": "high",
+                        "category": "governance",
+                        "effort_estimate": "3-6 months",
+                        "impact_score": 9.0,
+                        "implementation_steps": [
+                            "Conduct compliance gap analysis",
+                            "Develop core policies",
+                            "Establish governance structure",
+                            "Train key personnel",
+                        ],
+                        "resources_needed": [
+                            "Compliance officer",
+                            "Legal counsel",
+                            "Management support",
+                        ],
+                        "compliance_frameworks": compliance_needs[:3],
+                        "success_metrics": [
+                            "Policy completion",
+                            "Training completion",
+                            "Gap reduction",
+                        ],
+                    }
+                )
+
+            elif compliance_score < 60:
+                recommendations.append(
+                    {
+                        "id": "rec_1",
+                        "title": "Strengthen Existing Compliance Controls",
+                        "description": "Enhance current compliance measures to address identified gaps and improve overall posture.",
+                        "priority": "high",
+                        "category": "policy",
+                        "effort_estimate": "1-3 months",
+                        "impact_score": 8.5,
+                        "implementation_steps": [
+                            "Review current policies",
+                            "Identify enhancement opportunities",
+                            "Update procedures",
+                            "Implement monitoring",
+                        ],
+                        "resources_needed": ["Compliance team", "Process documentation"],
+                        "compliance_frameworks": compliance_needs[:3],
+                        "success_metrics": [
+                            "Policy updates",
+                            "Control effectiveness",
+                            "Score improvement",
+                        ],
+                    }
+                )
+
+            else:
+                recommendations.append(
+                    {
+                        "id": "rec_1",
+                        "title": "Optimize and Automate Compliance Processes",
+                        "description": "Implement advanced compliance monitoring and automation to maintain high standards efficiently.",
+                        "priority": "medium",
+                        "category": "technical",
+                        "effort_estimate": "1-3 months",
+                        "impact_score": 7.5,
+                        "implementation_steps": [
+                            "Assess automation opportunities",
+                            "Select compliance tools",
+                            "Implement monitoring",
+                            "Optimize workflows",
+                        ],
+                        "resources_needed": [
+                            "Compliance technology",
+                            "Training",
+                            "Process optimization",
+                        ],
+                        "compliance_frameworks": compliance_needs[:3],
+                        "success_metrics": [
+                            "Automation rate",
+                            "Efficiency gains",
+                            "Continuous monitoring",
+                        ],
+                    }
+                )
+
+            # Add risk-based recommendations
+            high_risk_count = len([r for r in identified_risks if r.get("severity") == "high"])
+            if high_risk_count > 0:
+                recommendations.append(
+                    {
+                        "id": "rec_2",
+                        "title": "Address High-Priority Risk Areas",
+                        "description": f"Implement immediate controls for {high_risk_count} high-priority risk areas identified in the assessment.",
+                        "priority": "high",
+                        "category": "governance",
+                        "effort_estimate": "1-2 weeks",
+                        "impact_score": 9.5,
+                        "implementation_steps": [
+                            "Review high-priority risks",
+                            "Develop mitigation strategies",
+                            "Implement immediate controls",
+                            "Monitor effectiveness",
+                        ],
+                        "resources_needed": ["Risk management team", "Immediate action plan"],
+                        "compliance_frameworks": compliance_needs[:2],
+                        "success_metrics": [
+                            "Risk reduction",
+                            "Control implementation",
+                            "Incident prevention",
+                        ],
+                    }
+                )
+
+            # Industry-specific recommendation
+            industry = business_profile.get("industry", "").lower()
+            if "health" in industry:
+                recommendations.append(
+                    {
+                        "id": "rec_3",
+                        "title": "Implement Healthcare-Specific Privacy Controls",
+                        "description": "Establish HIPAA-compliant data handling procedures and patient privacy safeguards.",
+                        "priority": "high",
+                        "category": "policy",
+                        "effort_estimate": "1-3 months",
+                        "impact_score": 9.0,
+                        "implementation_steps": [
+                            "Conduct HIPAA gap analysis",
+                            "Develop privacy procedures",
+                            "Implement access controls",
+                            "Train healthcare staff",
+                        ],
+                        "resources_needed": [
+                            "HIPAA expertise",
+                            "Privacy training",
+                            "Access control systems",
+                        ],
+                        "compliance_frameworks": ["HIPAA", "State privacy laws"],
+                        "success_metrics": [
+                            "HIPAA compliance",
+                            "Privacy incident reduction",
+                            "Staff certification",
+                        ],
+                    }
+                )
+
+            # Training recommendation
+            recommendations.append(
+                {
+                    "id": "rec_4",
+                    "title": "Enhance Compliance Training Program",
+                    "description": "Develop comprehensive compliance training to ensure all staff understand their responsibilities.",
+                    "priority": "medium",
+                    "category": "training",
+                    "effort_estimate": "1-3 months",
+                    "impact_score": 8.0,
+                    "implementation_steps": [
+                        "Assess training needs",
+                        "Develop training materials",
+                        "Implement training program",
+                        "Track completion and effectiveness",
+                    ],
+                    "resources_needed": [
+                        "Training materials",
+                        "LMS platform",
+                        "Subject matter experts",
+                    ],
+                    "compliance_frameworks": compliance_needs,
+                    "success_metrics": [
+                        "Training completion rate",
+                        "Knowledge assessment scores",
+                        "Incident reduction",
+                    ],
+                }
+            )
+
+            return recommendations[:5]  # Return top 5 recommendations
+
+        except Exception as e:
+            logger.error(f"Fallback recommendations failed: {e}")
+            return [
+                {
+                    "id": "rec_1",
+                    "title": "Review Compliance Status",
+                    "description": "Conduct a comprehensive review of current compliance status and develop improvement plan.",
+                    "priority": "medium",
+                    "category": "governance",
+                    "effort_estimate": "1-3 months",
+                    "impact_score": 7.0,
+                    "implementation_steps": ["Assessment", "Planning", "Implementation"],
+                    "resources_needed": ["Compliance team"],
+                    "compliance_frameworks": ["General"],
+                    "success_metrics": ["Assessment completion"],
+                }
+            ]
+
+    def _parse_contextual_question_response(self, response: str) -> Dict[str, Any]:
+        """Parse AI response for contextual question generation."""
+        try:
+            import json
+            import uuid
+
+            # Check if this is a safety filter fallback response
+            safety_indicators = [
+                "I understand you're asking about compliance",
+                "Let me provide general guidance",
+                "I can help with compliance guidance",
+                "I'm here to help with compliance",
+                "temporarily unavailable due to system limitations",
+            ]
+
+            is_safety_fallback = any(indicator in response for indicator in safety_indicators)
+
+            if is_safety_fallback:
+                logger.debug("Detected safety filter fallback, using fallback question")
+                return self._get_fallback_contextual_question({})
+
+            # Try to extract JSON from response
+            if "```json" in response:
+                json_start = response.find("```json") + 7
+                json_end = response.find("```", json_start)
+                json_str = response[json_start:json_end].strip()
+            elif "{" in response and "}" in response:
+                json_start = response.find("{")
+                json_end = response.rfind("}") + 1
+                json_str = response[json_start:json_end]
+            else:
+                logger.debug("No JSON structure found in response, using fallback")
+                return self._get_fallback_contextual_question({})
+
+            question_data = json.loads(json_str)
+
+            # Ensure question_id is present
+            if "question_id" not in question_data:
+                question_data["question_id"] = f"q_{str(uuid.uuid4())[:8]}"
+
+            # Validate required fields
+            required_fields = ["question_text", "question_type", "category"]
+            for field in required_fields:
+                if field not in question_data:
+                    logger.warning(f"Missing required field '{field}' in question response")
+                    return self._get_fallback_contextual_question({})
+
+            return question_data
+
+        except Exception as e:
+            logger.warning(f"Failed to parse question response: {str(e)}")
+            return self._get_fallback_contextual_question({})
+
+    def _get_fallback_contextual_question(self, context: Dict[str, Any]) -> Dict[str, Any]:
+        """Generate a fallback question when AI generation fails."""
+        import uuid
+
+        context.get("business_profile", {}).get("business_type", "general")
+        assessment_type = context.get("assessment_type", "general")
+
+        # Predefined questions based on context
+        fallback_questions = {
+            "gdpr": {
+                "question_text": "How does your organization currently handle data subject access requests (DSARs)?",
+                "category": "data_protection",
+                "context": "Understanding DSAR processes is crucial for GDPR compliance",
+            },
+            "security": {
+                "question_text": "What security measures are in place to protect sensitive business data?",
+                "category": "information_security",
+                "context": "Security controls are fundamental to protecting organizational assets",
+            },
+            "general": {
+                "question_text": "What compliance frameworks or regulations does your business need to adhere to?",
+                "category": "general_compliance",
+                "context": "Identifying applicable regulations helps prioritize compliance efforts",
+            },
+        }
+
+        question_template = fallback_questions.get(assessment_type, fallback_questions["general"])
+
+        return {
+            "question_id": f"fallback_{str(uuid.uuid4())[:8]}",
+            "question_text": question_template["question_text"],
+            "question_type": "text",
+            "category": question_template["category"],
+            "difficulty_level": 2,
+            "context": question_template["context"],
+            "options": None,
+        }
+
     async def generate_assessment_questions(
         self,
         business_context: Dict[str, Any],
         max_questions: int = 8,
-        difficulty_level: str = "mixed"
+        difficulty_level: str = "mixed",
     ) -> Dict[str, Any]:
         """
         Generate dynamic assessment questions based on business context.
-        
+
         Args:
             business_context: Business information including type, size, etc.
             max_questions: Maximum number of questions to generate
             difficulty_level: Question difficulty (easy, medium, hard, mixed)
-            
+
         Returns:
             Dictionary containing generated questions and metadata
         """
@@ -4469,23 +5221,23 @@ Please try your question again or contact support for immediate assistance."""
             business_type = business_context.get("business_type", "general")
             company_size = business_context.get("company_size", "small")
             assessment_type = business_context.get("assessment_type", "general")
-            
+
             system_prompt = """You are a compliance assessment expert. Generate practical, business-relevant compliance questions for organizations. Always use 'question_id' as the field name for question identifiers."""
-            
+
             user_prompt = f"""
             Generate {max_questions} compliance assessment questions for a {business_type} business with {company_size} employees.
             Assessment type: {assessment_type}
             Difficulty level: {difficulty_level}
-            
+
             Questions should cover:
             - Data protection and privacy (GDPR compliance)
             - Security practices and policies
             - Employee training and awareness
             - Risk management processes
             - Documentation and record keeping
-            
+
             IMPORTANT: Use 'question_id' as the field name (not 'id').
-            
+
             Return the questions in this EXACT JSON format:
             {{
                 "questions": [
@@ -4502,7 +5254,7 @@ Please try your question again or contact support for immediate assistance."""
                 "total_questions": {max_questions},
                 "assessment_context": "{assessment_type}"
             }}
-            
+
             Ensure questions are:
             1. Relevant to {business_type} businesses
             2. Appropriate for {company_size} organizations
@@ -4510,80 +5262,101 @@ Please try your question again or contact support for immediate assistance."""
             4. Varied in difficulty if mixed level requested
             5. Use 'question_id' field name (critical requirement)
             """
-            
+
             # Generate response using AI with correct parameters
             response = await self._generate_ai_response_with_cache(
                 system_prompt=system_prompt,
                 user_prompt=user_prompt,
                 task_type="question_generation",
-                context={"business_type": business_type, "company_size": company_size}
+                context={"business_type": business_type, "company_size": company_size},
             )
-            
+
             # Parse the response
-            questions_data = self._parse_questions_response(response, max_questions, assessment_type)
-            
+            questions_data = self._parse_questions_response(
+                response, max_questions, assessment_type
+            )
+
             return questions_data
-            
+
         except Exception as e:
             logger.error(f"Error generating assessment questions: {str(e)}")
             return self._get_fallback_questions_data(max_questions, assessment_type)
 
-    def _parse_questions_response(self, response: str, max_questions: int, assessment_type: str) -> Dict[str, Any]:
+    def _parse_questions_response(
+        self, response: str, max_questions: int, assessment_type: str
+    ) -> Dict[str, Any]:
         """Parse AI response to extract questions data."""
         try:
             import json
             import re
-            
+
             logger.debug(f"Parsing AI response: {response[:500]}...")  # DEBUG: Log first 500 chars
-            
+
             # Try to extract JSON from response
-            json_match = re.search(r'\{.*\}', response, re.DOTALL)
+            json_match = re.search(r"\{.*\}", response, re.DOTALL)
             if json_match:
                 logger.debug(f"Found JSON match: {json_match.group()[:200]}...")  # DEBUG: Log JSON
                 questions_data = json.loads(json_match.group())
-                logger.debug(f"Parsed JSON structure keys: {list(questions_data.keys())}")  # DEBUG: Log keys
-                
+                logger.debug(
+                    f"Parsed JSON structure keys: {list(questions_data.keys())}"
+                )  # DEBUG: Log keys
+
                 if "questions" in questions_data and isinstance(questions_data["questions"], list):
-                    logger.debug(f"Found {len(questions_data['questions'])} questions")  # DEBUG: Count
-                    
+                    logger.debug(
+                        f"Found {len(questions_data['questions'])} questions"
+                    )  # DEBUG: Count
+
                     # Ensure all questions have question_id field
                     for i, question in enumerate(questions_data["questions"]):
-                        logger.debug(f"Question {i} keys: {list(question.keys())}")  # DEBUG: Log question keys
+                        logger.debug(
+                            f"Question {i} keys: {list(question.keys())}"
+                        )  # DEBUG: Log question keys
                         if "id" in question and "question_id" not in question:
-                            logger.debug(f"Converting 'id' to 'question_id' for question {i}")  # DEBUG
+                            logger.debug(
+                                f"Converting 'id' to 'question_id' for question {i}"
+                            )  # DEBUG
                             question["question_id"] = question["id"]
                         elif "question_id" not in question:
-                            logger.warning(f"Question {i} missing both 'id' and 'question_id': {question}")
-                    
-                    logger.debug(f"Final questions structure: {questions_data}")  # DEBUG: Final structure
+                            logger.warning(
+                                f"Question {i} missing both 'id' and 'question_id': {question}"
+                            )
+
+                    logger.debug(
+                        f"Final questions structure: {questions_data}"
+                    )  # DEBUG: Final structure
                     return questions_data
-            
+
             logger.debug("No JSON found, falling back to text parsing")  # DEBUG
             # Fallback: parse text format
             return self._parse_text_questions(response, max_questions, assessment_type)
-            
+
         except Exception as e:
             logger.warning(f"Failed to parse questions response: {str(e)}")
             logger.debug(f"Exception parsing response: {response}")  # DEBUG: Full response on error
             return self._get_fallback_questions_data(max_questions, assessment_type)
 
-    def _parse_text_questions(self, response: str, max_questions: int, assessment_type: str) -> Dict[str, Any]:
+    def _parse_text_questions(
+        self, response: str, max_questions: int, assessment_type: str
+    ) -> Dict[str, Any]:
         """Parse text-format questions from AI response."""
         questions = []
-        lines = response.split('\n')
+        lines = response.split("\n")
         current_question = {}
         question_count = 0
-        
+
         for line in lines:
             line = line.strip()
             if not line:
                 continue
-                
+
             # Look for question patterns
-            if line.startswith(('1.', '2.', '3.', '4.', '5.', '6.', '7.', '8.')) and question_count < max_questions:
+            if (
+                line.startswith(("1.", "2.", "3.", "4.", "5.", "6.", "7.", "8."))
+                and question_count < max_questions
+            ):
                 if current_question:
                     questions.append(current_question)
-                
+
                 question_count += 1
                 current_question = {
                     "question_id": f"q{question_count}",
@@ -4592,19 +5365,21 @@ Please try your question again or contact support for immediate assistance."""
                     "options": ["Yes", "No", "Partially", "Not Applicable"],
                     "category": "compliance",
                     "difficulty": "medium",
-                    "compliance_weight": 1.0
+                    "compliance_weight": 1.0,
                 }
-        
+
         if current_question:
             questions.append(current_question)
-            
+
         return {
             "questions": questions[:max_questions],
             "total_questions": min(len(questions), max_questions),
-            "assessment_context": assessment_type
+            "assessment_context": assessment_type,
         }
 
-    def _get_fallback_questions_data(self, max_questions: int, assessment_type: str) -> Dict[str, Any]:
+    def _get_fallback_questions_data(
+        self, max_questions: int, assessment_type: str
+    ) -> Dict[str, Any]:
         """Generate fallback questions when AI generation fails."""
         fallback_questions = [
             {
@@ -4614,16 +5389,16 @@ Please try your question again or contact support for immediate assistance."""
                 "options": ["Yes, comprehensive", "Yes, basic", "In development", "No"],
                 "category": "data_protection",
                 "difficulty": "easy",
-                "compliance_weight": 1.5
+                "compliance_weight": 1.5,
             },
             {
                 "question_id": "q2",
                 "question": "How often do you conduct security awareness training for employees?",
-                "type": "multiple_choice", 
+                "type": "multiple_choice",
                 "options": ["Monthly", "Quarterly", "Annually", "Never"],
                 "category": "security",
                 "difficulty": "medium",
-                "compliance_weight": 1.2
+                "compliance_weight": 1.2,
             },
             {
                 "question_id": "q3",
@@ -4632,16 +5407,21 @@ Please try your question again or contact support for immediate assistance."""
                 "options": ["Yes, automated", "Yes, manual", "Informal process", "No process"],
                 "category": "data_protection",
                 "difficulty": "medium",
-                "compliance_weight": 1.8
+                "compliance_weight": 1.8,
             },
             {
                 "question_id": "q4",
                 "question": "How do you monitor and log access to sensitive data?",
                 "type": "multiple_choice",
-                "options": ["Comprehensive logging", "Basic logging", "Limited logging", "No logging"],
+                "options": [
+                    "Comprehensive logging",
+                    "Basic logging",
+                    "Limited logging",
+                    "No logging",
+                ],
                 "category": "security",
                 "difficulty": "hard",
-                "compliance_weight": 1.4
+                "compliance_weight": 1.4,
             },
             {
                 "question_id": "q5",
@@ -4650,16 +5430,21 @@ Please try your question again or contact support for immediate assistance."""
                 "options": ["Yes, regularly", "Yes, occasionally", "Planning to", "No"],
                 "category": "risk_management",
                 "difficulty": "medium",
-                "compliance_weight": 1.3
+                "compliance_weight": 1.3,
             },
             {
                 "question_id": "q6",
                 "question": "How do you ensure third-party vendors comply with data protection requirements?",
                 "type": "multiple_choice",
-                "options": ["Formal agreements", "Basic requirements", "Verbal agreements", "No requirements"],
+                "options": [
+                    "Formal agreements",
+                    "Basic requirements",
+                    "Verbal agreements",
+                    "No requirements",
+                ],
                 "category": "vendor_management",
                 "difficulty": "hard",
-                "compliance_weight": 1.6
+                "compliance_weight": 1.6,
             },
             {
                 "question_id": "q7",
@@ -4668,7 +5453,7 @@ Please try your question again or contact support for immediate assistance."""
                 "options": ["Yes, tested", "Yes, documented", "In development", "No"],
                 "category": "incident_response",
                 "difficulty": "medium",
-                "compliance_weight": 1.7
+                "compliance_weight": 1.7,
             },
             {
                 "question_id": "q8",
@@ -4677,17 +5462,17 @@ Please try your question again or contact support for immediate assistance."""
                 "options": ["Quarterly", "Annually", "As needed", "Never"],
                 "category": "governance",
                 "difficulty": "easy",
-                "compliance_weight": 1.1
-            }
+                "compliance_weight": 1.1,
+            },
         ]
-        
+
         selected_questions = fallback_questions[:max_questions]
-        
+
         return {
             "questions": selected_questions,
             "total_questions": len(selected_questions),
             "assessment_context": assessment_type,
-            "fallback_used": True
+            "fallback_used": True,
         }
 
     async def select_optimal_model(

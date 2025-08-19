@@ -33,8 +33,7 @@ class ExperimentType(Enum):
     COMPLIANCE_EFFECTIVENESS = "compliance_effectiveness"
     ASSESSMENT_METHODOLOGY = "assessment_methodology"
 
-
-# MetricType imported from analytics_monitor above
+    # MetricType imported from analytics_monitor above
     CATEGORICAL = "categorical"  # User preferences, status categories
     COUNT = "count"  # Number of actions, events
 
@@ -268,7 +267,7 @@ class ABTestingFramework:
             hash_input += ":" + ":".join(strata_values)
 
         # Generate hash and convert to assignment
-        hash_value = int(hashlib.md5(hash_input.encode()).hexdigest(), 16)
+        hash_value = int(hashlib.sha256(hash_input.encode()).hexdigest(), 16)
         assignment_ratio = (hash_value % 10000) / 10000.0
 
         # Assign to variant based on traffic split

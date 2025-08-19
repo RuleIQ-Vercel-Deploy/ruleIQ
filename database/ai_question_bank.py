@@ -2,6 +2,7 @@
 AIQuestionBank model for storing and managing AI-generated assessment questions.
 Supports dynamic question generation with context tags and difficulty weighting.
 """
+
 import uuid
 from datetime import datetime
 from decimal import Decimal
@@ -24,6 +25,7 @@ class AIQuestionBank(Base):
     Model for AI-generated assessment questions with context-aware categorization.
     Stores questions, options, metadata, and compliance weighting for dynamic selection.
     """
+
     __tablename__ = "ai_question_bank"
 
     # Primary identifier
@@ -41,7 +43,9 @@ class AIQuestionBank(Base):
 
     # Question weighting and difficulty
     difficulty_level = Column(Integer, default=5, nullable=False)  # 1-10 scale
-    compliance_weight = Column(Numeric(4, 3), default=Decimal('0.500'), nullable=False)  # 0.000-1.000
+    compliance_weight = Column(
+        Numeric(4, 3), default=Decimal("0.500"), nullable=False
+    )  # 0.000-1.000
     usage_frequency = Column(Integer, default=0, nullable=False)  # Track how often used
 
     # AI generation metadata

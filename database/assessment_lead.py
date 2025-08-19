@@ -2,6 +2,7 @@
 AssessmentLead model for capturing leads through the freemium assessment flow.
 Stores email capture, UTM tracking, and lead scoring data.
 """
+
 import uuid
 from sqlalchemy import (
     Boolean,
@@ -23,6 +24,7 @@ class AssessmentLead(Base):
     Model for capturing leads through the freemium assessment flow.
     Stores email capture, UTM tracking, and lead scoring data.
     """
+
     __tablename__ = "assessment_leads"
 
     # Primary identifiers
@@ -48,7 +50,7 @@ class AssessmentLead(Base):
 
     # Lead scoring and status
     lead_score = Column(Integer, default=0)
-    lead_status = Column(String(20), default='new')  # new, qualified, converted, lost
+    lead_status = Column(String(20), default="new")  # new, qualified, converted, lost
     conversion_probability = Column(Float, nullable=True)
     engagement_score = Column(Integer, default=0)
 

@@ -6,10 +6,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import Session
 
 from api.dependencies.database import get_async_db
-from api.dependencies.rbac_auth import (
-    UserWithRoles,
-    require_permission
-)
+from api.dependencies.rbac_auth import UserWithRoles, require_permission
 from services.data_access_service import DataAccessService
 from database.db_setup import get_db
 from api.schemas.models import BusinessProfileCreate, BusinessProfileResponse, BusinessProfileUpdate
@@ -81,7 +78,7 @@ async def create_business_profile(
 @router.get("/", response_model=BusinessProfileResponse)
 async def get_business_profile(
     current_user: UserWithRoles = Depends(require_permission("user_list")),
-    db: AsyncSession = Depends(get_async_db)
+    db: AsyncSession = Depends(get_async_db),
 ):
     stmt = select(BusinessProfile).where(BusinessProfile.user_id == current_user.id)
     result = await db.execute(stmt)
@@ -118,7 +115,7 @@ async def get_business_profile_by_id(
     ):
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
-            detail="Access denied: Insufficient permissions to view this profile"
+            detail="Access denied: Insufficient permissions to view this profile",
         )
 
     return profile
@@ -194,7 +191,7 @@ async def update_business_profile_by_id(
     ):
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
-            detail="Access denied: Insufficient permissions to update this profile"
+            detail="Access denied: Insufficient permissions to update this profile",
         )
 
     update_data = profile_update.model_dump(exclude_unset=True)
@@ -252,7 +249,7 @@ async def delete_business_profile_by_id(
     ):
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
-            detail="Access denied: Insufficient permissions to delete this profile"
+            detail="Access denied: Insufficient permissions to delete this profile",
         )
 
     await db.delete(profile)
@@ -287,7 +284,7 @@ async def patch_business_profile(
     ):
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
-            detail="Access denied: Insufficient permissions to update this profile"
+            detail="Access denied: Insufficient permissions to update this profile",
         )
 
     update_data = profile_update.model_dump(exclude_unset=True)

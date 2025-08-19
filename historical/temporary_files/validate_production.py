@@ -35,7 +35,9 @@ class Colors:
 
 
 class ValidationResult:
-    def __init__(self, test_name: str, passed: bool, message: str = "", details: Dict = None) -> None:
+    def __init__(
+        self, test_name: str, passed: bool, message: str = "", details: Dict = None
+    ) -> None:
         self.test_name = test_name
         self.passed = passed
         self.message = message

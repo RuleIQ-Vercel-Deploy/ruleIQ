@@ -9,6 +9,7 @@ from pathlib import Path
 from typing import Dict, Any
 
 import sys
+
 sys.path.append(str(Path(__file__).parent.parent))
 
 from services.compliance_loader import UKComplianceLoader
@@ -44,23 +45,34 @@ def load_uk_gdpr_framework() -> Dict[str, Any]:
             "Data processor agreements",
             "International data transfer safeguards",
             "Staff training and awareness",
-            "Data retention and disposal policies"
+            "Data retention and disposal policies",
         ],
         "control_domains": [
-            "Access Control", "Data Minimization", "Consent Management",
-            "Data Subject Rights", "Breach Management", "Privacy Impact Assessment",
-            "Data Retention", "Third Party Management", "Staff Training"
+            "Access Control",
+            "Data Minimization",
+            "Consent Management",
+            "Data Subject Rights",
+            "Breach Management",
+            "Privacy Impact Assessment",
+            "Data Retention",
+            "Third Party Management",
+            "Staff Training",
         ],
         "evidence_types": [
-            "Privacy Policy", "Data Processing Records", "DPIA Documentation",
-            "Staff Training Records", "Audit Logs", "Breach Notification Records",
-            "Data Processor Agreements", "Consent Management Records"
+            "Privacy Policy",
+            "Data Processing Records",
+            "DPIA Documentation",
+            "Staff Training Records",
+            "Audit Logs",
+            "Breach Notification Records",
+            "Data Processor Agreements",
+            "Consent Management Records",
         ],
         "relevance_facto": {
             "data_processing": 10,
             "personal_data_volume": 8,
             "cross_border_transfers": 7,
-            "automated_decision_making": 6
+            "automated_decision_making": 6,
         },
         "complexity_scor": 8,
         "implementation_": 16,
@@ -89,7 +101,7 @@ def load_uk_gdpr_framework() -> Dict[str, Any]:
         - Object to processing
         - Restrict processing
         """,
-        "version": "1.0"
+        "version": "1.0",
     }
 
 
@@ -117,22 +129,32 @@ def load_fca_framework() -> Dict[str, Any]:
             "Market conduct rules",
             "Prudential requirements",
             "Regulatory reporting",
-            "Complaints handling"
+            "Complaints handling",
         ],
         "control_domains": [
-            "Governance & Oversight", "Risk Management", "Operational Resilience",
-            "Consumer Protection", "Financial Crime", "Data Management",
-            "Market Conduct", "Regulatory Reporting"
+            "Governance & Oversight",
+            "Risk Management",
+            "Operational Resilience",
+            "Consumer Protection",
+            "Financial Crime",
+            "Data Management",
+            "Market Conduct",
+            "Regulatory Reporting",
         ],
         "evidence_types": [
-            "Governance Policies", "Risk Assessments", "Operational Resilience Plans",
-            "Consumer Outcomes Reports", "Training Records", "Incident Reports",
-            "Regulatory Returns", "Complaints Logs"
+            "Governance Policies",
+            "Risk Assessments",
+            "Operational Resilience Plans",
+            "Consumer Outcomes Reports",
+            "Training Records",
+            "Incident Reports",
+            "Regulatory Returns",
+            "Complaints Logs",
         ],
         "complexity_scor": 9,
         "implementation_": 24,
         "estimated_cost_": "£25,000-£150,000",
-        "version": "1.0"
+        "version": "1.0",
     }
 
 
@@ -155,20 +177,26 @@ def load_cyber_essentials_framework() -> Dict[str, Any]:
             "Secure configuration",
             "Access control",
             "Malware protection",
-            "Patch management"
+            "Patch management",
         ],
         "control_domains": [
-            "Network Security", "System Configuration", "Access Management",
-            "Malware Protection", "Patch Management"
+            "Network Security",
+            "System Configuration",
+            "Access Management",
+            "Malware Protection",
+            "Patch Management",
         ],
         "evidence_types": [
-            "Network Diagrams", "Configuration Standards", "Access Control Lists",
-            "Antivirus Reports", "Patch Management Logs"
+            "Network Diagrams",
+            "Configuration Standards",
+            "Access Control Lists",
+            "Antivirus Reports",
+            "Patch Management Logs",
         ],
         "complexity_scor": 4,
         "implementation_": 8,
         "estimated_cost_": "£2,000-£10,000",
-        "version": "1.0"
+        "version": "1.0",
     }
 
 
@@ -198,20 +226,28 @@ def load_pci_dss_uk_framework() -> Dict[str, Any]:
             "Restrict physical access",
             "Track and monitor access to network resources",
             "Regularly test security systems",
-            "Maintain information security policy"
+            "Maintain information security policy",
         ],
         "control_domains": [
-            "Network Security", "Data Protection", "Access Control",
-            "Monitoring", "Testing", "Policy Management"
+            "Network Security",
+            "Data Protection",
+            "Access Control",
+            "Monitoring",
+            "Testing",
+            "Policy Management",
         ],
         "evidence_types": [
-            "Network Scans", "Penetration Test Reports", "Access Logs",
-            "Security Policies", "Training Records", "Incident Response Plans"
+            "Network Scans",
+            "Penetration Test Reports",
+            "Access Logs",
+            "Security Policies",
+            "Training Records",
+            "Incident Response Plans",
         ],
         "complexity_scor": 7,
         "implementation_": 20,
         "estimated_cost_": "£20,000-£100,000",
-        "version": "1.0"
+        "version": "1.0",
     }
 
 
@@ -244,24 +280,38 @@ def load_iso27001_uk_framework() -> Dict[str, Any]:
             "Supplier relationships",
             "Incident management",
             "Business continuity",
-            "Compliance monitoring"
+            "Compliance monitoring",
         ],
         "control_domains": [
-            "Information Security Policies", "Organization of Information Security",
-            "Human Resource Security", "Asset Management", "Access Control",
-            "Cryptography", "Physical Security", "Operations Security",
-            "Communications Security", "System Development", "Supplier Relationships",
-            "Incident Management", "Business Continuity", "Compliance"
+            "Information Security Policies",
+            "Organization of Information Security",
+            "Human Resource Security",
+            "Asset Management",
+            "Access Control",
+            "Cryptography",
+            "Physical Security",
+            "Operations Security",
+            "Communications Security",
+            "System Development",
+            "Supplier Relationships",
+            "Incident Management",
+            "Business Continuity",
+            "Compliance",
         ],
         "evidence_types": [
-            "ISMS Documentation", "Risk Assessment Reports", "Statement of Applicability",
-            "Security Policies", "Audit Reports", "Training Records",
-            "Incident Reports", "Business Continuity Plans"
+            "ISMS Documentation",
+            "Risk Assessment Reports",
+            "Statement of Applicability",
+            "Security Policies",
+            "Audit Reports",
+            "Training Records",
+            "Incident Reports",
+            "Business Continuity Plans",
         ],
         "complexity_scor": 9,
         "implementation_": 32,
         "estimated_cost_": "£50,000-£200,000",
-        "version": "1.0"
+        "version": "1.0",
     }
 
 
@@ -281,7 +331,7 @@ def main():
         load_fca_framework(),
         load_cyber_essentials_framework(),
         load_pci_dss_uk_framework(),
-        load_iso27001_uk_framework()
+        load_iso27001_uk_framework(),
     ]
 
     # Load frameworks

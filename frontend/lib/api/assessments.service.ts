@@ -1,11 +1,12 @@
 import { apiClient } from './client';
 
-import type { Assessment, AssessmentQuestion, AssessmentResponse } from '@/types/api';
+import type { Assessment, AssessmentQuestion, AssessmentResponse, PaginatedResponse, SubmitResponseRequest } from '@/types/api';
 
 export interface CreateAssessmentRequest {
   business_profile_id: string;
   framework_id: string;
-  assessment_type?: 'quick' | 'comprehensive';
+  assessment_type?: string;
+  metadata?: Record<string, any>;
 }
 
 export interface UpdateAssessmentRequest {
@@ -29,11 +30,25 @@ class AssessmentService {
     status?: string;
     page?: number;
     page_size?: number;
-  }): Promise<{ items: Assessment[]; total: number }> {
+  }): Promise<PaginatedResponse<Assessment>> {
+    const params_with_defaults = {
+      page: 1,
+      page_size: 20,
+      ...params,
+    };
+    
     const response = await apiClient.get<{ items: Assessment[]; total: number }>('/assessments', {
-      params,
+      params: params_with_defaults,
     });
-    return response;
+    
+    // Transform to proper PaginatedResponse
+    return {
+      items: response.items,
+      total: response.total,
+      page: params_with_defaults.page,
+      page_size: params_with_defaults.page_size,
+      total_pages: Math.ceil(response.total / params_with_defaults.page_size),
+    };
   }
 
   /**
@@ -112,6 +127,28 @@ class AssessmentService {
    */
   async getQuickAssessment(businessProfileId: string, frameworkId: string): Promise<any> {
     const response = await apiClient.post<any>('/assessments/quick', {
+      business_profile_id: businessProfileId,
+      framework_id: frameworkId,
+    });
+    return response;
+  }
+
+  /**
+   * Submit a response to an assessment
+   */
+  async submitResponse(assessmentId: string, data: SubmitResponseRequest): Promise<AssessmentResponse> {
+    const response = await apiClient.post<AssessmentResponse>(
+      `/assessments/${assessmentId}/responses`,
+      data,
+    );
+    return response;
+  }
+
+  /**
+   * Start a quick assessment
+   */
+  async startQuickAssessment(businessProfileId: string, frameworkId: string): Promise<Assessment> {
+    const response = await apiClient.post<Assessment>('/assessments/quick/start', {
       business_profile_id: businessProfileId,
       framework_id: frameworkId,
     });

@@ -2,17 +2,20 @@
 """
 Test script for Stack Auth integration
 """
+
 import asyncio
 import os
 import sys
 from typing import Dict, Any
 
 # Add project root to Python path
-sys.path.insert(0, '.')
+sys.path.insert(0, ".")
 
 # Load environment variables
 from dotenv import load_dotenv
+
 load_dotenv()
+
 
 async def test_stack_auth():
     """Test Stack Auth functionality"""
@@ -37,6 +40,7 @@ async def test_stack_auth():
     try:
         from api.middleware.stack_auth_middleware import validate_stack_token, StackAuthMiddleware
         from api.dependencies.stack_auth import get_current_stack_user
+
         print("   ✅ Stack Auth modules import successfully")
     except Exception as e:
         print(f"   ❌ Import error: {e}")
@@ -46,6 +50,7 @@ async def test_stack_auth():
     print("\n3. Testing Middleware Creation:")
     try:
         from fastapi import FastAPI
+
         app = FastAPI()
         middleware = StackAuthMiddleware(app)
         print("   ✅ Stack Auth middleware creates successfully")
@@ -75,6 +80,7 @@ async def test_stack_auth():
     print("   3. Verify middleware is applied to protected routes")
 
     return True
+
 
 if __name__ == "__main__":
     success = asyncio.run(test_stack_auth())

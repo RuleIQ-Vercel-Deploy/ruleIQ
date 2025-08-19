@@ -3,11 +3,13 @@
 Test Phase 1 Stack Auth endpoints
 Quick integration test to verify authentication is working
 """
+
 import requests
 import json
 import sys
 
 BASE_URL = "http://localhost:8000"
+
 
 def test_endpoint(endpoint, description, should_fail=True):
     """Test an endpoint and return result"""
@@ -43,6 +45,7 @@ def test_endpoint(endpoint, description, should_fail=True):
         print(f"❌ Error: {e}")
         return False
 
+
 def check_server():
     """Check if server is running"""
     try:
@@ -50,6 +53,7 @@ def check_server():
         return response.status_code == 200
     except:
         return False
+
 
 def main():
     print("🚀 Phase 1 Stack Auth Endpoint Test")
@@ -96,6 +100,7 @@ def main():
     else:
         print(f"\n❌ {total - passed} endpoints failed authentication test")
         return 1
+
 
 if __name__ == "__main__":
     sys.exit(main())

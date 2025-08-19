@@ -251,7 +251,7 @@ class QueryOptimizer:
                 "rows_returned": rows_returned,
                 "query_plan": plan_data,
                 "index_suggestions": suggestions,
-                "performance_rating": "slow" if actual_time > 100 else "fast"
+                "performance_rating": "slow" if actual_time > 100 else "fast",
             }
 
         except Exception as e:
@@ -259,7 +259,7 @@ class QueryOptimizer:
             return {
                 "execution_time": 0,
                 "error": str(e),
-                "index_suggestions": ["Unable to analyze query"]
+                "index_suggestions": ["Unable to analyze query"],
             }
 
     async def get_slow_queries(self, threshold_ms: float = 100) -> List[Dict[str, Any]]:
@@ -277,7 +277,7 @@ class QueryOptimizer:
                     mean_exec_time,
                     max_exec_time,
                     rows,
-                    100.0 * shared_blks_hit / 
+                    100.0 * shared_blks_hit /
                     nullif(shared_blks_hit + shared_blks_read, 0) as hit_percent
                 FROM pg_stat_statements
                 WHERE mean_exec_time > :threshold
@@ -296,7 +296,7 @@ class QueryOptimizer:
                     "avg_time_ms": float(row.mean_exec_time),
                     "max_time_ms": float(row.max_exec_time),
                     "rows_avg": float(row.rows) if row.rows else 0,
-                    "cache_hit_percent": float(row.hit_percent) if row.hit_percent else 0
+                    "cache_hit_percent": float(row.hit_percent) if row.hit_percent else 0,
                 }
                 for row in rows
             ]
@@ -337,7 +337,7 @@ class QueryOptimizer:
                     "tuples_read": row.idx_tup_read,
                     "tuples_fetched": row.idx_tup_fetch,
                     "size": row.size,
-                    "usage_status": "unused" if row.idx_scan < 10 else "active"
+                    "usage_status": "unused" if row.idx_scan < 10 else "active",
                 }
                 for row in rows
             ]
@@ -395,7 +395,7 @@ class QueryOptimizer:
                 "idle_in_transaction": idle_in_tx,
                 "utilization_percent": utilization * 100,
                 "recommendations": recommendations,
-                "pool_health": "good" if 0.3 <= utilization <= 0.7 else "needs_attention"
+                "pool_health": "good" if 0.3 <= utilization <= 0.7 else "needs_attention",
             }
 
         except Exception as e:
@@ -411,38 +411,44 @@ class QueryOptimizer:
         # Analyze slow queries
         slow_queries = await self.get_slow_queries()
         if slow_queries:
-            suggestions.append({
-                "category": "queries",
-                "priority": "high",
-                "issue": f"Found {len(slow_queries)} slow queries",
-                "recommendation": (
-                    "Review and optimize slow queries with indexes or query restructuring"
-                ),
-                "impact": "Significant improvement in API response times"
-            })
+            suggestions.append(
+                {
+                    "category": "queries",
+                    "priority": "high",
+                    "issue": f"Found {len(slow_queries)} slow queries",
+                    "recommendation": (
+                        "Review and optimize slow queries with indexes or query restructuring"
+                    ),
+                    "impact": "Significant improvement in API response times",
+                }
+            )
 
         # Analyze index usage
         index_stats = await self.get_index_usage_stats()
         unused_indexes = [idx for idx in index_stats if idx["usage_status"] == "unused"]
         if unused_indexes:
-            suggestions.append({
-                "category": "indexes",
-                "priority": "medium",
-                "issue": f"Found {len(unused_indexes)} unused indexes",
-                "recommendation": "Consider dropping unused indexes to improve write performance",
-                "impact": "Faster INSERT/UPDATE operations, reduced storage"
-            })
+            suggestions.append(
+                {
+                    "category": "indexes",
+                    "priority": "medium",
+                    "issue": f"Found {len(unused_indexes)} unused indexes",
+                    "recommendation": "Consider dropping unused indexes to improve write performance",
+                    "impact": "Faster INSERT/UPDATE operations, reduced storage",
+                }
+            )
 
         # Analyze connection pool
         pool_analysis = await self.optimize_connection_pool()
         if pool_analysis.get("pool_health") == "needs_attention":
-            suggestions.append({
-                "category": "connections",
-                "priority": "high",
-                "issue": "Connection pool needs optimization",
-                "recommendation": "; ".join(pool_analysis.get("recommendations", [])),
-                "impact": "Better concurrency handling and resource utilization"
-            })
+            suggestions.append(
+                {
+                    "category": "connections",
+                    "priority": "high",
+                    "issue": "Connection pool needs optimization",
+                    "recommendation": "; ".join(pool_analysis.get("recommendations", [])),
+                    "impact": "Better concurrency handling and resource utilization",
+                }
+            )
 
         return suggestions
 

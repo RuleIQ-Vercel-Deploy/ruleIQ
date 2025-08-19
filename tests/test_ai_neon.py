@@ -2,18 +2,20 @@
 """
 Test AI functionality with Neon database
 """
+
 import asyncio
 import os
 import time
 from dotenv import load_dotenv
 
 # Load environment variables
-load_dotenv('.env.local')
+load_dotenv(".env.local")
 
 # Import after loading env vars
 from services.ai.assistant import ComplianceAssistant
 from services.ai.safety_manager import AdvancedSafetyManager
 from database.db_setup import init_db, get_async_db
+
 
 async def test_ai_functionality():
     """Test core AI functionality"""
@@ -60,14 +62,16 @@ async def test_ai_functionality():
             response = await assistant.get_assessment_help(
                 question_text=test_question,
                 question_type="regulatory_compliance",
-                user_context={"industry": "technology", "size": "small"}
+                user_context={"industry": "technology", "size": "small"},
             )
 
             print("✅ AI Response generated successfully:")
             print(f"   Response type: {type(response)}")
-            if hasattr(response, 'guidance'):
+            if hasattr(response, "guidance"):
                 print(f"   Guidance preview: {response.guidance[:100]}...")
-            print(f"   Has citations: {'citations' in response.__dict__ if hasattr(response, '__dict__') else 'N/A'}\n")
+            print(
+                f"   Has citations: {'citations' in response.__dict__ if hasattr(response, '__dict__') else 'N/A'}\n"
+            )
         except Exception as e:
             print(f"❌ AI response generation failed: {e}\n")
 
@@ -78,8 +82,8 @@ async def test_ai_functionality():
             start_time = time.time()
             cached_response = await assistant.get_assessment_help(
                 question_text=test_question,
-                question_type="regulatory_compliance", 
-                user_context={"industry": "technology", "size": "small"}
+                question_type="regulatory_compliance",
+                user_context={"industry": "technology", "size": "small"},
             )
             end_time = time.time()
 
@@ -91,6 +95,7 @@ async def test_ai_functionality():
             print(f"❌ Cache test failed: {e}\n")
 
     print("🎉 AI functionality tests completed!")
+
 
 if __name__ == "__main__":
     asyncio.run(test_ai_functionality())

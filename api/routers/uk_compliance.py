@@ -11,8 +11,11 @@ from sqlalchemy.orm import Session
 from database.db_setup import get_db
 from database.compliance_framework import ComplianceFramework
 from api.schemas.compliance import (
-    UKFrameworkSchema, FrameworkResponse, FrameworkListResponse,
-    FrameworkLoadRequest, FrameworkLoadResponse
+    UKFrameworkSchema,
+    FrameworkResponse,
+    FrameworkListResponse,
+    FrameworkLoadRequest,
+    FrameworkLoadResponse,
 )
 from services.compliance_loader import UKComplianceLoader, GeographicValidator
 from api.dependencies.auth import get_current_active_user
@@ -25,7 +28,7 @@ router = APIRouter(prefix="/api/v1/compliance", tags=["UK Compliance"])
 @router.get(
     "/frameworks",
     response_model=FrameworkListResponse,
-    dependencies=[Depends(RateLimited(requests=100, window=60))]
+    dependencies=[Depends(RateLimited(requests=100, window=60))],
 )
 async def get_frameworks(
     region: Optional[str] = Query(None, description="Filter by geographic region"),
@@ -34,7 +37,7 @@ async def get_frameworks(
     complexity_min: Optional[int] = Query(None, ge=1, le=10),
     complexity_max: Optional[int] = Query(None, ge=1, le=10),
     active_only: bool = Query(True, description="Include only active frameworks"),
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
 ):
     """
     Get compliance frameworks with optional filtering.
@@ -82,7 +85,7 @@ async def get_frameworks(
             version=fw.version,
             is_active=fw.is_active,
             created_at=fw.created_at.isoformat(),
-            updated_at=fw.updated_at.isoformat()
+            updated_at=fw.updated_at.isoformat(),
         )
         for fw in frameworks
     ]
@@ -92,30 +95,24 @@ async def get_frameworks(
         total_count=total_count,
         filtered_count=filtered_count,
         region=region,
-        category=category
+        category=category,
     )
 
 
 @router.get(
     "/frameworks/{framework_id}",
     response_model=FrameworkResponse,
-    dependencies=[Depends(RateLimited(requests=200, window=60))]
+    dependencies=[Depends(RateLimited(requests=200, window=60))],
 )
-async def get_framework(
-    framework_id: str,
-    db: Session = Depends(get_db)
-):
+async def get_framework(framework_id: str, db: Session = Depends(get_db)):
     """
     Get a specific compliance framework by ID.
     """
-    framework = db.query(ComplianceFramework)\
-        .filter(ComplianceFramework.id == framework_id)\
-        .first()
+    framework = db.query(ComplianceFramework).filter(ComplianceFramework.id == framework_id).first()
 
     if not framework:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Framework not found: {framework_id}"
+            status_code=status.HTTP_404_NOT_FOUND, detail=f"Framework not found: {framework_id}"
         )
 
     return FrameworkResponse(
@@ -129,22 +126,16 @@ async def get_framework(
         version=framework.version,
         is_active=framework.is_active,
         created_at=framework.created_at.isoformat(),
-        updated_at=framework.updated_at.isoformat()
+        updated_at=framework.updated_at.isoformat(),
     )
 
 
 @router.post(
     "/frameworks/load",
     response_model=FrameworkLoadResponse,
-    dependencies=[
-        Depends(get_current_active_user),
-        Depends(RateLimited(requests=10, window=60))
-    ]
+    dependencies=[Depends(get_current_active_user), Depends(RateLimited(requests=10, window=60))],
 )
-async def load_frameworks(
-    request: FrameworkLoadRequest,
-    db: Session = Depends(get_db)
-):
+async def load_frameworks(request: FrameworkLoadRequest, db: Session = Depends(get_db)):
     """
     Bulk load UK compliance frameworks.
 
@@ -176,14 +167,14 @@ async def load_frameworks(
             "control_templat": framework_schema.control_templates,
             "evidence_templa": framework_schema.evidence_templates,
             "version": framework_schema.version,
-            "is_active": framework_schema.is_active
+            "is_active": framework_schema.is_active,
         }
 
         # Validate UK scope
         if not validator.validate_uk_scope(framework_dict["geographic_scop"]):
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
-                detail=f"Invalid geographic scope for UK framework: {framework_schema.name}"
+                detail=f"Invalid geographic scope for UK framework: {framework_schema.name}",
             )
 
         frameworks_data.append(framework_dict)
@@ -200,22 +191,17 @@ async def load_frameworks(
         loaded_frameworks=[fw.name for fw in result.loaded_frameworks],
         skipped_frameworks=result.skipped_frameworks,
         errors=result.errors,
-        total_processed=result.total_processed
+        total_processed=result.total_processed,
     )
 
 
 @router.put(
     "/frameworks/{framework_id}",
     response_model=FrameworkResponse,
-    dependencies=[
-        Depends(get_current_active_user),
-        Depends(RateLimited(requests=50, window=60))
-    ]
+    dependencies=[Depends(get_current_active_user), Depends(RateLimited(requests=50, window=60))],
 )
 async def update_framework(
-    framework_id: str,
-    framework_update: UKFrameworkSchema,
-    db: Session = Depends(get_db)
+    framework_id: str, framework_update: UKFrameworkSchema, db: Session = Depends(get_db)
 ):
     """
     Update a specific compliance framework.
@@ -223,14 +209,11 @@ async def update_framework(
     Requires authentication.
     """
     # Find existing framework
-    framework = db.query(ComplianceFramework)\
-        .filter(ComplianceFramework.id == framework_id)\
-        .first()
+    framework = db.query(ComplianceFramework).filter(ComplianceFramework.id == framework_id).first()
 
     if not framework:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Framework not found: {framework_id}"
+            status_code=status.HTTP_404_NOT_FOUND, detail=f"Framework not found: {framework_id}"
         )
 
     # Update framework fields with truncated column mappings
@@ -262,7 +245,7 @@ async def update_framework(
         db.rollback()
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Failed to update framework: {str(e)}"
+            detail=f"Failed to update framework: {str(e)}",
         )
 
     return FrameworkResponse(
@@ -276,34 +259,25 @@ async def update_framework(
         version=framework.version,
         is_active=framework.is_active,
         created_at=framework.created_at.isoformat(),
-        updated_at=framework.updated_at.isoformat()
+        updated_at=framework.updated_at.isoformat(),
     )
 
 
 @router.delete(
     "/frameworks/{framework_id}",
-    dependencies=[
-        Depends(get_current_active_user),
-        Depends(RateLimited(requests=20, window=60))
-    ]
+    dependencies=[Depends(get_current_active_user), Depends(RateLimited(requests=20, window=60))],
 )
-async def delete_framework(
-    framework_id: str,
-    db: Session = Depends(get_db)
-):
+async def delete_framework(framework_id: str, db: Session = Depends(get_db)):
     """
     Soft delete a compliance framework (set is_active = False).
 
     Requires authentication.
     """
-    framework = db.query(ComplianceFramework)\
-        .filter(ComplianceFramework.id == framework_id)\
-        .first()
+    framework = db.query(ComplianceFramework).filter(ComplianceFramework.id == framework_id).first()
 
     if not framework:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Framework not found: {framework_id}"
+            status_code=status.HTTP_404_NOT_FOUND, detail=f"Framework not found: {framework_id}"
         )
 
     # Soft delete
@@ -315,7 +289,7 @@ async def delete_framework(
         db.rollback()
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Failed to delete framework: {str(e)}"
+            detail=f"Failed to delete framework: {str(e)}",
         )
 
     return {"message": f"Framework {framework_id} deactivated successfully"}

@@ -643,7 +643,7 @@ You will be notified when the analysis is complete. In the meantime, you can:
                 key_elements.append(f"{key}:{context[key]}")
 
         context_string = "|".join(key_elements)
-        return hashlib.md5(context_string.encode()).hexdigest()[:16]
+        return hashlib.sha256(context_string.encode()).hexdigest()[:16]
 
     def sync_offline_requests(self) -> Dict[str, Any]:
         """Synchronize queued offline requests when service returns"""

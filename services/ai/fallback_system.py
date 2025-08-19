@@ -474,7 +474,9 @@ class FallbackSystem:
             self.fallback_stats["fallback_by_source"][source] = 0
         self.fallback_stats["fallback_by_source"][source] += 1
 
-    def cache_successful_response(self, operation: str, context: Dict[str, Any], response: str) -> None:
+    def cache_successful_response(
+        self, operation: str, context: Dict[str, Any], response: str
+    ) -> None:
         """Cache a successful AI response for future fallback use"""
         if self.fallback_level in [FallbackLevel.CACHED, FallbackLevel.COMPREHENSIVE]:
             self.cache_manager.store_response(operation, context, response)

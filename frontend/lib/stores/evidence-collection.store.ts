@@ -88,12 +88,12 @@ export const useEvidenceCollectionStore = create<EvidenceCollectionState>()(
                 plans: [
                   ...state.plans,
                   {
-                    plan_id: plan.plan_id,
+                    id: plan.plan_id,
                     framework: plan.framework,
                     total_tasks: plan.total_tasks,
                     completed_tasks: 0,
-                    estimated_total_hours: plan.estimated_total_hours,
-                    completion_target_date: plan.completion_target_date,
+                    progress_percentage: 0,
+                    target_completion_date: plan.completion_target_date,
                     status: 'pending',
                     created_at: plan.created_at,
                   },
@@ -245,7 +245,7 @@ export const useEvidenceCollectionStore = create<EvidenceCollectionState>()(
               set(
                 (state) => ({
                   plans: state.plans.map((plan) =>
-                    plan.plan_id === currentPlan.plan_id
+                    plan.id === currentPlan.plan_id
                       ? { ...plan, completed_tasks: plan.completed_tasks + 1 }
                       : plan,
                   ),

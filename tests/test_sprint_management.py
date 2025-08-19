@@ -11,12 +11,20 @@ from unittest.mock import patch, MagicMock
 
 # Import the sprint management classes
 import sys
+
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from sprint_management import (
-    SprintManager, Sprint, UserStory, Task, Priority, StoryStatus, TaskType,
-    AcceptanceCriteria
+    SprintManager,
+    Sprint,
+    UserStory,
+    Task,
+    Priority,
+    StoryStatus,
+    TaskType,
+    AcceptanceCriteria,
 )
+
 
 class TestSprintManager:
     """Test cases for SprintManager"""
@@ -29,6 +37,7 @@ class TestSprintManager:
     def teardown_method(self):
         """Cleanup test environment"""
         import shutil
+
         shutil.rmtree(self.temp_dir, ignore_errors=True)
 
     def test_init_sprint(self):
@@ -41,7 +50,7 @@ class TestSprintManager:
             "end_date": "2025-08-15",
             "capacity_hours": 80.0,
             "team_members": ["Developer 1", "Developer 2"],
-            "velocity_target": 25
+            "velocity_target": 25,
         }
 
         sprint = self.sprint_manager.init_sprint(sprint_data)
@@ -131,7 +140,7 @@ class TestSprintManager:
             "end_date": "2025-08-03",
             "capacity_hours": 80.0,
             "team_members": ["Developer"],
-            "velocity_target": 30
+            "velocity_target": 30,
         }
 
         sprint = self.sprint_manager.init_sprint(sprint_data)
@@ -148,7 +157,7 @@ class TestSprintManager:
         self.sprint_manager._save_sprint(sprint)
 
         # Mock the _load_sprint method to return our test sprint
-        with patch.object(self.sprint_manager, '_load_sprint', return_value=sprint):
+        with patch.object(self.sprint_manager, "_load_sprint", return_value=sprint):
             progress = self.sprint_manager.track_sprint_implementation(sprint.id)
 
             assert progress["sprint_id"] == sprint.id
@@ -159,6 +168,7 @@ class TestSprintManager:
             assert "stories_by_status" in progress
             assert "recommendations" in progress
 
+
 class TestDataClasses:
     """Test sprint data classes"""
 
@@ -166,7 +176,7 @@ class TestDataClasses:
         """Test UserStory dataclass"""
         criteria = [
             AcceptanceCriteria("Test criteria 1"),
-            AcceptanceCriteria("Test criteria 2", automated_test="test_function")
+            AcceptanceCriteria("Test criteria 2", automated_test="test_function"),
         ]
 
         story = UserStory(
@@ -177,7 +187,7 @@ class TestDataClasses:
             story_points=5,
             feature_area="Testing",
             acceptance_criteria=criteria,
-            estimated_hours=20.0
+            estimated_hours=20.0,
         )
 
         assert story.id == "TEST-001"
@@ -196,7 +206,7 @@ class TestDataClasses:
             type=TaskType.FEATURE,
             story_id="STORY-001",
             estimated_hours=8.0,
-            dependencies=["TASK-002"]
+            dependencies=["TASK-002"],
         )
 
         assert task.id == "TASK-001"
@@ -217,7 +227,7 @@ class TestDataClasses:
             start_date=start_date,
             end_date=end_date,
             capacity_hours=80.0,
-            team_members=["Dev1", "Dev2"]
+            team_members=["Dev1", "Dev2"],
         )
 
         assert sprint.id == "SPRINT-001"
@@ -226,6 +236,7 @@ class TestDataClasses:
         assert sprint.capacity_hours == 80.0
         assert len(sprint.team_members) == 2
         assert sprint.status == "PLANNING"  # Default value
+
 
 class TestSprintBusinessLogic:
     """Test business logic and edge cases"""
@@ -238,6 +249,7 @@ class TestSprintBusinessLogic:
     def teardown_method(self):
         """Cleanup test environment"""
         import shutil
+
         shutil.rmtree(self.temp_dir, ignore_errors=True)
 
     def test_story_priority_analysis(self):
@@ -246,7 +258,7 @@ class TestSprintBusinessLogic:
             UserStory("S1", "Critical Story", "Desc", Priority.CRITICAL, 8, "Feature", []),
             UserStory("S2", "High Story", "Desc", Priority.HIGH, 5, "Feature", []),
             UserStory("S3", "Medium Story", "Desc", Priority.MEDIUM, 3, "Feature", []),
-            UserStory("S4", "Low Story", "Desc", Priority.LOW, 2, "Feature", [])
+            UserStory("S4", "Low Story", "Desc", Priority.LOW, 2, "Feature", []),
         ]
 
         analysis = self.sprint_manager.analyze_stories(stories)
@@ -260,9 +272,29 @@ class TestSprintBusinessLogic:
     def test_feature_area_breakdown(self):
         """Test feature area analysis"""
         stories = [
-            UserStory("S1", "Auth Story", "Desc", Priority.HIGH, 8, "Authentication", [], estimated_hours=20.0),
-            UserStory("S2", "Auth Story 2", "Desc", Priority.MEDIUM, 5, "Authentication", [], estimated_hours=15.0),
-            UserStory("S3", "UI Story", "Desc", Priority.HIGH, 3, "Frontend", [], estimated_hours=10.0)
+            UserStory(
+                "S1",
+                "Auth Story",
+                "Desc",
+                Priority.HIGH,
+                8,
+                "Authentication",
+                [],
+                estimated_hours=20.0,
+            ),
+            UserStory(
+                "S2",
+                "Auth Story 2",
+                "Desc",
+                Priority.MEDIUM,
+                5,
+                "Authentication",
+                [],
+                estimated_hours=15.0,
+            ),
+            UserStory(
+                "S3", "UI Story", "Desc", Priority.HIGH, 3, "Frontend", [], estimated_hours=10.0
+            ),
         ]
 
         analysis = self.sprint_manager.analyze_stories(stories)
@@ -281,8 +313,7 @@ class TestSprintBusinessLogic:
         stories = []
         for i in range(10):
             story = UserStory(
-                f"S{i}", f"Story {i}", "Desc", Priority.HIGH, 8, "Feature", [],
-                estimated_hours=20.0
+                f"S{i}", f"Story {i}", "Desc", Priority.HIGH, 8, "Feature", [], estimated_hours=20.0
             )
             stories.append(story)
 
@@ -295,10 +326,26 @@ class TestSprintBusinessLogic:
     def test_critical_complexity_risk_detection(self):
         """Test detection of high-risk stories"""
         stories = [
-            UserStory("S1", "Complex Story 1", "Desc", Priority.HIGH, 8, "Feature", [], 
-                     technical_complexity="CRITICAL"),
-            UserStory("S2", "Complex Story 2", "Desc", Priority.HIGH, 8, "Feature", [], 
-                     technical_complexity="CRITICAL")
+            UserStory(
+                "S1",
+                "Complex Story 1",
+                "Desc",
+                Priority.HIGH,
+                8,
+                "Feature",
+                [],
+                technical_complexity="CRITICAL",
+            ),
+            UserStory(
+                "S2",
+                "Complex Story 2",
+                "Desc",
+                Priority.HIGH,
+                8,
+                "Feature",
+                [],
+                technical_complexity="CRITICAL",
+            ),
         ]
 
         analysis = self.sprint_manager.analyze_stories(stories)
@@ -306,6 +353,7 @@ class TestSprintBusinessLogic:
         # Should flag multiple critical complexity stories as risky
         risks = analysis["risks"]
         assert any("critical complexity" in risk.lower() for risk in risks)
+
 
 if __name__ == "__main__":
     pytest.main([__file__, "-v"])

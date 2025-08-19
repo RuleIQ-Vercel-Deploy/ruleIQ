@@ -7,7 +7,7 @@ import asyncio
 import functools
 import inspect
 import logging
-import random
+import secrets
 import time
 from typing import Awaitable, Callable, Optional, TypeVar
 
@@ -64,7 +64,7 @@ class RetryManager:
         if self.config.jitter:
             # Add up to 25% jitter to prevent thundering herd
             jitter_amount = delay * 0.25
-            delay += random.uniform(-jitter_amount, jitter_amount)
+            delay += (secrets.randbelow(int(jitter_amount * 200)) - jitter_amount * 100) / 100
 
         return max(0, delay)
 

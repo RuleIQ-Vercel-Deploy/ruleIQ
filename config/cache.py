@@ -67,7 +67,7 @@ class CacheManager:
 
         # Create hash for long parameter strings
         if len(params_str) > 100:
-            params_hash = hashlib.md5(params_str.encode()).hexdigest()
+            params_hash = hashlib.sha256(params_str.encode()).hexdigest()
             return f"{prefix}:{params_hash}"
 
         return f"{prefix}:{params_str}"

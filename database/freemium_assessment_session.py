@@ -2,6 +2,7 @@
 FreemiumAssessmentSession model for managing AI-driven assessment sessions.
 Stores session data, AI responses, and user interactions for freemium flow.
 """
+
 import uuid
 from datetime import datetime, timedelta
 from sqlalchemy import (
@@ -23,11 +24,14 @@ class FreemiumAssessmentSession(Base):
     Model for managing freemium assessment sessions with AI integration.
     Stores session state, AI responses, and user answers with secure tokens.
     """
+
     __tablename__ = "freemium_assessment_sessions"
 
     # Primary identifiers
     id = Column(PG_UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    lead_id = Column(PG_UUID(as_uuid=True), ForeignKey("assessment_leads.id", ondelete="CASCADE"), nullable=False)
+    lead_id = Column(
+        PG_UUID(as_uuid=True), ForeignKey("assessment_leads.id", ondelete="CASCADE"), nullable=False
+    )
 
     # Session management
     session_token = Column(String(64), nullable=False, unique=True, index=True)
@@ -38,7 +42,9 @@ class FreemiumAssessmentSession(Base):
     current_question_id = Column(String(100), nullable=True)
     total_questions = Column(Integer, nullable=True)
     questions_answered = Column(Integer, nullable=True)
-    progress_percentage = Column("progress_percentage", Integer, nullable=True)  # Using double precision in DB
+    progress_percentage = Column(
+        "progress_percentage", Integer, nullable=True
+    )  # Using double precision in DB
 
     # Assessment configuration
     assessment_type = Column(String(50), nullable=True)
@@ -49,7 +55,9 @@ class FreemiumAssessmentSession(Base):
     personalization_data = Column(JSONB, nullable=True)
 
     # Results storage - matching actual database columns
-    compliance_score = Column("compliance_score", Integer, nullable=True)  # Using double precision in DB
+    compliance_score = Column(
+        "compliance_score", Integer, nullable=True
+    )  # Using double precision in DB
     risk_assessment = Column(JSONB, nullable=True)
     recommendations = Column(JSONB, nullable=True)
     gaps_identified = Column(JSONB, nullable=True)
@@ -81,6 +89,7 @@ class FreemiumAssessmentSession(Base):
             self.session_token = self._generate_secure_token()
         if not self.expires_at:
             from datetime import timezone
+
             self.expires_at = datetime.now(timezone.utc) + timedelta(hours=24)
 
     def _generate_secure_token(self) -> str:
@@ -90,6 +99,7 @@ class FreemiumAssessmentSession(Base):
     def is_expired(self) -> bool:
         """Check if the session has expired."""
         from datetime import timezone
+
         now_utc = datetime.now(timezone.utc)
 
         # Handle both naive and aware datetimes
@@ -109,12 +119,14 @@ class FreemiumAssessmentSession(Base):
         """Mark session as completed and set completion timestamp."""
         self.status = "completed"
         from datetime import timezone
+
         self.completed_at = datetime.now(timezone.utc)
 
     def extend_expiry(self, hours: int = 2) -> None:
         """Extend session expiry by specified hours."""
         if self.is_active():
             from datetime import timezone
+
             self.expires_at = datetime.now(timezone.utc) + timedelta(hours=hours)
 
     # Properties to maintain backward compatibility with service expectations

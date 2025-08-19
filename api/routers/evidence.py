@@ -137,7 +137,9 @@ async def get_evidence_statistics(
     current_user: User = Depends(get_current_active_user),
 ):
     """Get evidence statistics for the current user."""
-    stats = await EvidenceService.get_evidence_statistics(db=db, user_id=UUID(str(str(current_user.id))))
+    stats = await EvidenceService.get_evidence_statistics(
+        db=db, user_id=UUID(str(str(current_user.id)))
+    )
     return stats
 
 

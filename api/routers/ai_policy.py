@@ -11,10 +11,14 @@ from sqlalchemy.orm import Session
 from database.db_setup import get_db
 from database.compliance_framework import ComplianceFramework
 from api.schemas.ai_policy import (
-    PolicyGenerationRequest, PolicyGenerationResponse,
-    PolicyRefinementRequest, PolicyRefinementResponse,
-    PolicyTemplatesResponse, PolicyTemplate,
-    AIProviderMetrics, PolicyGenerationMetrics
+    PolicyGenerationRequest,
+    PolicyGenerationResponse,
+    PolicyRefinementRequest,
+    PolicyRefinementResponse,
+    PolicyTemplatesResponse,
+    PolicyTemplate,
+    AIProviderMetrics,
+    PolicyGenerationMetrics,
 )
 from services.ai.policy_generator import PolicyGenerator, TemplateProcessor
 from api.dependencies.auth import get_current_active_user
@@ -30,13 +34,13 @@ router = APIRouter(prefix="/policies", tags=["AI Policy Generation"])
     status_code=status.HTTP_201_CREATED,
     dependencies=[
         Depends(get_current_active_user),
-        Depends(RateLimited(requests=20, window=60))  # AI endpoint rate limiting
-    ]
+        Depends(RateLimited(requests=20, window=60)),  # AI endpoint rate limiting
+    ],
 )
 async def generate_policy(
     request: PolicyGenerationRequest,
     background_tasks: BackgroundTasks,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
 ):
     """
     Generate compliance policy using AI with dual provider fallback.
@@ -45,20 +49,20 @@ async def generate_policy(
     Uses Google AI (primary) with OpenAI fallback for reliability.
     """
     # Validate framework exists
-    framework = db.query(ComplianceFramework)\
-        .filter(ComplianceFramework.id == request.framework_id)\
-        .first()
+    framework = (
+        db.query(ComplianceFramework).filter(ComplianceFramework.id == request.framework_id).first()
+    )
 
     if not framework:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Framework not found: {request.framework_id}"
+            detail=f"Framework not found: {request.framework_id}",
         )
 
     if not framework.is_active:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail=f"Framework is not active: {framework.name}"
+            detail=f"Framework is not active: {framework.name}",
         )
 
     # Initialize policy generator
@@ -70,10 +74,7 @@ async def generate_policy(
 
         # Log metrics in background
         background_tasks.add_task(
-            _log_generation_metrics,
-            result,
-            request.framework_id,
-            framework.name
+            _log_generation_metrics, result, request.framework_id, framework.name
         )
 
         return result
@@ -81,65 +82,55 @@ async def generate_policy(
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Policy generation failed: {str(e)}"
+            detail=f"Policy generation failed: {str(e)}",
         )
 
 
 @router.put(
     "/refine-policy",
     response_model=PolicyRefinementResponse,
-    dependencies=[
-        Depends(get_current_active_user),
-        Depends(RateLimited(requests=30, window=60))
-    ]
+    dependencies=[Depends(get_current_active_user), Depends(RateLimited(requests=30, window=60))],
 )
-async def refine_policy(
-    request: PolicyRefinementRequest,
-    db: Session = Depends(get_db)
-):
+async def refine_policy(request: PolicyRefinementRequest, db: Session = Depends(get_db)):
     """
     Refine existing policy based on feedback.
 
     Requires authentication. Limited to 30 requests per minute per user.
     """
     # Validate framework exists
-    framework = db.query(ComplianceFramework)\
-        .filter(ComplianceFramework.id == request.framework_id)\
-        .first()
+    framework = (
+        db.query(ComplianceFramework).filter(ComplianceFramework.id == request.framework_id).first()
+    )
 
     if not framework:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Framework not found: {request.framework_id}"
+            detail=f"Framework not found: {request.framework_id}",
         )
 
     generator = PolicyGenerator()
 
     try:
-        result = generator.refine_policy(
-            request.original_policy,
-            request.feedback,
-            framework
-        )
+        result = generator.refine_policy(request.original_policy, request.feedback, framework)
 
         return result
 
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Policy refinement failed: {str(e)}"
+            detail=f"Policy refinement failed: {str(e)}",
         )
 
 
 @router.get(
     "/policy-templates",
     response_model=PolicyTemplatesResponse,
-    dependencies=[Depends(RateLimited(requests=100, window=60))]
+    dependencies=[Depends(RateLimited(requests=100, window=60))],
 )
 async def get_policy_templates(
     framework_id: Optional[str] = None,
     policy_type: Optional[str] = None,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
 ):
     """
     Get available policy templates.
@@ -161,8 +152,8 @@ async def get_policy_templates(
             customization_options={
                 "include_marketing": True,
                 "include_cookies": True,
-                "include_third_parties": True
-            }
+                "include_third_parties": True,
+            },
         ),
         PolicyTemplate(
             id="iso27001_info_sec_policy",
@@ -174,8 +165,8 @@ async def get_policy_templates(
             customization_options={
                 "include_risk_assessment": True,
                 "include_incident_response": True,
-                "include_business_continuity": False
-            }
+                "include_business_continuity": False,
+            },
         ),
         PolicyTemplate(
             id="fca_data_governance",
@@ -184,10 +175,7 @@ async def get_policy_templates(
             policy_type="data_governance_policy",
             framework_compatibility=["FCA_REGULATORY"],
             sections=["governance_framework", "data_quality", "regulatory_reporting"],
-            customization_options={
-                "include_smcr": True,
-                "include_operational_resilience": True
-            }
+            customization_options={"include_smcr": True, "include_operational_resilience": True},
         ),
         PolicyTemplate(
             id="cyber_essentials_security",
@@ -196,49 +184,39 @@ async def get_policy_templates(
             policy_type="cybersecurity_policy",
             framework_compatibility=["CYBER_ESSENTIALS_UK"],
             sections=["network_security", "access_control", "malware_protection"],
-            customization_options={
-                "include_remote_working": True,
-                "include_byod": False
-            }
-        )
+            customization_options={"include_remote_working": True, "include_byod": False},
+        ),
     ]
 
     # Filter by framework if specified
     if framework_id:
-        framework = db.query(ComplianceFramework)\
-            .filter(ComplianceFramework.id == framework_id)\
-            .first()
+        framework = (
+            db.query(ComplianceFramework).filter(ComplianceFramework.id == framework_id).first()
+        )
 
         if framework:
-            templates = [
-                t for t in templates
-                if framework.name in t.framework_compatibility
-            ]
+            templates = [t for t in templates if framework.name in t.framework_compatibility]
 
     # Filter by policy type if specified
     if policy_type:
         templates = [t for t in templates if t.policy_type == policy_type]
 
-    supported_frameworks = list(set(
-        fw for template in templates
-        for fw in template.framework_compatibility
-    ))
+    supported_frameworks = list(
+        set(fw for template in templates for fw in template.framework_compatibility)
+    )
 
     return PolicyTemplatesResponse(
         templates=templates,
         total_count=len(templates),
         supported_frameworks=supported_frameworks,
-        supported_languages=["en-GB", "en-US"]
+        supported_languages=["en-GB", "en-US"],
     )
 
 
 @router.get(
     "/metrics",
     response_model=PolicyGenerationMetrics,
-    dependencies=[
-        Depends(get_current_active_user),
-        Depends(RateLimited(requests=50, window=60))
-    ]
+    dependencies=[Depends(get_current_active_user), Depends(RateLimited(requests=50, window=60))],
 )
 async def get_ai_metrics():
     """
@@ -257,7 +235,7 @@ async def get_ai_metrics():
         average_response_time_ms=2500.0,
         average_confidence_score=0.91,
         total_cost=45.30,
-        last_24h_requests=25
+        last_24h_requests=25,
     )
 
     openai_metrics = AIProviderMetrics(
@@ -268,10 +246,11 @@ async def get_ai_metrics():
         average_response_time_ms=3200.0,
         average_confidence_score=0.88,
         total_cost=12.75,
-        last_24h_requests=3
+        last_24h_requests=3,
     )
 
     from services.ai.circuit_breaker import CircuitBreakerService
+
     circuit_breaker = CircuitBreakerService()
 
     circuit_status = {
@@ -279,7 +258,7 @@ async def get_ai_metrics():
         "openai_status": circuit_breaker.get_state("openai"),
         "failure_count": 0,
         "last_failure_time": None,
-        "next_retry_time": None
+        "next_retry_time": None,
     }
 
     return PolicyGenerationMetrics(
@@ -290,35 +269,25 @@ async def get_ai_metrics():
         provider_metrics=[google_metrics, openai_metrics],
         circuit_breaker_status=circuit_status,
         cost_savings_percentage=42.5,
-        monthly_cost_trend=[65.20, 58.05, 52.30, 48.15]
+        monthly_cost_trend=[65.20, 58.05, 52.30, 48.15],
     )
 
 
 @router.post(
     "/validate-policy",
-    dependencies=[
-        Depends(get_current_active_user),
-        Depends(RateLimited(requests=50, window=60))
-    ]
+    dependencies=[Depends(get_current_active_user), Depends(RateLimited(requests=50, window=60))],
 )
-async def validate_policy(
-    policy_content: str,
-    framework_id: str,
-    db: Session = Depends(get_db)
-):
+async def validate_policy(policy_content: str, framework_id: str, db: Session = Depends(get_db)):
     """
     Validate policy against framework requirements.
 
     Requires authentication. Limited to 50 requests per minute.
     """
-    framework = db.query(ComplianceFramework)\
-        .filter(ComplianceFramework.id == framework_id)\
-        .first()
+    framework = db.query(ComplianceFramework).filter(ComplianceFramework.id == framework_id).first()
 
     if not framework:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Framework not found: {framework_id}"
+            status_code=status.HTTP_404_NOT_FOUND, detail=f"Framework not found: {framework_id}"
         )
 
     generator = PolicyGenerator()
@@ -330,14 +299,12 @@ async def validate_policy(
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Policy validation failed: {str(e)}"
+            detail=f"Policy validation failed: {str(e)}",
         )
 
 
 async def _log_generation_metrics(
-    result: PolicyGenerationResponse,
-    framework_id: str,
-    framework_name: str
+    result: PolicyGenerationResponse, framework_id: str, framework_name: str
 ) -> None:
     """
     Log policy generation metrics in background.
@@ -351,6 +318,7 @@ async def _log_generation_metrics(
     # For now, just log the information
 
     import logging
+
     logger = logging.getLogger(__name__)
 
     logger.info(
@@ -367,14 +335,10 @@ async def _log_generation_metrics(
     "/analytics/export",
     dependencies=[
         Depends(get_current_active_user),
-        Depends(RateLimited(requests=5, window=3600))  # 5 per hour
-    ]
+        Depends(RateLimited(requests=5, window=3600)),  # 5 per hour
+    ],
 )
-async def export_analytics(
-    start_date: str,
-    end_date: str,
-    format: str = "csv"
-):
+async def export_analytics(start_date: str, end_date: str, format: str = "csv"):
     """
     Export policy generation analytics.
 
@@ -382,8 +346,7 @@ async def export_analytics(
     """
     if format not in ["csv", "json", "xlsx"]:
         raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Supported formats: csv, json, xlsx"
+            status_code=status.HTTP_400_BAD_REQUEST, detail="Supported formats: csv, json, xlsx"
         )
 
     # This would generate actual analytics export
@@ -391,5 +354,5 @@ async def export_analytics(
         "message": f"Analytics export started for {start_date} to {end_date}",
         "format": format,
         "estimated_completion": "2-3 minutes",
-        "download_url": "/api/v1/ai/analytics/download/{export_id}"
+        "download_url": "/api/v1/ai/analytics/download/{export_id}",
     }

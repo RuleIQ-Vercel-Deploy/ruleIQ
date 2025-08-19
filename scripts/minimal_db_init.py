@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Minimal database initialization for testing"""
+
 import sys
 from pathlib import Path
 

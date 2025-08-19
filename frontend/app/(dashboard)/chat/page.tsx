@@ -30,7 +30,7 @@ export default function ChatPage() {
     clearError,
   } = useChatStore();
 
-  const activeConversation = conversations.find((c) => c.id === activeConversationId);
+  const activeConversation = conversations?.find((c) => c.id === activeConversationId);
   const activeMessages = activeConversationId ? messages[activeConversationId] || [] : [];
 
   useEffect(() => {
@@ -48,6 +48,42 @@ export default function ChatPage() {
 
   const handleSendMessage = async (message: string) => {
     await sendMessage(message);
+  };
+
+  const handleActionClick = (action: string, data?: any) => {
+    console.log('Action clicked:', action, data);
+    
+    // Handle different action types
+    switch (action) {
+      case 'view_gap_details':
+      case 'view_recommendation_details':
+      case 'view_full_analysis':
+        // Could open a modal or navigate to detail page
+        console.log('Viewing details for:', data);
+        break;
+      
+      case 'implement_recommendation':
+      case 'create_evidence_task':
+        // Could create tasks or initiate workflows
+        console.log('Creating action for:', data);
+        break;
+      
+      case 'ask_followup':
+        // Send a follow-up message
+        if (data && typeof data === 'string') {
+          handleSendMessage(data);
+        }
+        break;
+      
+      case 'view_all_gaps':
+      case 'view_all_recommendations':
+        // Could show expanded view
+        console.log('Showing all items:', data);
+        break;
+      
+      default:
+        console.log('Unhandled action:', action, data);
+    }
   };
 
   if (isLoadingConversations) {
@@ -127,7 +163,11 @@ export default function ChatPage() {
             ) : (
               <>
                 {activeMessages.map((message) => (
-                  <ChatMessage key={message.id} message={message} />
+                  <ChatMessage 
+                    key={message.id} 
+                    message={message} 
+                    onActionClick={handleActionClick}
+                  />
                 ))}
                 {typingUsers.length > 0 && <TypingIndicator />}
               </>

@@ -145,9 +145,7 @@ async def get_user_policies(db: AsyncSession, user_id: UUID) -> List[GeneratedPo
         return policies
     except SQLAlchemyError as e:
         # Log the error e.g., logging.error(f"Database error fetching policies for user {user_id}: {e}")
-        raise DatabaseException(
-            f"Failed to retrieve policies for user {user_id}."
-        ) from e
+        raise DatabaseException(f"Failed to retrieve policies for user {user_id}.") from e
 
 
 async def regenerate_policy_section(

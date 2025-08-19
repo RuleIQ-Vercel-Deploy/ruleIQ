@@ -1,5 +1,5 @@
 from datetime import timedelta
-from datetime import datetime, timedelta
+from datetime import datetime
 from uuid import UUID, uuid4
 
 from fastapi import APIRouter, Depends, HTTPException, Request, status
@@ -62,16 +62,16 @@ async def register(user: UserCreate, db: Session = Depends(get_db)):
     # FIXED: Auto-assign business_user role to new users
     from database.rbac import Role
     from services.rbac_service import RBACService
-    
+
     try:
         rbac_service = RBACService(db)
         business_user_role = db.query(Role).filter(Role.name == "business_user").first()
-        
+
         if business_user_role:
             rbac_service.assign_role_to_user(
                 user_id=db_user.id,
                 role_id=business_user_role.id,
-                granted_by=db_user.id  # Self-assignment for registration
+                granted_by=db_user.id,  # Self-assignment for registration
             )
             logger.info(f"Assigned business_user role to new user: {db_user.email}")
         else:
@@ -229,16 +229,18 @@ async def get_current_user(db: Session = Depends(get_db), token: str = Depends(o
         is_active=user.is_active,
         created_at=user.created_at,
     )
-    
+
     # Add roles and permissions to the response dict
     response_dict = response_data.dict()
-    response_dict.update({
-        "roles": roles,
-        "permissions": permissions,
-        "total_permissions": len(permissions),
-        "assessment_permissions": [p for p in permissions if 'assessment' in p.lower()]
-    })
-    
+    response_dict.update(
+        {
+            "roles": roles,
+            "permissions": permissions,
+            "total_permissions": len(permissions),
+            "assessment_permissions": [p for p in permissions if "assessment" in p.lower()],
+        }
+    )
+
     return response_dict
 
 
@@ -263,26 +265,24 @@ async def logout(request: Request, token: str = Depends(oauth2_scheme)):
             if payload and payload.get("sub"):
                 user_id = UUID(payload["sub"])
                 await auth_service.logout_user(user_id)
-        except Exception:
+        except Exception as e:
             # If token decode fails, still consider logout successful
+            logger.debug(f"Token decode failed during logout: {e}")
             pass
 
     return {"message": "Successfully logged out"}
 
 
 @router.post("/assign-default-role")
-async def assign_default_role(
-    db: Session = Depends(get_db), 
-    token: str = Depends(oauth2_scheme)
-):
+async def assign_default_role(db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)):
     """
     Assign the business_user role to the current authenticated user.
-    
+
     This endpoint allows test users to self-assign the business_user role
     without requiring admin permissions, making testing seamless.
     """
     from api.dependencies.auth import decode_token
-    
+
     # Decode the JWT token to get user ID
     payload = decode_token(token)
     if not payload:
@@ -313,29 +313,29 @@ async def assign_default_role(
         # Get RBAC service and business_user role
         rbac = RBACService(db)
         business_user_role = db.query(Role).filter(Role.name == "business_user").first()
-        
+
         if not business_user_role:
             raise HTTPException(
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                detail="business_user role not found. Please contact administrator."
+                detail="business_user role not found. Please contact administrator.",
             )
 
         # Check if user already has the role
         existing_roles = rbac.get_user_roles(user.id)
-        if any(role['name'] == 'business_user' for role in existing_roles):
+        if any(role["name"] == "business_user" for role in existing_roles):
             return {
                 "success": True,
                 "message": "User already has business_user role",
                 "user_id": str(user.id),
                 "email": user.email,
-                "roles": existing_roles
+                "roles": existing_roles,
             }
 
         # Assign the business_user role (self-assignment)
         rbac.assign_role_to_user(
             user_id=user.id,
             role_id=business_user_role.id,
-            granted_by=user.id  # Self-assignment
+            granted_by=user.id,  # Self-assignment
         )
 
         # Get updated user roles and permissions
@@ -349,11 +349,11 @@ async def assign_default_role(
             "email": user.email,
             "roles": updated_roles,
             "permissions": updated_permissions,
-            "assessment_permissions": [p for p in updated_permissions if 'assessment' in p.lower()]
+            "assessment_permissions": [p for p in updated_permissions if "assessment" in p.lower()],
         }
 
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Failed to assign role: {str(e)}"
+            detail=f"Failed to assign role: {str(e)}",
         )

@@ -3,14 +3,16 @@ import { useState } from 'react';
 
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import { ComplianceMessageRenderer } from './compliance-message-renderer';
 
 import type { ChatMessage } from '@/types/api';
 
 interface ChatMessageProps {
   message: ChatMessage;
+  onActionClick?: (action: string, data?: any) => void;
 }
 
-export function ChatMessage({ message }: ChatMessageProps) {
+export function ChatMessage({ message, onActionClick }: ChatMessageProps) {
   const isUser = message.role === 'user';
   const [copied, setCopied] = useState(false);
 
@@ -24,21 +26,18 @@ export function ChatMessage({ message }: ChatMessageProps) {
   const renderMessageContent = () => {
     const { content } = message;
 
-    // Check if message contains JSON (for structured responses)
-    if (content.startsWith('{') || content.startsWith('[')) {
-      try {
-        const parsed = JSON.parse(content);
-        return (
-          <pre className="whitespace-pre-wrap font-mono text-sm">
-            {JSON.stringify(parsed, null, 2)}
-          </pre>
-        );
-      } catch {
-        // Not valid JSON, render as text
-      }
+    // For AI messages, use ComplianceMessageRenderer to handle structured responses
+    if (!isUser) {
+      return (
+        <ComplianceMessageRenderer
+          content={content}
+          metadata={message.metadata}
+          onActionClick={onActionClick}
+        />
+      );
     }
 
-    // Render as markdown-like text
+    // For user messages, render as simple text
     return (
       <div className="space-y-2 text-sm">
         {content.split('\n\n').map((paragraph, idx) => (

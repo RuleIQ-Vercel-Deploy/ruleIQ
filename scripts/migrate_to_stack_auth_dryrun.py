@@ -2,6 +2,7 @@
 """
 Dry run of Stack Auth migration to show what changes would be made
 """
+
 import re
 from pathlib import Path
 from typing import List
@@ -10,62 +11,38 @@ from typing import List
 REPLACEMENTS = [
     # Import replacements
     (
-        r'from api\.dependencies\.auth import get_current_active_user',
-        'from api.dependencies.stack_auth import get_current_stack_user'
+        r"from api\.dependencies\.auth import get_current_active_user",
+        "from api.dependencies.stack_auth import get_current_stack_user",
     ),
     (
-        r'from api\.dependencies\.auth import get_current_user',
-        'from api.dependencies.stack_auth import get_current_stack_user'
+        r"from api\.dependencies\.auth import get_current_user",
+        "from api.dependencies.stack_auth import get_current_stack_user",
     ),
     # Dependency replacements
-    (
-        r'Depends\(get_current_active_user\)',
-        'Depends(get_current_stack_user)'
-    ),
-    (
-        r'Depends\(get_current_user\)',
-        'Depends(get_current_stack_user)'
-    ),
+    (r"Depends\(get_current_active_user\)", "Depends(get_current_stack_user)"),
+    (r"Depends\(get_current_user\)", "Depends(get_current_stack_user)"),
     # Type hint replacements
-    (
-        r'current_user: User = Depends',
-        'current_user: dict = Depends'
-    ),
-    (
-        r'user: User = Depends',
-        'user: dict = Depends'
-    ),
+    (r"current_user: User = Depends", "current_user: dict = Depends"),
+    (r"user: User = Depends", "user: dict = Depends"),
     # User model attribute access replacements
-    (
-        r'current_user\.id',
-        'current_user["id"]'
-    ),
-    (
-        r'user\.id',
-        'user["id"]'
-    ),
-    (
-        r'current_user\.email',
-        'current_user.get("primaryEmail", current_user.get("email", ""))'
-    ),
-    (
-        r'user\.email',
-        'user.get("primaryEmail", user.get("email", ""))'
-    ),
-    (
-        r'current_user\.username',
-        'current_user.get("displayName", "")'
-    ),
-    (
-        r'user\.username',
-        'user.get("displayName", "")'
-    ),
+    (r"current_user\.id", 'current_user["id"]'),
+    (r"user\.id", 'user["id"]'),
+    (r"current_user\.email", 'current_user.get("primaryEmail", current_user.get("email", ""))'),
+    (r"user\.email", 'user.get("primaryEmail", user.get("email", ""))'),
+    (r"current_user\.username", 'current_user.get("displayName", "")'),
+    (r"user\.username", 'user.get("displayName", "")'),
 ]
+
 
 def get_router_files() -> List[Path]:
     """Get all router files that need migration"""
     router_dir = Path("api/routers")
-    exclude_files = {"auth.py", "google_auth.py", "test_utils.py", "stack_auth.py"}  # Already handled
+    exclude_files = {
+        "auth.py",
+        "google_auth.py",
+        "test_utils.py",
+        "stack_auth.py",
+    }  # Already handled
 
     router_files = []
     for file in router_dir.glob("*.py"):
@@ -74,31 +51,39 @@ def get_router_files() -> List[Path]:
 
     return router_files
 
+
 def analyze_file(file_path: Path) -> List[str]:
     """Analyze a single file for needed changes"""
     changes = []
     content = file_path.read_text()
 
     # Track line numbers for better reporting
-    lines = content.split('\n')
+    lines = content.split("\n")
 
     for pattern, replacement in REPLACEMENTS:
         for line_num, line in enumerate(lines, 1):
             if re.search(pattern, line):
-                changes.append(f"  Line {line_num}: {line.strip()} -> would change to use Stack Auth")
+                changes.append(
+                    f"  Line {line_num}: {line.strip()} -> would change to use Stack Auth"
+                )
 
     # Special handling for User model imports
     for line_num, line in enumerate(lines, 1):
         if "from database import User" in line or "from database.models import User" in line:
-            changes.append(f"  Line {line_num}: {line.strip()} -> User model import found, needs review")
+            changes.append(
+                f"  Line {line_num}: {line.strip()} -> User model import found, needs review"
+            )
 
     # Check for User type hints
-    user_type_pattern = r':\s*User\s*[=\)]'
+    user_type_pattern = r":\s*User\s*[=\)]"
     for line_num, line in enumerate(lines, 1):
         if re.search(user_type_pattern, line):
-            changes.append(f"  Line {line_num}: {line.strip()} -> User type hint needs updating to dict")
+            changes.append(
+                f"  Line {line_num}: {line.strip()} -> User type hint needs updating to dict"
+            )
 
     return changes
+
 
 def main() -> None:
     """Run the dry-run analysis"""
@@ -151,6 +136,7 @@ def main() -> None:
     print("2. Run the migration script with confirmation")
     print("3. Test all endpoints with Stack Auth tokens")
     print("4. Update any service layer code that expects User models")
+
 
 if __name__ == "__main__":
     main()

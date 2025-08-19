@@ -33,7 +33,7 @@ export async function withCSRFProtection(
     }
 
     // Validate CSRF token
-    const cookieStore = cookies();
+    const cookieStore = await cookies();
     const storedToken = cookieStore.get('ruleiq_csrf_token')?.value;
 
     if (!storedToken || !constantTimeEquals(storedToken, csrfToken)) {

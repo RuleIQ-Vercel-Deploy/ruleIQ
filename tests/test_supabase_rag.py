@@ -14,7 +14,8 @@ load_dotenv()
 # Add the project root to Python path
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
-from services.agentic_rag import AgenticRAGSystem
+from langgraph_agent.agents.rag_system import RAGSystem as AgenticRAGSystem
+
 
 async def test_supabase_rag():
     """Test the Supabase-integrated Agentic RAG system"""
@@ -56,6 +57,7 @@ async def test_supabase_rag():
     except Exception as e:
         print(f"❌ Test failed with error: {e}")
         import traceback
+
         traceback.print_exc()
         return False
 
@@ -65,6 +67,7 @@ async def test_supabase_rag():
             rag_system.close()
         except:
             pass
+
 
 if __name__ == "__main__":
     asyncio.run(test_supabase_rag())

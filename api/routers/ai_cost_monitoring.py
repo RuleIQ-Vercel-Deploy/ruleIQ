@@ -18,7 +18,7 @@ from services.ai.cost_management import (
     AICostManager,
     CostTrackingService,
     BudgetAlertService,
-    CostOptimizationService
+    CostOptimizationService,
 )
 from config.logging_config import get_logger
 
@@ -30,14 +30,19 @@ router = APIRouter(prefix="/api/v1/ai/cost", tags=["AI Cost Management"])
 # Request/Response Models
 class CostTrackingRequest(BaseModel):
     """Request model for tracking AI usage costs."""
+
     service_name: str = Field(..., description="Name of the AI service")
     model_name: str = Field(..., description="AI model used")
     input_tokens: int = Field(..., ge=0, description="Number of input tokens")
     output_tokens: int = Field(..., ge=0, description="Number of output tokens")
     session_id: Optional[str] = Field(None, description="Session identifier")
     request_id: Optional[str] = Field(None, description="Request identifier")
-    response_quality_score: Optional[float] = Field(None, ge=0, le=1, description="Response quality score (0-1)")
-    response_time_ms: Optional[float] = Field(None, ge=0, description="Response time in milliseconds")
+    response_quality_score: Optional[float] = Field(
+        None, ge=0, le=1, description="Response quality score (0-1)"
+    )
+    response_time_ms: Optional[float] = Field(
+        None, ge=0, description="Response time in milliseconds"
+    )
     cache_hit: bool = Field(False, description="Whether response was served from cache")
     error_occurred: bool = Field(False, description="Whether an error occurred")
     metadata: Optional[Dict[str, Any]] = Field(None, description="Additional metadata")
@@ -45,6 +50,7 @@ class CostTrackingRequest(BaseModel):
 
 class CostTrackingResponse(BaseModel):
     """Response model for cost tracking."""
+
     usage_id: str = Field(..., description="Unique usage identifier")
     cost_usd: Decimal = Field(..., description="Cost in USD")
     efficiency_score: Decimal = Field(..., description="Efficiency score")
@@ -54,13 +60,17 @@ class CostTrackingResponse(BaseModel):
 
 class BudgetConfigRequest(BaseModel):
     """Request model for budget configuration."""
+
     daily_limit: Optional[Decimal] = Field(None, ge=0, description="Daily budget limit in USD")
     monthly_limit: Optional[Decimal] = Field(None, ge=0, description="Monthly budget limit in USD")
-    service_limits: Optional[Dict[str, Decimal]] = Field(None, description="Per-service budget limits")
+    service_limits: Optional[Dict[str, Decimal]] = Field(
+        None, description="Per-service budget limits"
+    )
 
 
 class BudgetStatusResponse(BaseModel):
     """Response model for budget status."""
+
     daily_usage: Decimal = Field(..., description="Current daily usage")
     daily_limit: Optional[Decimal] = Field(None, description="Daily budget limit")
     monthly_usage: Decimal = Field(..., description="Current monthly usage")
@@ -73,6 +83,7 @@ class BudgetStatusResponse(BaseModel):
 
 class AlertResponse(BaseModel):
     """Response model for budget alerts."""
+
     alert_type: str = Field(..., description="Type of alert")
     severity: str = Field(..., description="Alert severity")
     message: str = Field(..., description="Alert message")
@@ -84,6 +95,7 @@ class AlertResponse(BaseModel):
 
 class OptimizationResponse(BaseModel):
     """Response model for optimization recommendations."""
+
     strategy: str = Field(..., description="Optimization strategy")
     recommendation: str = Field(..., description="Detailed recommendation")
     potential_savings: Decimal = Field(..., description="Potential savings in USD")
@@ -94,18 +106,24 @@ class OptimizationResponse(BaseModel):
 
 class CostAnalyticsResponse(BaseModel):
     """Response model for cost analytics."""
+
     total_cost: Decimal = Field(..., description="Total cost for period")
     total_requests: int = Field(..., description="Total number of requests")
     total_tokens: int = Field(..., description="Total tokens processed")
     average_cost_per_request: Decimal = Field(..., description="Average cost per request")
     average_cost_per_token: Decimal = Field(..., description="Average cost per token")
-    service_breakdown: Dict[str, Dict[str, Any]] = Field(..., description="Cost breakdown by service")
+    service_breakdown: Dict[str, Dict[str, Any]] = Field(
+        ..., description="Cost breakdown by service"
+    )
     model_breakdown: Dict[str, Dict[str, Any]] = Field(..., description="Cost breakdown by model")
-    hourly_breakdown: Optional[Dict[str, Decimal]] = Field(None, description="Hourly cost breakdown")
+    hourly_breakdown: Optional[Dict[str, Decimal]] = Field(
+        None, description="Hourly cost breakdown"
+    )
 
 
 class CostTrendsResponse(BaseModel):
     """Response model for cost trends."""
+
     trends: List[Dict[str, Any]] = Field(..., description="Cost trends over time")
     growth_rate: float = Field(..., description="Cost growth rate percentage")
     seasonal_patterns: Dict[str, float] = Field(..., description="Seasonal usage patterns")
@@ -114,6 +132,7 @@ class CostTrendsResponse(BaseModel):
 
 class ModelRoutingRequest(BaseModel):
     """Request model for intelligent model routing."""
+
     task_description: str = Field(..., description="Description of the task")
     task_type: str = Field(..., description="Type of task")
     max_cost_per_request: Optional[Decimal] = Field(None, description="Maximum cost constraint")
@@ -122,6 +141,7 @@ class ModelRoutingRequest(BaseModel):
 
 class ModelRoutingResponse(BaseModel):
     """Response model for model routing recommendations."""
+
     recommended_model: str = Field(..., description="Recommended model")
     alternative_models: List[str] = Field(..., description="Alternative models")
     estimated_cost: Decimal = Field(..., description="Estimated cost for recommended model")
@@ -140,14 +160,10 @@ optimization_service = CostOptimizationService()
     "/track",
     response_model=CostTrackingResponse,
     status_code=status.HTTP_201_CREATED,
-    dependencies=[
-        Depends(get_current_active_user),
-        Depends(RateLimited(requests=100, window=60))
-    ]
+    dependencies=[Depends(get_current_active_user), Depends(RateLimited(requests=100, window=60))],
 )
 async def track_ai_usage(
-    request: CostTrackingRequest,
-    current_user: User = Depends(get_current_active_user)
+    request: CostTrackingRequest, current_user: User = Depends(get_current_active_user)
 ):
     """
     Track AI usage and calculate costs.
@@ -170,7 +186,7 @@ async def track_ai_usage(
             response_time_ms=request.response_time_ms,
             cache_hit=request.cache_hit,
             error_occurred=request.error_occurred,
-            metadata=request.metadata
+            metadata=request.metadata,
         )
 
         return CostTrackingResponse(
@@ -178,28 +194,25 @@ async def track_ai_usage(
             cost_usd=result["cost_usd"],
             efficiency_score=result["efficiency_score"],
             cost_per_token=result["cost_per_token"],
-            timestamp=datetime.now()
+            timestamp=datetime.now(),
         )
 
     except Exception as e:
         logger.error(f"Failed to track AI usage: {str(e)}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Failed to track usage: {str(e)}"
+            detail=f"Failed to track usage: {str(e)}",
         )
 
 
 @router.get(
     "/analytics/daily",
     response_model=CostAnalyticsResponse,
-    dependencies=[
-        Depends(get_current_active_user),
-        Depends(RateLimited(requests=20, window=60))
-    ]
+    dependencies=[Depends(get_current_active_user), Depends(RateLimited(requests=20, window=60))],
 )
 async def get_daily_cost_analytics(
     target_date: Optional[date] = Query(None, description="Target date (default: today)"),
-    include_hourly: bool = Query(False, description="Include hourly breakdown")
+    include_hourly: bool = Query(False, description="Include hourly breakdown"),
 ):
     """
     Get comprehensive daily cost analytics.
@@ -221,32 +234,31 @@ async def get_daily_cost_analytics(
             total_cost=total_cost,
             total_requests=total_requests,
             total_tokens=total_tokens,
-            average_cost_per_request=total_cost / total_requests if total_requests > 0 else Decimal("0"),
+            average_cost_per_request=total_cost / total_requests
+            if total_requests > 0
+            else Decimal("0"),
             average_cost_per_token=total_cost / total_tokens if total_tokens > 0 else Decimal("0"),
             service_breakdown=daily_summary.get("service_breakdown", {}),
             model_breakdown=daily_summary.get("model_breakdown", {}),
-            hourly_breakdown=daily_summary.get("hourly_breakdown") if include_hourly else None
+            hourly_breakdown=daily_summary.get("hourly_breakdown") if include_hourly else None,
         )
 
     except Exception as e:
         logger.error(f"Failed to get daily analytics: {str(e)}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Failed to retrieve analytics: {str(e)}"
+            detail=f"Failed to retrieve analytics: {str(e)}",
         )
 
 
 @router.get(
     "/analytics/trends",
     response_model=CostTrendsResponse,
-    dependencies=[
-        Depends(get_current_active_user),
-        Depends(RateLimited(requests=20, window=60))
-    ]
+    dependencies=[Depends(get_current_active_user), Depends(RateLimited(requests=20, window=60))],
 )
 async def get_cost_trends(
     days: int = Query(7, ge=1, le=90, description="Number of days to analyze"),
-    include_anomalies: bool = Query(True, description="Include anomaly detection")
+    include_anomalies: bool = Query(True, description="Include anomaly detection"),
 ):
     """
     Get cost trends and patterns over time.
@@ -272,7 +284,7 @@ async def get_cost_trends(
             "thursday": 1.1,
             "friday": 1.3,
             "saturday": 0.7,
-            "sunday": 0.6
+            "sunday": 0.6,
         }
 
         # Get anomalies if requested
@@ -284,28 +296,24 @@ async def get_cost_trends(
             trends=trends,
             growth_rate=growth_rate,
             seasonal_patterns=seasonal_patterns,
-            anomalies=anomalies
+            anomalies=anomalies,
         )
 
     except Exception as e:
         logger.error(f"Failed to get cost trends: {str(e)}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Failed to retrieve trends: {str(e)}"
+            detail=f"Failed to retrieve trends: {str(e)}",
         )
 
 
 @router.post(
     "/budget/configure",
     status_code=status.HTTP_200_OK,
-    dependencies=[
-        Depends(get_current_active_user),
-        Depends(RateLimited(requests=10, window=60))
-    ]
+    dependencies=[Depends(get_current_active_user), Depends(RateLimited(requests=10, window=60))],
 )
 async def configure_budget(
-    config: BudgetConfigRequest,
-    current_user: User = Depends(get_current_active_user)
+    config: BudgetConfigRequest, current_user: User = Depends(get_current_active_user)
 ):
     """
     Configure budget limits and constraints.
@@ -330,17 +338,14 @@ async def configure_budget(
         logger.error(f"Failed to configure budget: {str(e)}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Failed to configure budget: {str(e)}"
+            detail=f"Failed to configure budget: {str(e)}",
         )
 
 
 @router.get(
     "/budget/status",
     response_model=BudgetStatusResponse,
-    dependencies=[
-        Depends(get_current_active_user),
-        Depends(RateLimited(requests=30, window=60))
-    ]
+    dependencies=[Depends(get_current_active_user), Depends(RateLimited(requests=30, window=60))],
 )
 async def get_budget_status():
     """
@@ -381,7 +386,9 @@ async def get_budget_status():
         # Project monthly cost
         days_in_month = 30  # Simplified
         day_of_month = today.day
-        projected_monthly_cost = (daily_usage / day_of_month) * days_in_month if day_of_month > 0 else monthly_usage
+        projected_monthly_cost = (
+            (daily_usage / day_of_month) * days_in_month if day_of_month > 0 else monthly_usage
+        )
 
         return BudgetStatusResponse(
             daily_usage=daily_usage,
@@ -391,24 +398,21 @@ async def get_budget_status():
             usage_percentage=usage_percentage,
             remaining_budget=remaining_budget,
             alert_level=alert_level,
-            projected_monthly_cost=projected_monthly_cost
+            projected_monthly_cost=projected_monthly_cost,
         )
 
     except Exception as e:
         logger.error(f"Failed to get budget status: {str(e)}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Failed to retrieve budget status: {str(e)}"
+            detail=f"Failed to retrieve budget status: {str(e)}",
         )
 
 
 @router.get(
     "/alerts",
     response_model=List[AlertResponse],
-    dependencies=[
-        Depends(get_current_active_user),
-        Depends(RateLimited(requests=30, window=60))
-    ]
+    dependencies=[Depends(get_current_active_user), Depends(RateLimited(requests=30, window=60))],
 )
 async def get_budget_alerts():
     """
@@ -427,7 +431,7 @@ async def get_budget_alerts():
                 current_usage=alert.current_usage,
                 budget_limit=alert.budget_limit,
                 service_name=alert.service_name,
-                timestamp=alert.timestamp
+                timestamp=alert.timestamp,
             )
             for alert in alerts
         ]
@@ -436,17 +440,14 @@ async def get_budget_alerts():
         logger.error(f"Failed to get budget alerts: {str(e)}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Failed to retrieve alerts: {str(e)}"
+            detail=f"Failed to retrieve alerts: {str(e)}",
         )
 
 
 @router.get(
     "/optimization/recommendations",
     response_model=List[OptimizationResponse],
-    dependencies=[
-        Depends(get_current_active_user),
-        Depends(RateLimited(requests=10, window=60))
-    ]
+    dependencies=[Depends(get_current_active_user), Depends(RateLimited(requests=10, window=60))],
 )
 async def get_optimization_recommendations():
     """
@@ -464,7 +465,7 @@ async def get_optimization_recommendations():
                 potential_savings=rec["potential_savings"],
                 confidence_score=rec["confidence_score"],
                 implementation_effort=rec["implementation_effort"],
-                priority=rec["priority"]
+                priority=rec["priority"],
             )
             for rec in recommendations
         ]
@@ -473,17 +474,14 @@ async def get_optimization_recommendations():
         logger.error(f"Failed to get optimization recommendations: {str(e)}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Failed to retrieve recommendations: {str(e)}"
+            detail=f"Failed to retrieve recommendations: {str(e)}",
         )
 
 
 @router.post(
     "/routing/select-model",
     response_model=ModelRoutingResponse,
-    dependencies=[
-        Depends(get_current_active_user),
-        Depends(RateLimited(requests=50, window=60))
-    ]
+    dependencies=[Depends(get_current_active_user), Depends(RateLimited(requests=50, window=60))],
 )
 async def select_optimal_model(request: ModelRoutingRequest):
     """
@@ -499,41 +497,40 @@ async def select_optimal_model(request: ModelRoutingRequest):
         result = await router_service.select_optimal_model(
             task_description=request.task_description,
             task_type=request.task_type,
-            max_cost_per_request=request.max_cost_per_request
+            max_cost_per_request=request.max_cost_per_request,
         )
 
         # Get cost estimate for recommended model
         cost_tracker_service = CostTrackingService()
         model_config = cost_tracker_service.model_configs.get(result["model"])
-        estimated_cost = model_config.calculate_total_cost(1000, 500) if model_config else Decimal("0.01")
+        estimated_cost = (
+            model_config.calculate_total_cost(1000, 500) if model_config else Decimal("0.01")
+        )
 
         return ModelRoutingResponse(
             recommended_model=result["model"],
             alternative_models=result["alternatives"],
             estimated_cost=estimated_cost,
             reasoning=result["reasoning"],
-            complexity_score=result["complexity_score"]
+            complexity_score=result["complexity_score"],
         )
 
     except Exception as e:
         logger.error(f"Failed to select optimal model: {str(e)}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Failed to select model: {str(e)}"
+            detail=f"Failed to select model: {str(e)}",
         )
 
 
 @router.get(
     "/reports/monthly",
-    dependencies=[
-        Depends(get_current_active_user),
-        Depends(RateLimited(requests=5, window=60))
-    ]
+    dependencies=[Depends(get_current_active_user), Depends(RateLimited(requests=5, window=60))],
 )
 async def generate_monthly_report(
     year: int = Query(..., ge=2020, le=2030, description="Year for report"),
     month: int = Query(..., ge=1, le=12, description="Month for report"),
-    format: str = Query("json", regex="^(json|pdf)$", description="Report format")
+    format: str = Query("json", regex="^(json|pdf)$", description="Report format"),
 ):
     """
     Generate comprehensive monthly cost report.
@@ -547,7 +544,7 @@ async def generate_monthly_report(
             # In production, would generate PDF report
             raise HTTPException(
                 status_code=status.HTTP_501_NOT_IMPLEMENTED,
-                detail="PDF generation not implemented yet"
+                detail="PDF generation not implemented yet",
             )
 
         return report
@@ -556,21 +553,18 @@ async def generate_monthly_report(
         logger.error(f"Failed to generate monthly report: {str(e)}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Failed to generate report: {str(e)}"
+            detail=f"Failed to generate report: {str(e)}",
         )
 
 
 @router.get(
     "/usage/by-service",
-    dependencies=[
-        Depends(get_current_active_user),
-        Depends(RateLimited(requests=30, window=60))
-    ]
+    dependencies=[Depends(get_current_active_user), Depends(RateLimited(requests=30, window=60))],
 )
 async def get_usage_by_service(
     service_name: str = Query(..., description="Service name to analyze"),
     start_date: Optional[date] = Query(None, description="Start date (default: 7 days ago)"),
-    end_date: Optional[date] = Query(None, description="End date (default: today)")
+    end_date: Optional[date] = Query(None, description="End date (default: today)"),
 ):
     """
     Get usage metrics for specific service over time range.
@@ -584,9 +578,7 @@ async def get_usage_by_service(
             end_date = date.today()
 
         usage_metrics = await cost_tracker.get_usage_by_service(
-            service_name=service_name,
-            start_date=start_date,
-            end_date=end_date
+            service_name=service_name, start_date=start_date, end_date=end_date
         )
 
         # Aggregate metrics
@@ -596,40 +588,38 @@ async def get_usage_by_service(
 
         return {
             "service_name": service_name,
-            "period": {
-                "start_date": start_date.isoformat(),
-                "end_date": end_date.isoformat()
-            },
+            "period": {"start_date": start_date.isoformat(), "end_date": end_date.isoformat()},
             "summary": {
                 "total_cost": total_cost,
                 "total_requests": total_requests,
                 "total_tokens": total_tokens,
-                "average_cost_per_request": total_cost / total_requests if total_requests > 0 else Decimal("0"),
-                "average_cost_per_token": total_cost / total_tokens if total_tokens > 0 else Decimal("0")
+                "average_cost_per_request": total_cost / total_requests
+                if total_requests > 0
+                else Decimal("0"),
+                "average_cost_per_token": total_cost / total_tokens
+                if total_tokens > 0
+                else Decimal("0"),
             },
             "daily_breakdown": [
                 {
                     "date": metric.timestamp.date().isoformat(),
                     "cost": metric.cost_usd,
                     "requests": metric.request_count,
-                    "tokens": metric.total_tokens
+                    "tokens": metric.total_tokens,
                 }
                 for metric in usage_metrics
-            ]
+            ],
         }
 
     except Exception as e:
         logger.error(f"Failed to get service usage: {str(e)}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Failed to retrieve service usage: {str(e)}"
+            detail=f"Failed to retrieve service usage: {str(e)}",
         )
 
 
-@router.get(
-    "/health",
-    dependencies=[Depends(RateLimited(requests=60, window=60))]
-)
+@router.get("/health", dependencies=[Depends(RateLimited(requests=60, window=60))])
 async def cost_monitoring_health():
     """
     Health check for cost monitoring system.
@@ -647,26 +637,22 @@ async def cost_monitoring_health():
                 "redis": redis_status,
                 "cost_tracking": tracking_status,
                 "budget_monitoring": "healthy",
-                "optimization_engine": "healthy"
+                "optimization_engine": "healthy",
             },
-            "timestamp": datetime.now().isoformat()
+            "timestamp": datetime.now().isoformat(),
         }
 
     except Exception as e:
         logger.error(f"Cost monitoring health check failed: {str(e)}")
-        return {
-            "status": "unhealthy",
-            "error": str(e),
-            "timestamp": datetime.now().isoformat()
-        }
+        return {"status": "unhealthy", "error": str(e), "timestamp": datetime.now().isoformat()}
 
 
 @router.delete(
     "/cache/clear",
     dependencies=[
         Depends(get_current_active_user),
-        Depends(RateLimited(requests=5, window=3600))  # 5 per hour
-    ]
+        Depends(RateLimited(requests=5, window=3600)),  # 5 per hour
+    ],
 )
 async def clear_cost_cache():
     """
@@ -684,5 +670,5 @@ async def clear_cost_cache():
         logger.error(f"Failed to clear cache: {str(e)}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Failed to clear cache: {str(e)}"
+            detail=f"Failed to clear cache: {str(e)}",
         )

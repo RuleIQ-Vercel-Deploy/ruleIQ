@@ -6,10 +6,7 @@ from pydantic import BaseModel
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from api.dependencies.database import get_async_db
-from api.dependencies.rbac_auth import (
-    UserWithRoles,
-    require_permission
-)
+from api.dependencies.rbac_auth import UserWithRoles, require_permission
 from api.schemas.models import (
     AssessmentQuestion,
     AssessmentResponseUpdate,
@@ -46,7 +43,7 @@ router = APIRouter()
 @router.post("/quick", response_model=QuickAssessmentResponse)
 async def quick_assessment(
     request: QuickAssessmentRequest,
-    current_user: UserWithRoles = Depends(require_permission("assessment_create"))
+    current_user: UserWithRoles = Depends(require_permission("assessment_create")),
 ):
     """Generate quick compliance recommendations based on business profile."""
 
@@ -94,7 +91,7 @@ async def quick_assessment(
 @router.get("/", response_model=List[AssessmentSessionResponse])
 async def list_assessments(
     current_user: UserWithRoles = Depends(require_permission("assessment_list")),
-    db: AsyncSession = Depends(get_async_db)
+    db: AsyncSession = Depends(get_async_db),
 ):
     """List all assessment sessions for the current user"""
     assessment_service = AssessmentService()
@@ -134,7 +131,7 @@ async def start_assessment(
 @router.get("/current", response_model=AssessmentSessionResponse)
 async def get_current_session(
     current_user: UserWithRoles = Depends(require_permission("assessment_list")),
-    db: AsyncSession = Depends(get_async_db)
+    db: AsyncSession = Depends(get_async_db),
 ):
     assessment_service = AssessmentService()
     session = await assessment_service.get_current_assessment_session(db, current_user)
@@ -147,8 +144,7 @@ async def get_current_session(
 
 @router.get("/questions/{stage}", response_model=List[AssessmentQuestion])
 async def get_questions(
-    stage: int,
-    current_user: UserWithRoles = Depends(require_permission("assessment_list"))
+    stage: int, current_user: UserWithRoles = Depends(require_permission("assessment_list"))
 ):
     assessment_service = AssessmentService()
     questions = assessment_service.get_assessment_questions(current_user, stage)

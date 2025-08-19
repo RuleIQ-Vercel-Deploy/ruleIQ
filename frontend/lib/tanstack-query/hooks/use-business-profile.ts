@@ -10,6 +10,7 @@ import type {
   CreateBusinessProfileRequest,
   UpdateBusinessProfileRequest,
 } from '@/types/api';
+import type { BusinessProfileFormData } from '@/types/business-profile';
 
 // Query keys
 const PROFILE_KEY = 'business-profile';
@@ -29,7 +30,7 @@ export function useCurrentBusinessProfile(options?: BaseQueryOptions<BusinessPro
   return useQuery({
     queryKey: businessProfileKeys.current(),
     queryFn: async () => {
-      const profile = await businessProfileService.getCurrentProfile();
+      const profile = await businessProfileService.getProfile();
       // Update store with fetched profile
       setProfile(profile);
       return profile;
@@ -42,7 +43,7 @@ export function useCurrentBusinessProfile(options?: BaseQueryOptions<BusinessPro
 export function useBusinessProfiles(options?: BaseQueryOptions<BusinessProfile[]>) {
   return useQuery({
     queryKey: businessProfileKeys.list(),
-    queryFn: () => businessProfileService.getProfiles(),
+    queryFn: () => businessProfileService.getBusinessProfiles(),
     ...options,
   });
 }
@@ -51,7 +52,7 @@ export function useBusinessProfiles(options?: BaseQueryOptions<BusinessProfile[]
 export function useBusinessProfile(id: string, options?: BaseQueryOptions<BusinessProfile>) {
   return useQuery({
     queryKey: businessProfileKeys.detail(id),
-    queryFn: () => businessProfileService.getProfile(id),
+    queryFn: () => businessProfileService.getBusinessProfile(id),
     enabled: !!id,
     ...options,
   });
@@ -59,13 +60,13 @@ export function useBusinessProfile(id: string, options?: BaseQueryOptions<Busine
 
 // Hook to create business profile
 export function useCreateBusinessProfile(
-  options?: BaseMutationOptions<BusinessProfile, unknown, CreateBusinessProfileRequest>,
+  options?: BaseMutationOptions<BusinessProfile, unknown, BusinessProfileFormData>,
 ) {
   const queryClient = useQueryClient();
   const setProfile = useBusinessProfileStore((state) => state.setProfile);
 
   return useMutation({
-    mutationFn: (data: CreateBusinessProfileRequest) => businessProfileService.createProfile(data),
+    mutationFn: (data: BusinessProfileFormData) => businessProfileService.saveProfile(data),
     onSuccess: (newProfile) => {
       // Update store
       setProfile(newProfile);
@@ -90,7 +91,7 @@ export function useUpdateBusinessProfile(
   const { profile, setProfile } = useBusinessProfileStore();
 
   return useMutation({
-    mutationFn: ({ id, data }) => businessProfileService.updateProfile(id, data),
+    mutationFn: ({ id, data }) => businessProfileService.updateBusinessProfile(id, data),
     onSuccess: (updatedProfile, variables) => {
       // Update store if it's the current profile
       if (profile?.id === variables.id) {

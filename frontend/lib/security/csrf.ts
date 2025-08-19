@@ -6,6 +6,8 @@ import { type NextRequest } from 'next/server';
  * CSRF token utilities for ruleIQ
  */
 
+export const CSRF_HEADER_NAME = 'x-csrf-token';
+
 /**
  * Verify CSRF token from request
  */

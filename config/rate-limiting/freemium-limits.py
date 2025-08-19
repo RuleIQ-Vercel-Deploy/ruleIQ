@@ -5,13 +5,16 @@ Implements multi-tier rate limiting for public and authenticated endpoints
 
 from enum import Enum
 
+
 class RateLimitTier(Enum):
     """Rate limiting tiers for different user types and endpoints"""
+
     PUBLIC = "public"
     FREEMIUM = "freemium"
     AUTHENTICATED = "authenticated"
     PREMIUM = "premium"
     ADMIN = "admin"
+
 
 class FreemiumRateLimits:
     """Rate limiting configuration for freemium endpoints"""
@@ -25,7 +28,6 @@ class FreemiumRateLimits:
             "burst": 2,
             "block_duration": 3600,  # 1 hour block after limit exceeded
         },
-
         # Assessment start - moderate restriction
         "/api/v1/freemium/start-assessment": {
             "requests": 10,
@@ -33,7 +35,6 @@ class FreemiumRateLimits:
             "burst": 3,
             "block_duration": 1800,  # 30 minutes
         },
-
         # Answer questions - allow more for legitimate users
         "/api/v1/freemium/answer-question": {
             "requests": 50,
@@ -41,7 +42,6 @@ class FreemiumRateLimits:
             "burst": 10,
             "block_duration": 900,  # 15 minutes
         },
-
         # Results viewing - cached, so can be more permissive
         "/api/v1/freemium/results": {
             "requests": 20,
@@ -49,14 +49,13 @@ class FreemiumRateLimits:
             "burst": 5,
             "block_duration": 600,  # 10 minutes
         },
-
         # Conversion tracking - moderate limits
         "/api/v1/freemium/track-conversion": {
             "requests": 30,
             "window": 300,  # 5 minutes
             "burst": 5,
             "block_duration": 900,  # 15 minutes
-        }
+        },
     }
 
     # AI service specific limits (separate from HTTP limits)
@@ -67,20 +66,18 @@ class FreemiumRateLimits:
             "tier": RateLimitTier.FREEMIUM,
             "cost_threshold": 0.50,  # $0.50 per hour per IP
         },
-
         "assessment_analysis": {
             "requests": 10,
             "window": 3600,  # 1 hour
             "tier": RateLimitTier.FREEMIUM,
             "cost_threshold": 2.00,  # $2.00 per hour per IP
         },
-
         "results_generation": {
             "requests": 15,
             "window": 3600,  # 1 hour
             "tier": RateLimitTier.FREEMIUM,
             "cost_threshold": 1.00,  # $1.00 per hour per IP
-        }
+        },
     }
 
     # Global limits per IP to prevent abuse
@@ -97,13 +94,13 @@ class FreemiumRateLimits:
         "suspicious_patterns": [
             r"bot|crawler|spider|scraper",
             r"curl|wget|python-requests",
-            r"headless|phantom|selenium"
+            r"headless|phantom|selenium",
         ],
         "bot_limits": {
             "requests": 10,
             "window": 3600,  # 1 hour
             "block_duration": 86400,  # 24 hours
-        }
+        },
     }
 
     # Geographic rate limiting (optional)
@@ -115,8 +112,9 @@ class FreemiumRateLimits:
         "premium_regions": {
             "countries": ["US", "GB", "DE", "FR", "CA", "AU"],
             "multiplier": 1.5,  # 150% of normal limits
-        }
+        },
     }
+
 
 class RateLimitRedisKeys:
     """Redis key patterns for rate limiting storage"""
@@ -151,23 +149,24 @@ class RateLimitRedisKeys:
         """Key for AI cost tracking per IP"""
         return f"cost_tracking:ai:{service}:ip:{ip}"
 
+
 class RateLimitExceptions:
     """IP addresses and patterns exempt from rate limiting"""
 
     WHITELIST_IPS = [
-        "127.0.0.1",        # Localhost
-        "::1",              # IPv6 localhost
-        "10.0.0.0/8",       # Private networks
-        "172.16.0.0/12",    # Private networks
-        "192.168.0.0/16",   # Private networks
+        "127.0.0.1",  # Localhost
+        "::1",  # IPv6 localhost
+        "10.0.0.0/8",  # Private networks
+        "172.16.0.0/12",  # Private networks
+        "192.168.0.0/16",  # Private networks
     ]
 
     # Health check and monitoring services
     MONITORING_USER_AGENTS = [
-        "GoogleHC/1.0",                    # Google Health Check
-        "Amazon CloudFront",               # CloudFront health checks
-        "UptimeRobot/2.0",                # UptimeRobot monitoring
-        "Pingdom.com_bot",                # Pingdom monitoring
+        "GoogleHC/1.0",  # Google Health Check
+        "Amazon CloudFront",  # CloudFront health checks
+        "UptimeRobot/2.0",  # UptimeRobot monitoring
+        "Pingdom.com_bot",  # Pingdom monitoring
     ]
 
     # Trusted partners and integrations
@@ -175,6 +174,7 @@ class RateLimitExceptions:
         # Format: "api_key": {"name": "Partner Name", "limits": "multiplier"}
         # These would be actual API keys in production
     }
+
 
 class RateLimitResponses:
     """Standard responses for rate limit violations"""
@@ -205,26 +205,25 @@ class RateLimitResponses:
         "status_code": 403,
     }
 
+
 # Configuration for different environments
 ENVIRONMENT_CONFIGS = {
     "development": {
         "enabled": False,  # Disable rate limiting in development
         "multiplier": 10,  # 10x higher limits for testing
     },
-
     "staging": {
         "enabled": True,
-        "multiplier": 2,   # 2x higher limits for testing
+        "multiplier": 2,  # 2x higher limits for testing
         "logging_level": "DEBUG",
     },
-
     "production": {
         "enabled": True,
-        "multiplier": 1,   # Standard limits
+        "multiplier": 1,  # Standard limits
         "logging_level": "INFO",
         "alert_on_abuse": True,
         "auto_block_enabled": True,
-    }
+    },
 }
 
 # Metrics collection for rate limiting
@@ -237,5 +236,5 @@ RATE_LIMIT_METRICS = {
         "blocked_requests_per_hour": 100,
         "cost_per_hour": 50.0,  # $50/hour across all IPs
         "suspicious_ips_per_hour": 10,
-    }
+    },
 }

@@ -1,3 +1,8 @@
+// Type declaration for gtag
+declare global {
+  function gtag(...args: any[]): void;
+}
+
 /**
  * Performance Monitoring Utilities for ruleIQ
  *
@@ -129,11 +134,11 @@ class PerformanceMonitor {
         this.recordMetric('TTFB', ttfb);
 
         // DOM Content Loaded
-        const dcl = navigation.domContentLoadedEventEnd - navigation.navigationStart;
+        const dcl = navigation.domContentLoadedEventEnd - navigation.fetchStart;
         this.recordMetric('DCL', dcl);
 
         // Load Complete
-        const loadComplete = navigation.loadEventEnd - navigation.navigationStart;
+        const loadComplete = navigation.loadEventEnd - navigation.fetchStart;
         this.recordMetric('LOAD', loadComplete);
       }
     });

@@ -736,7 +736,9 @@ class GoogleCachedContentManager:
     # Cache Strategy Optimization
     # ==============================
 
-    def record_cache_performance(self, cache_key: str, response_time_ms: int, hit: bool = True) -> None:
+    def record_cache_performance(
+        self, cache_key: str, response_time_ms: int, hit: bool = True
+    ) -> None:
         """Record cache performance for TTL optimization."""
         if not self.config.performance_based_ttl:
             return

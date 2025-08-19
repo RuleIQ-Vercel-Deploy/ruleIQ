@@ -12,11 +12,10 @@ load_dotenv(".env.local")
 
 import json
 import logging
-import os
 from enum import Enum
-from typing import Any, Dict, List, Optional, Union
+from typing import Dict, List, Optional, Union
 
-from pydantic import Field, field_validator, ValidationInfo
+from pydantic import Field, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 logger = logging.getLogger(__name__)
@@ -97,7 +96,9 @@ class Settings(BaseSettings):
     database_url: str = Field(..., description="Primary database URL")
     database_pool_size: int = Field(default=10, description="Database connection pool size")
     database_max_overflow: int = Field(default=20, description="Database max overflow connections")
-    database_pool_timeout: int = Field(default=30, description="Database connection timeout (seconds)")
+    database_pool_timeout: int = Field(
+        default=30, description="Database connection timeout (seconds)"
+    )
     database_pool_recycle: int = Field(default=3600, description="Database connection recycle time")
 
     # ===================================================================
@@ -126,9 +127,12 @@ class Settings(BaseSettings):
     # GOOGLE OAUTH SETTINGS
     # ===================================================================
     google_client_id: Optional[str] = Field(default=None, description="Google OAuth client ID")
-    google_client_secret: Optional[str] = Field(default=None, description="Google OAuth client secret")
+    google_client_secret: Optional[str] = Field(
+        default=None, description="Google OAuth client secret"
+    )
     google_redirect_uri: str = Field(
-        default="http://localhost:8000/api/v1/auth/google/callback", description="Google OAuth redirect URI"
+        default="http://localhost:8000/api/v1/auth/google/callback",
+        description="Google OAuth redirect URI",
     )
 
     # ===================================================================
@@ -147,8 +151,12 @@ class Settings(BaseSettings):
 
     # AI cost tracking
     ai_cost_tracking_enabled: bool = Field(default=True, description="Enable AI cost tracking")
-    ai_monthly_budget_limit: float = Field(default=500.0, description="Monthly AI budget limit (USD)")
-    ai_cost_alert_threshold: float = Field(default=0.8, description="Alert threshold (80% of budget)")
+    ai_monthly_budget_limit: float = Field(
+        default=500.0, description="Monthly AI budget limit (USD)"
+    )
+    ai_cost_alert_threshold: float = Field(
+        default=0.8, description="Alert threshold (80% of budget)"
+    )
 
     # ===================================================================
     # FILE UPLOAD SETTINGS
@@ -176,11 +184,13 @@ class Settings(BaseSettings):
     # CORS SETTINGS
     # ===================================================================
     cors_origins: Union[List[str], str] = Field(default=["http://localhost:3000"])
-    cors_allowed_origins: Union[List[str], str] = Field(default=[
-        "http://localhost:3000",
-        "http://127.0.0.1:8080",  # Debug suite origin
-        "http://localhost:8080"   # Alternative debug suite origin
-    ])
+    cors_allowed_origins: Union[List[str], str] = Field(
+        default=[
+            "http://localhost:3000",
+            "http://127.0.0.1:8080",  # Debug suite origin
+            "http://localhost:8080",  # Alternative debug suite origin
+        ]
+    )
     allowed_hosts: Union[List[str], str] = Field(default=["localhost", "127.0.0.1"])
 
     @field_validator(
@@ -222,7 +232,9 @@ class Settings(BaseSettings):
     # MONITORING SETTINGS
     # ===================================================================
     monitoring_enabled: bool = Field(default=True, description="Enable monitoring")
-    performance_monitoring_enabled: bool = Field(default=True, description="Enable performance monitoring")
+    performance_monitoring_enabled: bool = Field(
+        default=True, description="Enable performance monitoring"
+    )
     error_monitoring_enabled: bool = Field(default=True, description="Enable error monitoring")
 
     # ===================================================================
@@ -242,15 +254,21 @@ class Settings(BaseSettings):
     s3_bucket_name: Optional[str] = Field(default=None, description="S3 bucket name")
 
     # Stripe Settings
-    stripe_publishable_key: Optional[str] = Field(default=None, description="Stripe publishable key")
+    stripe_publishable_key: Optional[str] = Field(
+        default=None, description="Stripe publishable key"
+    )
     stripe_secret_key: Optional[str] = Field(default=None, description="Stripe secret key")
     stripe_webhook_secret: Optional[str] = Field(default=None, description="Stripe webhook secret")
 
     # ===================================================================
     # FEATURE FLAGS
     # ===================================================================
-    agentic_assessments_enabled: bool = Field(default=False, description="Enable agentic assessments")
-    ai_policy_generation_enabled: bool = Field(default=True, description="Enable AI policy generation")
+    agentic_assessments_enabled: bool = Field(
+        default=False, description="Enable agentic assessments"
+    )
+    ai_policy_generation_enabled: bool = Field(
+        default=True, description="Enable AI policy generation"
+    )
     advanced_analytics_enabled: bool = Field(default=True, description="Enable advanced analytics")
     integration_sync_enabled: bool = Field(default=True, description="Enable integration sync")
 
@@ -287,7 +305,9 @@ class Settings(BaseSettings):
     def validate_google_api_key(cls, v: str) -> str:
         """Validate Google API key format"""
         if not v.startswith("AIza"):
-            logger.warning("Google API key may not be in the correct format (should start with 'AIza')")
+            logger.warning(
+                "Google API key may not be in the correct format (should start with 'AIza')"
+            )
         return v
 
     @field_validator("max_file_size_mb")

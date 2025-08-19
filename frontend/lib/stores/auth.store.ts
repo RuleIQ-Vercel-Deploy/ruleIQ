@@ -299,40 +299,32 @@ export const useAuthStore = create<AuthState>()(
       },
 
       resetPassword: async (token: string, password: string) => {
-        try {
-          const response = await fetch(`${API_BASE_URL}/api/v1/auth/reset-password`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ token, password }),
-          });
+        const response = await fetch(`${API_BASE_URL}/api/v1/auth/reset-password`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ token, password }),
+        });
 
-          if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.detail || 'Password reset failed');
-          }
-        } catch (error) {
-          throw error;
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.detail || 'Password reset failed');
         }
       },
 
       verifyEmail: async (token: string) => {
-        try {
-          const response = await fetch(`${API_BASE_URL}/api/v1/auth/verify-email`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ token }),
-          });
+        const response = await fetch(`${API_BASE_URL}/api/v1/auth/verify-email`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ token }),
+        });
 
-          if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.detail || 'Email verification failed');
-          }
-        } catch (error) {
-          throw error;
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.detail || 'Email verification failed');
         }
       },
 
@@ -343,40 +335,36 @@ export const useAuthStore = create<AuthState>()(
           throw new Error('Not authenticated');
         }
 
-        try {
-          const response = await fetch(`${API_BASE_URL}/api/v1/auth/profile`, {
-            method: 'PATCH',
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${tokens.access_token}`,
-            },
-            body: JSON.stringify(data),
-          });
+        const response = await fetch(`${API_BASE_URL}/api/v1/auth/profile`, {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${tokens.access_token}`,
+          },
+          body: JSON.stringify(data),
+        });
 
-          if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.detail || 'Profile update failed');
-          }
-
-          const updatedUser: User = await response.json();
-
-          // Validate the response structure
-          if (
-            !updatedUser ||
-            typeof updatedUser.id !== 'string' ||
-            typeof updatedUser.email !== 'string' ||
-            typeof updatedUser.isActive !== 'boolean' ||
-            typeof updatedUser.createdAt !== 'string'
-          ) {
-            throw new Error('Invalid user data received from server');
-          }
-
-          set({ user: updatedUser });
-
-          return updatedUser;
-        } catch (error) {
-          throw error;
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.detail || 'Profile update failed');
         }
+
+        const updatedUser: User = await response.json();
+
+        // Validate the response structure
+        if (
+          !updatedUser ||
+          typeof updatedUser.id !== 'string' ||
+          typeof updatedUser.email !== 'string' ||
+          typeof updatedUser.isActive !== 'boolean' ||
+          typeof updatedUser.createdAt !== 'string'
+        ) {
+          throw new Error('Invalid user data received from server');
+        }
+
+        set({ user: updatedUser });
+
+        return updatedUser;
       },
 
       changePassword: async (currentPassword: string, newPassword: string) => {
@@ -386,25 +374,21 @@ export const useAuthStore = create<AuthState>()(
           throw new Error('Not authenticated');
         }
 
-        try {
-          const response = await fetch(`${API_BASE_URL}/api/v1/auth/change-password`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${tokens.access_token}`,
-            },
-            body: JSON.stringify({
-              current_password: currentPassword,
-              new_password: newPassword,
-            }),
-          });
+        const response = await fetch(`${API_BASE_URL}/api/v1/auth/change-password`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${tokens.access_token}`,
+          },
+          body: JSON.stringify({
+            current_password: currentPassword,
+            new_password: newPassword,
+          }),
+        });
 
-          if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.detail || 'Password change failed');
-          }
-        } catch (error) {
-          throw error;
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.detail || 'Password change failed');
         }
       },
     }),

@@ -92,7 +92,9 @@ async def connect_integration(
 
     try:
         # Use a generic integration instance to access encryption methods
-        temp_config = IntegrationConfig(user_id=str(current_user.id), provider=provider, credentials={})
+        temp_config = IntegrationConfig(
+            user_id=str(current_user.id), provider=provider, credentials={}
+        )
         integration_handler = GenericIntegration(temp_config)
 
         # Encrypt the credentials
@@ -135,7 +137,9 @@ async def connect_integration(
             )
             db.add(config)
             message = f"Successfully connected {provider} integration."
-            logger.info(f"New integration created for user {str(current_user.id)}, provider {provider}")
+            logger.info(
+                f"New integration created for user {str(current_user.id)}, provider {provider}"
+            )
 
         await db.commit()
         await db.refresh(config)

@@ -6,9 +6,10 @@ import type {
   VoiceConfig, 
   VoiceCallConfig,
   VoiceError,
-  VoiceErrorCode,
   VoiceTranscript,
   VoiceCommand
+} from '@/types/voice';
+import { VoiceErrorCode
 } from '@/types/voice';
 
 /**

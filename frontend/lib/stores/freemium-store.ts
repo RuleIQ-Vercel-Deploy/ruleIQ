@@ -51,11 +51,11 @@ export interface FreemiumStoreActions {
 }
 
 export interface FreemiumStoreComputed {
-  // Computed properties as getters
-  isSessionExpired: boolean;
-  canStartAssessment: boolean;
-  hasValidSession: boolean;
-  responseCount: number;
+  // Computed properties as functions
+  isSessionExpired: () => boolean;
+  canStartAssessment: () => boolean;
+  hasValidSession: () => boolean;
+  responseCount: () => number;
 }
 
 // ============================================================================
@@ -119,11 +119,7 @@ const initialState: FreemiumState = {
   utmTerm: null,
   utmContent: null,
   
-  // Computed properties (will be overridden by getters)
-  isSessionExpired: false,
-  canStartAssessment: false,
-  hasValidSession: false,
-  responseCount: 0,
+  // Computed properties are handled by getters only
 };
 
 // ============================================================================
@@ -156,7 +152,7 @@ const apiCall = async (endpoint: string, data?: any, method: string = 'POST') =>
 // STORE IMPLEMENTATION
 // ============================================================================
 
-export const useFreemiumStore = create<FreemiumStore & FreemiumStoreComputed>()(
+export const useFreemiumStore = create<FreemiumStore>()(
   persist(
     (set, get) => ({
       ...initialState,
@@ -279,7 +275,7 @@ export const useFreemiumStore = create<FreemiumStore & FreemiumStoreComputed>()(
             session_id: sessionData.session_id,
             session_token: sessionData.session_token,
             lead_id: sessionData.lead_id,
-            status: sessionData.status,
+            status: sessionData.status as 'started' | 'in_progress' | 'completed' | 'abandoned',
             created_at: sessionData.created_at,
             expires_at: sessionData.expires_at,
           };
@@ -341,7 +337,9 @@ export const useFreemiumStore = create<FreemiumStore & FreemiumStoreComputed>()(
           const response = await freemiumService.submitAnswer(answerData.session_token, {
             question_id: answerData.question_id,
             answer: answerData.answer.toString(),
-            answer_confidence: answerData.confidence_level,
+            answer_confidence: answerData.confidence_level ? 
+              (answerData.confidence_level > 0.7 ? 'high' : answerData.confidence_level > 0.4 ? 'medium' : 'low') as 'high' | 'medium' | 'low' : 
+              undefined,
             time_spent_seconds: answerData.time_spent_seconds,
           });
           
@@ -653,9 +651,10 @@ export const useFreemiumStore = create<FreemiumStore & FreemiumStoreComputed>()(
           const updatedResponses = [...currentResponses.filter(r => r.question_id !== questionId), newResponse];
           set({ responses: updatedResponses });
         } else {
-          // Object format for test compatibility
+          // Object format for test compatibility - ensure currentResponses is an object
+          const objResponses = Array.isArray(currentResponses) ? {} : (currentResponses || {});
           const updatedResponses = {
-            ...currentResponses,
+            ...objResponses,
             [questionId]: answer
           };
           set({ responses: updatedResponses as any });
@@ -701,19 +700,18 @@ export const useFreemiumStore = create<FreemiumStore & FreemiumStoreComputed>()(
         // Validate and clamp progress
         const clampedProgress = Math.max(0, Math.min(100, progress));
         
-        // Always set progress as number for test compatibility
-        set({ progress: clampedProgress });
-        
-        // Also update the progressObj for internal consistency
-        const currentProgressObj = get().progressObj;
-        if (currentProgressObj && typeof currentProgressObj === 'object') {
+        // Update the progress object properly
+        const currentProgress = get().progress;
+        if (currentProgress && typeof currentProgress === 'object') {
           set({ 
-            progressObj: { 
-              ...currentProgressObj, 
+            progress: { 
+              ...currentProgress, 
               progress_percentage: clampedProgress 
             } 
           });
         }
+        
+        
         
         get().updateLastActivity();
       },
@@ -736,14 +734,14 @@ export const useFreemiumStore = create<FreemiumStore & FreemiumStoreComputed>()(
         set({ 
           assessmentCompleted: true,
           isAssessmentComplete: true,
-          progress: 100 // Set as number for test compatibility
+          // Don't set progress as number here - use AssessmentProgress object
         });
         
-        // Also update progressObj if it exists
-        if (state.progressObj) {
+        // Also update progress if it exists
+        if (state.progress) {
           set({ 
-            progressObj: {
-              ...state.progressObj,
+            progress: {
+              ...state.progress,
               progress_percentage: 100
             }
           });
@@ -819,14 +817,14 @@ export const useFreemiumStore = create<FreemiumStore & FreemiumStoreComputed>()(
         }
       },
       
-      // Computed properties as getters
-      get isSessionExpired() {
+      // Computed properties as functions
+      isSessionExpired: () => {
         const state = get();
         if (!state.sessionExpiry) return true;
         return Date.now() > new Date(state.sessionExpiry).getTime();
       },
       
-      get canStartAssessment() {
+      canStartAssessment: () => {
         const state = get();
         // Check email and consent
         if (!state.email || !state.consentTerms) return false;
@@ -838,7 +836,7 @@ export const useFreemiumStore = create<FreemiumStore & FreemiumStoreComputed>()(
         return true;
       },
       
-      get hasValidSession() {
+      hasValidSession: () => {
         const state = get();
         // Check token exists
         if (!state.token && !state.sessionToken) return false;
@@ -848,7 +846,7 @@ export const useFreemiumStore = create<FreemiumStore & FreemiumStoreComputed>()(
         return true;
       },
       
-      get responseCount() {
+      responseCount: () => {
         const state = get();
         const responses = state.responses;
         if (Array.isArray(responses)) {
@@ -926,7 +924,7 @@ export const useFreemiumConversion = () => {
 // ============================================================================
 
 export const createFreemiumStore = () => {
-  return create<FreemiumStore & FreemiumStoreComputed>()(persist(
+  return create<FreemiumStore>()(persist(
     (set, get) => ({
       ...initialState,
       // Include all the same methods as useFreemiumStore
@@ -1035,8 +1033,10 @@ export const createFreemiumStore = () => {
           const updatedResponses = [...currentResponses.filter(r => r.question_id !== questionId), newResponse];
           set({ responses: updatedResponses });
         } else {
+          // Ensure currentResponses is an object for spreading
+          const objResponses = Array.isArray(currentResponses) ? {} : (currentResponses || {});
           const updatedResponses = {
-            ...currentResponses,
+            ...objResponses,
             [questionId]: answer
           };
           set({ responses: updatedResponses as any });
@@ -1060,19 +1060,18 @@ export const createFreemiumStore = () => {
       
       setProgress: (progress: number) => {
         const clampedProgress = Math.max(0, Math.min(100, progress));
-        // Always set progress as number for test compatibility
-        set({ progress: clampedProgress });
-        
-        // Also update progressObj if it exists
-        const currentProgressObj = get().progressObj;
-        if (currentProgressObj && typeof currentProgressObj === 'object') {
+        // Update the progress object properly
+        const currentProgress = get().progress;
+        if (currentProgress && typeof currentProgress === 'object') {
           set({ 
-            progressObj: { 
-              ...currentProgressObj, 
+            progress: { 
+              ...currentProgress, 
               progress_percentage: clampedProgress 
             } 
           });
         }
+        
+        
       },
       
       markAssessmentStarted: () => {
@@ -1092,14 +1091,14 @@ export const createFreemiumStore = () => {
         set({ 
           assessmentCompleted: true,
           isAssessmentComplete: true,
-          progress: 100 // Set as number for test compatibility
+          // Don't set progress as number here - use AssessmentProgress object
         });
         
-        // Also update progressObj if it exists
-        if (state.progressObj) {
+        // Also update progress if it exists
+        if (state.progress) {
           set({ 
-            progressObj: {
-              ...state.progressObj,
+            progress: {
+              ...state.progress,
               progress_percentage: 100
             }
           });
@@ -1204,14 +1203,14 @@ export const createFreemiumStore = () => {
       setLoading: (loading) => set({ isLoading: loading }),
       setError: (error) => set({ error }),
       
-      // Computed properties as getters
-      get isSessionExpired() {
+      // Computed properties as functions
+      isSessionExpired: () => {
         const state = get();
         if (!state.sessionExpiry) return true;
         return Date.now() > new Date(state.sessionExpiry).getTime();
       },
       
-      get canStartAssessment() {
+      canStartAssessment: () => {
         const state = get();
         // Check email and consent
         if (!state.email || !state.consentTerms) return false;
@@ -1223,7 +1222,7 @@ export const createFreemiumStore = () => {
         return true;
       },
       
-      get hasValidSession() {
+      hasValidSession: () => {
         const state = get();
         // Check token exists
         if (!state.token && !state.sessionToken) return false;
@@ -1233,7 +1232,7 @@ export const createFreemiumStore = () => {
         return true;
       },
       
-      get responseCount() {
+      responseCount: () => {
         const state = get();
         const responses = state.responses;
         if (Array.isArray(responses)) {

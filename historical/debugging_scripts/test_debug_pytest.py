@@ -11,7 +11,9 @@ from services.ai.assistant import ComplianceAssistant
 
 
 @pytest.mark.asyncio
-async def test_simple_debug(async_db_session, async_sample_user, async_sample_business_profile) -> None:
+async def test_simple_debug(
+    async_db_session, async_sample_user, async_sample_business_profile
+) -> None:
     """Simple debug test to see what's failing."""
     try:
         print(f"✓ Got async_db_session: {type(async_db_session)}")

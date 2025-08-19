@@ -40,12 +40,14 @@ engine = create_engine(
 # Create session factory (same as conftest.py)
 TestSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
+
 def test_with_exact_setup() -> Optional[bool]:
     """Test using the exact same setup as pytest conftest."""
     print("=== Using Exact Test Setup ===")
 
     # Import models and ensure tables exist
     from database import Base, AssessmentLead
+
     print("✅ Models imported")
 
     # Create all tables (this is what we added to conftest)
@@ -64,7 +66,9 @@ def test_with_exact_setup() -> Optional[bool]:
         print(f"✅ Lead saved: {lead.id}")
 
         # Test querying
-        saved_lead = session.query(AssessmentLead).filter_by(email="manual-test@example.com").first()
+        saved_lead = (
+            session.query(AssessmentLead).filter_by(email="manual-test@example.com").first()
+        )
         print(f"✅ Lead retrieved: {saved_lead}")
 
         # Cleanup
@@ -77,10 +81,12 @@ def test_with_exact_setup() -> Optional[bool]:
     except Exception as e:
         print(f"❌ Test failed: {e}")
         import traceback
+
         traceback.print_exc()
         return False
     finally:
         session.close()
+
 
 def simulate_pytest_test() -> Optional[bool]:
     """Simulate the exact pytest test that's failing."""
@@ -97,10 +103,7 @@ def simulate_pytest_test() -> Optional[bool]:
             email = "test@example.com"
 
             # Act
-            lead = AssessmentLead(
-                email=email,
-                consent_marketing=True
-            )
+            lead = AssessmentLead(email=email, consent_marketing=True)
             session.add(lead)
             session.commit()
 
@@ -129,8 +132,10 @@ def simulate_pytest_test() -> Optional[bool]:
     except Exception as e:
         print(f"❌ Pytest simulation FAILED: {e}")
         import traceback
+
         traceback.print_exc()
         return False
+
 
 if __name__ == "__main__":
     print("🧪 Manual Test with Exact Setup")

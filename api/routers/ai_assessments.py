@@ -205,7 +205,8 @@ async def get_user_business_profile(
         # Get specific business profile
         result = await db.execute(
             select(BusinessProfile).where(
-                BusinessProfile["id"] == business_profile_id, BusinessProfile.user_id == str(user["id"])
+                BusinessProfile["id"] == business_profile_id,
+                BusinessProfile.user_id == str(user["id"]),
             )
         )
         profile = result.scalars().first()

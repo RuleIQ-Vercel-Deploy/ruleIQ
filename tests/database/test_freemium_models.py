@@ -4,6 +4,7 @@ Tests for Freemium Assessment database models.
 Following ALWAYS_READ_FIRST protocol: Test-first development mandate.
 These tests define the exact interfaces and behavior required for the freemium models.
 """
+
 import uuid
 from datetime import datetime, timedelta
 from decimal import Decimal
@@ -29,10 +30,7 @@ class TestAssessmentLead:
         email = "test@example.com"
 
         # Act
-        lead = AssessmentLead(
-            email=email,
-            marketing_consent=True
-        )
+        lead = AssessmentLead(email=email, marketing_consent=True)
         db_session.add(lead)
         db_session.commit()
 
@@ -54,7 +52,7 @@ class TestAssessmentLead:
             "utm_medium": "cpc",
             "utm_campaign": "freemium_launch",
             "utm_term": "compliance_software",
-            "utm_content": "cta_button"
+            "utm_content": "cta_button",
         }
 
         # Act
@@ -141,21 +139,18 @@ class TestFreemiumAssessmentSession:
         db_session.add(lead)
         db_session.commit()
 
-        session = FreemiumAssessmentSession(
-            lead_id=lead.id,
-            business_type="healthcare"
-        )
+        session = FreemiumAssessmentSession(lead_id=lead.id, business_type="healthcare")
 
         # Act
         session.ai_responses = {
             "questions_generated": 5,
             "risk_level": "medium",
-            "recommendations": ["Implement GDPR compliance", "Update privacy policy"]
+            "recommendations": ["Implement GDPR compliance", "Update privacy policy"],
         }
         session.user_answers = {
             "handles_personal_data": True,
             "data_retention_policy": False,
-            "staff_training": "annually"
+            "staff_training": "annually",
         }
 
         db_session.add(session)
@@ -177,7 +172,7 @@ class TestFreemiumAssessmentSession:
         session = FreemiumAssessmentSession(
             lead_id=lead.id,
             business_type="finance",
-            expires_at=datetime.utcnow() + timedelta(hours=2)
+            expires_at=datetime.utcnow() + timedelta(hours=2),
         )
         db_session.add(session)
         db_session.commit()
@@ -201,7 +196,7 @@ class TestAIQuestionBank:
             question_text="How do you currently handle customer data deletion requests?",
             question_type="multiple_choice",
             options=["Manual process", "Automated system", "No process", "Not applicable"],
-            context_tags=["gdpr", "data_rights", "deletion"]
+            context_tags=["gdpr", "data_rights", "deletion"],
         )
         db_session.add(question)
         db_session.commit()
@@ -221,14 +216,14 @@ class TestAIQuestionBank:
             question_text="Describe your incident response procedure.",
             question_type="text",
             difficulty_level=8,
-            compliance_weight=0.95
+            compliance_weight=0.95,
         )
         db_session.add(question)
         db_session.commit()
 
         # Assert
         assert question.difficulty_level == 8
-        assert question.compliance_weight == Decimal('0.95')
+        assert question.compliance_weight == Decimal("0.95")
 
 
 class TestLeadScoringEvent:
@@ -247,7 +242,7 @@ class TestLeadScoringEvent:
             event_type="assessment_start",
             event_category="engagement",
             event_action="started_assessment",
-            score_impact=10
+            score_impact=10,
         )
         db_session.add(event)
         db_session.commit()
@@ -276,8 +271,8 @@ class TestLeadScoringEvent:
                 "question_id": "q_data_protection_1",
                 "answer": "yes",
                 "time_spent_seconds": 45,
-                "confidence_level": "high"
-            }
+                "confidence_level": "high",
+            },
         )
         db_session.add(event)
         db_session.commit()
@@ -306,8 +301,8 @@ class TestConversionEvent:
             lead_id=lead.id,
             session_id=session.id,
             conversion_type="trial_signup",
-            conversion_value=Decimal('99.00'),
-            conversion_source="freemium_results_page"
+            conversion_value=Decimal("99.00"),
+            conversion_source="freemium_results_page",
         )
         db_session.add(conversion)
         db_session.commit()
@@ -316,7 +311,7 @@ class TestConversionEvent:
         assert conversion.lead_id == lead.id
         assert conversion.session_id == session.id
         assert conversion.conversion_type == "trial_signup"
-        assert conversion.conversion_value == Decimal('99.00')
+        assert conversion.conversion_value == Decimal("99.00")
         assert conversion.conversion_source == "freemium_results_page"
         assert conversion.created_at is not None
 
@@ -352,10 +347,7 @@ class TestFreemiumModelRelationships:
 
         session = FreemiumAssessmentSession(lead_id=lead.id, business_type="education")
         event = LeadScoringEvent(
-            lead_id=lead.id,
-            event_type="test",
-            event_category="test",
-            event_action="test"
+            lead_id=lead.id, event_type="test", event_category="test", event_action="test"
         )
 
         db_session.add_all([session, event])

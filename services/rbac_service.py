@@ -14,10 +14,7 @@ from uuid import UUID
 from sqlalchemy.orm import Session
 from sqlalchemy import and_, or_
 
-from database.rbac import (
-    Role, Permission, UserRole, RolePermission, FrameworkAccess,
-    AuditLog
-)
+from database.rbac import Role, Permission, UserRole, RolePermission, FrameworkAccess, AuditLog
 from database.user import User
 from database.compliance_framework import ComplianceFramework
 
@@ -44,7 +41,7 @@ class RBACService:
         display_name: str,
         description: str = None,
         is_system_role: bool = False,
-        created_by: UUID = None
+        created_by: UUID = None,
     ) -> Role:
         """
         Create a new role.
@@ -71,7 +68,7 @@ class RBACService:
             name=name,
             display_name=display_name,
             description=description,
-            is_system_role=is_system_role
+            is_system_role=is_system_role,
         )
 
         self.db.add(role)
@@ -84,18 +81,14 @@ class RBACService:
             action="role_created",
             resource_type="role",
             resource_id=str(role.id),
-            details={"role_name": name, "display_name": display_name}
+            details={"role_name": name, "display_name": display_name},
         )
 
         logger.info(f"Role created: {name} (ID: {role.id})")
         return role
 
     def assign_role_to_user(
-        self,
-        user_id: UUID,
-        role_id: UUID,
-        granted_by: UUID = None,
-        expires_at: datetime = None
+        self, user_id: UUID, role_id: UUID, granted_by: UUID = None, expires_at: datetime = None
     ) -> UserRole:
         """
         Assign a role to a user.
@@ -123,9 +116,11 @@ class RBACService:
             raise ValueError(f"Role not found: {role_id}")
 
         # Check if assignment already exists
-        existing = self.db.query(UserRole).filter(
-            and_(UserRole.user_id == user_id, UserRole.role_id == role_id)
-        ).first()
+        existing = (
+            self.db.query(UserRole)
+            .filter(and_(UserRole.user_id == user_id, UserRole.role_id == role_id))
+            .first()
+        )
 
         if existing:
             if existing.is_active:
@@ -141,10 +136,7 @@ class RBACService:
         else:
             # Create new assignment
             user_role = UserRole(
-                user_id=user_id,
-                role_id=role_id,
-                granted_by=granted_by,
-                expires_at=expires_at
+                user_id=user_id, role_id=role_id, granted_by=granted_by, expires_at=expires_at
             )
             self.db.add(user_role)
             self.db.commit()
@@ -159,19 +151,14 @@ class RBACService:
             details={
                 "user_id": str(user_id),
                 "role_name": role.name,
-                "expires_at": expires_at.isoformat() if expires_at else None
-            }
+                "expires_at": expires_at.isoformat() if expires_at else None,
+            },
         )
 
         logger.info(f"Role '{role.name}' assigned to user {user_id}")
         return user_role
 
-    def revoke_role_from_user(
-        self,
-        user_id: UUID,
-        role_id: UUID,
-        revoked_by: UUID = None
-    ) -> bool:
+    def revoke_role_from_user(self, user_id: UUID, role_id: UUID, revoked_by: UUID = None) -> bool:
         """
         Revoke a role from a user.
 
@@ -183,13 +170,13 @@ class RBACService:
         Returns:
             True if role was revoked, False if assignment didn't exist
         """
-        user_role = self.db.query(UserRole).filter(
-            and_(
-                UserRole.user_id == user_id,
-                UserRole.role_id == role_id,
-                UserRole.is_active
+        user_role = (
+            self.db.query(UserRole)
+            .filter(
+                and_(UserRole.user_id == user_id, UserRole.role_id == role_id, UserRole.is_active)
             )
-        ).first()
+            .first()
+        )
 
         if not user_role:
             return False
@@ -207,10 +194,7 @@ class RBACService:
             action="role_revoked",
             resource_type="user_role",
             resource_id=str(user_role.id),
-            details={
-                "user_id": str(user_id),
-                "role_name": role_name
-            }
+            details={"user_id": str(user_id), "role_name": role_name},
         )
 
         logger.info(f"Role '{role_name}' revoked from user {user_id}")
@@ -224,7 +208,7 @@ class RBACService:
         display_name: str,
         category: str,
         description: str = None,
-        resource_type: str = None
+        resource_type: str = None,
     ) -> Permission:
         """
         Create a new permission.
@@ -249,7 +233,7 @@ class RBACService:
             display_name=display_name,
             category=category,
             description=description,
-            resource_type=resource_type
+            resource_type=resource_type,
         )
 
         self.db.add(permission)
@@ -260,10 +244,7 @@ class RBACService:
         return permission
 
     def assign_permission_to_role(
-        self,
-        role_id: UUID,
-        permission_id: UUID,
-        granted_by: UUID = None
+        self, role_id: UUID, permission_id: UUID, granted_by: UUID = None
     ) -> RolePermission:
         """
         Assign a permission to a role.
@@ -277,20 +258,21 @@ class RBACService:
             RolePermission assignment
         """
         # Check if assignment already exists
-        existing = self.db.query(RolePermission).filter(
-            and_(
-                RolePermission.role_id == role_id,
-                RolePermission.permission_id == permission_id
+        existing = (
+            self.db.query(RolePermission)
+            .filter(
+                and_(
+                    RolePermission.role_id == role_id, RolePermission.permission_id == permission_id
+                )
             )
-        ).first()
+            .first()
+        )
 
         if existing:
             raise ValueError("Permission already assigned to role")
 
         role_permission = RolePermission(
-            role_id=role_id,
-            permission_id=permission_id,
-            granted_by=granted_by
+            role_id=role_id, permission_id=permission_id, granted_by=granted_by
         )
 
         self.db.add(role_permission)
@@ -303,11 +285,7 @@ class RBACService:
     # Framework Access Control
 
     def grant_framework_access(
-        self,
-        role_id: UUID,
-        framework_id: UUID,
-        access_level: str = "read",
-        granted_by: UUID = None
+        self, role_id: UUID, framework_id: UUID, access_level: str = "read", granted_by: UUID = None
     ) -> FrameworkAccess:
         """
         Grant framework access to a role.
@@ -325,13 +303,17 @@ class RBACService:
             raise ValueError("Access level must be 'read', 'write', or 'admin'")
 
         # Check if access already exists
-        existing = self.db.query(FrameworkAccess).filter(
-            and_(
-                FrameworkAccess.role_id == role_id,
-                FrameworkAccess.framework_id == framework_id,
-                FrameworkAccess.is_active
+        existing = (
+            self.db.query(FrameworkAccess)
+            .filter(
+                and_(
+                    FrameworkAccess.role_id == role_id,
+                    FrameworkAccess.framework_id == framework_id,
+                    FrameworkAccess.is_active,
+                )
             )
-        ).first()
+            .first()
+        )
 
         if existing:
             # Update existing access level
@@ -346,22 +328,20 @@ class RBACService:
                 role_id=role_id,
                 framework_id=framework_id,
                 access_level=access_level,
-                granted_by=granted_by
+                granted_by=granted_by,
             )
             self.db.add(framework_access)
             self.db.commit()
             self.db.refresh(framework_access)
 
-        logger.info(f"Framework access granted: role {role_id}, framework {framework_id}, level {access_level}")
+        logger.info(
+            f"Framework access granted: role {role_id}, framework {framework_id}, level {access_level}"
+        )
         return framework_access
 
     # User Access Checks
 
-    def user_has_permission(
-        self,
-        user_id: UUID,
-        permission_name: str
-    ) -> bool:
+    def user_has_permission(self, user_id: UUID, permission_name: str) -> bool:
         """
         Check if a user has a specific permission.
 
@@ -373,16 +353,17 @@ class RBACService:
             True if user has the permission
         """
         # Get user's active roles
-        user_roles = self.db.query(UserRole).filter(
-            and_(
-                UserRole.user_id == user_id,
-                UserRole.is_active,
-                or_(
-                    UserRole.expires_at.is_(None),
-                    UserRole.expires_at > datetime.utcnow()
+        user_roles = (
+            self.db.query(UserRole)
+            .filter(
+                and_(
+                    UserRole.user_id == user_id,
+                    UserRole.is_active,
+                    or_(UserRole.expires_at.is_(None), UserRole.expires_at > datetime.utcnow()),
                 )
             )
-        ).all()
+            .all()
+        )
 
         if not user_roles:
             return False
@@ -390,21 +371,23 @@ class RBACService:
         role_ids = [ur.role_id for ur in user_roles]
 
         # Check if any role has the permission
-        permission_count = self.db.query(RolePermission).join(Permission).filter(
-            and_(
-                RolePermission.role_id.in_(role_ids),
-                Permission.name == permission_name,
-                Permission.is_active
+        permission_count = (
+            self.db.query(RolePermission)
+            .join(Permission)
+            .filter(
+                and_(
+                    RolePermission.role_id.in_(role_ids),
+                    Permission.name == permission_name,
+                    Permission.is_active,
+                )
             )
-        ).count()
+            .count()
+        )
 
         return permission_count > 0
 
     def user_has_framework_access(
-        self,
-        user_id: UUID,
-        framework_id: UUID,
-        required_level: str = "read"
+        self, user_id: UUID, framework_id: UUID, required_level: str = "read"
     ) -> bool:
         """
         Check if a user has access to a specific framework.
@@ -421,16 +404,17 @@ class RBACService:
         required_level_value = level_hierarchy.get(required_level, 1)
 
         # Get user's active roles
-        user_roles = self.db.query(UserRole).filter(
-            and_(
-                UserRole.user_id == user_id,
-                UserRole.is_active,
-                or_(
-                    UserRole.expires_at.is_(None),
-                    UserRole.expires_at > datetime.utcnow()
+        user_roles = (
+            self.db.query(UserRole)
+            .filter(
+                and_(
+                    UserRole.user_id == user_id,
+                    UserRole.is_active,
+                    or_(UserRole.expires_at.is_(None), UserRole.expires_at > datetime.utcnow()),
                 )
             )
-        ).all()
+            .all()
+        )
 
         if not user_roles:
             return False
@@ -438,13 +422,17 @@ class RBACService:
         role_ids = [ur.role_id for ur in user_roles]
 
         # Check framework access for user's roles
-        framework_access = self.db.query(FrameworkAccess).filter(
-            and_(
-                FrameworkAccess.role_id.in_(role_ids),
-                FrameworkAccess.framework_id == framework_id,
-                FrameworkAccess.is_active
+        framework_access = (
+            self.db.query(FrameworkAccess)
+            .filter(
+                and_(
+                    FrameworkAccess.role_id.in_(role_ids),
+                    FrameworkAccess.framework_id == framework_id,
+                    FrameworkAccess.is_active,
+                )
             )
-        ).all()
+            .all()
+        )
 
         # Check if any access level meets the requirement
         for access in framework_access:
@@ -464,17 +452,19 @@ class RBACService:
         Returns:
             List of role information dictionaries
         """
-        user_roles = self.db.query(UserRole).join(Role).filter(
-            and_(
-                UserRole.user_id == user_id,
-                UserRole.is_active,
-                Role.is_active,
-                or_(
-                    UserRole.expires_at.is_(None),
-                    UserRole.expires_at > datetime.utcnow()
+        user_roles = (
+            self.db.query(UserRole)
+            .join(Role)
+            .filter(
+                and_(
+                    UserRole.user_id == user_id,
+                    UserRole.is_active,
+                    Role.is_active,
+                    or_(UserRole.expires_at.is_(None), UserRole.expires_at > datetime.utcnow()),
                 )
             )
-        ).all()
+            .all()
+        )
 
         return [
             {
@@ -483,7 +473,7 @@ class RBACService:
                 "display_name": ur.role.display_name,
                 "description": ur.role.description,
                 "granted_at": ur.granted_at.isoformat(),
-                "expires_at": ur.expires_at.isoformat() if ur.expires_at else None
+                "expires_at": ur.expires_at.isoformat() if ur.expires_at else None,
             }
             for ur in user_roles
         ]
@@ -499,16 +489,17 @@ class RBACService:
             List of permission names
         """
         # Get user's active roles
-        user_roles = self.db.query(UserRole).filter(
-            and_(
-                UserRole.user_id == user_id,
-                UserRole.is_active,
-                or_(
-                    UserRole.expires_at.is_(None),
-                    UserRole.expires_at > datetime.utcnow()
+        user_roles = (
+            self.db.query(UserRole)
+            .filter(
+                and_(
+                    UserRole.user_id == user_id,
+                    UserRole.is_active,
+                    or_(UserRole.expires_at.is_(None), UserRole.expires_at > datetime.utcnow()),
                 )
             )
-        ).all()
+            .all()
+        )
 
         if not user_roles:
             return []
@@ -516,12 +507,12 @@ class RBACService:
         role_ids = [ur.role_id for ur in user_roles]
 
         # Get permissions for these roles
-        permissions = self.db.query(Permission).join(RolePermission).filter(
-            and_(
-                RolePermission.role_id.in_(role_ids),
-                Permission.is_active
-            )
-        ).all()
+        permissions = (
+            self.db.query(Permission)
+            .join(RolePermission)
+            .filter(and_(RolePermission.role_id.in_(role_ids), Permission.is_active))
+            .all()
+        )
 
         return list(set(p.name for p in permissions))
 
@@ -536,16 +527,17 @@ class RBACService:
             List of framework information with access levels
         """
         # Get user's active roles
-        user_roles = self.db.query(UserRole).filter(
-            and_(
-                UserRole.user_id == user_id,
-                UserRole.is_active,
-                or_(
-                    UserRole.expires_at.is_(None),
-                    UserRole.expires_at > datetime.utcnow()
+        user_roles = (
+            self.db.query(UserRole)
+            .filter(
+                and_(
+                    UserRole.user_id == user_id,
+                    UserRole.is_active,
+                    or_(UserRole.expires_at.is_(None), UserRole.expires_at > datetime.utcnow()),
                 )
             )
-        ).all()
+            .all()
+        )
 
         if not user_roles:
             return []
@@ -553,13 +545,18 @@ class RBACService:
         role_ids = [ur.role_id for ur in user_roles]
 
         # Get framework access for these roles
-        framework_access = self.db.query(FrameworkAccess).join(ComplianceFramework).filter(
-            and_(
-                FrameworkAccess.role_id.in_(role_ids),
-                FrameworkAccess.is_active,
-                ComplianceFramework.is_active
+        framework_access = (
+            self.db.query(FrameworkAccess)
+            .join(ComplianceFramework)
+            .filter(
+                and_(
+                    FrameworkAccess.role_id.in_(role_ids),
+                    FrameworkAccess.is_active,
+                    ComplianceFramework.is_active,
+                )
             )
-        ).all()
+            .all()
+        )
 
         # Group by framework and get highest access level
         frameworks = {}
@@ -569,13 +566,16 @@ class RBACService:
             framework_id = str(access.framework_id)
             current_level = level_hierarchy.get(access.access_level, 1)
 
-            if framework_id not in frameworks or current_level > frameworks[framework_id]["access_level_value"]:
+            if (
+                framework_id not in frameworks
+                or current_level > frameworks[framework_id]["access_level_value"]
+            ):
                 frameworks[framework_id] = {
                     "id": framework_id,
                     "name": access.framework.name,
                     "display_name": access.framework.display_name,
                     "access_level": access.access_level,
-                    "access_level_value": current_level
+                    "access_level_value": current_level,
                 }
 
         return [
@@ -592,7 +592,7 @@ class RBACService:
         resource_type: str = None,
         resource_id: str = None,
         details: Dict = None,
-        severity: str = "info"
+        severity: str = "info",
     ) -> None:
         """
         Log an audit event.
@@ -611,7 +611,7 @@ class RBACService:
             resource_type=resource_type,
             resource_id=resource_id,
             details=json.dumps(details) if details else None,
-            severity=severity
+            severity=severity,
         )
 
         self.db.add(audit_log)
@@ -626,12 +626,11 @@ class RBACService:
         """
         current_time = datetime.utcnow()
 
-        expired_roles = self.db.query(UserRole).filter(
-            and_(
-                UserRole.expires_at <= current_time,
-                UserRole.is_active
-            )
-        ).all()
+        expired_roles = (
+            self.db.query(UserRole)
+            .filter(and_(UserRole.expires_at <= current_time, UserRole.is_active))
+            .all()
+        )
 
         count = len(expired_roles)
 
@@ -646,8 +645,8 @@ class RBACService:
                 details={
                     "user_id": str(user_role.user_id),
                     "role_id": str(user_role.role_id),
-                    "expired_at": current_time.isoformat()
-                }
+                    "expired_at": current_time.isoformat(),
+                },
             )
 
         if count > 0:
@@ -672,29 +671,49 @@ def initialize_rbac_system(db: Session) -> None:
         ("user_update", "Update Users", "user_management", "Update user information"),
         ("user_delete", "Delete Users", "user_management", "Delete user accounts"),
         ("user_list", "List Users", "user_management", "View user listings"),
-
         # Framework management
-        ("framework_create", "Create Frameworks", "framework_management", "Create compliance frameworks"),
-        ("framework_update", "Update Frameworks", "framework_management", "Update framework information"),
+        (
+            "framework_create",
+            "Create Frameworks",
+            "framework_management",
+            "Create compliance frameworks",
+        ),
+        (
+            "framework_update",
+            "Update Frameworks",
+            "framework_management",
+            "Update framework information",
+        ),
         ("framework_delete", "Delete Frameworks", "framework_management", "Delete frameworks"),
         ("framework_list", "List Frameworks", "framework_management", "View framework listings"),
-
         # Assessment management
-        ("assessment_create", "Create Assessments", "assessment_management", "Create new assessments"),
-        ("assessment_update", "Update Assessments", "assessment_management", "Update assessment information"),
+        (
+            "assessment_create",
+            "Create Assessments",
+            "assessment_management",
+            "Create new assessments",
+        ),
+        (
+            "assessment_update",
+            "Update Assessments",
+            "assessment_management",
+            "Update assessment information",
+        ),
         ("assessment_delete", "Delete Assessments", "assessment_management", "Delete assessments"),
-        ("assessment_list", "List Assessments", "assessment_management", "View assessment listings"),
-
+        (
+            "assessment_list",
+            "List Assessments",
+            "assessment_management",
+            "View assessment listings",
+        ),
         # Policy generation
         ("policy_generate", "Generate Policies", "policy_generation", "Generate AI policies"),
         ("policy_refine", "Refine Policies", "policy_generation", "Refine existing policies"),
         ("policy_validate", "Validate Policies", "policy_generation", "Validate policy compliance"),
-
         # Report access
         ("report_view", "View Reports", "report_access", "View compliance reports"),
         ("report_export", "Export Reports", "report_access", "Export reports to files"),
         ("report_schedule", "Schedule Reports", "report_access", "Schedule automated reports"),
-
         # Admin functions
         ("admin_roles", "Manage Roles", "admin_functions", "Manage system roles"),
         ("admin_permissions", "Manage Permissions", "admin_functions", "Manage system permissions"),
@@ -711,7 +730,12 @@ def initialize_rbac_system(db: Session) -> None:
     # Create default roles
     default_roles = [
         ("admin", "Administrator", "Full system access with all permissions", True),
-        ("framework_manager", "Framework Manager", "Manage compliance frameworks and policies", True),
+        (
+            "framework_manager",
+            "Framework Manager",
+            "Manage compliance frameworks and policies",
+            True,
+        ),
         ("assessor", "Assessor", "Create and manage compliance assessments", True),
         ("viewer", "Viewer", "Read-only access to compliance data", True),
         ("business_user", "Business User", "Standard business user access", True),

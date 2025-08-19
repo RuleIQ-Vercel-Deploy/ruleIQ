@@ -90,7 +90,9 @@ class DatabaseException(RuleIQException):
 class IntegrationException(RuleIQException):
     """Exception for third-party integration errors."""
 
-    def __init__(self, service: str, message: str, details: Optional[Dict[str, Any]] = None) -> None:
+    def __init__(
+        self, service: str, message: str, details: Optional[Dict[str, Any]] = None
+    ) -> None:
         super().__init__(
             message=f"Integration error with {service}: {message}",
             error_code="INTEGRATION_ERROR",
@@ -318,7 +320,9 @@ class SecurityErrorHandler:
         raise AuthenticationException()
 
     @staticmethod
-    def handle_authorization_error(resource: str, action: str, user_id: Optional[str] = None) -> NoReturn:
+    def handle_authorization_error(
+        resource: str, action: str, user_id: Optional[str] = None
+    ) -> NoReturn:
         """Handle authorization errors securely."""
         logger.warning(
             "Authorization attempt failed",

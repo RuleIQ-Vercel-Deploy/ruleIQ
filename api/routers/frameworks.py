@@ -15,21 +15,21 @@ router = APIRouter()
 @router.get("/", response_model=List[ComplianceFrameworkResponse])
 async def list_frameworks(
     current_user: UserWithRoles = Depends(require_permission("user_list")),
-    db: AsyncSession = Depends(get_async_db)
+    db: AsyncSession = Depends(get_async_db),
 ):
     """List all available frameworks - simplified for compliance wizard."""
     from database.compliance_framework import ComplianceFramework
     from sqlalchemy.future import select
-    
+
     # Get all active frameworks directly from database (bypass RBAC for now)
     result = await db.execute(select(ComplianceFramework))
     frameworks = result.scalars().all()
     print(f"DEBUG: Found {len(frameworks)} total frameworks")
-    
+
     # Filter active ones in Python for now
     active_frameworks = [fw for fw in frameworks if fw.is_active]
     print(f"DEBUG: Found {len(active_frameworks)} active frameworks")
-    
+
     # Convert to response format
     return [
         ComplianceFrameworkResponse(
@@ -38,7 +38,7 @@ async def list_frameworks(
             description=fw.description or "",
             category=fw.category or "general",
             version=fw.version or "1.0",
-            controls=[]  # Simplified for compliance wizard
+            controls=[],  # Simplified for compliance wizard
         )
         for fw in active_frameworks
     ]
@@ -47,7 +47,7 @@ async def list_frameworks(
 @router.get("/recommendations", response_model=List[FrameworkRecommendation])
 async def get_framework_recommendations(
     current_user: UserWithRoles = Depends(require_permission("framework_list")),
-    db: AsyncSession = Depends(get_async_db)
+    db: AsyncSession = Depends(get_async_db),
 ):
     """Get framework recommendations filtered by user's access permissions."""
     recommendations = await get_relevant_frameworks(db, current_user)
@@ -59,10 +59,7 @@ async def get_framework_recommendations(
         framework_id = str(framework.id)
 
         # Check if user has access to this specific framework
-        has_access = any(
-            af["id"] == framework_id
-            for af in current_user.accessible_frameworks
-        )
+        has_access = any(af["id"] == framework_id for af in current_user.accessible_frameworks)
 
         if has_access:
             accessible_recommendations.append(
@@ -93,10 +90,7 @@ async def get_framework_recommendations_for_profile(
         framework_id = str(framework.id)
 
         # Check if user has access to this specific framework
-        has_access = any(
-            af["id"] == framework_id
-            for af in current_user.accessible_frameworks
-        )
+        has_access = any(af["id"] == framework_id for af in current_user.accessible_frameworks)
 
         if has_access:
             accessible_recommendations.append(
@@ -114,18 +108,16 @@ async def get_framework_recommendations_for_profile(
 @router.get("/all-public", response_model=List[ComplianceFrameworkResponse])
 async def list_all_public_frameworks(
     current_user: UserWithRoles = Depends(require_permission("user_list")),
-    db: AsyncSession = Depends(get_async_db)
+    db: AsyncSession = Depends(get_async_db),
 ):
     """List all available frameworks without RBAC restrictions - for compliance wizard."""
     from database.compliance_framework import ComplianceFramework
     from sqlalchemy.future import select
-    
+
     # Get all active frameworks directly from database
-    result = await db.execute(
-        select(ComplianceFramework).where(ComplianceFramework.is_active == True)
-    )
+    result = await db.execute(select(ComplianceFramework).where(ComplianceFramework.is_active))
     frameworks = result.scalars().all()
-    
+
     # Convert to response format
     return [
         ComplianceFrameworkResponse(
@@ -134,7 +126,7 @@ async def list_all_public_frameworks(
             description=fw.description or "",
             category=fw.category or "general",
             version=fw.version or "1.0",
-            controls=[]  # Simplified for compliance wizard
+            controls=[],  # Simplified for compliance wizard
         )
         for fw in frameworks
     ]
@@ -148,15 +140,12 @@ async def get_framework(
 ):
     """Get a specific framework if user has access to it."""
     # Check if user has access to this specific framework
-    has_access = any(
-        af["id"] == str(framework_id)
-        for af in current_user.accessible_frameworks
-    )
+    has_access = any(af["id"] == str(framework_id) for af in current_user.accessible_frameworks)
 
     if not has_access:
         raise HTTPException(
             status_code=403,
-            detail="Access denied: You don't have permission to access this framework"
+            detail="Access denied: You don't have permission to access this framework",
         )
 
     framework = await get_framework_by_id(db, current_user, framework_id)

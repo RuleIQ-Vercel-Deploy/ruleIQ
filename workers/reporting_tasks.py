@@ -164,13 +164,13 @@ async def _send_report_summary_notifications_async():
     bind=True,
     autoretry_for=(DatabaseException, Exception),
     retry_kwargs={
-        'max_retries': 5,
-        'countdown': 120,  # Start with 2 minutes for report generation
+        "max_retries": 5,
+        "countdown": 120,  # Start with 2 minutes for report generation
     },
     retry_backoff=True,
     retry_backoff_max=600,  # Max 10 minutes for reports
     retry_jitter=True,
-    rate_limit='2/m',  # 2 report generations per minute
+    rate_limit="2/m",  # 2 report generations per minute
 )
 def generate_and_distribute_report(self, schedule_id: str):
     """Celery task to generate and distribute a report by running the async helper."""
@@ -191,13 +191,13 @@ def generate_and_distribute_report(self, schedule_id: str):
     bind=True,
     autoretry_for=(Exception,),
     retry_kwargs={
-        'max_retries': 3,
-        'countdown': 90,  # Start with 90 seconds for on-demand reports
+        "max_retries": 3,
+        "countdown": 90,  # Start with 90 seconds for on-demand reports
     },
     retry_backoff=True,
     retry_backoff_max=400,
     retry_jitter=True,
-    rate_limit='5/m',  # 5 on-demand reports per minute
+    rate_limit="5/m",  # 5 on-demand reports per minute
 )
 def generate_report_on_demand(
     self, user_id: str, profile_id: str, report_type: str, recipients: List[str]
@@ -214,13 +214,13 @@ def generate_report_on_demand(
     bind=True,
     autoretry_for=(Exception,),
     retry_kwargs={
-        'max_retries': 3,
-        'countdown': 60,
+        "max_retries": 3,
+        "countdown": 60,
     },
     retry_backoff=True,
     retry_backoff_max=300,
     retry_jitter=True,
-    rate_limit='1/h',  # 1 cleanup task per hour
+    rate_limit="1/h",  # 1 cleanup task per hour
 )
 def cleanup_old_reports(self):
     """Mock task for cleaning up old reports."""
@@ -232,13 +232,13 @@ def cleanup_old_reports(self):
     bind=True,
     autoretry_for=(Exception,),
     retry_kwargs={
-        'max_retries': 5,
-        'countdown': 45,
+        "max_retries": 5,
+        "countdown": 45,
     },
     retry_backoff=True,
     retry_backoff_max=300,
     retry_jitter=True,
-    rate_limit='10/m',  # 10 summary notifications per minute
+    rate_limit="10/m",  # 10 summary notifications per minute
 )
 def send_report_summary_notifications(self):
     """Celery task to send summary notifications by running the async helper."""

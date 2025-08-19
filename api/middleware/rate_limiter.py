@@ -69,7 +69,6 @@ else:
 strict_test_limiter = RateLimiter(requests_per_minute=4)  # Very strict for testing
 
 
-
 async def rate_limit_middleware(request: Request, call_next):
     """General rate limiting middleware"""
     # Skip rate limiting for docs and testing environment

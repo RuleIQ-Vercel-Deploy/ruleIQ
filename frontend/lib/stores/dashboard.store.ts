@@ -31,7 +31,7 @@ export interface ComplianceScore {
   policy_score: number;
   implementation_score: number;
   evidence_score: number;
-  trend: 'up' | 'down' | 'stable';
+  trend: 'up' | 'down' | 'stable' | 'improving' | 'declining';
   lastUpdated: Date;
   domain_scores: Record<string, number>; // JSONB field from backend
   control_scores: Record<string, number>; // JSONB field from backend
@@ -39,7 +39,7 @@ export interface ComplianceScore {
     framework: string;
     score: number;
     weight: number;
-  }[];
+  }[] | Record<string, number>;
 }
 
 export interface Task {
@@ -250,10 +250,9 @@ export const useDashboardStore = create<DashboardState>()(
 
           try {
             // Load dashboard data from API
-            const [dashboardData, recentActivities] = await Promise.all([
-              dashboardService.getDashboardMetrics(),
-              dashboardService.getRecentActivity(),
-            ]);
+            const dashboardResponse = await dashboardService.getUserDashboard();
+            const dashboardData = dashboardResponse.stats;
+            const recentActivities = dashboardResponse.recent_activity;
 
             // Transform API data to match our state structure
             const complianceScore: ComplianceScore = {
@@ -265,12 +264,12 @@ export const useDashboardStore = create<DashboardState>()(
               lastUpdated: new Date(),
               domain_scores: dashboardData.domain_scores || {},
               control_scores: dashboardData.control_scores || {},
-              breakdown: dashboardData.framework_scores || [],
+              breakdown: dashboardData.framework_scores || {},
             };
 
             // Transform tasks from API
             const tasks: Task[] =
-              dashboardData.pending_tasks?.map((task: any) => ({
+              dashboardResponse.pending_tasks?.map((task: any) => ({
                 id: task.id,
                 title: task.title,
                 category: task.category,
@@ -310,9 +309,38 @@ export const useDashboardStore = create<DashboardState>()(
                 complianceScore,
                 tasks,
                 activities,
-                frameworks: dashboardData.frameworks || [],
-                deadlines: dashboardData.upcoming_deadlines || [],
-                aiInsights: dashboardData.ai_insights || [],
+                frameworks: (dashboardData.frameworks || []).map((framework: any) => ({
+                  id: framework.id || framework,
+                  name: framework.name || framework,
+                  progress: framework.progress || 0,
+                  status: framework.status || 'not-started',
+                  description: framework.description || '',
+                  deadline: framework.deadline ? new Date(framework.deadline) : undefined
+                })),
+                deadlines: (dashboardResponse.upcoming_deadlines || []).map((deadline: any) => ({
+                  id: deadline.id || `deadline-${Date.now()}`,
+                  title: deadline.title || deadline.name || '',
+                  type: deadline.type || 'compliance',
+                  dueDate: deadline.date ? new Date(deadline.date) : new Date(),
+                  priority: deadline.priority || 'medium',
+                  description: deadline.description || '',
+                  notificationEnabled: deadline.notification_enabled !== false,
+                  framework: deadline.framework
+                })),
+                aiInsights: (dashboardResponse.ai_insights || []).map((insight: any) => ({
+                  id: insight.id || `insight-${Date.now()}`,
+                  type: insight.type || 'tip',
+                  title: insight.title || '',
+                  description: insight.description || '',
+                  priority: insight.priority || 'medium',
+                  framework: insight.framework,
+                  actionable: insight.actionable !== false,
+                  suggestedActions: insight.suggested_actions || insight.action ? [insight.action.label] : [],
+                  confidence: insight.confidence || 0.8,
+                  timestamp: new Date(insight.timestamp || Date.now()),
+                  dismissed: insight.dismissed || false,
+                  bookmarked: insight.bookmarked || false
+                })),
               },
               false,
               'fetchDashboardData/success',
@@ -359,8 +387,9 @@ export const useDashboardStore = create<DashboardState>()(
           try {
             // Refresh specific widget data based on widget type
             switch (widgetId) {
-              case 'compliance-score':
-                const metrics = await dashboardService.getDashboardMetrics();
+              case 'compliance-score': {
+                const dashboardResponse = await dashboardService.getUserDashboard();
+                const metrics = dashboardResponse.stats;
                 const complianceScore: ComplianceScore = {
                   overall_score: metrics.compliance_score || 0,
                   policy_score: metrics.policy_score || 0,
@@ -370,13 +399,15 @@ export const useDashboardStore = create<DashboardState>()(
                   lastUpdated: new Date(),
                   domain_scores: metrics.domain_scores || {},
                   control_scores: metrics.control_scores || {},
-                  breakdown: metrics.framework_scores || [],
+                  breakdown: metrics.framework_scores || {},
                 };
                 set({ complianceScore });
                 break;
+              }
 
-              case 'activity-feed':
-                const activities = await dashboardService.getRecentActivity();
+              case 'activity-feed': {
+                const activityResponse = await dashboardService.getUserDashboard();
+                const activities = activityResponse.recent_activity;
                 set({
                   activities: activities.map((activity: any) => ({
                     id: activity.id,
@@ -393,6 +424,7 @@ export const useDashboardStore = create<DashboardState>()(
                   })),
                 });
                 break;
+              }
 
               // Add other widget-specific refresh logic as needed
             }

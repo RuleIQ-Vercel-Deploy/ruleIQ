@@ -256,7 +256,7 @@ export const useEvidenceStore = create<EvidenceState>()(
           set({ isBulkUpdating: true, error: null }, false, 'bulkUpdate/start');
 
           try {
-            const result = await evidenceService.bulkUpdateEvidence(data);
+            await evidenceService.bulkUpdateEvidence(data);
 
             // Reload evidence to reflect changes
             await get().loadEvidence();
@@ -269,8 +269,6 @@ export const useEvidenceStore = create<EvidenceState>()(
               false,
               'bulkUpdate/success',
             );
-
-            return result;
           } catch (error: any) {
             set(
               {
@@ -508,8 +506,28 @@ export const useEvidenceStore = create<EvidenceState>()(
 
         // Data Management
         setEvidence: (evidence) => {
-          const validatedEvidence = safeValidate(EvidenceArraySchema, evidence, 'setEvidence');
-          set({ evidence: validatedEvidence }, false, 'setEvidence');
+          // Map API evidence data to EvidenceItem interface with all required fields
+          const mappedEvidence = evidence.map((item: any): EvidenceItem => ({
+            id: item.id || '',
+            title: item.title || '',
+            description: item.description || '', // Ensure always string, never undefined
+            control_id: item.control_id || item.controlId || '',
+            framework_id: item.framework_id || '',
+            business_profile_id: item.business_profile_id || '',
+            evidence_type: item.evidence_type || 'manual',
+            source: item.source || 'manual',
+            tags: item.tags || [],
+            status: item.status || 'pending',
+            created_at: item.created_at || new Date().toISOString(),
+            updated_at: item.updated_at || new Date().toISOString(),
+            // Optional fields can be undefined
+            quality_score: item.quality_score,
+            metadata: item.metadata,
+            file_url: item.file_url,
+            file_name: item.file_name,
+            file_size: item.file_size
+          }));
+          set({ evidence: mappedEvidence }, false, 'setEvidence');
         },
 
         setLoading: (loading) => {

@@ -361,7 +361,9 @@ class AdvancedSafetyManager:
         decision_record = SafetyDecisionRecord(
             decision_id=str(uuid4()),
             user_id=self.user_id,
-            content_type=ContentType.GENERAL_QUESTION if context and context.get("content_type") == "unknown" else ContentType.GENERAL_INQUIRY,
+            content_type=ContentType.GENERAL_QUESTION
+            if context and context.get("content_type") == "unknown"
+            else ContentType.GENERAL_INQUIRY,
             safety_profile="standard",
             input_content=f"AUTHORIZATION: {action}",
             decision=SafetyDecision.ALLOW if granted else SafetyDecision.BLOCK,

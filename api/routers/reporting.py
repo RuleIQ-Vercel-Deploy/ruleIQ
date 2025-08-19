@@ -407,7 +407,9 @@ async def list_schedules(
 
 @router.delete("/schedules/{schedule_id}")
 async def delete_schedule(
-    schedule_id: str, current_user: User = Depends(get_current_active_user), db: Session = Depends(get_db)
+    schedule_id: str,
+    current_user: User = Depends(get_current_active_user),
+    db: Session = Depends(get_db),
 ):
     """Delete a report schedule"""
     try:
@@ -433,7 +435,9 @@ async def delete_schedule(
 
 @router.post("/schedules/{schedule_id}/execute")
 async def execute_schedule(
-    schedule_id: str, current_user: User = Depends(get_current_active_user), db: Session = Depends(get_db)
+    schedule_id: str,
+    current_user: User = Depends(get_current_active_user),
+    db: Session = Depends(get_db),
 ):
     """Manually execute a scheduled report"""
     try:

@@ -16,6 +16,7 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 from services.rag_self_critic import RAGSelfCriticCommands
 
+
 async def test_rag_critic_system():
     """Test the RAG self-critic and fact-checking system"""
     print("🚀 Testing RAG Self-Critic System")
@@ -25,7 +26,9 @@ async def test_rag_critic_system():
     openai_key = os.getenv("OPENAI_API_KEY")
     mistral_key = os.getenv("MISTRAL_API_KEY")
 
-    print(f"🔑 OpenAI API Key: {'Set' if openai_key and openai_key != 'your-openai-api-key' else 'Missing'}")
+    print(
+        f"🔑 OpenAI API Key: {'Set' if openai_key and openai_key != 'your-openai-api-key' else 'Missing'}"
+    )
     print(f"🔑 Mistral API Key: {'Set' if mistral_key else 'Missing'}")
 
     if not openai_key or openai_key == "your-openai-api-key":
@@ -71,7 +74,7 @@ async def test_rag_critic_system():
             else:
                 print("✅ Self-critique completed")
                 print(f"   Overall Score: {critique_result.get('overall_score', 0.0)}")
-                critiques = critique_result.get('critiques', [])
+                critiques = critique_result.get("critiques", [])
                 for c in critiques:
                     print(f"   {c.get('aspect', 'Unknown')}: {c.get('score', 0.0):.3f}")
         except Exception as e:
@@ -85,17 +88,17 @@ async def test_rag_critic_system():
                 print(f"⚠️  Assessment error: {assess_result['error']}")
             else:
                 print("✅ Comprehensive assessment completed")
-                assessment = assess_result.get('assessment', {})
+                assessment = assess_result.get("assessment", {})
                 print(f"   Overall Score: {assessment.get('overall_score', 0.0)}")
                 print(f"   Reliability: {assessment.get('response_reliability', 0.0)}")
                 print(f"   Approved: {assessment.get('approved_for_use', False)}")
 
                 # Show fact-check results
-                fact_checks = assessment.get('fact_check_results', [])
+                fact_checks = assessment.get("fact_check_results", [])
                 print(f"   Fact Checks: {len(fact_checks)} claims analyzed")
 
                 # Show flagged issues
-                flagged = assessment.get('flagged_issues', [])
+                flagged = assessment.get("flagged_issues", [])
                 if flagged:
                     print(f"   ⚠️  Flagged Issues: {len(flagged)}")
                     for issue in flagged[:2]:  # Show first 2
@@ -105,7 +108,7 @@ async def test_rag_critic_system():
 
         print("\n🎯 System Capabilities Verified:")
         print("   • ✅ RAG query processing")
-        print("   • ✅ Fact-checking framework") 
+        print("   • ✅ Fact-checking framework")
         print("   • ✅ Self-criticism analysis")
         print("   • ✅ Quality assessment scoring")
         print("   • ✅ Command-line interface")
@@ -123,16 +126,18 @@ async def test_rag_critic_system():
     except Exception as e:
         print(f"❌ Test failed with error: {e}")
         import traceback
+
         traceback.print_exc()
         return False
 
     finally:
         # Clean up connections
         try:
-            if 'critic' in locals() and critic.rag_system:
+            if "critic" in locals() and critic.rag_system:
                 critic.rag_system.close()
         except:
             pass
+
 
 if __name__ == "__main__":
     asyncio.run(test_rag_critic_system())

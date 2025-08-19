@@ -64,7 +64,7 @@ export function usePendingTasks(options?: BaseQueryOptions<any>) {
 }
 
 // Hook to fetch compliance score
-export function useComplianceScore(options?: BaseQueryOptions<any>) {
+export function useDashboardComplianceScore(options?: BaseQueryOptions<any>) {
   return useQuery({
     queryKey: dashboardKeys.score(),
     queryFn: async () => {

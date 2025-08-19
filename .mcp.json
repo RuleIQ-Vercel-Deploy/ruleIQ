@@ -2,7 +2,9 @@
   "mcpServers": {
     "desktop-commander": {
       "command": "node",
-      "args": ["/home/omar/DesktopCommanderMCP/dist/index.js"]
+      "args": [
+        "/home/omar/DesktopCommanderMCP/dist/index.js"
+      ]
     },
     "serena": {
       "command": "/home/omar/.local/bin/uv",
@@ -12,6 +14,13 @@
         "/home/omar/serena",
         "serena",
         "start-mcp-server"
+      ]
+    },
+    "archon": {
+      "command": "npx",
+      "args": [
+        "mcp-remote",
+        "http://localhost:8051/mcp"
       ]
     },
     "magic-ui": {
@@ -33,19 +42,6 @@
         "@smithery/cli@latest",
         "run",
         "@smithery-ai/fetch",
-        "--key",
-        "95e83c85-9a18-4524-9549-6a2c0f194f69",
-        "--profile",
-        "hungry-lemming-s64fT3"
-      ]
-    },
-    "cloudflare-playwright": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "@smithery/cli@latest",
-        "run",
-        "@cloudflare/playwright-mcp",
         "--key",
         "95e83c85-9a18-4524-9549-6a2c0f194f69",
         "--profile",
@@ -184,7 +180,9 @@
     },
     "TestSprite": {
       "command": "npx",
-      "args": ["@testsprite/testsprite-mcp@latest"],
+      "args": [
+        "@testsprite/testsprite-mcp@latest"
+      ],
       "env": {
         "API_KEY": "sk-user-b-dOi1HbRc33E1UXQrAsQac8Lw1jPX-T6HFKcweaEaC7avLKnobKlFyScXbEMaZHzGP_BXKmYmwwtnj-8qVO7jrTAw0oWcnWqXqecgMnLVzOgJgHOfckcXNn4sB2ySyjZwE"
       }

@@ -21,10 +21,7 @@ def is_test_environment() -> bool:
 
 
 @router.delete("/cleanup-test-users")
-async def cleanup_test_users(
-    email_pattern: str = "@example.com",
-    db: Session = Depends(get_db)
-):
+async def cleanup_test_users(email_pattern: str = "@example.com", db: Session = Depends(get_db)):
     """
     Clean up test users from the database.
     Only works in test/development environments.
@@ -38,7 +35,7 @@ async def cleanup_test_users(
     if not is_test_environment():
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
-            detail="This endpoint is only available in test environments"
+            detail="This endpoint is only available in test environments",
         )
 
     try:
@@ -51,10 +48,17 @@ async def cleanup_test_users(
 
         # Clean up related data first to avoid foreign key constraints
         from database import (
-            AuditLog, UserSession, UserRole, BusinessProfile,
-            AssessmentSession, GeneratedPolicy, ChatConversation,
-            ReportSchedule, EvidenceItem, ImplementationPlan,
-            ReadinessAssessment
+            AuditLog,
+            UserSession,
+            UserRole,
+            BusinessProfile,
+            AssessmentSession,
+            GeneratedPolicy,
+            ChatConversation,
+            ReportSchedule,
+            EvidenceItem,
+            ImplementationPlan,
+            ReadinessAssessment,
         )
 
         for user in test_users:
@@ -84,15 +88,13 @@ async def cleanup_test_users(
         db.rollback()
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Failed to cleanup test users: {str(e)}"
+            detail=f"Failed to cleanup test users: {str(e)}",
         )
 
 
 @router.post("/create-test-user")
 async def create_test_user(
-    email: str,
-    password: str = "TestPassword123!",
-    db: Session = Depends(get_db)
+    email: str, password: str = "TestPassword123!", db: Session = Depends(get_db)
 ):
     """
     Create a test user for testing purposes.
@@ -108,7 +110,7 @@ async def create_test_user(
     if not is_test_environment():
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
-            detail="This endpoint is only available in test environments"
+            detail="This endpoint is only available in test environments",
         )
 
     # Check if user already exists
@@ -123,21 +125,12 @@ async def create_test_user(
     from api.auth.security import get_password_hash
 
     hashed_password = get_password_hash(password)
-    db_user = User(
-        id=uuid4(),
-        email=email,
-        hashed_password=hashed_password,
-        is_active=True
-    )
+    db_user = User(id=uuid4(), email=email, hashed_password=hashed_password, is_active=True)
     db.add(db_user)
     db.commit()
     db.refresh(db_user)
 
-    return {
-        "id": str(db_user.id),
-        "email": db_user.email,
-        "is_active": db_user.is_active
-    }
+    return {"id": str(db_user.id), "email": db_user.email, "is_active": db_user.is_active}
 
 
 @router.post("/clear-rate-limits")
@@ -152,7 +145,7 @@ async def clear_rate_limits():
     if not is_test_environment():
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
-            detail="This endpoint is only available in test environments"
+            detail="This endpoint is only available in test environments",
         )
 
     # Import rate limiters

@@ -19,27 +19,30 @@ import { act, renderHook } from '@testing-library/react';
 import { useFreemiumStore, createFreemiumStore } from '../../lib/stores/freemium-store';
 import type { FreemiumStoreState, FreemiumStoreActions } from '../../lib/stores/freemium-store';
 
-// Mock localStorage
-const localStorageMock = {
+// Create a proper mock for localStorage/sessionStorage that works with vitest
+const createStorageMock = () => ({
   getItem: vi.fn(),
-  setItem: vi.fn(),
+  setItem: vi.fn(), 
   removeItem: vi.fn(),
   clear: vi.fn(),
-};
-vi.stubGlobal('localStorage', localStorageMock);
+  length: 0,
+  key: vi.fn()
+});
 
-// Mock sessionStorage
-const sessionStorageMock = {
-  getItem: vi.fn(),
-  setItem: vi.fn(),
-  removeItem: vi.fn(),
-  clear: vi.fn(),
-};
+const localStorageMock = createStorageMock();
+const sessionStorageMock = createStorageMock();
+
+// Mock global storage objects
+vi.stubGlobal('localStorage', localStorageMock);
 vi.stubGlobal('sessionStorage', sessionStorageMock);
 
 describe('FreemiumStore', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    // Clear localStorage and sessionStorage
+    localStorageMock.clear();
+    sessionStorageMock.clear();
+    
     // Reset store state
     useFreemiumStore.setState({
       email: '',
@@ -465,8 +468,8 @@ describe('FreemiumStore', () => {
 
   describe('State Persistence and Hydration', () => {
     it('loads state from localStorage on initialization', () => {
-      localStorageMock.getItem.mockImplementation((key) => {
-        const data = {
+      localStorageMock.getItem.mockImplementation((key: string) => {
+        const data: Record<string, string> = {
           'freemium-email': 'saved@example.com',
           'freemium-utm': JSON.stringify({
             utm_source: 'saved_source',
@@ -480,8 +483,8 @@ describe('FreemiumStore', () => {
         return data[key] || null;
       });
 
-      sessionStorageMock.getItem.mockImplementation((key) => {
-        const data = {
+      sessionStorageMock.getItem.mockImplementation((key: string) => {
+        const data: Record<string, string> = {
           'freemium-token': 'saved-token-123'
         };
         return data[key] || null;
@@ -498,7 +501,7 @@ describe('FreemiumStore', () => {
     });
 
     it('handles corrupt localStorage data gracefully', () => {
-      localStorageMock.getItem.mockImplementation((key) => {
+      localStorageMock.getItem.mockImplementation((key: string) => {
         if (key === 'freemium-utm') {
           return 'invalid-json{';
         }
@@ -641,7 +644,7 @@ describe('FreemiumStore', () => {
     it('computes responseCount correctly', () => {
       const { result } = renderHook(() => useFreemiumStore());
 
-      expect(result.current.responseCount).toBe(0);
+      expect(result.current.getResponseCount()).toBe(0);
 
       act(() => {
         result.current.addResponse('q1', 'answer1');
@@ -649,7 +652,7 @@ describe('FreemiumStore', () => {
         result.current.addResponse('q3', 'answer3');
       });
 
-      expect(result.current.responseCount).toBe(3);
+      expect(result.current.getResponseCount()).toBe(3);
     });
   });
 

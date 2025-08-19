@@ -1,0 +1,98 @@
+{
+  "timestamp": "2025-08-18T10:49:03.352758",
+  "test_results": {
+    "response_structure": {
+      "passed": true,
+      "structure_consistency": true,
+      "type_consistency": true,
+      "details": [
+        {
+          "query": "What are GDPR requirements?",
+          "structure_valid": true,
+          "missing_fields": [],
+          "type_valid": true,
+          "type_errors": []
+        },
+        {
+          "query": "Explain ISO 27001 controls",
+          "structure_valid": true,
+          "missing_fields": [],
+          "type_valid": true,
+          "type_errors": []
+        },
+        {
+          "query": "What is SOC 2?",
+          "structure_valid": true,
+          "missing_fields": [],
+          "type_valid": true,
+          "type_errors": []
+        },
+        {
+          "query": "How to implement data privacy?",
+          "structure_valid": true,
+          "missing_fields": [],
+          "type_valid": true,
+          "type_errors": []
+        }
+      ]
+    },
+    "cross_framework": {
+      "passed": true,
+      "structure_consistent": true,
+      "confidence_consistent": true,
+      "confidence_variation": 0.0,
+      "score_consistent": true,
+      "score_variation": 2,
+      "framework_responses": {
+        "gdpr": 96,
+        "iso27001": 94,
+        "soc2": 95
+      }
+    },
+    "caching": {
+      "passed": true,
+      "consistency_rate": 1.0,
+      "identical_responses": 5,
+      "total_responses": 5
+    },
+    "concurrent": {
+      "passed": true,
+      "completion_rate": 1.0,
+      "consistency_rate": 1.0,
+      "total_time": 0.01458883285522461,
+      "requests_per_second": 685.4557934302991
+    },
+    "ui_format": {
+      "passed": true,
+      "json_serializable": true,
+      "content_safe": true,
+      "queries_tested": 3
+    },
+    "performance": {
+      "passed": true,
+      "avg_response_time": 0.01419069766998291,
+      "max_response_time": 0.014212369918823242,
+      "min_response_time": 0.014119148254394531,
+      "coefficient_of_variation": 0.0018548141184616027,
+      "time_consistent": true,
+      "all_responses_fast": true,
+      "confidence_stable": true
+    },
+    "error_handling": {
+      "passed": true,
+      "consistent_error_handling": true,
+      "graceful_failures": 2,
+      "scenarios_tested": 3
+    }
+  },
+  "summary": {
+    "total_tests": 7,
+    "passed_tests": 7,
+    "failed_tests": 0,
+    "success_rate": 1.0,
+    "overall_status": "PASSED"
+  },
+  "recommendations": [
+    "All consistency tests passed! AI output is reliable for UI consumption."
+  ]
+}

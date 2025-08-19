@@ -2,6 +2,7 @@
 Performance Monitoring API Endpoints
 Provides real-time performance metrics and optimization recommendations
 """
+
 from datetime import datetime
 from typing import Dict, List, Any
 from fastapi import APIRouter, HTTPException, Depends, Query
@@ -15,16 +16,20 @@ from config.logging_config import get_logger
 logger = get_logger(__name__)
 router = APIRouter(prefix="/performance", tags=["performance-monitoring"])
 
+
 class PerformanceOverview(BaseModel):
     """Performance overview response model."""
+
     performance_score: float
     status: str
     critical_issues: int
     recommendations_count: int
     last_updated: datetime
 
+
 class DatabasePerformanceResponse(BaseModel):
     """Database performance metrics response."""
+
     connection_pool_size: int
     active_connections: int
     connection_pool_utilization: float
@@ -32,8 +37,10 @@ class DatabasePerformanceResponse(BaseModel):
     slow_queries_count: int
     performance_rating: str
 
+
 class CachePerformanceResponse(BaseModel):
     """Cache performance metrics response."""
+
     hit_rate: float
     miss_rate: float
     memory_usage: int
@@ -41,8 +48,10 @@ class CachePerformanceResponse(BaseModel):
     avg_response_time: float
     performance_rating: str
 
+
 class APIPerformanceResponse(BaseModel):
     """API performance metrics response."""
+
     avg_response_time: float
     p95_response_time: float
     p99_response_time: float
@@ -50,16 +59,20 @@ class APIPerformanceResponse(BaseModel):
     slowest_endpoints: List[Dict[str, Any]]
     performance_rating: str
 
+
 class SystemMetricsResponse(BaseModel):
     """System metrics response."""
+
     cpu_percent: float
     memory_percent: float
     disk_percent: float
     load_average: float
     status: str
 
+
 class OptimizationRecommendation(BaseModel):
     """Performance optimization recommendation."""
+
     category: str
     priority: str
     issue: str
@@ -68,16 +81,19 @@ class OptimizationRecommendation(BaseModel):
     suggested_value: str
     impact: str
 
+
 class PerformanceTrendsResponse(BaseModel):
     """Performance trends response."""
+
     hours: int
     data_points: int
     trends: Dict[str, Dict[str, float]]
 
+
 @router.get("/overview", response_model=PerformanceOverview)
 @monitor_performance("performance_overview")
 async def get_performance_overview(
-    current_user: User = Depends(get_current_active_user)
+    current_user: User = Depends(get_current_active_user),
 ) -> PerformanceOverview:
     """
     Get overall performance overview with key metrics.
@@ -114,17 +130,18 @@ async def get_performance_overview(
             status=status,
             critical_issues=critical_issues,
             recommendations_count=len(recommendations),
-            last_updated=datetime.fromisoformat(metrics["timestamp"])
+            last_updated=datetime.fromisoformat(metrics["timestamp"]),
         )
 
     except Exception as e:
         logger.error(f"Error getting performance overview: {e}")
         raise HTTPException(status_code=500, detail="Failed to get performance overview")
 
+
 @router.get("/database", response_model=DatabasePerformanceResponse)
 @monitor_performance("database_performance")
 async def get_database_performance(
-    current_user: User = Depends(get_current_active_user)
+    current_user: User = Depends(get_current_active_user),
 ) -> DatabasePerformanceResponse:
     """
     Get detailed database performance metrics.
@@ -156,17 +173,18 @@ async def get_database_performance(
             connection_pool_utilization=db_metrics.connection_pool_utilization,
             avg_query_time=db_metrics.avg_query_time,
             slow_queries_count=db_metrics.slow_queries_count,
-            performance_rating=rating
+            performance_rating=rating,
         )
 
     except Exception as e:
         logger.error(f"Error getting database performance: {e}")
         raise HTTPException(status_code=500, detail="Failed to get database metrics")
 
+
 @router.get("/cache", response_model=CachePerformanceResponse)
 @monitor_performance("cache_performance")
 async def get_cache_performance(
-    current_user: User = Depends(get_current_active_user)
+    current_user: User = Depends(get_current_active_user),
 ) -> CachePerformanceResponse:
     """
     Get cache performance metrics.
@@ -198,17 +216,18 @@ async def get_cache_performance(
             memory_usage=cache_metrics.memory_usage,
             total_requests=cache_metrics.total_requests,
             avg_response_time=cache_metrics.avg_response_time,
-            performance_rating=rating
+            performance_rating=rating,
         )
 
     except Exception as e:
         logger.error(f"Error getting cache performance: {e}")
         raise HTTPException(status_code=500, detail="Failed to get cache metrics")
 
+
 @router.get("/api", response_model=APIPerformanceResponse)
 @monitor_performance("api_performance")
 async def get_api_performance(
-    current_user: User = Depends(get_current_active_user)
+    current_user: User = Depends(get_current_active_user),
 ) -> APIPerformanceResponse:
     """
     Get API performance metrics.
@@ -240,17 +259,18 @@ async def get_api_performance(
             p99_response_time=api_metrics.p99_response_time,
             requests_per_second=api_metrics.requests_per_second,
             slowest_endpoints=api_metrics.slowest_endpoints,
-            performance_rating=rating
+            performance_rating=rating,
         )
 
     except Exception as e:
         logger.error(f"Error getting API performance: {e}")
         raise HTTPException(status_code=500, detail="Failed to get API metrics")
 
+
 @router.get("/system", response_model=SystemMetricsResponse)
 @monitor_performance("system_metrics")
 async def get_system_metrics(
-    current_user: User = Depends(get_current_active_user)
+    current_user: User = Depends(get_current_active_user),
 ) -> SystemMetricsResponse:
     """
     Get system resource metrics.
@@ -284,17 +304,18 @@ async def get_system_metrics(
             memory_percent=system_metrics["memory_percent"],
             disk_percent=system_metrics["disk_percent"],
             load_average=system_metrics["load_average"],
-            status=status
+            status=status,
         )
 
     except Exception as e:
         logger.error(f"Error getting system metrics: {e}")
         raise HTTPException(status_code=500, detail="Failed to get system metrics")
 
+
 @router.get("/recommendations", response_model=List[OptimizationRecommendation])
 @monitor_performance("performance_recommendations")
 async def get_optimization_recommendations(
-    current_user: User = Depends(get_current_active_user)
+    current_user: User = Depends(get_current_active_user),
 ) -> List[OptimizationRecommendation]:
     """
     Get performance optimization recommendations.
@@ -313,11 +334,12 @@ async def get_optimization_recommendations(
         logger.error(f"Error getting optimization recommendations: {e}")
         raise HTTPException(status_code=500, detail="Failed to get recommendations")
 
+
 @router.get("/trends", response_model=PerformanceTrendsResponse)
 @monitor_performance("performance_trends")
 async def get_performance_trends(
     hours: int = Query(24, ge=1, le=168, description="Number of hours to analyze (1-168)"),
-    current_user: User = Depends(get_current_active_user)
+    current_user: User = Depends(get_current_active_user),
 ) -> PerformanceTrendsResponse:
     """
     Get performance trends over time.
@@ -340,11 +362,11 @@ async def get_performance_trends(
         logger.error(f"Error getting performance trends: {e}")
         raise HTTPException(status_code=500, detail="Failed to get performance trends")
 
+
 @router.post("/alerts/configure")
 @monitor_performance("configure_performance_alerts")
 async def configure_performance_alerts(
-    alerts_config: Dict[str, Any],
-    current_user: User = Depends(get_current_active_user)
+    alerts_config: Dict[str, Any], current_user: User = Depends(get_current_active_user)
 ):
     """
     Configure performance alerting thresholds.
@@ -363,6 +385,7 @@ async def configure_performance_alerts(
 
         # Store configuration (would typically go to database)
         from config.cache import get_cache_manager
+
         cache = await get_cache_manager()
         await cache.set("performance_alerts_config", alerts_config, ttl=86400)  # 24 hours
 
@@ -373,6 +396,7 @@ async def configure_performance_alerts(
     except Exception as e:
         logger.error(f"Error configuring performance alerts: {e}")
         raise HTTPException(status_code=500, detail="Failed to configure alerts")
+
 
 @router.get("/health")
 async def performance_monitoring_health():
@@ -387,23 +411,20 @@ async def performance_monitoring_health():
             "status": "healthy",
             "monitoring_active": monitor.monitoring_active,
             "metrics_available": len(monitor.performance_history) > 0,
-            "timestamp": datetime.utcnow().isoformat()
+            "timestamp": datetime.utcnow().isoformat(),
         }
 
         return health_status
 
     except Exception as e:
         logger.error(f"Performance monitoring health check failed: {e}")
-        return {
-            "status": "unhealthy",
-            "error": str(e),
-            "timestamp": datetime.utcnow().isoformat()
-        }
+        return {"status": "unhealthy", "error": str(e), "timestamp": datetime.utcnow().isoformat()}
+
 
 @router.post("/monitoring/start")
 async def start_performance_monitoring(
     interval: int = Query(60, ge=10, le=300, description="Monitoring interval in seconds"),
-    current_user: User = Depends(get_current_active_user)
+    current_user: User = Depends(get_current_active_user),
 ):
     """
     Start continuous performance monitoring.
@@ -417,24 +438,33 @@ async def start_performance_monitoring(
         monitor = await get_performance_monitor()
 
         if monitor.monitoring_active:
-            return {"status": "already_running", "message": "Performance monitoring is already active"}
+            return {
+                "status": "already_running",
+                "message": "Performance monitoring is already active",
+            }
 
         # Start monitoring in background
         import asyncio
+
         asyncio.create_task(monitor.start_monitoring(interval=interval))
 
-        logger.info(f"Performance monitoring started by user {current_user.id} with {interval}s interval")
+        logger.info(
+            f"Performance monitoring started by user {current_user.id} with {interval}s interval"
+        )
 
-        return {"status": "started", "interval": interval, "message": "Performance monitoring started"}
+        return {
+            "status": "started",
+            "interval": interval,
+            "message": "Performance monitoring started",
+        }
 
     except Exception as e:
         logger.error(f"Error starting performance monitoring: {e}")
         raise HTTPException(status_code=500, detail="Failed to start monitoring")
 
+
 @router.post("/monitoring/stop")
-async def stop_performance_monitoring(
-    current_user: User = Depends(get_current_active_user)
-):
+async def stop_performance_monitoring(current_user: User = Depends(get_current_active_user)):
     """
     Stop continuous performance monitoring.
     """
