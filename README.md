@@ -9,6 +9,7 @@
 ![Next.js](https://img.shields.io/badge/Next.js-15_+_Turbopack-black)
 ![Tests](https://img.shields.io/badge/Tests-671+-brightgreen)
 ![AI Agents](https://img.shields.io/badge/AI_Agents-IQ_Agent_+_RAG-2C7A7B)
+![Verified](https://img.shields.io/badge/Verified-Devin_Access-blue)</div>
 
 </div>
 
