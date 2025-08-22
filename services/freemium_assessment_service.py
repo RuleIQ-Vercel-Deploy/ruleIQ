@@ -119,14 +119,14 @@ class FreemiumAssessmentService:
                     "assessment_type": assessment_type,
                     **full_personalization_data
                 }
-                
+
                 # Start assessment with LangGraph agent
                 agent_state = await self.assessment_agent.start_assessment(
                     session_id=str(session.id),
                     lead_id=str(lead_id),
                     initial_context=initial_context
                 )
-                
+
                 # Store agent state in session
                 session.ai_responses = {
                     "agent_state": "active",
@@ -136,14 +136,14 @@ class FreemiumAssessmentService:
                     "using_langgraph": True,
                     "generation_timestamp": datetime.utcnow().isoformat()
                 }
-                
+
                 # Extract first question from agent messages
                 messages = agent_state.get("messages", [])
                 if messages and len(messages) > 0:
                     # Last message should be the introduction/first question
                     session.current_question_id = "agent_intro"
                     session.total_questions = agent_state.get("total_questions_planned", self.MIN_QUESTIONS_FOR_RESULTS)
-                
+
             else:
                 # Generate initial AI questions based on business context (traditional approach)
                 initial_questions = await self._generate_initial_questions(
@@ -220,7 +220,7 @@ class FreemiumAssessmentService:
                     user_response=answer,
                     confidence=answer_confidence
                 )
-                
+
                 # Store the answer
                 if not session.user_answers:
                     session.user_answers = {}
@@ -235,11 +235,11 @@ class FreemiumAssessmentService:
                 # Update progress from agent state
                 session.questions_answered = agent_state.get("questions_answered", session.questions_answered + 1)
                 session.progress_percentage = (session.questions_answered / max(session.total_questions, self.MIN_QUESTIONS_FOR_RESULTS)) * 100
-                
+
                 # Check if assessment is complete
                 completion_status = "completed" if agent_state.get("current_phase") == "completion" else "in_progress"
                 next_question = None
-                
+
                 # Extract next question from agent messages if not complete
                 if completion_status == "in_progress":
                     messages = agent_state.get("messages", [])
@@ -254,7 +254,7 @@ class FreemiumAssessmentService:
                                     "category": agent_state.get("current_phase", "general")
                                 }
                                 break
-                
+
                 # Update session with agent state
                 session.ai_responses.update({
                     "current_phase": str(agent_state.get("current_phase", "unknown")),
@@ -262,10 +262,10 @@ class FreemiumAssessmentService:
                     "compliance_score": agent_state.get("compliance_score", 0),
                     "risk_level": agent_state.get("risk_level", "unknown")
                 })
-                
+
                 if completion_status == "completed":
                     session.completed_at = datetime.utcnow()
-                    
+
             else:
                 # Traditional processing (non-LangGraph)
                 # Store the answer
@@ -804,7 +804,7 @@ class FreemiumAssessmentService:
             session = result.scalar_one_or_none()
             if not session:
                 return None
-            
+
             # If AI is available, generate a contextual follow-up question
             if self.circuit_breaker.is_model_available("gemini-2.5-flash"):
                 # Build context from previous answers
@@ -814,7 +814,7 @@ class FreemiumAssessmentService:
                     "assessment_type": session.assessment_type,
                     "questions_answered": len(answered_questions)
                 }
-                
+
                 # Generate a smart follow-up question based on what we've learned
                 follow_up = await self.assistant.generate_followup_questions(
                     previous_answers=session.user_answers,
@@ -823,15 +823,15 @@ class FreemiumAssessmentService:
                 questions = follow_up.get("questions", [])
                 if questions:
                     return questions[0]
-            
+
             # Fallback: Select from our question bank if not already asked
             fallback_questions = self._get_fallback_questions(session.assessment_type)
             for question in fallback_questions:
                 if question["question_id"] not in answered_questions:
                     return question
-            
+
             return None
-            
+
         except Exception as e:
             logger.error(f"Error getting next question: {str(e)}")
             return None

@@ -455,11 +455,92 @@ class SprintManager:
             return None
 
         with open(filepath, 'r') as f:
-            json.load(f)
+            data = json.load(f)
 
-        # TODO: Implement proper deserialization from dict to Sprint dataclass
-        # This is a simplified version - full implementation would handle all conversions
-        return None
+        # Convert dict back to Sprint dataclass with proper type conversions
+        try:
+            # Parse dates
+            start_date = datetime.datetime.strptime(data['start_date'], "%Y-%m-%d").date()
+            end_date = datetime.datetime.strptime(data['end_date'], "%Y-%m-%d").date()
+            created_at = datetime.datetime.fromisoformat(data['created_at'])
+
+            # Reconstruct stories
+            stories = []
+            for story_data in data.get('stories', []):
+                # Parse story dates
+                story_created_at = datetime.datetime.fromisoformat(story_data['created_at'])
+                
+                # Reconstruct acceptance criteria
+                acceptance_criteria = []
+                for criteria_data in story_data.get('acceptance_criteria', []):
+                    acceptance_criteria.append(AcceptanceCriteria(
+                        description=criteria_data['description'],
+                        testable=criteria_data.get('testable', True),
+                        automated_test=criteria_data.get('automated_test')
+                    ))
+
+                # Reconstruct tasks
+                tasks = []
+                for task_data in story_data.get('tasks', []):
+                    task_created_at = datetime.datetime.fromisoformat(task_data['created_at'])
+                    task = Task(
+                        id=task_data['id'],
+                        title=task_data['title'],
+                        description=task_data['description'],
+                        type=TaskType(task_data['type']),
+                        story_id=task_data['story_id'],
+                        estimated_hours=task_data['estimated_hours'],
+                        assigned_to=task_data.get('assigned_to'),
+                        status=StoryStatus(task_data['status']),
+                        dependencies=task_data.get('dependencies', []),
+                        technical_notes=task_data.get('technical_notes'),
+                        created_at=task_created_at
+                    )
+                    tasks.append(task)
+
+                # Reconstruct user story
+                story = UserStory(
+                    id=story_data['id'],
+                    title=story_data['title'],
+                    description=story_data['description'],
+                    priority=Priority(story_data['priority']),
+                    story_points=story_data['story_points'],
+                    feature_area=story_data['feature_area'],
+                    acceptance_criteria=acceptance_criteria,
+                    tasks=tasks,
+                    status=StoryStatus(story_data['status']),
+                    dependencies=story_data.get('dependencies', []),
+                    technical_complexity=story_data.get('technical_complexity', 'MEDIUM'),
+                    estimated_hours=story_data.get('estimated_hours', 0.0),
+                    actual_hours=story_data.get('actual_hours', 0.0),
+                    sprint_id=story_data.get('sprint_id'),
+                    assigned_to=story_data.get('assigned_to'),
+                    created_at=story_created_at
+                )
+                stories.append(story)
+
+            # Reconstruct sprint
+            sprint = Sprint(
+                id=data['id'],
+                name=data['name'],
+                goal=data['goal'],
+                start_date=start_date,
+                end_date=end_date,
+                capacity_hours=data['capacity_hours'],
+                team_members=data['team_members'],
+                stories=stories,
+                status=data.get('status', 'PLANNING'),
+                velocity_target=data.get('velocity_target', 0),
+                actual_velocity=data.get('actual_velocity', 0),
+                retrospective_notes=data.get('retrospective_notes'),
+                created_at=created_at
+            )
+
+            return sprint
+
+        except (KeyError, ValueError, TypeError) as e:
+            print(f"Error deserializing sprint {sprint_id}: {e}")
+            return None
 
 def main() -> None:
     """CLI interface for sprint management"""

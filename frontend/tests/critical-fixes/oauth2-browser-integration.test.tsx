@@ -241,7 +241,7 @@ describe('OAuth2 Browser Integration Tests', () => {
       await act(async () => {
         try {
           await useAuthStore.getState().refreshToken();
-        } catch (error) {
+        } catch {
           // Expected to fail
         }
       });

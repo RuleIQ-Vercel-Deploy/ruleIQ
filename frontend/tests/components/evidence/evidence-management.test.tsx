@@ -9,7 +9,7 @@ import { EvidenceFilters } from '@/components/evidence/evidence-filters';
 Object.defineProperty(window, 'File', {
   value: class MockFile {
     constructor(
-      public bits: any[],
+      public bits: unknown[],
       public name: string,
       public options: any = {},
     ) {
@@ -25,7 +25,7 @@ Object.defineProperty(window, 'File', {
 Object.defineProperty(window, 'DataTransfer', {
   value: class MockDataTransfer {
     files: File[] = [];
-    items: any[] = [];
+    items: unknown[] = [];
     types: string[] = [];
   },
 });

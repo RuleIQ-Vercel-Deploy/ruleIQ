@@ -2,8 +2,8 @@ declare module 'jspdf-autotable' {
   import { type jsPDF } from 'jspdf';
 
   export interface AutoTableOptions {
-    head?: any[][];
-    body?: any[][];
+    head?: unknown[][];
+    body?: unknown[][];
     startY?: number;
     margin?: { horizontal?: number; top?: number; bottom?: number };
     headStyles?: any;

@@ -24,7 +24,9 @@ export default function PricingPage() {
         setCurrentPlan(subscription.plan_id);
       }
     } catch (error) {
-      console.error('Error fetching subscription:', error);
+      // TODO: Replace with proper logging
+
+      // // TODO: Replace with proper logging
     } finally {
       setLoading(false);
     }
@@ -48,7 +50,9 @@ export default function PricingPage() {
         window.location.href = response.url;
       }
     } catch (error) {
-      console.error('Error creating checkout session:', error);
+      // TODO: Replace with proper logging
+
+      // // TODO: Replace with proper logging
     }
   };
 

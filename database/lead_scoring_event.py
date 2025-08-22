@@ -26,9 +26,9 @@ class LeadScoringEvent(Base):
     # Primary identifier
     id = Column(PG_UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     lead_id = Column(
-        PG_UUID(as_uuid=True), 
-        ForeignKey("assessment_leads.id", ondelete="CASCADE"), 
-        nullable=False, 
+        PG_UUID(as_uuid=True),
+        ForeignKey("assessment_leads.id", ondelete="CASCADE"),
+        nullable=False,
         index=True
     )
 
@@ -108,9 +108,9 @@ class LeadScoringEvent(Base):
 
     @classmethod
     def create_assessment_start_event(
-        cls, 
-        lead_id: uuid.UUID, 
-        session_id: str = None, 
+        cls,
+        lead_id: uuid.UUID,
+        session_id: str = None,
         metadata: dict = None
     ):
         """Factory method for assessment start events."""
@@ -126,10 +126,10 @@ class LeadScoringEvent(Base):
 
     @classmethod
     def create_question_answered_event(
-        cls, 
-        lead_id: uuid.UUID, 
-        question_type: str, 
-        score_impact: int = 5, 
+        cls,
+        lead_id: uuid.UUID,
+        question_type: str,
+        score_impact: int = 5,
         metadata: dict = None
     ):
         """Factory method for question answered events."""
@@ -144,9 +144,9 @@ class LeadScoringEvent(Base):
 
     @classmethod
     def create_assessment_completed_event(
-        cls, 
-        lead_id: uuid.UUID, 
-        completion_rate: float, 
+        cls,
+        lead_id: uuid.UUID,
+        completion_rate: float,
         metadata: dict = None
     ):
         """Factory method for assessment completion events."""

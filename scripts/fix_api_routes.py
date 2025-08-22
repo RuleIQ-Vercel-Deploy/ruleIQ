@@ -9,9 +9,6 @@ Key Issues Found:
 3. Missing authentication for testing endpoints
 """
 
-import os
-import re
-import json
 from pathlib import Path
 from typing import Dict, List
 
@@ -20,28 +17,28 @@ ROUTE_MAPPINGS = {
     # AI Assessment routes
     '/api/v1/ai/assessments': '/api/v1/ai-assessments',
     '/api/v1/ai/health': '/api/v1/ai-assessments/health',
-    
+
     # AI Policy routes (these are correctly mounted at /api/v1/ai)
     '/api/v1/ai/policies/generate': '/api/v1/ai/policies/generate',
     '/api/v1/ai/policies/templates': '/api/v1/ai/policies/templates',
-    
+
     # AI Cost Monitoring routes (correctly mounted at /api/v1/ai)
     '/api/v1/ai/costs': '/api/v1/ai/costs',
-    
+
     # Chat routes (correctly mounted)
     '/api/v1/chat/messages': '/api/v1/chat/messages',
-    
+
     # Compliance routes (need to verify exact endpoints)
     '/api/v1/compliance/score': '/api/v1/compliance/score',
     '/api/v1/compliance/check': '/api/v1/compliance/run-check',
-    
+
     # Monitoring routes (correctly mounted)
     '/api/v1/monitoring/health': '/api/v1/monitoring/health',
     '/api/v1/monitoring/metrics': '/api/v1/monitoring/metrics',
-    
+
     # Integrations routes (correctly mounted)
     '/api/v1/integrations': '/api/v1/integrations',
-    
+
     # Reporting routes (correctly mounted)
     '/api/v1/reporting/reports': '/api/v1/reporting/reports',
 }
@@ -52,7 +49,7 @@ def find_api_service_files() -> List[Path]:
     if not frontend_path.exists():
         print(f"❌ Frontend API path not found: {frontend_path}")
         return []
-    
+
     service_files = list(frontend_path.glob('*.ts'))
     print(f"📁 Found {len(service_files)} API service files:")
     for f in service_files:
@@ -65,7 +62,7 @@ def find_hook_files() -> List[Path]:
     if not hooks_path.exists():
         print(f"❌ Hooks path not found: {hooks_path}")
         return []
-    
+
     hook_files = list(hooks_path.glob('use-*.ts'))
     print(f"📁 Found {len(hook_files)} hook files:")
     for f in hook_files:
@@ -78,7 +75,7 @@ def update_api_routes_in_file(file_path: Path, route_mappings: Dict[str, str]) -
         content = file_path.read_text()
         original_content = content
         changes_made = 0
-        
+
         for old_route, new_route in route_mappings.items():
             # Match the old route pattern in various contexts
             patterns = [
@@ -89,14 +86,14 @@ def update_api_routes_in_file(file_path: Path, route_mappings: Dict[str, str]) -
                 f'"{old_route}/',
                 f"`{old_route}/",
             ]
-            
+
             for pattern in patterns:
                 if pattern in content:
                     replacement = pattern.replace(old_route, new_route)
                     content = content.replace(pattern, replacement)
                     changes_made += 1
                     print(f"   ✅ {old_route} → {new_route}")
-        
+
         if content != original_content:
             file_path.write_text(content)
             print(f"📝 Updated {file_path} ({changes_made} changes)")
@@ -104,7 +101,7 @@ def update_api_routes_in_file(file_path: Path, route_mappings: Dict[str, str]) -
         else:
             print(f"📄 No changes needed in {file_path}")
             return False
-            
+
     except Exception as e:
         print(f"❌ Error updating {file_path}: {e}")
         return False
@@ -115,10 +112,10 @@ def update_debug_analysis_tool():
     if not debug_file.exists():
         print("❌ debug_api_analysis.py not found")
         return False
-    
+
     try:
         content = debug_file.read_text()
-        
+
         # Update the EXPECTED_ENDPOINTS dictionary
         old_ai_endpoints = [
             "'/api/v1/ai/assessments'",
@@ -127,22 +124,22 @@ def update_debug_analysis_tool():
             "'/api/v1/ai/policies/templates'",
             "'/api/v1/ai/costs'",
         ]
-        
+
         new_ai_endpoints = [
             "'/api/v1/ai-assessments'",
-            "'/api/v1/ai-assessments/health'", 
+            "'/api/v1/ai-assessments/health'",
             "'/api/v1/ai/policies/generate'",
             "'/api/v1/ai/policies/templates'",
             "'/api/v1/ai/costs'",
         ]
-        
+
         for old, new in zip(old_ai_endpoints, new_ai_endpoints):
             content = content.replace(old, new)
-        
+
         debug_file.write_text(content)
         print("✅ Updated debug_api_analysis.py with correct routes")
         return True
-        
+
     except Exception as e:
         print(f"❌ Error updating debug analysis: {e}")
         return False
@@ -290,7 +287,7 @@ async def main():
 if __name__ == "__main__":
     asyncio.run(main())
 '''
-    
+
     script_path = Path('test_auth_api.py')
     script_path.write_text(script_content)
     script_path.chmod(0o755)
@@ -300,37 +297,37 @@ def main():
     """Main execution function."""
     print("🔧 ruleIQ API Route Fixing Script")
     print("=" * 50)
-    
+
     # Step 1: Update API service files
     print("\\n📝 Updating API service files...")
     service_files = find_api_service_files()
     service_updates = 0
-    
+
     for file_path in service_files:
         if update_api_routes_in_file(file_path, ROUTE_MAPPINGS):
             service_updates += 1
-    
+
     print(f"   Updated {service_updates}/{len(service_files)} service files")
-    
-    # Step 2: Update hook files  
+
+    # Step 2: Update hook files
     print("\\n🪝 Updating TanStack Query hook files...")
     hook_files = find_hook_files()
     hook_updates = 0
-    
+
     for file_path in hook_files:
         if update_api_routes_in_file(file_path, ROUTE_MAPPINGS):
             hook_updates += 1
-    
+
     print(f"   Updated {hook_updates}/{len(hook_files)} hook files")
-    
+
     # Step 3: Update debug analysis tool
     print("\\n🔍 Updating debug analysis tool...")
     update_debug_analysis_tool()
-    
+
     # Step 4: Create authenticated test script
     print("\\n🔐 Creating authenticated test script...")
     create_auth_test_script()
-    
+
     print("\\n🎉 Route fixing complete!")
     print("\\nNext steps:")
     print("1. Run: python test_auth_api.py (to test with authentication)")

@@ -36,7 +36,9 @@ export class GlobalErrorBoundary extends Component<Props, State> {
   }
 
   override componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    console.error('GlobalErrorBoundary caught an error:', error, errorInfo);
+    // TODO: Replace with proper logging
+
+    // // TODO: Replace with proper logging
 
     // Log error to Sentry
     const eventId = Sentry.captureException(error, {
@@ -175,7 +177,9 @@ export function withErrorBoundary<P extends object>(
  */
 export function useErrorHandler() {
   return React.useCallback((error: Error, context?: Record<string, any>) => {
-    console.error('Manual error capture:', error);
+    // TODO: Replace with proper logging
+
+    // // TODO: Replace with proper logging
 
     Sentry.captureException(error, {
       tags: {

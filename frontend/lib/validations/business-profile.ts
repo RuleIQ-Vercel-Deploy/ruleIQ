@@ -205,7 +205,7 @@ export type BusinessProfileUpdateData = z.infer<typeof businessProfileUpdateSche
 // Validation helper functions
 export function validateWizardStep(
   stepId: keyof typeof wizardStepSchemas,
-  data: any,
+  data: unknown,
 ): { success: boolean; errors?: z.ZodError; data?: any } {
   const schema = wizardStepSchemas[stepId];
   const result = schema.safeParse(data);
@@ -217,7 +217,7 @@ export function validateWizardStep(
   }
 }
 
-export function validateCompleteProfile(data: any): {
+export function validateCompleteProfile(data: unknown): {
   success: boolean;
   errors?: z.ZodError;
   data?: BusinessProfileFormData;

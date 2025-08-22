@@ -143,7 +143,7 @@ export function FileUpload({
           message: `${acceptedFiles.length} file(s) uploaded`,
           duration: 3000,
         });
-      } catch (error) {
+      } catch {
         // Mark files as error
         newFiles.forEach((file) => {
           setFiles((prev) =>

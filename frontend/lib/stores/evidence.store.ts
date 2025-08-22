@@ -128,7 +128,7 @@ export const useEvidenceStore = create<EvidenceState>()(
               false,
               'loadEvidence/success',
             );
-          } catch (error: any) {
+          } catch (error: unknown) {
             set(
               {
                 isLoading: false,
@@ -153,7 +153,7 @@ export const useEvidenceStore = create<EvidenceState>()(
               false,
               'loadEvidenceItem/success',
             );
-          } catch (error: any) {
+          } catch (error: unknown) {
             set(
               {
                 isLoading: false,
@@ -182,7 +182,7 @@ export const useEvidenceStore = create<EvidenceState>()(
             );
 
             return item;
-          } catch (error: any) {
+          } catch (error: unknown) {
             set(
               {
                 isLoading: false,
@@ -211,7 +211,7 @@ export const useEvidenceStore = create<EvidenceState>()(
               false,
               'updateEvidence/success',
             );
-          } catch (error: any) {
+          } catch (error: unknown) {
             set(
               {
                 isLoading: false,
@@ -240,7 +240,7 @@ export const useEvidenceStore = create<EvidenceState>()(
               false,
               'deleteEvidence/success',
             );
-          } catch (error: any) {
+          } catch (error: unknown) {
             set(
               {
                 isLoading: false,
@@ -271,7 +271,7 @@ export const useEvidenceStore = create<EvidenceState>()(
             );
 
             return result;
-          } catch (error: any) {
+          } catch (error: unknown) {
             set(
               {
                 isBulkUpdating: false,
@@ -303,7 +303,7 @@ export const useEvidenceStore = create<EvidenceState>()(
               false,
               'upload/success',
             );
-          } catch (error: any) {
+          } catch (error: unknown) {
             set(
               {
                 isUploading: false,
@@ -324,7 +324,7 @@ export const useEvidenceStore = create<EvidenceState>()(
             const result = await evidenceService.configureEvidenceAutomation(id, config);
             set({ isLoading: false }, false, 'automation/success');
             return result;
-          } catch (error: any) {
+          } catch (error: unknown) {
             set(
               {
                 isLoading: false,
@@ -351,7 +351,7 @@ export const useEvidenceStore = create<EvidenceState>()(
               false,
               'dashboard/success',
             );
-          } catch (error: any) {
+          } catch (error: unknown) {
             set(
               {
                 isLoading: false,
@@ -376,7 +376,7 @@ export const useEvidenceStore = create<EvidenceState>()(
               false,
               'requirements/success',
             );
-          } catch (error: any) {
+          } catch (error: unknown) {
             set(
               {
                 isLoading: false,
@@ -398,7 +398,7 @@ export const useEvidenceStore = create<EvidenceState>()(
             });
             set({ isLoading: false }, false, 'classify/success');
             return result;
-          } catch (error: any) {
+          } catch (error: unknown) {
             set(
               {
                 isLoading: false,
@@ -418,7 +418,7 @@ export const useEvidenceStore = create<EvidenceState>()(
             const result = await evidenceService.getEvidenceQualityAnalysis(id);
             set({ isLoading: false }, false, 'quality/success');
             return result;
-          } catch (error: any) {
+          } catch (error: unknown) {
             set(
               {
                 isLoading: false,
@@ -446,7 +446,7 @@ export const useEvidenceStore = create<EvidenceState>()(
               false,
               'search/success',
             );
-          } catch (error: any) {
+          } catch (error: unknown) {
             set(
               {
                 isLoading: false,

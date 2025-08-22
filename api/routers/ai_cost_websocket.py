@@ -606,8 +606,53 @@ async def broadcast_cost_updates() -> None:
             await asyncio.sleep(60)  # Wait longer on error
 
 
-# Start background task when module is imported
-# TODO: Move to application startup - asyncio.create_task(broadcast_cost_updates())
+# Background task management for WebSocket cost updates
+_background_task: Optional[asyncio.Task] = None
+
+
+async def start_websocket_background_tasks() -> None:
+    """Start background tasks for WebSocket cost monitoring.
+    
+    This should be called during application startup.
+    """
+    global _background_task
+    
+    if _background_task is None or _background_task.done():
+        _background_task = asyncio.create_task(broadcast_cost_updates())
+        logger.info("Started WebSocket cost monitoring background task")
+    else:
+        logger.warning("WebSocket background task already running")
+
+
+async def stop_websocket_background_tasks() -> None:
+    """Stop background tasks for WebSocket cost monitoring.
+    
+    This should be called during application shutdown.
+    """
+    global _background_task
+    
+    if _background_task and not _background_task.done():
+        _background_task.cancel()
+        try:
+            await _background_task
+        except asyncio.CancelledError:
+            pass
+        logger.info("Stopped WebSocket cost monitoring background task")
+
+
+# HTTP endpoint to manually start/stop background tasks (for development)
+@router.post("/admin/background-tasks/start")
+async def start_background_tasks():
+    """Start WebSocket background tasks manually."""
+    await start_websocket_background_tasks()
+    return {"message": "Background tasks started"}
+
+
+@router.post("/admin/background-tasks/stop") 
+async def stop_background_tasks():
+    """Stop WebSocket background tasks manually."""
+    await stop_websocket_background_tasks()
+    return {"message": "Background tasks stopped"}
 
 
 # HTTP endpoints for WebSocket management

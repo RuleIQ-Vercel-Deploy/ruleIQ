@@ -114,7 +114,7 @@ export async function validateRequestBody<T>(
     const validatedData = schema.parse(sanitizedBody);
 
     return validatedData;
-  } catch (error) {
+  } catch {
     if (error instanceof ZodError) {
       throw new ApiSecurityError('Validation failed', 'VALIDATION_ERROR', 400, error.errors);
     }
@@ -190,7 +190,9 @@ export function createSecureApiRoute<T = any>(
       // Call the actual handler
       return await handler(request, context);
     } catch (error) {
-      console.error('API Security Error:', error);
+      // TODO: Replace with proper logging
+
+      // // TODO: Replace with proper logging
 
       if (error instanceof ApiSecurityError) {
         return NextResponse.json(

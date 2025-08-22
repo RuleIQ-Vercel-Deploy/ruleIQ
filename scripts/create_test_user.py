@@ -20,18 +20,18 @@ async def create_test_user():
             email = "test@ruleiq.dev"
             result = await db.execute(select(User).where(User.email == email))
             existing_user = result.scalars().first()
-            
+
             if existing_user:
                 print(f"✅ Test user already exists: {email}")
                 print(f"   ID: {existing_user.id}")
                 print(f"   Is Active: {existing_user.is_active}")
-                
+
                 # Update password to ensure we know it
                 existing_user.hashed_password = get_password_hash("TestPassword123!")
                 existing_user.is_active = True
                 await db.commit()
-                print(f"✅ Password updated to: TestPassword123!")
-                
+                print("✅ Password updated to: TestPassword123!")
+
             else:
                 # Create new test user
                 new_user = User(
@@ -45,12 +45,12 @@ async def create_test_user():
                 await db.commit()
                 print(f"✅ Created new test user: {email}")
                 print(f"   ID: {new_user.id}")
-                print(f"   Password: TestPassword123!")
-            
+                print("   Password: TestPassword123!")
+
             print("\n📝 Use these credentials for testing:")
             print(f"   Email: {email}")
-            print(f"   Password: TestPassword123!")
-            
+            print("   Password: TestPassword123!")
+
             break
         except Exception as e:
             print(f"❌ Error creating/updating user: {e}")

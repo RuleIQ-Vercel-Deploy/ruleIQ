@@ -189,7 +189,7 @@ export const useFreemiumStore = create<FreemiumStore & FreemiumStoreComputed>()(
             utm_campaign: leadData.utm_campaign,
           });
           
-        } catch (error) {
+        } catch {
           set({ 
             isLoading: false, 
             error: error instanceof Error ? error.message : 'Failed to capture lead'
@@ -258,7 +258,7 @@ export const useFreemiumStore = create<FreemiumStore & FreemiumStoreComputed>()(
             business_type: startData.business_type,
           });
           
-        } catch (error) {
+        } catch {
           set({ 
             isLoading: false, 
             error: error instanceof Error ? error.message : 'Failed to start assessment'
@@ -303,7 +303,7 @@ export const useFreemiumStore = create<FreemiumStore & FreemiumStoreComputed>()(
             isLoading: false,
           });
           
-        } catch (error) {
+        } catch {
           set({ 
             isLoading: false, 
             error: error instanceof Error ? error.message : 'Failed to load session'
@@ -387,7 +387,7 @@ export const useFreemiumStore = create<FreemiumStore & FreemiumStoreComputed>()(
           
           return { is_complete: false };
           
-        } catch (error) {
+        } catch {
           set({ 
             isLoading: false, 
             error: error instanceof Error ? error.message : 'Failed to submit answer'
@@ -441,7 +441,7 @@ export const useFreemiumStore = create<FreemiumStore & FreemiumStoreComputed>()(
             risk_score: response.risk_score,
           });
           
-        } catch (error) {
+        } catch {
           set({ 
             isLoading: false, 
             error: error instanceof Error ? error.message : 'Failed to generate results'
@@ -525,8 +525,8 @@ export const useFreemiumStore = create<FreemiumStore & FreemiumStoreComputed>()(
       recordBehavioralEvent: async (eventData: any) => {
         try {
           await apiCall('/events', eventData);
-        } catch (error) {
-          console.warn('Failed to record behavioral event:', error);
+        } catch {
+          // TODO: Replace with proper logging
         }
       },
       
@@ -582,8 +582,8 @@ export const useFreemiumStore = create<FreemiumStore & FreemiumStoreComputed>()(
         // Persist to localStorage
         try {
           localStorage.setItem('freemium-email', trimmed);
-        } catch (error) {
-          console.warn('Failed to persist email:', error);
+        } catch {
+          // TODO: Replace with proper logging
         }
       },
       
@@ -592,8 +592,8 @@ export const useFreemiumStore = create<FreemiumStore & FreemiumStoreComputed>()(
           set({ token: null, sessionToken: null, sessionExpiry: null });
           try {
             sessionStorage.removeItem('freemium-token');
-          } catch (error) {
-            console.warn('Failed to remove token from storage:', error);
+          } catch {
+            // TODO: Replace with proper logging
           }
           return;
         }
@@ -608,8 +608,8 @@ export const useFreemiumStore = create<FreemiumStore & FreemiumStoreComputed>()(
           
           try {
             sessionStorage.setItem('freemium-token', token);
-          } catch (error) {
-            console.warn('Failed to persist token:', error);
+          } catch {
+            // TODO: Replace with proper logging
           }
           return;
         }
@@ -633,7 +633,7 @@ export const useFreemiumStore = create<FreemiumStore & FreemiumStoreComputed>()(
           
           // Persist to sessionStorage
           sessionStorage.setItem('freemium-token', token);
-        } catch (error) {
+        } catch {
           // If JWT parsing fails, still set the token
           set({ token, sessionToken: token });
           sessionStorage.setItem('freemium-token', token);
@@ -663,8 +663,8 @@ export const useFreemiumStore = create<FreemiumStore & FreemiumStoreComputed>()(
           // Persist to sessionStorage
           try {
             sessionStorage.setItem('freemium-responses', JSON.stringify(updatedResponses));
-          } catch (error) {
-            console.warn('Failed to persist responses:', error);
+          } catch {
+            // TODO: Replace with proper logging
           }
         }
         
@@ -692,8 +692,8 @@ export const useFreemiumStore = create<FreemiumStore & FreemiumStoreComputed>()(
             marketing: state.consentMarketing || state.hasMarketingConsent,
             terms: state.consentTerms || state.hasNewsletterConsent
           }));
-        } catch (error) {
-          console.warn('Failed to persist consent:', error);
+        } catch {
+          // TODO: Replace with proper logging
         }
       },
       
@@ -773,8 +773,8 @@ export const useFreemiumStore = create<FreemiumStore & FreemiumStoreComputed>()(
         // Persist UTM parameters
         try {
           localStorage.setItem('freemium-utm', JSON.stringify(params));
-        } catch (error) {
-          console.warn('Failed to persist UTM params:', error);
+        } catch {
+          // TODO: Replace with proper logging
         }
       },
       
@@ -814,8 +814,8 @@ export const useFreemiumStore = create<FreemiumStore & FreemiumStoreComputed>()(
           localStorage.removeItem('freemium-consent');
           sessionStorage.removeItem('freemium-token');
           sessionStorage.removeItem('freemium-responses');
-        } catch (error) {
-          console.warn('Failed to clear storage on reset:', error);
+        } catch {
+          // TODO: Replace with proper logging
         }
       },
       
@@ -950,7 +950,7 @@ export const createFreemiumStore = () => {
             utm_source: leadData.utm_source,
             utm_campaign: leadData.utm_campaign,
           });
-        } catch (error) {
+        } catch {
           set({ 
             isLoading: false, 
             error: error instanceof Error ? error.message : 'Failed to capture lead'
@@ -972,8 +972,8 @@ export const createFreemiumStore = () => {
         set({ email: trimmed });
         try {
           localStorage.setItem('freemium-email', trimmed);
-        } catch (error) {
-          console.warn('Failed to persist email:', error);
+        } catch {
+          // TODO: Replace with proper logging
         }
       },
       
@@ -982,8 +982,8 @@ export const createFreemiumStore = () => {
           set({ token: null, sessionToken: null, sessionExpiry: null });
           try {
             sessionStorage.removeItem('freemium-token');
-          } catch (error) {
-            console.warn('Failed to remove token from storage:', error);
+          } catch {
+            // TODO: Replace with proper logging
           }
           return;
         }
@@ -998,8 +998,8 @@ export const createFreemiumStore = () => {
           
           try {
             sessionStorage.setItem('freemium-token', token);
-          } catch (error) {
-            console.warn('Failed to persist token:', error);
+          } catch {
+            // TODO: Replace with proper logging
           }
           return;
         }
@@ -1018,7 +1018,7 @@ export const createFreemiumStore = () => {
             sessionExpiry: expiry ? new Date(expiry).toISOString() : null
           });
           sessionStorage.setItem('freemium-token', token);
-        } catch (error) {
+        } catch {
           set({ token, sessionToken: token });
           sessionStorage.setItem('freemium-token', token);
         }

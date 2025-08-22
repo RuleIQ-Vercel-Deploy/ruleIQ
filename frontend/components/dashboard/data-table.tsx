@@ -124,7 +124,7 @@ const getProgressColor = (progress: number, status: string) => {
 
 interface DataTableProps {
   className?: string;
-  assessments?: any[];
+  assessments?: unknown[];
 }
 
 export function DataTable({ className, assessments }: DataTableProps) {

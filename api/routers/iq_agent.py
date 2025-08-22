@@ -10,11 +10,10 @@ Endpoints for interacting with IQ, the autonomous compliance orchestrator:
 
 import logging
 from datetime import datetime
-from typing import Any, Dict, List, Optional
+from typing import Optional
 from uuid import UUID
 
 from fastapi import APIRouter, Depends, HTTPException, Query, status, BackgroundTasks
-from fastapi.responses import StreamingResponse
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from api.dependencies.auth import get_current_active_user
@@ -39,11 +38,6 @@ from services.neo4j_service import Neo4jGraphRAGService
 from services.compliance_graph_initializer import initialize_compliance_graph
 from services.ai.exceptions import (
     AIServiceException,
-    AIContentFilterException,
-    AIModelException,
-    AIParsingException,
-    AIQuotaExceededException,
-    AITimeoutException,
 )
 
 # Set up logging
@@ -59,43 +53,43 @@ _neo4j_service: Optional[Neo4jGraphRAGService] = None
 async def get_iq_agent() -> IQComplianceAgent:
     """Get or create IQ agent instance"""
     global _iq_agent, _neo4j_service
-    
+
     if _iq_agent is None:
         try:
             # Initialize Neo4j service
             _neo4j_service = Neo4jGraphRAGService()
             await _neo4j_service.connect()
-            
+
             # Create IQ agent
             _iq_agent = await create_iq_agent(_neo4j_service)
             logger.info("IQ Agent initialized successfully")
-            
+
         except Exception as e:
             logger.error(f"Failed to initialize IQ Agent: {str(e)}")
             raise HTTPException(
                 status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
                 detail=f"IQ Agent initialization failed: {str(e)}"
             )
-    
+
     return _iq_agent
 
 
 async def get_neo4j_service() -> Neo4jGraphRAGService:
     """Get Neo4j service instance"""
     global _neo4j_service
-    
+
     if _neo4j_service is None:
         try:
             _neo4j_service = Neo4jGraphRAGService()
             await _neo4j_service.connect()
-            
+
         except Exception as e:
             logger.error(f"Failed to initialize Neo4j service: {str(e)}")
             raise HTTPException(
                 status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
                 detail=f"Neo4j service initialization failed: {str(e)}"
             )
-    
+
     return _neo4j_service
 
 
@@ -139,13 +133,13 @@ async def query_compliance_analysis(
     """
     try:
         logger.info(f"Processing compliance query from user {current_user.id}: {request.query[:100]}...")
-        
+
         # Process query through IQ's intelligence loop
         result = await iq_agent.process_query(
             user_query=request.query,
             context=request.context
         )
-        
+
         # Convert IQ response to API schema
         iq_response = IQAgentResponse(
             status=result["status"],
@@ -157,7 +151,7 @@ async def query_compliance_analysis(
             next_actions=result["next_actions"],
             llm_response=result["llm_response"]
         )
-        
+
         # Log successful query for monitoring
         background_tasks.add_task(
             _log_query_metrics,
@@ -166,20 +160,20 @@ async def query_compliance_analysis(
             response_status=result["status"],
             nodes_traversed=result["graph_context"]["nodes_traversed"]
         )
-        
+
         return ComplianceQueryResponse(
             success=True,
             data=iq_response,
             message="Compliance analysis completed successfully"
         )
-        
+
     except AIServiceException as e:
         logger.error(f"AI service error in compliance query: {str(e)}")
         raise HTTPException(
             status_code=status.HTTP_502_BAD_GATEWAY,
             detail=f"AI analysis failed: {str(e)}"
         )
-        
+
     except Exception as e:
         logger.error(f"Unexpected error in compliance query: {str(e)}", exc_info=True)
         raise HTTPException(
@@ -219,13 +213,13 @@ async def store_compliance_memory(
             compliance_context=request.content,
             importance_score=request.importance_score
         )
-        
+
         return MemoryStoreResponse(
             success=True,
             data={"memory_id": memory_id, "status": "stored"},
             message="Knowledge stored successfully in IQ's memory"
         )
-        
+
     except Exception as e:
         logger.error(f"Error storing compliance memory: {str(e)}")
         raise HTTPException(
@@ -265,13 +259,13 @@ async def retrieve_compliance_memories(
             max_memories=request.max_memories,
             relevance_threshold=request.relevance_threshold
         )
-        
+
         return MemoryRetrievalResponseWrapper(
             success=True,
             data=result,
             message=f"Retrieved {len(result.retrieved_memories)} relevant memories"
         )
-        
+
     except Exception as e:
         logger.error(f"Error retrieving compliance memories: {str(e)}")
         raise HTTPException(
@@ -308,14 +302,14 @@ async def initialize_compliance_graph_endpoint(
     """
     try:
         logger.info(f"Initializing compliance graph - user: {current_user.email}")
-        
+
         # Initialize graph in background for large datasets
         background_tasks.add_task(
             _initialize_graph_background,
             clear_existing=request.clear_existing,
             load_sample_data=request.load_sample_data
         )
-        
+
         # Return immediate response
         return GraphInitializationResponseWrapper(
             success=True,
@@ -328,7 +322,7 @@ async def initialize_compliance_graph_endpoint(
             },
             message="Compliance graph initialization initiated"
         )
-        
+
     except Exception as e:
         logger.error(f"Error initiating graph initialization: {str(e)}")
         raise HTTPException(
@@ -363,41 +357,41 @@ async def iq_agent_health_check(
         # Check Neo4j connectivity
         neo4j_connected = False
         graph_stats = {}
-        
+
         try:
             neo4j_service = await get_neo4j_service()
             await neo4j_service.test_connection()
             neo4j_connected = True
-            
+
             if include_stats:
                 graph_stats = await neo4j_service.get_graph_statistics()
-                
+
         except Exception as e:
             logger.warning(f"Neo4j health check failed: {str(e)}")
-        
+
         # Check IQ agent status
         agent_status = "healthy"
         memory_stats = {}
         last_query_time = None
-        
+
         try:
             iq_agent = await get_iq_agent()
-            
+
             if include_stats:
                 # Get memory statistics
                 memory_stats = {
                     "total_memories": len(iq_agent.memory_manager.memory_store),
                     "clusters": len(iq_agent.memory_manager.clusters),
                     "memory_types": list(set(
-                        memory.memory_type.value 
+                        memory.memory_type.value
                         for memory in iq_agent.memory_manager.memory_store.values()
                     ))
                 }
-                
+
         except Exception as e:
             logger.warning(f"IQ agent health check failed: {str(e)}")
             agent_status = "degraded"
-        
+
         # Determine overall status
         if neo4j_connected and agent_status == "healthy":
             overall_status = "healthy"
@@ -405,7 +399,7 @@ async def iq_agent_health_check(
             overall_status = "degraded"
         else:
             overall_status = "unhealthy"
-        
+
         health_response = HealthCheckResponse(
             status=overall_status,
             neo4j_connected=neo4j_connected,
@@ -413,13 +407,13 @@ async def iq_agent_health_check(
             memory_statistics=memory_stats,
             last_query_time=last_query_time
         )
-        
+
         return IQHealthCheckResponse(
             success=True,
             data=health_response,
             message=f"IQ Agent status: {overall_status}"
         )
-        
+
     except Exception as e:
         logger.error(f"Health check error: {str(e)}")
         return IQHealthCheckResponse(
@@ -450,14 +444,14 @@ async def iq_agent_status():
         # Quick connectivity checks
         await get_neo4j_service()
         await get_iq_agent()
-        
+
         return {
             "status": "operational",
             "timestamp": datetime.utcnow().isoformat(),
             "agent": "IQ",
             "version": "1.0.0"
         }
-        
+
     except Exception as e:
         logger.error(f"Status check failed: {str(e)}")
         return {
@@ -495,7 +489,7 @@ async def _initialize_graph_background(
         logger.info("Starting background graph initialization")
         result = await initialize_compliance_graph()
         logger.info(f"Graph initialization completed: {result['status']}")
-        
+
     except Exception as e:
         logger.error(f"Background graph initialization failed: {str(e)}")
 
@@ -504,14 +498,14 @@ async def _initialize_graph_background(
 async def cleanup_iq_agent() -> None:
     """Cleanup IQ agent resources on shutdown"""
     global _iq_agent, _neo4j_service
-    
+
     try:
         if _neo4j_service:
             await _neo4j_service.close()
             logger.info("Neo4j service closed")
-            
+
         _iq_agent = None
         _neo4j_service = None
-        
+
     except Exception as e:
         logger.error(f"Error during IQ agent cleanup: {str(e)}")

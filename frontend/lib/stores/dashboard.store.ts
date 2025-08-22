@@ -317,7 +317,7 @@ export const useDashboardStore = create<DashboardState>()(
               false,
               'fetchDashboardData/success',
             );
-          } catch (error: any) {
+          } catch (error: unknown) {
             set(
               {
                 isLoading: false,
@@ -404,7 +404,7 @@ export const useDashboardStore = create<DashboardState>()(
               false,
               'refreshWidget/success',
             );
-          } catch (error: any) {
+          } catch (error: unknown) {
             set(
               (state) => ({
                 widgetLoading: { ...state.widgetLoading, [widgetId]: false },

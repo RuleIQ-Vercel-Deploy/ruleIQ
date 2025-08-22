@@ -12,7 +12,7 @@ export const queryClient = new QueryClient({
       staleTime: 1000 * 60 * 5,
 
       // Retry failed requests 3 times with exponential backoff
-      retry: (failureCount, error: any) => {
+      retry: (failureCount, error: unknown) => {
         // Don't retry on 4xx errors (client errors)
         if (error?.response?.status >= 400 && error?.response?.status < 500) {
           return false;
@@ -34,8 +34,10 @@ export const queryClient = new QueryClient({
       retry: 1,
 
       // Show error notifications by default
-      onError: (error: any) => {
-        console.error('Mutation error:', error);
+      onError: (error: unknown) => {
+        // TODO: Replace with proper logging
+
+        // // TODO: Replace with proper logging
         // TODO: Integrate with toast notification system
       },
     },
@@ -49,8 +51,8 @@ const safeStorage = {
       if (typeof window !== 'undefined' && window.localStorage) {
         return window.localStorage.getItem(key);
       }
-    } catch (error) {
-      console.warn('localStorage not available:', error);
+    } catch {
+      // TODO: Replace with proper logging
     }
     return null;
   },
@@ -59,8 +61,8 @@ const safeStorage = {
       if (typeof window !== 'undefined' && window.localStorage) {
         window.localStorage.setItem(key, value);
       }
-    } catch (error) {
-      console.warn('localStorage not available:', error);
+    } catch {
+      // TODO: Replace with proper logging
     }
   },
   removeItem: (key: string): void => {
@@ -68,8 +70,8 @@ const safeStorage = {
       if (typeof window !== 'undefined' && window.localStorage) {
         window.localStorage.removeItem(key);
       }
-    } catch (error) {
-      console.warn('localStorage not available:', error);
+    } catch {
+      // TODO: Replace with proper logging
     }
   },
 };
@@ -92,8 +94,8 @@ if (typeof window !== 'undefined') {
     //   persister,
     //   maxAge: 1000 * 60 * 60 * 24, // 24 hours
     // });
-  } catch (error) {
-    console.warn('Failed to setup query persistence:', error);
+  } catch {
+    // TODO: Replace with proper logging
   }
 }
 */

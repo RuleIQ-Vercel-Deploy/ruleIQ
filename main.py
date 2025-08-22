@@ -35,6 +35,7 @@ from api.routers import (
     readiness,
     reporting,
     security,
+    secrets_vault,
     test_utils,
     uk_compliance,
     users,
@@ -210,6 +211,8 @@ app.include_router(
 app.include_router(assessments.router, prefix="/api/v1/assessments", tags=["Assessments"])
 app.include_router(freemium.router, prefix="/api/v1", tags=["Freemium Assessment"])
 app.include_router(ai_assessments.router, prefix="/api/v1/ai-assessments", tags=["AI Assessment Assistant"])
+# Backward compatibility for legacy tests - old /api/ai/assessments structure  
+app.include_router(ai_assessments.router, prefix="/api/ai/assessments", tags=["AI Assessment Assistant (Legacy)"])
 app.include_router(ai_optimization.router, prefix="/api/v1/ai/optimization", tags=["AI Optimization"])
 app.include_router(frameworks.router, prefix="/api/v1/frameworks", tags=["Compliance Frameworks"])
 app.include_router(policies.router, prefix="/api/v1/policies", tags=["Policies"])
@@ -227,6 +230,7 @@ app.include_router(
 )
 app.include_router(monitoring.router, prefix="/api/v1/monitoring", tags=["Monitoring"])
 app.include_router(security.router, prefix="/api/v1/security", tags=["Security"])
+app.include_router(secrets_vault.router, tags=["🔐 Secrets Vault"])
 app.include_router(chat.router, prefix="/api/v1/chat", tags=["AI Assistant"])
 app.include_router(ai_cost_monitoring.router, prefix="/api/v1/ai/cost", tags=["AI Cost Monitoring"])
 app.include_router(ai_cost_websocket.router, prefix="/api/v1/ai/cost-websocket", tags=["AI Cost WebSocket"])
@@ -383,18 +387,22 @@ async def api_detailed_health_check():
         # Get database monitoring status
         monitor = get_database_monitor()
         monitoring_summary = monitor.get_monitoring_summary()
-        
+
         # Get basic database engine info
         engine_info = get_engine_info()
-        
+
         # Extract key metrics from monitoring summary
         current_metrics = monitoring_summary.get("current_metrics", {})
         alerts = monitoring_summary.get("alerts", [])
-        
+
         # Count alerts by severity
         critical_alerts = len([a for a in alerts if a.get("severity") == "critical"])
         warning_alerts = len([a for a in alerts if a.get("severity") == "warning"])
-        
+
+        # 🔐 Check SecretsVault health status
+        vault_health = settings.get_secrets_vault_health()
+        vault_healthy = vault_health.get("status") == "healthy"
+
         # Determine overall status
         if critical_alerts > 0:
             status = "degraded"
@@ -405,10 +413,13 @@ async def api_detailed_health_check():
         elif not engine_info.get("async_engine_initialized"):
             status = "degraded"
             message = "Database engine not properly initialized"
+        elif not vault_healthy and vault_health.get("status") != "disabled":
+            status = "warning"
+            message = f"SecretsVault health issue: {vault_health.get('message', 'Unknown vault error')}"
         else:
             status = "healthy"
             message = "All API v1 components operational"
-        
+
         health_data = {
             "status": status,
             "message": message,
@@ -423,14 +434,22 @@ async def api_detailed_health_check():
                     "total": len(alerts)
                 },
             },
+            # 🔐 SecretsVault status in health check - easily identifiable
+            "secrets_vault": {
+                "status": vault_health.get("status", "unknown"),
+                "enabled": vault_health.get("enabled", False),
+                "vault_type": vault_health.get("vault_type", "None"),
+                "region": vault_health.get("region", settings.secrets_vault_region),
+                "message": vault_health.get("message", "No vault information available")
+            },
         }
-        
+
         return HealthCheckResponse(**health_data)
-    
+
     except Exception as e:
         logger.error(f"API v1 detailed health check failed: {e}")
         return HealthCheckResponse(
-            status="error", 
+            status="error",
             message=f"API v1 health check failed: {e!s}",
             timestamp=datetime.utcnow().isoformat(),
             version="2.0.0"

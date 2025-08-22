@@ -106,9 +106,9 @@ export default function AnalyticsPage() {
     return data;
   }
 
-  const handleExport = (format: string) => {
+  const handleExport = (_format: string) => {
     // In a real app, this would generate and download the report
-    console.log(`Exporting analytics in ${format} format`);
+    // TODO: Implement actual export functionality
   };
 
   const handleRefresh = () => {

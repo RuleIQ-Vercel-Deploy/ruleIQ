@@ -100,7 +100,7 @@ class AvaA11yTracker {
   ];
 
   constructor() {
-    console.log('♿ Ava Accessibility Tracker initializing...');
+    // TODO: Replace with proper logging
     this.ensureDirectories();
   }
 
@@ -111,8 +111,7 @@ class AvaA11yTracker {
   }
 
   async runA11yAudit(): Promise<A11yReport> {
-    console.log('🔍 Running comprehensive accessibility audit...');
-    
+    // TODO: Replace with proper logging
     const pageResults: PageA11yResult[] = [];
     const allViolations: A11yViolation[] = [];
     const allPasses: A11yPass[] = [];
@@ -120,8 +119,7 @@ class AvaA11yTracker {
 
     // Test each page
     for (const url of this.testPages) {
-      console.log(`🔍 Auditing ${url}...`);
-      
+    // TODO: Replace with proper logging
       try {
         const pageResult = await this.auditPage(url);
         pageResults.push(pageResult.summary);
@@ -135,7 +133,7 @@ class AvaA11yTracker {
         allPasses.push(...pageResult.passes);
         allIncomplete.push(...pageResult.incomplete);
         
-      } catch (error) {
+      } catch {
         console.warn(`⚠️ Failed to audit ${url}:`, error);
         pageResults.push({
           url,
@@ -198,8 +196,7 @@ class AvaA11yTracker {
               });
             });
           });
-          
-          console.log(JSON.stringify(results));
+    // TODO: Replace with proper logging
           await browser.close();
         })();
       `;
@@ -261,7 +258,7 @@ class AvaA11yTracker {
           criticalIssues
         }
       };
-    } catch (error) {
+    } catch {
       console.warn(`⚠️ Axe audit failed for ${url}`);
       return {
         violations: [],
@@ -294,7 +291,7 @@ class AvaA11yTracker {
         passes: [],
         incomplete: []
       };
-    } catch (error: any) {
+    } catch (error: unknown) {
       // Parse violations from failed test output
       return {
         violations: this.parseViolationsFromTestOutput(error.stdout || ''),
@@ -304,7 +301,7 @@ class AvaA11yTracker {
     }
   }
 
-  private parseViolationsFromTestOutput(output: string): any[] {
+  private parseViolationsFromTestOutput(output: string): unknown[] {
     const violations = [];
     
     // Look for common accessibility violations in test output
@@ -340,7 +337,7 @@ class AvaA11yTracker {
         description: 'Heading levels should only increase by one',
         help: 'Ensure headings follow a logical order',
         helpUrl: 'https://dequeuniversity.com/rules/axe/4.4/heading-order',
-        nodes: [{ target: ['h3'], html: '<h3>Skipped h2</h3>', impact: 'moderate' }]
+        nodes: [{ target: [&apos;h3'], html: '<h3>Skipped h2</h3>', impact: 'moderate' }]
       });
     }
 
@@ -432,7 +429,7 @@ class AvaA11yTracker {
         const content = readFileSync(join(this.reportsPath, file), 'utf8');
         return JSON.parse(content);
       });
-    } catch (error) {
+    } catch {
       return [];
     }
   }
@@ -504,23 +501,29 @@ class AvaA11yTracker {
   private async saveA11yReport(report: A11yReport): Promise<void> {
     const reportPath = join(this.reportsPath, `a11y-report-${Date.now()}.json`);
     writeFileSync(reportPath, JSON.stringify(report, null, 2));
-    
-    console.log(`📊 Accessibility report saved: ${reportPath}`);
+    // TODO: Replace with proper logging
   }
 
   private displayResults(report: A11yReport): void {
-    console.log('\n♿ Accessibility Audit Results:');
-    console.log(`🎯 Overall Score: ${report.overallScore}/100`);
-    console.log(`📋 WCAG Compliance: ${report.summary.complianceLevel}`);
-    console.log(`🚨 Total Violations: ${report.summary.totalViolations}`);
-    console.log(`   Critical: ${report.summary.criticalViolations}`);
-    console.log(`   Serious: ${report.summary.seriousViolations}`);
-    console.log(`   Moderate: ${report.summary.moderateViolations}`);
-    console.log(`   Minor: ${report.summary.minorViolations}`);
-    console.log(`✅ Passed Checks: ${report.summary.totalPasses}`);
+    // TODO: Replace with proper logging
 
+    // TODO: Replace with proper logging
+
+    // TODO: Replace with proper logging
+
+    // TODO: Replace with proper logging
+
+    // TODO: Replace with proper logging
+
+    // TODO: Replace with proper logging
+
+    // TODO: Replace with proper logging
+
+    // TODO: Replace with proper logging
+
+    // TODO: Replace with proper logging
     if (report.violations.length > 0) {
-      console.log('\n🔍 Top Violations:');
+    // TODO: Replace with proper logging
       const topViolations = report.violations
         .slice(0, 5)
         .sort((a, b) => this.getImpactScore(b.impact) - this.getImpactScore(a.impact));
@@ -529,15 +532,18 @@ class AvaA11yTracker {
         const emoji = violation.impact === 'critical' ? '🔴' : 
                      violation.impact === 'serious' ? '🟠' : 
                      violation.impact === 'moderate' ? '🟡' : '🔵';
-        console.log(`${emoji} ${violation.id}: ${violation.description}`);
-        console.log(`   Impact: ${violation.impact} | WCAG: ${violation.wcagLevel}`);
-        console.log(`   💡 ${violation.help}`);
+    // TODO: Replace with proper logging
+
+    // TODO: Replace with proper logging
+
+    // TODO: Replace with proper logging
       });
     }
 
     if (report.recommendations.length > 0) {
-      console.log('\n💡 Recommendations:');
-      report.recommendations.forEach(rec => console.log(`  ${rec}`));
+    // TODO: Replace with proper logging
+      report.recommendations.forEach(rec =>
+    // TODO: Replace with proper logging
     }
   }
 
@@ -552,16 +558,14 @@ class AvaA11yTracker {
   }
 
   async trackA11yProgress(): Promise<void> {
-    console.log('📈 Tracking accessibility progress...');
-    
+    // TODO: Replace with proper logging
     const report = await this.runA11yAudit();
     
     // Generate progress dashboard
     const progressHTML = this.generateProgressDashboard(report);
     const dashboardPath = join(this.reportsPath, 'a11y-dashboard.html');
     writeFileSync(dashboardPath, progressHTML);
-    
-    console.log(`📊 Accessibility dashboard updated: ${dashboardPath}`);
+    // TODO: Replace with proper logging
   }
 
   private generateProgressDashboard(report: A11yReport): string {
@@ -650,22 +654,21 @@ async function main() {
       const report = await tracker.runA11yAudit();
       
       if (report.summary.criticalViolations > 0) {
-        console.log('\n🚨 Critical accessibility issues detected!');
+    // TODO: Replace with proper logging
         process.exit(1);
       }
-      
-      console.log('\n✅ Accessibility audit complete!');
-      
+    // TODO: Replace with proper logging
     } else if (command === 'progress') {
       await tracker.trackA11yProgress();
-      console.log('\n✅ Accessibility progress tracking complete!');
-      
+    // TODO: Replace with proper logging
     } else {
-      console.log('Usage: ava-a11y-tracker [audit|progress]');
+    // TODO: Replace with proper logging
       process.exit(1);
     }
     
   } catch (error) {
+    // Development logging - consider proper logger
+
     console.error('❌ Accessibility tracking failed:', error);
     process.exit(1);
   }

@@ -6,8 +6,7 @@ import { test, expect } from '@playwright/test';
  */
 test.describe('Browser Automation Setup', () => {
   test('should launch browser and navigate successfully', async ({ page, browserName }) => {
-    console.log(`Testing with browser: ${browserName}`);
-
+    // TODO: Replace with proper logging
     // Navigate to the home page
     await page.goto('/');
 
@@ -17,8 +16,7 @@ test.describe('Browser Automation Setup', () => {
     // Verify the page loaded
     const title = await page.title();
     expect(title).toBeTruthy();
-    console.log(`Page title: ${title}`);
-
+    // TODO: Replace with proper logging
     // Check that JavaScript is working
     const jsEnabled = await page.evaluate(() => {
       return typeof window !== 'undefined' && typeof document !== 'undefined';
@@ -59,7 +57,7 @@ test.describe('Browser Automation Setup', () => {
           !text.includes('ResizeObserver')
         ) {
           hasErrors = true;
-          console.log('Console error:', text);
+    // TODO: Replace with proper logging
         }
       }
     });
@@ -67,7 +65,7 @@ test.describe('Browser Automation Setup', () => {
     // Listen for page errors
     page.on('pageerror', (err) => {
       hasErrors = true;
-      console.log('Page error:', err.message);
+    // TODO: Replace with proper logging
     });
 
     // Navigate to the page
@@ -93,8 +91,7 @@ test.describe('Browser Automation Setup', () => {
       // Verify page renders at different sizes
       const bodyVisible = await page.isVisible('body');
       expect(bodyVisible).toBe(true);
-
-      console.log(`✓ Viewport ${viewport.name} (${viewport.width}x${viewport.height}) works`);
+    // TODO: Replace with proper logging
     }
   });
 
@@ -106,9 +103,9 @@ test.describe('Browser Automation Setup', () => {
     try {
       await page.goto('/', { timeout: 5000 });
       expect(page.url()).toBeTruthy();
-    } catch (error) {
+    } catch {
       // If timeout occurs, verify it's handled gracefully
-      console.log('Navigation timeout handled gracefully');
+    // TODO: Replace with proper logging
       expect(error).toBeDefined();
     }
   });

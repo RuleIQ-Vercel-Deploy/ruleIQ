@@ -372,7 +372,7 @@ async def start_assessment_session(
         raise
     except Exception as e:
         logger.error(f"Error starting assessment session: {str(e)}")
-        db.rollback()
+        await db.rollback()
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Failed to start assessment session"
@@ -517,7 +517,7 @@ async def submit_assessment_answer(
         raise
     except Exception as e:
         logger.error(f"Error processing answer for session {session_token}: {str(e)}")
-        db.rollback()
+        await db.rollback()
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Failed to process assessment answer"

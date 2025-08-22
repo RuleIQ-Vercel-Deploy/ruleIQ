@@ -75,7 +75,7 @@ const quickActions: QuickAction[] = [
         description: "We'll analyze your current compliance status",
       });
     },
-    color: 'text-purple-600',
+    color: 'text-teal-600',
     requiresProfile: true,
   },
 ];

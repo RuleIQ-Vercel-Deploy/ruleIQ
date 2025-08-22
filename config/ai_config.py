@@ -23,8 +23,8 @@ else:
 from dotenv import load_dotenv
 
 # Import at top level
-from services.ai.response_formats import get_schema_for_response_type
-from services.ai.exceptions import AIServiceException
+# Moved to local import to avoid circular import
+# Moved to local import to avoid circular import
 from config.logging_config import get_logger
 
 load_dotenv()
@@ -313,6 +313,7 @@ class AIConfig:
             schema_type: Type of response schema (gap_analysis, recommendations, etc.)
         """
 
+        from services.ai.response_formats import get_schema_for_response_type
         schema = get_schema_for_response_type(schema_type)
         return self.get_structured_output_config(schema)
 
@@ -556,6 +557,7 @@ class AIConfig:
 
         # If no models available, raise exception
 
+        from services.ai.exceptions import AIServiceException
         raise AIServiceException(
             message="No AI models available - all circuits are open",
             service_name="AI Model Selection",

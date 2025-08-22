@@ -124,7 +124,7 @@ export class QuestionValidator {
 
   private static validateCheckbox(
     question: Question,
-    value: any[],
+    value: unknown[],
     validation: QuestionValidation,
   ): ValidationError | null {
     if (!Array.isArray(value)) {

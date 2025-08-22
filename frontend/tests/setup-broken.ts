@@ -254,7 +254,7 @@ vi.mock('next/navigation', () => ({
 
 // Mock Next.js image
 vi.mock('next/image', () => ({
-  default: (props: any) => {
+  default: (props: Record<string, unknown>) => {
     const { src, alt, ...rest } = props;
     return React.createElement('img', { src, alt, ...rest });
   },
@@ -262,7 +262,7 @@ vi.mock('next/image', () => ({
 
 // Mock Lucide React icons
 vi.mock('lucide-react', () => {
-  const createMockIcon = (name: string) => (props: any) =>
+  const createMockIcon = (name: string) => (props: Record<string, unknown>) =>
     React.createElement('svg', {
       'data-testid': `${name}-icon`,
       ...props,
@@ -683,8 +683,7 @@ vi.mock('@/lib/services/ai-service', () => ({
 
 // Mock network requests to prevent actual API calls
 global.fetch = vi.fn().mockImplementation((url, options = {}) => {
-  console.log('Mock fetch:', url, options);
-
+    // TODO: Replace with proper logging
   return Promise.resolve({
     ok: true,
     status: 200,
@@ -769,8 +768,7 @@ vi.mock('@/lib/services/ai-service', () => ({
 
 // Mock network requests to prevent actual API calls
 global.fetch = vi.fn().mockImplementation((url, options = {}) => {
-  console.log('Mock fetch:', url, options);
-
+    // TODO: Replace with proper logging
   return Promise.resolve({
     ok: true,
     status: 200,
@@ -1088,8 +1086,7 @@ vi.useFakeTimers();
 
 // EMERGENCY: Mock network requests and AI services
 global.fetch = vi.fn().mockImplementation((url, options = {}) => {
-  console.log('Emergency fetch mock:', url);
-
+    // TODO: Replace with proper logging
   return Promise.resolve({
     ok: true,
     status: 200,
@@ -1144,7 +1141,7 @@ import './mocks/form-submission-mock';
 
 // CRITICAL: Handle unhandled promise rejections in tests
 process.on('unhandledRejection', (reason, promise) => {
-  console.log('Unhandled Rejection at:', promise, 'reason:', reason);
+    // TODO: Replace with proper logging
   // Don't fail tests for unhandled rejections during testing
 });
 

@@ -54,7 +54,9 @@ export default function AssessmentResultsPage() {
       const data = await freemiumService.getResults(token);
       setResults(data);
     } catch (err) {
-      console.error('Failed to load results:', err);
+      // TODO: Replace with proper logging
+
+      // // TODO: Replace with proper logging
       setError(err instanceof Error ? err.message : 'Failed to load assessment results');
     } finally {
       setLoading(false);

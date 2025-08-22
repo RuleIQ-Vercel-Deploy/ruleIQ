@@ -53,7 +53,7 @@ const LocalStorageComponent = () => {
 
   return (
     <div data-testid="hydrated-content">
-      <p>Hydrated: {value || 'No value'}</p>
+      <p>Hydrated: {value || &apos;No value'}</p>
     </div>
   );
 };
@@ -140,7 +140,7 @@ describe('Hydration Safety Tests', () => {
 
         return (
           <div data-testid="hydrated-content">
-            <p>Hydrated: {value || 'No value'}</p>
+            <p>Hydrated: {value || &apos;No value'}</p>
           </div>
         );
       };

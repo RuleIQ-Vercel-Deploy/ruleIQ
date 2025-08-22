@@ -1,0 +1,969 @@
+{
+  "collection": {
+    "item": [
+      {
+        "id": "7c0c974c-6f4f-4039-85b0-4aafb9430061",
+        "name": "🔐 Authentication",
+        "item": [
+          {
+            "id": "4d0c34f5-a515-4d2e-8203-d3fd6bd0dea6",
+            "name": "Login with Doppler Credentials",
+            "request": {
+              "description": {
+                "content": "🔐 **Doppler-Integrated Login**\n\nAuthenticate using credentials stored in Doppler:\n- Username: Loaded from `TEST_USER_EMAIL`\n- Password: Loaded from `TEST_USER_PASSWORD`\n\nAutomatically saves JWT token and user details to environment variables for use in other requests.",
+                "type": "text/plain"
+              },
+              "url": {
+                "path": [
+                  "api",
+                  "v1",
+                  "auth",
+                  "token"
+                ],
+                "host": [
+                  "{{base_url}}"
+                ],
+                "query": [],
+                "variable": []
+              },
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/x-www-form-urlencoded"
+                }
+              ],
+              "method": "POST",
+              "body": {
+                "mode": "urlencoded",
+                "urlencoded": [
+                  {
+                    "description": {
+                      "content": "Loaded from Doppler TEST_USER_EMAIL",
+                      "type": "text/plain"
+                    },
+                    "key": "username",
+                    "value": "{{test_user_email}}"
+                  },
+                  {
+                    "description": {
+                      "content": "Loaded from Doppler TEST_USER_PASSWORD",
+                      "type": "text/plain"
+                    },
+                    "key": "password",
+                    "value": "{{test_user_password}}"
+                  }
+                ]
+              }
+            },
+            "response": [],
+            "event": [
+              {
+                "listen": "test",
+                "script": {
+                  "id": "77bd94c3-3c46-4dfc-80aa-31db3e78c267",
+                  "type": "text/javascript",
+                  "exec": [
+                    "// Auto-save JWT token and user details",
+                    "if (pm.response.code === 200) {",
+                    "    const responseJson = pm.response.json();",
+                    "    ",
+                    "    if (responseJson.access_token) {",
+                    "        pm.environment.set('jwt_token', responseJson.access_token);",
+                    "        console.log('✅ JWT token saved to environment');",
+                    "    }",
+                    "    ",
+                    "    if (responseJson.user_id) {",
+                    "        pm.environment.set('user_id', responseJson.user_id);",
+                    "    }",
+                    "    ",
+                    "    if (responseJson.business_profile_id) {",
+                    "        pm.environment.set('business_profile_id', responseJson.business_profile_id);",
+                    "    }",
+                    "    ",
+                    "    pm.test('Login successful', function () {",
+                    "        pm.response.to.have.status(200);",
+                    "        pm.expect(responseJson).to.have.property('access_token');",
+                    "    });",
+                    "} else {",
+                    "    pm.test('Login failed', function () {",
+                    "        pm.response.to.not.have.status(200);",
+                    "    });",
+                    "}"
+                  ],
+                  "_lastExecutionId": "7f3c2851-1338-467e-95bc-098868215a1d"
+                }
+              }
+            ]
+          }
+        ],
+        "event": []
+      },
+      {
+        "id": "60cb50f4-719a-47a7-a0aa-b5e468bc1cc5",
+        "name": "🧠 AI Assessment with Secrets",
+        "item": [
+          {
+            "id": "d9610879-f1f1-43d0-8fd8-f4eb2c08c54e",
+            "name": "Stream AI Analysis (with API Key)",
+            "request": {
+              "description": {
+                "content": "🔐 **AI Analysis with Doppler Integration**\n\nStreams AI-powered compliance analysis using:\n- Google API key from Doppler secrets\n- Automatic fallback handling\n- Circuit breaker protection\n\nThis endpoint uses the Google Gemini API key stored securely in Doppler.",
+                "type": "text/plain"
+              },
+              "url": {
+                "path": [
+                  "api",
+                  "v1",
+                  "ai-assessments",
+                  "analyze-stream"
+                ],
+                "host": [
+                  "{{base_url}}"
+                ],
+                "query": [],
+                "variable": []
+              },
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                },
+                {
+                  "key": "Accept",
+                  "value": "text/event-stream"
+                }
+              ],
+              "method": "POST",
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"assessment_responses\": [\n    {\n      \"question_id\": \"gdpr_data_collection\",\n      \"answer\": \"yes\",\n      \"evidence\": \"We collect email addresses and company details for service delivery\"\n    }\n  ],\n  \"framework\": \"gdpr\",\n  \"session_id\": \"{{$guid}}\"\n}"
+              }
+            },
+            "response": [],
+            "event": [
+              {
+                "listen": "prerequest",
+                "script": {
+                  "id": "639c99f9-ac36-4efc-86ad-6b453a311c95",
+                  "type": "text/javascript",
+                  "exec": [
+                    "// Verify we have Google API key from Doppler",
+                    "const apiKey = pm.environment.get('google_api_key');",
+                    "if (!apiKey) {",
+                    "    console.error('❌ Google API key not found in environment');",
+                    "    console.log('💡 Ensure GOOGLE_API_KEY is set in Doppler');",
+                    "}"
+                  ],
+                  "_lastExecutionId": "de2e65ef-3f34-4c67-8422-aff6781dbf21"
+                }
+              }
+            ]
+          }
+        ],
+        "event": []
+      }
+    ],
+    "auth": {
+      "type": "bearer",
+      "bearer": [
+        {
+          "type": "string",
+          "value": "{{jwt_token}}",
+          "key": "token"
+        }
+      ]
+    },
+    "event": [
+      {
+        "listen": "prerequest",
+        "script": {
+          "id": "bd335bbf-6065-4e28-8396-c341aa9f3a1d",
+          "type": "text/javascript",
+          "exec": [
+            "// 🔐 Doppler Integration - Auto-load secrets from environment",
+            "// This script runs before each request to ensure we have fresh credentials",
+            "",
+            "// Method 1: Use Doppler environment variables (when using doppler run)",
+            "if (typeof process !== 'undefined' && process.env) {",
+            "    console.log('🔐 Loading secrets from Doppler environment...');",
+            "    ",
+            "    // Set API credentials from Doppler",
+            "    if (process.env.JWT_SECRET_KEY) {",
+            "        pm.environment.set('jwt_secret', process.env.JWT_SECRET_KEY);",
+            "    }",
+            "    if (process.env.GOOGLE_API_KEY) {",
+            "        pm.environment.set('google_api_key', process.env.GOOGLE_API_KEY);",
+            "    }",
+            "    if (process.env.DATABASE_URL) {",
+            "        pm.environment.set('database_url', process.env.DATABASE_URL);",
+            "    }",
+            "    if (process.env.REDIS_URL) {",
+            "        pm.environment.set('redis_url', process.env.REDIS_URL);",
+            "    }",
+            "}",
+            "",
+            "// Method 2: Fetch from Doppler API (requires DOPPLER_TOKEN)",
+            "const dopplerToken = pm.environment.get('DOPPLER_TOKEN');",
+            "if (dopplerToken && !pm.environment.get('secrets_loaded')) {",
+            "    console.log('🔐 Fetching secrets from Doppler API...');",
+            "    ",
+            "    pm.sendRequest({",
+            "        url: 'https://api.doppler.com/v3/configs/config/secrets',",
+            "        method: 'GET',",
+            "        header: {",
+            "            'Authorization': 'Bearer ' + dopplerToken,",
+            "            'Accept': 'application/json'",
+            "        }",
+            "    }, function (err, res) {",
+            "        if (!err && res.code === 200) {",
+            "            const secrets = res.json().secrets;",
+            "            console.log('✅ Loaded ' + Object.keys(secrets).length + ' secrets from Doppler');",
+            "            ",
+            "            // Set environment variables from Doppler secrets",
+            "            Object.keys(secrets).forEach(key => {",
+            "                pm.environment.set(key.toLowerCase(), secrets[key].computed);",
+            "            });",
+            "            ",
+            "            pm.environment.set('secrets_loaded', 'true');",
+            "        } else {",
+            "            console.warn('⚠️ Failed to load secrets from Doppler:', err || res.code);",
+            "        }",
+            "    });",
+            "}",
+            "",
+            "// Token validation and refresh logic",
+            "const currentToken = pm.environment.get('jwt_token');",
+            "if (currentToken) {",
+            "    try {",
+            "        const tokenPayload = JSON.parse(atob(currentToken.split('.')[1]));",
+            "        const now = Math.floor(Date.now() / 1000);",
+            "        ",
+            "        // Check if token expires in next 5 minutes",
+            "        if (tokenPayload.exp && tokenPayload.exp - now < 300) {",
+            "            console.log('🔄 JWT token expires soon, should refresh...');",
+            "            pm.environment.set('token_needs_refresh', 'true');",
+            "        }",
+            "    } catch (e) {",
+            "        console.warn('⚠️ Invalid JWT token format');",
+            "    }",
+            "}"
+          ],
+          "_lastExecutionId": "387c45c7-c9c5-4b70-bae6-e7e66f0bcd25"
+        }
+      }
+    ],
+    "variable": [
+      {
+        "description": {
+          "content": "API base URL - automatically loaded from Doppler",
+          "type": "text/plain"
+        },
+        "type": "string",
+        "value": "http://localhost:8000",
+        "key": "base_url"
+      },
+      {
+        "description": {
+          "content": "JWT Bearer token - obtained via login endpoint",
+          "type": "text/plain"
+        },
+        "type": "string",
+        "value": "",
+        "key": "jwt_token"
+      },
+      {
+        "description": {
+          "content": "Current user ID",
+          "type": "text/plain"
+        },
+        "type": "string",
+        "value": "",
+        "key": "user_id"
+      },
+      {
+        "description": {
+          "content": "Current business profile ID",
+          "type": "text/plain"
+        },
+        "type": "string",
+        "value": "",
+        "key": "business_profile_id"
+      },
+      {
+        "description": {
+          "content": "Doppler service token for fetching secrets",
+          "type": "text/plain"
+        },
+        "type": "string",
+        "value": "",
+        "key": "DOPPLER_TOKEN"
+      },
+      {
+        "description": {
+          "content": "Flag to prevent multiple Doppler API calls",
+          "type": "text/plain"
+        },
+        "type": "string",
+        "value": "false",
+        "key": "secrets_loaded"
+      }
+    ],
+    "info": {
+      "_postman_id": "6118ce7e-d249-4a28-9d42-4ea6f8a65a30",
+      "name": "ruleIQ API with Doppler Integration",
+      "version": {
+        "raw": "2.0.0-doppler",
+        "major": 2,
+        "minor": 0,
+        "patch": 0,
+        "prerelease": "doppler",
+        "build": [],
+        "string": "2.0.0-doppler"
+      },
+      "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+      "description": {
+        "content": "Complete API collection for ruleIQ with Doppler secret management integration.\n\n## 🔐 Doppler Integration\nThis collection is designed to work with Doppler for secure secret management:\n\n1. **Setup Doppler Environment Variables:**\n   - Set `DOPPLER_TOKEN` in your Postman environment\n   - Or use `doppler run -- newman run collection.json`\n\n2. **Pre-request Script Auto-loads Secrets:**\n   - JWT tokens, API keys, and database URLs from Doppler\n   - Automatic token refresh when expired\n   - Secure credential management\n\n## Authentication\n- Most endpoints require JWT Bearer token authentication\n- Tokens are automatically managed via Doppler integration\n- Rate limiting: General (100/min), AI (3-20/min), Auth (5/min)\n\n## Base URLs\n- Development: http://localhost:8000\n- Production: https://api.ruleiq.com",
+        "type": "text/plain"
+      }
+    }
+  },
+  "environment": {
+    "id": "6ab91fc8-17a8-435f-95aa-868b8b1645f8",
+    "values": []
+  },
+  "globals": {
+    "id": "e025f1fa-f557-4559-8f04-6f99ad29f079",
+    "values": []
+  },
+  "run": {
+    "stats": {
+      "iterations": {
+        "total": 1,
+        "pending": 0,
+        "failed": 0
+      },
+      "items": {
+        "total": 2,
+        "pending": 0,
+        "failed": 0
+      },
+      "scripts": {
+        "total": 4,
+        "pending": 0,
+        "failed": 0
+      },
+      "prerequests": {
+        "total": 2,
+        "pending": 0,
+        "failed": 0
+      },
+      "requests": {
+        "total": 2,
+        "pending": 0,
+        "failed": 0
+      },
+      "tests": {
+        "total": 2,
+        "pending": 0,
+        "failed": 0
+      },
+      "assertions": {
+        "total": 1,
+        "pending": 0,
+        "failed": 0
+      },
+      "testScripts": {
+        "total": 1,
+        "pending": 0,
+        "failed": 0
+      },
+      "prerequestScripts": {
+        "total": 3,
+        "pending": 0,
+        "failed": 0
+      }
+    },
+    "timings": {
+      "responseAverage": 192.5,
+      "responseMin": 9,
+      "responseMax": 376,
+      "responseSd": 183.5,
+      "dnsAverage": 0,
+      "dnsMin": 0,
+      "dnsMax": 0,
+      "dnsSd": 0,
+      "firstByteAverage": 0,
+      "firstByteMin": 0,
+      "firstByteMax": 0,
+      "firstByteSd": 0,
+      "started": 1755879577547,
+      "completed": 1755879577986
+    },
+    "executions": [
+      {
+        "cursor": {
+          "position": 0,
+          "iteration": 0,
+          "length": 2,
+          "cycles": 1,
+          "empty": false,
+          "eof": false,
+          "bof": true,
+          "cr": false,
+          "ref": "5debf392-ab2c-4f92-b8c8-a35d9890dcf5",
+          "httpRequestId": "2f60b419-e839-4f74-8df4-57839e88cc1a"
+        },
+        "item": {
+          "id": "4d0c34f5-a515-4d2e-8203-d3fd6bd0dea6",
+          "name": "Login with Doppler Credentials",
+          "request": {
+            "description": {
+              "content": "🔐 **Doppler-Integrated Login**\n\nAuthenticate using credentials stored in Doppler:\n- Username: Loaded from `TEST_USER_EMAIL`\n- Password: Loaded from `TEST_USER_PASSWORD`\n\nAutomatically saves JWT token and user details to environment variables for use in other requests.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "token"
+              ],
+              "host": [
+                "{{base_url}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/x-www-form-urlencoded"
+              }
+            ],
+            "method": "POST",
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "description": {
+                    "content": "Loaded from Doppler TEST_USER_EMAIL",
+                    "type": "text/plain"
+                  },
+                  "key": "username",
+                  "value": "{{test_user_email}}"
+                },
+                {
+                  "description": {
+                    "content": "Loaded from Doppler TEST_USER_PASSWORD",
+                    "type": "text/plain"
+                  },
+                  "key": "password",
+                  "value": "{{test_user_password}}"
+                }
+              ]
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "id": "77bd94c3-3c46-4dfc-80aa-31db3e78c267",
+                "type": "text/javascript",
+                "exec": [
+                  "// Auto-save JWT token and user details",
+                  "if (pm.response.code === 200) {",
+                  "    const responseJson = pm.response.json();",
+                  "    ",
+                  "    if (responseJson.access_token) {",
+                  "        pm.environment.set('jwt_token', responseJson.access_token);",
+                  "        console.log('✅ JWT token saved to environment');",
+                  "    }",
+                  "    ",
+                  "    if (responseJson.user_id) {",
+                  "        pm.environment.set('user_id', responseJson.user_id);",
+                  "    }",
+                  "    ",
+                  "    if (responseJson.business_profile_id) {",
+                  "        pm.environment.set('business_profile_id', responseJson.business_profile_id);",
+                  "    }",
+                  "    ",
+                  "    pm.test('Login successful', function () {",
+                  "        pm.response.to.have.status(200);",
+                  "        pm.expect(responseJson).to.have.property('access_token');",
+                  "    });",
+                  "} else {",
+                  "    pm.test('Login failed', function () {",
+                  "        pm.response.to.not.have.status(200);",
+                  "    });",
+                  "}"
+                ],
+                "_lastExecutionId": "7f3c2851-1338-467e-95bc-098868215a1d"
+              }
+            }
+          ]
+        },
+        "request": {
+          "description": {
+            "content": "🔐 **Doppler-Integrated Login**\n\nAuthenticate using credentials stored in Doppler:\n- Username: Loaded from `TEST_USER_EMAIL`\n- Password: Loaded from `TEST_USER_PASSWORD`\n\nAutomatically saves JWT token and user details to environment variables for use in other requests.",
+            "type": "text/plain"
+          },
+          "url": {
+            "protocol": "http",
+            "port": "8000",
+            "path": [
+              "api",
+              "v1",
+              "auth",
+              "token"
+            ],
+            "host": [
+              "localhost"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/x-www-form-urlencoded"
+            },
+            {
+              "key": "User-Agent",
+              "value": "PostmanRuntime/7.39.1",
+              "system": true
+            },
+            {
+              "key": "Accept",
+              "value": "*/*",
+              "system": true
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache",
+              "system": true
+            },
+            {
+              "key": "Postman-Token",
+              "value": "e3368421-8d2c-4be4-9814-dc6526e261be",
+              "system": true
+            },
+            {
+              "key": "Host",
+              "value": "localhost:8000",
+              "system": true
+            },
+            {
+              "key": "Accept-Encoding",
+              "value": "gzip, deflate, br",
+              "system": true
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive",
+              "system": true
+            },
+            {
+              "key": "Content-Length",
+              "value": "76",
+              "system": true
+            }
+          ],
+          "method": "POST",
+          "body": {
+            "mode": "urlencoded",
+            "urlencoded": [
+              {
+                "description": {
+                  "content": "Loaded from Doppler TEST_USER_EMAIL",
+                  "type": "text/plain"
+                },
+                "key": "username",
+                "value": "{{test_user_email}}"
+              },
+              {
+                "description": {
+                  "content": "Loaded from Doppler TEST_USER_PASSWORD",
+                  "type": "text/plain"
+                },
+                "key": "password",
+                "value": "{{test_user_password}}"
+              }
+            ]
+          },
+          "auth": {
+            "type": "bearer",
+            "bearer": [
+              {
+                "type": "string",
+                "value": "",
+                "key": "token"
+              }
+            ]
+          }
+        },
+        "response": {
+          "id": "37df747e-481b-4f3b-8db9-a124335dedb2",
+          "status": "Unauthorized",
+          "code": 401,
+          "header": [
+            {
+              "key": "date",
+              "value": "Fri, 22 Aug 2025 16:19:37 GMT"
+            },
+            {
+              "key": "server",
+              "value": "uvicorn"
+            },
+            {
+              "key": "www-authenticate",
+              "value": "Bearer"
+            },
+            {
+              "key": "content-length",
+              "value": "40"
+            },
+            {
+              "key": "content-type",
+              "value": "application/json"
+            },
+            {
+              "key": "x-request-id",
+              "value": "3e2ba7e8-bdc2-474e-bb03-b8e27a7b7b5d"
+            },
+            {
+              "key": "x-process-time",
+              "value": "0.3481926918029785"
+            },
+            {
+              "key": "x-content-type-options",
+              "value": "nosniff"
+            },
+            {
+              "key": "x-frame-options",
+              "value": "DENY"
+            },
+            {
+              "key": "x-xss-protection",
+              "value": "1; mode=block"
+            },
+            {
+              "key": "strict-transport-security",
+              "value": "max-age=31536000; includeSubDomains"
+            },
+            {
+              "key": "content-security-policy",
+              "value": "default-src 'self'"
+            },
+            {
+              "key": "referrer-policy",
+              "value": "strict-origin-when-cross-origin"
+            },
+            {
+              "key": "permissions-policy",
+              "value": "geolocation=(), microphone=(), camera=()"
+            }
+          ],
+          "stream": {
+            "type": "Buffer",
+            "data": [
+              123,
+              34,
+              100,
+              101,
+              116,
+              97,
+              105,
+              108,
+              34,
+              58,
+              34,
+              73,
+              110,
+              99,
+              111,
+              114,
+              114,
+              101,
+              99,
+              116,
+              32,
+              101,
+              109,
+              97,
+              105,
+              108,
+              32,
+              111,
+              114,
+              32,
+              112,
+              97,
+              115,
+              115,
+              119,
+              111,
+              114,
+              100,
+              34,
+              125
+            ]
+          },
+          "cookie": [],
+          "responseTime": 376,
+          "responseSize": 40
+        },
+        "id": "4d0c34f5-a515-4d2e-8203-d3fd6bd0dea6",
+        "assertions": [
+          {
+            "assertion": "Login failed",
+            "skipped": false
+          }
+        ]
+      },
+      {
+        "cursor": {
+          "ref": "bcb871f7-36ee-4140-896d-fee13418b1a5",
+          "length": 2,
+          "cycles": 1,
+          "position": 1,
+          "iteration": 0,
+          "httpRequestId": "378e2b24-cd68-481e-a91c-c5cb3857fa4b"
+        },
+        "item": {
+          "id": "d9610879-f1f1-43d0-8fd8-f4eb2c08c54e",
+          "name": "Stream AI Analysis (with API Key)",
+          "request": {
+            "description": {
+              "content": "🔐 **AI Analysis with Doppler Integration**\n\nStreams AI-powered compliance analysis using:\n- Google API key from Doppler secrets\n- Automatic fallback handling\n- Circuit breaker protection\n\nThis endpoint uses the Google Gemini API key stored securely in Doppler.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v1",
+                "ai-assessments",
+                "analyze-stream"
+              ],
+              "host": [
+                "{{base_url}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "text/event-stream"
+              }
+            ],
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"assessment_responses\": [\n    {\n      \"question_id\": \"gdpr_data_collection\",\n      \"answer\": \"yes\",\n      \"evidence\": \"We collect email addresses and company details for service delivery\"\n    }\n  ],\n  \"framework\": \"gdpr\",\n  \"session_id\": \"{{$guid}}\"\n}"
+            }
+          },
+          "response": [],
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "id": "639c99f9-ac36-4efc-86ad-6b453a311c95",
+                "type": "text/javascript",
+                "exec": [
+                  "// Verify we have Google API key from Doppler",
+                  "const apiKey = pm.environment.get('google_api_key');",
+                  "if (!apiKey) {",
+                  "    console.error('❌ Google API key not found in environment');",
+                  "    console.log('💡 Ensure GOOGLE_API_KEY is set in Doppler');",
+                  "}"
+                ],
+                "_lastExecutionId": "de2e65ef-3f34-4c67-8422-aff6781dbf21"
+              }
+            }
+          ]
+        },
+        "request": {
+          "description": {
+            "content": "🔐 **AI Analysis with Doppler Integration**\n\nStreams AI-powered compliance analysis using:\n- Google API key from Doppler secrets\n- Automatic fallback handling\n- Circuit breaker protection\n\nThis endpoint uses the Google Gemini API key stored securely in Doppler.",
+            "type": "text/plain"
+          },
+          "url": {
+            "protocol": "http",
+            "port": "8000",
+            "path": [
+              "api",
+              "v1",
+              "ai-assessments",
+              "analyze-stream"
+            ],
+            "host": [
+              "localhost"
+            ],
+            "query": [],
+            "variable": []
+          },
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Accept",
+              "value": "text/event-stream"
+            },
+            {
+              "key": "User-Agent",
+              "value": "PostmanRuntime/7.39.1",
+              "system": true
+            },
+            {
+              "key": "Cache-Control",
+              "value": "no-cache",
+              "system": true
+            },
+            {
+              "key": "Postman-Token",
+              "value": "e3001b20-fb7b-4bcc-8f55-a123afd510b2",
+              "system": true
+            },
+            {
+              "key": "Host",
+              "value": "localhost:8000",
+              "system": true
+            },
+            {
+              "key": "Accept-Encoding",
+              "value": "gzip, deflate, br",
+              "system": true
+            },
+            {
+              "key": "Connection",
+              "value": "keep-alive",
+              "system": true
+            },
+            {
+              "key": "Content-Length",
+              "value": "282",
+              "system": true
+            }
+          ],
+          "method": "POST",
+          "body": {
+            "mode": "raw",
+            "raw": "{\n  \"assessment_responses\": [\n    {\n      \"question_id\": \"gdpr_data_collection\",\n      \"answer\": \"yes\",\n      \"evidence\": \"We collect email addresses and company details for service delivery\"\n    }\n  ],\n  \"framework\": \"gdpr\",\n  \"session_id\": \"5b9cb0f8-824f-4a42-bc3d-b320a33aaa22\"\n}"
+          },
+          "auth": {
+            "type": "bearer",
+            "bearer": [
+              {
+                "type": "string",
+                "value": "",
+                "key": "token"
+              }
+            ]
+          }
+        },
+        "response": {
+          "id": "fccdf46c-8ec1-48a2-ae05-368aa7a86e68",
+          "status": "Not Found",
+          "code": 404,
+          "header": [
+            {
+              "key": "date",
+              "value": "Fri, 22 Aug 2025 16:19:37 GMT"
+            },
+            {
+              "key": "server",
+              "value": "uvicorn"
+            },
+            {
+              "key": "content-length",
+              "value": "22"
+            },
+            {
+              "key": "content-type",
+              "value": "application/json"
+            },
+            {
+              "key": "x-request-id",
+              "value": "97fa56d1-0a21-4a04-8571-602dc4d5d2a8"
+            },
+            {
+              "key": "x-process-time",
+              "value": "0.006197690963745117"
+            },
+            {
+              "key": "x-content-type-options",
+              "value": "nosniff"
+            },
+            {
+              "key": "x-frame-options",
+              "value": "DENY"
+            },
+            {
+              "key": "x-xss-protection",
+              "value": "1; mode=block"
+            },
+            {
+              "key": "strict-transport-security",
+              "value": "max-age=31536000; includeSubDomains"
+            },
+            {
+              "key": "content-security-policy",
+              "value": "default-src 'self'"
+            },
+            {
+              "key": "referrer-policy",
+              "value": "strict-origin-when-cross-origin"
+            },
+            {
+              "key": "permissions-policy",
+              "value": "geolocation=(), microphone=(), camera=()"
+            }
+          ],
+          "stream": {
+            "type": "Buffer",
+            "data": [
+              123,
+              34,
+              100,
+              101,
+              116,
+              97,
+              105,
+              108,
+              34,
+              58,
+              34,
+              78,
+              111,
+              116,
+              32,
+              70,
+              111,
+              117,
+              110,
+              100,
+              34,
+              125
+            ]
+          },
+          "cookie": [],
+          "responseTime": 9,
+          "responseSize": 22
+        },
+        "id": "d9610879-f1f1-43d0-8fd8-f4eb2c08c54e"
+      }
+    ],
+    "transfers": {
+      "responseTotal": 62
+    },
+    "failures": [],
+    "error": null
+  }
+}

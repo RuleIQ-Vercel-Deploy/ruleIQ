@@ -15,7 +15,7 @@ vi.mock('@/components/assessments/AIErrorBoundary', () => ({
 }));
 
 vi.mock('@/components/assessments/AssessmentNavigation', () => ({
-  AssessmentNavigation: (props: any) => (
+  AssessmentNavigation: (props: Record<string, unknown>) => (
     <div data-testid="assessment-navigation">
       {props.framework.sections.map((section: any, index: number) => (
         <button key={section.id} onClick={() => props.onSectionClick(index)}>
@@ -27,7 +27,7 @@ vi.mock('@/components/assessments/AssessmentNavigation', () => ({
 }));
 
 vi.mock('@/components/assessments/QuestionRenderer', () => ({
-  QuestionRenderer: (props: any) => (
+  QuestionRenderer: (props: Record<string, unknown>) => (
     <div data-testid="question-renderer">
       <div>{props.question.text}</div>
       <input
@@ -42,7 +42,7 @@ vi.mock('@/components/assessments/QuestionRenderer', () => ({
 }));
 
 vi.mock('@/components/assessments/FollowUpQuestion', () => ({
-  FollowUpQuestion: (props: any) => (
+  FollowUpQuestion: (props: Record<string, unknown>) => (
     <div data-testid="follow-up-question">
       <div>{props.question.text}</div>
       <input
@@ -56,7 +56,7 @@ vi.mock('@/components/assessments/FollowUpQuestion', () => ({
 }));
 
 vi.mock('@/components/assessments/ProgressTracker', () => ({
-  ProgressTracker: (props: any) => (
+  ProgressTracker: (props: Record<string, unknown>) => (
     <div data-testid="progress-tracker">
       Progress: {props.progress.answeredQuestions + 1}/{props.progress.totalQuestions}
     </div>

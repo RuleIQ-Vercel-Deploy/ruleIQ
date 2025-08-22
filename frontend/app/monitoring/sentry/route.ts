@@ -46,7 +46,9 @@ export async function POST(request: NextRequest) {
       },
     });
   } catch (error) {
-    console.error('Sentry tunnel error:', error);
+    // TODO: Replace with proper logging
+
+    // // TODO: Replace with proper logging
     return new NextResponse('Internal Server Error', { status: 500 });
   }
 }

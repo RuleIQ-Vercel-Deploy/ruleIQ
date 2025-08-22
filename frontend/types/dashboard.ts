@@ -59,8 +59,8 @@ export interface DashboardData {
   compliance_trends: ComplianceTrend[];
   framework_scores: Record<string, number>;
   pending_tasks: PendingTask[];
-  recent_activity: any[];
-  task_progress?: any[];
-  risks?: any[];
-  activity_data?: any[];
+  recent_activity: unknown[];
+  task_progress?: unknown[];
+  risks?: unknown[];
+  activity_data?: unknown[];
 }

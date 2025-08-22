@@ -103,7 +103,7 @@ class DashboardService {
   /**
    * Update dashboard widgets configuration
    */
-  async updateDashboardWidgets(widgets: any[]): Promise<void> {
+  async updateDashboardWidgets(widgets: unknown[]): Promise<void> {
     await apiClient.put('/dashboard/widgets', { widgets });
   }
 

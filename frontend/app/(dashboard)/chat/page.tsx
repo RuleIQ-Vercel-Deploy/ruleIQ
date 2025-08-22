@@ -40,7 +40,7 @@ export default function ChatPage() {
     return () => {
       useChatStore.getState().disconnectWebSocket();
     };
-  }, []);
+  }, [loadConversations]);
 
   const handleNewConversation = async () => {
     await createConversation('New Conversation');

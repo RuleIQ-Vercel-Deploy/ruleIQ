@@ -2,7 +2,7 @@
 
 import { Loader2 } from 'lucide-react';
 import { useRouter, useParams } from 'next/navigation';
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 
 import { AssessmentWizard } from '@/components/assessments/AssessmentWizard';
 import { assessmentService } from '@/lib/api/assessments.service';
@@ -140,11 +140,7 @@ export default function AssessmentPage() {
 
   const assessmentId = params?.['id'] as string;
 
-  useEffect(() => {
-    loadAssessment();
-  }, [assessmentId]);
-
-  const loadAssessment = async () => {
+  const loadAssessment = useCallback(async () => {
     try {
       // Load assessment details
       await assessmentService.getAssessment(assessmentId);
@@ -162,7 +158,11 @@ export default function AssessmentPage() {
       });
       router.push('/assessments');
     }
-  };
+  }, [assessmentId, addNotification, router]);
+
+  useEffect(() => {
+    loadAssessment();
+  }, [loadAssessment]);
 
   const handleComplete = async (result: AssessmentResult) => {
     try {
@@ -193,10 +193,11 @@ export default function AssessmentPage() {
       // Save progress to backend
       await assessmentService.updateAssessment(assessmentId, {
         status: 'in_progress',
-        responses: (progress as any).responses || {}, // Safe access to responses
+        responses: (progress as AssessmentProgress).responses || {}, // Safe access to responses
       });
     } catch (error) {
-      console.error('Failed to save progress:', error);
+      // Log error for debugging - consider using a proper logger in production
+      // TODO: Replace with proper logging
     }
   };
 

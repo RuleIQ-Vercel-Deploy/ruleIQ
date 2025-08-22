@@ -60,16 +60,16 @@ def upgrade() -> None:
 
         # Timestamps
         sa.Column(
-            'created_at', 
-            sa.DateTime(timezone=True), 
-            server_default=sa.func.now(), 
+            'created_at',
+            sa.DateTime(timezone=True),
+            server_default=sa.func.now(),
             nullable=False
         ),
         sa.Column(
-            'updated_at', 
-            sa.DateTime(timezone=True), 
-            server_default=sa.func.now(), 
-            onupdate=sa.func.now(), 
+            'updated_at',
+            sa.DateTime(timezone=True),
+            server_default=sa.func.now(),
+            onupdate=sa.func.now(),
             nullable=False
         ),
         sa.Column('last_activity_at', sa.DateTime(timezone=True), nullable=True),
@@ -84,9 +84,9 @@ def upgrade() -> None:
         sa.Column('id', postgresql.UUID(as_uuid=True), primary_key=True, default=uuid.uuid4),
         sa.Column('session_token', sa.String(255), nullable=False, unique=True, index=True),
         sa.Column(
-            'lead_id', 
+            'lead_id',
             postgresql.UUID(as_uuid=True),
-            sa.ForeignKey('assessment_leads.id', ondelete='CASCADE'), 
+            sa.ForeignKey('assessment_leads.id', ondelete='CASCADE'),
             nullable=False
         ),
 
@@ -128,16 +128,16 @@ def upgrade() -> None:
 
         # Timestamps
         sa.Column(
-            'created_at', 
-            sa.DateTime(timezone=True), 
-            server_default=sa.func.now(), 
+            'created_at',
+            sa.DateTime(timezone=True),
+            server_default=sa.func.now(),
             nullable=False
         ),
         sa.Column(
-            'updated_at', 
-            sa.DateTime(timezone=True), 
-            server_default=sa.func.now(), 
-            onupdate=sa.func.now(), 
+            'updated_at',
+            sa.DateTime(timezone=True),
+            server_default=sa.func.now(),
+            onupdate=sa.func.now(),
             nullable=False
         ),
         sa.Column('completed_at', sa.DateTime(timezone=True), nullable=True),
@@ -198,16 +198,16 @@ def upgrade() -> None:
 
         # Timestamps
         sa.Column(
-            'created_at', 
-            sa.DateTime(timezone=True), 
-            server_default=sa.func.now(), 
+            'created_at',
+            sa.DateTime(timezone=True),
+            server_default=sa.func.now(),
             nullable=False
         ),
         sa.Column(
-            'updated_at', 
-            sa.DateTime(timezone=True), 
-            server_default=sa.func.now(), 
-            onupdate=sa.func.now(), 
+            'updated_at',
+            sa.DateTime(timezone=True),
+            server_default=sa.func.now(),
+            onupdate=sa.func.now(),
             nullable=False
         ),
 
@@ -222,15 +222,15 @@ def upgrade() -> None:
         'lead_scoring_events',
         sa.Column('id', postgresql.UUID(as_uuid=True), primary_key=True, default=uuid.uuid4),
         sa.Column(
-            'lead_id', 
+            'lead_id',
             postgresql.UUID(as_uuid=True),
-            sa.ForeignKey('assessment_leads.id', ondelete='CASCADE'), 
+            sa.ForeignKey('assessment_leads.id', ondelete='CASCADE'),
             nullable=False
         ),
         sa.Column(
-            'session_id', 
+            'session_id',
             postgresql.UUID(as_uuid=True),
-            sa.ForeignKey('freemium_assessment_sessions.id', ondelete='CASCADE'), 
+            sa.ForeignKey('freemium_assessment_sessions.id', ondelete='CASCADE'),
             nullable=True
         ),
 
@@ -280,15 +280,15 @@ def upgrade() -> None:
 
         # Timestamps
         sa.Column(
-            'created_at', 
-            sa.DateTime(timezone=True), 
-            server_default=sa.func.now(), 
+            'created_at',
+            sa.DateTime(timezone=True),
+            server_default=sa.func.now(),
             nullable=False
         ),
         sa.Column(
-            'event_timestamp', 
-            sa.DateTime(timezone=True), 
-            server_default=sa.func.now(), 
+            'event_timestamp',
+            sa.DateTime(timezone=True),
+            server_default=sa.func.now(),
             nullable=False
         ),
 

@@ -36,8 +36,8 @@ describe('Duplicate Key Detection Tests', () => {
             <HomePage />
           </TestWrapper>,
         );
-      } catch (error) {
-        console.log('HomePage render error:', error);
+      } catch {
+    // TODO: Replace with proper logging
         throw error;
       } finally {
         consoleError.mockRestore();
@@ -156,7 +156,7 @@ describe('Component Key Audit', () => {
           <Component />
         </TestWrapper>,
       );
-    } catch (error) {
+    } catch {
       if (error instanceof Error && error.message.includes('key')) {
         warnings.push(error.message);
       }

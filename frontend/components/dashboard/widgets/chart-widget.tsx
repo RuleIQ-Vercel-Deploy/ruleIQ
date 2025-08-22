@@ -24,7 +24,7 @@ import { cn } from '@/lib/utils';
 export type ChartType = 'line' | 'bar' | 'area' | 'pie' | 'radar' | 'polar';
 
 interface ChartWidgetProps {
-  data: any[];
+  data: unknown[];
   type?: ChartType;
   dataKey: string;
   xAxisKey?: string;

@@ -236,3 +236,52 @@ test-quick-groups:
 test-core-groups:
 	@echo "🎯 Running core test groups (Unit + AI + API)..."
 	python test_groups.py group1_unit && python test_groups.py group2_ai_core && python test_groups.py group3_api_basic
+
+# Integration Testing Commands
+test-integration-comprehensive:
+	@echo "🔗 Running comprehensive integration tests..."
+	@. .venv/bin/activate && python scripts/run_integration_tests.py --suite all
+
+test-integration-api-workflows:
+	@echo "🌐 Running API workflow integration tests..."
+	@. .venv/bin/activate && python scripts/run_integration_tests.py --suite api-workflows
+
+test-integration-external-services:
+	@echo "🌍 Running external service integration tests..."
+	@. .venv/bin/activate && python scripts/run_integration_tests.py --suite external-services
+
+test-integration-contracts:
+	@echo "📋 Running contract validation tests..."
+	@. .venv/bin/activate && python scripts/run_integration_tests.py --suite contracts
+
+test-integration-database:
+	@echo "🗄️ Running database integration tests..."
+	@. .venv/bin/activate && python scripts/run_integration_tests.py --suite database
+
+test-integration-security:
+	@echo "🔒 Running security integration tests..."
+	@. .venv/bin/activate && python scripts/run_integration_tests.py --suite security
+
+test-integration-performance:
+	@echo "⚡ Running performance integration tests..."
+	@. .venv/bin/activate && python scripts/run_integration_tests.py --suite performance
+
+test-integration-ai-services:
+	@echo "🤖 Running AI service integration tests..."
+	@. .venv/bin/activate && python scripts/run_integration_tests.py --suite ai-services
+
+test-integration-e2e:
+	@echo "🎯 Running end-to-end integration tests..."
+	@. .venv/bin/activate && python scripts/run_integration_tests.py --suite e2e
+
+# Integration test shortcuts
+test-integration-quick:
+	@echo "⚡ Running quick integration tests (API workflows + contracts)..."
+	@. .venv/bin/activate && python scripts/run_integration_tests.py --suite api-workflows
+	@. .venv/bin/activate && python scripts/run_integration_tests.py --suite contracts
+
+test-integration-core:
+	@echo "🎯 Running core integration tests..."
+	@. .venv/bin/activate && python scripts/run_integration_tests.py --suite api-workflows
+	@. .venv/bin/activate && python scripts/run_integration_tests.py --suite database
+	@. .venv/bin/activate && python scripts/run_integration_tests.py --suite contracts

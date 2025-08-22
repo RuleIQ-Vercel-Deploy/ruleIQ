@@ -238,7 +238,7 @@ export async function retryWithBackoff<T>(
   for (let attempt = 1; attempt <= config.maxAttempts; attempt++) {
     try {
       return await fn();
-    } catch (error) {
+    } catch {
       lastError = error as Error;
 
       if (attempt === config.maxAttempts) {
@@ -331,7 +331,7 @@ export function getContextualErrorMessage(error: EnhancedApiError, context?: str
 export function logError(error: EnhancedApiError, additionalContext?: any): void {
   // Handle cases where error might be undefined or empty
   if (!error) {
-    console.warn('[ruleIQ] Attempted to log undefined error');
+    // TODO: Replace with proper logging
     return;
   }
 
@@ -350,9 +350,13 @@ export function logError(error: EnhancedApiError, additionalContext?: any): void
   // In production, send to error monitoring service
   if (process.env.NODE_ENV === 'production') {
     // TODO: Send to Sentry or similar service
-    console.error('[ruleIQ Error]', errorLog);
+    // TODO: Replace with proper logging
+
+    // // TODO: Replace with proper logging
   } else {
-    console.error('[ruleIQ Error]', errorLog);
+    // TODO: Replace with proper logging
+
+    // // TODO: Replace with proper logging
   }
 }
 

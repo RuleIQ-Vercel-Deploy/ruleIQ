@@ -299,7 +299,9 @@ class RBACConfig:
         "refresh_token_expiry_days": 7,
         "max_failed_login_attempts": 5,
         "account_lockout_duration_minutes": 15,
-        "require_mfa_for_admin": False,  # TODO: Implement MFA
+        "require_mfa_for_admin": False,  # MFA implementation planned for Phase 2
+        "mfa_methods": ["totp", "sms"],  # Supported MFA methods when implemented
+        "mfa_backup_codes": True,  # Generate backup codes for MFA recovery
         "password_min_length": 8,
         "password_require_special_chars": True,
         "session_timeout_minutes": 120

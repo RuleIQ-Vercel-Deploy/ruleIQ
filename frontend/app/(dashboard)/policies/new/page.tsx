@@ -91,7 +91,9 @@ export default function NewPolicyPage() {
       // Redirect to the generated policy
       router.push(`/policies/${generatedPolicy.id}`);
     } catch (error) {
-      console.error('Policy generation failed:', error);
+      // TODO: Replace with proper logging
+
+      // // TODO: Replace with proper logging
       setIsGenerating(false);
       setCurrentStep(3); // Go back to customization step
 

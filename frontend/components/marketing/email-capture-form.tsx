@@ -56,10 +56,9 @@ export function EmailCaptureForm({ onSuccess, className = '', variant = 'hero' }
         ...formData,
         ...utmData,
       } as LeadCaptureRequest);
+    // TODO: Replace with proper logging
 
-      console.log('📧 Email captured successfully:', response);
-      console.log('🔄 Calling onSuccess callback with:', { leadId: response.lead_id, email: response.email });
-      
+    // TODO: Replace with proper logging
       onSuccess(response.lead_id, response.email);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to capture email');

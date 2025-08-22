@@ -51,7 +51,7 @@ describe('AI State Persistence Tests', () => {
         removeItem: (key: string) => mockStorage.delete(key),
       };
 
-      const storeAIRecommendations = (assessmentId: string, recommendations: any[]) => {
+      const storeAIRecommendations = (assessmentId: string, recommendations: unknown[]) => {
         const key = `ai_recommendations_${assessmentId}`;
         localStorage.setItem(
           key,

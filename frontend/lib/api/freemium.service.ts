@@ -213,9 +213,9 @@ export interface AssessmentResultsResponse {
   compliance_score?: number;
   risk_level: string;
   completed_at?: string;
-  recommendations?: any[];
-  gaps?: any[];
-  next_steps?: any[];
+  recommendations?: unknown[];
+  gaps?: unknown[];
+  next_steps?: unknown[];
 }
 
 class FreemiumService {

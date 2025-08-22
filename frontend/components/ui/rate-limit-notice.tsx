@@ -193,7 +193,7 @@ export function useRateLimitState(_operation: string) {
     suggestion?: string;
   } | null>(null);
 
-  const handleRateLimitError = React.useCallback((error: any) => {
+  const handleRateLimitError = React.useCallback((error: unknown) => {
     if (error.response?.status === 429) {
       const rateLimitError = error.response.data;
       setRateLimitInfo({

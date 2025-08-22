@@ -91,8 +91,8 @@ class PerformanceMonitor {
 
       // Navigation timing
       this.observeNavigationTiming();
-    } catch (error) {
-      console.warn('Performance monitoring initialization failed:', error);
+    } catch {
+      // TODO: Replace with proper logging
     }
   }
 
@@ -107,8 +107,8 @@ class PerformanceMonitor {
 
       observer.observe({ entryTypes: [entryType] });
       this.observers.push(observer);
-    } catch (error) {
-      console.warn(`Failed to observe ${entryType}:`, error);
+    } catch {
+      // TODO: Replace with proper logging
     }
   }
 
@@ -166,7 +166,7 @@ class PerformanceMonitor {
 
     // Log performance issues
     if (metric.rating === 'poor') {
-      console.warn(`Poor performance detected: ${name} = ${value}ms`);
+      // TODO: Replace with proper logging
     }
   }
 
@@ -202,7 +202,7 @@ class PerformanceMonitor {
     // For example: Google Analytics, DataDog, New Relic, etc.
 
     if (process.env.NODE_ENV === 'development') {
-      console.log('Performance metric:', metric);
+    // TODO: Replace with proper logging
     }
 
     // Example: Send to Google Analytics
@@ -230,7 +230,9 @@ class PerformanceMonitor {
       try {
         await fn();
       } catch (error) {
-        console.error(`Error in custom metric ${name}:`, error);
+        // TODO: Replace with proper logging
+
+        // // TODO: Replace with proper logging
       }
 
       const duration = performance.now() - startTime;
@@ -369,7 +371,7 @@ export function measurePerformance(metricName: string) {
   return function (_target: any, _propertyName: string, descriptor: PropertyDescriptor) {
     const method = descriptor.value;
 
-    descriptor.value = async function (...args: any[]) {
+    descriptor.value = async function (...args: unknown[]) {
       return performanceMonitor.measureCustomMetric(metricName, () => method.apply(this, args));
     };
 

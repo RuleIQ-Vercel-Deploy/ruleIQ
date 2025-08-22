@@ -261,7 +261,9 @@ export default function ComplianceWizardPage() {
           message: 'We found your previous answers and loaded them for you.',
         });
       } catch (error) {
-        console.error('Failed to load draft:', error);
+        // TODO: Replace with proper logging
+
+        // // TODO: Replace with proper logging
       }
     }
   }, []);
@@ -360,7 +362,9 @@ export default function ComplianceWizardPage() {
                 resolve();
               },
               onError: (error) => {
-                console.error('Compliance check failed:', error);
+                // TODO: Replace with proper logging
+
+                // // TODO: Replace with proper logging
                 // Fallback to local report
                 const fallbackReport = generateComplianceReport(answers);
                 localStorage.setItem(
@@ -412,7 +416,9 @@ export default function ComplianceWizardPage() {
       // Redirect to results page
       router.push('/compliance-wizard/results');
     } catch (error) {
-      console.error('Assessment completion error:', error);
+      // TODO: Replace with proper logging
+
+      // // TODO: Replace with proper logging
       addNotification({
         type: 'error',
         title: 'Error',

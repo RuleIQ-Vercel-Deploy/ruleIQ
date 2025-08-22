@@ -163,7 +163,7 @@ export function useCreateIntegration(
 
 // Hook to update integration
 export function useUpdateIntegration(
-  options?: BaseMutationOptions<Integration, unknown, { id: string; data: any }>,
+  options?: BaseMutationOptions<Integration, unknown, { id: string; data: unknown }>,
 ) {
   const queryClient = useQueryClient();
 

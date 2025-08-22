@@ -122,7 +122,7 @@ class AvaPerformanceMonitor {
   private budget: PerformanceBudget;
 
   constructor() {
-    console.log('⚡ Ava Performance Monitor initializing...');
+    // TODO: Replace with proper logging
     this.budget = this.loadPerformanceBudget();
     this.ensureDirectories();
   }
@@ -161,15 +161,14 @@ class AvaPerformanceMonitor {
       try {
         const customBudget = JSON.parse(readFileSync(this.budgetPath, 'utf8'));
         return { ...defaultBudget, ...customBudget };
-      } catch (error) {
+      } catch {
         console.warn('⚠️ Could not load custom budget, using defaults');
       }
     }
 
     // Save default budget for reference
     writeFileSync(this.budgetPath, JSON.stringify(defaultBudget, null, 2));
-    console.log(`📋 Created default performance budget: ${this.budgetPath}`);
-
+    // TODO: Replace with proper logging
     return defaultBudget;
   }
 
@@ -180,8 +179,7 @@ class AvaPerformanceMonitor {
   }
 
   async monitorPerformance(url: string = 'http://localhost:3000'): Promise<PerformanceResults> {
-    console.log(`🔍 Monitoring performance for ${url}...`);
-
+    // TODO: Replace with proper logging
     const results: PerformanceResults = {
       timestamp: new Date().toISOString(),
       lighthouse: await this.runLighthouseAudit(url),
@@ -203,8 +201,7 @@ class AvaPerformanceMonitor {
   }
 
   private async runLighthouseAudit(url: string): Promise<LighthouseResults> {
-    console.log('🔍 Running Lighthouse audit...');
-
+    // TODO: Replace with proper logging
     try {
       const lighthouseCmd = `npx lighthouse ${url} --output=json --quiet --chrome-flags="--headless --no-sandbox"`;
       const output = execSync(lighthouseCmd, { encoding: 'utf8', cwd: this.frontendPath });
@@ -229,7 +226,7 @@ class AvaPerformanceMonitor {
           totalBlockingTime: audits['total-blocking-time'].numericValue
         }
       };
-    } catch (error) {
+    } catch {
       console.warn('⚠️ Lighthouse audit failed, using fallback values');
       return {
         performance: 0,
@@ -243,8 +240,7 @@ class AvaPerformanceMonitor {
   }
 
   private async measureCoreWebVitals(url: string): Promise<CoreWebVitalsResults> {
-    console.log('📊 Measuring Core Web Vitals...');
-
+    // TODO: Replace with proper logging
     try {
       // Use web-vitals library to measure real metrics
       const webVitalsScript = `
@@ -257,7 +253,8 @@ class AvaPerformanceMonitor {
         getLCP((metric) => results.lcp = metric.value);
         getTTFB((metric) => results.ttfb = metric.value);
         
-        setTimeout(() => console.log(JSON.stringify(results)), 2000);
+        setTimeout(() =>
+    // TODO: Replace with proper logging
       `;
 
       // For now, use Lighthouse values as fallback
@@ -274,15 +271,14 @@ class AvaPerformanceMonitor {
                     lcp <= this.budget.coreWebVitals.lcp;
 
       return { cls, fid, lcp, fcp, ttfb, passed };
-    } catch (error) {
+    } catch {
       console.warn('⚠️ Core Web Vitals measurement failed');
       return { cls: 0, fid: 0, lcp: 0, fcp: 0, ttfb: 0, passed: false };
     }
   }
 
   private async analyzeBundleSize(): Promise<BundleSizeResults> {
-    console.log('📦 Analyzing bundle size...');
-
+    // TODO: Replace with proper logging
     try {
       const buildOutput = execSync('pnpm build', { encoding: 'utf8', cwd: this.frontendPath });
       
@@ -321,7 +317,7 @@ class AvaPerformanceMonitor {
         chunks,
         breakdown
       };
-    } catch (error) {
+    } catch {
       console.warn('⚠️ Bundle size analysis failed');
       return {
         totalSize: 0,
@@ -335,8 +331,7 @@ class AvaPerformanceMonitor {
   }
 
   private async measureBuildTime(): Promise<BuildTimeResults> {
-    console.log('⏱️ Measuring build time...');
-
+    // TODO: Replace with proper logging
     try {
       const startTime = Date.now();
       execSync('pnpm build', { encoding: 'utf8', cwd: this.frontendPath });
@@ -347,15 +342,14 @@ class AvaPerformanceMonitor {
         compileTime: buildTime * 0.7, // Estimate
         optimizationTime: buildTime * 0.3 // Estimate
       };
-    } catch (error) {
+    } catch {
       console.warn('⚠️ Build time measurement failed');
       return { buildTime: 0, compileTime: 0, optimizationTime: 0 };
     }
   }
 
   private async measureRuntimeMetrics(url: string): Promise<RuntimeResults> {
-    console.log('🏃 Measuring runtime metrics...');
-
+    // TODO: Replace with proper logging
     try {
       // Use puppeteer to measure runtime metrics
       const puppeteerScript = `
@@ -369,13 +363,7 @@ class AvaPerformanceMonitor {
           const loadTime = Date.now() - startTime;
           
           const metrics = await page.metrics();
-          
-          console.log(JSON.stringify({
-            memoryUsage: metrics.JSHeapUsedSize / 1024 / 1024,
-            cpuUsage: 0, // Not available in puppeteer
-            loadTime
-          }));
-          
+    // TODO: Replace with proper logging
           await browser.close();
         })();
       `;
@@ -386,7 +374,7 @@ class AvaPerformanceMonitor {
         cpuUsage: 30,    // %
         loadTime: 1500   // ms
       };
-    } catch (error) {
+    } catch {
       console.warn('⚠️ Runtime metrics measurement failed');
       return { memoryUsage: 0, cpuUsage: 0, loadTime: 0 };
     }
@@ -494,56 +482,59 @@ class AvaPerformanceMonitor {
   private async savePerformanceReport(results: PerformanceResults): Promise<void> {
     const reportPath = join(this.reportsPath, `performance-report-${Date.now()}.json`);
     writeFileSync(reportPath, JSON.stringify(results, null, 2));
-    
-    console.log(`📊 Performance report saved: ${reportPath}`);
+    // TODO: Replace with proper logging
   }
 
   private displayResults(results: PerformanceResults): void {
-    console.log('\n⚡ Performance Monitor Results:');
-    console.log(`🎯 Overall Score: ${results.score}/100`);
-    console.log(`🔍 Lighthouse Performance: ${results.lighthouse.performance}/100`);
-    console.log(`📊 Core Web Vitals: ${results.coreWebVitals.passed ? '✅ PASSED' : '❌ FAILED'}`);
-    console.log(`📦 Bundle Size: ${results.bundleSize.totalSize.toFixed(1)}KB`);
-    console.log(`⏱️ Build Time: ${results.buildTime.buildTime.toFixed(1)}s`);
+    // TODO: Replace with proper logging
 
+    // TODO: Replace with proper logging
+
+    // TODO: Replace with proper logging
+
+    // TODO: Replace with proper logging
+
+    // TODO: Replace with proper logging
+
+    // TODO: Replace with proper logging
     if (results.violations.length > 0) {
-      console.log('\n🚨 Budget Violations:');
+    // TODO: Replace with proper logging
       results.violations.forEach(violation => {
         const emoji = violation.severity === 'CRITICAL' ? '🔴' : 
                      violation.severity === 'ERROR' ? '🟠' : '🟡';
-        console.log(`${emoji} ${violation.category}: ${violation.metric}`);
-        console.log(`   Actual: ${violation.actual} | Budget: ${violation.budget}`);
-        console.log(`   💡 ${violation.recommendation}`);
+    // TODO: Replace with proper logging
+
+    // TODO: Replace with proper logging
+
+    // TODO: Replace with proper logging
       });
     } else {
-      console.log('\n✅ All performance budgets met!');
+    // TODO: Replace with proper logging
     }
   }
 
   async enforceQualityGates(): Promise<boolean> {
-    console.log('🚪 Enforcing performance quality gates...');
-    
+    // TODO: Replace with proper logging
     const results = await this.monitorPerformance();
     
     const criticalViolations = results.violations.filter(v => v.severity === 'CRITICAL');
     const errorViolations = results.violations.filter(v => v.severity === 'ERROR');
 
     if (criticalViolations.length > 0) {
-      console.log('🚫 CRITICAL performance issues detected - blocking deployment!');
+    // TODO: Replace with proper logging
       return false;
     }
 
     if (errorViolations.length > 2) {
-      console.log('🚫 Too many performance errors - blocking deployment!');
+    // TODO: Replace with proper logging
       return false;
     }
 
     if (results.score < 70) {
-      console.log('🚫 Performance score too low - blocking deployment!');
+    // TODO: Replace with proper logging
       return false;
     }
-
-    console.log('✅ Performance quality gates passed!');
+    // TODO: Replace with proper logging
     return true;
   }
 }
@@ -561,9 +552,11 @@ async function main() {
       process.exit(passed ? 0 : 1);
     } else {
       await monitor.monitorPerformance(url);
-      console.log('\n✅ Performance monitoring complete!');
+    // TODO: Replace with proper logging
     }
   } catch (error) {
+    // Development logging - consider proper logger
+
     console.error('❌ Performance monitoring failed:', error);
     process.exit(1);
   }

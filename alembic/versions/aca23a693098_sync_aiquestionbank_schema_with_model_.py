@@ -43,7 +43,7 @@ def upgrade():
                existing_type=sa.VARCHAR(length=20),
                type_=sa.Integer(),
                nullable=False,
-               postgresql_using='CASE WHEN difficulty_level ~ \'^\d+$\' THEN difficulty_level::integer ELSE 5 END')
+               postgresql_using='CASE WHEN difficulty_level ~ \'^\\d+$\' THEN difficulty_level::integer ELSE 5 END')
     op.alter_column('ai_question_bank', 'is_active',
                existing_type=sa.BOOLEAN(),
                nullable=False)

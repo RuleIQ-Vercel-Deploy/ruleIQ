@@ -32,7 +32,9 @@ export async function GET() {
 
     return response;
   } catch (error) {
-    console.error('Failed to generate CSRF token:', error);
+    // TODO: Replace with proper logging
+
+    // // TODO: Replace with proper logging
     return NextResponse.json({ error: 'Failed to generate CSRF token' }, { status: 500 });
   }
 }

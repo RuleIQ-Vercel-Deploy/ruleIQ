@@ -10,6 +10,6 @@ export const resetHandlers = () => {
 };
 
 // Helper to add additional handlers for specific tests
-export const addHandlers = (...newHandlers: any[]) => {
+export const addHandlers = (...newHandlers: unknown[]) => {
   server.use(...newHandlers);
 };

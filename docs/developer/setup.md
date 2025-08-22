@@ -25,7 +25,13 @@ source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 # Install dependencies
 pip install -r requirements.txt
 
-# Environment setup
+# 🔐 Secrets Management Setup
+# RECOMMENDED: Doppler (Production secrets management)
+curl -Ls https://cli.doppler.com/install.sh | sudo sh
+doppler login
+doppler setup  # Follow prompts to select project/config
+
+# Alternative: Local environment file
 cp .env.template .env
 # Edit .env with your configuration (see Environment Variables section)
 
@@ -34,6 +40,10 @@ alembic upgrade head
 python database/init_db.py
 
 # Start backend server
+# WITH DOPPLER (Recommended):
+doppler run -- python main.py    # All secrets auto-injected
+
+# WITHOUT DOPPLER (Local dev):
 python main.py  # Runs on http://localhost:8000
 ```
 

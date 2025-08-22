@@ -108,7 +108,7 @@ export function ChatWidget({
   // Voice control handlers
   const handleVoiceToggle = useCallback(() => {
     if (!isVoiceSupported) {
-      console.log('Voice not supported in this browser');
+    // TODO: Replace with proper logging
       return;
     }
 
@@ -123,7 +123,7 @@ export function ChatWidget({
 
   const handleVoiceCall = useCallback(() => {
     if (!voiceCapabilities?.calling) {
-      console.log('Voice calling not yet available');
+    // TODO: Replace with proper logging
       return;
     }
 
@@ -328,7 +328,7 @@ export function ChatWidget({
                     <div className="flex flex-col items-center justify-center h-full text-center">
                       <MessageSquare className="h-10 w-10 text-muted-foreground mb-3" />
                       <p className="text-sm text-muted-foreground">
-                        Hi! I&apos;m your AI compliance assistant.
+                        Hi! I'm your AI compliance assistant.
                       </p>
                       <p className="text-xs text-muted-foreground mt-1">
                         Ask me anything about compliance, policies, or regulations.

@@ -185,9 +185,9 @@ export class AssessmentUtils {
   static sanitizeInput(input: string): string {
     // Basic XSS prevention
     return input
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;')
+      .replace(/</g, '<')
+      .replace(/>/g, '>')
+      .replace(/"/g, '"')
       .replace(/'/g, '&#x27;')
       .replace(/\//g, '&#x2F;');
   }

@@ -106,7 +106,7 @@ vi.mock('next/navigation', () => ({
 
 // Mock Next.js image
 vi.mock('next/image', () => ({
-  default: (props: any) => {
+  default: (props: Record<string, unknown>) => {
     const { src, alt, ...rest } = props;
     return React.createElement('img', { src, alt, ...rest });
   },
@@ -147,7 +147,7 @@ vi.mock('tailwind-merge', () => ({
 
 // Mock Lucide React icons with proper error handling
 vi.mock('lucide-react', () => {
-  const createMockIcon = (name: string) => (props: any) => {
+  const createMockIcon = (name: string) => (props: Record<string, unknown>) => {
     return React.createElement('svg', {
       'data-testid': `${name}-icon`,
       'aria-label': name,

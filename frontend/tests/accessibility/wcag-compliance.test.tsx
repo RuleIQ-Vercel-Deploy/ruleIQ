@@ -26,7 +26,7 @@ test.describe('WCAG 2.2 AA Compliance Tests', () => {
 
     // Log violations for debugging
     if (violations.length > 0) {
-      console.log('WCAG 2.2 AA Violations:', JSON.stringify(violations, null, 2));
+    // TODO: Replace with proper logging
     }
 
     expect(violations.length).toBe(0);
@@ -63,7 +63,7 @@ test.describe('WCAG 2.2 AA Compliance Tests', () => {
 
     // Check color contrast ratios
     const contrastIssues = await page.evaluate(() => {
-      const issues: any[] = [];
+      const issues: unknown[] = [];
       const elements = document.querySelectorAll('*');
 
       elements.forEach((element) => {
@@ -188,7 +188,7 @@ test.describe('WCAG 2.2 AA Compliance Tests', () => {
     await page.goto('/', { waitUntil: 'networkidle' });
 
     const ariaIssues = await page.evaluate(() => {
-      const issues: any[] = [];
+      const issues: unknown[] = [];
 
       // Check for valid ARIA roles
       document.querySelectorAll('[role]').forEach((element) => {
@@ -254,7 +254,7 @@ test.describe('WCAG 2.2 AA Compliance Tests', () => {
     await page.goto('/login', { waitUntil: 'networkidle' });
 
     const formIssues = await page.evaluate(() => {
-      const issues: any[] = [];
+      const issues: unknown[] = [];
 
       // Check all form inputs
       document.querySelectorAll('input, select, textarea').forEach((input) => {
@@ -320,7 +320,7 @@ test.describe('WCAG 2.2 AA Compliance Tests', () => {
     await page.goto('/', { waitUntil: 'networkidle' });
 
     const imageIssues = await page.evaluate(() => {
-      const issues: any[] = [];
+      const issues: unknown[] = [];
 
       // Check all images
       document.querySelectorAll('img').forEach((img) => {
@@ -369,7 +369,7 @@ test.describe('WCAG 2.2 AA Compliance Tests', () => {
     await page.goto('/', { waitUntil: 'networkidle' });
 
     const linkIssues = await page.evaluate(() => {
-      const issues: any[] = [];
+      const issues: unknown[] = [];
 
       document.querySelectorAll('a').forEach((link) => {
         const href = link.getAttribute('href');
@@ -417,7 +417,7 @@ test.describe('WCAG 2.2 AA Compliance Tests', () => {
     await page.goto('/', { waitUntil: 'networkidle' });
 
     const focusIssues = await page.evaluate(async () => {
-      const issues: any[] = [];
+      const issues: unknown[] = [];
       const focusableElements = document.querySelectorAll(
         'a, button, input, select, textarea, [tabindex]:not([tabindex="-1"])',
       );
@@ -460,7 +460,7 @@ test.describe('WCAG 2.2 AA Compliance Tests', () => {
     await page.goto('/dashboard', { waitUntil: 'networkidle' });
 
     const tableIssues = await page.evaluate(() => {
-      const issues: any[] = [];
+      const issues: unknown[] = [];
 
       document.querySelectorAll('table').forEach((table) => {
         // Check for caption or aria-label
@@ -503,7 +503,7 @@ test.describe('WCAG 2.2 AA Compliance Tests', () => {
     await page.goto('/', { waitUntil: 'networkidle' });
 
     const mediaIssues = await page.evaluate(() => {
-      const issues: any[] = [];
+      const issues: unknown[] = [];
 
       // Check video elements
       document.querySelectorAll('video').forEach((video) => {

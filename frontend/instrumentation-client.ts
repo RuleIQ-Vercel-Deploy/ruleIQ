@@ -83,5 +83,5 @@ if (isValidDsn) {
     },
   });
 } else {
-  console.log('Sentry disabled: No valid DSN provided or placeholder DSN detected');
+    // TODO: Replace with proper logging
 }

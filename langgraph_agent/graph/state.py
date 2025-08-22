@@ -26,57 +26,57 @@ class ComplianceAgentState(TypedDict):
     This defines the complete state that flows through all nodes in the LangGraph.
     Each node can read from and write to this state.
     """
-    
+
     # Core conversation flow
     messages: Annotated[List[GraphMessage], add_messages]
-    
+
     # Routing and navigation
     route: Optional[RouteDecision]
     current_node: Optional[str]
     next_node: Optional[str]
-    
+
     # Business context and profile
     company_id: UUID
     profile: Optional[ComplianceProfile]
     thread_id: Optional[str]
     user_id: Optional[UUID]
-    
+
     # Retrieved documents and obligations
     retrieved_docs: List[Dict[str, Any]]
-    relevant_obligations: List[Obligation] 
+    relevant_obligations: List[Obligation]
     collected_evidence: List[EvidenceItem]
-    
+
     # Tool execution tracking
     tool_outputs: Dict[str, Any]
     tool_calls_made: List[Dict[str, Any]]
     tool_call_count: int
-    
+
     # Error handling and fallbacks
     errors: List[SafeFallbackResponse]
     error_count: int
-    
+
     # Graph execution metadata
     meta: Dict[str, Any]
     turn_count: int
     start_time: datetime
     last_updated: datetime
-    
+
     # Autonomy and interrupts
     autonomy_level: int  # 1=transparent_helper, 2=trusted_advisor, 3=autonomous_partner
     requires_human_review: bool
     interrupt_before: Optional[str]  # Node name to interrupt before
     interrupt_reason: Optional[str]
-    
+
     # Framework and compliance context
     selected_frameworks: List[str]
     risk_tolerance: str
     geographical_scope: List[str]
-    
+
     # Performance and cost tracking
     token_usage: Dict[str, int]
     cost_estimate: float
     latency_ms: Optional[int]
-    
+
 
 def create_initial_state(
     company_id: UUID,
@@ -99,43 +99,43 @@ def create_initial_state(
         Initial state with user message and default values
     """
     now = datetime.utcnow()
-    
+
     # Create initial user message
     initial_message = GraphMessage(
         role="user",
         content=user_input,
         timestamp=now
     )
-    
+
     return ComplianceAgentState(
         # Core conversation
         messages=[initial_message],
-        
+
         # Routing
         route=None,
         current_node=None,
         next_node="router",  # Always start with router
-        
+
         # Business context
         company_id=company_id,
         profile=None,
         thread_id=thread_id,
         user_id=user_id,
-        
+
         # Retrieved content
         retrieved_docs=[],
         relevant_obligations=[],
         collected_evidence=[],
-        
+
         # Tool tracking
         tool_outputs={},
         tool_calls_made=[],
         tool_call_count=0,
-        
+
         # Error handling
         errors=[],
         error_count=0,
-        
+
         # Metadata
         meta={
             "session_id": thread_id,
@@ -145,18 +145,18 @@ def create_initial_state(
         turn_count=1,
         start_time=now,
         last_updated=now,
-        
+
         # Autonomy
         autonomy_level=autonomy_level,
         requires_human_review=False,
         interrupt_before=None,
         interrupt_reason=None,
-        
+
         # Compliance context
         selected_frameworks=[],
         risk_tolerance="medium",
         geographical_scope=[],
-        
+
         # Performance
         token_usage={"input": 0, "output": 0, "total": 0},
         cost_estimate=0.0,
@@ -180,7 +180,7 @@ def update_state_metadata(state: ComplianceAgentState) -> ComplianceAgentState:
 
 
 def add_error_to_state(
-    state: ComplianceAgentState, 
+    state: ComplianceAgentState,
     error: SafeFallbackResponse
 ) -> ComplianceAgentState:
     """
@@ -212,19 +212,19 @@ def should_interrupt(state: ComplianceAgentState, node_name: str) -> bool:
     # Check explicit interrupt requests
     if state["interrupt_before"] == node_name:
         return True
-    
+
     # Check if human review is required
     if state["requires_human_review"]:
         return True
-    
+
     # Check error thresholds
     if state["error_count"] >= 3:
         return True
-    
+
     # Check turn limits
     if state["turn_count"] >= 20:
         return True
-    
+
     return False
 
 

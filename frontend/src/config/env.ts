@@ -60,7 +60,7 @@ const processEnv = {
 // --------------------------
 
 const merged = serverSchema.merge(clientSchema);
-// eslint-disable-next-line no-unused-vars
+ 
 type _MergedInput = z.input<typeof merged>;
 type MergedOutput = z.output<typeof merged>;
 
@@ -75,6 +75,8 @@ if (!!process.env['SKIP_ENV_VALIDATION'] === false) {
     : clientSchema.safeParse(processEnv); // on client we can only validate the ones that are exposed
 
   if (parsed.success === false) {
+    // Development logging - consider proper logger
+
     console.error('❌ Invalid environment variables:', parsed.error.flatten().fieldErrors);
     throw new Error('Invalid environment variables');
   }

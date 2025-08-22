@@ -110,12 +110,11 @@ export const LoadingStateSchema = z.boolean();
 export function safeValidate<T>(schema: z.ZodSchema<T>, data: unknown, context: string): T {
   try {
     return schema.parse(data);
-  } catch (error) {
+  } catch {
     if (error instanceof z.ZodError) {
-      console.error(`Validation error in ${context}:`, {
-        errors: error.errors,
-        data,
-      });
+      // TODO: Replace with proper logging
+
+      // // TODO: Replace with proper logging
       // In development, throw the error. In production, you might want to handle it gracefully
       if (process.env.NODE_ENV === 'development') {
         throw new Error(

@@ -107,7 +107,7 @@ test.describe('Keyboard Navigation Tests', () => {
       });
 
       // Log for debugging
-      console.log(`Shortcut ${shortcut.key}: ${actionTriggered ? 'triggered' : 'no action'}`);
+    // TODO: Replace with proper logging
     }
   });
 
@@ -445,7 +445,7 @@ test.describe('Keyboard Navigation Tests', () => {
 
     if (gridNavTest.gridFound && gridNavTest.cellCount > 1) {
       // Grid navigation is optional but good to have
-      console.log('Grid navigation:', gridNavTest.navigationWorks ? 'supported' : 'not supported');
+    // TODO: Replace with proper logging
     }
   });
 

@@ -140,7 +140,7 @@ export const useBusinessProfileStore = create<BusinessProfileState>()(
               false,
               'loadProfile/success',
             );
-          } catch (error: any) {
+          } catch (error: unknown) {
             const errorType =
               error.code === 'NETWORK_ERROR'
                 ? 'network'
@@ -202,7 +202,7 @@ export const useBusinessProfileStore = create<BusinessProfileState>()(
               false,
               'saveProfile/success',
             );
-          } catch (error: any) {
+          } catch (error: unknown) {
             const errorType = error.message?.includes('validation')
               ? 'validation'
               : error.code === 'NETWORK_ERROR'
@@ -266,7 +266,7 @@ export const useBusinessProfileStore = create<BusinessProfileState>()(
               false,
               'updateProfileAsync/success',
             );
-          } catch (error: any) {
+          } catch (error: unknown) {
             set(
               {
                 error: error.detail || error.message || 'Failed to update profile',
@@ -292,7 +292,7 @@ export const useBusinessProfileStore = create<BusinessProfileState>()(
               false,
               'deleteProfile/success',
             );
-          } catch (error: any) {
+          } catch (error: unknown) {
             set(
               {
                 error: error.detail || error.message || 'Failed to delete profile',
@@ -470,7 +470,7 @@ export const useBusinessProfileStore = create<BusinessProfileState>()(
               );
               return false;
             }
-          } catch (error: any) {
+          } catch (error: unknown) {
             set(
               {
                 error: error.message || 'Validation failed',
@@ -515,7 +515,7 @@ export const useBusinessProfileStore = create<BusinessProfileState>()(
               );
               return false;
             }
-          } catch (error: any) {
+          } catch (error: unknown) {
             set(
               {
                 error: error.message || 'Validation failed',
@@ -607,9 +607,9 @@ export const useBusinessProfileStore = create<BusinessProfileState>()(
               false,
               'loadRecommendations/success',
             );
-          } catch (error: any) {
+          } catch (error: unknown) {
             // Don't set error for recommendations - they're not critical
-            console.warn('Failed to load framework recommendations:', error);
+            // TODO: Replace with proper logging
             set(
               {
                 recommendations: [],

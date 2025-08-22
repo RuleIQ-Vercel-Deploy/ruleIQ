@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { User } from '@/types/auth';
+import type { User } from '@/types/auth';
 
 export interface AuthTokens {
   access_token: string;
@@ -106,7 +106,7 @@ export const useAuthStore = create<AuthState>()(
             isLoading: false,
             error: null,
           });
-        } catch (error) {
+        } catch {
           set({
             user: null,
             tokens: null,
@@ -157,7 +157,7 @@ export const useAuthStore = create<AuthState>()(
             isLoading: false,
             error: null,
           });
-        } catch (error) {
+        } catch {
           set({
             user: null,
             tokens: null,
@@ -218,7 +218,7 @@ export const useAuthStore = create<AuthState>()(
             tokens: newTokens,
             error: null,
           });
-        } catch (error) {
+        } catch {
           // If refresh fails, logout the user
           get().logout();
           throw error;
@@ -260,7 +260,7 @@ export const useAuthStore = create<AuthState>()(
 
           const user: User = await response.json();
           set({ user, isAuthenticated: true });
-        } catch (error) {
+        } catch {
           // If all fails, logout
           get().logout();
         }
@@ -293,7 +293,9 @@ export const useAuthStore = create<AuthState>()(
             throw new Error(errorData.detail || 'Password reset request failed');
           }
         } catch (error) {
-          console.error('Error in updateProfile:', error);
+          // TODO: Replace with proper logging
+
+          // // TODO: Replace with proper logging
           throw error;
         }
       },
@@ -312,7 +314,7 @@ export const useAuthStore = create<AuthState>()(
             const errorData = await response.json();
             throw new Error(errorData.detail || 'Password reset failed');
           }
-        } catch (error) {
+        } catch {
           throw error;
         }
       },
@@ -331,7 +333,7 @@ export const useAuthStore = create<AuthState>()(
             const errorData = await response.json();
             throw new Error(errorData.detail || 'Email verification failed');
           }
-        } catch (error) {
+        } catch {
           throw error;
         }
       },
@@ -374,7 +376,7 @@ export const useAuthStore = create<AuthState>()(
           set({ user: updatedUser });
 
           return updatedUser;
-        } catch (error) {
+        } catch {
           throw error;
         }
       },
@@ -403,7 +405,7 @@ export const useAuthStore = create<AuthState>()(
             const errorData = await response.json();
             throw new Error(errorData.detail || 'Password change failed');
           }
-        } catch (error) {
+        } catch {
           throw error;
         }
       },

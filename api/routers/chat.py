@@ -48,25 +48,24 @@ async def create_conversation(
     """Create a new chat conversation with optimized database queries."""
     try:
         from sqlalchemy import func, select
-        from sqlalchemy.orm import selectinload
 
         # Optimized: Single query to get both business profile and conversation count
         user_id_str = str(current_user.id)
-        
+
         # Use a single query with subquery for better performance
         profile_stmt = select(BusinessProfile).where(BusinessProfile.user_id == user_id_str)
         count_stmt = select(func.count(ChatConversation.id)).where(ChatConversation.user_id == user_id_str)
-        
+
         # Execute both queries concurrently
         profile_task = asyncio.create_task(db.execute(profile_stmt))
         count_task = asyncio.create_task(db.execute(count_stmt))
-        
+
         try:
             profile_result, count_result = await asyncio.gather(profile_task, count_task)
         except Exception as e:
             logger.error(f"Database query failed: {e}")
             raise HTTPException(status_code=500, detail="Database query failed")
-        
+
         business_profile = profile_result.scalars().first()
         conversation_count = count_result.scalar() or 0
 
@@ -106,7 +105,7 @@ async def create_conversation(
 
                 # Generate assistant response with enhanced error handling and timeout
                 logger.info(f"Processing initial message for conversation {conversation.id}")
-                
+
                 # Use asyncio timeout to prevent hanging
                 try:
                     response_task = asyncio.create_task(
@@ -117,10 +116,10 @@ async def create_conversation(
                             business_profile_id=business_profile.id,
                         )
                     )
-                    
+
                     # Aggressive timeout for conversation creation
                     response_text, metadata = await asyncio.wait_for(response_task, timeout=12.0)
-                    
+
                 except asyncio.TimeoutError:
                     logger.warning(f"AI processing timed out for conversation {conversation.id}")
                     # Use fallback response
@@ -133,7 +132,7 @@ I'm here to help with compliance questions about GDPR, ISO 27001, and other fram
 • Audit preparations
 
 What specific compliance topic would you like to explore?"""
-                    
+
                     metadata = {
                         "timestamp": datetime.utcnow().isoformat(),
                         "fallback_used": True,

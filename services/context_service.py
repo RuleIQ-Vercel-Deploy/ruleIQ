@@ -23,7 +23,7 @@ from dataclasses import dataclass, asdict
 from enum import Enum
 import redis.asyncio as redis
 
-# from services.cache_service import CacheService  # TODO: Implement cache service
+from services.cache_service import CacheService
 
 logger = logging.getLogger(__name__)
 
@@ -128,7 +128,7 @@ class UserContextService:
     """
 
     def __init__(self) -> None:
-        self.cache_service = None  # CacheService()  # TODO: Implement cache service
+        self.cache_service = CacheService()
         self.redis_client = None
         self._session_contexts: Dict[str, SessionContext] = {}
 

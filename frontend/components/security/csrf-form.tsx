@@ -30,7 +30,9 @@ export function CsrfForm({
     event.preventDefault();
 
     if (!token) {
-      console.error('CSRF token not available');
+      // TODO: Replace with proper logging
+
+      // // TODO: Replace with proper logging
       return;
     }
 
@@ -40,7 +42,9 @@ export function CsrfForm({
     try {
       await onSubmit(formData, token);
     } catch (error) {
-      console.error('Form submission error:', error);
+      // TODO: Replace with proper logging
+
+      // // TODO: Replace with proper logging
     }
   };
 

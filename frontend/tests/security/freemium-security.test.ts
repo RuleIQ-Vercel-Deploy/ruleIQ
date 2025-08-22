@@ -72,7 +72,7 @@ class SecurityTester {
     const responseText = await response.text();
     
     // Check that XSS payload is not reflected in response
-    expect(responseText).not.toContain('<script>');
+    expect(responseText).not.toContain(&apos;<script>');
     expect(responseText).not.toContain('javascript:');
     expect(responseText).not.toContain('onerror=');
     
@@ -152,12 +152,12 @@ describe('Freemium Security Tests', () => {
         123,
         null,
         '',
-        '<script>alert("xss")</script>',
+      '<script>alert(&quot;xss")</script>',
         'DROP TABLE users;',
       ];
       
       for (const businessType of invalidBusinessTypes) {
-        await securityTester.testInputValidation('/api/freemium/start-assessment', {
+        await securityTester.testInputValidation('/api/v1/freemium/sessions', {
           email: 'test@example.com',
           business_type: businessType,
           company_size: '10-50',
@@ -171,12 +171,12 @@ describe('Freemium Security Tests', () => {
         999,
         null,
         '',
-        '<script>',
+      '<script>',
         "'; DROP TABLE companies; --",
       ];
       
       for (const companySize of invalidCompanySizes) {
-        await securityTester.testInputValidation('/api/freemium/start-assessment', {
+        await securityTester.testInputValidation('/api/v1/freemium/sessions', {
           email: 'test@example.com',
           business_type: 'technology',
           company_size: companySize,
@@ -196,7 +196,7 @@ describe('Freemium Security Tests', () => {
       await securityTester.testInputValidation('/api/freemium/capture-email', {
         email: 'test@example.com',
         consent: true,
-        utm_medium: '<script>alert("xss")</script>',
+        utm_medium: &apos;<script>alert(&quot;xss")</script>',
       }, 400);
     });
   });
@@ -216,7 +216,7 @@ describe('Freemium Security Tests', () => {
     });
     
     it('should enforce rate limits on assessment start endpoint', async () => {
-      const responses = await securityTester.testRateLimit('/api/freemium/start-assessment', 15);
+      const responses = await securityTester.testRateLimit('/api/v1/freemium/sessions', 15);
       
       const rateLimitedResponses = responses.filter(r => r.status === 429);
       expect(rateLimitedResponses.length).toBeGreaterThan(0);
@@ -284,11 +284,11 @@ describe('Freemium Security Tests', () => {
   describe('XSS Prevention Tests', () => {
     it('should prevent reflected XSS in email field', async () => {
       const xssPayloads = [
-        '<script>alert("xss")</script>',
+      '<script>alert(&quot;xss")</script>',
         'javascript:alert("xss")',
-        '<img src="x" onerror="alert(\'xss\')" />',
-        '<svg onload="alert(\'xss\')" />',
-        '"><script>alert("xss")</script>',
+        &apos;<img src="x" onerror="alert(\'xss\')" />',
+        &apos;<svg onload="alert(\'xss\')" />',
+      '"><script>alert(&quot;xss")</script>',
         "'; alert('xss'); //",
       ];
       
@@ -298,7 +298,7 @@ describe('Freemium Security Tests', () => {
     });
     
     it('should sanitize UTM parameters', async () => {
-      const xssPayload = '<script>document.location="http://evil.com"</script>';
+      const xssPayload = &apos;<script>document.location=&quot;http://evil.com"</script>';
       
       const response = await fetch('http://localhost:8000/api/freemium/capture-email', {
         method: 'POST',
@@ -309,17 +309,17 @@ describe('Freemium Security Tests', () => {
           email: 'test@example.com',
           consent: true,
           utm_source: xssPayload,
-          utm_medium: '<img src="x" onerror="alert(1)">',
+          utm_medium: &apos;<img src="x" onerror="alert(1)">',
         }),
       });
       
       const responseText = await response.text();
-      expect(responseText).not.toContain('<script>');
+      expect(responseText).not.toContain(&apos;<script>');
       expect(responseText).not.toContain('onerror=');
     });
     
     it('should prevent XSS in assessment answers', async () => {
-      const xssAnswer = '<script>fetch("/api/admin/users").then(r=>r.json()).then(console.log)</script>';
+      const xssAnswer = &apos;<script>fetch(&quot;/api/admin/users").then(r=>r.json()).then(console.log)</script>';
       
       const response = await fetch('http://localhost:8000/api/freemium/assessment/answer', {
         method: 'POST',
@@ -335,7 +335,7 @@ describe('Freemium Security Tests', () => {
       });
       
       const responseText = await response.text();
-      expect(responseText).not.toContain('<script>');
+      expect(responseText).not.toContain(&apos;<script>');
       expect(responseText).not.toContain('fetch(');
     });
   });
@@ -548,10 +548,10 @@ describe('Freemium Security Tests', () => {
           .replace(/\//g, '&#x2F;');
       };
       
-      const maliciousInput = '<script>alert("xss")</script>';
+      const maliciousInput = &apos;<script>alert(&quot;xss")</script>';
       const sanitized = sanitizeInput(maliciousInput);
       
-      expect(sanitized).not.toContain('<script>');
+      expect(sanitized).not.toContain(&apos;<script>');
       expect(sanitized).toBe('&lt;script&gt;alert(&quot;xss&quot;)&lt;&#x2F;script&gt;');
     });
     
@@ -563,8 +563,8 @@ describe('Freemium Security Tests', () => {
       
       expect(validateEmail('valid@example.com')).toBe(true);
       expect(validateEmail('invalid-email')).toBe(false);
-      expect(validateEmail('<script>@example.com')).toBe(false);
-      expect(validateEmail('test@<script>.com')).toBe(false);
+      expect(validateEmail(&apos;<script>@example.com')).toBe(false);
+      expect(validateEmail(&apos;test@<script>.com')).toBe(false);
     });
     
     it('should prevent DOM-based XSS', () => {
@@ -572,7 +572,7 @@ describe('Freemium Security Tests', () => {
       const parseUrlParam = (param: string): string => {
         const decoded = decodeURIComponent(param);
         // Should sanitize or validate
-        if (decoded.includes('<script>') || decoded.includes('javascript:')) {
+        if (decoded.includes(&apos;<script>') || decoded.includes('javascript:')) {
           throw new Error('Invalid parameter');
         }
         return decoded;

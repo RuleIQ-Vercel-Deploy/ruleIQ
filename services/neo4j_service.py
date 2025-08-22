@@ -20,7 +20,7 @@ class Neo4jGraphRAGService:
     """
     Production-ready Neo4j service for compliance intelligence with GraphRAG capabilities
     """
-    
+
     def __init__(self) -> None:
         self.driver: Optional[Driver] = None
         self.uri = os.getenv("NEO4J_URI", "bolt://localhost:7687")
@@ -28,7 +28,7 @@ class Neo4jGraphRAGService:
         self.password = os.getenv("NEO4J_PASSWORD", "please_change")
         self.database = os.getenv("NEO4J_DATABASE", "neo4j")
         self.executor = ThreadPoolExecutor(max_workers=10)
-    
+
     async def initialize(self) -> bool:
         """Initialize Neo4j connection and verify schema"""
         try:
@@ -40,21 +40,21 @@ class Neo4jGraphRAGService:
                 max_connection_pool_size=50,
                 connection_acquisition_timeout=60
             )
-            
+
             # Verify connection
             if not await self._verify_connection():
                 raise Exception("Neo4j connection verification failed")
-            
+
             # Initialize schema if needed
             await self._initialize_schema()
-            
+
             logger.info("Neo4j GraphRAG service initialized successfully")
             return True
-            
+
         except Exception as e:
             logger.error(f"Failed to initialize Neo4j service: {e}")
             return False
-    
+
     async def _verify_connection(self) -> bool:
         """Verify Neo4j connection is working"""
         def _test_connection() -> bool:
@@ -73,7 +73,7 @@ class Neo4jGraphRAGService:
         except Exception as e:
             logger.error(f"Neo4j connection test failed: {e}")
             return False
-    
+
     async def _initialize_schema(self) -> None:
         """Initialize Neo4j schema with indexes and constraints"""
         # Node indexes for performance
@@ -119,7 +119,7 @@ class Neo4jGraphRAGService:
                     except ClientError as e:
                         if "already exists" not in str(e):
                             logger.warning(f"Index creation warning: {e}")
-                
+
                 # Create constraints
                 for constraint_query in constraints:
                     try:
@@ -136,7 +136,7 @@ class Neo4jGraphRAGService:
         except Exception as e:
             logger.error(f"Schema initialization failed: {e}")
             raise
-    
+
     async def execute_query(
         self,
         query: str,
@@ -165,13 +165,13 @@ class Neo4jGraphRAGService:
             logger.error(f"Query: {query}")
             logger.error(f"Parameters: {parameters}")
             raise
-    
+
     async def execute_transaction(
         self,
         queries: List[Tuple[str, Dict[str, Any]]]
     ) -> bool:
         """Execute multiple queries in a transaction"""
-        
+
         def _run_transaction() -> bool:
             if self.driver is None:
                 return False
@@ -181,7 +181,7 @@ class Neo4jGraphRAGService:
                         tx.run(query, params)
                     tx.commit()
                     return True
-        
+
         try:
             result = await asyncio.get_event_loop().run_in_executor(
                 self.executor, _run_transaction
@@ -190,14 +190,14 @@ class Neo4jGraphRAGService:
         except Exception as e:
             logger.error(f"Transaction failed: {e}")
             return False
-    
+
     # ============================================
     # COMPLIANCE COVERAGE ANALYSIS
     # ============================================
-    
+
     async def get_compliance_coverage(self, domain_name: Optional[str] = None) -> Dict[str, Any]:
         """Get compliance coverage analysis for a domain"""
-        
+
         if domain_name:
             query = """
             MATCH (domain:ComplianceDomain {name: $domain_name})-[:GOVERNS]->(reg:Regulation)
@@ -223,13 +223,13 @@ class Neo4jGraphRAGService:
             ORDER BY domain.priority, coverage_percentage DESC
             """
             params = {}
-        
+
         results = await self.execute_query(query, params)
         return {"coverage_analysis": results}
-    
+
     async def get_unimplemented_requirements(self) -> Dict[str, Any]:
         """Find all unimplemented mandatory requirements"""
-        
+
         query = """
         MATCH (reg:Regulation)-[:REQUIRES {mandatory: true}]->(req:Requirement)
         WHERE NOT EXISTS((req)<-[:IMPLEMENTS]-(:Control))
@@ -239,17 +239,17 @@ class Neo4jGraphRAGService:
                req.description AS description
         ORDER BY req.deadline
         """
-        
+
         results = await self.execute_query(query)
         return {"unimplemented_requirements": results}
-    
+
     # ============================================
     # RISK ASSESSMENT QUERIES
     # ============================================
-    
+
     async def calculate_residual_risks(self) -> Dict[str, Any]:
         """Calculate residual risk across all domains"""
-        
+
         query = """
         MATCH (risk:Risk)
         OPTIONAL MATCH (risk)<-[m:MITIGATES]-(ctrl:Control)
@@ -267,13 +267,13 @@ class Neo4jGraphRAGService:
                END AS risk_level
         ORDER BY residual_risk DESC
         """
-        
+
         results = await self.execute_query(query)
         return {"residual_risks": results}
-    
+
     async def get_unmitigated_high_risks(self) -> Dict[str, Any]:
         """Find high-risk areas needing immediate attention"""
-        
+
         query = """
         MATCH (risk:Risk)
         WHERE risk.risk_score >= 15
@@ -284,17 +284,17 @@ class Neo4jGraphRAGService:
                risk.risk_score AS score
         ORDER BY risk.risk_score DESC
         """
-        
+
         results = await self.execute_query(query)
         return {"unmitigated_high_risks": results}
-    
+
     # ============================================
     # REGULATORY CONVERGENCE
     # ============================================
-    
+
     async def find_regulatory_convergence(self) -> Dict[str, Any]:
         """Find common requirements across jurisdictions"""
-        
+
         query = """
         MATCH (j1:Jurisdiction)-[:ENFORCES]->(r1:Regulation)-[:REQUIRES]->(req1:Requirement)
         MATCH (j2:Jurisdiction)-[:ENFORCES]->(r2:Regulation)-[:REQUIRES]->(req2:Requirement)
@@ -304,17 +304,17 @@ class Neo4jGraphRAGService:
                COLLECT(DISTINCT j1.code + ':' + r1.name) AS regulations
         ORDER BY size(COLLECT(DISTINCT j1.code)) DESC
         """
-        
+
         results = await self.execute_query(query)
         return {"regulatory_convergence": results}
-    
+
     # ============================================
     # CONTROL EFFECTIVENESS
     # ============================================
-    
+
     async def analyze_control_effectiveness(self) -> Dict[str, Any]:
         """Analyze control effectiveness and automation levels"""
-        
+
         query = """
         MATCH (ctrl:Control)
         OPTIONAL MATCH (ctrl)-[impl:IMPLEMENTS]->(req:Requirement)
@@ -334,13 +334,13 @@ class Neo4jGraphRAGService:
                END AS automation_score
         ORDER BY COUNT(DISTINCT req) DESC, automation_score DESC
         """
-        
+
         results = await self.execute_query(query)
         return {"control_effectiveness": results}
-    
+
     async def get_manual_controls_needing_automation(self) -> Dict[str, Any]:
         """Find manual controls that need technology enablement"""
-        
+
         query = """
         MATCH (ctrl:Control {automation_level: 'MANUAL'})
         WHERE ctrl.implementation_status IN ['NOT_STARTED', 'IN_PROGRESS']
@@ -352,17 +352,17 @@ class Neo4jGraphRAGService:
                ctrl.frequency AS frequency
         ORDER BY COUNT(req) DESC
         """
-        
+
         results = await self.execute_query(query)
         return {"automation_candidates": results}
-    
+
     # ============================================
     # ENFORCEMENT ACTION LEARNING
     # ============================================
-    
+
     async def learn_from_enforcement_actions(self) -> Dict[str, Any]:
         """Extract lessons from enforcement actions"""
-        
+
         query = """
         MATCH (ea:EnforcementAction)-[:PRECEDENT_FOR]->(ctrl:Control)
         OPTIONAL MATCH (ctrl)-[:IMPLEMENTS]->(req:Requirement)
@@ -375,17 +375,17 @@ class Neo4jGraphRAGService:
                COLLECT(DISTINCT req.title) AS requirements_affected
         ORDER BY ea.penalty_amount DESC
         """
-        
+
         results = await self.execute_query(query)
         return {"enforcement_lessons": results}
-    
+
     # ============================================
     # METRIC PERFORMANCE TRACKING
     # ============================================
-    
+
     async def get_compliance_metrics_dashboard(self) -> Dict[str, Any]:
         """Get KPI/KRI dashboard data"""
-        
+
         query = """
         MATCH (m:Metric)
         OPTIONAL MATCH (m)-[:MEASURES]->(ctrl:Control)
@@ -403,21 +403,21 @@ class Neo4jGraphRAGService:
                COLLECT(ctrl.name) AS related_controls
         ORDER BY m.type, status DESC
         """
-        
+
         results = await self.execute_query(query)
         return {"metrics_dashboard": results}
-    
+
     # ============================================
     # NATURAL LANGUAGE QUERY INTERFACE
     # ============================================
-    
+
     async def query_by_domain_and_jurisdiction(
         self,
         domain: str,
         jurisdiction: str
     ) -> Dict[str, Any]:
         """Natural language query: What are the requirements for [DOMAIN] in [JURISDICTION]?"""
-        
+
         query = """
         MATCH (domain:ComplianceDomain {name: $domain})
               -[:GOVERNS]->(reg:Regulation {jurisdiction: $jurisdiction})
@@ -431,14 +431,14 @@ class Neo4jGraphRAGService:
                  article_reference: req.article_reference
                }) AS requirements
         """
-        
+
         params = {"domain": domain, "jurisdiction": jurisdiction}
         results = await self.execute_query(query, params)
         return {"domain_requirements": results}
-    
+
     async def query_controls_for_regulation(self, regulation: str) -> Dict[str, Any]:
         """Natural language query: What controls do we need for [REGULATION]?"""
-        
+
         query = """
         MATCH (reg:Regulation {name: $regulation})-[:REQUIRES]->(req:Requirement)
         OPTIONAL MATCH (req)<-[:IMPLEMENTS]-(ctrl:Control)
@@ -451,18 +451,18 @@ class Neo4jGraphRAGService:
                END AS status
         ORDER BY req.mandatory DESC, status
         """
-        
+
         params = {"regulation": regulation}
         results = await self.execute_query(query, params)
         return {"regulation_controls": results}
-    
+
     # ============================================
     # GRAPH PATTERN MATCHING
     # ============================================
-    
+
     async def find_compliance_gaps(self) -> Dict[str, Any]:
         """Use graph patterns to identify compliance gaps"""
-        
+
         query = """
         MATCH (domain:ComplianceDomain)-[:GOVERNS]->(reg:Regulation)
               -[:REQUIRES]->(req:Requirement)
@@ -475,13 +475,13 @@ class Neo4jGraphRAGService:
                COLLECT(req.title) AS unimplemented_requirements
         ORDER BY domain.priority, missing_controls DESC
         """
-        
+
         results = await self.execute_query(query)
         return {"compliance_gaps": results}
-    
+
     async def trace_risk_mitigation_chain(self, risk_name: str) -> Dict[str, Any]:
         """Trace risk mitigation through controls to technology"""
-        
+
         query = """
         MATCH (risk:Risk {name: $risk_name})<-[:MITIGATES]-(control:Control)
         OPTIONAL MATCH (control)<-[:MONITORS]-(tech:Technology)
@@ -492,21 +492,21 @@ class Neo4jGraphRAGService:
                tech.name AS technology,
                tech.category AS tech_category
         """
-        
+
         params = {"risk_name": risk_name}
         results = await self.execute_query(query, params)
         return {"mitigation_chain": results}
-    
+
     # ============================================
     # DATA MANAGEMENT
     # ============================================
-    
+
     async def bulk_load_compliance_data(self, data_file: str) -> bool:
         """Load compliance data from JSON file"""
         try:
             with open(data_file, 'r') as f:
                 data = json.load(f)
-            
+
             # Load domains
             if 'domains' in data:
                 query = """
@@ -519,7 +519,7 @@ class Neo4jGraphRAGService:
                 })
                 """
                 await self.execute_query(query, {"domains": data['domains']}, read_only=False)
-            
+
             # Load regulations
             if 'regulations' in data:
                 query = """
@@ -536,14 +536,27 @@ class Neo4jGraphRAGService:
                 })
                 """
                 await self.execute_query(query, {"regulations": data['regulations']}, read_only=False)
-            
+
             logger.info(f"Successfully loaded compliance data from {data_file}")
             return True
-            
+
         except Exception as e:
             logger.error(f"Failed to load compliance data: {e}")
             return False
-    
+
+    async def get_graph_statistics(self) -> Dict[str, Any]:
+        """Get basic graph statistics for initialization check"""
+        try:
+            query = """
+            MATCH (n)
+            RETURN count(n) as total_nodes
+            """
+            result = await self.execute_query(query, read_only=True)
+            return result[0] if result else {"total_nodes": 0}
+        except Exception as e:
+            logger.error(f"Failed to get graph statistics: {e}")
+            return {"total_nodes": 0}
+
     async def close(self):
         """Close Neo4j connection"""
         if self.driver:

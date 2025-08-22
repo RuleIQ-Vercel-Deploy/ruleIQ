@@ -5,7 +5,7 @@ Production-ready tool management with error handling and performance optimizatio
 
 import asyncio
 import logging
-from typing import Dict, List, Optional, Any, Union, Callable, Type
+from typing import Dict, List, Optional, Any, Union
 from dataclasses import dataclass, field
 from datetime import datetime
 from enum import Enum
@@ -14,11 +14,8 @@ import hashlib
 import hmac
 from uuid import UUID
 
-from pydantic import BaseModel, Field, ValidationError
-from langchain_core.tools import BaseTool, tool
-from langchain_core.callbacks import BaseCallbackHandler
+from langchain_core.tools import BaseTool
 
-from ..core.constants import SECURITY_CONFIG, EXECUTION_LIMITS
 from ..core.models import SafeFallbackResponse
 
 logger = logging.getLogger(__name__)
@@ -47,7 +44,7 @@ class ToolPriority(str, Enum):
 @dataclass
 class ToolResult:
     """Standardized tool execution result."""
-    
+
     tool_name: str
     success: bool
     result: Any = None
@@ -55,7 +52,7 @@ class ToolResult:
     execution_time_ms: int = 0
     timestamp: datetime = field(default_factory=datetime.utcnow)
     metadata: Dict[str, Any] = field(default_factory=dict)
-    
+
     def to_dict(self) -> Dict[str, Any]:
         """Convert to dictionary for serialization."""
         return {
@@ -72,12 +69,12 @@ class ToolResult:
 @dataclass
 class ToolError(Exception):
     """Custom tool execution error."""
-    
+
     tool_name: str
     error_type: str
     message: str
     details: Dict[str, Any] = field(default_factory=dict)
-    
+
     def to_fallback_response(self, company_id: UUID, thread_id: str) -> SafeFallbackResponse:
         """Convert to SafeFallbackResponse."""
         return SafeFallbackResponse(
@@ -96,27 +93,27 @@ class BaseComplianceTool(BaseTool, ABC):
     """
     Base class for compliance tools with validation and security.
     """
-    
+
     category: ToolCategory
     priority: ToolPriority = ToolPriority.MEDIUM
     requires_auth: bool = True
     rate_limit_per_minute: int = 60
     max_execution_time_seconds: int = 30
-    
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self._execution_count = 0
         self._last_reset = datetime.utcnow()
-    
+
     def _check_rate_limit(self) -> bool:
         """Check if tool is within rate limits."""
         now = datetime.utcnow()
         if (now - self._last_reset).total_seconds() >= 60:
             self._execution_count = 0
             self._last_reset = now
-        
+
         return self._execution_count < self.rate_limit_per_minute
-    
+
     def _validate_signature(self, input_data: str, signature: str, secret: str) -> bool:
         """Validate HMAC signature for tool security."""
         expected_signature = hmac.new(
@@ -124,41 +121,41 @@ class BaseComplianceTool(BaseTool, ABC):
             input_data.encode(),
             hashlib.sha256
         ).hexdigest()
-        
+
         return hmac.compare_digest(signature, expected_signature)
-    
+
     def _run(self, *args, **kwargs) -> Any:
         """
         Synchronous run method required by LangChain BaseTool.
         This is a bridge to our async _execute method.
         """
         import asyncio
-        
+
         # Create new event loop if none exists
         try:
             loop = asyncio.get_event_loop()
         except RuntimeError:
             loop = asyncio.new_event_loop()
             asyncio.set_event_loop(loop)
-        
+
         # Run the async execute method
         try:
             result = loop.run_until_complete(self._execute(*args, **kwargs))
             return result
         except Exception as e:
             return {"error": str(e), "success": False}
-    
+
     async def _arun(self, *args, **kwargs) -> Any:
         """
         Async run method for LangChain BaseTool.
         Delegates to our _execute method.
         """
         return await self._execute(*args, **kwargs)
-    
+
     async def _safe_execute(self, *args, **kwargs) -> ToolResult:
         """Execute tool with safety checks and error handling."""
         start_time = datetime.utcnow()
-        
+
         try:
             # Check rate limits
             if not self._check_rate_limit():
@@ -167,24 +164,24 @@ class BaseComplianceTool(BaseTool, ABC):
                     error_type="rate_limit_exceeded",
                     message=f"Rate limit exceeded: {self.rate_limit_per_minute}/minute"
                 )
-            
+
             self._execution_count += 1
-            
+
             # Execute with timeout
             result = await asyncio.wait_for(
                 self._execute(*args, **kwargs),
                 timeout=self.max_execution_time_seconds
             )
-            
+
             execution_time = int((datetime.utcnow() - start_time).total_seconds() * 1000)
-            
+
             return ToolResult(
                 tool_name=self.name,
                 success=True,
                 result=result,
                 execution_time_ms=execution_time
             )
-            
+
         except asyncio.TimeoutError:
             raise ToolError(
                 tool_name=self.name,
@@ -193,14 +190,14 @@ class BaseComplianceTool(BaseTool, ABC):
             )
         except Exception as e:
             execution_time = int((datetime.utcnow() - start_time).total_seconds() * 1000)
-            
+
             return ToolResult(
                 tool_name=self.name,
                 success=False,
                 error=str(e),
                 execution_time_ms=execution_time
             )
-    
+
     @abstractmethod
     async def _execute(self, *args, **kwargs) -> Any:
         """Execute the tool logic. Must be implemented by subclasses."""
@@ -209,12 +206,12 @@ class BaseComplianceTool(BaseTool, ABC):
 
 class ComplianceAnalysisTool(BaseComplianceTool):
     """Tool for analyzing compliance requirements."""
-    
+
     name: str = "compliance_analysis"
     description: str = "Analyze business compliance requirements and applicable frameworks"
     category: ToolCategory = ToolCategory.COMPLIANCE_ANALYSIS
     priority: ToolPriority = ToolPriority.HIGH
-    
+
     async def _execute(self, business_profile: Dict[str, Any], frameworks: List[str]) -> Dict[str, Any]:
         """Analyze compliance requirements for a business."""
         # Implementation would integrate with existing ruleIQ compliance logic
@@ -233,21 +230,21 @@ class ComplianceAnalysisTool(BaseComplianceTool):
             ],
             "recommendations": [
                 "Implement comprehensive privacy policy",
-                "Establish data retention schedule", 
+                "Establish data retention schedule",
                 "Conduct privacy impact assessment"
             ]
         }
-        
+
         return analysis
 
 
 class DocumentRetrievalTool(BaseComplianceTool):
     """Tool for retrieving relevant documents and templates."""
-    
+
     name: str = "document_retrieval"
     description: str = "Retrieve compliance documents, templates, and guidance materials"
     category: ToolCategory = ToolCategory.DOCUMENT_RETRIEVAL
-    
+
     async def _execute(self, query: str, framework: str, doc_type: str) -> Dict[str, Any]:
         """Retrieve relevant documents."""
         # Implementation would integrate with document storage
@@ -260,7 +257,7 @@ class DocumentRetrievalTool(BaseComplianceTool):
                     "url": "/templates/gdpr-privacy-policy.docx"
                 },
                 {
-                    "title": "Data Processing Agreement Template", 
+                    "title": "Data Processing Agreement Template",
                     "type": "contract_template",
                     "framework": "GDPR",
                     "url": "/templates/dpa-template.docx"
@@ -281,17 +278,17 @@ class DocumentRetrievalTool(BaseComplianceTool):
                 }
             ]
         }
-        
+
         return documents
 
 
 class EvidenceCollectionTool(BaseComplianceTool):
     """Tool for collecting and organizing compliance evidence."""
-    
+
     name: str = "evidence_collection"
     description: str = "Collect and organize compliance evidence and documentation"
     category: ToolCategory = ToolCategory.EVIDENCE_COLLECTION
-    
+
     async def _execute(self, company_id: str, frameworks: List[str]) -> Dict[str, Any]:
         """Collect evidence for compliance frameworks."""
         evidence = {
@@ -304,7 +301,7 @@ class EvidenceCollectionTool(BaseComplianceTool):
                     "frameworks": ["GDPR", "UK_GDPR"]
                 },
                 {
-                    "type": "training_record", 
+                    "type": "training_record",
                     "title": "Data Protection Training",
                     "status": "complete",
                     "completion_date": "2024-02-01",
@@ -325,18 +322,18 @@ class EvidenceCollectionTool(BaseComplianceTool):
                 "Document data retention procedures"
             ]
         }
-        
+
         return evidence
 
 
 class ReportGenerationTool(BaseComplianceTool):
     """Tool for generating compliance reports."""
-    
+
     name: str = "report_generation"
     description: str = "Generate comprehensive compliance reports and assessments"
     category: ToolCategory = ToolCategory.REPORT_GENERATION
     priority: ToolPriority = ToolPriority.MEDIUM
-    
+
     async def _execute(self, company_id: str, report_type: str, frameworks: List[str]) -> Dict[str, Any]:
         """Generate compliance report."""
         report = {
@@ -362,7 +359,7 @@ class ReportGenerationTool(BaseComplianceTool):
                 {
                     "title": "Data Security Measures",
                     "score": 70,
-                    "status": "needs_improvement", 
+                    "status": "needs_improvement",
                     "findings": ["Encryption in place", "Access controls implemented"],
                     "issues": ["Backup procedures need documentation"]
                 }
@@ -376,7 +373,7 @@ class ReportGenerationTool(BaseComplianceTool):
                 }
             ]
         }
-        
+
         return report
 
 
@@ -384,18 +381,18 @@ class ToolManager:
     """
     Advanced tool manager with validation, composition, and async execution.
     """
-    
+
     def __init__(self, secret_key: str):
         self.secret_key = secret_key
         self.tools: Dict[str, BaseComplianceTool] = {}
         self.tool_categories: Dict[ToolCategory, List[str]] = {}
         self.execution_stats: Dict[str, Dict[str, Any]] = {}
-        
+
         # Register default tools
         self._register_default_tools()
-        
+
         logger.info("ToolManager initialized with default tools")
-    
+
     def _register_default_tools(self) -> None:
         """Register default compliance tools."""
         default_tools = [
@@ -404,19 +401,19 @@ class ToolManager:
             EvidenceCollectionTool(),
             ReportGenerationTool()
         ]
-        
+
         for tool in default_tools:
             self.register_tool(tool)
-    
+
     def register_tool(self, tool: BaseComplianceTool) -> None:
         """Register a new tool."""
         self.tools[tool.name] = tool
-        
+
         # Update category mapping
         if tool.category not in self.tool_categories:
             self.tool_categories[tool.category] = []
         self.tool_categories[tool.category].append(tool.name)
-        
+
         # Initialize stats
         self.execution_stats[tool.name] = {
             "total_executions": 0,
@@ -425,26 +422,26 @@ class ToolManager:
             "avg_execution_time_ms": 0.0,
             "last_executed": None
         }
-        
+
         logger.info(f"Registered tool: {tool.name}")
-    
+
     def get_tool(self, name: str) -> Optional[BaseComplianceTool]:
         """Get tool by name."""
         return self.tools.get(name)
-    
+
     def list_tools(self, category: Optional[ToolCategory] = None) -> List[str]:
         """List available tools, optionally filtered by category."""
         if category:
             return self.tool_categories.get(category, [])
         return list(self.tools.keys())
-    
+
     def get_tools_by_priority(self, priority: ToolPriority) -> List[str]:
         """Get tools by priority level."""
         return [
             name for name, tool in self.tools.items()
             if tool.priority == priority
         ]
-    
+
     async def execute_tool(
         self,
         tool_name: str,
@@ -461,26 +458,26 @@ class ToolManager:
                 company_id=company_id,
                 thread_id=thread_id
             )
-        
+
         tool = self.tools[tool_name]
-        
+
         try:
             # Check if tool needs company_id parameter
             import inspect
             sig = inspect.signature(tool._execute)
-            
+
             # If tool expects company_id and it's not in kwargs, add it
             if 'company_id' in sig.parameters and 'company_id' not in kwargs:
                 kwargs['company_id'] = str(company_id)
-            
+
             # Execute tool
             result = await tool._safe_execute(*args, **kwargs)
-            
+
             # Update stats
             self._update_stats(tool_name, result)
-            
+
             return result
-            
+
         except ToolError as e:
             logger.error(f"Tool execution failed: {e}")
             self._update_stats(tool_name, None, failed=True)
@@ -488,7 +485,7 @@ class ToolManager:
         except Exception as e:
             logger.error(f"Unexpected error executing tool {tool_name}: {e}")
             self._update_stats(tool_name, None, failed=True)
-            
+
             return SafeFallbackResponse(
                 error_message=f"Tool execution failed: {str(e)}",
                 error_details={
@@ -498,7 +495,7 @@ class ToolManager:
                 company_id=company_id,
                 thread_id=thread_id
             )
-    
+
     async def execute_tool_chain(
         self,
         tool_sequence: List[Dict[str, Any]],
@@ -508,33 +505,33 @@ class ToolManager:
         """Execute a sequence of tools with data flow."""
         results = []
         context = {}
-        
+
         for step in tool_sequence:
             tool_name = step["tool"]
             args = step.get("args", [])
             kwargs = step.get("kwargs", {})
-            
+
             # Inject context from previous results
             if "use_context" in step:
                 for key in step["use_context"]:
                     if key in context:
                         kwargs[key] = context[key]
-            
+
             result = await self.execute_tool(
                 tool_name, company_id, thread_id, *args, **kwargs
             )
-            
+
             results.append(result)
-            
+
             # Update context for next tools
             if isinstance(result, ToolResult) and result.success:
                 context[f"{tool_name}_result"] = result.result
             else:
                 # Stop chain on failure
                 break
-        
+
         return results
-    
+
     async def execute_parallel_tools(
         self,
         tool_configs: List[Dict[str, Any]],
@@ -543,7 +540,7 @@ class ToolManager:
     ) -> List[Union[ToolResult, SafeFallbackResponse]]:
         """Execute multiple tools in parallel."""
         tasks = []
-        
+
         for config in tool_configs:
             task = self.execute_tool(
                 config["tool"],
@@ -553,9 +550,9 @@ class ToolManager:
                 **config.get("kwargs", {})
             )
             tasks.append(task)
-        
+
         results = await asyncio.gather(*tasks, return_exceptions=True)
-        
+
         # Convert exceptions to SafeFallbackResponse
         processed_results = []
         for i, result in enumerate(results):
@@ -570,9 +567,9 @@ class ToolManager:
                 )
             else:
                 processed_results.append(result)
-        
+
         return processed_results
-    
+
     def _update_stats(
         self,
         tool_name: str,
@@ -583,12 +580,12 @@ class ToolManager:
         stats = self.execution_stats[tool_name]
         stats["total_executions"] += 1
         stats["last_executed"] = datetime.utcnow().isoformat()
-        
+
         if failed:
             stats["failed_executions"] += 1
         elif result and result.success:
             stats["successful_executions"] += 1
-            
+
             # Update average execution time
             total_successful = stats["successful_executions"]
             current_avg = stats["avg_execution_time_ms"]
@@ -596,25 +593,25 @@ class ToolManager:
             stats["avg_execution_time_ms"] = new_avg
         else:
             stats["failed_executions"] += 1
-    
+
     def get_tool_stats(self, tool_name: Optional[str] = None) -> Dict[str, Any]:
         """Get execution statistics for tools."""
         if tool_name:
             return self.execution_stats.get(tool_name, {})
         return self.execution_stats
-    
+
     async def health_check(self) -> Dict[str, Any]:
         """Perform health check on all tools."""
         health = {
             "status": "healthy",
             "total_tools": len(self.tools),
             "tools_by_category": {
-                category.value: len(tools) 
+                category.value: len(tools)
                 for category, tools in self.tool_categories.items()
             },
             "tool_statuses": {}
         }
-        
+
         for tool_name, tool in self.tools.items():
             try:
                 # Simple health check - could be expanded
@@ -622,9 +619,9 @@ class ToolManager:
             except Exception:
                 health["tool_statuses"][tool_name] = "error"
                 health["status"] = "degraded"
-        
+
         return health
-    
+
     def validate_tool_request(
         self,
         tool_name: str,
@@ -634,10 +631,10 @@ class ToolManager:
         """Validate tool request with HMAC signature."""
         if tool_name not in self.tools:
             return False
-        
+
         tool = self.tools[tool_name]
-        
+
         if not tool.requires_auth:
             return True
-        
+
         return tool._validate_signature(request_data, signature, self.secret_key)

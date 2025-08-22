@@ -35,27 +35,27 @@ logger = get_logger(__name__)
 
 class LangSmithConfig:
     """Configuration manager for LangSmith tracing."""
-    
+
     @staticmethod
     def is_tracing_enabled() -> bool:
         """Check if LangSmith tracing is enabled."""
         return os.getenv("LANGCHAIN_TRACING_V2", "false").lower() == "true"
-    
+
     @staticmethod
     def get_api_key() -> Optional[str]:
         """Get LangSmith API key from environment."""
         return os.getenv("LANGCHAIN_API_KEY")
-    
+
     @staticmethod
     def get_project_name() -> str:
         """Get LangSmith project name."""
         return os.getenv("LANGCHAIN_PROJECT", "ruleiq-assessment")
-    
+
     @staticmethod
     def get_endpoint() -> str:
         """Get LangSmith API endpoint."""
         return os.getenv("LANGCHAIN_ENDPOINT", "https://api.smith.langchain.com")
-    
+
     @staticmethod
     def validate_configuration() -> bool:
         """
@@ -67,7 +67,7 @@ class LangSmithConfig:
         if not LangSmithConfig.is_tracing_enabled():
             logger.debug("LangSmith tracing is disabled")
             return False
-        
+
         api_key = LangSmithConfig.get_api_key()
         if not api_key:
             logger.warning(
@@ -75,24 +75,24 @@ class LangSmithConfig:
                 "Please set LANGCHAIN_API_KEY to enable tracing."
             )
             return False
-        
+
         if not api_key.startswith("ls__"):
             logger.warning(
                 "LANGCHAIN_API_KEY should start with 'ls__'. "
                 "Please check your API key format."
             )
             return False
-        
+
         project = LangSmithConfig.get_project_name()
         endpoint = LangSmithConfig.get_endpoint()
-        
-        logger.info(f"LangSmith tracing configured:")
+
+        logger.info("LangSmith tracing configured:")
         logger.info(f"  Project: {project}")
         logger.info(f"  Endpoint: {endpoint}")
-        logger.info(f"  View traces at: https://smith.langchain.com")
-        
+        logger.info("  View traces at: https://smith.langchain.com")
+
         return True
-    
+
     @staticmethod
     def get_trace_metadata(
         session_id: Optional[str] = None,
@@ -115,17 +115,17 @@ class LangSmithConfig:
             "component": "assessment_agent",
             "environment": os.getenv("ENVIRONMENT", "development"),
         }
-        
+
         if session_id:
             metadata["session_id"] = session_id
-        
+
         if lead_id:
             metadata["lead_id"] = lead_id
-        
+
         metadata.update(kwargs)
-        
+
         return metadata
-    
+
     @staticmethod
     def get_trace_tags(
         operation: str,
@@ -149,14 +149,14 @@ class LangSmithConfig:
             "langgraph",
             operation,
         ]
-        
+
         if phase:
             tags.append(f"phase:{phase}")
-        
+
         # Add any additional tags from kwargs
         for key, value in kwargs.items():
             tags.append(f"{key}:{value}")
-        
+
         return tags
 
 
@@ -184,32 +184,32 @@ def with_langsmith_tracing(
             if not LangSmithConfig.is_tracing_enabled():
                 # Tracing disabled, just run the function
                 return await func(*args, **kwargs)
-            
+
             from langchain_core.tracers.context import tracing_v2_enabled
-            
+
             # Extract useful context if available
             metadata = {}
             tags = [operation]
-            
+
             # Try to extract session_id from kwargs or args
             if "session_id" in kwargs:
                 metadata["session_id"] = kwargs["session_id"]
                 tags.append(f"session:{kwargs['session_id']}")
-            
+
             if "state" in kwargs and isinstance(kwargs["state"], dict):
                 if "session_id" in kwargs["state"]:
                     metadata["session_id"] = kwargs["state"]["session_id"]
                     tags.append(f"session:{kwargs['state']['session_id']}")
                 if "current_phase" in kwargs["state"]:
                     tags.append(f"phase:{kwargs['state']['current_phase']}")
-            
+
             # Add function inputs to metadata if requested
             if include_input:
                 metadata["inputs"] = {
                     "args": str(args)[:500],  # Truncate for brevity
                     "kwargs": str(kwargs)[:500]
                 }
-            
+
             # Run function with tracing
             with tracing_v2_enabled(
                 project_name=LangSmithConfig.get_project_name(),
@@ -217,15 +217,15 @@ def with_langsmith_tracing(
                 metadata=metadata
             ):
                 result = await func(*args, **kwargs)
-                
+
                 # Add output to metadata if requested
                 if include_output and result:
                     metadata["output_type"] = type(result).__name__
                     if isinstance(result, dict):
                         metadata["output_keys"] = list(result.keys())
-                
+
                 return result
-        
+
         return wrapper
     return decorator
 
@@ -271,7 +271,7 @@ if __name__ == "__main__":
     # Validate configuration when module is run directly
     print(LANGSMITH_SETUP_INSTRUCTIONS)
     print("\nChecking current configuration...")
-    
+
     if LangSmithConfig.validate_configuration():
         print("✅ LangSmith tracing is properly configured!")
     else:

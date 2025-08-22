@@ -513,7 +513,7 @@ export const authHandlers = [
     });
   }),
   
-  http.post(`${baseURL}/freemium/start-assessment`, async ({ request }) => {
+  http.post(`${baseURL}/freemium/sessions`, async ({ request }) => {
     const body = await request.json() as any;
     
     // Validate business type

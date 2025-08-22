@@ -131,7 +131,7 @@ function fixComprehensiveStoreTest() {
   );
 
   fs.writeFileSync(testFile, content);
-  console.log('✅ Fixed comprehensive store test');
+    // TODO: Replace with proper logging
 }
 
 // Fix 2: Add missing mock implementations for AI integration tests
@@ -155,7 +155,7 @@ function fixAIIntegrationTest() {
   );
 
   fs.writeFileSync(testFile, content);
-  console.log('✅ Fixed AI integration test');
+    // TODO: Replace with proper logging
 }
 
 // Fix 3: Update auth flow test to handle form submission properly
@@ -163,7 +163,7 @@ function fixAuthFlowTest() {
   const testFile = path.join(FRONTEND_DIR, 'tests/components/auth/auth-flow.test.tsx');
 
   if (!fs.existsSync(testFile)) {
-    console.log('⚠️  Auth flow test file not found, skipping');
+    // TODO: Replace with proper logging
     return;
   }
 
@@ -183,7 +183,7 @@ function fixAuthFlowTest() {
   );
 
   fs.writeFileSync(testFile, content);
-  console.log('✅ Fixed auth flow test');
+    // TODO: Replace with proper logging
 }
 
 // Fix 4: Create missing test utilities for assessment wizard
@@ -248,7 +248,7 @@ export const createMockAssessmentContext = () => ({
   }
 
   fs.writeFileSync(utilsFile, utilsContent);
-  console.log('✅ Created assessment wizard test utilities');
+    // TODO: Replace with proper logging
 }
 
 // Fix 5: Update vitest config to handle long-running tests
@@ -273,26 +273,30 @@ function updateVitestConfig() {
   }
 
   fs.writeFileSync(configFile, content);
-  console.log('✅ Updated vitest config');
+    // TODO: Replace with proper logging
 }
 
 // Main execution
 async function main() {
-  console.log('🔧 Fixing frontend tests...\n');
-
+    // TODO: Replace with proper logging
   try {
     fixComprehensiveStoreTest();
     fixAIIntegrationTest();
     fixAuthFlowTest();
     createAssessmentWizardUtils();
     updateVitestConfig();
+    // TODO: Replace with proper logging
 
-    console.log('\n✅ All fixes applied successfully!');
-    console.log('\n📝 Next steps:');
-    console.log('1. Run: pnpm test --run to verify fixes');
-    console.log('2. For specific test files: pnpm test <filename>');
-    console.log('3. For watch mode: pnpm test');
+    // TODO: Replace with proper logging
+
+    // TODO: Replace with proper logging
+
+    // TODO: Replace with proper logging
+
+    // TODO: Replace with proper logging
   } catch (error) {
+    // Development logging - consider proper logger
+
     console.error('\n❌ Error applying fixes:', error);
     process.exit(1);
   }

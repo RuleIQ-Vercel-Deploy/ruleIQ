@@ -116,8 +116,8 @@ export async function withRetry<T>(
   for (let attempt = 1; attempt <= maxAttempts; attempt++) {
     try {
       return await operation();
-    } catch (error) {
-      lastError = createAppError(error, `Attempt ${attempt}`);
+    } catch (err) {
+      lastError = createAppError(err, `Attempt ${attempt}`);
 
       // Don't retry on last attempt or if not retryable
       if (attempt === maxAttempts || !retryCondition(lastError)) {
@@ -145,7 +145,7 @@ export function showErrorToast(error: AppError) {
           label: 'Retry',
           onClick: () => {
             // This should be handled by the calling component
-            console.log('Retry requested for:', error);
+    // TODO: Replace with proper logging
           },
         }
       : undefined,
@@ -175,11 +175,9 @@ export function useErrorHandler() {
     const appError = createAppError(error, context);
 
     // Log error for debugging
-    console.error('Application error:', {
-      context,
-      error: appError,
-      stack: appError.originalError?.stack,
-    });
+    // TODO: Replace with proper logging
+
+    // // TODO: Replace with proper logging
 
     // Show user-friendly toast
     showErrorToast(appError);
@@ -197,8 +195,8 @@ export function useErrorHandler() {
         return await withRetry(operation, retryOptions);
       }
       return await operation();
-    } catch (error) {
-      handleError(error, context);
+    } catch (err) {
+      handleError(err, context);
       return null;
     }
   };

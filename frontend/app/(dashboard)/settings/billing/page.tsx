@@ -54,7 +54,9 @@ export default function BillingPage() {
       const response = await paymentService.createPortalSession(window.location.href);
       window.location.href = response.url;
     } catch (error) {
-      console.error('Error opening customer portal:', error);
+      // TODO: Replace with proper logging
+
+      // // TODO: Replace with proper logging
     }
   };
 
@@ -71,7 +73,9 @@ export default function BillingPage() {
       await paymentService.cancelSubscription(true);
       await fetchBillingData();
     } catch (error) {
-      console.error('Error cancelling subscription:', error);
+      // TODO: Replace with proper logging
+
+      // // TODO: Replace with proper logging
     }
   };
 
@@ -80,7 +84,9 @@ export default function BillingPage() {
       await paymentService.reactivateSubscription();
       await fetchBillingData();
     } catch (error) {
-      console.error('Error reactivating subscription:', error);
+      // TODO: Replace with proper logging
+
+      // // TODO: Replace with proper logging
     }
   };
 

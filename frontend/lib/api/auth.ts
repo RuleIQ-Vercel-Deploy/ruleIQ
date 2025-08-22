@@ -110,9 +110,9 @@ class AuthAPIClient {
           method: 'POST',
           headers: this.getAuthHeaders(),
         });
-      } catch (error) {
+      } catch {
         // Ignore logout errors
-        console.warn('Logout request failed:', error);
+        // TODO: Replace with proper logging
       }
     }
   }

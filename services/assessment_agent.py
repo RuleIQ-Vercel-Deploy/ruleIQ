@@ -19,7 +19,7 @@ from typing import Dict, List, Optional, Any, TypedDict, Annotated
 from enum import Enum
 
 from langgraph.graph import StateGraph, add_messages
-from langgraph.checkpoint import MemorySaver
+from langgraph.checkpoint.memory import MemorySaver
 from langchain_core.messages import HumanMessage, AIMessage
 from langchain_core.tracers.context import tracing_v2_enabled
 from langsmith import traceable
@@ -588,11 +588,6 @@ Would you like to schedule a demo to see how we can help address your specific n
 
         return "\n".join(formatted)
 
-    @traceable(
-        name="start_assessment",
-        tags=["langgraph", "assessment", "freemium"],
-        metadata={"agent": "AssessmentAgent", "action": "start"}
-    )
     async def start_assessment(
         self,
         session_id: str,
@@ -638,10 +633,10 @@ Would you like to schedule a demo to see how we can help address your specific n
         # Run the introduction node with tracing context
         config = {"configurable": {"thread_id": initial_state["thread_id"]}}
 
+        # Fixed: Remove metadata parameter that's not supported in newer LangSmith
         with tracing_v2_enabled(
             project_name=os.getenv("LANGCHAIN_PROJECT", "ruleiq-assessment"),
-            tags=["assessment_start", f"session:{session_id}"],
-            metadata={"lead_id": lead_id, "initial_context": initial_context}
+            tags=["assessment_start", f"session:{session_id}"]
         ):
             result = await self.app.ainvoke(initial_state, config)
 
@@ -678,15 +673,10 @@ Would you like to schedule a demo to see how we can help address your specific n
             additional_kwargs={"confidence": confidence}
         )
 
-        # Continue graph execution with tracing context
+        # Fixed: Remove metadata parameter that's not supported in newer LangSmith
         with tracing_v2_enabled(
             project_name=os.getenv("LANGCHAIN_PROJECT", "ruleiq-assessment"),
-            tags=["assessment_response", f"session:{session_id}"],
-            metadata={
-                "response_length": len(user_response),
-                "confidence": confidence,
-                "session_id": session_id
-            }
+            tags=["assessment_response", f"session:{session_id}"]
         ):
             result = await self.app.ainvoke(
                 {"messages": [user_message]},

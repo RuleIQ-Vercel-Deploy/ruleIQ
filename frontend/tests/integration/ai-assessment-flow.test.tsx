@@ -232,7 +232,7 @@ function TestAssessmentWithAI({
     <AIErrorBoundary>
       <div data-testid="assessment-container">
         <div data-testid="question-text">{currentQuestion.text}</div>
-        <div data-testid="ai-mode-indicator">{isAIMode ? 'AI Mode' : 'AI Mode'}</div>
+        <div data-testid="ai-mode-indicator">{isAIMode ? &apos;AI Mode' : 'AI Mode'}</div>
 
         {/* AI Help Tooltip */}
         <AIHelpTooltip

@@ -17,7 +17,7 @@ interface ResponsiveTableColumn {
 
 interface ResponsiveTableProps {
   columns: ResponsiveTableColumn[];
-  data: any[];
+  data: unknown[];
   className?: string;
   mobileLayout?: 'scroll' | 'stack'; // default is scroll
   emptyMessage?: string;

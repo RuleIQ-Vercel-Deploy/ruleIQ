@@ -4,26 +4,35 @@ line-length = 100
 
 [lint]
 select = [
-    "F",   # Pyflakes (critical errors only)
-    "E",   # pycodestyle errors (will be ignored in tests)
-    "W",   # pycodestyle warnings (will be ignored in tests)
-    "ANN", # Type annotations (will be ignored in tests)
-    "ARG", # Unused arguments (will be ignored in tests)
-    "PLR", # Pylint refactor (will be ignored in tests)
-    "S",   # Security (will be ignored in tests for asserts)
-    "PT",  # pytest-specific rules (will be ignored in tests)
+    "F",   # Pyflakes
+    "E",   # pycodestyle errors
+    "W",   # pycodestyle warnings
+    "ANN", # Type annotations
+    "ARG", # Unused arguments
+    "PLR", # Pylint refactor
+    "S",   # Security
+    "PT",  # pytest-specific rules
 ]
 
 ignore = [
-    # Disable style and formatting rules for non-test files
-    "N",    # pep8-naming
-    "UP",   # pyupgrade
-    "B",    # flake8-bugbear
-    "C4",   # flake8-comprehensions
-    "SIM",  # flake8-simplify
-    "RUF",  # Ruff-specific rules
-    "I",    # isort
-    "D",    # pydocstyle
+    # Only ignore specific non-critical rules
+    "ANN201", # Missing return type annotation for public function
+    "ANN001", # Missing type function argument
+    "ANN003", # Missing type kwargs
+    "ANN202", # Missing return type annotation for private function
+    "ANN401", # Any type allowed in validation utilities
+    "ARG002", # Unused method argument
+    "ARG001", # Unused function argument
+    "PLR0913", # Too many arguments
+    "PLR0912", # Too many branches
+    "PLR0915", # Too many statements
+    "PLR0911", # Too many return statements
+    "S311",  # Non-cryptographic random usage
+    "S603",  # Subprocess without shell
+    "S105",  # Hardcoded password
+    "S106",  # Hardcoded password func arg
+    "S110",  # Try except pass
+    "S101",  # Assert (primarily in test files)
 ]
 
 # Directories to exclude
@@ -40,8 +49,6 @@ exclude = [
     ".ruff_cache",
     "migrations",
     "validate-auth-flow.py",
-    "validate_*.py",
-    "test_*.py",
 ]
 
 [lint.per-file-ignores]
@@ -58,6 +65,10 @@ exclude = [
     "W291",    # Trailing whitespace
     "F401",    # Unused imports (common in test fixtures)
     "F841",    # Unused variables (common in test setup)
+    "E402",    # Module import not at top of file (common in tests)
+    "F821",    # Undefined name (fixtures)
+    "S113",    # Request without timeout (acceptable in tests)
+    "S324",    # Hashlib insecure hash (acceptable in tests)
 ]
 "*/__init__.py" = ["F401"]  # Allow unused imports in __init__.py
 

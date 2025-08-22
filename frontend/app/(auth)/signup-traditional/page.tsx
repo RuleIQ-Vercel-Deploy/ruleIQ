@@ -76,10 +76,10 @@ export default function TraditionalSignupPage() {
     setError('');
 
     try {
-      // Parse full name into first and last name
-      const nameParts = data.fullName.split(' ');
-      const firstName = nameParts[0] || '';
-      const lastName = nameParts.slice(1).join(' ') || '';
+      // Parse full name into first and last name (not currently used)
+      // const nameParts = data.fullName.split(' ');
+      // const firstName = nameParts[0] || '';
+      // const lastName = nameParts.slice(1).join(' ') || '';
 
       await registerUser(data.email, data.password, data.fullName);
 
@@ -91,7 +91,7 @@ export default function TraditionalSignupPage() {
       });
 
       router.push('/business-profile');
-    } catch (err) {
+    } catch {
       setError('An error occurred. Please try again.');
     } finally {
       setIsLoading(false);

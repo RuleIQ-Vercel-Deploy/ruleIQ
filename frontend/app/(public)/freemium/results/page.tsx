@@ -85,7 +85,7 @@ function ResultsContent() {
           url: `${window.location.origin}/freemium`,
         });
         setHasSharedResults(true);
-      } catch (error) {
+      } catch {
         // User cancelled or share failed, fallback to copy
         await navigator.clipboard.writeText(`${window.location.origin}/freemium`);
         setHasSharedResults(true);
@@ -100,7 +100,7 @@ function ResultsContent() {
   const handleDownloadResults = () => {
     // This would typically generate a PDF report
     // For now, we'll just track the event
-    console.log('Download results clicked');
+    // TODO: Replace with proper logging
   };
 
   return (

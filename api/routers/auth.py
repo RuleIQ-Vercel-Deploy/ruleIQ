@@ -1,5 +1,5 @@
 from datetime import timedelta
-from datetime import datetime, timedelta
+from datetime import datetime
 from uuid import UUID, uuid4
 
 from fastapi import APIRouter, Depends, HTTPException, Request, status
@@ -62,11 +62,11 @@ async def register(user: UserCreate, db: Session = Depends(get_db)):
     # FIXED: Auto-assign business_user role to new users
     from database.rbac import Role
     from services.rbac_service import RBACService
-    
+
     try:
         rbac_service = RBACService(db)
         business_user_role = db.query(Role).filter(Role.name == "business_user").first()
-        
+
         if business_user_role:
             rbac_service.assign_role_to_user(
                 user_id=db_user.id,
@@ -229,7 +229,7 @@ async def get_current_user(db: Session = Depends(get_db), token: str = Depends(o
         is_active=user.is_active,
         created_at=user.created_at,
     )
-    
+
     # Add roles and permissions to the response dict
     response_dict = response_data.dict()
     response_dict.update({
@@ -238,7 +238,7 @@ async def get_current_user(db: Session = Depends(get_db), token: str = Depends(o
         "total_permissions": len(permissions),
         "assessment_permissions": [p for p in permissions if 'assessment' in p.lower()]
     })
-    
+
     return response_dict
 
 
@@ -272,7 +272,7 @@ async def logout(request: Request, token: str = Depends(oauth2_scheme)):
 
 @router.post("/assign-default-role")
 async def assign_default_role(
-    db: Session = Depends(get_db), 
+    db: Session = Depends(get_db),
     token: str = Depends(oauth2_scheme)
 ):
     """
@@ -282,7 +282,7 @@ async def assign_default_role(
     without requiring admin permissions, making testing seamless.
     """
     from api.dependencies.auth import decode_token
-    
+
     # Decode the JWT token to get user ID
     payload = decode_token(token)
     if not payload:
@@ -313,7 +313,7 @@ async def assign_default_role(
         # Get RBAC service and business_user role
         rbac = RBACService(db)
         business_user_role = db.query(Role).filter(Role.name == "business_user").first()
-        
+
         if not business_user_role:
             raise HTTPException(
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,

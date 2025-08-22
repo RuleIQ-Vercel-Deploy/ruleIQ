@@ -52,7 +52,7 @@ export const authService = {
     return useAuthStore.getState().verifyEmail(token);
   },
 
-  updateProfile: async (data: any) => {
+  updateProfile: async (data: unknown) => {
     return useAuthStore.getState().updateProfile(data);
   },
 

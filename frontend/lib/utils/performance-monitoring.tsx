@@ -30,7 +30,7 @@ class PerformanceMonitor {
 
     // Log slow operations
     if (entry.duration > 1000) {
-      console.warn('Slow operation detected:', entry);
+      // TODO: Replace with proper logging
     }
 
     // In production, you might want to send this to a monitoring service
@@ -92,7 +92,7 @@ class PerformanceMonitor {
     // In a real app, you'd send this to a service like Sentry, DataDog, etc.
     // For now, we'll just log it
     if (entry.duration > 2000 || !entry.success) {
-      console.log('Performance monitoring:', entry);
+    // TODO: Replace with proper logging
     }
   }
 }

@@ -38,7 +38,7 @@ export default function ForgotPasswordPage() {
         title: 'Password reset email sent',
         description: 'Please check your email for password reset instructions.',
       });
-    } catch (error) {
+    } catch {
       toast({
         title: 'Error',
         description: 'Failed to send password reset email. Please try again.',
@@ -124,7 +124,7 @@ export default function ForgotPasswordPage() {
           <div className="flex flex-col space-y-2 text-center">
             <h1 className="text-2xl font-semibold tracking-tight">Forgot your password?</h1>
             <p className="text-sm text-muted-foreground">
-              Enter your email address and we'll send you a link to reset your password.
+              Enter your email address and we''ll send you a link to reset your password.
             </p>
           </div>
           <Card>

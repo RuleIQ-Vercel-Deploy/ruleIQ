@@ -134,7 +134,7 @@ export function useStreaming(): [StreamingState, StreamingControls] {
 
       try {
         await streamFn(options);
-      } catch (error) {
+      } catch {
         stopTimer();
         setState((prev) => ({
           ...prev,

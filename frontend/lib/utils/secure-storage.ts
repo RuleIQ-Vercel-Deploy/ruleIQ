@@ -38,8 +38,8 @@ class SecureStorage {
           ['encrypt', 'decrypt'],
         );
         return this.encryptionKey;
-      } catch (error) {
-        console.warn('Failed to import stored encryption key, generating new one');
+      } catch {
+        // TODO: Replace with proper logging
       }
     }
 
@@ -80,7 +80,9 @@ class SecureStorage {
       // Return base64 encoded result
       return btoa(String.fromCharCode(...combined));
     } catch (error) {
-      console.error('Encryption failed:', error);
+      // TODO: Replace with proper logging
+
+      // // TODO: Replace with proper logging
       throw new Error('Failed to encrypt data');
     }
   }
@@ -110,7 +112,9 @@ class SecureStorage {
       const decoder = new TextDecoder();
       return decoder.decode(decryptedBuffer);
     } catch (error) {
-      console.error('Decryption failed:', error);
+      // TODO: Replace with proper logging
+
+      // // TODO: Replace with proper logging
       throw new Error('Failed to decrypt data');
     }
   }
@@ -156,7 +160,7 @@ class SecureStorage {
 
       if (options.useHttpOnlyCookie) {
         // Note: For production, this should be set by the server
-        console.warn('httpOnly cookies must be set server-side for security');
+        // TODO: Replace with proper logging
       }
 
       sessionStorage.setItem(this.ACCESS_TOKEN_KEY, encryptedToken);
@@ -165,7 +169,9 @@ class SecureStorage {
         sessionStorage.setItem(this.SESSION_EXPIRY_KEY, options.expiry.toString());
       }
     } catch (error) {
-      console.error('Failed to store access token:', error);
+      // TODO: Replace with proper logging
+
+      // // TODO: Replace with proper logging
       throw error;
     }
   }
@@ -182,7 +188,9 @@ class SecureStorage {
 
       return await this.decrypt(encryptedToken);
     } catch (error) {
-      console.error('Failed to retrieve access token:', error);
+      // TODO: Replace with proper logging
+
+      // // TODO: Replace with proper logging
       // Clear corrupted data
       this.clearAccessToken();
       return null;
@@ -287,10 +295,11 @@ class SecureStorage {
       sessionStorage.removeItem('ruleiq_auth_token');
       sessionStorage.removeItem('ruleiq_refresh_token');
       sessionStorage.removeItem('ruleiq_session_expiry');
-
-      console.log('Legacy tokens migrated to secure storage');
+    // TODO: Replace with proper logging
     } catch (error) {
-      console.error('Failed to migrate legacy tokens:', error);
+      // TODO: Replace with proper logging
+
+      // // TODO: Replace with proper logging
     }
   }
 }

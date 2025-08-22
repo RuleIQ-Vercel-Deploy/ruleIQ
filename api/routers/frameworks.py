@@ -20,16 +20,16 @@ async def list_frameworks(
     """List all available frameworks - simplified for compliance wizard."""
     from database.compliance_framework import ComplianceFramework
     from sqlalchemy.future import select
-    
+
     # Get all active frameworks directly from database (bypass RBAC for now)
     result = await db.execute(select(ComplianceFramework))
     frameworks = result.scalars().all()
     print(f"DEBUG: Found {len(frameworks)} total frameworks")
-    
+
     # Filter active ones in Python for now
     active_frameworks = [fw for fw in frameworks if fw.is_active]
     print(f"DEBUG: Found {len(active_frameworks)} active frameworks")
-    
+
     # Convert to response format
     return [
         ComplianceFrameworkResponse(
@@ -119,13 +119,13 @@ async def list_all_public_frameworks(
     """List all available frameworks without RBAC restrictions - for compliance wizard."""
     from database.compliance_framework import ComplianceFramework
     from sqlalchemy.future import select
-    
+
     # Get all active frameworks directly from database
     result = await db.execute(
         select(ComplianceFramework).where(ComplianceFramework.is_active == True)
     )
     frameworks = result.scalars().all()
-    
+
     # Convert to response format
     return [
         ComplianceFrameworkResponse(

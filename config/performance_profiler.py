@@ -9,7 +9,7 @@ import time
 import psutil
 import asyncio
 import statistics
-from typing import Dict, List, Any, Optional, Callable
+from typing import Dict, List, Any, Optional
 from dataclasses import dataclass, field
 from collections import defaultdict, deque
 from contextlib import asynccontextmanager, contextmanager
@@ -47,7 +47,7 @@ class PerformanceStats:
 
 class PerformanceProfiler:
     """Real-time performance profiler"""
-    
+
     def __init__(self, max_samples: int = 1000):
         self.max_samples = max_samples
         self.metrics: Dict[str, deque] = defaultdict(lambda: deque(maxlen=max_samples))
@@ -55,23 +55,23 @@ class PerformanceProfiler:
         self.error_counts: Dict[str, int] = defaultdict(int)
         self._lock = threading.Lock()
         self._process = psutil.Process()
-        
+
     def record_metric(self, metric: PerformanceMetric):
         """Record a performance metric"""
         with self._lock:
             self.metrics[metric.operation].append(metric)
-    
+
     def get_stats(self, operation: str) -> Optional[PerformanceStats]:
         """Get aggregated statistics for an operation"""
         with self._lock:
             if operation not in self.metrics or not self.metrics[operation]:
                 return None
-                
+
             metrics_list = list(self.metrics[operation])
             durations = [m.duration_ms for m in metrics_list]
             memory_usage = [m.memory_usage_mb for m in metrics_list]
             cpu_usage = [m.cpu_percent for m in metrics_list]
-            
+
             return PerformanceStats(
                 operation=operation,
                 count=len(durations),
@@ -86,7 +86,7 @@ class PerformanceProfiler:
                 avg_cpu_percent=statistics.mean(cpu_usage) if cpu_usage else 0,
                 error_count=self.error_counts[operation]
             )
-    
+
     def get_all_stats(self) -> Dict[str, PerformanceStats]:
         """Get statistics for all operations"""
         with self._lock:
@@ -95,7 +95,7 @@ class PerformanceProfiler:
                 for operation in self.metrics.keys()
                 if self.get_stats(operation) is not None
             }
-    
+
     def get_slowest_operations(self, limit: int = 10) -> List[PerformanceStats]:
         """Get the slowest operations by average duration"""
         all_stats = self.get_all_stats()
@@ -104,7 +104,7 @@ class PerformanceProfiler:
             key=lambda s: s.avg_duration_ms,
             reverse=True
         )[:limit]
-    
+
     def get_most_frequent_operations(self, limit: int = 10) -> List[PerformanceStats]:
         """Get the most frequently called operations"""
         all_stats = self.get_all_stats()
@@ -113,12 +113,12 @@ class PerformanceProfiler:
             key=lambda s: s.count,
             reverse=True
         )[:limit]
-    
+
     def record_error(self, operation: str):
         """Record an error for an operation"""
         with self._lock:
             self.error_counts[operation] += 1
-    
+
     def clear_metrics(self, operation: Optional[str] = None):
         """Clear metrics for a specific operation or all operations"""
         with self._lock:
@@ -128,7 +128,7 @@ class PerformanceProfiler:
             else:
                 self.metrics.clear()
                 self.error_counts.clear()
-    
+
     @staticmethod
     def _percentile(data: List[float], percentile: float) -> float:
         """Calculate percentile value"""
@@ -137,17 +137,17 @@ class PerformanceProfiler:
         sorted_data = sorted(data)
         index = int(len(sorted_data) * percentile)
         return sorted_data[min(index, len(sorted_data) - 1)]
-    
+
     @contextmanager
     def profile_operation(self, operation: str, context: Optional[Dict[str, Any]] = None):
         """Context manager to profile a synchronous operation"""
         start_time = time.perf_counter()
         start_memory = self._process.memory_info().rss / 1024 / 1024  # MB
         start_cpu = self._process.cpu_percent()
-        
+
         try:
             yield
-        except Exception as e:
+        except Exception:
             self.record_error(operation)
             raise
         finally:
@@ -155,7 +155,7 @@ class PerformanceProfiler:
             duration_ms = (end_time - start_time) * 1000
             end_memory = self._process.memory_info().rss / 1024 / 1024  # MB
             end_cpu = self._process.cpu_percent()
-            
+
             metric = PerformanceMetric(
                 operation=operation,
                 duration_ms=duration_ms,
@@ -164,19 +164,19 @@ class PerformanceProfiler:
                 cpu_percent=end_cpu,
                 context=context or {}
             )
-            
+
             self.record_metric(metric)
-    
+
     @asynccontextmanager
     async def profile_async_operation(self, operation: str, context: Optional[Dict[str, Any]] = None):
         """Context manager to profile an asynchronous operation"""
         start_time = time.perf_counter()
         start_memory = self._process.memory_info().rss / 1024 / 1024  # MB
         start_cpu = self._process.cpu_percent()
-        
+
         try:
             yield
-        except Exception as e:
+        except Exception:
             self.record_error(operation)
             raise
         finally:
@@ -184,7 +184,7 @@ class PerformanceProfiler:
             duration_ms = (end_time - start_time) * 1000
             end_memory = self._process.memory_info().rss / 1024 / 1024  # MB
             end_cpu = self._process.cpu_percent()
-            
+
             metric = PerformanceMetric(
                 operation=operation,
                 duration_ms=duration_ms,
@@ -193,16 +193,16 @@ class PerformanceProfiler:
                 cpu_percent=end_cpu,
                 context=context or {}
             )
-            
+
             self.record_metric(metric)
 
 class APIPerformanceMonitor:
     """Monitor API endpoint performance specifically"""
-    
+
     def __init__(self, profiler: PerformanceProfiler):
         self.profiler = profiler
         self.endpoint_stats: Dict[str, Dict[str, Any]] = defaultdict(dict)
-    
+
     def profile_endpoint(self, endpoint: str, method: str = "GET"):
         """Decorator to profile API endpoint performance"""
         def decorator(func):
@@ -216,10 +216,10 @@ class APIPerformanceMonitor:
                         "args_count": len(args),
                         "kwargs_count": len(kwargs)
                     }
-                    
+
                     async with self.profiler.profile_async_operation(operation, context):
                         result = await func(*args, **kwargs)
-                        
+
                     # Track endpoint-specific metrics
                     self._update_endpoint_stats(endpoint, method)
                     return result
@@ -234,16 +234,16 @@ class APIPerformanceMonitor:
                         "args_count": len(args),
                         "kwargs_count": len(kwargs)
                     }
-                    
+
                     with self.profiler.profile_operation(operation, context):
                         result = func(*args, **kwargs)
-                        
+
                     # Track endpoint-specific metrics
                     self._update_endpoint_stats(endpoint, method)
                     return result
                 return sync_wrapper
         return decorator
-    
+
     def _update_endpoint_stats(self, endpoint: str, method: str):
         """Update endpoint-specific statistics"""
         key = f"{method} {endpoint}"
@@ -252,14 +252,14 @@ class APIPerformanceMonitor:
                 "call_count": 0,
                 "last_called": None
             }
-        
+
         self.endpoint_stats[key]["call_count"] += 1
         self.endpoint_stats[key]["last_called"] = time.time()
-    
+
     def get_endpoint_performance_report(self) -> Dict[str, Any]:
         """Generate comprehensive endpoint performance report"""
         all_stats = self.profiler.get_all_stats()
-        
+
         report = {
             "slowest_endpoints": [],
             "most_called_endpoints": [],
@@ -270,7 +270,7 @@ class APIPerformanceMonitor:
                 "avg_response_time": statistics.mean([s.avg_duration_ms for s in all_stats.values()]) if all_stats else 0
             }
         }
-        
+
         # Slowest endpoints
         slowest = sorted(all_stats.values(), key=lambda s: s.avg_duration_ms, reverse=True)[:10]
         report["slowest_endpoints"] = [
@@ -282,7 +282,7 @@ class APIPerformanceMonitor:
             }
             for s in slowest
         ]
-        
+
         # Most called endpoints
         most_called = sorted(all_stats.values(), key=lambda s: s.count, reverse=True)[:10]
         report["most_called_endpoints"] = [
@@ -294,7 +294,7 @@ class APIPerformanceMonitor:
             }
             for s in most_called
         ]
-        
+
         # Error-prone endpoints
         error_prone = [s for s in all_stats.values() if s.error_count > 0]
         error_prone.sort(key=lambda s: s.error_count, reverse=True)
@@ -307,16 +307,16 @@ class APIPerformanceMonitor:
             }
             for s in error_prone[:10]
         ]
-        
+
         return report
 
 class DatabasePerformanceMonitor:
     """Monitor database operation performance"""
-    
+
     def __init__(self, profiler: PerformanceProfiler):
         self.profiler = profiler
         self.query_stats: Dict[str, Dict[str, Any]] = defaultdict(dict)
-    
+
     def profile_query(self, query_type: str, table: str = "unknown"):
         """Decorator to profile database queries"""
         def decorator(func):
@@ -329,7 +329,7 @@ class DatabasePerformanceMonitor:
                         "table": table,
                         "database": "postgresql"
                     }
-                    
+
                     async with self.profiler.profile_async_operation(operation, context):
                         return await func(*args, **kwargs)
                 return async_wrapper
@@ -342,16 +342,16 @@ class DatabasePerformanceMonitor:
                         "table": table,
                         "database": "postgresql"
                     }
-                    
+
                     with self.profiler.profile_operation(operation, context):
                         return func(*args, **kwargs)
                 return sync_wrapper
         return decorator
-    
+
     def get_slow_queries_report(self, threshold_ms: float = 100.0) -> List[Dict[str, Any]]:
         """Get report of slow database queries"""
         all_stats = self.profiler.get_all_stats()
-        
+
         slow_queries = []
         for operation, stats in all_stats.items():
             if operation.startswith("db.") and stats.avg_duration_ms > threshold_ms:
@@ -363,7 +363,7 @@ class DatabasePerformanceMonitor:
                     "call_count": stats.count,
                     "total_time_ms": stats.total_duration_ms
                 })
-        
+
         return sorted(slow_queries, key=lambda q: q["avg_duration_ms"], reverse=True)
 
 # Global profiler instances

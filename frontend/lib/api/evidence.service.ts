@@ -149,7 +149,7 @@ class EvidenceService {
     approved_evidence: number;
     coverage_percentage: number;
     by_type: Record<string, number>;
-    recent_activity: any[];
+    recent_activity: unknown[];
   }> {
     const response = await apiClient.get<any>(`/evidence/dashboard/${frameworkId}`);
     return response;

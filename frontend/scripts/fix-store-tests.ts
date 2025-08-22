@@ -171,7 +171,7 @@ vi.mock('@/lib/api/auth.service'`,
   );
 
   fs.writeFileSync(testFile, content);
-  console.log('✅ Fixed store tests');
+    // TODO: Replace with proper logging
 }
 
 // Check and fix evidence store if it exists
@@ -179,8 +179,7 @@ function checkEvidenceStore() {
   const storePath = path.join(FRONTEND_DIR, 'lib/stores/evidence.store.ts');
 
   if (!fs.existsSync(storePath)) {
-    console.log('⚠️  Evidence store not found, creating a basic implementation');
-
+    // TODO: Replace with proper logging
     const evidenceStoreContent = `import { create } from 'zustand'
 import { persist, createJSONStorage, devtools } from 'zustand/middleware'
 import { EvidenceArraySchema, safeValidate } from './schemas'
@@ -281,8 +280,7 @@ function checkDashboardStore() {
   const storePath = path.join(FRONTEND_DIR, 'lib/stores/dashboard.store.ts');
 
   if (!fs.existsSync(storePath)) {
-    console.log('⚠️  Dashboard store not found, creating a basic implementation');
-
+    // TODO: Replace with proper logging
     const dashboardStoreContent = `import { create } from 'zustand'
 import { persist, createJSONStorage, devtools } from 'zustand/middleware'
 import { WidgetsArraySchema, MetricsSchema, safeValidate } from './schemas'
@@ -382,18 +380,21 @@ export const useDashboardStore = create<DashboardState>()(
 
 // Main execution
 async function main() {
-  console.log('🔧 Fixing store tests...\n');
-
+    // TODO: Replace with proper logging
   try {
     fixStoreTests();
     checkEvidenceStore();
     checkDashboardStore();
+    // TODO: Replace with proper logging
 
-    console.log('\n✅ All store fixes applied successfully!');
-    console.log('\n📝 Next steps:');
-    console.log('1. Run: pnpm test tests/stores/comprehensive-store.test.ts');
-    console.log('2. If tests still fail, check the specific error messages');
+    // TODO: Replace with proper logging
+
+    // TODO: Replace with proper logging
+
+    // TODO: Replace with proper logging
   } catch (error) {
+    // Development logging - consider proper logger
+
     console.error('\n❌ Error applying fixes:', error);
     process.exit(1);
   }

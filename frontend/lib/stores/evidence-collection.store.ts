@@ -105,7 +105,7 @@ export const useEvidenceCollectionStore = create<EvidenceCollectionState>()(
             );
 
             return plan;
-          } catch (error: any) {
+          } catch (error: unknown) {
             set(
               {
                 isCreatingPlan: false,
@@ -131,7 +131,7 @@ export const useEvidenceCollectionStore = create<EvidenceCollectionState>()(
               false,
               'loadPlan/success',
             );
-          } catch (error: any) {
+          } catch (error: unknown) {
             set(
               {
                 isLoading: false,
@@ -159,7 +159,7 @@ export const useEvidenceCollectionStore = create<EvidenceCollectionState>()(
               false,
               'loadPlans/success',
             );
-          } catch (error: any) {
+          } catch (error: unknown) {
             set(
               {
                 isLoading: false,
@@ -192,7 +192,7 @@ export const useEvidenceCollectionStore = create<EvidenceCollectionState>()(
               false,
               'loadPriorityTasks/success',
             );
-          } catch (error: any) {
+          } catch (error: unknown) {
             set(
               {
                 isLoading: false,
@@ -254,7 +254,7 @@ export const useEvidenceCollectionStore = create<EvidenceCollectionState>()(
                 'updateTaskStatus/updateSummary',
               );
             }
-          } catch (error: any) {
+          } catch (error: unknown) {
             set(
               {
                 isUpdatingTask: false,

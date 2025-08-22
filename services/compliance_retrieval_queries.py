@@ -22,7 +22,7 @@ Query Categories:
 """
 
 import logging
-from typing import Dict, List, Any, Optional, Tuple
+from typing import Dict, List, Any, Optional
 from datetime import datetime, timedelta
 from dataclasses import dataclass
 from enum import Enum
@@ -64,18 +64,18 @@ class QueryResult:
 
 class ComplianceRetrievalQueries:
     """Production-ready retrieval queries for compliance intelligence"""
-    
+
     def __init__(self, neo4j_service: Neo4jGraphRAGService):
         self.neo4j = neo4j_service
-    
+
     # 1. Regulatory Coverage Analysis
     async def get_regulatory_coverage_analysis(
-        self, 
+        self,
         domain_name: Optional[str] = None,
         jurisdiction: Optional[str] = None
     ) -> QueryResult:
         """Analyze compliance coverage across domains and jurisdictions"""
-        
+
         query = """
         MATCH (d:ComplianceDomain)
         OPTIONAL MATCH (d)<-[:GOVERNED_BY]-(r:Regulation)
@@ -107,21 +107,21 @@ class ComplianceRetrievalQueries:
         
         ORDER BY domain, regulation_code
         """
-        
+
         result = await self.neo4j.execute_query(
-            query, 
+            query,
             {"domain": domain_name, "jurisdiction": jurisdiction}
         )
-        
+
         # Calculate overall coverage metrics
         coverage_data = []
         total_coverage = 0.0
         domain_coverage = {}
-        
+
         for record in result:
             domain = record["domain"]
             coverage_ratio = record["coverage_ratio"]
-            
+
             coverage_data.append({
                 "domain": domain,
                 "domain_risk": record["domain_risk"],
@@ -135,19 +135,19 @@ class ComplianceRetrievalQueries:
                 "risk_levels": record["risk_levels"],
                 "coverage_ratio": round(coverage_ratio, 3)
             })
-            
+
             if domain not in domain_coverage:
                 domain_coverage[domain] = []
             domain_coverage[domain].append(coverage_ratio)
-        
+
         # Calculate aggregate metrics
         for domain, ratios in domain_coverage.items():
             domain_coverage[domain] = round(sum(ratios) / len(ratios), 3) if ratios else 0.0
-        
+
         overall_coverage = round(
             sum(domain_coverage.values()) / len(domain_coverage), 3
         ) if domain_coverage else 0.0
-        
+
         return QueryResult(
             category=QueryCategory.REGULATORY_COVERAGE.value,
             query_id="coverage_analysis_001",
@@ -164,14 +164,14 @@ class ComplianceRetrievalQueries:
             },
             confidence_score=0.95
         )
-    
+
     # 2. Cross-jurisdictional Impact Assessment
     async def analyze_cross_jurisdictional_impact(
-        self, 
+        self,
         regulation_codes: List[str]
     ) -> QueryResult:
         """Analyze impact of regulations across multiple jurisdictions"""
-        
+
         query = """
         MATCH (r:Regulation)-[:ENFORCED_IN]->(j:Jurisdiction)
         WHERE r.code IN $regulation_codes
@@ -202,26 +202,26 @@ class ComplianceRetrievalQueries:
         
         ORDER BY extraterritorial DESC, requirements_count DESC
         """
-        
+
         result = await self.neo4j.execute_query(
-            query, 
+            query,
             {"regulation_codes": regulation_codes}
         )
-        
+
         impact_data = []
         total_jurisdictions = set()
         extraterritorial_regulations = []
-        
+
         for record in result:
             regulation_code = record["regulation_code"]
             applicable_jurisdictions = record["applicable_jurisdictions"]
-            
+
             # Track jurisdictional scope
             total_jurisdictions.update(applicable_jurisdictions)
-            
+
             if record["extraterritorial"]:
                 extraterritorial_regulations.append(regulation_code)
-            
+
             impact_data.append({
                 "regulation": {
                     "code": regulation_code,
@@ -245,7 +245,7 @@ class ComplianceRetrievalQueries:
                     "latest_enforcement": record["latest_enforcement"]
                 }
             })
-        
+
         return QueryResult(
             category=QueryCategory.CROSS_JURISDICTIONAL.value,
             query_id="cross_jurisdictional_001",
@@ -259,14 +259,14 @@ class ComplianceRetrievalQueries:
             },
             confidence_score=0.92
         )
-    
+
     # 3. Risk Convergence Detection
     async def detect_risk_convergence_patterns(
-        self, 
+        self,
         risk_threshold: str = "high"
     ) -> QueryResult:
         """Detect convergence patterns in regulatory risks"""
-        
+
         query = """
         MATCH (req1:Requirement)-[:SIMILAR_RISK]->(req2:Requirement)
         WHERE req1.risk_level IN ['high', 'critical'] 
@@ -320,26 +320,26 @@ class ComplianceRetrievalQueries:
         
         ORDER BY convergence_type, shared_control_types DESC
         """
-        
+
         result = await self.neo4j.execute_query(query)
-        
+
         convergence_data = []
         same_domain_convergences = 0
         cross_domain_convergences = 0
         uncontrolled_risks = 0
-        
+
         for record in result:
             convergence_type = record["convergence_type"]
             control_status = record["control_status"]
-            
+
             if convergence_type == "same_domain":
                 same_domain_convergences += 1
             else:
                 cross_domain_convergences += 1
-            
+
             if control_status == "uncontrolled":
                 uncontrolled_risks += 1
-            
+
             convergence_data.append({
                 "convergence_id": f"{record['requirement_1_id']}_{record['requirement_2_id']}",
                 "convergence_type": convergence_type,
@@ -367,7 +367,7 @@ class ComplianceRetrievalQueries:
                     )
                 }
             })
-        
+
         return QueryResult(
             category=QueryCategory.RISK_CONVERGENCE.value,
             query_id="risk_convergence_001",
@@ -382,14 +382,14 @@ class ComplianceRetrievalQueries:
             },
             confidence_score=0.88
         )
-    
+
     # 4. Compliance Gap Analysis
     async def analyze_compliance_gaps(
-        self, 
+        self,
         business_functions: Optional[List[str]] = None
     ) -> QueryResult:
         """Identify compliance gaps where requirements lack controls"""
-        
+
         query = """
         MATCH (req:Requirement)-[:MANDATED_BY]->(r:Regulation)-[:GOVERNED_BY]->(d:ComplianceDomain)
         WHERE ($functions IS NULL OR req.business_function IN $functions)
@@ -438,28 +438,28 @@ class ComplianceRetrievalQueries:
             historical_violations DESC,
             max_penalty_observed DESC
         """
-        
+
         result = await self.neo4j.execute_query(
-            query, 
+            query,
             {"functions": business_functions}
         )
-        
+
         gap_data = []
         critical_gaps = 0
         high_risk_gaps = 0
         total_penalty_exposure = 0
-        
+
         for record in result:
             risk_level = record["risk_level"]
             penalty_observed = record["max_penalty_observed"] or 0
-            
+
             if risk_level == "critical":
                 critical_gaps += 1
             elif risk_level == "high":
                 high_risk_gaps += 1
-            
+
             total_penalty_exposure += penalty_observed
-            
+
             # Calculate gap severity score
             severity_multiplier = {
                 "critical": 4,
@@ -467,11 +467,11 @@ class ComplianceRetrievalQueries:
                 "medium": 2,
                 "low": 1
             }.get(risk_level, 1)
-            
+
             enforcement_multiplier = min(record["historical_violations"] * 0.5, 2.0)
-            
+
             gap_severity = severity_multiplier * (1 + enforcement_multiplier)
-            
+
             gap_data.append({
                 "gap_id": record["requirement_id"],
                 "requirement": {
@@ -505,7 +505,7 @@ class ComplianceRetrievalQueries:
                 "gap_severity_score": round(gap_severity, 2),
                 "priority_level": "critical" if gap_severity >= 8 else "high" if gap_severity >= 5 else "medium"
             })
-        
+
         return QueryResult(
             category=QueryCategory.COMPLIANCE_GAPS.value,
             query_id="compliance_gaps_001",
@@ -523,18 +523,18 @@ class ComplianceRetrievalQueries:
             },
             confidence_score=0.94
         )
-    
+
     # 5. Temporal Regulatory Changes
     async def analyze_temporal_regulatory_changes(
-        self, 
+        self,
         lookback_months: int = 12,
         forecast_months: int = 6
     ) -> QueryResult:
         """Analyze temporal patterns in regulatory changes"""
-        
+
         lookback_date = datetime.now() - timedelta(days=lookback_months * 30)
         forecast_date = datetime.now() + timedelta(days=forecast_months * 30)
-        
+
         query = """
         MATCH (r:Regulation)
         WHERE r.last_updated >= date($lookback_date)
@@ -573,7 +573,7 @@ class ComplianceRetrievalQueries:
         
         ORDER BY months_since_update ASC, upcoming_reviews DESC
         """
-        
+
         result = await self.neo4j.execute_query(
             query,
             {
@@ -581,26 +581,26 @@ class ComplianceRetrievalQueries:
                 "forecast_date": forecast_date.strftime("%Y-%m-%d")
             }
         )
-        
+
         temporal_data = []
         recent_changes = 0
         upcoming_reviews = 0
         new_regulations = 0
-        
+
         for record in result:
             change_recency = record["change_recency"]
             regulation_maturity = record["regulation_maturity"]
             reviews_count = record["upcoming_reviews"]
-            
+
             if change_recency == "recent":
                 recent_changes += 1
-            
+
             if reviews_count > 0:
                 upcoming_reviews += 1
-            
+
             if regulation_maturity == "new":
                 new_regulations += 1
-            
+
             temporal_data.append({
                 "regulation": {
                     "code": record["regulation_code"],
@@ -624,7 +624,7 @@ class ComplianceRetrievalQueries:
                     record["affected_requirements"] / max(record["months_since_update"], 1), 2
                 )
             })
-        
+
         return QueryResult(
             category=QueryCategory.TEMPORAL_CHANGES.value,
             query_id="temporal_changes_001",
@@ -645,14 +645,14 @@ class ComplianceRetrievalQueries:
             },
             confidence_score=0.90
         )
-    
+
     # Helper method for enforcement learning patterns
     async def analyze_enforcement_learning_patterns(
-        self, 
+        self,
         violation_types: Optional[List[str]] = None
     ) -> QueryResult:
         """Learn from enforcement cases to predict compliance risks"""
-        
+
         query = """
         MATCH (ec:EnforcementCase)-[:VIOLATES]->(r:Regulation)
         WHERE ($violation_types IS NULL OR ec.violation_type IN $violation_types)
@@ -690,22 +690,22 @@ class ComplianceRetrievalQueries:
         
         ORDER BY ec.case_date DESC, ec.penalty_amount DESC
         """
-        
+
         result = await self.neo4j.execute_query(
             query,
             {"violation_types": violation_types}
         )
-        
+
         enforcement_data = []
         violation_patterns = {}
         total_penalties = 0
-        
+
         for record in result:
             violation_type = record["violation_type"]
             penalty_amount = record["penalty_amount"] or 0
-            
+
             total_penalties += penalty_amount
-            
+
             if violation_type not in violation_patterns:
                 violation_patterns[violation_type] = {
                     "count": 0,
@@ -713,12 +713,12 @@ class ComplianceRetrievalQueries:
                     "organizations": set(),
                     "jurisdictions": set()
                 }
-            
+
             violation_patterns[violation_type]["count"] += 1
             violation_patterns[violation_type]["total_penalty"] += penalty_amount
             violation_patterns[violation_type]["organizations"].add(record["organization_type"])
             violation_patterns[violation_type]["jurisdictions"].add(record["jurisdiction"])
-            
+
             enforcement_data.append({
                 "case": {
                     "id": record["case_id"],
@@ -747,7 +747,7 @@ class ComplianceRetrievalQueries:
                     "control_adequacy": record["control_adequacy"]
                 }
             })
-        
+
         # Process violation patterns
         processed_patterns = {}
         for vtype, data in violation_patterns.items():
@@ -759,7 +759,7 @@ class ComplianceRetrievalQueries:
                 "jurisdictions": list(data["jurisdictions"]),
                 "risk_score": min(data["count"] * (data["total_penalty"] / 1000000), 10)
             }
-        
+
         return QueryResult(
             category=QueryCategory.ENFORCEMENT_LEARNING.value,
             query_id="enforcement_learning_001",
@@ -783,9 +783,9 @@ async def execute_compliance_query(
     **kwargs
 ) -> QueryResult:
     """Factory function to execute compliance queries by category"""
-    
+
     queries = ComplianceRetrievalQueries(neo4j_service)
-    
+
     query_map = {
         QueryCategory.REGULATORY_COVERAGE: queries.get_regulatory_coverage_analysis,
         QueryCategory.CROSS_JURISDICTIONAL: queries.analyze_cross_jurisdictional_impact,
@@ -794,8 +794,8 @@ async def execute_compliance_query(
         QueryCategory.TEMPORAL_CHANGES: queries.analyze_temporal_regulatory_changes,
         QueryCategory.ENFORCEMENT_LEARNING: queries.analyze_enforcement_learning_patterns,
     }
-    
+
     if query_category not in query_map:
         raise ValueError(f"Query category {query_category} not implemented")
-    
+
     return await query_map[query_category](**kwargs)

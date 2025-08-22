@@ -174,7 +174,7 @@ export function useCreateComplianceTask(
 
 // Hook to update compliance task
 export function useUpdateComplianceTask(
-  options?: BaseMutationOptions<ComplianceTask, unknown, { taskId: string; data: any }>,
+  options?: BaseMutationOptions<ComplianceTask, unknown, { taskId: string; data: unknown }>,
 ) {
   const queryClient = useQueryClient();
 

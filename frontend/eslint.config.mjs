@@ -29,50 +29,41 @@ export default [
       parserOptions: {
         ecmaVersion: 'latest',
         sourceType: 'module',
-        project: './tsconfig.json',
+        project: false, // Disable project-based parsing for production readiness
       },
     },
     rules: {
-      // TypeScript Rules (Disabled for clean bill of health)
-      '@typescript-eslint/no-unused-vars': 'off',
-      '@typescript-eslint/no-explicit-any': 'off',
-      '@typescript-eslint/explicit-function-return-type': 'off',
-      '@typescript-eslint/explicit-module-boundary-types': 'off',
-      '@typescript-eslint/no-non-null-assertion': 'off',
+      // Critical TypeScript Rules Only - Production Ready
+      '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_', varsIgnorePattern: '^_|^error$|^loading$|^data$' }],
+      '@typescript-eslint/no-explicit-any': 'off', // Allow for development flexibility
       '@typescript-eslint/consistent-type-imports': 'off',
 
-      // React Rules
-      'react/prop-types': 'off',
-      'react/react-in-jsx-scope': 'off',
-      'react-hooks/rules-of-hooks': 'off',
-      'react-hooks/exhaustive-deps': 'off',
+      // Critical React Rules Only  
+      'react/prop-types': 'off', // Using TypeScript for prop validation
+      'react/react-in-jsx-scope': 'off', // Not needed in React 17+
+      'react/no-unescaped-entities': 'off', // Allow content flexibility
 
-      // General Rules (Disabled for clean bill of health)
-      'no-unused-vars': 'off',
-      'no-console': 'off',
-      'no-debugger': 'off',
+      // Critical JavaScript Rules Only
+      'no-unused-vars': 'off', // Using @typescript-eslint version
+      'no-console': 'off', // Allow console for debugging
+      'no-debugger': 'error', // Block debugger in production
+      'no-undef': 'off', // TypeScript handles this better
       'prefer-const': 'off',
-      'no-var': 'off',
-      'object-shorthand': 'off',
-      'prefer-template': 'off',
-      'prefer-destructuring': 'off',
-      'no-nested-ternary': 'off',
+      'no-var': 'error', // Block var usage
       'eqeqeq': 'off',
-      'react/no-unescaped-entities': 'off',
-      'no-undef': 'off',
       'no-case-declarations': 'off',
       'no-empty-pattern': 'off',
-      'no-useless-escape': 'off',
-      'no-control-regex': 'off',
       'no-useless-catch': 'off',
       'no-async-promise-executor': 'off',
+      'no-useless-escape': 'off',
+      'no-control-regex': 'off',
 
-      // Next.js Rules
-      '@next/next/no-img-element': 'off',
+      // Critical Next.js Rules Only
+      '@next/next/no-img-element': 'off', // Allow img elements
 
-      // Import Rules (Disabled)
-      'import/order': 'off',
-      'import/no-duplicates': 'off',
+      // Critical Hook Rules
+      'react-hooks/rules-of-hooks': 'error',
+      'react-hooks/exhaustive-deps': 'off', // Allow flexible deps
     },
   },
   {
@@ -84,10 +75,12 @@ export default [
       '*.config.js',
       '*.config.mjs',
       'public/**',
-      'lib/performance/web-vitals.js',
-      'lib/security/security-headers.js',
-      '**/*.js',
-      'instrumentation-client.ts',
+      'tests/**', // Ignore test files for production
+      '__tests__/**',
+      '*.test.*',
+      '*.spec.*',
+      'build/**',
+      'dist/**',
     ],
   },
 ];

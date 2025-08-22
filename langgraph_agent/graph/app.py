@@ -3,7 +3,6 @@ Minimal runnable LangGraph application with PostgreSQL checkpointer.
 StateGraph with basic node structure and compilation.
 """
 
-import asyncio
 import logging
 from typing import Dict, Any, Optional
 from uuid import UUID, uuid4
@@ -11,7 +10,6 @@ from datetime import datetime
 
 from langgraph.graph import StateGraph, START, END
 from langgraph.checkpoint.postgres import PostgresSaver
-from langgraph.prebuilt import ToolNode
 from langchain_core.runnables import RunnableConfig
 
 from .state import ComplianceAgentState, create_initial_state, update_state_metadata
@@ -35,18 +33,18 @@ async def router_node(state: ComplianceAgentState) -> ComplianceAgentState:
     Minimal implementation for now, will be expanded in Chunk 3.
     """
     logger.info(f"Router processing for company {state['company_id']}")
-    
+
     # Update current node
     state["current_node"] = GRAPH_NODES["router"]
-    
+
     # Simple routing logic (will be replaced with sophisticated routing)
     last_message = state["messages"][-1] if state["messages"] else None
     if not last_message:
         state["next_node"] = "__end__"
         return update_state_metadata(state)
-    
+
     content_lower = last_message.content.lower()
-    
+
     # Basic keyword-based routing
     if any(word in content_lower for word in ["gdpr", "privacy", "data protection"]):
         state["next_node"] = GRAPH_NODES["compliance_analyzer"]
@@ -58,7 +56,7 @@ async def router_node(state: ComplianceAgentState) -> ComplianceAgentState:
         state["next_node"] = GRAPH_NODES["legal_reviewer"]
     else:
         state["next_node"] = GRAPH_NODES["compliance_analyzer"]  # Default route
-    
+
     logger.info(f"Router decision: {state['next_node']}")
     return update_state_metadata(state)
 
@@ -69,19 +67,19 @@ async def compliance_analyzer_node(state: ComplianceAgentState) -> ComplianceAge
     Minimal implementation for now.
     """
     logger.info(f"Compliance analyzer processing for company {state['company_id']}")
-    
+
     state["current_node"] = GRAPH_NODES["compliance_analyzer"]
-    
+
     # Add a simple response message
     response_msg = GraphMessage(
         role="assistant",
         content="I'm analyzing your compliance requirements. Based on your inquiry, I'll help identify applicable frameworks and obligations.",
         timestamp=datetime.utcnow()
     )
-    
+
     state["messages"].append(response_msg)
     state["next_node"] = "__end__"
-    
+
     return update_state_metadata(state)
 
 
@@ -91,18 +89,18 @@ async def obligation_finder_node(state: ComplianceAgentState) -> ComplianceAgent
     Minimal implementation for now.
     """
     logger.info(f"Obligation finder processing for company {state['company_id']}")
-    
+
     state["current_node"] = GRAPH_NODES["obligation_finder"]
-    
+
     response_msg = GraphMessage(
         role="assistant",
         content="I'm searching for specific compliance obligations relevant to your business. This will include requirements from applicable frameworks.",
         timestamp=datetime.utcnow()
     )
-    
+
     state["messages"].append(response_msg)
     state["next_node"] = "__end__"
-    
+
     return update_state_metadata(state)
 
 
@@ -112,18 +110,18 @@ async def evidence_collector_node(state: ComplianceAgentState) -> ComplianceAgen
     Minimal implementation for now.
     """
     logger.info(f"Evidence collector processing for company {state['company_id']}")
-    
+
     state["current_node"] = GRAPH_NODES["evidence_collector"]
-    
+
     response_msg = GraphMessage(
         role="assistant",
         content="I'm helping you collect and organize compliance evidence. This includes policies, procedures, and documentation.",
         timestamp=datetime.utcnow()
     )
-    
+
     state["messages"].append(response_msg)
     state["next_node"] = "__end__"
-    
+
     return update_state_metadata(state)
 
 
@@ -133,18 +131,18 @@ async def legal_reviewer_node(state: ComplianceAgentState) -> ComplianceAgentSta
     Minimal implementation for now.
     """
     logger.info(f"Legal reviewer processing for company {state['company_id']}")
-    
+
     state["current_node"] = GRAPH_NODES["legal_reviewer"]
-    
+
     response_msg = GraphMessage(
         role="assistant",
         content="I'm preparing materials for legal review. This ensures compliance decisions meet legal standards.",
         timestamp=datetime.utcnow()
     )
-    
+
     state["messages"].append(response_msg)
     state["next_node"] = "__end__"
-    
+
     return update_state_metadata(state)
 
 
@@ -157,19 +155,19 @@ def create_graph() -> StateGraph:
     """
     # Create state graph
     graph = StateGraph(ComplianceAgentState)
-    
+
     # Add nodes
     graph.add_node(GRAPH_NODES["router"], router_node)
     graph.add_node(GRAPH_NODES["compliance_analyzer"], compliance_analyzer_node)
     graph.add_node(GRAPH_NODES["obligation_finder"], obligation_finder_node)
     graph.add_node(GRAPH_NODES["evidence_collector"], evidence_collector_node)
     graph.add_node(GRAPH_NODES["legal_reviewer"], legal_reviewer_node)
-    
+
     # Define routing logic
     def route_after_router(state: ComplianceAgentState) -> str:
         """Route from router to appropriate specialized node."""
         return state["next_node"] or "__end__"
-    
+
     # Add edges
     graph.add_edge(START, GRAPH_NODES["router"])
     graph.add_conditional_edges(
@@ -183,13 +181,13 @@ def create_graph() -> StateGraph:
             "__end__": END
         }
     )
-    
+
     # All specialized nodes end the conversation for now
     graph.add_edge(GRAPH_NODES["compliance_analyzer"], END)
     graph.add_edge(GRAPH_NODES["obligation_finder"], END)
     graph.add_edge(GRAPH_NODES["evidence_collector"], END)
     graph.add_edge(GRAPH_NODES["legal_reviewer"], END)
-    
+
     return graph
 
 
@@ -229,21 +227,21 @@ def compile_graph(
     # Create graph and checkpointer
     graph = create_graph()
     checkpointer = create_checkpointer(database_url)
-    
+
     # Set up interrupts for human review
     compile_kwargs = {
         "checkpointer": checkpointer
     }
-    
+
     if interrupt_before:
         compile_kwargs["interrupt_before"] = interrupt_before
-        
+
     if interrupt_after:
         compile_kwargs["interrupt_after"] = interrupt_after
-    
+
     # Compile graph
     compiled_graph = graph.compile(**compile_kwargs)
-    
+
     logger.info("LangGraph compiled successfully with PostgreSQL checkpointer")
     return compiled_graph
 
@@ -273,7 +271,7 @@ async def invoke_graph(
     # Generate thread ID if not provided
     if not thread_id:
         thread_id = f"thread_{uuid4()}"
-    
+
     # Create initial state
     initial_state = create_initial_state(
         company_id=company_id,
@@ -282,7 +280,7 @@ async def invoke_graph(
         user_id=user_id,
         autonomy_level=autonomy_level
     )
-    
+
     # Create runnable config with thread ID for checkpointing
     config = RunnableConfig(
         configurable={
@@ -290,32 +288,32 @@ async def invoke_graph(
             "company_id": str(company_id)
         }
     )
-    
+
     # Track execution time for SLO monitoring
     start_time = datetime.utcnow()
-    
+
     try:
         # Invoke graph
         logger.info(f"Invoking graph for company {company_id}, thread {thread_id}")
         final_state = await compiled_graph.ainvoke(initial_state, config=config)
-        
+
         # Calculate latency
         end_time = datetime.utcnow()
         latency_ms = int((end_time - start_time).total_seconds() * 1000)
         final_state["latency_ms"] = latency_ms
-        
+
         # Log SLO compliance
         if latency_ms > SLO_P95_LATENCY_MS:
             logger.warning(f"SLO violation: {latency_ms}ms > {SLO_P95_LATENCY_MS}ms")
         else:
             logger.info(f"SLO compliant: {latency_ms}ms")
-        
+
         logger.info(f"Graph execution completed in {latency_ms}ms")
         return final_state
-        
+
     except Exception as e:
         logger.error(f"Graph execution failed: {str(e)}")
-        
+
         # Create fallback response
         error_response = SafeFallbackResponse(
             error_message=f"Graph execution failed: {str(e)}",
@@ -323,11 +321,11 @@ async def invoke_graph(
             company_id=company_id,
             thread_id=thread_id
         )
-        
+
         # Add error to state
         initial_state["errors"].append(error_response)
         initial_state["error_count"] += 1
-        
+
         return initial_state
 
 
@@ -356,7 +354,7 @@ async def stream_graph(
     # Generate thread ID if not provided
     if not thread_id:
         thread_id = f"thread_{uuid4()}"
-    
+
     # Create initial state
     initial_state = create_initial_state(
         company_id=company_id,
@@ -365,7 +363,7 @@ async def stream_graph(
         user_id=user_id,
         autonomy_level=autonomy_level
     )
-    
+
     # Create runnable config
     config = RunnableConfig(
         configurable={
@@ -373,17 +371,17 @@ async def stream_graph(
             "company_id": str(company_id)
         }
     )
-    
+
     try:
         # Stream graph execution
         logger.info(f"Streaming graph for company {company_id}, thread {thread_id}")
-        
+
         async for chunk in compiled_graph.astream(initial_state, config=config):
             yield chunk
-            
+
     except Exception as e:
         logger.error(f"Graph streaming failed: {str(e)}")
-        
+
         # Yield error state
         error_response = SafeFallbackResponse(
             error_message=f"Graph streaming failed: {str(e)}",
@@ -391,7 +389,7 @@ async def stream_graph(
             company_id=company_id,
             thread_id=thread_id
         )
-        
+
         yield {"error": error_response}
 
 
@@ -410,8 +408,8 @@ def get_compiled_graph(database_url: str) -> Any:
         Compiled graph instance
     """
     global _compiled_graph
-    
+
     if _compiled_graph is None:
         _compiled_graph = compile_graph(database_url)
-    
+
     return _compiled_graph

@@ -27,7 +27,7 @@ class APIClient {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${tokens.access_token}`,
       };
-    } catch (error) {
+    } catch {
       // If we have a refresh token, try to refresh
       if (tokens.refresh_token) {
         try {
@@ -80,7 +80,7 @@ class APIClient {
       }
       
       return response.text() as unknown as T;
-    } catch (error) {
+    } catch {
       if (error instanceof APIError) {
         throw error;
       }
@@ -133,7 +133,7 @@ class APIClient {
       }
       
       return response.text() as unknown as T;
-    } catch (error) {
+    } catch {
       if (error instanceof APIError) {
         throw error;
       }
@@ -221,7 +221,7 @@ class APIClient {
       link.click();
       document.body.removeChild(link);
       window.URL.revokeObjectURL(downloadUrl);
-    } catch (error) {
+    } catch {
       if (error instanceof APIError) {
         throw error;
       }
@@ -273,7 +273,7 @@ class APIClient {
       }
       
       return response.text() as unknown as T;
-    } catch (error) {
+    } catch {
       if (error instanceof APIError) {
         throw error;
       }

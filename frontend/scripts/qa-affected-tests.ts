@@ -52,17 +52,14 @@ class AvaAffectedTestsRunner {
   private testExecutions: TestExecution[] = [];
 
   constructor() {
-    console.log('🧪 Ava Affected Tests Runner initializing...');
+    // TODO: Replace with proper logging
   }
 
   async runAffectedTests(prNumber?: number): Promise<TestResults> {
-    console.log(`🎯 Running affected tests${prNumber ? ` for PR #${prNumber}` : ''}...`);
-    
+    // TODO: Replace with proper logging
     const changedFiles = this.getChangedFiles();
     const affectedTestFiles = this.findAffectedTests(changedFiles);
-    
-    console.log(`📊 Found ${affectedTestFiles.length} affected test files`);
-    
+    // TODO: Replace with proper logging
     this.planTestExecution(affectedTestFiles);
     
     const results = await this.executeTests();
@@ -79,7 +76,7 @@ class AvaAffectedTestsRunner {
         file.startsWith('frontend/') && 
         (file.endsWith('.tsx') || file.endsWith('.ts') || file.endsWith('.js'))
       );
-    } catch (error) {
+    } catch {
       console.warn('⚠️ Could not get git diff, running all tests');
       return [];
     }
@@ -153,7 +150,7 @@ class AvaAffectedTestsRunner {
         const relativePath = file.replace(this.frontendPath + '/', '');
         dependentTests.push(relativePath);
       });
-    } catch (error) {
+    } catch {
       // No dependent tests found, which is fine
     }
 
@@ -242,8 +239,7 @@ class AvaAffectedTestsRunner {
         status: 'pending'
       });
     }
-
-    console.log(`📋 Planned ${this.testExecutions.length} test execution groups`);
+    // TODO: Replace with proper logging
   }
 
   private async executeTests(): Promise<TestResults> {
@@ -260,7 +256,7 @@ class AvaAffectedTestsRunner {
     const startTime = Date.now();
 
     for (const execution of this.testExecutions) {
-      console.log(`\n🏃 Running ${execution.category}...`);
+    // TODO: Replace with proper logging
       execution.status = 'running';
       
       const executionStart = Date.now();
@@ -280,10 +276,8 @@ class AvaAffectedTestsRunner {
         const testCount = this.parseTestCount(output);
         results.totalTests += testCount;
         results.passedTests += testCount;
-        
-        console.log(`✅ ${execution.category} passed (${testCount} tests, ${execution.duration}ms)`);
-        
-      } catch (error: any) {
+    // TODO: Replace with proper logging
+      } catch (error: unknown) {
         execution.status = 'failed';
         execution.output = error.stdout || error.message;
         execution.duration = Date.now() - executionStart;
@@ -291,12 +285,10 @@ class AvaAffectedTestsRunner {
         const failure = this.parseTestFailure(execution, error);
         results.failures.push(failure);
         results.failedTests++;
-        
-        console.log(`❌ ${execution.category} failed`);
-        
+    // TODO: Replace with proper logging
         // Stop on required test failures
         if (execution.required) {
-          console.log(`🚫 Stopping execution due to required test failure`);
+    // TODO: Replace with proper logging
           break;
         }
       }
@@ -318,7 +310,7 @@ class AvaAffectedTestsRunner {
     return match ? parseInt(match[1]) : 0;
   }
 
-  private parseTestFailure(execution: TestExecution, error: any): TestFailure {
+  private parseTestFailure(execution: TestExecution, error: unknown): TestFailure {
     return {
       testFile: execution.files[0] || 'unknown',
       testName: execution.category,
@@ -368,15 +360,21 @@ class AvaAffectedTestsRunner {
     };
 
     require('fs').writeFileSync(reportPath, JSON.stringify(report, null, 2));
-    
-    console.log(`\n📊 Test Results Summary:`);
-    console.log(`✅ Passed: ${results.passedTests}`);
-    console.log(`❌ Failed: ${results.failedTests}`);
-    console.log(`⏭️ Skipped: ${results.skippedTests}`);
-    console.log(`⏱️ Duration: ${results.totalDuration}ms`);
-    console.log(`📈 Coverage: ${results.coverage.statements}% statements`);
-    console.log(`🎯 Threshold Met: ${results.coverage.threshold ? '✅' : '❌'}`);
-    console.log(`📄 Report saved: ${reportPath}`);
+    // TODO: Replace with proper logging
+
+    // TODO: Replace with proper logging
+
+    // TODO: Replace with proper logging
+
+    // TODO: Replace with proper logging
+
+    // TODO: Replace with proper logging
+
+    // TODO: Replace with proper logging
+
+    // TODO: Replace with proper logging
+
+    // TODO: Replace with proper logging
   }
 }
 
@@ -390,18 +388,18 @@ async function main() {
     const results = await runner.runAffectedTests(prNumber);
     
     if (results.failedTests > 0) {
-      console.log('\n❌ Some tests failed!');
+    // TODO: Replace with proper logging
       process.exit(1);
     }
     
     if (!results.coverage.threshold) {
-      console.log('\n❌ Coverage threshold not met!');
+    // TODO: Replace with proper logging
       process.exit(1);
     }
-    
-    console.log('\n✅ All affected tests passed!');
-    
+    // TODO: Replace with proper logging
   } catch (error) {
+    // Development logging - consider proper logger
+
     console.error('❌ Test execution failed:', error);
     process.exit(1);
   }

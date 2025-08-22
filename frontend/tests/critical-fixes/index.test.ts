@@ -31,8 +31,7 @@ describe('Critical Frontend Fixes - Test Suite Index', () => {
     expect(testModules).toContain('hydration-safety.test.tsx');
     expect(testModules).toContain('react-key-uniqueness.test.tsx');
     expect(testModules).toContain('assessment-components.test.tsx');
-    
-    console.log('✅ All critical fix test modules verified');
+    // TODO: Replace with proper logging
   });
 });
 

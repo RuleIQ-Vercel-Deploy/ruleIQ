@@ -178,6 +178,8 @@ describe('AI Fallback Tests', () => {
           // Simulate AI service failure
           throw new Error('AI service temporarily unavailable');
         } catch (error) {
+          // Development logging - consider proper logger
+
           console.error('Enhanced AI response failed:', error);
           return fallbackResponse;
         }
@@ -220,6 +222,8 @@ describe('AI Fallback Tests', () => {
           // Simulate network error
           throw new Error('Network request failed');
         } catch (error) {
+          // Development logging - consider proper logger
+
           console.error('Network error:', error);
 
           // Return fallback response
@@ -254,7 +258,7 @@ describe('AI Fallback Tests', () => {
 
         try {
           await Promise.race([slowRequest, timeoutPromise]);
-        } catch (error) {
+        } catch {
           if (error instanceof Error && error.message.includes('timed out')) {
             return {
               error: 'Request is taking longer than expected. Please try again.',

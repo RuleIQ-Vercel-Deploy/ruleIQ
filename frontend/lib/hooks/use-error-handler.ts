@@ -29,7 +29,7 @@ export function useErrorHandler(options: UseErrorHandlerOptions = {}) {
   const [isRetrying, setIsRetrying] = useState(false);
 
   const handleError = useCallback(
-    (error: any) => {
+    (error: unknown) => {
       let processedError: EnhancedApiError | APIError;
 
       // Check if it's already an enhanced error
@@ -135,7 +135,7 @@ export function useAsyncError() {
       try {
         const result = await asyncFunction();
         return result;
-      } catch (error) {
+      } catch {
         handleError(error);
         return null;
       } finally {
@@ -162,7 +162,7 @@ export function useFormError(context: string = 'form') {
   });
 
   const handleFormError = useCallback(
-    (error: any) => {
+    (error: unknown) => {
       handleError(error);
 
       // Extract field-specific errors if available

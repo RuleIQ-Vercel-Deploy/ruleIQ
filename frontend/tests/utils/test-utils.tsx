@@ -256,9 +256,9 @@ export const createMockEvidence = (overrides: Partial<typeof mockEvidence> = {})
 
 // API mock responses
 export const mockAPIResponses = {
-  success: (data: any) => ({ data, message: 'Success', status: 200 }),
+  success: (data: unknown) => ({ data, message: 'Success', status: 200 }),
   error: (message: string, status = 400) => ({ detail: message, status }),
-  paginated: (items: any[], total = items.length) => ({
+  paginated: (items: unknown[], total = items.length) => ({
     items,
     total,
     page: 1,

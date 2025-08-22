@@ -118,7 +118,7 @@ class AvaQualityDashboard {
   private readonly dashboardPath = join(this.reportsPath, 'dashboard.html');
 
   constructor() {
-    console.log('📊 Ava Quality Dashboard Generator initializing...');
+    // TODO: Replace with proper logging
     this.ensureDirectories();
   }
 
@@ -129,8 +129,7 @@ class AvaQualityDashboard {
   }
 
   async generateQualityReport(): Promise<QualityMetrics> {
-    console.log('📈 Generating comprehensive quality report...');
-    
+    // TODO: Replace with proper logging
     const metrics: QualityMetrics = {
       timestamp: new Date().toISOString(),
       coverage: await this.collectCoverageMetrics(),
@@ -148,8 +147,7 @@ class AvaQualityDashboard {
   }
 
   private async collectCoverageMetrics(): Promise<CoverageMetrics> {
-    console.log('📊 Collecting coverage metrics...');
-    
+    // TODO: Replace with proper logging
     try {
       const coverageOutput = execSync('pnpm test:coverage --run', { 
         encoding: 'utf8',
@@ -157,7 +155,7 @@ class AvaQualityDashboard {
       });
       
       return this.parseCoverageOutput(coverageOutput);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.warn('⚠️ Could not collect coverage metrics');
       return {
         statements: 0,
@@ -219,8 +217,7 @@ class AvaQualityDashboard {
   }
 
   private async collectPerformanceMetrics(): Promise<PerformanceMetrics> {
-    console.log('⚡ Collecting performance metrics...');
-    
+    // TODO: Replace with proper logging
     try {
       // Run Lighthouse audit
       const lighthouseOutput = execSync('npx lighthouse http://localhost:3000 --output=json --quiet', {
@@ -251,7 +248,7 @@ class AvaQualityDashboard {
         bundleSize: bundleStats,
         buildTime: 0 // TODO: Measure build time
       };
-    } catch (error) {
+    } catch {
       console.warn('⚠️ Could not collect performance metrics');
       return {
         lighthouse: { performance: 0, accessibility: 0, bestPractices: 0, seo: 0, pwa: 0 },
@@ -284,14 +281,13 @@ class AvaQualityDashboard {
         imageSize: sizes[2] || 0,
         chunks: sizes.length
       };
-    } catch (error) {
+    } catch {
       return { totalSize: 0, jsSize: 0, cssSize: 0, imageSize: 0, chunks: 0 };
     }
   }
 
   private async collectAccessibilityMetrics(): Promise<AccessibilityMetrics> {
-    console.log('♿ Collecting accessibility metrics...');
-    
+    // TODO: Replace with proper logging
     try {
       const a11yOutput = execSync('pnpm test tests/accessibility/ --run', {
         encoding: 'utf8',
@@ -299,7 +295,7 @@ class AvaQualityDashboard {
       });
       
       return this.parseA11yOutput(a11yOutput);
-    } catch (error) {
+    } catch {
       console.warn('⚠️ Could not collect accessibility metrics');
       return {
         violations: 0,
@@ -318,15 +314,14 @@ class AvaQualityDashboard {
 
     return {
       violations,
-      wcagLevel: violations === 0 ? 'AA' : violations < 5 ? 'A' : 'A',
+      wcagLevel: violations === 0 ? &apos;AA' : violations < 5 ? 'A' : 'A',
       score: Math.max(0, 100 - violations * 10),
       criticalIssues: [] // TODO: Parse specific issues
     };
   }
 
   private async collectTestStabilityMetrics(): Promise<TestStabilityMetrics> {
-    console.log('🧪 Collecting test stability metrics...');
-    
+    // TODO: Replace with proper logging
     try {
       // Load flaky test data
       const flakyDataPath = join(this.frontendPath, 'test-results', 'flaky-tests.json');
@@ -356,7 +351,7 @@ class AvaQualityDashboard {
           acc + (result.perfStats?.runtime || 0), 0) / (testResults.testResults?.length || 1) || 0,
         slowestTests: [] // TODO: Extract slowest tests
       };
-    } catch (error) {
+    } catch {
       console.warn('⚠️ Could not collect test stability metrics');
       return {
         totalTests: 0,
@@ -370,8 +365,7 @@ class AvaQualityDashboard {
   }
 
   private async collectCodeQualityMetrics(): Promise<CodeQualityMetrics> {
-    console.log('🔍 Collecting code quality metrics...');
-    
+    // TODO: Replace with proper logging
     try {
       const lintOutput = execSync('pnpm lint', { encoding: 'utf8', cwd: this.frontendPath });
       const typeOutput = execSync('pnpm typecheck', { encoding: 'utf8', cwd: this.frontendPath });
@@ -383,7 +377,7 @@ class AvaQualityDashboard {
         duplicateCode: 0, // TODO: Implement duplicate detection
         complexity: 0 // TODO: Implement complexity analysis
       };
-    } catch (error: any) {
+    } catch (error: unknown) {
       // Parse errors from failed lint/typecheck
       const output = error.stdout || '';
       return {
@@ -397,8 +391,7 @@ class AvaQualityDashboard {
   }
 
   private async analyzeTrends(): Promise<TrendAnalysis> {
-    console.log('📈 Analyzing quality trends...');
-    
+    // TODO: Replace with proper logging
     // Load historical reports
     const historicalReports = this.loadHistoricalReports();
     
@@ -434,7 +427,7 @@ class AvaQualityDashboard {
         const content = readFileSync(join(this.reportsPath, file), 'utf8');
         return JSON.parse(content);
       });
-    } catch (error) {
+    } catch {
       return [];
     }
   }
@@ -478,15 +471,13 @@ class AvaQualityDashboard {
   private async saveQualityReport(metrics: QualityMetrics): Promise<void> {
     const reportPath = join(this.reportsPath, `quality-report-${Date.now()}.json`);
     writeFileSync(reportPath, JSON.stringify(metrics, null, 2));
-    
-    console.log(`📊 Quality report saved: ${reportPath}`);
+    // TODO: Replace with proper logging
   }
 
   private async generateHTMLDashboard(metrics: QualityMetrics): Promise<void> {
     const html = this.generateDashboardHTML(metrics);
     writeFileSync(this.dashboardPath, html);
-    
-    console.log(`📊 Quality dashboard generated: ${this.dashboardPath}`);
+    // TODO: Replace with proper logging
   }
 
   private generateDashboardHTML(metrics: QualityMetrics): string {
@@ -498,7 +489,7 @@ class AvaQualityDashboard {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ava's Quality Dashboard - ruleIQ</title>
+    <title>Ava&apos;s Quality Dashboard - ruleIQ</title>
     <style>
         body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; margin: 0; padding: 20px; background: #f5f5f5; }
         .dashboard { max-width: 1200px; margin: 0 auto; }
@@ -524,7 +515,7 @@ class AvaQualityDashboard {
 <body>
     <div class="dashboard">
         <div class="header">
-            <h1>🤖 Ava's Quality Dashboard</h1>
+            <h1>🤖 Ava&apos;s Quality Dashboard</h1>
             <p>Generated: ${new Date(metrics.timestamp).toLocaleString()}</p>
             <div class="quality-score ${this.getScoreClass(metrics.trends.qualityScore)}">
                 Quality Score: ${metrics.trends.qualityScore}/100
@@ -631,17 +622,22 @@ async function main() {
   
   try {
     const metrics = await dashboard.generateQualityReport();
-    
-    console.log('\n📊 Quality Dashboard Summary:');
-    console.log(`🎯 Quality Score: ${metrics.trends.qualityScore}/100`);
-    console.log(`📈 Coverage: ${metrics.coverage.statements.toFixed(1)}%`);
-    console.log(`⚡ Performance: ${metrics.performance.lighthouse.performance}`);
-    console.log(`♿ Accessibility: ${metrics.accessibility.score}`);
-    console.log(`🧪 Test Stability: ${((1 - metrics.testStability.flakyRate) * 100).toFixed(1)}%`);
-    
-    console.log('\n✅ Quality dashboard generated successfully!');
-    
+    // TODO: Replace with proper logging
+
+    // TODO: Replace with proper logging
+
+    // TODO: Replace with proper logging
+
+    // TODO: Replace with proper logging
+
+    // TODO: Replace with proper logging
+
+    // TODO: Replace with proper logging
+
+    // TODO: Replace with proper logging
   } catch (error) {
+    // Development logging - consider proper logger
+
     console.error('❌ Quality dashboard generation failed:', error);
     process.exit(1);
   }

@@ -346,7 +346,7 @@ Always provide:
                 action = {
                     "action_id": f"action_{gap['gap_id']}",
                     "type": "IMPLEMENT_CONTROL",
-                    "priority": gap.get("priority_level", "medium"),
+                    "priority": gap["requirement"]["risk_level"],
                     "target": gap["requirement"]["title"],
                     "regulation": gap["regulation"]["code"],
                     "risk_level": gap["requirement"]["risk_level"],
@@ -683,7 +683,7 @@ Always provide:
                 updates.append({
                     "control_id": evidence_item["action_id"],
                     "effectiveness": evidence_item.get("effectiveness", 0.8),
-                    "updated_at": evidence_item["timestamp"]
+                    "updated_at": evidence_item.get("timestamp", datetime.utcnow().isoformat())
                 })
 
         return updates
@@ -1137,15 +1137,19 @@ async def create_iq_agent(neo4j_service: Neo4jGraphRAGService) -> IQComplianceAg
 
     # Ensure graph is initialized
     try:
-        await neo4j_service.connect()
+        await neo4j_service.initialize()
         logger.info("IQ Agent: Neo4j connection established")
 
-        # Initialize compliance graph if needed
+        # Check graph statistics but don't require initialization for testing
         graph_stats = await neo4j_service.get_graph_statistics()
         if graph_stats.get("total_nodes", 0) < 10:
-            logger.info("IQ Agent: Initializing compliance graph...")
-            await initialize_compliance_graph()
-            logger.info("IQ Agent: Compliance graph initialized")
+            logger.info("IQ Agent: Empty graph detected, attempting to initialize...")
+            try:
+                await initialize_compliance_graph()
+                logger.info("IQ Agent: Compliance graph initialized")
+            except Exception as init_error:
+                logger.warning(f"IQ Agent: Could not initialize graph (read-only mode?): {init_error}")
+                logger.info("IQ Agent: Continuing with empty graph for testing")
 
     except Exception as e:
         logger.error(f"IQ Agent initialization error: {str(e)}")

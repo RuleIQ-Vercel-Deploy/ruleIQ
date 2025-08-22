@@ -448,7 +448,7 @@ export function isStructuredAIResponse(response: any): response is StructuredAIR
   );
 }
 
-export function isValidationError(error: any): error is ValidationError {
+export function isValidationError(error: unknown): error is ValidationError {
   return (
     error &&
     typeof error === 'object' &&

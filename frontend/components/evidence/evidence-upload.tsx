@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 
 interface EvidenceUploadProps {
-  onUpload?: (files: File[], metadata: any) => void;
+  onUpload?: (files: File[], metadata: unknown) => void;
 }
 
 export function EvidenceUpload({ onUpload }: EvidenceUploadProps) {

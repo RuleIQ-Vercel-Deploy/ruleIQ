@@ -76,7 +76,7 @@ interface AssessmentState {
   setAssessments: (assessments: Assessment[]) => void;
   addAssessment: (assessment: Assessment) => void;
   setLoading: (loading: boolean) => void;
-  setFrameworks: (frameworks: any[]) => void;
+  setFrameworks: (frameworks: unknown[]) => void;
 
   // Actions - Filters & UI
   setFilters: (filters: AssessmentState['filters']) => void;
@@ -119,7 +119,7 @@ export const useAssessmentStore = create<AssessmentState>()(
         ...initialState,
 
         // Assessment Management
-        loadAssessments: async (params: any) => {
+        loadAssessments: async (params: Record<string, unknown>) => {
           set({ isLoading: true, error: null }, false, 'loadAssessments/start');
 
           await withPerformanceMonitoring(
@@ -398,8 +398,8 @@ export const useAssessmentStore = create<AssessmentState>()(
             // Note: Schema validation may not match Assessment interface exactly
             // For now, we'll trust the input data and just set it
             set({ assessments }, false, 'setAssessments');
-          } catch (error) {
-            console.warn('Assessment validation failed, using data as-is:', error);
+          } catch {
+            // TODO: Replace with proper logging
             set({ assessments }, false, 'setAssessments');
           }
         },
@@ -414,8 +414,8 @@ export const useAssessmentStore = create<AssessmentState>()(
               false,
               'addAssessment',
             );
-          } catch (error) {
-            console.warn('Assessment validation failed, using data as-is:', error);
+          } catch {
+            // TODO: Replace with proper logging
             set(
               (state) => ({
                 assessments: [assessment, ...state.assessments],
@@ -430,21 +430,19 @@ export const useAssessmentStore = create<AssessmentState>()(
           try {
             safeValidate(LoadingStateSchema, loading, 'setLoading');
             set({ isLoading: loading }, false, 'setLoading');
-          } catch (error) {
-            console.warn('Loading validation failed, using data as-is:', error);
+          } catch {
+            // TODO: Replace with proper logging
             set({ isLoading: loading }, false, 'setLoading');
           }
         },
 
-        setFrameworks: (frameworks: any[]) => {
+        setFrameworks: (frameworks: unknown[]) => {
           try {
             safeValidate(FrameworksArraySchema, frameworks, 'setFrameworks');
             // Note: frameworks are not part of this store, but adding for test compatibility
-            console.warn(
-              'setFrameworks called on assessment store - frameworks should be managed separately',
-            );
-          } catch (error) {
-            console.warn('Framework validation failed:', error);
+            // TODO: Replace with proper logging
+          } catch {
+            // TODO: Replace with proper logging
           }
         },
 

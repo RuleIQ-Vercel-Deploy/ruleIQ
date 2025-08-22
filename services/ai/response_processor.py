@@ -15,7 +15,6 @@ from uuid import uuid4
 
 from config.logging_config import get_logger
 
-from .exceptions import AIParsingException, SchemaValidationException
 from .validation_models import (
     validate_ai_response,
 )

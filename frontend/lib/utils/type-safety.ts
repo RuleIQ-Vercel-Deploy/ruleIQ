@@ -109,7 +109,7 @@ export function assertNonNull<T>(
   value: T | null | undefined,
   message?: string,
 ): asserts value is T {
-  if (value == null) {
+  if (value === null || value === undefined) {
     throw new Error(message ?? 'Value is null or undefined');
   }
 }
@@ -154,7 +154,7 @@ export function safeAccess<T, K extends keyof T>(
 export function safeAccessNested<T>(obj: unknown, path: string[]): T | undefined {
   let current = obj;
   for (const key of path) {
-    if (current == null || typeof current !== 'object') {
+    if (current === null || current === undefined || typeof current !== 'object') {
       return undefined;
     }
     current = (current as Record<string, unknown>)[key];

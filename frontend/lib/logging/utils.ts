@@ -29,7 +29,7 @@ export const withRequestLogging = (handler: Function) => async (req: any, res: a
   try {
     await handler(req, res);
     log.info(`Request finished: ${method} ${url}`, { status: res.statusCode });
-  } catch (error: any) {
+  } catch (error: unknown) {
     log.error(`Request error: ${method} ${url}`, {
       status: 500,
       errorMessage: error.message,

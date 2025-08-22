@@ -68,7 +68,7 @@ export default function ReportsPage() {
         title: 'Download started',
         description: `Your report is being downloaded as ${format.toUpperCase()}.`,
       });
-    } catch (error) {
+    } catch {
       toast({
         title: 'Download failed',
         description: 'There was an error downloading the report. Please try again.',

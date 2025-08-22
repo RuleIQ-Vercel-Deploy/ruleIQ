@@ -27,7 +27,9 @@ export const useFreemiumEmailCapture = () => {
       router.push(`/freemium/assessment?token=${response.token}`);
     },
     onError: (error) => {
-      console.error('Email capture failed:', error);
+      // TODO: Replace with proper logging
+
+      // // TODO: Replace with proper logging
     },
   });
 };
@@ -48,7 +50,7 @@ export const useFreemiumStartAssessment = (token: string | null) => {
       setCurrentQuestion(data.question_id);
       incrementProgress(data.progress);
     },
-    retry: (failureCount, error: any) => {
+    retry: (failureCount, error: unknown) => {
       // Don't retry if session expired or not found
       if (error?.message?.includes('expired') || error?.message?.includes('not found')) {
         return false;
@@ -89,8 +91,10 @@ export const useFreemiumAnswerQuestion = () => {
         queryKey: freemiumKeys.assessment(token || '') 
       });
     },
-    onError: (error: any) => {
-      console.error('Answer submission failed:', error);
+    onError: (error: unknown) => {
+      // TODO: Replace with proper logging
+
+      // // TODO: Replace with proper logging
       
       // Handle session expiration
       if (error?.message?.includes('expired')) {
@@ -114,7 +118,7 @@ export const useFreemiumResults = (token: string | null) => {
     onSuccess: () => {
       markResultsViewed();
     },
-    retry: (failureCount, error: any) => {
+    retry: (failureCount, error: unknown) => {
       // Don't retry if results not found or expired
       if (error?.message?.includes('not found') || error?.message?.includes('expired')) {
         return false;
@@ -139,7 +143,7 @@ export const useFreemiumConversionTracking = () => {
     },
     onError: (error) => {
       // Conversion tracking failures should not break UX
-      console.warn('Conversion tracking failed:', error);
+      // TODO: Replace with proper logging
     },
     // Don't show loading states for tracking
     mutationKey: ['freemium-tracking'],

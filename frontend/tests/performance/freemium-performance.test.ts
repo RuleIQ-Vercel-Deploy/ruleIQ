@@ -71,7 +71,7 @@ class PerformanceTester {
         cpuUsage: 0, // Would be measured server-side in real implementation
         networkLatency: endTime - startTime,
       };
-    } catch (error) {
+    } catch {
       const endTime = performance.now();
       return {
         responseTime: endTime - startTime,
@@ -97,7 +97,7 @@ class PerformanceTester {
         try {
           const metrics = await this.measureApiPerformance(endpoint, options);
           results.push(metrics.responseTime);
-        } catch (error) {
+        } catch {
           errors.push(error as Error);
         }
         
@@ -199,7 +199,7 @@ describe('Freemium Performance Tests', () => {
   
   describe('Assessment Flow Performance', () => {
     it('should start assessment within 200ms', async () => {
-      const metrics = await performanceTester.measureApiPerformance('/api/freemium/start-assessment', {
+      const metrics = await performanceTester.measureApiPerformance('/api/v1/freemium/sessions', {
         method: 'POST',
         body: JSON.stringify({
           email: 'assessment@example.com',
@@ -405,7 +405,7 @@ describe('Performance Benchmarking', () => {
           consent: true,
         }),
       }),
-      startAssessment: await performanceTester.measureApiPerformance('/api/freemium/start-assessment', {
+      startAssessment: await performanceTester.measureApiPerformance('/api/v1/freemium/sessions', {
         method: 'POST',
         body: JSON.stringify({
           email: 'benchmark@example.com',
@@ -415,11 +415,7 @@ describe('Performance Benchmarking', () => {
     };
     
     // Log benchmarks for reference
-    console.log('Performance Benchmarks:', {
-      emailCaptureTime: benchmarks.emailCapture.responseTime,
-      startAssessmentTime: benchmarks.startAssessment.responseTime,
-    });
-    
+    // TODO: Replace with proper logging
     // Verify all benchmarks meet requirements
     expect(benchmarks.emailCapture.responseTime).toBeLessThan(200);
     expect(benchmarks.startAssessment.responseTime).toBeLessThan(200);

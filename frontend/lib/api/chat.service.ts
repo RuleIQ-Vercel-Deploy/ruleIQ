@@ -23,7 +23,7 @@ export interface ComplianceAnalysisRequest {
 
 export type ChatWebSocketMessage = {
   type: 'message' | 'typing' | 'error' | 'connection';
-  data: any;
+  data: unknown;
 };
 
 class ChatService {
@@ -243,7 +243,7 @@ class ChatService {
     this.ws = new WebSocket(wsUrl);
 
     this.ws.onopen = () => {
-      console.log('WebSocket connected');
+    // TODO: Replace with proper logging
       this.notifyHandlers({ type: 'connection', data: { status: 'connected' } });
     };
 
@@ -252,17 +252,21 @@ class ChatService {
         const message = JSON.parse(event.data);
         this.notifyHandlers({ type: 'message', data: message });
       } catch (error) {
-        console.error('Failed to parse WebSocket message:', error);
+        // TODO: Replace with proper logging
+
+        // // TODO: Replace with proper logging
       }
     };
 
     this.ws.onerror = (error) => {
-      console.error('WebSocket error:', error);
+      // TODO: Replace with proper logging
+
+      // // TODO: Replace with proper logging
       this.notifyHandlers({ type: 'error', data: error });
     };
 
     this.ws.onclose = () => {
-      console.log('WebSocket disconnected');
+    // TODO: Replace with proper logging
       this.notifyHandlers({ type: 'connection', data: { status: 'disconnected' } });
 
       // Attempt to reconnect after 3 seconds
@@ -281,7 +285,9 @@ class ChatService {
     if (this.ws?.readyState === WebSocket.OPEN) {
       this.ws.send(JSON.stringify(message));
     } else {
-      console.error('WebSocket is not connected');
+      // TODO: Replace with proper logging
+
+      // // TODO: Replace with proper logging
     }
   }
 

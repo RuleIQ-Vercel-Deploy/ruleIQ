@@ -78,8 +78,8 @@ def upgrade() -> None:
         ['granted_by'], ['users.id'], name=op.f('fk_role_permissions_granted_by_users')
     ),
     sa.ForeignKeyConstraint(
-        ['permission_id'], 
-        ['permissions.id'], 
+        ['permission_id'],
+        ['permissions.id'],
         name=op.f('fk_role_permissions_permission_id_permissions')
     ),
     sa.ForeignKeyConstraint(
@@ -137,8 +137,8 @@ def upgrade() -> None:
     sa.Column('ip_address', sa.String(length=45), nullable=True),
     sa.Column('user_agent', sa.String(length=500), nullable=True),
     sa.Column(
-        'severity', 
-        sa.Enum('info', 'warning', 'error', 'critical', name='severity_enum'), 
+        'severity',
+        sa.Enum('info', 'warning', 'error', 'critical', name='severity_enum'),
         nullable=False
     ),
     sa.Column('timestamp', sa.DateTime(), nullable=True),
@@ -155,16 +155,16 @@ def upgrade() -> None:
     sa.Column('user_id', sa.UUID(), nullable=False),
     sa.Column('business_profile_id', sa.UUID(), nullable=True),
     sa.Column(
-        'access_type', 
-        sa.Enum('own_data', 'organization_data', 'all_data', name='data_access_enum'), 
+        'access_type',
+        sa.Enum('own_data', 'organization_data', 'all_data', name='data_access_enum'),
         nullable=False
     ),
     sa.Column('granted_at', sa.DateTime(), nullable=True),
     sa.Column('granted_by', sa.UUID(), nullable=True),
     sa.Column('is_active', sa.Boolean(), nullable=True),
     sa.ForeignKeyConstraint(
-        ['business_profile_id'], 
-        ['business_profiles.id'], 
+        ['business_profile_id'],
+        ['business_profiles.id'],
         name=op.f('fk_data_access_business_profile_id_business_profiles')
     ),
     sa.ForeignKeyConstraint(

@@ -199,10 +199,10 @@ export interface PerformanceTestResult {
 }
 
 export interface AccessibilityTestResult {
-  violations: any[];
-  passes: any[];
-  incomplete: any[];
-  inapplicable: any[];
+  violations: unknown[];
+  passes: unknown[];
+  incomplete: unknown[];
+  inapplicable: unknown[];
   url: string;
   timestamp: number;
 }
@@ -329,8 +329,8 @@ declare global {
   }
 
   interface Window {
-    gtag?: (...args: any[]) => void;
-    dataLayer?: any[];
+    gtag?: (...args: unknown[]) => void;
+    dataLayer?: unknown[];
     performance: Performance & {
       memory?: {
         usedJSHeapSize: number;

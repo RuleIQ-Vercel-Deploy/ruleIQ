@@ -10,7 +10,7 @@ export interface ExportOptions {
 }
 
 export class DataExporter {
-  static exportToCSV(data: any[], options: Partial<ExportOptions> = {}) {
+  static exportToCSV(data: unknown[], options: Partial<ExportOptions> = {}) {
     const { filename = 'export', headers } = options;
 
     // Extract headers from data if not provided
@@ -36,13 +36,13 @@ export class DataExporter {
     this.downloadFile(csvContent, `${filename}.csv`, 'text/csv;charset=utf-8;');
   }
 
-  static exportToJSON(data: any[], options: Partial<ExportOptions> = {}) {
+  static exportToJSON(data: unknown[], options: Partial<ExportOptions> = {}) {
     const { filename = 'export' } = options;
     const jsonContent = JSON.stringify(data, null, 2);
     this.downloadFile(jsonContent, `${filename}.json`, 'application/json');
   }
 
-  static exportToExcel(data: any[], options: Partial<ExportOptions> = {}) {
+  static exportToExcel(data: unknown[], options: Partial<ExportOptions> = {}) {
     const { filename = 'export', headers } = options;
 
     // Create workbook and worksheet
@@ -65,7 +65,7 @@ export class DataExporter {
     XLSX.writeFile(wb, `${filename}.xlsx`);
   }
 
-  static exportToPDF(data: any[], options: Partial<ExportOptions> = {}) {
+  static exportToPDF(data: unknown[], options: Partial<ExportOptions> = {}) {
     const { filename = 'export', headers } = options;
 
     // Create PDF document
@@ -115,7 +115,7 @@ export class DataExporter {
   }
 
   static async exportWithProgress(
-    data: any[],
+    data: unknown[],
     format: ExportOptions['format'],
     onProgress?: (progress: number) => void,
   ) {
@@ -166,7 +166,7 @@ export class DataExporter {
 
 // Utility functions for data transformation
 export const transformDataForExport = (
-  data: any[],
+  data: unknown[],
   columnMapping?: Record<string, string>,
   valueFormatters?: Record<string, (value: any) => string>,
 ) => {

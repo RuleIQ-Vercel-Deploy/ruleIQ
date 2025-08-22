@@ -1,17 +1,17 @@
 import { type FullConfig } from '@playwright/test';
 
 async function globalTeardown(config: FullConfig) {
-  console.log('🧹 Starting global teardown for E2E tests...');
-
+    // TODO: Replace with proper logging
   try {
     // Clean up test data if needed
     // await cleanupTestData();
 
     // Clean up test files
     // await cleanupTestFiles();
-
-    console.log('✅ Global teardown completed successfully');
+    // TODO: Replace with proper logging
   } catch (error) {
+    // Development logging - consider proper logger
+
     console.error('❌ Global teardown failed:', error);
     // Don't throw here to avoid masking test failures
   }

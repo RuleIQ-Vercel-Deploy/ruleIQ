@@ -46,7 +46,7 @@ export const EmergencyLucideProxy = new Proxy(LucideMocks, {
       return target[prop];
     }
     // Create a mock for any missing icon on the fly
-    console.log(`Creating emergency mock for missing Lucide icon: ${String(prop)}`);
+    // TODO: Replace with proper logging
     const newMock = createEmergencyIconMock(String(prop));
     target[prop] = newMock;
     return newMock;

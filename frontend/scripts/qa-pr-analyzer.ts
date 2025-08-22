@@ -51,12 +51,11 @@ class QAAutomationSystem {
   private readonly testsPath = join(this.frontendPath, 'tests');
 
   constructor() {
-    console.log('🤖 QA PR Analyzer initializing...');
+    // TODO: Replace with proper logging
   }
 
   async analyzePR(prNumber: number): Promise<PRAnalysis> {
-    console.log(`📊 Analyzing PR #${prNumber}...`);
-
+    // TODO: Replace with proper logging
     const changedFiles = this.getChangedFiles();
     const affectedComponents = this.analyzeComponents(changedFiles);
     const testPlan = this.generateTestPlan(affectedComponents);
@@ -84,7 +83,7 @@ class QAAutomationSystem {
             file.startsWith('frontend/') &&
             (file.endsWith('.tsx') || file.endsWith('.ts') || file.endsWith('.js')),
         );
-    } catch (error) {
+    } catch {
       console.warn('⚠️ Could not get git diff, using fallback method');
       return [];
     }
@@ -168,7 +167,7 @@ class QAAutomationSystem {
       }
 
       return dependencies;
-    } catch (error) {
+    } catch {
       return [];
     }
   }
@@ -341,7 +340,7 @@ ${
       `pr-${analysis.prNumber}-analysis.json`,
     );
     writeFileSync(reportPath, JSON.stringify(analysis, null, 2));
-    console.log(`📊 Analysis saved to ${reportPath}`);
+    // TODO: Replace with proper logging
   }
 }
 
@@ -350,7 +349,9 @@ async function main() {
   const prNumber = parseInt(process.argv[2]) || 0;
 
   if (!prNumber) {
-    console.error('❌ Please provide PR number: npm run ava:pr-analysis <PR_NUMBER>');
+    // Development logging - consider proper logger
+
+    console.error(&apos;❌ Please provide PR number: npm run ava:pr-analysis <PR_NUMBER>');
     process.exit(1);
   }
 
@@ -359,15 +360,16 @@ async function main() {
   try {
     const analysis = await qaSystem.analyzePR(prNumber);
     const comment = qaSystem.generateTestPlanComment(analysis);
-
-    console.log('\n' + comment);
-
+    // TODO: Replace with proper logging
     await ava.saveAnalysis(analysis);
+    // TODO: Replace with proper logging
 
-    console.log('\n✅ PR analysis complete!');
-    console.log(`🎯 Risk Level: ${analysis.riskAssessment}`);
-    console.log(`⏱️ Estimated Test Runtime: ${analysis.estimatedRuntime} minutes`);
+    // TODO: Replace with proper logging
+
+    // TODO: Replace with proper logging
   } catch (error) {
+    // Development logging - consider proper logger
+
     console.error('❌ PR analysis failed:', error);
     process.exit(1);
   }

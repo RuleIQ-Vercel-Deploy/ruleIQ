@@ -76,7 +76,7 @@ describe('Memory Leak Detection Tests', () => {
     );
 
     // Mock setTimeout to track timers
-    global.setTimeout = vi.fn((callback: any, delay?: number, ...args: any[]) => {
+    global.setTimeout = vi.fn((callback: any, delay?: number, ...args: unknown[]) => {
       const timer = originalSetTimeout(callback, delay, ...args);
       activeTimers.add(timer);
       return timer;
@@ -89,7 +89,7 @@ describe('Memory Leak Detection Tests', () => {
     }) as any;
 
     // Mock setInterval to track intervals
-    global.setInterval = vi.fn((callback: any, delay?: number, ...args: any[]) => {
+    global.setInterval = vi.fn((callback: any, delay?: number, ...args: unknown[]) => {
       const interval = originalSetInterval(callback, delay, ...args);
       activeIntervals.add(interval);
       return interval;
@@ -231,7 +231,8 @@ describe('Memory Leak Detection Tests', () => {
     it('should detect components with uncleaned event listeners', () => {
       const LeakyComponent = () => {
         React.useEffect(() => {
-          const handler = () => console.log('click');
+          const handler = () =>
+    // TODO: Replace with proper logging
           // Intentionally not cleaning up to test detection
           document.addEventListener('click', handler);
           // Missing: return () => document.removeEventListener('click', handler);
@@ -257,7 +258,8 @@ describe('Memory Leak Detection Tests', () => {
       const LeakyTimerComponent = () => {
         React.useEffect(() => {
           // Intentionally not cleaning up to test detection
-          setTimeout(() => console.log('timeout'), 5000);
+          setTimeout(() =>
+    // TODO: Replace with proper logging
           // Missing: return () => clearTimeout(timer);
         }, []);
 
@@ -308,7 +310,7 @@ describe('Memory Leak Detection Tests', () => {
 });
 
 // Helper function to check for memory leaks in a component
-export function testComponentForMemoryLeaks(Component: React.ComponentType<any>, props: any = {}) {
+export function testComponentForMemoryLeaks(Component: React.ComponentType<any>, props: Record<string, unknown> = {}) {
   return {
     hasEventListenerLeak: () => {
       const { unmount } = render(<Component {...props} />);

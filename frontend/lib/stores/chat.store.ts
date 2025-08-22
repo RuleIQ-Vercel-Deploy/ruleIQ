@@ -80,7 +80,7 @@ export const useChatStore = create<ChatState>()(
         try {
           const response = await chatService.getConversations();
           set({ conversations: response.items, isLoadingConversations: false });
-        } catch (error: any) {
+        } catch (error: unknown) {
           set({
             error: error.message || 'Failed to load conversations',
             isLoadingConversations: false,
@@ -102,7 +102,7 @@ export const useChatStore = create<ChatState>()(
 
           // Connect WebSocket for real-time updates
           get().connectWebSocket(conversationId);
-        } catch (error: any) {
+        } catch (error: unknown) {
           set({
             error: error.message || 'Failed to load conversation',
             isLoadingMessages: false,
@@ -129,7 +129,7 @@ export const useChatStore = create<ChatState>()(
 
           // Connect WebSocket for the new conversation
           get().connectWebSocket(response.conversation.id);
-        } catch (error: any) {
+        } catch (error: unknown) {
           set({ error: error.message || 'Failed to create conversation' });
         }
       },
@@ -210,7 +210,7 @@ export const useChatStore = create<ChatState>()(
           }
 
           set({ isSendingMessage: false });
-        } catch (error: any) {
+        } catch (error: unknown) {
           // Remove temp message on error
           set((state) => ({
             messages: {
@@ -248,7 +248,7 @@ export const useChatStore = create<ChatState>()(
 
             return newState;
           });
-        } catch (error: any) {
+        } catch (error: unknown) {
           set({ error: error.message || 'Failed to delete conversation' });
         }
       },
@@ -351,7 +351,7 @@ export const useChatStore = create<ChatState>()(
 
           // Connect WebSocket for the widget conversation
           get().connectWebSocket(response.conversation.id);
-        } catch (error: any) {
+        } catch (error: unknown) {
           set({ error: error.message || 'Failed to create widget conversation' });
         }
       },
@@ -373,7 +373,7 @@ export const useChatStore = create<ChatState>()(
 
           // Connect WebSocket for real-time updates
           get().connectWebSocket(state.widgetConversationId);
-        } catch (error: any) {
+        } catch (error: unknown) {
           set({
             error: error.message || 'Failed to load widget conversation',
             isLoadingMessages: false,

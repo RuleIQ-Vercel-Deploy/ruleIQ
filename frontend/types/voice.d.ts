@@ -181,7 +181,7 @@ export interface VoiceAnalytics {
 
 export interface VoiceWebSocketMessage {
   type: 'audio' | 'transcript' | 'command' | 'control' | 'error';
-  data: any;
+  data: unknown;
   timestamp: Date;
   sessionId: string;
 }

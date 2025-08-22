@@ -24,7 +24,7 @@ export default function LoginPage() {
     try {
       await login(email, password);
       router.push("/dashboard");
-    } catch (err) {
+    } catch {
       // Error is handled by the store
     }
   };

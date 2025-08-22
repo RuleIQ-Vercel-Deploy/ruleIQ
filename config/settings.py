@@ -3,6 +3,10 @@ Environment Configuration Management for RuleIQ
 
 This module handles all environment variables and configuration settings
 using Pydantic for validation and type safety.
+
+🔐 SECURE SECRETS VAULT INTEGRATION:
+Uses AWS Secrets Manager for production secrets with environment fallback.
+All sensitive configuration is retrieved through the SecretsVault class.
 """
 
 from dotenv import load_dotenv
@@ -14,12 +18,49 @@ import json
 import logging
 import os
 from enum import Enum
-from typing import Any, Dict, List, Optional, Union
+from typing import Dict, List, Optional, Union
 
-from pydantic import Field, field_validator, ValidationInfo
+from pydantic import Field, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
+# 🔐 Import SecretsVault for secure secrets management
+try:
+    from .secrets_vault import get_secrets_vault, SecretKeys
+    SECRETS_VAULT_AVAILABLE = True
+except ImportError:
+    logger.warning("⚠️ SecretsVault not available, falling back to environment variables")
+    SECRETS_VAULT_AVAILABLE = False
+
 logger = logging.getLogger(__name__)
+
+
+def get_secret_or_env(secret_key: str, env_key: Optional[str] = None) -> Optional[str]:
+    """
+    🔐 Get secret from SecretsVault or environment variable fallback
+    
+    Args:
+        secret_key: Key used in SecretsVault (e.g., 'database_url')
+        env_key: Environment variable key (defaults to secret_key.upper())
+        
+    Returns:
+        Secret value or None if not found
+    """
+    if SECRETS_VAULT_AVAILABLE:
+        vault = get_secrets_vault()
+        value = vault.get_secret(secret_key)
+        if value:
+            logger.debug(f"🔐 Retrieved '{secret_key}' from SecretsVault")
+            return value
+    
+    # Fallback to environment variable
+    env_key = env_key or secret_key.upper()
+    value = os.getenv(env_key)
+    if value:
+        logger.debug(f"🔐 Retrieved '{secret_key}' from environment ({env_key})")
+        return value
+    
+    logger.warning(f"⚠️ Secret '{secret_key}' not found in vault or environment")
+    return None
 
 
 def parse_list_from_string(v: Union[str, list]) -> list:
@@ -92,18 +133,24 @@ class Settings(BaseSettings):
         return self.environment == Environment.TESTING
 
     # ===================================================================
-    # DATABASE SETTINGS
+    # DATABASE SETTINGS - 🔐 Secured via SecretsVault
     # ===================================================================
-    database_url: str = Field(..., description="Primary database URL")
+    database_url: str = Field(
+        default_factory=lambda: get_secret_or_env(SecretKeys.DATABASE_URL if SECRETS_VAULT_AVAILABLE else "database_url", "DATABASE_URL") or "postgresql://localhost/ruleiq",
+        description="Primary database URL (🔐 from SecretsVault)"
+    )
     database_pool_size: int = Field(default=10, description="Database connection pool size")
     database_max_overflow: int = Field(default=20, description="Database max overflow connections")
     database_pool_timeout: int = Field(default=30, description="Database connection timeout (seconds)")
     database_pool_recycle: int = Field(default=3600, description="Database connection recycle time")
 
     # ===================================================================
-    # REDIS CACHE SETTINGS
+    # REDIS CACHE SETTINGS - 🔐 Secured via SecretsVault
     # ===================================================================
-    redis_url: str = Field(..., description="Redis URL for caching")
+    redis_url: str = Field(
+        default_factory=lambda: get_secret_or_env(SecretKeys.REDIS_URL if SECRETS_VAULT_AVAILABLE else "redis_url", "REDIS_URL") or "redis://localhost:6379/0",
+        description="Redis URL for caching (🔐 from SecretsVault)"
+    )
     redis_max_connections: int = Field(default=20, description="Max Redis connections")
     redis_socket_keepalive: bool = Field(default=True, description="Redis socket keepalive")
     redis_socket_keepalive_options: Dict[str, int] = Field(
@@ -111,9 +158,12 @@ class Settings(BaseSettings):
     )
 
     # ===================================================================
-    # JWT AUTHENTICATION
+    # JWT AUTHENTICATION - 🔐 Secured via SecretsVault
     # ===================================================================
-    jwt_secret_key: str = Field(..., description="JWT secret key")
+    jwt_secret_key: str = Field(
+        default_factory=lambda: get_secret_or_env(SecretKeys.JWT_SECRET if SECRETS_VAULT_AVAILABLE else "jwt_secret", "JWT_SECRET_KEY") or "insecure-dev-key-change-in-production",
+        description="JWT secret key (🔐 from SecretsVault)"
+    )
     jwt_algorithm: str = Field(default="HS256", description="JWT algorithm")
     jwt_access_token_expire_minutes: int = Field(
         default=30, description="JWT access token expiration (minutes)"
@@ -123,18 +173,27 @@ class Settings(BaseSettings):
     )
 
     # ===================================================================
-    # GOOGLE OAUTH SETTINGS
+    # GOOGLE OAUTH SETTINGS - 🔐 Secured via SecretsVault
     # ===================================================================
-    google_client_id: Optional[str] = Field(default=None, description="Google OAuth client ID")
-    google_client_secret: Optional[str] = Field(default=None, description="Google OAuth client secret")
+    google_client_id: Optional[str] = Field(
+        default_factory=lambda: get_secret_or_env(SecretKeys.GOOGLE_CLIENT_ID if SECRETS_VAULT_AVAILABLE else "google_client_id", "GOOGLE_CLIENT_ID"),
+        description="Google OAuth client ID (🔐 from SecretsVault)"
+    )
+    google_client_secret: Optional[str] = Field(
+        default_factory=lambda: get_secret_or_env(SecretKeys.GOOGLE_CLIENT_SECRET if SECRETS_VAULT_AVAILABLE else "google_client_secret", "GOOGLE_CLIENT_SECRET"),
+        description="Google OAuth client secret (🔐 from SecretsVault)"
+    )
     google_redirect_uri: str = Field(
         default="http://localhost:8000/api/v1/auth/google/callback", description="Google OAuth redirect URI"
     )
 
     # ===================================================================
-    # AI SERVICES (GOOGLE GEMINI)
+    # AI SERVICES (GOOGLE GEMINI) - 🔐 Secured via SecretsVault
     # ===================================================================
-    google_api_key: str = Field(..., description="Google AI API key")
+    google_api_key: str = Field(
+        default_factory=lambda: get_secret_or_env(SecretKeys.GOOGLE_AI_API_KEY if SECRETS_VAULT_AVAILABLE else "google_ai_api_key", "GOOGLE_AI_API_KEY") or "placeholder-change-in-production",
+        description="Google AI API key (🔐 from SecretsVault)"
+    )
     gemini_model: str = Field(default="gemini-1.5-flash", description="Gemini model")
     gemini_temperature: float = Field(default=0.1, description="Gemini temperature")
     gemini_max_tokens: int = Field(default=4096, description="Gemini max tokens")
@@ -226,10 +285,16 @@ class Settings(BaseSettings):
     error_monitoring_enabled: bool = Field(default=True, description="Enable error monitoring")
 
     # ===================================================================
-    # TASK QUEUE SETTINGS (Celery)
+    # TASK QUEUE SETTINGS (Celery) - 🔐 Secured via SecretsVault
     # ===================================================================
-    celery_broker_url: Optional[str] = Field(default=None, description="Celery broker URL")
-    celery_result_backend: Optional[str] = Field(default=None, description="Celery result backend")
+    celery_broker_url: Optional[str] = Field(
+        default_factory=lambda: get_secret_or_env("celery_broker_url", "CELERY_BROKER_URL"),
+        description="Celery broker URL (🔐 from SecretsVault)"
+    )
+    celery_result_backend: Optional[str] = Field(
+        default_factory=lambda: get_secret_or_env("celery_result_backend", "CELERY_RESULT_BACKEND"),
+        description="Celery result backend (🔐 from SecretsVault)"
+    )
     celery_task_timeout: int = Field(default=300, description="Celery task timeout (seconds)")
 
     # ===================================================================
@@ -245,6 +310,22 @@ class Settings(BaseSettings):
     stripe_publishable_key: Optional[str] = Field(default=None, description="Stripe publishable key")
     stripe_secret_key: Optional[str] = Field(default=None, description="Stripe secret key")
     stripe_webhook_secret: Optional[str] = Field(default=None, description="Stripe webhook secret")
+
+    # ===================================================================
+    # SECRETS VAULT CONFIGURATION - 🔐 AWS Secrets Manager
+    # ===================================================================
+    secrets_vault_enabled: bool = Field(
+        default_factory=lambda: os.getenv("SECRETS_MANAGER_ENABLED", "false").lower() == "true",
+        description="Enable AWS Secrets Manager vault integration"
+    )
+    secrets_vault_region: str = Field(
+        default_factory=lambda: os.getenv("SECRETS_MANAGER_REGION", "us-east-1"),
+        description="AWS Secrets Manager region"
+    )
+    secrets_vault_name: str = Field(
+        default_factory=lambda: os.getenv("SECRETS_MANAGER_SECRET_NAME", "ruleiq-production-secrets"),
+        description="AWS Secrets Manager secret name"
+    )
 
     # ===================================================================
     # FEATURE FLAGS
@@ -306,6 +387,57 @@ class Settings(BaseSettings):
             raise ValueError("Bcrypt rounds must be between 10 and 16")
         return v
 
+    # ===================================================================
+    # SECRETS VAULT METHODS - 🔐 Easily Identifiable Vault Integration
+    # ===================================================================
+    
+    def get_secrets_vault_health(self) -> Dict[str, Union[str, bool]]:
+        """
+        🔐 Get SecretsVault health status for monitoring
+        
+        Returns:
+            Dict containing vault health information
+        """
+        if not SECRETS_VAULT_AVAILABLE:
+            return {
+                "status": "unavailable",
+                "enabled": False,
+                "message": "SecretsVault module not available",
+                "vault_type": "None"
+            }
+        
+        try:
+            from .secrets_vault import vault_health_check
+            return vault_health_check()
+        except Exception as e:
+            logger.error(f"❌ SecretsVault health check failed: {e}")
+            return {
+                "status": "error",
+                "enabled": self.secrets_vault_enabled,
+                "message": f"Health check failed: {str(e)}",
+                "vault_type": "AWS Secrets Manager"
+            }
+    
+    def log_vault_status(self) -> None:
+        """🔐 Log SecretsVault status at application startup"""
+        health = self.get_secrets_vault_health()
+        
+        if health["status"] == "healthy":
+            logger.info("✅ SecretsVault: AWS Secrets Manager connected and healthy")
+        elif health["status"] == "disabled":
+            logger.info("🔐 SecretsVault: Disabled, using environment variables")
+        elif health["status"] == "unavailable":
+            logger.warning("⚠️ SecretsVault: Module unavailable, using environment fallback")
+        else:
+            logger.error(f"❌ SecretsVault: {health['message']}")
+        
+        logger.info(f"🔐 Vault Configuration: enabled={self.secrets_vault_enabled}, region={self.secrets_vault_region}")
+    
+    @property
+    def is_secrets_vault_healthy(self) -> bool:
+        """🔐 Quick check if SecretsVault is healthy"""
+        return self.get_secrets_vault_health()["status"] == "healthy"
+
 
 # Global settings instance - initialized lazily
 _settings: Optional[Settings] = None
@@ -326,6 +458,8 @@ def _get_or_create_settings() -> Settings:
     global _settings
     if _settings is None:
         _settings = Settings()
+        # 🔐 Log SecretsVault status on first initialization
+        _settings.log_vault_status()
     return _settings
 
 

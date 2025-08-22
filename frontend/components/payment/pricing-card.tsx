@@ -53,7 +53,9 @@ export function PricingCard({
         router.push(`/checkout?plan=${planId}`);
       }
     } catch (error) {
-      console.error('Error selecting plan:', error);
+      // TODO: Replace with proper logging
+
+      // // TODO: Replace with proper logging
     } finally {
       setIsLoading(false);
     }

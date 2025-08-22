@@ -56,8 +56,44 @@ async def create_collection_plan(
         # Get existing evidence if needed
         existing_evidence = []
         if plan_request.include_existing_evidence:
-            # TODO: Fetch existing evidence from database
-            pass
+            # Fetch existing evidence from database
+            from sqlalchemy import select
+            from database.models import Evidence
+            
+            # Query existing evidence for this business profile and framework
+            evidence_query = select(Evidence).where(
+                Evidence.business_profile_id == profile.id
+            )
+            if plan_request.framework:
+                # Filter by framework if specified
+                evidence_query = evidence_query.join(
+                    "compliance_frameworks"
+                ).where(
+                    Evidence.framework_id.in_(
+                        select("compliance_frameworks.id").where(
+                            "compliance_frameworks.name" == plan_request.framework
+                        )
+                    )
+                )
+            
+            result = await db.execute(evidence_query)
+            evidence_records = result.scalars().all()
+            
+            # Convert to format expected by smart_evidence_collector
+            existing_evidence = [
+                {
+                    "evidence_id": str(evidence.id),
+                    "control_id": evidence.control_id,
+                    "title": evidence.title,
+                    "description": evidence.description,
+                    "source": evidence.source,
+                    "status": evidence.status,
+                    "tags": evidence.tags or [],
+                    "created_at": evidence.created_at,
+                    "metadata": evidence.ai_metadata or {}
+                }
+                for evidence in evidence_records
+            ]
 
         # Create business context
         business_context = {

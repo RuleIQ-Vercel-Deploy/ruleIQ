@@ -329,7 +329,7 @@ export interface FreemiumApiClient {
   startAssessment: (data: AssessmentStartRequest) => Promise<FreemiumAssessmentStartResponse>;
   submitAnswer: (data: AssessmentAnswerRequest) => Promise<AssessmentQuestionResponse>;
   generateResults: (data: ResultsGenerationRequest) => Promise<AssessmentResultsResponse>;
-  recordEvent: (data: any) => Promise<LeadScoringResponse>;
+  recordEvent: (data: unknown) => Promise<LeadScoringResponse>;
 }
 
 // ============================================================================

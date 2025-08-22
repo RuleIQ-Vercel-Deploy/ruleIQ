@@ -104,7 +104,9 @@ class BusinessProfileService {
       const profiles = await this.getBusinessProfiles();
       return profiles.length > 0 ? profiles[0] : null;
     } catch (error) {
-      console.error('Failed to get profile:', error);
+      // TODO: Replace with proper logging
+
+      // // TODO: Replace with proper logging
       throw error;
     }
   }
@@ -133,7 +135,9 @@ class BusinessProfileService {
         return transformed;
       }
     } catch (error) {
-      console.error('Failed to save profile:', error);
+      // TODO: Replace with proper logging
+
+      // // TODO: Replace with proper logging
       throw error;
     }
   }
@@ -161,7 +165,9 @@ class BusinessProfileService {
         await this.deleteBusinessProfile(profile.id);
       }
     } catch (error) {
-      console.error('Failed to delete profile:', error);
+      // TODO: Replace with proper logging
+
+      // // TODO: Replace with proper logging
       throw error;
     }
   }
@@ -176,7 +182,9 @@ class BusinessProfileService {
       );
       return response;
     } catch (error) {
-      console.error('Failed to get framework recommendations:', error);
+      // TODO: Replace with proper logging
+
+      // // TODO: Replace with proper logging
       // Return empty array if recommendations fail
       return [];
     }

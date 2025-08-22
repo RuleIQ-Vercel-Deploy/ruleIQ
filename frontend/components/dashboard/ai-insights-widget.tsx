@@ -131,7 +131,9 @@ export function AIInsightsWidget({
       try {
         await dashboardService.dismissInsight(insightId);
       } catch (error) {
-        console.error('Failed to dismiss insight:', error);
+        // TODO: Replace with proper logging
+
+        // // TODO: Replace with proper logging
       }
     }
   };
@@ -153,7 +155,9 @@ export function AIInsightsWidget({
       try {
         await dashboardService.bookmarkInsight(insightId);
       } catch (error) {
-        console.error('Failed to bookmark insight:', error);
+        // TODO: Replace with proper logging
+
+        // // TODO: Replace with proper logging
       }
     }
   };

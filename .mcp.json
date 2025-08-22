@@ -2,7 +2,9 @@
   "mcpServers": {
     "desktop-commander": {
       "command": "node",
-      "args": ["/home/omar/DesktopCommanderMCP/dist/index.js"]
+      "args": [
+        "/home/omar/DesktopCommanderMCP/dist/index.js"
+     ]
     },
     "serena": {
       "command": "/home/omar/.local/bin/uv",
@@ -14,6 +16,13 @@
         "start-mcp-server"
       ]
     },
+    "superdesign": {
+      "command": "node",
+      "args": [
+        "-m", 
+        "superdesign_server"
+      ]
+    }, 
     "magic-ui": {
       "command": "npx",
       "args": [
@@ -180,6 +189,13 @@
         "95e83c85-9a18-4524-9549-6a2c0f194f69",
         "--profile",
         "hungry-lemming-s64fT3"
+      ]
+    },
+    "archon": {
+      "command": "npx",
+      "args": [
+        "mcp-remote",
+        "http://localhost:8051/mcp"
       ]
     },
     "TestSprite": {

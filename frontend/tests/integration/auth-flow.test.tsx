@@ -373,6 +373,8 @@ describe('Authentication Flow Integration', () => {
           try {
             await authService.refreshToken();
           } catch (error) {
+            // Development logging - consider proper logger
+
             console.error('Token refresh failed:', error);
           }
         };
@@ -398,7 +400,7 @@ describe('Authentication Flow Integration', () => {
         const handleGetUser = async () => {
           try {
             await authService.getCurrentUser();
-          } catch (error) {
+          } catch {
             // Handle expired session
             mockReplace('/login');
           }

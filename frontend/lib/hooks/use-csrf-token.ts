@@ -32,7 +32,9 @@ export function useCsrfToken() {
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Unknown error';
       setError(errorMessage);
-      console.error('CSRF token fetch error:', err);
+      // TODO: Replace with proper logging
+
+      // // TODO: Replace with proper logging
     } finally {
       setLoading(false);
     }

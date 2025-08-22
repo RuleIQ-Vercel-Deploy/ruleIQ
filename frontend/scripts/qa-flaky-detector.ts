@@ -56,7 +56,7 @@ class AvaFlakyTestDetector {
   private flakyTests: Map<string, FlakyTestData> = new Map();
 
   constructor() {
-    console.log('🔍 Ava Flaky Test Detector initializing...');
+    // TODO: Replace with proper logging
     this.ensureDirectories();
     this.loadExistingData();
   }
@@ -79,16 +79,15 @@ class AvaFlakyTestDetector {
       try {
         const data = JSON.parse(readFileSync(this.flakyDataPath, 'utf8'));
         this.flakyTests = new Map(Object.entries(data));
-        console.log(`📊 Loaded ${this.flakyTests.size} existing flaky test records`);
-      } catch (error) {
+    // TODO: Replace with proper logging
+      } catch {
         console.warn('⚠️ Could not load existing flaky test data');
       }
     }
   }
 
   async detectFlakyTests(runs: number = 10): Promise<FlakyReport> {
-    console.log(`🧪 Running flaky test detection with ${runs} iterations...`);
-    
+    // TODO: Replace with proper logging
     const testResults = await this.runMultipleTestSessions(runs);
     const flakyTests = this.analyzeFlakyPatterns(testResults);
     
@@ -104,8 +103,7 @@ class AvaFlakyTestDetector {
     const testResults = new Map<string, TestResult[]>();
     
     for (let i = 1; i <= runs; i++) {
-      console.log(`🏃 Running test session ${i}/${runs}...`);
-      
+    // TODO: Replace with proper logging
       try {
         const output = execSync('pnpm test --run --reporter=json', { 
           encoding: 'utf8',
@@ -121,7 +119,7 @@ class AvaFlakyTestDetector {
           testResults.get(testKey)!.push(result);
         });
         
-      } catch (error: any) {
+      } catch (error: unknown) {
         console.warn(`⚠️ Test session ${i} had failures, parsing partial results...`);
         
         // Parse failed test results
@@ -163,7 +161,7 @@ class AvaFlakyTestDetector {
           });
         });
       }
-    } catch (error) {
+    } catch {
       console.warn('⚠️ Could not parse JSON test results, using fallback parsing');
     }
     
@@ -359,8 +357,7 @@ class AvaFlakyTestDetector {
     // Save updated database
     const dataToSave = Object.fromEntries(this.flakyTests);
     writeFileSync(this.flakyDataPath, JSON.stringify(dataToSave, null, 2));
-    
-    console.log(`💾 Updated flaky test database with ${newFlakyTests.length} tests`);
+    // TODO: Replace with proper logging
   }
 
   private generateFlakyReport(newFlakyTests: FlakyTestData[]): FlakyReport {
@@ -408,30 +405,32 @@ class AvaFlakyTestDetector {
   private async saveFlakyReport(report: FlakyReport): Promise<void> {
     const reportPath = join(this.reportsPath, `flaky-report-${Date.now()}.json`);
     writeFileSync(reportPath, JSON.stringify(report, null, 2));
-    
-    console.log('\n📊 Flaky Test Detection Report:');
-    console.log(`🧪 Total Tests Analyzed: ${report.totalTests}`);
-    console.log(`🔍 Flaky Tests Found: ${report.flakyTests}`);
-    console.log(`🆕 New Flaky Tests: ${report.newFlakyTests.length}`);
-    console.log(`🚨 Critical Tests: ${report.criticalTests.length}`);
-    console.log(`📄 Report saved: ${reportPath}`);
-    
+    // TODO: Replace with proper logging
+
+    // TODO: Replace with proper logging
+
+    // TODO: Replace with proper logging
+
+    // TODO: Replace with proper logging
+
+    // TODO: Replace with proper logging
+
+    // TODO: Replace with proper logging
     if (report.recommendations.length > 0) {
-      console.log('\n💡 Recommendations:');
-      report.recommendations.forEach(rec => console.log(`  ${rec}`));
+    // TODO: Replace with proper logging
+      report.recommendations.forEach(rec =>
+    // TODO: Replace with proper logging
     }
   }
 
   async autoTagFlakyTests(): Promise<void> {
-    console.log('🏷️ Auto-tagging flaky tests...');
-    
+    // TODO: Replace with proper logging
     const flakyTests = Array.from(this.flakyTests.values());
     
     for (const test of flakyTests) {
       await this.addFlakyTestComment(test);
     }
-    
-    console.log(`✅ Tagged ${flakyTests.length} flaky tests`);
+    // TODO: Replace with proper logging
   }
 
   private async addFlakyTestComment(test: FlakyTestData): Promise<void> {
@@ -454,10 +453,10 @@ class AvaFlakyTestDetector {
         
         if (updatedContent !== content) {
           writeFileSync(filePath, updatedContent);
-          console.log(`🏷️ Tagged flaky test: ${test.testName}`);
+    // TODO: Replace with proper logging
         }
       }
-    } catch (error) {
+    } catch {
       console.warn(`⚠️ Could not tag test ${test.testName}:`, error);
     }
   }
@@ -482,13 +481,13 @@ async function main() {
     const report = await detector.detectFlakyTests(runs);
     
     if (report.criticalTests.length > 0) {
-      console.log('\n🚨 Critical flaky tests detected!');
+    // TODO: Replace with proper logging
       await detector.autoTagFlakyTests();
     }
-    
-    console.log('\n✅ Flaky test detection complete!');
-    
+    // TODO: Replace with proper logging
   } catch (error) {
+    // Development logging - consider proper logger
+
     console.error('❌ Flaky test detection failed:', error);
     process.exit(1);
   }

@@ -45,48 +45,49 @@ const HeroSection = ({ showEmailCapture, setShowEmailCapture }: HeroSectionProps
   const opacity = useTransform(scrollYProgress, [0, 1], [1, 0]);
 
   const handleEmailSuccess = async (leadId: string, email: string) => {
-    console.log('🔄 handleEmailSuccess called with:', { leadId, email });
-
+    // TODO: Replace with proper logging
     try {
-      console.log('📞 Starting assessment via freemiumService...');
-
+    // TODO: Replace with proper logging
       // Start assessment session
       const session = await freemiumService.startAssessment({
         lead_email: email,
         business_type: 'general',
         assessment_type: 'general',
       });
+    // TODO: Replace with proper logging
 
-      console.log('✅ Assessment session created:', session);
-      console.log('🔗 Redirecting to:', `/assessment?token=${session.session_token}`);
-
+    // TODO: Replace with proper logging
       // Hide email capture form before redirecting
       setShowEmailCapture(false);
 
       // Add a small delay to ensure state updates
       setTimeout(() => {
-        console.log('🚀 Executing navigation...');
-        console.log('🔧 Current URL:', window.location.href);
-        console.log('🔧 Target URL:', `/assessment?token=${session.session_token}`);
+    // TODO: Replace with proper logging
 
+    // TODO: Replace with proper logging
+
+    // TODO: Replace with proper logging
         // Try Next.js router first
         router.push(`/assessment?token=${session.session_token}`);
-        console.log('🚀 Next.js router.push() called');
-
+    // TODO: Replace with proper logging
         // Add fallback navigation after short delay
         setTimeout(() => {
-          console.log('🔧 Checking if navigation happened...');
+    // TODO: Replace with proper logging
           if (window.location.pathname === '/') {
-            console.log('❌ Navigation failed, using window.location fallback');
+    // TODO: Replace with proper logging
             window.location.href = `/assessment?token=${session.session_token}`;
           } else {
-            console.log('✅ Navigation successful');
+    // TODO: Replace with proper logging
           }
         }, 500);
       }, 100);
     } catch (error) {
-      console.error('❌ Failed to start assessment:', error);
-      console.error('❌ Error details:', JSON.stringify(error, null, 2));
+      // TODO: Replace with proper logging
+
+      // // TODO: Replace with proper logging
+      // TODO: Replace with proper logging
+
+      // // TODO: Replace with proper logging
 
       // Show error message and reset form to try again
       alert("Sorry, we couldn't start your assessment right now. Please try again.");
@@ -345,7 +346,7 @@ const TestimonialCard = ({ quote, author, role, company, rating }: TestimonialPr
           <Star key={i} className="h-5 w-5 fill-primary text-primary" />
         ))}
       </div>
-      <p className="mb-6 text-lg italic text-foreground">&ldquo;{quote}&rdquo;</p>
+      <p className="mb-6 text-lg italic text-foreground">"{quote}"</p>
       <div className="mt-auto">
         <p className="font-semibold text-foreground">{author}</p>
         <p className="text-sm text-primary">{role}</p>

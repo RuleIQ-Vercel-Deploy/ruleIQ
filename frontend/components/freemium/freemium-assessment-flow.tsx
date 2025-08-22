@@ -69,7 +69,9 @@ export function FreemiumAssessmentFlow({ token, className = "", onComplete }: Fr
       
       setCurrentQuestion(mockQuestion);
     } catch (err) {
-      console.error('Failed to load session:', err);
+      // TODO: Replace with proper logging
+
+      // // TODO: Replace with proper logging
       setError(err instanceof Error ? err.message : 'Failed to load session');
     } finally {
       setIsLoading(false);
@@ -121,7 +123,9 @@ export function FreemiumAssessmentFlow({ token, className = "", onComplete }: Fr
         onComplete?.();
       }
     } catch (error) {
-      console.error('Failed to submit answer:', error);
+      // TODO: Replace with proper logging
+
+      // // TODO: Replace with proper logging
       setAnswerError(error instanceof Error ? error.message : 'Failed to submit answer');
     } finally {
       setIsSubmitting(false);

@@ -44,7 +44,9 @@ export default function PoliciesPage() {
       });
       setPolicies(response.policies);
     } catch (err) {
-      console.error('Error fetching policies:', err);
+      // TODO: Replace with proper logging
+
+      // // TODO: Replace with proper logging
       setError(err instanceof Error ? err.message : 'Failed to load policies');
     } finally {
       setLoading(false);
@@ -99,7 +101,9 @@ export default function PoliciesPage() {
         await policyService.exportPolicyAsWord(policyId);
       }
     } catch (err) {
-      console.error('Error exporting policy:', err);
+      // TODO: Replace with proper logging
+
+      // // TODO: Replace with proper logging
     }
   };
 

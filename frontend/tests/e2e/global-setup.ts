@@ -3,8 +3,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 
 async function globalSetup(config: FullConfig) {
-  console.log('🚀 Starting global setup for E2E tests...');
-
+    // TODO: Replace with proper logging
   // Ensure test results directories exist
   const dirs = ['test-results', 'test-results/screenshots', 'playwright-report'];
   for (const dir of dirs) {
@@ -36,17 +35,17 @@ async function globalSetup(config: FullConfig) {
   // Set up console logging for debugging
   page.on('console', (msg) => {
     if (msg.type() === 'error') {
-      console.log(`Browser console error: ${msg.text()}`);
+    // TODO: Replace with proper logging
     }
   });
 
   page.on('pageerror', (err) => {
-    console.log(`Page error: ${err.message}`);
+    // TODO: Replace with proper logging
   });
 
   try {
     // Wait for the application to be ready
-    console.log('⏳ Waiting for application to be ready...');
+    // TODO: Replace with proper logging
     const baseURL = config.projects[0].use?.baseURL || 'http://localhost:3000';
 
     // Try multiple times to ensure the server is ready
@@ -63,8 +62,8 @@ async function globalSetup(config: FullConfig) {
         if (response && response.ok()) {
           isReady = true;
         }
-      } catch (err) {
-        console.log(`Retry ${6 - retries}/5: Waiting for server...`);
+      } catch {
+    // TODO: Replace with proper logging
         retries--;
         if (retries > 0) {
           await new Promise((resolve) => setTimeout(resolve, 3000));
@@ -84,8 +83,7 @@ async function globalSetup(config: FullConfig) {
 
     // Check if the app is running properly
     const title = await page.title();
-    console.log(`✅ Application is ready. Page title: ${title}`);
-
+    // TODO: Replace with proper logging
     // Check for critical errors
     const hasErrors = await page.evaluate(() => {
       return (
@@ -101,6 +99,8 @@ async function globalSetup(config: FullConfig) {
     // Create test user if needed (optional)
     // await createTestUser(page);
   } catch (error) {
+    // Development logging - consider proper logger
+
     console.error('❌ Global setup failed:', error);
     // Take a screenshot for debugging
     await page.screenshot({
@@ -112,8 +112,7 @@ async function globalSetup(config: FullConfig) {
     await context.close();
     await browser.close();
   }
-
-  console.log('✅ Global setup completed successfully');
+    // TODO: Replace with proper logging
 }
 
 // Helper function to create test user (uncomment if needed)

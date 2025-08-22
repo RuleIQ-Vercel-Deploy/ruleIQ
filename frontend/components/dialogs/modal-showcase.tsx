@@ -27,13 +27,13 @@ export function ModalShowcase() {
     setTimeout(() => {
       setIsLoading(false);
       setFeedback(`User "${formState.name}" with email "${formState.email}" has been added.`);
-      console.log('Form submitted:', formState);
+    // TODO: Replace with proper logging
     }, 1500);
   };
 
   const handleConfirmAction = () => {
     setFeedback('The item has been successfully deleted.');
-    console.log('Delete action confirmed.');
+    // TODO: Replace with proper logging
   };
 
   return (

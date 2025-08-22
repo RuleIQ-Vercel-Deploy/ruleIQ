@@ -86,7 +86,7 @@ export function DataTableWithBulkActions<TData, TValue>({
       label: 'Archive',
       icon: Archive,
       handler: async (_selection, items) => {
-        console.log('Archiving', items.length, 'items');
+    // TODO: Replace with proper logging
         // Implement archive logic
       },
     },
@@ -96,7 +96,7 @@ export function DataTableWithBulkActions<TData, TValue>({
       icon: Trash2,
       variant: 'destructive',
       handler: async (_selection, items) => {
-        console.log('Deleting', items.length, 'items');
+    // TODO: Replace with proper logging
         // Implement delete logic
       },
     },

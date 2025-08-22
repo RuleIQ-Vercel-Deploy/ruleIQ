@@ -73,7 +73,7 @@ export function renderWithLeakDetection(
  */
 export async function testComponentMemoryLeaks(
   Component: React.ComponentType<any>,
-  props: any = {},
+  props: Record<string, unknown> = {},
   testScenario?: (result: RenderResult) => void | Promise<void>,
 ): Promise<void> {
   const { unmount, leakDetector, assertNoLeaks, ...rest } = renderWithLeakDetection(
@@ -103,7 +103,7 @@ export async function testComponentMemoryLeaks(
  */
 export async function testRapidMountUnmount(
   Component: React.ComponentType<any>,
-  props: any = {},
+  props: Record<string, unknown> = {},
   cycles: number = 10,
 ): Promise<void> {
   const leakDetector = createMemoryLeakDetector();

@@ -188,11 +188,16 @@ source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 pip install -r requirements.txt
 
 # Set up environment variables
+# 🔐 SECRETS MANAGEMENT (PRODUCTION-READY)
+# Option 1: Doppler (Recommended for production)
+doppler run -- python main.py    # All secrets auto-injected from Doppler
+
+# Option 2: Local development with .env
 cp .env.template .env
 # Edit .env with your configuration including:
 # - DATABASE_URL (Neon PostgreSQL)
 # - NEO4J_URI, NEO4J_USERNAME, NEO4J_PASSWORD
-# - GOOGLE_API_KEY (for Gemini AI)
+# - GOOGLE_AI_API_KEY (for Gemini AI)
 # - REDIS_URL
 # - JWT_SECRET_KEY
 

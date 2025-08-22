@@ -117,11 +117,7 @@ test.describe('Core Web Vitals Performance Tests', () => {
     expect(totalSize).toBeLessThan(THRESHOLDS.BUNDLE_SIZE);
 
     // Log bundle sizes for monitoring
-    console.log('Bundle sizes:', {
-      js: `${(resourceSizes.js || 0) / 1024}KB`,
-      css: `${(resourceSizes.css || 0) / 1024}KB`,
-      total: `${totalSize / 1024}KB`,
-    });
+    // TODO: Replace with proper logging
   });
 
   test('Time to Interactive (TTI) should be under 3.8s', async ({ page }) => {
@@ -173,7 +169,7 @@ test.describe('Core Web Vitals Performance Tests', () => {
   });
 
   test('Network requests should be optimized', async ({ page }) => {
-    const requests: any[] = [];
+    const requests: unknown[] = [];
 
     page.on('request', (request) => {
       requests.push({

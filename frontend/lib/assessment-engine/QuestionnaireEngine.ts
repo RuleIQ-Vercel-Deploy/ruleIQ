@@ -37,7 +37,7 @@ export class QuestionnaireEngine {
   private isInAIQuestionMode: boolean = false;
   private sectionAnalysisCache: Map<string, { timestamp: number; result: boolean }> = new Map();
   private AI_TIMEOUT_MS = 10000; // 10 seconds timeout for AI calls
-  private aiServiceCache: Map<string, { timestamp: number; data: any }> = new Map();
+  private aiServiceCache: Map<string, { timestamp: number; data: unknown }> = new Map();
   private readonly AI_CACHE_TTL = 300000; // 5 minutes cache TTL
 
   constructor(
@@ -158,7 +158,7 @@ export class QuestionnaireEngine {
       if (this.config.onProgress) {
         this.config.onProgress(this.getProgress());
       }
-    } catch (error) {
+    } catch {
       if (this.config.onError) {
         this.config.onError(error as Error);
       }
@@ -189,7 +189,7 @@ export class QuestionnaireEngine {
       this.initializeVisibleQuestions();
 
       return true;
-    } catch (error) {
+    } catch {
       if (this.config.onError) {
         this.config.onError(error as Error);
       }
@@ -514,21 +514,14 @@ export class QuestionnaireEngine {
     // Check cache first
     const cached = this.getCachedAIResponse(cacheKey);
     if (cached) {
-      console.log('Using cached AI recommendations');
+    // TODO: Replace with proper logging
       return cached;
     }
 
     try {
       // Use AI service if enabled, otherwise fall back to mock generation
       if (this.config.enableAI !== false) {
-        console.log('Generating AI recommendations with context:', {
-          gaps: gaps.length,
-          business_profile: this.getBusinessProfileFromContext(),
-          existing_policies: this.getExistingPoliciesFromAnswers(),
-          industry_context: this.getIndustryContextFromAnswers(),
-          timeline_preferences: this.getTimelinePreferenceFromAnswers(),
-        });
-
+    // TODO: Replace with proper logging
         const recommendations = await this.callAIServiceWithTimeout(
           () =>
             assessmentAIService.getPersonalizedRecommendations({
@@ -565,7 +558,9 @@ export class QuestionnaireEngine {
       }
     } catch (error) {
       // Log error but don't break the assessment
-      console.error('Failed to generate AI recommendations:', error);
+      // TODO: Replace with proper logging
+
+      // // TODO: Replace with proper logging
 
       // Use mock recommendations as fallback
       if (this.config.useMockAIOnError) {
@@ -1029,7 +1024,9 @@ export class QuestionnaireEngine {
       }
     } catch (error) {
       // Log error but don't break the assessment
-      console.error('Failed to generate AI follow-up questions:', error);
+      // TODO: Replace with proper logging
+
+      // // TODO: Replace with proper logging
 
       // Optionally use mock questions as fallback
       if (this.config.useMockAIOnError) {
@@ -1191,7 +1188,7 @@ export class QuestionnaireEngine {
       }
 
       return result;
-    } catch (error) {
+    } catch {
       // Ensure timeout is cleared on error
       if (timeoutId) {
         clearTimeout(timeoutId);
@@ -1215,7 +1212,7 @@ export class QuestionnaireEngine {
     return cached.data;
   }
 
-  private setCachedAIResponse(key: string, data: any): void {
+  private setCachedAIResponse(key: string, data: unknown): void {
     this.aiServiceCache.set(key, {
       timestamp: Date.now(),
       data,

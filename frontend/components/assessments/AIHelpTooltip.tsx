@@ -107,7 +107,9 @@ export function AIHelpTooltip({
         duration: 2000,
       });
     } catch (err) {
-      console.error('Failed to submit feedback:', err);
+      // TODO: Replace with proper logging
+
+      // // TODO: Replace with proper logging
     }
   };
 

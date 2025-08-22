@@ -180,7 +180,7 @@ const SemanticColorsComponent = () => (
     <div className="text-red-600 dark:text-red-400" data-testid="error-color">
       Error Message
     </div>
-    <div className="text-cyan dark:text-cyan-400" data-testid="info-color">
+    <div className="text-teal dark:text-teal-400" data-testid="info-color">
       Info Message
     </div>
   </div>
@@ -421,7 +421,7 @@ describe('Theme and Dark Mode Tests', () => {
       expect(success).toHaveClass('text-green-600', 'dark:text-green-400');
       expect(warning).toHaveClass('text-gold', 'dark:text-yellow-400');
       expect(error).toHaveClass('text-red-600', 'dark:text-red-400');
-      expect(info).toHaveClass('text-cyan', 'dark:text-cyan-400');
+      expect(info).toHaveClass('text-teal', 'dark:text-teal-400');
 
       // Dark theme
       rerender(

@@ -69,7 +69,7 @@ export default async function AssessmentResultsPage({
                 key={req.id}
                 title={req.title}
                 score={req.score}
-                status={req.status as any}
+                status={req.status}
                 icon={req.icon}
                 color={req.color}
               />

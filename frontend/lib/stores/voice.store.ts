@@ -142,8 +142,7 @@ const initialState: Omit<VoiceStore, keyof ReturnType<typeof createActions>> = {
 const createActions = (set: any, get: any) => ({
   // Recognition Actions
   startListening: async (config?: Partial<VoiceConfig>) => {
-    console.log('[Voice] Starting listening...', config);
-    
+    // TODO: Replace with proper logging
     // Check if voice is supported
     const capabilities = await get().checkCapabilities();
     if (!capabilities.speechRecognition) {
@@ -174,24 +173,23 @@ const createActions = (set: any, get: any) => ({
   },
   
   stopListening: () => {
-    console.log('[Voice] Stopping listening...');
+    // TODO: Replace with proper logging
     set({ isListening: false, isProcessing: false });
   },
   
   pauseListening: () => {
-    console.log('[Voice] Pausing listening...');
+    // TODO: Replace with proper logging
     set({ isListening: false });
   },
   
   resumeListening: () => {
-    console.log('[Voice] Resuming listening...');
+    // TODO: Replace with proper logging
     set({ isListening: true });
   },
   
   // Synthesis Actions
   speakResponse: async (text: string, options?: Partial<VoiceConfig>) => {
-    console.log('[Voice] Speaking:', text, options);
-    
+    // TODO: Replace with proper logging
     // Check if synthesis is supported
     const capabilities = await get().checkCapabilities();
     if (!capabilities.speechSynthesis) {
@@ -216,24 +214,23 @@ const createActions = (set: any, get: any) => ({
   },
   
   stopSpeaking: () => {
-    console.log('[Voice] Stopping speech...');
+    // TODO: Replace with proper logging
     set({ isSpeaking: false });
   },
   
   pauseSpeaking: () => {
-    console.log('[Voice] Pausing speech...');
+    // TODO: Replace with proper logging
     // Future implementation
   },
   
   resumeSpeaking: () => {
-    console.log('[Voice] Resuming speech...');
+    // TODO: Replace with proper logging
     // Future implementation
   },
   
   // Calling Actions
   startVoiceCall: async (config: VoiceCallConfig) => {
-    console.log('[Voice] Starting voice call...', config);
-    
+    // TODO: Replace with proper logging
     // Check if calling is supported
     const capabilities = await get().checkCapabilities();
     if (!capabilities.calling || !capabilities.webRTC) {
@@ -260,40 +257,40 @@ const createActions = (set: any, get: any) => ({
   },
   
   endVoiceCall: () => {
-    console.log('[Voice] Ending voice call...');
+    // TODO: Replace with proper logging
     set({ isInCall: false, callDuration: 0, callParticipants: [] });
   },
   
   toggleMute: () => {
     const currentMuted = get().isMuted;
-    console.log('[Voice] Toggling mute:', !currentMuted);
+    // TODO: Replace with proper logging
     set({ isMuted: !currentMuted });
   },
   
   adjustVolume: (volume: number) => {
-    console.log('[Voice] Adjusting volume:', volume);
+    // TODO: Replace with proper logging
     set({ volume: Math.max(0, Math.min(1, volume)) });
   },
   
   // Command Actions
   registerCommand: (command: VoiceCommand) => {
-    console.log('[Voice] Registering command:', command);
+    // TODO: Replace with proper logging
     // Future implementation - store commands
   },
   
   unregisterCommand: (trigger: string) => {
-    console.log('[Voice] Unregistering command:', trigger);
+    // TODO: Replace with proper logging
     // Future implementation
   },
   
   executeCommand: async (command: string) => {
-    console.log('[Voice] Executing command:', command);
+    // TODO: Replace with proper logging
     // Future implementation - parse and execute commands
   },
   
   // Configuration Actions
   setLanguage: (language: string) => {
-    console.log('[Voice] Setting language:', language);
+    // TODO: Replace with proper logging
     set({ 
       language,
       config: { ...get().config, language }
@@ -301,14 +298,14 @@ const createActions = (set: any, get: any) => ({
   },
   
   setVoiceType: (voiceType: 'male' | 'female' | 'neutral') => {
-    console.log('[Voice] Setting voice type:', voiceType);
+    // TODO: Replace with proper logging
     set({ 
       config: { ...get().config, voiceType }
     });
   },
   
   updateConfig: (config: Partial<VoiceConfig>) => {
-    console.log('[Voice] Updating config:', config);
+    // TODO: Replace with proper logging
     set({ 
       config: { ...get().config, ...config }
     });
@@ -316,8 +313,7 @@ const createActions = (set: any, get: any) => ({
   
   // Utility Actions
   checkCapabilities: async (): Promise<VoiceCapabilities> => {
-    console.log('[Voice] Checking capabilities...');
-    
+    // TODO: Replace with proper logging
     // In the future, this will actually check browser capabilities
     // For now, return mock capabilities
     const capabilities = mockCapabilities;
@@ -330,8 +326,7 @@ const createActions = (set: any, get: any) => ({
   },
   
   requestPermissions: async (): Promise<boolean> => {
-    console.log('[Voice] Requesting permissions...');
-    
+    // TODO: Replace with proper logging
     try {
       if (typeof window !== 'undefined' && navigator.mediaDevices) {
         const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -340,7 +335,9 @@ const createActions = (set: any, get: any) => ({
         return true;
       }
     } catch (error) {
-      console.error('[Voice] Permission denied:', error);
+      // TODO: Replace with proper logging
+
+      // // TODO: Replace with proper logging
       const voiceError: VoiceError = {
         code: VoiceErrorCode.PERMISSION_DENIED,
         message: 'Microphone permission denied',
@@ -353,8 +350,7 @@ const createActions = (set: any, get: any) => ({
   },
   
   testMicrophone: async (): Promise<boolean> => {
-    console.log('[Voice] Testing microphone...');
-    
+    // TODO: Replace with proper logging
     try {
       if (typeof window !== 'undefined' && navigator.mediaDevices) {
         const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -369,19 +365,21 @@ const createActions = (set: any, get: any) => ({
         return hasAudio;
       }
     } catch (error) {
-      console.error('[Voice] Microphone test failed:', error);
+      // TODO: Replace with proper logging
+
+      // // TODO: Replace with proper logging
     }
     
     return false;
   },
   
   clearTranscript: () => {
-    console.log('[Voice] Clearing transcript...');
+    // TODO: Replace with proper logging
     set({ transcript: '', interimTranscript: '', confidence: 0 });
   },
   
   reset: () => {
-    console.log('[Voice] Resetting voice store...');
+    // TODO: Replace with proper logging
     set(initialState);
   },
 });

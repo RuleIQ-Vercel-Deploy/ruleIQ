@@ -50,8 +50,20 @@ class RBACMiddleware(BaseHTTPMiddleware):
             "/api/monitoring/prometheus",  # Public metrics for Prometheus scraping
             "/docs",
             "/redoc",
-            "/openapi.json"
+            "/openapi.json",
+            # Freemium assessment endpoints - public access for lead generation
+            "/api/v1/freemium/leads",
+            "/api/v1/freemium/sessions",
+            "/api/v1/freemium/health"
         }
+
+        # Route patterns for public access (regex patterns)
+        self.public_route_patterns = [
+            # Freemium session endpoints with tokens (public access)
+            re.compile(r"/api/v1/freemium/sessions/[^/]+$"),  # GET /api/v1/freemium/sessions/{token}
+            re.compile(r"/api/v1/freemium/sessions/[^/]+/answers$"),  # POST /api/v1/freemium/sessions/{token}/answers  
+            re.compile(r"/api/v1/freemium/sessions/[^/]+/results$"),  # GET /api/v1/freemium/sessions/{token}/results
+        ]
 
         # Routes that require authentication but no specific permissions
         self.authenticated_only_routes = {
@@ -253,7 +265,12 @@ class RBACMiddleware(BaseHTTPMiddleware):
 
     def _is_public_route(self, path: str) -> bool:
         """Check if route is public (no authentication required)."""
-        return any(path.startswith(route) for route in self.public_routes)
+        # Check exact path matches
+        if any(path.startswith(route) for route in self.public_routes):
+            return True
+        
+        # Check regex patterns for dynamic routes (like freemium sessions with tokens)
+        return any(pattern.match(path) for pattern in self.public_route_patterns)
 
     def _is_authenticated_only_route(self, path: str) -> bool:
         """Check if route requires authentication but no specific permissions."""

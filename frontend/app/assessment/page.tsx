@@ -20,15 +20,13 @@ export default function AssessmentPage() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    console.log('🔍 Assessment page loaded with token:', token);
-    
+    // TODO: Replace with proper logging
     if (!token) {
-      console.log('❌ No token found, redirecting to home');
+    // TODO: Replace with proper logging
       router.push('/');
       return;
     }
-
-    console.log('✅ Token found, loading session...');
+    // TODO: Replace with proper logging
     loadSession();
   }, [token, router]);
 
@@ -41,7 +39,9 @@ export default function AssessmentPage() {
       const session = await freemiumService.getSessionProgress(token);
       setSessionData(session);
     } catch (err) {
-      console.error('Failed to load session:', err);
+      // TODO: Replace with proper logging
+
+      // // TODO: Replace with proper logging
       setError(err instanceof Error ? err.message : 'Failed to load assessment session');
     } finally {
       setLoading(false);

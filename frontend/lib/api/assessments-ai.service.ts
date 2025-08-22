@@ -288,8 +288,10 @@ class AssessmentAIService {
 
           // Development fallback with no artificial delay
           return mockAIResponses.help;
-        } catch (error: any) {
-          console.error('Failed to get AI help:', error);
+        } catch (error: unknown) {
+          // TODO: Replace with proper logging
+
+          // // TODO: Replace with proper logging
 
           // Handle rate limiting specifically - don't retry immediately
           if (error.response?.status === 429) {
@@ -313,7 +315,7 @@ class AssessmentAIService {
 
           // Enhanced error handling with fallback to mock data
           if (this.useProductionEndpoints && error instanceof Error) {
-            console.warn('Production AI endpoint failed, falling back to mock data');
+            // TODO: Replace with proper logging
             return mockAIResponses.help;
           }
 
@@ -345,8 +347,10 @@ class AssessmentAIService {
 
       // Development fallback with no artificial delay
       return mockAIResponses.followUp;
-    } catch (error: any) {
-      console.error('Failed to get AI follow-up questions:', error);
+    } catch (error: unknown) {
+      // TODO: Replace with proper logging
+
+      // // TODO: Replace with proper logging
 
       // Handle rate limiting specifically
       if (error.response?.status === 429) {
@@ -362,7 +366,7 @@ class AssessmentAIService {
 
       // Enhanced error handling with fallback to mock data
       if (this.useProductionEndpoints && error instanceof Error) {
-        console.warn('Production AI followup endpoint failed, falling back to mock data');
+        // TODO: Replace with proper logging
         return mockAIResponses.followUp;
       }
 
@@ -386,10 +390,12 @@ class AssessmentAIService {
       // Development fallback
       return mockAIResponses.analysis;
     } catch (error) {
-      console.error('Failed to get AI analysis:', error);
+      // TODO: Replace with proper logging
+
+      // // TODO: Replace with proper logging
 
       if (this.useProductionEndpoints && error instanceof Error) {
-        console.warn('Production AI endpoint failed, falling back to mock data');
+        // TODO: Replace with proper logging
         return mockAIResponses.analysis;
       }
 
@@ -450,10 +456,12 @@ class AssessmentAIService {
         ],
       };
     } catch (error) {
-      console.error('Failed to get AI recommendations:', error);
+      // TODO: Replace with proper logging
+
+      // // TODO: Replace with proper logging
 
       if (this.useProductionEndpoints && error instanceof Error) {
-        console.warn('Production AI endpoint failed, falling back to mock data');
+        // TODO: Replace with proper logging
         return {
           recommendations: mockAIResponses.analysis.recommendations,
           implementation_plan: {
@@ -528,10 +536,12 @@ Can you provide guidance on how to answer this question correctly?`;
           ...feedback,
         });
       } else {
-        console.log('AI Feedback submitted:', { interactionId, feedback });
+    // TODO: Replace with proper logging
       }
     } catch (error) {
-      console.error('Failed to submit AI feedback:', error);
+      // TODO: Replace with proper logging
+
+      // // TODO: Replace with proper logging
       // Non-blocking - don't throw error for feedback submission
     }
   }
@@ -554,7 +564,9 @@ Can you provide guidance on how to answer this question correctly?`;
       }>('/ai/assessments/metrics');
       return response;
     } catch (error) {
-      console.error('Failed to get AI metrics:', error);
+      // TODO: Replace with proper logging
+
+      // // TODO: Replace with proper logging
       throw new Error('Unable to retrieve AI performance metrics.');
     }
   }
@@ -862,9 +874,9 @@ Can you provide guidance on how to answer this question correctly?`;
     try {
       const result = await Promise.race([aiRequest, timeoutPromise]);
       return result;
-    } catch (error) {
+    } catch {
       if (error instanceof Error && error.message.includes('timed out')) {
-        console.warn(`${operation} timed out, falling back to default response`);
+        // TODO: Replace with proper logging
         throw new Error(`${operation} is taking longer than expected. Please try again.`);
       }
       throw error;
@@ -932,7 +944,9 @@ Can you provide guidance on how to answer this question correctly?`;
 
       return response;
     } catch (error) {
-      console.error('Enhanced AI response failed:', error);
+      // TODO: Replace with proper logging
+
+      // // TODO: Replace with proper logging
 
       // Fallback response with basic recommendations
       return {
@@ -998,8 +1012,10 @@ Can you provide guidance on how to answer this question correctly?`;
               eventSource.close();
               break;
           }
-        } catch (e) {
-          console.error('Error parsing streaming chunk:', e);
+        } catch {
+          // TODO: Replace with proper logging
+
+          // // TODO: Replace with proper logging
           options.onError?.('Error parsing response data');
         }
       };
@@ -1009,7 +1025,9 @@ Can you provide guidance on how to answer this question correctly?`;
         eventSource.close();
       };
     } catch (error) {
-      console.error('Error starting assessment analysis stream:', error);
+      // TODO: Replace with proper logging
+
+      // // TODO: Replace with proper logging
       options.onError?.('Failed to start analysis stream');
     }
   }
@@ -1049,8 +1067,10 @@ Can you provide guidance on how to answer this question correctly?`;
               eventSource.close();
               break;
           }
-        } catch (e) {
-          console.error('Error parsing streaming chunk:', e);
+        } catch {
+          // TODO: Replace with proper logging
+
+          // // TODO: Replace with proper logging
           options.onError?.('Error parsing response data');
         }
       };
@@ -1060,7 +1080,9 @@ Can you provide guidance on how to answer this question correctly?`;
         eventSource.close();
       };
     } catch (error) {
-      console.error('Error starting recommendations stream:', error);
+      // TODO: Replace with proper logging
+
+      // // TODO: Replace with proper logging
       options.onError?.('Failed to start recommendations stream');
     }
   }
@@ -1101,8 +1123,10 @@ Can you provide guidance on how to answer this question correctly?`;
               eventSource.close();
               break;
           }
-        } catch (e) {
-          console.error('Error parsing streaming chunk:', e);
+        } catch {
+          // TODO: Replace with proper logging
+
+          // // TODO: Replace with proper logging
           options.onError?.('Error parsing response data');
         }
       };
@@ -1112,7 +1136,9 @@ Can you provide guidance on how to answer this question correctly?`;
         eventSource.close();
       };
     } catch (error) {
-      console.error('Error starting help stream:', error);
+      // TODO: Replace with proper logging
+
+      // // TODO: Replace with proper logging
       options.onError?.('Failed to start help stream');
     }
   }

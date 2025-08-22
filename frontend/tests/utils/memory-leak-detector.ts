@@ -123,7 +123,7 @@ export function createMemoryLeakDetector(): MemoryLeakDetector {
       }) as any;
 
       // Mock setTimeout
-      global.setTimeout = vi.fn((callback: any, delay?: number, ...args: any[]) => {
+      global.setTimeout = vi.fn((callback: any, delay?: number, ...args: unknown[]) => {
         const timer = originalSetTimeout(callback, delay, ...args);
         activeTimers.add(timer);
         timersCreated++;
@@ -140,7 +140,7 @@ export function createMemoryLeakDetector(): MemoryLeakDetector {
       }) as any;
 
       // Mock setInterval
-      global.setInterval = vi.fn((callback: any, delay?: number, ...args: any[]) => {
+      global.setInterval = vi.fn((callback: any, delay?: number, ...args: unknown[]) => {
         const interval = originalSetInterval(callback, delay, ...args);
         activeIntervals.add(interval);
         intervalsCreated++;

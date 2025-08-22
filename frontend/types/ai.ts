@@ -194,7 +194,7 @@ export interface AIConfig {
 /**
  * Type guards for AI responses
  */
-export function isAIError(error: any): error is AIError {
+export function isAIError(error: unknown): error is AIError {
   return error && typeof error === 'object' && 'type' in error && 'message' in error;
 }
 

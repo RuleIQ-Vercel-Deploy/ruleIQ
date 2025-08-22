@@ -3,8 +3,7 @@ import { mockApiResponses, createErrorResponse } from './api-responses';
 
 export const createUltimateApiClient = () => ({
   get: vi.fn().mockImplementation(async (url: string, options = {}) => {
-    console.log('Ultimate API GET:', url, options);
-
+    // TODO: Replace with proper logging
     // Handle authentication endpoints
     if (url.includes('/auth/me')) {
       return mockApiResponses.login;
@@ -37,9 +36,8 @@ export const createUltimateApiClient = () => ({
     return { data: { success: true } };
   }),
 
-  post: vi.fn().mockImplementation(async (url: string, data: any, options = {}) => {
-    console.log('Ultimate API POST:', url, data, options);
-
+  post: vi.fn().mockImplementation(async (url: string, data: unknown, options = {}) => {
+    // TODO: Replace with proper logging
     // Handle login
     if (url.includes('/auth/login')) {
       if (data.email === 'invalid@example.com') {
@@ -110,9 +108,8 @@ export const createUltimateApiClient = () => ({
     return { data: { success: true, id: 'new-item' } };
   }),
 
-  put: vi.fn().mockImplementation(async (url: string, data: any, options = {}) => {
-    console.log('Ultimate API PUT:', url, data, options);
-
+  put: vi.fn().mockImplementation(async (url: string, data: unknown, options = {}) => {
+    // TODO: Replace with proper logging
     // Handle specific assessment updates
     if (url.includes('/assessments/assess-123')) {
       return mockApiResponses.assessment('assess-123');
@@ -121,9 +118,8 @@ export const createUltimateApiClient = () => ({
     return { data: { success: true, ...data } };
   }),
 
-  patch: vi.fn().mockImplementation(async (url: string, data: any, options = {}) => {
-    console.log('Ultimate API PATCH:', url, data, options);
-
+  patch: vi.fn().mockImplementation(async (url: string, data: unknown, options = {}) => {
+    // TODO: Replace with proper logging
     // Handle evidence updates
     if (url.includes('/evidence/')) {
       return {
@@ -139,7 +135,7 @@ export const createUltimateApiClient = () => ({
   }),
 
   delete: vi.fn().mockImplementation(async (url: string, options = {}) => {
-    console.log('Ultimate API DELETE:', url, options);
+    // TODO: Replace with proper logging
     return { data: { success: true } };
   }),
 

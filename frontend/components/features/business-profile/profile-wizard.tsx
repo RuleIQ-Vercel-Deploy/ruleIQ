@@ -273,7 +273,7 @@ export function ProfileWizard({ onComplete, initialData }: ProfileWizardProps) {
       } else {
         router.push('/dashboard');
       }
-    } catch (error) {
+    } catch {
       // Error is handled by the store
     }
   };

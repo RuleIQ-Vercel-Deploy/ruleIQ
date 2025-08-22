@@ -45,7 +45,7 @@ function TestErrorHandler() {
 
   return (
     <div>
-      <button onClick={() => captureError(new Error('Programmatic error'))}>Trigger Error</button>
+      <button onClick={() => captureError(new Error(&apos;Programmatic error'))}>Trigger Error</button>
       <button onClick={resetError}>Reset Error</button>
     </div>
   );

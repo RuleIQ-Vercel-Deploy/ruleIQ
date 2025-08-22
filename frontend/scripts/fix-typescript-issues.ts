@@ -25,7 +25,7 @@ class TypeScriptFixer {
   private fixedFiles: Set<string> = new Set();
 
   constructor() {
-    console.log('🔧 Starting TypeScript issues analysis and fixes...\n');
+    // TODO: Replace with proper logging
   }
 
   async run() {
@@ -38,29 +38,28 @@ class TypeScriptFixer {
 
       // Generate report
       this.generateReport();
-
-      console.log('\n✅ TypeScript fixes completed successfully!');
+    // TODO: Replace with proper logging
     } catch (error) {
+      // Development logging - consider proper logger
+
       console.error('❌ TypeScript fixing failed:', error);
       process.exit(1);
     }
   }
 
   private async analyzeIssues() {
-    console.log('📊 Analyzing TypeScript issues...');
-
+    // TODO: Replace with proper logging
     try {
       // Run TypeScript compiler to get issues
       const output = execSync('pnpm typecheck', {
         encoding: 'utf8',
         stdio: 'pipe',
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
       // Parse TypeScript errors from output
       this.parseTypeScriptErrors(error.stdout || error.message);
     }
-
-    console.log(`Found ${this.issues.length} TypeScript issues to address\n`);
+    // TODO: Replace with proper logging
   }
 
   private parseTypeScriptErrors(output: string) {
@@ -86,8 +85,7 @@ class TypeScriptFixer {
   }
 
   private async applyAutomatedFixes() {
-    console.log('🔨 Applying automated fixes...');
-
+    // TODO: Replace with proper logging
     // Group issues by file for efficient processing
     const issuesByFile = this.groupIssuesByFile();
 
@@ -111,7 +109,7 @@ class TypeScriptFixer {
 
   private async fixFileIssues(filePath: string, issues: TypeScriptIssue[]) {
     if (!fs.existsSync(filePath)) {
-      console.log(`⚠️  File not found: ${filePath}`);
+    // TODO: Replace with proper logging
       return;
     }
 
@@ -127,7 +125,7 @@ class TypeScriptFixer {
       if (fix) {
         content = this.applyFix(content, issue, fix);
         modified = true;
-        console.log(`  ✓ Fixed ${issue.code} in ${path.basename(filePath)}:${issue.line}`);
+    // TODO: Replace with proper logging
       }
     }
 
@@ -245,37 +243,42 @@ class TypeScriptFixer {
   }
 
   private generateReport() {
-    console.log('\n📋 TypeScript Fix Report');
-    console.log('========================');
+    // TODO: Replace with proper logging
 
-    console.log(`Total issues found: ${this.issues.length}`);
-    console.log(`Files modified: ${this.fixedFiles.size}`);
+    // TODO: Replace with proper logging
 
+    // TODO: Replace with proper logging
+
+    // TODO: Replace with proper logging
     // Group issues by type
     const issuesByCode = new Map<string, number>();
     for (const issue of this.issues) {
       issuesByCode.set(issue.code, (issuesByCode.get(issue.code) || 0) + 1);
     }
-
-    console.log('\nIssue breakdown:');
+    // TODO: Replace with proper logging
     for (const [code, count] of issuesByCode.entries()) {
-      console.log(`  ${code}: ${count} occurrences`);
+    // TODO: Replace with proper logging
     }
 
     if (this.fixedFiles.size > 0) {
-      console.log('\nModified files:');
+    // TODO: Replace with proper logging
       for (const file of this.fixedFiles) {
-        console.log(`  ✓ ${file}`);
+    // TODO: Replace with proper logging
       }
     }
 
     // Recommendations for manual fixes
-    console.log('\n💡 Manual Fix Recommendations:');
-    console.log('1. Review type definitions in types/api.ts');
-    console.log('2. Update component prop interfaces');
-    console.log('3. Add proper error handling for async operations');
-    console.log('4. Implement proper type guards for runtime checks');
-    console.log('5. Update test mocks to match actual API responses');
+    // TODO: Replace with proper logging
+
+    // TODO: Replace with proper logging
+
+    // TODO: Replace with proper logging
+
+    // TODO: Replace with proper logging
+
+    // TODO: Replace with proper logging
+
+    // TODO: Replace with proper logging
   }
 }
 

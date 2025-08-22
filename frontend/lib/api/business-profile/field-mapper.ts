@@ -76,7 +76,7 @@ export class BusinessProfileFieldMapper {
    * @param data - API response with truncated field names
    * @returns Frontend data with descriptive field names
    */
-  static fromAPI(data: any): BusinessProfile | null {
+  static fromAPI(data: unknown): BusinessProfile | null {
     if (!data) return null;
 
     const mapped: any = {};
@@ -296,7 +296,7 @@ export function validateFieldMappings(): void {
   if (process.env.NODE_ENV === 'development') {
     const validation = BusinessProfileFieldMapper.validateMappings();
     if (!validation.isValid) {
-      console.warn('Missing field mappings:', validation.missingMappings);
+      // TODO: Replace with proper logging
     }
   }
 }

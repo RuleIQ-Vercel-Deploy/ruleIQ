@@ -74,7 +74,7 @@ interface UserFormData {
 // Answer type for question responses
 type QuestionAnswer = string | string[] | boolean | undefined;
 
-/* eslint-disable no-unused-vars */
+ 
 interface Question {
   id: string;
   type: QuestionType;
@@ -90,7 +90,7 @@ interface Question {
   icon?: React.ReactNode;
   priority?: 'high' | 'medium' | 'low';
 }
-/* eslint-enable no-unused-vars */
+ 
 
 // Question Bank - Smart, Dynamic Questions
 const questionBank: Record<string, Question> = {
@@ -523,12 +523,12 @@ const getNextQuestion = (
       }
       // If invalid ID or same as current, fall through to default flow
       if (nextId === currentId) {
-        console.warn(`Question ${currentId} is trying to loop to itself`);
+        // Question trying to loop to itself
       } else {
-        console.warn(`Invalid question ID returned: ${nextId}`);
+        // Invalid question ID returned
       }
-    } catch (error) {
-      console.error(`Error in nextQuestion logic for ${currentId}:`, error);
+    } catch {
+      // Error in nextQuestion logic
     }
   }
 
@@ -538,7 +538,7 @@ const getNextQuestion = (
 
   // If current question not in flow, return null
   if (currentIndex === -1) {
-    console.warn(`Current question ${currentId} not found in flow`);
+    // Current question not found in flow
     return null;
   }
 
@@ -839,8 +839,8 @@ export default function AIGuidedSignupPage() {
           localStorage.setItem('ruleiq_compliance_profile', JSON.stringify(complianceProfile));
           localStorage.setItem('ruleiq_onboarding_data', JSON.stringify(formData));
         }
-      } catch (storageError) {
-        console.warn('Unable to save to localStorage:', storageError);
+      } catch {
+        // Unable to save to localStorage
         // Continue anyway - the app will work without personalization
       }
 
@@ -853,7 +853,7 @@ export default function AIGuidedSignupPage() {
 
       router.push('/dashboard');
     } catch (error: unknown) {
-      console.error('Registration error:', error);
+      // Registration error occurred
 
       let errorMessage = 'There was an error creating your account. Please try again.';
 

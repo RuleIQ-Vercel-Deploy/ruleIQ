@@ -3,8 +3,7 @@ import { vi } from 'vitest';
 // Emergency comprehensive API mock
 export const createEmergencyApiClient = () => ({
   get: vi.fn().mockImplementation(async (url: string, options = {}) => {
-    console.log('Emergency API GET:', url);
-    
+    // TODO: Replace with proper logging
     // Handle all possible endpoints with proper responses
     if (url.includes('/auth/me')) {
       return { data: { id: 'user-123', email: 'test@example.com', name: 'Test User', is_active: true } };
@@ -26,9 +25,8 @@ export const createEmergencyApiClient = () => ({
     return { data: { success: true } };
   }),
   
-  post: vi.fn().mockImplementation(async (url: string, data: any, options = {}) => {
-    console.log('Emergency API POST:', url, data);
-    
+  post: vi.fn().mockImplementation(async (url: string, data: unknown, options = {}) => {
+    // TODO: Replace with proper logging
     if (url.includes('/auth/login')) {
       if (data.email === 'invalid@example.com') {
         throw new Error('Invalid credentials');

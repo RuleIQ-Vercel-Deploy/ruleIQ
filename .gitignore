@@ -149,6 +149,10 @@ End of file
 .env.production
 .env.staging
 
+# Secure key storage directory
+.secrets/
+**/.secrets/
+
 # Cache files with potential secrets
 .serena/cache/
 */.serena/cache/

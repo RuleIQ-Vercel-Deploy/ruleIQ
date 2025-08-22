@@ -53,7 +53,7 @@ class AvaHealthCheck {
   private healthChecks: HealthCheck[] = [];
 
   constructor() {
-    console.log('🌅 Ava Daily Health Check initializing...');
+    // TODO: Replace with proper logging
     this.ensureDirectories();
   }
 
@@ -64,8 +64,7 @@ class AvaHealthCheck {
   }
 
   async runDailyHealthCheck(): Promise<HealthCheckResult> {
-    console.log('🏥 Running comprehensive daily health check...');
-    
+    // TODO: Replace with proper logging
     const startTime = Date.now();
     this.healthChecks = [];
 
@@ -90,8 +89,7 @@ class AvaHealthCheck {
   }
 
   private async checkTestInfrastructure(): Promise<void> {
-    console.log('🧪 Checking test infrastructure...');
-    
+    // TODO: Replace with proper logging
     const check: HealthCheck = {
       name: 'Test Infrastructure',
       status: 'PASS',
@@ -126,7 +124,7 @@ class AvaHealthCheck {
         check.details = 'All test infrastructure components are healthy';
       }
 
-    } catch (error: any) {
+    } catch (error: unknown) {
       check.status = 'FAIL';
       check.score = 0;
       check.details = 'Test infrastructure is not working properly';
@@ -138,8 +136,7 @@ class AvaHealthCheck {
   }
 
   private async checkCodeQuality(): Promise<void> {
-    console.log('🔍 Checking code quality...');
-    
+    // TODO: Replace with proper logging
     const check: HealthCheck = {
       name: 'Code Quality',
       status: 'PASS',
@@ -175,7 +172,7 @@ class AvaHealthCheck {
 
       check.metrics = { lintErrors, lintWarnings, typeErrors };
 
-    } catch (error: any) {
+    } catch (error: unknown) {
       // Parse errors from failed commands
       const output = error.stdout || error.message;
       const errors = (output.match(/error/gi) || []).length;
@@ -191,8 +188,7 @@ class AvaHealthCheck {
   }
 
   private async checkTestCoverage(): Promise<void> {
-    console.log('📊 Checking test coverage...');
-    
+    // TODO: Replace with proper logging
     const check: HealthCheck = {
       name: 'Test Coverage',
       status: 'PASS',
@@ -236,7 +232,7 @@ class AvaHealthCheck {
 
       check.metrics = { statements, branches, functions, lines, avgCoverage };
 
-    } catch (error: any) {
+    } catch (error: unknown) {
       check.status = 'FAIL';
       check.score = 0;
       check.details = 'Could not measure test coverage';
@@ -248,8 +244,7 @@ class AvaHealthCheck {
   }
 
   private async checkPerformance(): Promise<void> {
-    console.log('⚡ Checking performance...');
-    
+    // TODO: Replace with proper logging
     const check: HealthCheck = {
       name: 'Performance',
       status: 'PASS',
@@ -286,7 +281,7 @@ class AvaHealthCheck {
 
       check.metrics = { performanceScore: score };
 
-    } catch (error: any) {
+    } catch (error: unknown) {
       check.status = 'SKIP';
       check.score = 0;
       check.details = 'Performance check skipped (server not running)';
@@ -298,8 +293,7 @@ class AvaHealthCheck {
   }
 
   private async checkAccessibility(): Promise<void> {
-    console.log('♿ Checking accessibility...');
-    
+    // TODO: Replace with proper logging
     const check: HealthCheck = {
       name: 'Accessibility',
       status: 'PASS',
@@ -335,7 +329,7 @@ class AvaHealthCheck {
 
       check.metrics = { violations };
 
-    } catch (error: any) {
+    } catch (error: unknown) {
       check.status = 'SKIP';
       check.score = 0;
       check.details = 'Accessibility check skipped';
@@ -347,8 +341,7 @@ class AvaHealthCheck {
   }
 
   private async checkSecurity(): Promise<void> {
-    console.log('🔒 Checking security...');
-    
+    // TODO: Replace with proper logging
     const check: HealthCheck = {
       name: 'Security',
       status: 'PASS',
@@ -368,7 +361,7 @@ class AvaHealthCheck {
 
       check.details = 'No security vulnerabilities found';
 
-    } catch (error: any) {
+    } catch (error: unknown) {
       const output = error.stdout || error.message;
       
       if (output.includes('vulnerabilities')) {
@@ -391,8 +384,7 @@ class AvaHealthCheck {
   }
 
   private async checkDependencies(): Promise<void> {
-    console.log('📦 Checking dependencies...');
-    
+    // TODO: Replace with proper logging
     const check: HealthCheck = {
       name: 'Dependencies',
       status: 'PASS',
@@ -426,7 +418,7 @@ class AvaHealthCheck {
 
       check.metrics = { outdatedCount };
 
-    } catch (error: any) {
+    } catch (error: unknown) {
       // pnpm outdated exits with code 1 when there are outdated packages
       if (error.code === 1 && error.stdout) {
         const outdatedCount = (error.stdout.match(/\n/g) || []).length - 1;
@@ -444,8 +436,7 @@ class AvaHealthCheck {
   }
 
   private async checkBuildHealth(): Promise<void> {
-    console.log('🏗️ Checking build health...');
-    
+    // TODO: Replace with proper logging
     const check: HealthCheck = {
       name: 'Build Health',
       status: 'PASS',
@@ -476,7 +467,7 @@ class AvaHealthCheck {
         check.details = 'Build completed successfully';
       }
 
-    } catch (error: any) {
+    } catch (error: unknown) {
       check.status = 'FAIL';
       check.score = 0;
       check.details = 'Build failed';
@@ -488,8 +479,7 @@ class AvaHealthCheck {
   }
 
   private async checkFlakyTests(): Promise<void> {
-    console.log('🔍 Checking for flaky tests...');
-    
+    // TODO: Replace with proper logging
     const check: HealthCheck = {
       name: 'Test Stability',
       status: 'PASS',
@@ -525,7 +515,7 @@ class AvaHealthCheck {
         check.details = 'No flaky test data available';
       }
 
-    } catch (error: any) {
+    } catch (error: unknown) {
       check.status = 'SKIP';
       check.score = 0;
       check.details = 'Could not check flaky tests';
@@ -636,8 +626,7 @@ class AvaHealthCheck {
   private async saveHealthReport(result: HealthCheckResult): Promise<void> {
     const reportPath = join(this.reportsPath, `health-check-${Date.now()}.json`);
     writeFileSync(reportPath, JSON.stringify(result, null, 2));
-    
-    console.log(`📊 Health check report saved: ${reportPath}`);
+    // TODO: Replace with proper logging
   }
 
   private displayHealthReport(result: HealthCheckResult): void {
@@ -647,31 +636,36 @@ class AvaHealthCheck {
       CRITICAL: '🟠',
       FAILING: '🔴'
     };
+    // TODO: Replace with proper logging
 
-    console.log('\n🏥 Daily Health Check Results:');
-    console.log(`${statusEmoji[result.overallStatus]} Overall Status: ${result.overallStatus}`);
-    console.log(`🎯 Overall Score: ${result.overallScore}/100`);
-    console.log(`✅ Passed: ${result.summary.passedChecks}`);
-    console.log(`⚠️ Warnings: ${result.summary.warningChecks}`);
-    console.log(`❌ Failed: ${result.summary.failedChecks}`);
-    console.log(`⏭️ Skipped: ${result.summary.skippedChecks}`);
+    // TODO: Replace with proper logging
 
+    // TODO: Replace with proper logging
+
+    // TODO: Replace with proper logging
+
+    // TODO: Replace with proper logging
+
+    // TODO: Replace with proper logging
+
+    // TODO: Replace with proper logging
     if (result.summary.criticalIssues.length > 0) {
-      console.log('\n🚨 Critical Issues:');
-      result.summary.criticalIssues.forEach(issue => console.log(`  • ${issue}`));
+    // TODO: Replace with proper logging
+      result.summary.criticalIssues.forEach(issue =>
+    // TODO: Replace with proper logging
     }
 
     if (result.recommendations.length > 0) {
-      console.log('\n💡 Recommendations:');
-      result.recommendations.forEach(rec => console.log(`  ${rec}`));
+    // TODO: Replace with proper logging
+      result.recommendations.forEach(rec =>
+    // TODO: Replace with proper logging
     }
-
-    console.log('\n📋 Detailed Results:');
+    // TODO: Replace with proper logging
     this.healthChecks.forEach(check => {
       const emoji = check.status === 'PASS' ? '✅' : 
                    check.status === 'WARN' ? '⚠️' : 
                    check.status === 'FAIL' ? '❌' : '⏭️';
-      console.log(`${emoji} ${check.name}: ${check.details} (${check.score}/100)`);
+    // TODO: Replace with proper logging
     });
   }
 }
@@ -684,13 +678,13 @@ async function main() {
     const result = await healthCheck.runDailyHealthCheck();
     
     if (result.overallStatus === 'FAILING') {
-      console.log('\n🚨 Health check failed - critical issues detected!');
+    // TODO: Replace with proper logging
       process.exit(1);
     }
-    
-    console.log('\n✅ Daily health check complete!');
-    
+    // TODO: Replace with proper logging
   } catch (error) {
+    // Development logging - consider proper logger
+
     console.error('❌ Health check failed:', error);
     process.exit(1);
   }

@@ -49,7 +49,9 @@ export async function withCSRFProtection(
     // CSRF validation passed, proceed with the request
     return handler(request);
   } catch (error) {
-    console.error('CSRF validation error:', error);
+    // TODO: Replace with proper logging
+
+    // // TODO: Replace with proper logging
     return NextResponse.json(
       {
         error: 'CSRF validation failed',

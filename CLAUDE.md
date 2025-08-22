@@ -96,7 +96,11 @@ Before marking any task complete, ensure:
 # ALWAYS START WITH:
 source /home/omar/Documents/ruleIQ/.venv/bin/activate
 
-# Development
+# Development (Choose one)
+# 🔐 WITH DOPPLER (Recommended - all 48 secrets auto-injected):
+doppler run -- python main.py    # Start server with all secrets from Doppler
+
+# 🏠 LOCAL DEV (Fallback):
 python main.py                    # Start server (http://localhost:8000)
 make test-fast                    # Quick tests (2-5 min) - RUN BEFORE COMMITS
 ruff check . && ruff format .     # Lint & format - MUST BE CLEAN

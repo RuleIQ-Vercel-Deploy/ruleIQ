@@ -10,8 +10,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 
 async function verifySetup() {
-  console.log('🔍 Verifying E2E test setup...\n');
-
+    // TODO: Replace with proper logging
   const results = {
     playwright: false,
     browsers: false,
@@ -24,20 +23,20 @@ async function verifySetup() {
   // 1. Check if Playwright is installed
   try {
     const playwrightVersion = require('@playwright/test/package.json').version;
-    console.log(`✅ Playwright installed: v${playwrightVersion}`);
+    // TODO: Replace with proper logging
     results.playwright = true;
-  } catch (error) {
-    console.log('❌ Playwright not installed');
+  } catch {
+    // TODO: Replace with proper logging
   }
 
   // 2. Check if browsers are installed
   try {
     const browser = await chromium.launch();
     await browser.close();
-    console.log('✅ Browsers installed and working');
+    // TODO: Replace with proper logging
     results.browsers = true;
-  } catch (error) {
-    console.log('❌ Browsers not installed. Run: pnpm exec playwright install');
+  } catch {
+    // TODO: Replace with proper logging
   }
 
   // 3. Check test directory structure
@@ -45,18 +44,18 @@ async function verifySetup() {
 
   const missingDirs = testDirs.filter((dir) => !fs.existsSync(dir));
   if (missingDirs.length === 0) {
-    console.log('✅ Test directory structure exists');
+    // TODO: Replace with proper logging
     results.testDir = true;
   } else {
-    console.log(`❌ Missing directories: ${missingDirs.join(', ')}`);
+    // TODO: Replace with proper logging
   }
 
   // 4. Check test results directory
   if (fs.existsSync('test-results')) {
-    console.log('✅ Test results directory exists');
+    // TODO: Replace with proper logging
     results.resultsDir = true;
   } else {
-    console.log('❌ Test results directory missing. Creating...');
+    // TODO: Replace with proper logging
     fs.mkdirSync('test-results', { recursive: true });
     fs.mkdirSync('test-results/screenshots', { recursive: true });
     results.resultsDir = true;
@@ -64,10 +63,10 @@ async function verifySetup() {
 
   // 5. Check Playwright config
   if (fs.existsSync('playwright.config.ts')) {
-    console.log('✅ Playwright config exists');
+    // TODO: Replace with proper logging
     results.config = true;
   } else {
-    console.log('❌ Playwright config missing');
+    // TODO: Replace with proper logging
   }
 
   // 6. Check test helpers and fixtures
@@ -80,25 +79,30 @@ async function verifySetup() {
 
   const missingFiles = requiredFiles.filter((file) => !fs.existsSync(file));
   if (missingFiles.length === 0) {
-    console.log('✅ All test helper files exist');
+    // TODO: Replace with proper logging
     results.helpers = true;
   } else {
-    console.log(`❌ Missing files: ${missingFiles.join(', ')}`);
+    // TODO: Replace with proper logging
   }
 
   // Summary
-  console.log('\n📊 Setup Summary:');
+    // TODO: Replace with proper logging
   const allPassed = Object.values(results).every((v) => v);
 
   if (allPassed) {
-    console.log('✅ E2E test setup is complete and ready!');
-    console.log('\nYou can run tests with:');
-    console.log('  pnpm test:e2e           - Run all E2E tests');
-    console.log('  pnpm test:e2e:ui        - Run tests with UI mode');
-    console.log('  pnpm test:e2e:headed    - Run tests with browser visible');
-    console.log('  pnpm test:e2e:debug     - Run tests in debug mode');
+    // TODO: Replace with proper logging
+
+    // TODO: Replace with proper logging
+
+    // TODO: Replace with proper logging
+
+    // TODO: Replace with proper logging
+
+    // TODO: Replace with proper logging
+
+    // TODO: Replace with proper logging
   } else {
-    console.log('❌ E2E test setup needs attention. Fix the issues above.');
+    // TODO: Replace with proper logging
   }
 
   process.exit(allPassed ? 0 : 1);

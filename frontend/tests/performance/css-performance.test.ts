@@ -23,7 +23,7 @@ test.describe('CSS Performance Tests', () => {
     // Check CSS load times
     for (const [url, duration] of Object.entries(cssLoadTimes)) {
       expect(duration).toBeLessThan(500); // CSS should load in under 500ms
-      console.log(`CSS load time for ${url.split('/').pop()}: ${duration}ms`);
+    // TODO: Replace with proper logging
     }
 
     // Verify critical CSS is inlined or loaded first
@@ -82,14 +82,13 @@ test.describe('CSS Performance Tests', () => {
     }
 
     const usagePercent = (usedBytes / totalBytes) * 100;
-    console.log(`CSS Usage: ${usagePercent.toFixed(2)}% (${usedBytes}/${totalBytes} bytes)`);
-
+    // TODO: Replace with proper logging
     // At least 60% of CSS should be used
     expect(usagePercent).toBeGreaterThan(60);
 
     // Log sample of unused selectors for optimization
     if (unusedSelectors.length > 0) {
-      console.log('Sample unused selectors:', unusedSelectors.slice(0, 10));
+    // TODO: Replace with proper logging
     }
   });
 
@@ -219,7 +218,7 @@ test.describe('CSS Performance Tests', () => {
               }
             }
           }
-        } catch (e) {
+        } catch {
           // Skip cross-origin stylesheets
         }
       }
@@ -232,7 +231,7 @@ test.describe('CSS Performance Tests', () => {
     expect(specificityAnalysis.overlySpecific.length).toBeLessThan(20);
 
     if (specificityAnalysis.deeplyNested.length > 0) {
-      console.log('Deeply nested selectors found:', specificityAnalysis.deeplyNested.slice(0, 5));
+    // TODO: Replace with proper logging
     }
   });
 
@@ -277,11 +276,7 @@ test.describe('CSS Performance Tests', () => {
     expect(animationMetrics.willChange).toBeLessThan(10); // Limited use of will-change
 
     // Log findings
-    console.log('Animation metrics:', {
-      animatedElements: animationMetrics.animatedElements,
-      transforms: animationMetrics.transforms,
-      willChange: animationMetrics.willChange,
-    });
+    // TODO: Replace with proper logging
   });
 
   test('Critical rendering path optimization', async ({ page }) => {
@@ -362,8 +357,7 @@ test.describe('CSS Performance Tests', () => {
     });
 
     // Log layout usage
-    console.log('Layout metrics:', layoutMetrics);
-
+    // TODO: Replace with proper logging
     // Verify no overly complex layouts
     expect(layoutMetrics.complexLayouts.length).toBeLessThan(5);
     expect(layoutMetrics.nestedGrids).toBeLessThan(3);

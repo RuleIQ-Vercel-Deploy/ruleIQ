@@ -28,14 +28,14 @@ class ConversionEvent(Base):
     # Primary identifier
     id = Column(PG_UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     lead_id = Column(
-        PG_UUID(as_uuid=True), 
-        ForeignKey("assessment_leads.id", ondelete="CASCADE"), 
-        nullable=False, 
+        PG_UUID(as_uuid=True),
+        ForeignKey("assessment_leads.id", ondelete="CASCADE"),
+        nullable=False,
         index=True
     )
     session_id = Column(
-        PG_UUID(as_uuid=True), 
-        ForeignKey("freemium_assessment_sessions.id", ondelete="SET NULL"), 
+        PG_UUID(as_uuid=True),
+        ForeignKey("freemium_assessment_sessions.id", ondelete="SET NULL"),
         nullable=True
     )
 
@@ -150,10 +150,10 @@ class ConversionEvent(Base):
 
     @classmethod
     def create_trial_signup(
-        cls, 
-        lead_id: uuid.UUID, 
-        session_id: uuid.UUID = None, 
-        source: str = "freemium_results", 
+        cls,
+        lead_id: uuid.UUID,
+        session_id: uuid.UUID = None,
+        source: str = "freemium_results",
         metadata: dict = None
     ):
         """Factory method for trial signup conversions."""
@@ -168,11 +168,11 @@ class ConversionEvent(Base):
 
     @classmethod
     def create_paid_subscription(
-        cls, 
-        lead_id: uuid.UUID, 
-        plan: str, 
-        value: Decimal, 
-        frequency: str = "monthly", 
+        cls,
+        lead_id: uuid.UUID,
+        plan: str,
+        value: Decimal,
+        frequency: str = "monthly",
         metadata: dict = None
     ):
         """Factory method for paid subscription conversions."""
@@ -188,9 +188,9 @@ class ConversionEvent(Base):
 
     @classmethod
     def create_consultation_request(
-        cls, 
-        lead_id: uuid.UUID, 
-        session_id: uuid.UUID = None, 
+        cls,
+        lead_id: uuid.UUID,
+        session_id: uuid.UUID = None,
         metadata: dict = None
     ):
         """Factory method for consultation request conversions."""

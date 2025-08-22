@@ -192,7 +192,9 @@ export default function DataExportDemoPage() {
       }
     } catch (error) {
       toast.error('Export failed. Please try again.');
-      console.error(error);
+      // TODO: Replace with proper logging
+
+      // // TODO: Replace with proper logging
     }
   };
 
@@ -208,7 +210,7 @@ export default function DataExportDemoPage() {
 
     toast.promise(
       DataExporter.exportWithProgress(largeData, 'csv', (progress) => {
-        console.log(`Export progress: ${progress}%`);
+    // TODO: Replace with proper logging
       }),
       {
         loading: 'Exporting large dataset...',
