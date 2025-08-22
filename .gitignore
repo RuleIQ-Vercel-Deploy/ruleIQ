@@ -200,3 +200,4 @@ celerybeat-schedule*
 
 # Legacy and migration folders
 frontend/legacy/
+results.json
