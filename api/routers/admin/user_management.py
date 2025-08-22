@@ -12,7 +12,7 @@ from uuid import UUID, uuid4
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from pydantic import BaseModel, EmailStr, Field
 from sqlalchemy.orm import Session
-from sqlalchemy import and_, or_, desc, func, distinct
+from sqlalchemy import and_, or_, desc
 
 from api.dependencies.rbac_auth import (
     UserWithRoles, require_permission
@@ -420,23 +420,11 @@ async def list_roles(
     db: Session = Depends(get_db)
 ):
     """List all roles with permission and user count information."""
-    roles_with_counts = (
-        db.query(
-            Role,
-            func.count(distinct(UserRole.id)).label('user_count')
-        )
-        .outerjoin(UserRole, and_(
-            Role.id == UserRole.role_id,
-            UserRole.is_active
-        ))
-        .filter(Role.is_active)
-        .group_by(Role.id)
-        .all()
-    )
+    roles = db.query(Role).filter(Role.is_active).all()
 
     role_responses = []
-    for role, user_count in roles_with_counts:
-        # Get permissions for role in a separate optimized query
+    for role in roles:
+        # Get permissions for role
         permissions = db.query(Permission).join(RolePermission).filter(
             and_(
                 RolePermission.role_id == role.id,
@@ -453,6 +441,11 @@ async def list_roles(
             }
             for perm in permissions
         ]
+
+        # Get user count for role
+        user_count = db.query(UserRole).filter(
+            and_(UserRole.role_id == role.id, UserRole.is_active)
+        ).count()
 
         role_responses.append(RoleResponse(
             id=str(role.id),
