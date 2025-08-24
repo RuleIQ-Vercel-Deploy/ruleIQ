@@ -211,9 +211,9 @@ app.include_router(
 )
 app.include_router(assessments.router, prefix="/api/v1/assessments", tags=["Assessments"])
 app.include_router(freemium.router, prefix="/api/v1", tags=["Freemium Assessment"])
-app.include_router(ai_assessments.router, prefix="/api/v1/ai-assessments", tags=["AI Assessment Assistant"])
+# DEPRECATED: app.include_router(ai_assessments.router, prefix="/api/v1/ai-assessments", tags=["AI Assessment Assistant"])
 # Backward compatibility for legacy tests - old /api/ai/assessments structure  
-app.include_router(ai_assessments.router, prefix="/api/ai/assessments", tags=["AI Assessment Assistant (Legacy)"])
+# DEPRECATED: app.include_router(ai_assessments.router, prefix="/api/ai/assessments", tags=["AI Assessment Assistant (Legacy)"])
 app.include_router(ai_optimization.router, prefix="/api/v1/ai/optimization", tags=["AI Optimization"])
 app.include_router(frameworks.router, prefix="/api/v1/frameworks", tags=["Compliance Frameworks"])
 app.include_router(policies.router, prefix="/api/v1/policies", tags=["Policies"])

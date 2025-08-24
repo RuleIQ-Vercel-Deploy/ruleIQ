@@ -87,34 +87,76 @@ class DuplicateCleaner:
         method, path = endpoint.split(' ', 1)
         method = method.lower()
         
-        # Extract the base path without prefix
-        path_parts = path.split('/')
-        if 'api' in path_parts[1]:
-            # Remove /api/v1/ or /api/admin/ etc
-            base_path = '/' + '/'.join(path_parts[3:]) if len(path_parts) > 3 else '/'
+        # Map full paths to router files and local paths
+        endpoint_map = {
+            'GET /api/v1/users/me': ('users.py', '/me'),
+            'GET /api/v1/ai-assessments/circuit-breaker/status': ('ai_assessments.py', '/circuit-breaker/status'),
+            'POST /api/v1/ai-assessments/circuit-breaker/reset': ('ai_assessments.py', '/circuit-breaker/reset'),
+            'GET /api/v1/ai-assessments/cache/metrics': ('ai_assessments.py', '/cache/metrics'),
+            'GET /api/ai/assessments/circuit-breaker/status': None,  # Legacy router inclusion
+            'POST /api/ai/assessments/circuit-breaker/reset': None,  # Legacy router inclusion
+            'GET /api/ai/assessments/cache/metrics': None,  # Legacy router inclusion
+            'GET /api/v1/chat/cache/metrics': ('chat.py', '/cache/metrics'),
+            'GET /api/v1/chat/quality/trends': ('chat.py', '/quality/trends'),
+        }
+        
+        if endpoint not in endpoint_map:
+            print(f"  ⚠️  No mapping for {endpoint}")
+            return False
+            
+        mapping = endpoint_map[endpoint]
+        if mapping is None:
+            # This is handled by commenting out router inclusion in main.py
+            print(f"  📝 {endpoint} handled via main.py router inclusion")
+            return True
+            
+        router_file, local_path = mapping
+        router_path = ROUTERS_DIR / router_file
+        
+        if not router_path.exists():
+            print(f"  ❌ Router file {router_file} not found")
+            return False
+            
+        with open(router_path, 'r') as f:
+            lines = f.readlines()
+        
+        # Find and comment out the endpoint
+        new_lines = []
+        found = False
+        in_function = False
+        decorator_line = f'@router.{method}("{local_path}"'
+        
+        for i, line in enumerate(lines):
+            if decorator_line in line:
+                found = True
+                in_function = True
+                new_lines.append('# REMOVED: Duplicate endpoint\n')
+                new_lines.append('# ' + line)
+            elif in_function:
+                # Keep commenting until we hit an empty line after function or next decorator
+                if line.strip().startswith('@'):
+                    in_function = False
+                    new_lines.append(line)
+                elif i > 0 and not line.strip() and lines[i-1].strip() and not lines[i-1].strip().endswith(','):
+                    # Empty line after non-comma ending - end of function
+                    in_function = False
+                    new_lines.append('#\n')
+                    new_lines.append(line)
+                else:
+                    new_lines.append('# ' + line if line.strip() else '#\n')
+            else:
+                new_lines.append(line)
+        
+        if found:
+            with open(router_path, 'w') as f:
+                f.writelines(new_lines)
+            
+            self.changes.append(f"Removed {endpoint} from {router_file}")
+            print(f"  ✅ Removed {endpoint} from {router_file}")
+            return True
         else:
-            base_path = path
-        
-        # Find the router file
-        for router_file in ROUTERS_DIR.glob("*.py"):
-            with open(router_file, 'r') as f:
-                content = f.read()
-            
-            # Pattern to find and remove the endpoint
-            pattern = rf'@router\.{method}\("{re.escape(base_path)}".*?\)[\s\S]*?(?=@router\.|$)'
-            
-            if re.search(pattern, content):
-                # Comment out instead of removing for safety
-                replacement = lambda m: f"# REMOVED: Duplicate endpoint\n# {m.group(0)}"
-                new_content = re.sub(pattern, replacement, content)
-                
-                with open(router_file, 'w') as f:
-                    f.write(new_content)
-                
-                self.changes.append(f"Removed {endpoint} from {router_file.name}")
-                return True
-        
-        return False
+            print(f"  ⚠️  Endpoint {decorator_line} not found in {router_file}")
+            return False
     
     def clean_namespace_duplicates(self, dry_run=True):
         """Clean up namespace duplicates by removing deprecated namespaces"""
@@ -139,19 +181,30 @@ class DuplicateCleaner:
         """Remove or comment out routes in a deprecated namespace"""
         # Update main.py to comment out deprecated router inclusions
         with open(MAIN_PY, 'r') as f:
-            content = f.read()
+            lines = f.readlines()
         
-        # Pattern to find router inclusions with this namespace
-        pattern = rf'(app\.include_router\([^)]*prefix="{re.escape(namespace[:-1])}"[^)]*\))'
+        new_lines = []
+        modified = False
         
-        if re.search(pattern, content):
-            # Comment out the line
-            new_content = re.sub(pattern, r'# DEPRECATED: \1', content)
-            
+        for line in lines:
+            # Special handling for the legacy AI assessments namespace
+            if namespace == '/api/ai/assessments/' and 'app.include_router(ai_assessments.router, prefix="/api/ai/assessments"' in line:
+                new_lines.append('# DEPRECATED: ' + line)
+                modified = True
+                self.changes.append(f"Commented out legacy namespace {namespace} in main.py")
+            # Generic handling for other namespaces
+            elif f'prefix="{namespace[:-1]}"' in line and 'app.include_router' in line:
+                new_lines.append('# DEPRECATED: ' + line)
+                modified = True
+                self.changes.append(f"Commented out namespace {namespace} in main.py")
+            else:
+                new_lines.append(line)
+        
+        if modified:
             with open(MAIN_PY, 'w') as f:
-                f.write(new_content)
-            
-            self.changes.append(f"Commented out namespace {namespace} in main.py")
+                f.writelines(new_lines)
+        
+        return modified
     
     def identify_safe_removals(self):
         """Identify endpoints that are safe to remove"""
