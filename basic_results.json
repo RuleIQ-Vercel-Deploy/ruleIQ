@@ -2,11 +2,11 @@
   "collection": {
     "item": [
       {
-        "id": "8f492d0a-39f7-46ea-87f3-696a65f9ab4f",
+        "id": "da9a7ee9-eba0-4749-ba65-eb56204682bd",
         "name": "🔐 Authentication",
         "item": [
           {
-            "id": "d1fd7229-8e0d-4d1c-bbc4-72ddb60e5efc",
+            "id": "b073c3b7-cec0-4127-ab96-2490eeeead58",
             "name": "Login",
             "request": {
               "url": {
@@ -48,7 +48,7 @@
               {
                 "listen": "test",
                 "script": {
-                  "id": "c256c698-92f2-4a4d-af8f-ad1911fe3df7",
+                  "id": "cd705c8a-0bf3-48dc-8d38-f1ec8dfe18d0",
                   "type": "text/javascript",
                   "exec": [
                     "if (pm.response.code === 200) {",
@@ -59,7 +59,7 @@
                     "    }",
                     "}"
                   ],
-                  "_lastExecutionId": "9c2e4977-ba04-4a67-aa67-5433fedcd35f"
+                  "_lastExecutionId": "3787ab95-73f3-4d44-a305-2e56d5629864"
                 }
               }
             ]
@@ -68,11 +68,11 @@
         "event": []
       },
       {
-        "id": "45c31c71-6dfb-4d98-bc54-043adb077cc6",
+        "id": "3aa58dba-c4b5-4ab6-a7b8-a532fc7e27cb",
         "name": "🧠 AI Analysis",
         "item": [
           {
-            "id": "26255f9a-9a78-458d-bdc8-c4f2c7e9f5bc",
+            "id": "079e42c1-fa5c-47cb-a6d7-e80ad8181d5e",
             "name": "Stream AI Analysis (Fixed)",
             "request": {
               "url": {
@@ -141,7 +141,7 @@
       }
     ],
     "info": {
-      "_postman_id": "6ceb5ff2-5282-4394-877d-3930be018bde",
+      "_postman_id": "95add72c-8591-421a-8c49-794097c4d46c",
       "name": "ruleIQ API Fixed Collection",
       "version": {
         "raw": "2.0.1-fixed",
@@ -181,13 +181,13 @@
       },
       {
         "type": "any",
-        "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI0MWIxOTMwZC05YzI0LTQwZWItYmE3Ny02YzViNTA4YjNiNDEiLCJleHAiOjE3NTU5MzkwNzIsInR5cGUiOiJhY2Nlc3MiLCJpYXQiOjE3NTU5MzcyNzJ9.y7sxJ4unHVaIebledN2-Q27is4nn7w7nS6FGxkkxbFQ",
+        "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI0MWIxOTMwZC05YzI0LTQwZWItYmE3Ny02YzViNTA4YjNiNDEiLCJleHAiOjE3NTU5NDAxNDgsInR5cGUiOiJhY2Nlc3MiLCJpYXQiOjE3NTU5MzgzNDh9.iAoqj2FrDDW0-ckb6A74I_KKetm87MCH6astHxxk2aI",
         "key": "jwt_token"
       }
     ]
   },
   "globals": {
-    "id": "de9438d1-753b-484a-affb-4a396681014c",
+    "id": "d11ddf27-14ec-4ff8-9ffc-4f383f821148",
     "values": []
   },
   "run": {
@@ -239,10 +239,10 @@
       }
     },
     "timings": {
-      "responseAverage": 1155.5,
-      "responseMin": 640,
-      "responseMax": 1671,
-      "responseSd": 515.5,
+      "responseAverage": 1169.5,
+      "responseMin": 638,
+      "responseMax": 1701,
+      "responseSd": 531.5,
       "dnsAverage": 0,
       "dnsMin": 0,
       "dnsMax": 0,
@@ -251,8 +251,8 @@
       "firstByteMin": 0,
       "firstByteMax": 0,
       "firstByteSd": 0,
-      "started": 1755937271597,
-      "completed": 1755937274172
+      "started": 1755938347996,
+      "completed": 1755938350630
     },
     "executions": [
       {
@@ -265,11 +265,11 @@
           "eof": false,
           "bof": true,
           "cr": false,
-          "ref": "4f30857f-e08a-4962-a525-86ecea96ad87",
-          "httpRequestId": "72ee1446-13fe-424c-89b8-0c996570464d"
+          "ref": "071a0ce4-d108-4932-aaa2-dc188ece638a",
+          "httpRequestId": "22e1d53d-2fa8-491c-90e2-22e8fd4ec813"
         },
         "item": {
-          "id": "d1fd7229-8e0d-4d1c-bbc4-72ddb60e5efc",
+          "id": "b073c3b7-cec0-4127-ab96-2490eeeead58",
           "name": "Login",
           "request": {
             "url": {
@@ -311,7 +311,7 @@
             {
               "listen": "test",
               "script": {
-                "id": "c256c698-92f2-4a4d-af8f-ad1911fe3df7",
+                "id": "cd705c8a-0bf3-48dc-8d38-f1ec8dfe18d0",
                 "type": "text/javascript",
                 "exec": [
                   "if (pm.response.code === 200) {",
@@ -322,7 +322,7 @@
                   "    }",
                   "}"
                 ],
-                "_lastExecutionId": "9c2e4977-ba04-4a67-aa67-5433fedcd35f"
+                "_lastExecutionId": "3787ab95-73f3-4d44-a305-2e56d5629864"
               }
             }
           ]
@@ -365,7 +365,7 @@
             },
             {
               "key": "Postman-Token",
-              "value": "0ca8fc2d-e9ed-4eb2-859d-a56a9888540c",
+              "value": "01357884-c54e-4e56-9d69-22d1028ad43d",
               "system": true
             },
             {
@@ -415,13 +415,13 @@
           }
         },
         "response": {
-          "id": "4263551e-3d37-4b6a-8a4d-a71eb4cc0399",
+          "id": "594cc46b-d3dd-45d4-a5c9-1c4debb8d160",
           "status": "OK",
           "code": 200,
           "header": [
             {
               "key": "date",
-              "value": "Sat, 23 Aug 2025 08:21:11 GMT"
+              "value": "Sat, 23 Aug 2025 08:39:07 GMT"
             },
             {
               "key": "server",
@@ -437,11 +437,11 @@
             },
             {
               "key": "x-request-id",
-              "value": "24d35739-07d1-4da0-bd30-aec8deed29b4"
+              "value": "0c511d74-e4cc-4e11-90dc-1c5697d9d936"
             },
             {
               "key": "x-process-time",
-              "value": "0.6055862903594971"
+              "value": "0.5974264144897461"
             },
             {
               "key": "x-content-type-options",
@@ -605,13 +605,13 @@
               84,
               85,
               53,
-              77,
-              122,
-              107,
-              119,
               78,
-              122,
-              73,
+              68,
+              65,
+              120,
+              78,
+              68,
+              103,
               115,
               73,
               110,
@@ -651,56 +651,56 @@
               53,
               77,
               122,
-              99,
-              121,
-              78,
+              103,
               122,
-              74,
+              78,
+              68,
+              104,
               57,
               46,
-              121,
+              105,
+              65,
+              111,
+              113,
+              106,
+              50,
+              70,
+              114,
+              68,
+              68,
+              87,
+              48,
+              45,
+              99,
+              107,
+              98,
+              54,
+              65,
               55,
-              115,
-              120,
-              74,
               52,
-              117,
-              110,
+              73,
+              95,
+              75,
+              75,
+              101,
+              116,
+              109,
+              56,
+              55,
+              77,
+              67,
               72,
-              86,
+              54,
+              97,
+              115,
+              116,
+              72,
+              120,
+              120,
+              107,
+              50,
               97,
               73,
-              101,
-              98,
-              108,
-              101,
-              100,
-              78,
-              50,
-              45,
-              81,
-              50,
-              55,
-              105,
-              115,
-              52,
-              110,
-              110,
-              55,
-              119,
-              55,
-              110,
-              83,
-              54,
-              70,
-              71,
-              120,
-              107,
-              107,
-              120,
-              98,
-              70,
-              81,
               34,
               44,
               34,
@@ -835,11 +835,11 @@
               49,
               78,
               68,
-              73,
-              119,
+              77,
+              120,
               78,
-              122,
-              73,
+              68,
+              103,
               115,
               73,
               110,
@@ -880,57 +880,57 @@
               79,
               84,
               77,
-              51,
+              52,
               77,
-              106,
-              99,
-              121,
+              122,
+              81,
+              52,
               102,
               81,
               46,
-              82,
-              57,
-              87,
-              108,
-              111,
-              57,
-              108,
-              107,
-              107,
-              97,
-              53,
+              89,
+              121,
+              104,
+              95,
+              103,
+              80,
+              88,
+              88,
+              50,
+              52,
+              56,
+              118,
+              67,
               84,
               113,
-              108,
-              89,
-              98,
-              83,
-              88,
-              71,
-              95,
-              95,
-              88,
-              51,
+              76,
+              115,
+              76,
               68,
-              119,
-              109,
-              108,
-              102,
-              73,
-              115,
-              102,
+              105,
+              79,
+              70,
+              99,
+              114,
+              78,
+              77,
+              69,
+              75,
+              77,
+              98,
+              71,
+              111,
               88,
-              74,
-              99,
-              51,
-              115,
-              57,
-              74,
-              103,
-              82,
-              107,
-              99,
-              103,
+              48,
+              117,
+              98,
+              110,
+              87,
+              80,
+              105,
+              97,
+              54,
+              81,
               34,
               44,
               34,
@@ -958,22 +958,22 @@
             ]
           },
           "cookie": [],
-          "responseTime": 640,
+          "responseTime": 638,
           "responseSize": 480
         },
-        "id": "d1fd7229-8e0d-4d1c-bbc4-72ddb60e5efc"
+        "id": "b073c3b7-cec0-4127-ab96-2490eeeead58"
       },
       {
         "cursor": {
-          "ref": "b56aafa5-9acf-4b00-9732-9175ca2fd99c",
+          "ref": "198d77ab-d540-434f-bdbd-4902d1cad163",
           "length": 2,
           "cycles": 1,
           "position": 1,
           "iteration": 0,
-          "httpRequestId": "07b981ae-423c-4d5e-8c27-003b298f8f88"
+          "httpRequestId": "57131d46-cfbf-42d8-aa2d-4d64242a1c20"
         },
         "item": {
-          "id": "26255f9a-9a78-458d-bdc8-c4f2c7e9f5bc",
+          "id": "079e42c1-fa5c-47cb-a6d7-e80ad8181d5e",
           "name": "Stream AI Analysis (Fixed)",
           "request": {
             "url": {
@@ -1037,7 +1037,7 @@
             },
             {
               "key": "Authorization",
-              "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI0MWIxOTMwZC05YzI0LTQwZWItYmE3Ny02YzViNTA4YjNiNDEiLCJleHAiOjE3NTU5MzkwNzIsInR5cGUiOiJhY2Nlc3MiLCJpYXQiOjE3NTU5MzcyNzJ9.y7sxJ4unHVaIebledN2-Q27is4nn7w7nS6FGxkkxbFQ",
+              "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI0MWIxOTMwZC05YzI0LTQwZWItYmE3Ny02YzViNTA4YjNiNDEiLCJleHAiOjE3NTU5NDAxNDgsInR5cGUiOiJhY2Nlc3MiLCJpYXQiOjE3NTU5MzgzNDh9.iAoqj2FrDDW0-ckb6A74I_KKetm87MCH6astHxxk2aI",
               "system": true
             },
             {
@@ -1052,7 +1052,7 @@
             },
             {
               "key": "Postman-Token",
-              "value": "e142aee6-3373-4a38-af4c-da5b9bd241e8",
+              "value": "e765d18a-5a93-4a96-b914-f696181ebb65",
               "system": true
             },
             {
@@ -1086,20 +1086,20 @@
             "bearer": [
               {
                 "type": "string",
-                "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI0MWIxOTMwZC05YzI0LTQwZWItYmE3Ny02YzViNTA4YjNiNDEiLCJleHAiOjE3NTU5MzkwNzIsInR5cGUiOiJhY2Nlc3MiLCJpYXQiOjE3NTU5MzcyNzJ9.y7sxJ4unHVaIebledN2-Q27is4nn7w7nS6FGxkkxbFQ",
+                "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI0MWIxOTMwZC05YzI0LTQwZWItYmE3Ny02YzViNTA4YjNiNDEiLCJleHAiOjE3NTU5NDAxNDgsInR5cGUiOiJhY2Nlc3MiLCJpYXQiOjE3NTU5MzgzNDh9.iAoqj2FrDDW0-ckb6A74I_KKetm87MCH6astHxxk2aI",
                 "key": "token"
               }
             ]
           }
         },
         "response": {
-          "id": "d5a15bed-5245-4e10-8a5c-19c8a214a7ee",
+          "id": "eff29a30-31cb-4163-a5cc-6433815fb4a8",
           "status": "OK",
           "code": 200,
           "header": [
             {
               "key": "date",
-              "value": "Sat, 23 Aug 2025 08:21:11 GMT"
+              "value": "Sat, 23 Aug 2025 08:39:07 GMT"
             },
             {
               "key": "server",
@@ -1123,11 +1123,11 @@
             },
             {
               "key": "x-request-id",
-              "value": "13f16061-b23b-4a4a-9807-2febc603cbd3"
+              "value": "e47f98b0-7590-4d92-a0c3-31458b6bf6b5"
             },
             {
               "key": "x-process-time",
-              "value": "0.49877429008483887"
+              "value": "0.4959094524383545"
             },
             {
               "key": "x-content-type-options",
@@ -1301,18 +1301,18 @@
               48,
               56,
               58,
-              50,
-              49,
+              51,
+              57,
               58,
               49,
-              51,
+              48,
               46,
-              56,
+              50,
+              54,
+              49,
               50,
               55,
-              50,
-              56,
-              49,
+              51,
               34,
               125,
               10,
@@ -1320,10 +1320,10 @@
             ]
           },
           "cookie": [],
-          "responseTime": 1671,
+          "responseTime": 1701,
           "responseSize": 152
         },
-        "id": "26255f9a-9a78-458d-bdc8-c4f2c7e9f5bc"
+        "id": "079e42c1-fa5c-47cb-a6d7-e80ad8181d5e"
       }
     ],
     "transfers": {
