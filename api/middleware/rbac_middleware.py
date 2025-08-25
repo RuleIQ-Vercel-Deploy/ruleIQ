@@ -13,6 +13,7 @@ import re
 
 from fastapi import Request, Response, HTTPException, status
 from starlette.middleware.base import BaseHTTPMiddleware
+from starlette.responses import JSONResponse
 
 from api.dependencies.rbac_auth import (
     UserWithRoles
@@ -196,9 +197,10 @@ class RBACMiddleware(BaseHTTPMiddleware):
             # Check if route requires authentication only
             if self._is_authenticated_only_route(request.url.path):
                 if current_user is None:
-                    raise HTTPException(
+                    return JSONResponse(
                         status_code=status.HTTP_401_UNAUTHORIZED,
-                        detail="Authentication required"
+                        content={"detail": "Authentication required"},
+                        headers={"WWW-Authenticate": "Bearer"}
                     )
                 # User is authenticated, proceed
                 return await call_next(request)
@@ -211,16 +213,17 @@ class RBACMiddleware(BaseHTTPMiddleware):
 
             if required_permissions:
                 if current_user is None:
-                    raise HTTPException(
+                    return JSONResponse(
                         status_code=status.HTTP_401_UNAUTHORIZED,
-                        detail="Authentication required"
+                        content={"detail": "Authentication required"},
+                        headers={"WWW-Authenticate": "Bearer"}
                     )
 
                 # Check if user has required permissions
                 if not self._check_permissions(current_user, required_permissions, request):
-                    raise HTTPException(
+                    return JSONResponse(
                         status_code=status.HTTP_403_FORBIDDEN,
-                        detail="Insufficient permissions"
+                        content={"detail": "Insufficient permissions"}
                     )
 
             # Add user to request state for downstream handlers

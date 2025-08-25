@@ -21,7 +21,7 @@ from api.dependencies.auth import get_current_active_user
 from api.middleware.rate_limiter import RateLimited
 
 
-router = APIRouter(prefix="/policies", tags=["AI Policy Generation"])
+router = APIRouter(tags=["AI Policy Generation"])
 
 
 @router.post(

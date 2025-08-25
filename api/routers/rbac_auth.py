@@ -27,7 +27,7 @@ from database.user import User
 from services.rbac_service import RBACService
 
 
-router = APIRouter(prefix="/api/v1/auth", tags=["RBAC Authentication"])
+router = APIRouter(tags=["RBAC Authentication"])
 
 
 class LoginRequest(BaseModel):

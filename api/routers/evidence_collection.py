@@ -29,7 +29,7 @@ from services.business_service import get_business_profile
 
 logger = get_logger(__name__)
 
-router = APIRouter(prefix="/evidence-collection", tags=["evidence-collection"])
+router = APIRouter()
 
 
 @router.post("/plans", response_model=CollectionPlanResponse)

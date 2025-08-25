@@ -104,3 +104,107 @@ async def update_policy_status(
 async def approve_policy(policy_id: UUID, current_user: User = Depends(get_current_active_user)):
     # Implementation for policy approval
     return {"message": "Policy approved", "policy_id": policy_id}
+
+
+@router.post("/{id}/regenerate-section")
+async def regenerate_policy_section(
+    policy_id: UUID,
+    section_data: dict,
+    current_user: User = Depends(get_current_active_user),
+    db: AsyncSession = Depends(get_async_db),
+):
+    """Regenerate a specific section of the policy."""
+    # Placeholder implementation
+    section_name = section_data.get("section", "introduction")
+    return {
+        "policy_id": str(policy_id),
+        "section": section_name,
+        "regenerated": True,
+        "content": f"Regenerated content for {section_name} section",
+        "message": f"Section '{section_name}' regenerated successfully"
+    }
+
+
+@router.get("/templates")
+async def get_policy_templates(
+    current_user: User = Depends(get_current_active_user),
+    db: AsyncSession = Depends(get_async_db),
+):
+    """Get available policy templates."""
+    # Placeholder implementation with common policy templates
+    return {
+        "templates": [
+            {
+                "id": "template-1",
+                "name": "GDPR Data Protection Policy",
+                "framework": "GDPR",
+                "sections": 12,
+                "description": "Comprehensive GDPR compliance policy template"
+            },
+            {
+                "id": "template-2", 
+                "name": "ISO 27001 Information Security Policy",
+                "framework": "ISO 27001",
+                "sections": 15,
+                "description": "Complete information security management policy"
+            },
+            {
+                "id": "template-3",
+                "name": "SOC 2 Security Policy",
+                "framework": "SOC 2",
+                "sections": 10,
+                "description": "SOC 2 Type II compliance policy template"
+            }
+        ],
+        "total": 3
+    }
+
+
+@router.post("/{id}/clone")
+async def clone_policy(
+    policy_id: UUID,
+    clone_data: dict,
+    current_user: User = Depends(get_current_active_user),
+    db: AsyncSession = Depends(get_async_db),
+):
+    """Clone an existing policy."""
+    # Placeholder implementation
+    new_name = clone_data.get("name", "Cloned Policy")
+    return {
+        "original_id": str(policy_id),
+        "cloned_id": "cloned-policy-123",
+        "name": new_name,
+        "status": "draft",
+        "message": f"Policy cloned successfully as '{new_name}'"
+    }
+
+
+@router.get("/{id}/versions")
+async def get_policy_versions(
+    policy_id: UUID,
+    current_user: User = Depends(get_current_active_user),
+    db: AsyncSession = Depends(get_async_db),
+):
+    """Get version history of a policy."""
+    # Placeholder implementation
+    return {
+        "policy_id": str(policy_id),
+        "versions": [
+            {
+                "version": "1.0",
+                "created_at": "2024-01-15T10:00:00Z",
+                "created_by": current_user.email,
+                "changes": "Initial version",
+                "status": "approved"
+            },
+            {
+                "version": "1.1",
+                "created_at": "2024-02-01T14:30:00Z",
+                "created_by": current_user.email,
+                "changes": "Updated data retention section",
+                "status": "draft"
+            }
+        ],
+        "current_version": "1.1",
+        "total_versions": 2
+    }

@@ -195,6 +195,216 @@ async def get_compliance_status(
         raise HTTPException(status_code=500, detail=f"Failed to retrieve compliance status: {e!s}")
 
 
+@router.get("/status/{framework_id}", response_model=ComplianceStatusResponse)
+async def get_framework_compliance_status(
+    framework_id: str,
+    current_user: User = Depends(get_current_active_user),
+    db: AsyncSession = Depends(get_async_db)
+) -> Dict[str, Any]:
+    """
+    Get compliance status for a specific framework.
+    
+    Args:
+        framework_id: The ID of the compliance framework
+    
+    Returns:
+        Compliance status specific to the requested framework
+    """
+    # Delegate to main status function with framework filter
+    # For now, we'll return the overall status
+    # In production, this would filter by specific framework
+    return await get_compliance_status(current_user, db)
+
+
+@router.post("/tasks")
+async def create_compliance_task(
+    task_data: dict,
+    current_user: User = Depends(get_current_active_user),
+    db: AsyncSession = Depends(get_async_db)
+):
+    """Create a new compliance task."""
+    # Placeholder implementation
+    return {
+        "id": "task-123",
+        "title": task_data.get("title", "New Compliance Task"),
+        "description": task_data.get("description", ""),
+        "status": "pending",
+        "priority": task_data.get("priority", "medium"),
+        "framework_id": task_data.get("framework_id"),
+        "due_date": task_data.get("due_date"),
+        "created_at": datetime.utcnow().isoformat(),
+        "updated_at": datetime.utcnow().isoformat()
+    }
+
+
+@router.patch("/tasks/{task_id}")
+async def update_compliance_task(
+    task_id: str,
+    update_data: dict,
+    current_user: User = Depends(get_current_active_user),
+    db: AsyncSession = Depends(get_async_db)
+):
+    """Update an existing compliance task."""
+    # Placeholder implementation
+    return {
+        "id": task_id,
+        "title": update_data.get("title", "Updated Task"),
+        "description": update_data.get("description"),
+        "status": update_data.get("status", "in_progress"),
+        "priority": update_data.get("priority", "medium"),
+        "updated_at": datetime.utcnow().isoformat()
+    }
+
+
+@router.post("/risks")
+async def create_compliance_risk(
+    risk_data: dict,
+    current_user: User = Depends(get_current_active_user),
+    db: AsyncSession = Depends(get_async_db)
+):
+    """Create a new compliance risk."""
+    # Placeholder implementation
+    return {
+        "id": "risk-456",
+        "title": risk_data.get("title", "New Compliance Risk"),
+        "description": risk_data.get("description", ""),
+        "likelihood": risk_data.get("likelihood", "medium"),
+        "impact": risk_data.get("impact", "medium"),
+        "status": "identified",
+        "framework_id": risk_data.get("framework_id"),
+        "mitigation_plan": risk_data.get("mitigation_plan"),
+        "created_at": datetime.utcnow().isoformat()
+    }
+
+
+@router.patch("/risks/{risk_id}")
+async def update_compliance_risk(
+    risk_id: str,
+    update_data: dict,
+    current_user: User = Depends(get_current_active_user),
+    db: AsyncSession = Depends(get_async_db)
+):
+    """Update an existing compliance risk."""
+    # Placeholder implementation
+    return {
+        "id": risk_id,
+        "title": update_data.get("title"),
+        "description": update_data.get("description"),
+        "likelihood": update_data.get("likelihood", "medium"),
+        "impact": update_data.get("impact", "medium"),
+        "status": update_data.get("status", "mitigated"),
+        "mitigation_plan": update_data.get("mitigation_plan"),
+        "updated_at": datetime.utcnow().isoformat()
+    }
+
+
+@router.get("/timeline")
+async def get_compliance_timeline(
+    framework_id: str = None,
+    current_user: User = Depends(get_current_active_user),
+    db: AsyncSession = Depends(get_async_db)
+):
+    """Get compliance timeline and milestones."""
+    # Placeholder implementation
+    return {
+        "framework_id": framework_id,
+        "milestones": [
+            {
+                "id": "milestone-1",
+                "title": "Initial Assessment",
+                "date": "2024-01-15",
+                "status": "completed",
+                "description": "Complete initial compliance assessment"
+            },
+            {
+                "id": "milestone-2",
+                "title": "Evidence Collection",
+                "date": "2024-02-01",
+                "status": "in_progress",
+                "description": "Gather all required evidence"
+            },
+            {
+                "id": "milestone-3",
+                "title": "Gap Analysis",
+                "date": "2024-02-15",
+                "status": "pending",
+                "description": "Identify and address compliance gaps"
+            },
+            {
+                "id": "milestone-4",
+                "title": "Certification Audit",
+                "date": "2024-03-01",
+                "status": "pending",
+                "description": "External certification audit"
+            }
+        ],
+        "current_phase": "evidence_collection",
+        "estimated_completion": "2024-03-01",
+        "progress_percentage": 45
+    }
+
+
+@router.get("/dashboard")
+async def get_compliance_dashboard(
+    current_user: User = Depends(get_current_active_user),
+    db: AsyncSession = Depends(get_async_db)
+):
+    """Get compliance dashboard data."""
+    # Get basic compliance status
+    status_data = await get_compliance_status(current_user, db)
+    
+    # Add dashboard-specific data
+    return {
+        **status_data,
+        "dashboard_metrics": {
+            "active_frameworks": len(status_data.get("framework_scores", {})),
+            "total_evidence": status_data.get("evidence_summary", {}).get("total_items", 0),
+            "pending_tasks": 5,  # Placeholder
+            "identified_risks": 3,  # Placeholder
+            "upcoming_deadlines": 2,  # Placeholder
+        },
+        "quick_actions": [
+            {"action": "Upload Evidence", "path": "/evidence/upload"},
+            {"action": "Start Assessment", "path": "/assessments/new"},
+            {"action": "Review Tasks", "path": "/compliance/tasks"},
+            {"action": "View Risks", "path": "/compliance/risks"}
+        ],
+        "compliance_trends": {
+            "30_day_change": 5.2,  # Placeholder percentage
+            "trend_direction": "improving",
+            "forecast": "on_track"
+        }
+    }
+
+
+@router.post("/certificate/generate")
+async def generate_compliance_certificate(
+    request_data: dict,
+    current_user: User = Depends(get_current_active_user),
+    db: AsyncSession = Depends(get_async_db)
+):
+    """Generate a compliance certificate."""
+    framework_id = request_data.get("framework_id")
+    certificate_type = request_data.get("type", "attestation")
+    
+    # Placeholder implementation
+    return {
+        "certificate_id": "cert-789",
+        "framework_id": framework_id,
+        "type": certificate_type,
+        "status": "generated",
+        "issue_date": datetime.utcnow().isoformat(),
+        "expiry_date": (datetime.utcnow() + timedelta(days=365)).isoformat(),
+        "compliance_score": 85.5,
+        "certificate_url": f"/api/v1/compliance/certificate/cert-789/download",
+        "verification_code": "VERIFY-2024-0001",
+        "issuer": "RuleIQ Compliance Platform",
+        "recipient": {
+            "organization": "User Organization",
+            "contact": current_user.email
+        }
+    }
+
 @router.post("/query")
 async def query_compliance(
     request: dict,

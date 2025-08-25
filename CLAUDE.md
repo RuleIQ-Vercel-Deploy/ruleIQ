@@ -1,213 +1,201 @@
 # CLAUDE.md - Claude Code Optimization Guide
 
-**Purpose**: Maximize Claude Code's performance when working with the ruleIQ codebase.
+**Purpose**: Maximize Claude Code's performance with the ruleIQ codebase using Serena and Archon MCP integration.
 
 **Project Status**: 98% Production-Ready | 671+ Tests Passing | <200ms API Response | 8.5/10 Security Score
 
-## 🚀 AUTOMATIC INITIALIZATION
+## 🎯 CRITICAL: ARCHON-FIRST WORKFLOW
 
-### Serena MCP Auto-Check (Session Start)
+### The Golden Rule
+**ALWAYS use Archon MCP for task management BEFORE any other action:**
+
+1. **Check Archon health**: `mcp__archon__health_check`
+2. **Get current task**: `mcp__archon__get_task` or `mcp__archon__list_tasks`
+3. **Research with RAG**: `mcp__archon__perform_rag_query` + `mcp__archon__search_code_examples`
+4. **Update task status**: Mark as "doing" → "review" → "done"
+5. **Only then**: Use Serena MCP for code implementation
+
+**VIOLATION CHECK**: If you used TodoWrite or started coding without Archon task check, STOP and restart with Archon.
+
+## 🚀 AUTOMATIC INITIALIZATION SEQUENCE
+
+### 1. Archon MCP Health Check (Primary)
 ```bash
-# Status verification (auto-run at session start)
-serena /check_onboarding_performed
-serena /mcp-serena-initial-instruction
+# Archon must be checked FIRST at session start
+mcp__archon__health_check
+mcp__archon__get_available_sources
+
+# Expected: {"status": "healthy", "services": {...}}
+```
+
+### 2. Serena MCP Activation (Secondary)
+```bash
+# Serena activates AFTER Archon verification
+serena activate_project ruleIQ
+serena check_onboarding_performed
 
 # Expected indicators:
 # ✅ Active project: ruleIQ
-# ✅ Active context: desktop-app
 # ✅ Active modes: interactive, editing
 # ✅ Tool stats collection: enabled
-# ✅ Onboarding: completed
 ```
 
-### 🔧 Serena MCP Reactivation
-**Check before every user command:**
-```bash
-serena activate_project ruleIQ
-serena check_onboarding_performed
+## 🧠 INTEGRATED MCP WORKFLOW
+
+### Archon MCP (Knowledge & Tasks)
+**Primary Functions:**
+- Task management: `manage_task`, `list_tasks`, `get_task`
+- Knowledge queries: `perform_rag_query`, `search_code_examples`
+- Project tracking: `manage_project`, `get_project_features`
+- Documentation: `manage_document`, `create_document`
+
+**Usage Pattern:**
+```python
+# 1. Always start with task check
+archon:manage_task(action="list", filter_by="status", filter_value="todo")
+
+# 2. Research before implementation
+archon:perform_rag_query(query="FastAPI middleware patterns", match_count=5)
+archon:search_code_examples(query="JWT authentication implementation", match_count=3)
+
+# 3. Update task progress
+archon:manage_task(action="update", task_id="...", update_fields={"status": "doing"})
 ```
+
+### Serena MCP (Code Intelligence)
+**Primary Functions:**
+- Symbol navigation: `find_symbol`, `get_symbols_overview`
+- Code editing: `replace_symbol_body`, `replace_regex`
+- Pattern search: `search_for_pattern`, `find_referencing_symbols`
+- Memory management: `read_memory`, `write_memory`
+
+**Key Memories:**
+- `ALWAYS_READ_FIRST` - Critical coding guidelines
+- `FRONTEND_CONDENSED_2025` - Frontend status & tasks
+- `BACKEND_CONDENSED_2025` - Backend reference
+- `MEMORY_CATEGORIES_2025` - Organization guide
 
 ## 🏗️ TECH STACK & ARCHITECTURE
 
-### Stack Overview
-- **Backend**: FastAPI (Python 3.11+) + Celery + Redis
+### Core Stack
+- **Backend**: FastAPI (Python 3.11+), Celery, Redis
 - **Frontend**: Next.js 15.2.4 (TypeScript) with Turbopack
-- **Database**: Neon PostgreSQL (Cloud) + Redis (Caching)
-- **AI**: Google Gemini + OpenAI with Circuit Breaker Pattern
-- **Auth**: JWT + AES-GCM + RBAC Middleware
+- **Database**: Neon PostgreSQL + Redis
+- **AI**: Google Gemini + OpenAI (Circuit Breaker Pattern)
+- **Auth**: JWT + AES-GCM + RBAC
 - **Hosting**: Digital Ocean + Cloudflare
 
-### Key Agents (4 Main + Specialized)
-1. **IQ Agent**: Main AI compliance assistant
-2. **RAG Agent**: Document analysis & retrieval
+### AI Agent Architecture
+1. **IQ Agent**: Main compliance assistant
+2. **RAG Agent**: Document analysis (Internal - NOT Archon's)
 3. **Assessment Agent**: Compliance questionnaires
-4. **Integration Agent**: External service connections
-5. **Specialized**: GDPR, Companies House, Employment Law, etc.
+4. **Integration Agent**: External services
+5. **Specialized**: GDPR, Companies House, Employment Law
 
-## 🧠 SERENA MCP INTEGRATION
+## ⚡ ESSENTIAL COMMANDS
 
-### Quick Reference
+### Backend Development
 ```bash
-# Already activated for this project!
-# Access memories with: mcp__serena__read_memory
-# Key memories:
-- ALWAYS_READ_FIRST          # Critical coding guidelines
-- FRONTEND_CONDENSED_2025    # Frontend tasks & status
-- BACKEND_CONDENSED_2025     # Backend reference
-- MEMORY_CATEGORIES_2025     # Memory organization
+# Environment activation (ALWAYS FIRST)
+source /home/omar/Documents/ruleIQ/.venv/bin/activate
+
+# Development with Doppler (Recommended)
+doppler run -- python main.py        # All secrets auto-injected
+
+# Testing & Quality
+make test-fast                       # Quick tests (2-5 min)
+ruff check . && ruff format .        # Lint & format
+
+# Database
+alembic upgrade head                 # Apply migrations
 ```
 
-### Serena Tools You'll Use Most
-- `mcp__serena__find_symbol` - Find classes, functions, methods
-- `mcp__serena__replace_symbol_body` - Edit code precisely
-- `mcp__serena__search_for_pattern` - Search across codebase
-- `mcp__serena__get_symbols_overview` - Understand file structure
+### Frontend Development
+```bash
+cd frontend
 
-### Memory Best Practices
-1. Read `ALWAYS_READ_FIRST` at session start
-2. Check condensed memories for area-specific work
-3. Don't read same memory multiple times
-4. Write new memories for significant discoveries
+# Turbopack Development
+pnpm dev --turbo                     # Fast dev server (localhost:3000)
 
-## ⚡ IMMEDIATE ACTIONS FOR ANY TASK
+# Quality Checks
+pnpm test                           # Run tests
+pnpm lint && pnpm typecheck         # Lint & type check
 
-1. **Activate Environment**: `source /home/omar/Documents/ruleIQ/.venv/bin/activate`
-2. **Check Serena MCP**: Already activated for enhanced code intelligence
-3. **Read Relevant Memories**: Use `mcp__serena__read_memory` for context:
-   - Frontend: `FRONTEND_CONDENSED_2025`
-   - Backend: `BACKEND_CONDENSED_2025`
-   - Critical: `ALWAYS_READ_FIRST`
+# Theme Testing
+NEXT_PUBLIC_USE_NEW_THEME=true pnpm dev --turbo
+```
 
 ## 🎯 TASK COMPLETION CHECKLIST
 
-Before marking any task complete, ensure:
+Before marking ANY task complete:
+- [ ] Archon task updated to "review" status
 - [ ] Code compiles without errors
-- [ ] Tests pass: `make test-fast` (backend) or `pnpm test` (frontend)
-- [ ] Linting clean: `ruff check .` (backend) or `pnpm lint` (frontend)
-- [ ] Type checking: `ruff check .` (backend) or `pnpm typecheck` (frontend)
+- [ ] Tests pass: `make test-fast` or `pnpm test`
+- [ ] Linting clean: `ruff check .` or `pnpm lint`
+- [ ] Type checking: `ruff check .` or `pnpm typecheck`
 - [ ] No hardcoded values or secrets
 - [ ] Field mappers used for truncated DB columns
 - [ ] Rate limiting considered for new endpoints
 
-## 🛠️ ESSENTIAL COMMANDS
+## 🔐 CRITICAL PATTERNS
 
-### Backend Commands (Python/FastAPI)
-```bash
-# ALWAYS START WITH:
-source /home/omar/Documents/ruleIQ/.venv/bin/activate
+### Security Requirements
+- Input validation on ALL endpoints
+- Rate limits: General 100/min, AI 20/min, Auth 5/min
+- Field mappers for truncated DB columns
+- RBAC permissions checked
 
-# Development (Choose one)
-# 🔐 WITH DOPPLER (Recommended - all 48 secrets auto-injected):
-doppler run -- python main.py    # Start server with all secrets from Doppler
-
-# 🏠 LOCAL DEV (Fallback):
-python main.py                    # Start server (http://localhost:8000)
-make test-fast                    # Quick tests (2-5 min) - RUN BEFORE COMMITS
-ruff check . && ruff format .     # Lint & format - MUST BE CLEAN
-
-# Database
-alembic upgrade head              # Apply migrations
-python database/init_db.py        # Initialize database
-
-# Testing by type
-pytest -m unit                    # Unit tests only
-pytest -m api                     # API tests only
-pytest -m security                # Security tests only
-```
-
-### Frontend Commands (Next.js/TypeScript)
-```bash
-cd frontend
-
-# Development (Now with Turbopack!)
-pnpm dev --turbo                  # Start dev server with Turbopack (http://localhost:3000)
-pnpm test                         # Run tests - RUN BEFORE COMMITS
-pnpm lint && pnpm typecheck       # Lint & type check - MUST BE CLEAN
-
-# Build & Deploy
-pnpm build                        # Production build
-pnpm test:e2e                     # E2E tests with Playwright
-
-# Theme Testing (Active Migration)
-NEXT_PUBLIC_USE_NEW_THEME=true pnpm dev --turbo  # Test teal theme
-```
-
-## 🏗️ ARCHITECTURE QUICK REFERENCE
-
-### Critical Patterns to Follow
-- **AI Services**: Circuit breaker with fallback (see `services/ai/`)
-- **Auth**: JWT + AES-GCM encryption + RBAC middleware
-- **State**: Zustand (client) + TanStack Query (server) - DON'T MIX
+### Architecture Patterns
+- **AI Services**: Circuit breaker with fallback
+- **State Management**: Zustand (client) + TanStack Query (server)
 - **Database**: Field mappers for truncated columns
-- **Rate Limits**: General 100/min, AI 20/min, Auth 5/min
+- **Auth**: JWT + AES-GCM + RBAC middleware
 
-### Key Files & Locations
+### Key File Locations
 ```
 Backend:
 - API Routes: api/routers/*.py
 - Business Logic: services/*.py
-- AI Services: services/ai/*.py (circuit breaker, fallback, optimizer)
+- AI Services: services/ai/*.py
 - RBAC: api/middleware/rbac_*.py
-- Models: database/models.py
 
 Frontend:
 - Pages: frontend/app/(dashboard)/
-- Components: frontend/components/ui/ (shadcn/ui based)
+- Components: frontend/components/ui/
 - API Clients: frontend/lib/api/
-- State: frontend/lib/stores/ (Zustand)
-- Hooks: frontend/lib/tanstack-query/hooks/
+- State: frontend/lib/stores/
 ```
 
-## 📋 COMMON WORKFLOWS
+## 🔄 DEVELOPMENT WORKFLOW
 
-### Adding New API Endpoint
+### Standard Task Cycle
+1. **Check Archon tasks**: `mcp__archon__list_tasks`
+2. **Research with Archon RAG**: Query patterns and examples
+3. **Implement with Serena**: Use symbol tools for precise edits
+4. **Test thoroughly**: Run tests before task completion
+5. **Update Archon status**: Mark task as "review" for testing
+6. **Document in Archon**: Create documents for significant changes
+
+### Environment Setup
 ```bash
-1. Create router: api/routers/new_feature.py
-2. Add service: services/new_feature_service.py
-3. Define schemas: api/schemas/new_feature.py
-4. Add tests: tests/test_new_feature.py
-5. Add rate limiting in api/middleware/rate_limiter.py
-6. RUN: make test-fast
-```
-
-### Adding New Frontend Page
-```bash
-1. Create page: frontend/app/(dashboard)/new-page/page.tsx
-2. Add API client: frontend/lib/api/new-feature.ts
-3. Add store (if needed): frontend/lib/stores/new-feature-store.ts
-4. Add hooks: frontend/lib/tanstack-query/hooks/use-new-feature.ts
-5. Add tests: frontend/tests/new-feature.test.tsx
-6. RUN: cd frontend && pnpm test
-```
-
-### Working with AI Services
-- ALWAYS use circuit breaker pattern (see `services/ai/circuit_breaker.py`)
-- ALWAYS provide fallback responses
-- ALWAYS implement caching for similar requests
-- Test with: `pytest -m ai`
-
-## 🔐 SECURITY & ENVIRONMENT
-
-### Environment Variables
-```bash
-# Generate JWT secret
+# Generate JWT secret if needed
 python generate_jwt_secret.py
 
-# Required vars (see .env.template)
-DATABASE_URL=postgresql://...@ep-*-pooler.eastus2.azure.neon.tech/neondb?sslmode=require
+# Required environment variables
+DATABASE_URL=postgresql://...
 REDIS_URL=redis://...
 GOOGLE_API_KEY=...
 JWT_SECRET_KEY=...
 ALLOWED_ORIGINS=http://localhost:3000
 ```
 
-### Security Checklist
-- [ ] Input validation on ALL endpoints
-- [ ] Rate limiting configured
-- [ ] No secrets in code
-- [ ] Field mappers for DB columns
-- [ ] RBAC permissions checked
+## 📝 IMPORTANT REMINDERS
 
+1. **Archon First**: ALWAYS check Archon tasks before ANY coding
+2. **Research Before Code**: Use Archon's RAG for patterns and examples
+3. **Test Before Complete**: Never mark tasks done without passing tests
+4. **Memory Efficiency**: Don't re-read memories already in context
+5. **Field Mappers**: Always use for truncated database columns
 
 ---
 # Superdesign App:

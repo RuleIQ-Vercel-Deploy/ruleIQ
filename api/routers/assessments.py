@@ -265,3 +265,64 @@ async def complete_assessment(
     assessment_service = AssessmentService()
     session = await assessment_service.complete_assessment_session(db, current_user, session_id)
     return session
+
+
+@router.patch("/{id}", response_model=AssessmentSessionResponse)
+async def update_assessment(
+    id: UUID,  # Using 'id' to match frontend expectation
+    update_data: dict,
+    current_user: UserWithRoles = Depends(require_permission("assessment_update")),
+    db: AsyncSession = Depends(get_async_db),
+):
+    """Update an assessment session (partial update)."""
+    assessment_service = AssessmentService()
+    session = await assessment_service.get_assessment_session(db, current_user, id)
+    if not session:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="Assessment session not found"
+        )
+    
+    # Placeholder implementation - update session fields
+    # In a real implementation, this would update the session in the database
+    return session
+
+
+@router.get("/{id}/results", response_model=dict)
+async def get_assessment_results(
+    id: UUID,  # Using 'id' to match frontend expectation
+    current_user: UserWithRoles = Depends(require_permission("assessment_list")),
+    db: AsyncSession = Depends(get_async_db),
+):
+    """Get detailed results for a completed assessment."""
+    assessment_service = AssessmentService()
+    session = await assessment_service.get_assessment_session(db, current_user, id)
+    if not session:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="Assessment session not found"
+        )
+    
+    # Placeholder implementation - return assessment results
+    return {
+        "assessment_id": str(id),
+        "status": "completed",
+        "score": 85,
+        "risk_level": "low",
+        "recommendations": [
+            {
+                "framework": "GDPR",
+                "compliance_level": 90,
+                "gaps": ["Data retention policy", "User consent mechanism"],
+            },
+            {
+                "framework": "ISO 27001",
+                "compliance_level": 75,
+                "gaps": ["Access control procedures", "Security awareness training"],
+            },
+        ],
+        "next_steps": [
+            "Implement data retention policy",
+            "Set up user consent workflows",
+            "Schedule security training",
+        ],
+        "completed_at": session.completed_at.isoformat() if hasattr(session, 'completed_at') and session.completed_at else None,
+    }

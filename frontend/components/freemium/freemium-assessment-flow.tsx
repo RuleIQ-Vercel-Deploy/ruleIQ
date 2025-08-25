@@ -56,22 +56,28 @@ export function FreemiumAssessmentFlow({ token, className = "", onComplete }: Fr
     try {
       setIsLoading(true);
       setError(null);
+      
+      // Get session progress to see current state
       const progress = await freemiumService.getSessionProgress(token);
       setSessionProgress(progress);
       
-      // For now, we'll create a mock question
-      // In a real implementation, this would come from the API
-      const mockQuestion: AssessmentQuestion = {
-        question_id: `q_${Date.now()}`,
-        question_text: "How would you rate your organization's current compliance maturity?",
-        question_type: 'scale',
-      };
-      
-      setCurrentQuestion(mockQuestion);
+      // If there's a current question in the session, use it
+      if (progress.current_question_id) {
+        // The session response should contain the current question data
+        // For now, extract from the progress response
+        const question: AssessmentQuestion = {
+          question_id: progress.current_question_id,
+          question_text: progress.question_text || "Please describe your compliance needs",
+          question_type: progress.question_type || 'text',
+          answer_options: progress.answer_options
+        };
+        setCurrentQuestion(question);
+      } else {
+        // Session exists but no current question - might be complete
+        setError('Assessment may be complete. Check results.');
+      }
     } catch (err) {
-      // TODO: Replace with proper logging
-
-      // // TODO: Replace with proper logging
+      console.error('Failed to load session data:', err);
       setError(err instanceof Error ? err.message : 'Failed to load session');
     } finally {
       setIsLoading(false);
@@ -105,27 +111,42 @@ export function FreemiumAssessmentFlow({ token, className = "", onComplete }: Fr
     // Submit answer
     setIsSubmitting(true);
     try {
-      await freemiumService.submitAnswer(token, {
+      const response = await freemiumService.submitAnswer(token, {
         question_id: currentQuestion.question_id,
-        answer: currentAnswer.toString(),
+        answer_text: currentAnswer.toString(),  // Changed from 'answer' to 'answer_text'
         answer_confidence: 'medium',
         time_spent_seconds: 30,
       });
       
-      // Check if assessment is complete
-      const updatedProgress = await freemiumService.getSessionProgress(token);
-      setSessionProgress(updatedProgress);
-      
-      if (updatedProgress.status === 'completed') {
-        onComplete?.();
+      // Check response for next question or completion
+      if (response.assessment_complete || response.redirect_to_results) {
+        // Assessment is complete, redirect to results
+        if (onComplete) {
+          onComplete();
+        } else {
+          // If no onComplete handler, redirect to results page
+          window.location.href = `/freemium/results?token=${token}`;
+        }
+      } else if (response.next_question_id) {
+        // There's a next question, update the current question
+        const nextQuestion: AssessmentQuestion = {
+          question_id: response.next_question_id,
+          question_text: response.next_question_text || "Please provide your answer",
+          question_type: response.next_question_type || 'text',
+          answer_options: response.next_answer_options
+        };
+        setCurrentQuestion(nextQuestion);
+        
+        // Update progress if provided
+        if (response.progress) {
+          setSessionProgress(response.progress);
+        }
       } else {
-        // Load next question (for now, mark as complete after first answer)
-        onComplete?.();
+        // No next question but not complete - might be an error state
+        setError('Unable to continue assessment. Please try again.');
       }
     } catch (error) {
-      // TODO: Replace with proper logging
-
-      // // TODO: Replace with proper logging
+      console.error('Failed to submit answer:', error);
       setAnswerError(error instanceof Error ? error.message : 'Failed to submit answer');
     } finally {
       setIsSubmitting(false);

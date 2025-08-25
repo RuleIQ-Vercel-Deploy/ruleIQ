@@ -13,7 +13,7 @@ from database.user import User
 from config.logging_config import get_logger
 
 logger = get_logger(__name__)
-router = APIRouter(prefix="/performance", tags=["performance-monitoring"])
+router = APIRouter(tags=["performance-monitoring"])
 
 class PerformanceOverview(BaseModel):
     """Performance overview response model."""

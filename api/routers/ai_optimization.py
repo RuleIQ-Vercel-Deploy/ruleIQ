@@ -5,6 +5,7 @@ Provides endpoints for AI model selection, health monitoring, and performance me
 """
 
 from typing import Any, Dict
+from datetime import datetime
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from pydantic import BaseModel
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -13,6 +14,7 @@ from api.dependencies.auth import get_current_active_user
 from database.user import User
 from api.dependencies.database import get_async_db
 from services.ai.assistant import ComplianceAssistant
+from config.cache import get_cache_manager
 from services.ai.circuit_breaker import AICircuitBreaker
 
 router = APIRouter()
@@ -205,3 +207,54 @@ async def reset_circuit_breaker(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Failed to reset circuit breaker",
         )
+
+@router.get("/cache/metrics")
+async def get_cache_metrics(
+    current_user: User = Depends(get_current_active_user),
+    cache_manager=Depends(get_cache_manager),
+):
+    """Get cache performance metrics (centralized from ai_assessments and chat)"""
+    try:
+        # Get cache statistics
+        stats = {
+            "cache_type": "redis" if hasattr(cache_manager, 'redis') else "in-memory",
+            "total_keys": 0,
+            "hit_rate": 0.0,
+            "miss_rate": 0.0,
+            "total_hits": 0,
+            "total_misses": 0,
+            "memory_usage": "N/A",
+        }
+        
+        # If using Redis cache, get detailed metrics
+        if hasattr(cache_manager, 'redis') and cache_manager.redis:
+            try:
+                info = cache_manager.redis.info('stats')
+                stats.update({
+                    "total_keys": cache_manager.redis.dbsize(),
+                    "total_hits": info.get('keyspace_hits', 0),
+                    "total_misses": info.get('keyspace_misses', 0),
+                })
+                
+                total_ops = stats["total_hits"] + stats["total_misses"]
+                if total_ops > 0:
+                    stats["hit_rate"] = stats["total_hits"] / total_ops
+                    stats["miss_rate"] = stats["total_misses"] / total_ops
+                    
+                memory_info = cache_manager.redis.info('memory')
+                stats["memory_usage"] = memory_info.get('used_memory_human', 'N/A')
+            except Exception:
+                pass
+        
+        return {
+            "status": "success",
+            "metrics": stats,
+            "timestamp": datetime.utcnow().isoformat()
+        }
+    except Exception as e:
+        return {
+            "status": "error",
+            "message": str(e),
+            "metrics": {},
+            "timestamp": datetime.utcnow().isoformat()
+        }

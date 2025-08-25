@@ -1,7 +1,7 @@
 from typing import Optional
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, File, HTTPException, UploadFile
+from fastapi import APIRouter, Depends, File, HTTPException, Path, UploadFile
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from api.dependencies.auth import get_current_active_user
@@ -206,7 +206,7 @@ async def validate_evidence_quality(
     }
 
 
-@router.get("/requirements", response_model=EvidenceRequirementsResponse)
+@router.get("/requirements/{framework_id}", response_model=EvidenceRequirementsResponse)
 async def get_evidence_requirements(
     framework_id: UUID,
     db: AsyncSession = Depends(get_async_db),
@@ -903,6 +903,21 @@ async def get_evidence_quality_analysis(
     except Exception as e:
         logger.error(f"Error analyzing evidence quality {id}: {e}", exc_info=True)
         raise HTTPException(status_code=500, detail="Quality analysis failed")
+
+# Alias for frontend compatibility
+@router.get("/{id}/quality", response_model=QualityAnalysisResponse)
+async def get_evidence_quality(
+    id: UUID = Path(..., alias="id"),  # Using 'id' as parameter name for consistency
+    db: AsyncSession = Depends(get_async_db),
+    current_user: User = Depends(get_current_active_user),
+):
+    """Get quality analysis for evidence item (alias for frontend compatibility)."""
+    # Delegate to the main quality analysis function
+    return await get_evidence_quality_analysis(
+        evidence_id=id,
+        db=db,
+        current_user=current_user
+    )
 
 
 @router.post("/{id}/duplicate-detection", response_model=DuplicateDetectionResponse)

@@ -19,7 +19,7 @@ from api.dependencies.auth import get_current_active_user
 from api.middleware.rate_limiter import RateLimited
 
 
-router = APIRouter(prefix="/api/v1/compliance", tags=["UK Compliance"])
+router = APIRouter(tags=["UK Compliance"])
 
 
 @router.get(

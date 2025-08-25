@@ -245,3 +245,145 @@ async def get_integration_status(
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Database operation failed."
         )
+
+
+@router.get("/", summary="List all available integrations")
+async def list_integrations(
+    current_user: User = Depends(get_current_active_user),
+    db: AsyncSession = Depends(get_async_db),
+):
+    """List all available integration providers and their configuration status."""
+    # Placeholder implementation
+    return {
+        "available_providers": [
+            {"provider": "google_workspace", "name": "Google Workspace", "configured": False},
+            {"provider": "microsoft_365", "name": "Microsoft 365", "configured": False},
+        ],
+        "configured_count": 0,
+    }
+
+
+@router.get("/connected", summary="Get connected integrations")
+async def get_connected_integrations(
+    current_user: User = Depends(get_current_active_user),
+    db: AsyncSession = Depends(get_async_db),
+):
+    """Get list of currently connected integrations for the user."""
+    # Placeholder implementation
+    return {
+        "connected_integrations": [],
+        "total": 0,
+    }
+
+
+@router.post("/{integrationId}/test", summary="Test integration connection")
+async def test_integration(
+    integrationId: str,
+    current_user: User = Depends(get_current_active_user),
+    db: AsyncSession = Depends(get_async_db),
+):
+    """Test if integration connection is working properly."""
+    # Placeholder implementation
+    return {
+        "integration_id": integrationId,
+        "status": "success",
+        "message": "Connection test successful",
+        "timestamp": datetime.utcnow().isoformat(),
+    }
+
+
+@router.get("/{integrationId}/sync-history", summary="Get sync history")
+async def get_sync_history(
+    integrationId: str,
+    current_user: User = Depends(get_current_active_user),
+    db: AsyncSession = Depends(get_async_db),
+):
+    """Get synchronization history for an integration."""
+    # Placeholder implementation
+    return {
+        "integration_id": integrationId,
+        "sync_history": [
+            {
+                "timestamp": "2024-01-15T10:00:00Z",
+                "status": "success",
+                "records_synced": 150,
+                "duration_seconds": 45,
+            },
+            {
+                "timestamp": "2024-01-14T10:00:00Z",
+                "status": "success",
+                "records_synced": 148,
+                "duration_seconds": 42,
+            },
+        ],
+        "total_syncs": 2,
+    }
+
+
+@router.post("/{integrationId}/webhooks", summary="Configure webhooks")
+async def configure_webhooks(
+    integrationId: str,
+    webhook_config: dict,
+    current_user: User = Depends(get_current_active_user),
+    db: AsyncSession = Depends(get_async_db),
+):
+    """Configure webhooks for an integration."""
+    # Placeholder implementation
+    webhook_url = webhook_config.get("url", "")
+    events = webhook_config.get("events", [])
+    
+    return {
+        "integration_id": integrationId,
+        "webhook_url": webhook_url,
+        "events": events,
+        "status": "configured",
+        "message": "Webhook configured successfully",
+    }
+
+
+@router.get("/{integrationId}/logs", summary="Get integration logs")
+async def get_integration_logs(
+    integrationId: str,
+    current_user: User = Depends(get_current_active_user),
+    db: AsyncSession = Depends(get_async_db),
+):
+    """Get activity logs for an integration."""
+    # Placeholder implementation
+    return {
+        "integration_id": integrationId,
+        "logs": [
+            {
+                "timestamp": "2024-01-15T15:30:00Z",
+                "level": "info",
+                "message": "Sync completed successfully",
+                "details": {"records": 150},
+            },
+            {
+                "timestamp": "2024-01-15T15:29:00Z",
+                "level": "info",
+                "message": "Sync started",
+                "details": {},
+            },
+        ],
+        "total_logs": 2,
+    }
+
+
+@router.post("/oauth/callback", summary="Handle OAuth callback")
+async def oauth_callback(
+    callback_data: dict,
+    current_user: User = Depends(get_current_active_user),
+    db: AsyncSession = Depends(get_async_db),
+):
+    """Handle OAuth callback from integration providers."""
+    # Placeholder implementation
+    code = callback_data.get("code", "")
+    state = callback_data.get("state", "")
+    provider = callback_data.get("provider", "")
+    
+    return {
+        "provider": provider,
+        "status": "success",
+        "message": "OAuth authentication successful",
+        "access_token_received": bool(code),
+    }

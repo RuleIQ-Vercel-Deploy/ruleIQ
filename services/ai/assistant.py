@@ -3598,7 +3598,11 @@ Please try your question again or contact support for immediate assistance."""
             else:
                 # Fallback to regular generation
                 logger.debug(f"No cached content available for {task_type} task")
+                logger.info(f"Generating response with model: {model.model_name if hasattr(model, 'model_name') else 'unknown'}")
+                logger.info(f"System prompt: {system_prompt[:100]}...")
+                logger.info(f"User prompt: {user_prompt[:200]}...")
                 response = model.generate_content(conversation_parts)
+                logger.info(f"Got response object: {response is not None}, type: {type(response)}")
 
             # Calculate response time
             response_time_ms = int((datetime.now() - start_time).total_seconds() * 1000)
@@ -3619,7 +3623,9 @@ Please try your question again or contact support for immediate assistance."""
             self.circuit_breaker.record_success(model_name)
 
             # Extract and return response text
-            return self._extract_response_text(response)
+            response_text = self._extract_response_text(response)
+            logger.debug(f"Response text for {task_type}: {response_text[:200] if response_text else 'EMPTY'}")
+            return response_text
 
         except Exception as e:
             # Record circuit breaker failure
@@ -3632,6 +3638,10 @@ Please try your question again or contact support for immediate assistance."""
                 pass
 
             logger.error(f"Error generating AI response with cache: {e}")
+            logger.error(f"Exception type: {type(e).__name__}")
+            logger.error(f"Exception details: {str(e)}")
+            import traceback
+            logger.error(f"Traceback: {traceback.format_exc()}")
             # Fallback to regular generation without cache
             return await self._generate_ai_response(system_prompt, user_prompt)
 
@@ -3676,13 +3686,92 @@ Please try your question again or contact support for immediate assistance."""
 
     def _extract_response_text(self, response) -> str:
         """Safely extract text from Google AI response, handling safety filtering and other issues."""
+        logger.info(f"=== DEBUG: Extracting response text ===")
+        logger.info(f"Raw response type: {type(response)}")
+        logger.info(f"Response has text attr: {hasattr(response, 'text')}")
+        logger.info(f"Response object: {response}")
+        
         try:
             # First try the quick accessor
-            if hasattr(response, "text") and response.text:
-                return response.text
+            if hasattr(response, "text"):
+                text_value = response.text
+                logger.info(f"Response.text value: {repr(text_value)}")
+                logger.info(f"Text length: {len(text_value) if text_value else 0}")
+                if text_value and text_value.strip():
+                    logger.info(f"SUCCESS: Found valid text content")
+                    return text_value.strip()
+                else:
+                    logger.warning(f"PROBLEM: response.text is empty or None")
         except Exception as e:
             # If quick accessor fails, handle manually
-            logger.debug(f"Quick accessor failed: {e}")
+            logger.error(f"Quick accessor failed: {e}, type: {type(e).__name__}")
+
+        # Detailed inspection of response structure
+        logger.info(f"=== DEBUG: Detailed response inspection ===")
+        try:
+            if hasattr(response, '__dict__'):
+                logger.info(f"Response attributes: {list(response.__dict__.keys())}")
+            
+            # Check candidates structure
+            if hasattr(response, "candidates"):
+                logger.info(f"Has candidates: {len(response.candidates) if response.candidates else 0}")
+                if response.candidates:
+                    candidate = response.candidates[0]
+                    logger.info(f"Candidate type: {type(candidate)}")
+                    logger.info(f"Candidate attributes: {list(candidate.__dict__.keys()) if hasattr(candidate, '__dict__') else 'No __dict__'}")
+                    
+                    # Check finish reason
+                    if hasattr(candidate, "finish_reason"):
+                        logger.info(f"Finish reason: {candidate.finish_reason}")
+                        logger.info(f"Finish reason type: {type(candidate.finish_reason)}")
+                        
+                        # Log detailed finish reason analysis
+                        if candidate.finish_reason == 1:  # STOP
+                            logger.info("Finish reason: STOP (normal completion)")
+                        elif candidate.finish_reason == 2:  # MAX_TOKENS
+                            logger.warning("Finish reason: MAX_TOKENS (response truncated)")
+                        elif candidate.finish_reason == 3:  # SAFETY
+                            logger.warning("Finish reason: SAFETY (content filtered)")
+                        elif candidate.finish_reason == 4:  # RECITATION
+                            logger.warning("Finish reason: RECITATION (content blocked)")
+                        elif candidate.finish_reason == 5:  # OTHER
+                            logger.warning("Finish reason: OTHER (unknown issue)")
+                        else:
+                            logger.info(f"Finish reason: {candidate.finish_reason} (unknown code)")
+                    
+                    # Check content structure
+                    if hasattr(candidate, "content"):
+                        logger.info(f"Has content: {candidate.content is not None}")
+                        if candidate.content:
+                            logger.info(f"Content type: {type(candidate.content)}")
+                            if hasattr(candidate.content, '__dict__'):
+                                logger.info(f"Content attributes: {list(candidate.content.__dict__.keys())}")
+                            
+                            # Check parts
+                            if hasattr(candidate.content, "parts"):
+                                logger.info(f"Has parts: {len(candidate.content.parts) if candidate.content.parts else 0}")
+                                if candidate.content.parts:
+                                    for i, part in enumerate(candidate.content.parts):
+                                        logger.info(f"Part {i} type: {type(part)}")
+                                        if hasattr(part, 'text'):
+                                            logger.info(f"Part {i} text: {repr(part.text)}")
+                                        if hasattr(part, '__dict__'):
+                                            logger.info(f"Part {i} attributes: {list(part.__dict__.keys())}")
+            
+            # Check prompt feedback for safety issues
+            if hasattr(response, "prompt_feedback"):
+                logger.info(f"Has prompt_feedback: {response.prompt_feedback is not None}")
+                if response.prompt_feedback:
+                    logger.info(f"Prompt feedback type: {type(response.prompt_feedback)}")
+                    if hasattr(response.prompt_feedback, '__dict__'):
+                        logger.info(f"Prompt feedback attributes: {list(response.prompt_feedback.__dict__.keys())}")
+                    if hasattr(response.prompt_feedback, "block_reason"):
+                        logger.info(f"Block reason: {response.prompt_feedback.block_reason}")
+                    if hasattr(response.prompt_feedback, "safety_ratings"):
+                        logger.info(f"Safety ratings: {response.prompt_feedback.safety_ratings}")
+
+        except Exception as inspect_error:
+            logger.error(f"Error during response inspection: {inspect_error}")
 
         try:
             # Handle response with candidates
@@ -3691,28 +3780,29 @@ Please try your question again or contact support for immediate assistance."""
 
                 # Check finish reason with enhanced Google API bug handling
                 if hasattr(candidate, "finish_reason"):
-                    if candidate.finish_reason == 2:  # SAFETY or MAX_TOKENS
+                    if candidate.finish_reason in [2, 3, 4, 5]:  # SAFETY, MAX_TOKENS, RECITATION, OTHER
+                        logger.warning(f"Response blocked with finish_reason: {candidate.finish_reason}")
+                        
                         # Check if this is actually a recitation issue (Google bug #331677495)
                         if hasattr(response, "prompt_feedback") and response.prompt_feedback:
                             if hasattr(response.prompt_feedback, "block_reason"):
                                 if response.prompt_feedback.block_reason == "RECITATION":
-                                    logger.warning(
-                                        "AI response blocked due to Google API recitation bug - providing fallback"
-                                    )
+                                    logger.warning("AI response blocked due to Google API recitation bug - providing fallback")
                                     return "Content temporarily unavailable due to system limitations. Please rephrase your question and I'll provide original compliance insights."
 
-                        logger.warning(
-                            "AI response blocked by safety filters or token limit - providing compliance-focused fallback"
-                        )
-                        return "I understand you're asking about compliance matters. Let me provide general guidance: For regulatory compliance, it's important to follow established frameworks, maintain proper documentation, and ensure regular audits. Could you please rephrase your question to be more specific about the compliance area you need help with?"
-                    elif candidate.finish_reason == 3:  # RECITATION
-                        logger.warning(
-                            "AI response blocked due to recitation concerns - known Google API issue"
-                        )
-                        return "I can help with compliance guidance using my own analysis. Please rephrase your question and I'll provide original insights based on compliance best practices."
-                    elif candidate.finish_reason == 4:  # OTHER
-                        logger.warning("AI response blocked for other reasons")
-                        return "I'm here to help with compliance and regulatory matters. Please try rephrasing your question to focus on specific compliance requirements or frameworks."
+                        # Return appropriate fallback based on finish reason
+                        if candidate.finish_reason == 2:  # MAX_TOKENS
+                            logger.warning("AI response truncated due to token limit")
+                            return "Response truncated. Please try a more specific question for complete guidance on compliance requirements."
+                        elif candidate.finish_reason == 3:  # SAFETY
+                            logger.warning("AI response blocked by safety filters")
+                            return "I understand you're asking about compliance matters. Let me provide general guidance: For regulatory compliance, it's important to follow established frameworks, maintain proper documentation, and ensure regular audits. Could you please rephrase your question to be more specific about the compliance area you need help with?"
+                        elif candidate.finish_reason == 4:  # RECITATION
+                            logger.warning("AI response blocked due to recitation concerns")
+                            return "I can help with compliance guidance using my own analysis. Please rephrase your question and I'll provide original insights based on compliance best practices."
+                        else:  # OTHER or unknown
+                            logger.warning("AI response blocked for other reasons")
+                            return "I'm here to help with compliance and regulatory matters. Please try rephrasing your question to focus on specific compliance requirements or frameworks."
 
                 # Try to extract text from content parts
                 if hasattr(candidate, "content") and candidate.content:
@@ -3720,17 +3810,22 @@ Please try your question again or contact support for immediate assistance."""
                         text_parts = []
                         for part in candidate.content.parts:
                             if hasattr(part, "text") and part.text:
-                                text_parts.append(part.text)
+                                text_parts.append(part.text.strip())
                         if text_parts:
-                            return "".join(text_parts)
+                            result_text = "\n".join(text_parts).strip()
+                            logger.info(f"SUCCESS: Extracted text from parts: {len(result_text)} chars")
+                            return result_text
 
             # Fallback response
-            logger.warning("No valid response text found")
+            logger.error("CRITICAL: No valid response text found after all extraction attempts")
             return "I apologize, but I'm unable to provide a response at this time. Please try rephrasing your question."
 
         except Exception as e:
             logger.error(f"Error extracting response text: {e}")
+            import traceback
+            logger.error(f"Traceback: {traceback.format_exc()}")
             return "I apologize, but I'm unable to provide a response at this time. Please try again later."
+
 
     async def _stream_response(
         self,
@@ -4622,8 +4717,27 @@ Please try your question again or contact support for immediate assistance."""
             # Parse the response
             try:
                 import json
+                import re
+                
+                logger.debug(f"Raw response before parsing: {response[:500] if response else 'EMPTY'}")
+                
                 if isinstance(response, str):
-                    parsed_response = json.loads(response)
+                    # Clean up the response - remove markdown code blocks if present
+                    cleaned_response = response.strip()
+                    
+                    # Remove markdown code blocks
+                    if cleaned_response.startswith("```"):
+                        # Remove opening and closing code blocks
+                        cleaned_response = re.sub(r'^```(?:json)?\s*', '', cleaned_response)
+                        cleaned_response = re.sub(r'\s*```$', '', cleaned_response)
+                    
+                    # Extract JSON object from response
+                    json_match = re.search(r'\{[\s\S]*\}', cleaned_response)
+                    if json_match:
+                        cleaned_response = json_match.group()
+                    
+                    logger.debug(f"Cleaned response for parsing: {cleaned_response[:200] if cleaned_response else 'EMPTY'}")
+                    parsed_response = json.loads(cleaned_response)
                 else:
                     parsed_response = response
 
@@ -4922,43 +5036,454 @@ Please try your question again or contact support for immediate assistance."""
                 }
             ]
 
+    async def analyze_conversation_context(
+        self,
+        messages: List[Dict[str, str]],
+        business_profile: Dict[str, Any]
+    ) -> Dict[str, Any]:
+        """
+        Analyze conversation context to extract insights and identify compliance needs.
+        
+        Args:
+            messages: List of conversation messages
+            business_profile: Current business profile
+            
+        Returns:
+            Dictionary containing insights, compliance needs, expertise level, and follow-up needed flag
+        """
+        try:
+            # Prepare conversation context
+            conversation = "\n".join([
+                f"{getattr(msg, 'type', 'user')}: {getattr(msg, 'content', '')}"
+                for msg in messages if hasattr(msg, 'content') and msg.content
+            ])
+            
+            # Extract business context
+            business_type = business_profile.get("business_type", "general")
+            company_size = business_profile.get("company_size", "small")
+            industry = business_profile.get("industry", "general")
+            
+            # Create analysis prompt
+            system_prompt = """You are an AI compliance analyst. Analyze the conversation to extract:
+1. Key business insights and characteristics
+2. Compliance needs and requirements
+3. User's expertise level with compliance
+4. Whether follow-up questions are needed
+
+Return a JSON object with these fields:
+- insights: object with business characteristics
+- compliance_needs: array of identified compliance requirements
+- expertise_level: string (beginner/intermediate/expert)
+- follow_up_needed: boolean"""
+
+            user_prompt = f"""Business Context:
+- Type: {business_type}
+- Size: {company_size}
+- Industry: {industry}
+
+Conversation:
+{conversation[:2000]}  # Limit context to avoid token limits
+
+Analyze this conversation and provide insights in JSON format."""
+
+            # Use circuit breaker to check model availability
+            if not self.circuit_breaker.is_model_available("gemini-2.5-flash"):
+                # Return default analysis if AI is not available
+                return {
+                    "insights": {
+                        "business_type": business_type,
+                        "company_size": company_size,
+                        "industry": industry
+                    },
+                    "compliance_needs": ["GDPR", "data_protection"],
+                    "expertise_level": "intermediate",
+                    "follow_up_needed": True
+                }
+            
+            # Generate AI response
+            response = await self._generate_ai_response(system_prompt, user_prompt)
+            
+            # Parse JSON response
+            import json
+            import re
+            
+            # Extract JSON from response
+            json_match = re.search(r'\{[\s\S]*\}', response)
+            if json_match:
+                try:
+                    analysis = json.loads(json_match.group())
+                    
+                    # Validate and clean the response
+                    return {
+                        "insights": analysis.get("insights", {}),
+                        "compliance_needs": analysis.get("compliance_needs", ["GDPR", "data_protection"]),
+                        "expertise_level": analysis.get("expertise_level", "intermediate"),
+                        "follow_up_needed": analysis.get("follow_up_needed", True)
+                    }
+                except json.JSONDecodeError:
+                    logger.warning("Failed to parse AI analysis response as JSON")
+            
+            # Return default analysis if parsing fails
+            return {
+                "insights": {
+                    "business_type": business_type,
+                    "company_size": company_size,
+                    "industry": industry
+                },
+                "compliance_needs": ["GDPR", "data_protection"],
+                "expertise_level": "intermediate",
+                "follow_up_needed": True
+            }
+            
+        except Exception as e:
+            logger.error(f"Error analyzing conversation context: {str(e)}")
+            # Return safe default analysis
+            return {
+                "insights": business_profile,
+                "compliance_needs": ["GDPR", "data_protection", "ISO27001"],
+                "expertise_level": "intermediate",
+                "follow_up_needed": True
+            }
+
+    async def get_personalized_recommendations(
+        self,
+        assessment_context: Dict[str, Any],
+        analysis_results: Dict[str, Any],
+        compliance_score: float
+    ) -> Dict[str, Any]:
+        """
+        Generate personalized recommendations based on assessment results.
+        
+        Args:
+            assessment_context: Context from the assessment including business profile
+            analysis_results: Results from the assessment analysis
+            compliance_score: Overall compliance score
+            
+        Returns:
+            Dictionary containing personalized recommendations
+        """
+        try:
+            # Extract key information
+            business_profile = assessment_context.get("business_profile", {})
+            business_type = business_profile.get("business_type", "general")
+            company_size = business_profile.get("company_size", "small")
+            industry = business_profile.get("industry", "general")
+            
+            # Determine priority areas based on score
+            if compliance_score < 30:
+                priority_level = "critical"
+                focus_areas = ["immediate_compliance", "risk_mitigation", "basic_policies"]
+            elif compliance_score < 60:
+                priority_level = "high"
+                focus_areas = ["compliance_gaps", "policy_development", "training"]
+            elif compliance_score < 80:
+                priority_level = "medium"
+                focus_areas = ["optimization", "advanced_compliance", "continuous_improvement"]
+            else:
+                priority_level = "low"
+                focus_areas = ["maintenance", "best_practices", "innovation"]
+            
+            # Build prompt for AI
+            prompt = f"""
+            Generate personalized compliance recommendations for a {company_size} {business_type} business in the {industry} industry.
+            
+            Current compliance score: {compliance_score}%
+            Priority level: {priority_level}
+            Focus areas: {', '.join(focus_areas)}
+            
+            Analysis insights:
+            {json.dumps(analysis_results.get('insights', {}), indent=2)}
+            
+            Compliance needs identified:
+            {json.dumps(analysis_results.get('compliance_needs', []), indent=2)}
+            
+            Generate 3-5 specific, actionable recommendations that:
+            1. Address the most critical compliance gaps
+            2. Are appropriate for the business size and type
+            3. Include clear next steps
+            4. Consider resource constraints
+            5. Provide measurable outcomes
+            
+            Format as JSON:
+            {{
+                "recommendations": [
+                    {{
+                        "title": "Recommendation title",
+                        "description": "Detailed description",
+                        "priority": "critical/high/medium/low",
+                        "timeline": "immediate/30-days/60-days/90-days",
+                        "steps": ["step1", "step2"],
+                        "expected_outcome": "What will be achieved",
+                        "resources_needed": "What resources are required",
+                        "compliance_impact": "How this improves compliance"
+                    }}
+                ]
+            }}
+            """
+            
+            # Get AI response
+            response = await self._get_ai_response_with_fallback(prompt)
+            
+            # Parse response
+            import json
+            import re
+            
+            json_match = re.search(r'\{[\s\S]*\}', response)
+            if json_match:
+                try:
+                    recommendations_data = json.loads(json_match.group())
+                    
+                    # Validate and enhance recommendations
+                    recommendations = recommendations_data.get("recommendations", [])
+                    
+                    # Ensure we have at least some recommendations
+                    if not recommendations:
+                        raise ValueError("No recommendations generated")
+                    
+                    # Add additional context to each recommendation
+                    for i, rec in enumerate(recommendations):
+                        rec["id"] = f"rec_{i+1}"
+                        rec["business_context"] = {
+                            "business_type": business_type,
+                            "company_size": company_size,
+                            "industry": industry,
+                            "compliance_score": compliance_score
+                        }
+                    
+                    return {
+                        "recommendations": recommendations,
+                        "priority_level": priority_level,
+                        "focus_areas": focus_areas,
+                        "generated_at": datetime.utcnow().isoformat()
+                    }
+                    
+                except json.JSONDecodeError:
+                    logger.warning("Failed to parse recommendations response as JSON")
+            
+            # Fallback recommendations if AI fails
+            return self._get_fallback_recommendations(
+                compliance_score, 
+                business_type, 
+                company_size,
+                priority_level,
+                focus_areas
+            )
+            
+        except Exception as e:
+            logger.error(f"Error generating personalized recommendations: {str(e)}")
+            # Return basic fallback recommendations
+            return {
+                "recommendations": [
+                    {
+                        "id": "rec_1",
+                        "title": "Conduct Compliance Assessment",
+                        "description": "Perform a comprehensive compliance assessment to identify gaps and priorities.",
+                        "priority": "high",
+                        "timeline": "30-days",
+                        "steps": [
+                            "Review current policies and procedures",
+                            "Identify applicable regulations",
+                            "Document compliance gaps"
+                        ],
+                        "expected_outcome": "Clear understanding of compliance status",
+                        "resources_needed": "Internal team time or external consultant",
+                        "compliance_impact": "Establishes baseline for improvements",
+                        "business_context": {
+                            "business_type": assessment_context.get("business_profile", {}).get("business_type", "general"),
+                            "company_size": assessment_context.get("business_profile", {}).get("company_size", "small"),
+                            "compliance_score": compliance_score
+                        }
+                    }
+                ],
+                "priority_level": "medium",
+                "focus_areas": ["assessment", "planning"],
+                "generated_at": datetime.utcnow().isoformat()
+            }
+    
+    def _get_fallback_recommendations(
+        self, 
+        compliance_score: float, 
+        business_type: str, 
+        company_size: str,
+        priority_level: str,
+        focus_areas: List[str]
+    ) -> Dict[str, Any]:
+        """Generate fallback recommendations when AI is unavailable."""
+        from typing import List
+        
+        recommendations = []
+        
+        # Critical recommendations for low scores
+        if compliance_score < 30:
+            recommendations.extend([
+                {
+                    "id": "rec_critical_1",
+                    "title": "Implement Basic Data Protection Measures",
+                    "description": "Establish fundamental data protection policies and procedures to meet minimum legal requirements.",
+                    "priority": "critical",
+                    "timeline": "immediate",
+                    "steps": [
+                        "Create data inventory",
+                        "Implement access controls",
+                        "Document data processing activities"
+                    ],
+                    "expected_outcome": "Basic GDPR compliance",
+                    "resources_needed": "Data protection officer or consultant",
+                    "compliance_impact": "Reduces risk of regulatory penalties"
+                },
+                {
+                    "id": "rec_critical_2",
+                    "title": "Develop Privacy Policy",
+                    "description": "Create comprehensive privacy policy covering data collection, use, and user rights.",
+                    "priority": "critical",
+                    "timeline": "immediate",
+                    "steps": [
+                        "Review data practices",
+                        "Draft privacy policy",
+                        "Publish and communicate to users"
+                    ],
+                    "expected_outcome": "Transparent data practices",
+                    "resources_needed": "Legal review",
+                    "compliance_impact": "Meets transparency requirements"
+                }
+            ])
+        
+        # Standard recommendations for medium scores
+        elif compliance_score < 70:
+            recommendations.extend([
+                {
+                    "id": "rec_medium_1",
+                    "title": "Enhance Security Controls",
+                    "description": "Strengthen security measures to better protect sensitive data.",
+                    "priority": "high",
+                    "timeline": "30-days",
+                    "steps": [
+                        "Conduct security assessment",
+                        "Implement multi-factor authentication",
+                        "Regular security training"
+                    ],
+                    "expected_outcome": "Improved data security",
+                    "resources_needed": "Security tools and training",
+                    "compliance_impact": "Reduces breach risk"
+                },
+                {
+                    "id": "rec_medium_2",
+                    "title": "Establish Compliance Monitoring",
+                    "description": "Set up regular compliance reviews and monitoring processes.",
+                    "priority": "medium",
+                    "timeline": "60-days",
+                    "steps": [
+                        "Define compliance metrics",
+                        "Schedule regular audits",
+                        "Create reporting dashboard"
+                    ],
+                    "expected_outcome": "Ongoing compliance visibility",
+                    "resources_needed": "Compliance management tools",
+                    "compliance_impact": "Maintains compliance over time"
+                }
+            ])
+        
+        # Optimization recommendations for higher scores
+        else:
+            recommendations.extend([
+                {
+                    "id": "rec_optimize_1",
+                    "title": "Pursue Certification",
+                    "description": f"Consider pursuing ISO 27001 or SOC 2 certification to demonstrate compliance maturity.",
+                    "priority": "low",
+                    "timeline": "90-days",
+                    "steps": [
+                        "Gap analysis against standard",
+                        "Implement required controls",
+                        "Engage certification body"
+                    ],
+                    "expected_outcome": "Industry-recognized certification",
+                    "resources_needed": "Certification consultant and auditor",
+                    "compliance_impact": "Demonstrates compliance excellence"
+                }
+            ])
+        
+        # Add business context to all recommendations
+        for rec in recommendations:
+            rec["business_context"] = {
+                "business_type": business_type,
+                "company_size": company_size,
+                "compliance_score": compliance_score
+            }
+        
+        return {
+            "recommendations": recommendations,
+            "priority_level": priority_level,
+            "focus_areas": focus_areas,
+            "generated_at": datetime.utcnow().isoformat()
+        }
+
     def _parse_questions_response(self, response: str, max_questions: int, assessment_type: str) -> Dict[str, Any]:
         """Parse AI response to extract questions data."""
         try:
             import json
             import re
 
-            logger.debug(f"Parsing AI response: {response[:500]}...")  # DEBUG: Log first 500 chars
+            logger.debug(f"=== DEBUG: Parsing questions response ===")
+            logger.debug(f"Response type: {type(response)}")
+            logger.debug(f"Response length: {len(response) if response else 0}")
+            logger.debug(f"Response content: {repr(response[:500]) if response else 'EMPTY'}")
+
+            # Check if response is empty or None
+            if not response or not response.strip():
+                logger.warning("Response is empty or None - using fallback questions")
+                return self._get_fallback_questions_data(max_questions, assessment_type)
 
             # Try to extract JSON from response
             json_match = re.search(r'\{.*\}', response, re.DOTALL)
             if json_match:
-                logger.debug(f"Found JSON match: {json_match.group()[:200]}...")  # DEBUG: Log JSON
-                questions_data = json.loads(json_match.group())
-                logger.debug(f"Parsed JSON structure keys: {list(questions_data.keys())}")  # DEBUG: Log keys
+                json_text = json_match.group()
+                logger.debug(f"Found JSON match: {json_text[:200]}...")
+                
+                try:
+                    questions_data = json.loads(json_text)
+                    logger.debug(f"Successfully parsed JSON. Keys: {list(questions_data.keys())}")
+                except json.JSONDecodeError as json_error:
+                    logger.error(f"JSON decode error: {json_error}")
+                    logger.error(f"Problematic JSON: {json_text}")
+                    return self._get_fallback_questions_data(max_questions, assessment_type)
 
                 if "questions" in questions_data and isinstance(questions_data["questions"], list):
-                    logger.debug(f"Found {len(questions_data['questions'])} questions")  # DEBUG: Count
+                    logger.debug(f"Found {len(questions_data['questions'])} questions")
 
                     # Ensure all questions have question_id field
                     for i, question in enumerate(questions_data["questions"]):
-                        logger.debug(f"Question {i} keys: {list(question.keys())}")  # DEBUG: Log question keys
+                        logger.debug(f"Question {i} keys: {list(question.keys())}")
                         if "id" in question and "question_id" not in question:
-                            logger.debug(f"Converting 'id' to 'question_id' for question {i}")  # DEBUG
+                            logger.debug(f"Converting 'id' to 'question_id' for question {i}")
                             question["question_id"] = question["id"]
                         elif "question_id" not in question:
-                            logger.warning(f"Question {i} missing both 'id' and 'question_id': {question}")
+                            logger.warning(f"Question {i} missing both 'id' and 'question_id', adding fallback ID")
+                            question["question_id"] = f"q{i+1}"
+                        
+                        # Ensure required fields exist
+                        if "question" not in question and "question_text" not in question:
+                            logger.warning(f"Question {i} missing question text")
+                            question["question"] = f"Question {i+1} content missing"
+                        
+                        # Standardize question field name
+                        if "question_text" in question and "question" not in question:
+                            question["question"] = question["question_text"]
 
-                    logger.debug(f"Final questions structure: {questions_data}")  # DEBUG: Final structure
+                    logger.debug(f"Final questions structure validated")
                     return questions_data
+                else:
+                    logger.warning("Response has no 'questions' array or it's not a list")
 
-            logger.debug("No JSON found, falling back to text parsing")  # DEBUG
+            logger.debug("No valid JSON found, falling back to text parsing")
             # Fallback: parse text format
             return self._parse_text_questions(response, max_questions, assessment_type)
 
         except Exception as e:
-            logger.warning(f"Failed to parse questions response: {str(e)}")
-            logger.debug(f"Exception parsing response: {response}")  # DEBUG: Full response on error
+            logger.error(f"Exception parsing questions response: {str(e)}")
+            logger.error(f"Response that caused error: {repr(response) if response else 'None'}")
+            import traceback
+            logger.error(f"Traceback: {traceback.format_exc()}")
             return self._get_fallback_questions_data(max_questions, assessment_type)
 
     def _parse_text_questions(self, response: str, max_questions: int, assessment_type: str) -> Dict[str, Any]:

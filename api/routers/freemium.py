@@ -12,7 +12,7 @@ Following ruleIQ patterns: Rate limiting, RBAC middleware, field mappers, error 
 """
 
 from datetime import datetime
-from typing import List, Optional
+from typing import Dict, Any, List, Optional
 from uuid import UUID
 
 from fastapi import APIRouter, Depends, HTTPException, Request, status
@@ -128,6 +128,7 @@ class SessionResponse(BaseModel):
     status: str
     progress_percentage: float
     current_question_id: Optional[str]
+    current_question: Optional[Dict[str, Any]] = None  # Add actual question data
     total_questions: int
     questions_answered: int
     expires_at: datetime
@@ -139,13 +140,27 @@ class SessionResponse(BaseModel):
     @classmethod
     def from_orm(cls, obj):
         """Custom from_orm to handle field mapping."""
+        # Try to get the current question from ai_responses if available
+        current_question = None
+        if hasattr(obj, 'ai_responses') and obj.ai_responses:
+            # Check if we have generated questions stored
+            if 'questions' in obj.ai_responses:
+                questions = obj.ai_responses.get('questions', [])
+                if questions and obj.current_question_id:
+                    # Find the current question by ID
+                    for q in questions:
+                        if q.get('question_id') == obj.current_question_id:
+                            current_question = q
+                            break
+        
         return cls(
             session_id=obj.id,
             session_token=obj.session_token,
             lead_id=obj.lead_id,
-            status=obj.completion_status or 'active',
+            status=obj.status or 'active',  # Changed from obj.completion_status
             progress_percentage=obj.progress_percentage or 0.0,
             current_question_id=obj.current_question_id,
+            current_question=current_question,
             total_questions=obj.total_questions or 0,
             questions_answered=obj.questions_answered or 0,
             expires_at=obj.expires_at,
@@ -329,8 +344,8 @@ async def start_assessment_session(
 
         logger.info(f"Starting assessment session for lead: {lead.id}")
 
-        # Initialize FreemiumAssessmentService
-        assessment_service = FreemiumAssessmentService(db)
+        # Initialize FreemiumAssessmentService using async factory
+        assessment_service = await FreemiumAssessmentService.create(db)
 
         # Create new assessment session
         session = await assessment_service.create_session(
@@ -474,8 +489,8 @@ async def submit_assessment_answer(
 
         logger.info(f"Processing answer for session: {session.id}")
 
-        # Initialize assessment service
-        assessment_service = FreemiumAssessmentService(db)
+        # Initialize assessment service using async factory
+        assessment_service = await FreemiumAssessmentService.create(db)
 
         # Process the answer and get next question
         result = await assessment_service.process_answer(
@@ -565,8 +580,8 @@ async def get_assessment_results(
 
         logger.info(f"Generating results for session: {session.id}")
 
-        # Initialize assessment service
-        assessment_service = FreemiumAssessmentService(db)
+        # Initialize assessment service using async factory
+        assessment_service = await FreemiumAssessmentService.create(db)
 
         # Generate comprehensive results
         results = await assessment_service.generate_results(session.id)

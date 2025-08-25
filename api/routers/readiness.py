@@ -155,3 +155,237 @@ async def download_compliance_report(
         "content_type": "application/pdf",
         "size": 1024,
     }
+
+
+@router.get("/{business_profile_id}", summary="Get readiness assessment for business profile")
+async def get_readiness_by_profile(
+    business_profile_id: str,
+    current_user: User = Depends(get_current_active_user),
+    db: AsyncSession = Depends(get_async_db),
+):
+    """Get readiness assessment for a specific business profile."""
+    # Placeholder implementation
+    return {
+        "business_profile_id": business_profile_id,
+        "overall_readiness": 75,
+        "frameworks": [
+            {
+                "name": "GDPR",
+                "readiness_score": 80,
+                "status": "Good",
+            },
+            {
+                "name": "ISO 27001",
+                "readiness_score": 70,
+                "status": "Fair",
+            },
+        ],
+        "last_assessed": "2024-01-15T10:00:00Z",
+        "next_assessment_due": "2024-02-15T10:00:00Z",
+    }
+
+
+@router.get("/gaps/{business_profile_id}", summary="Get compliance gaps for business profile")
+async def get_compliance_gaps(
+    business_profile_id: str,
+    current_user: User = Depends(get_current_active_user),
+    db: AsyncSession = Depends(get_async_db),
+):
+    """Identify compliance gaps for a business profile."""
+    # Placeholder implementation
+    return {
+        "business_profile_id": business_profile_id,
+        "gaps": [
+            {
+                "framework": "GDPR",
+                "category": "Data Protection",
+                "gap": "Missing data retention policy",
+                "severity": "high",
+                "estimated_effort": "2 weeks",
+            },
+            {
+                "framework": "ISO 27001",
+                "category": "Access Control",
+                "gap": "Incomplete access control procedures",
+                "severity": "medium",
+                "estimated_effort": "1 week",
+            },
+        ],
+        "total_gaps": 2,
+        "critical_gaps": 1,
+        "estimated_total_effort": "3 weeks",
+    }
+
+
+@router.post("/roadmap", summary="Generate compliance roadmap")
+async def generate_compliance_roadmap(
+    roadmap_request: dict,
+    current_user: User = Depends(get_current_active_user),
+    db: AsyncSession = Depends(get_async_db),
+):
+    """Generate a customized compliance roadmap."""
+    # Placeholder implementation
+    business_profile_id = roadmap_request.get("business_profile_id", "")
+    target_frameworks = roadmap_request.get("frameworks", ["GDPR"])
+    timeline = roadmap_request.get("timeline", "6_months")
+    
+    return {
+        "roadmap_id": f"roadmap_{business_profile_id}",
+        "business_profile_id": business_profile_id,
+        "target_frameworks": target_frameworks,
+        "timeline": timeline,
+        "phases": [
+            {
+                "phase": 1,
+                "name": "Foundation",
+                "duration": "2 months",
+                "tasks": [
+                    "Complete initial assessment",
+                    "Document current processes",
+                    "Identify key stakeholders",
+                ],
+            },
+            {
+                "phase": 2,
+                "name": "Implementation",
+                "duration": "3 months",
+                "tasks": [
+                    "Implement required policies",
+                    "Deploy technical controls",
+                    "Train staff",
+                ],
+            },
+            {
+                "phase": 3,
+                "name": "Validation",
+                "duration": "1 month",
+                "tasks": [
+                    "Internal audit",
+                    "Gap remediation",
+                    "Certification preparation",
+                ],
+            },
+        ],
+        "created_at": "2024-01-15T10:00:00Z",
+    }
+
+
+@router.post("/quick-assessment", summary="Perform quick readiness assessment")
+async def quick_readiness_assessment(
+    assessment_request: dict,
+    current_user: User = Depends(get_current_active_user),
+    db: AsyncSession = Depends(get_async_db),
+):
+    """Perform a quick readiness assessment based on minimal inputs."""
+    # Placeholder implementation
+    business_type = assessment_request.get("business_type", "technology")
+    size = assessment_request.get("size", "small")
+    regions = assessment_request.get("regions", ["EU"])
+    
+    return {
+        "assessment_id": f"quick_{current_user.id}",
+        "business_type": business_type,
+        "recommended_frameworks": [
+            {
+                "framework": "GDPR",
+                "priority": "High",
+                "reason": "Operating in EU region",
+                "estimated_readiness": 40,
+            },
+            {
+                "framework": "ISO 27001",
+                "priority": "Medium",
+                "reason": "Industry best practice for technology companies",
+                "estimated_readiness": 35,
+            },
+        ],
+        "estimated_timeline": "6-9 months",
+        "immediate_actions": [
+            "Appoint Data Protection Officer",
+            "Create privacy policy",
+            "Implement cookie consent",
+        ],
+        "assessment_date": "2024-01-15T10:00:00Z",
+    }
+
+
+@router.get("/trends/{business_profile_id}", summary="Get readiness trends")
+async def get_readiness_trends(
+    business_profile_id: str,
+    period: str = "30d",
+    current_user: User = Depends(get_current_active_user),
+    db: AsyncSession = Depends(get_async_db),
+):
+    """Get historical readiness trends for a business profile."""
+    # Placeholder implementation
+    return {
+        "business_profile_id": business_profile_id,
+        "period": period,
+        "overall_trend": "improving",
+        "trend_data": [
+            {"date": "2024-01-01", "score": 65},
+            {"date": "2024-01-08", "score": 68},
+            {"date": "2024-01-15", "score": 75},
+        ],
+        "framework_trends": {
+            "GDPR": {
+                "trend": "improving",
+                "change": "+15%",
+                "current_score": 80,
+            },
+            "ISO 27001": {
+                "trend": "stable",
+                "change": "+5%",
+                "current_score": 70,
+            },
+        },
+        "insights": [
+            "Significant improvement in data protection measures",
+            "Access control procedures need attention",
+            "Overall compliance posture strengthening",
+        ],
+    }
+
+
+@router.get("/benchmarks", summary="Get industry benchmarks")
+async def get_industry_benchmarks(
+    industry: str = "technology",
+    size: str = "small",
+    current_user: User = Depends(get_current_active_user),
+    db: AsyncSession = Depends(get_async_db),
+):
+    """Get industry benchmarks for compliance readiness."""
+    # Placeholder implementation
+    return {
+        "industry": industry,
+        "company_size": size,
+        "benchmarks": {
+            "average_readiness": 72,
+            "top_quartile": 85,
+            "your_position": "above_average",
+            "percentile": 65,
+        },
+        "framework_benchmarks": {
+            "GDPR": {
+                "industry_average": 75,
+                "your_score": 80,
+                "position": "above_average",
+            },
+            "ISO 27001": {
+                "industry_average": 70,
+                "your_score": 70,
+                "position": "average",
+            },
+        },
+        "common_gaps": [
+            "Data retention policies",
+            "Third-party risk management",
+            "Incident response procedures",
+        ],
+        "best_practices": [
+            "Regular compliance audits",
+            "Automated evidence collection",
+            "Continuous monitoring",
+        ],
+        "updated_at": "2024-01-15T00:00:00Z",
+    }

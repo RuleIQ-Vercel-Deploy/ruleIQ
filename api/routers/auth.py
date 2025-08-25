@@ -183,12 +183,35 @@ async def refresh_token(refresh_request: dict, db: Session = Depends(get_db)):
     }
 
 
-@router.get("/me", response_model=UserResponse)
+@router.get("/me")
 async def get_current_user(db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)):
     """Get current user information from JWT token"""
     from api.dependencies.auth import decode_token
-
-    payload = decode_token(token)
+    from core.exceptions import NotAuthenticatedException
+    
+    # Handle missing token (oauth2_scheme returns None when auto_error=False)
+    if not token:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Not authenticated",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    
+    try:
+        payload = decode_token(token)
+    except NotAuthenticatedException as e:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail=str(e),
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Could not validate credentials",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    
     if not payload:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -222,24 +245,17 @@ async def get_current_user(db: Session = Depends(get_db), token: str = Depends(o
         roles = []
         permissions = []
 
-    # Create enhanced response with role information
-    response_data = UserResponse(
-        id=user.id,
-        email=user.email,
-        is_active=user.is_active,
-        created_at=user.created_at,
-    )
-
-    # Add roles and permissions to the response dict
-    response_dict = response_data.dict()
-    response_dict.update({
+    # Return a dictionary response without model validation
+    return {
+        "id": str(user.id),
+        "email": user.email,
+        "is_active": user.is_active,
+        "created_at": user.created_at.isoformat() if hasattr(user.created_at, 'isoformat') else str(user.created_at),
         "roles": roles,
         "permissions": permissions,
         "total_permissions": len(permissions),
         "assessment_permissions": [p for p in permissions if 'assessment' in p.lower()]
-    })
-
-    return response_dict
+    }
 
 
 @router.post("/logout")

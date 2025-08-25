@@ -15,7 +15,7 @@ from api.middleware.rate_limiter import rate_limit
 from api.schemas.base import StandardResponse
 
 logger = logging.getLogger(__name__)
-router = APIRouter(prefix="/agentic-rag", tags=["Agentic RAG"])
+router = APIRouter(tags=["Agentic RAG"])
 
 # Request schemas
 class DocumentationQueryRequest(BaseModel):

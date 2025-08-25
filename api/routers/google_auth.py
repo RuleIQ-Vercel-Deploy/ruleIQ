@@ -23,7 +23,7 @@ from database.user import User
 from services.auth_service import auth_service
 
 settings = get_settings()
-router = APIRouter(prefix="/google", tags=["Google OAuth"])
+router = APIRouter(tags=["Google OAuth"])
 
 
 class GoogleUserInfo(BaseModel):

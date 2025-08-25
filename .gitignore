@@ -180,10 +180,10 @@ debug-suite.html
 debug-suite.html
 
 # Tool-specific session files (Added for cleanup)
-.claude/serena-*.sh
-.claude/serena-*.json
-.claude/serena-*.flag
-.serena/memories/
+#.claude/serena-*.sh
+#.claude/serena-*.json
+#.claude/serena-*.flag
+#.serena/memories/
 .cursor/rules/
 .windsurfrules
 .augment-guidelines/

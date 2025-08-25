@@ -9,7 +9,6 @@ from api.dependencies.auth import get_current_active_user
 from api.middleware.error_handler import error_handler_middleware
 from api.request_id_middleware import RequestIDMiddleware
 from api.routers import (
-    # agentic_assessments,
     agentic_rag,
     ai_assessments,
     ai_cost_monitoring,
@@ -21,6 +20,7 @@ from api.routers import (
     business_profiles,
     chat,
     compliance,
+    dashboard,  # Added missing dashboard import
     evidence,
     evidence_collection,
     foundation_evidence,
@@ -31,10 +31,11 @@ from api.routers import (
     integrations,
     iq_agent,  # Added missing IQ Agent import
     monitoring,
+    payment,  # Added missing payment import
     performance_monitoring,
     policies,
     readiness,
-    reporting,
+    reports,  # Added missing reports import (was 'reporting')
     security,
     secrets_vault,
     test_utils,
@@ -203,17 +204,16 @@ app.middleware("http")(security_headers_middleware)
 
 # Include routers
 app.include_router(auth.router, prefix="/api/v1/auth", tags=["Authentication"])
-app.include_router(google_auth.router, prefix="/api/v1/auth", tags=["Google OAuth"])
-app.include_router(rbac_auth.router, tags=["RBAC Authentication"])
+app.include_router(google_auth.router, prefix="/api/v1/auth/google", tags=["Google OAuth"])
+app.include_router(rbac_auth.router, prefix="/api/v1/auth", tags=["RBAC Authentication"])
 app.include_router(users.router, prefix="/api/v1/users", tags=["Users"])
 app.include_router(
     business_profiles.router, prefix="/api/v1/business-profiles", tags=["Business Profiles"]
 )
 app.include_router(assessments.router, prefix="/api/v1/assessments", tags=["Assessments"])
 app.include_router(freemium.router, prefix="/api/v1", tags=["Freemium Assessment"])
-# DEPRECATED: app.include_router(ai_assessments.router, prefix="/api/v1/ai-assessments", tags=["AI Assessment Assistant"])
-# Backward compatibility for legacy tests - old /api/ai/assessments structure  
-# DEPRECATED: app.include_router(ai_assessments.router, prefix="/api/ai/assessments", tags=["AI Assessment Assistant (Legacy)"])
+# New consolidated AI assessments namespace
+app.include_router(ai_assessments.router, prefix="/api/v1/ai", tags=["AI Assessment Assistant"])
 app.include_router(ai_optimization.router, prefix="/api/v1/ai/optimization", tags=["AI Optimization"])
 app.include_router(frameworks.router, prefix="/api/v1/frameworks", tags=["Compliance Frameworks"])
 app.include_router(policies.router, prefix="/api/v1/policies", tags=["Policies"])
@@ -224,11 +224,13 @@ app.include_router(evidence.router, prefix="/api/v1/evidence", tags=["Evidence"]
 app.include_router(evidence_collection.router, prefix="/api/v1/evidence-collection", tags=["Evidence Collection"])
 app.include_router(compliance.router, prefix="/api/v1/compliance", tags=["Compliance Status"])
 app.include_router(readiness.router, prefix="/api/v1/readiness", tags=["Readiness Assessment"])
-app.include_router(reporting.router, prefix="/api/v1/reports", tags=["Reports"])
+app.include_router(reports.router, prefix="/api/v1/reports", tags=["Reports"])
 app.include_router(integrations.router, prefix="/api/v1/integrations", tags=["Integrations"])
 app.include_router(
-    foundation_evidence.router, prefix="/api/v1/foundation-evidence", tags=["Foundation Evidence Collection"]
+    foundation_evidence.router, prefix="/api/v1/foundation/evidence", tags=["Foundation Evidence Collection"]
 )
+app.include_router(dashboard.router, prefix="/api/v1/dashboard", tags=["Dashboard"])
+app.include_router(payment.router, prefix="/api/v1/payments", tags=["Payments"])
 app.include_router(monitoring.router, prefix="/api/v1/monitoring", tags=["Monitoring"])
 app.include_router(security.router, prefix="/api/v1/security", tags=["Security"])
 app.include_router(secrets_vault.router, tags=["🔐 Secrets Vault"])
@@ -239,8 +241,7 @@ app.include_router(ai_policy.router, prefix="/api/v1/ai/policies", tags=["AI Pol
 app.include_router(performance_monitoring.router, prefix="/api/v1/performance", tags=["Performance Monitoring"])
 app.include_router(uk_compliance.router, prefix="/api/v1/uk-compliance", tags=["UK Compliance"])
 app.include_router(iq_agent.router, prefix="/api/v1/iq-agent", tags=["IQ Agent"])
-# app.include_router(agentic_assessments.router, prefix="/api", tags=["Agentic Assessments"])
-app.include_router(agentic_rag.router, prefix="/api/v1", tags=["Agentic RAG"])
+app.include_router(agentic_rag.router, prefix="/api/v1/agentic-rag", tags=["Agentic RAG"])
 app.include_router(admin_router)
 
 # Test utilities (only in development/test environments)

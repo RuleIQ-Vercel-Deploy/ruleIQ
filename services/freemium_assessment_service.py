@@ -44,18 +44,33 @@ class FreemiumAssessmentService:
     to results generation with AI-powered personalization.
     """
 
-    def __init__(self, db_session: AsyncSession) -> None:
+    def __init__(self, db_session: AsyncSession, assessment_agent=None) -> None:
         self.db = db_session
         self.assistant = ComplianceAssistant(db_session)
         self.circuit_breaker = AICircuitBreaker()
-        self.assessment_agent = AssessmentAgent(db_session)  # LangGraph conversational agent
+        self.assessment_agent = assessment_agent  # Will be set via async factory method
 
         # Configuration constants
         self.SESSION_DURATION_HOURS = 24
         self.MIN_QUESTIONS_FOR_RESULTS = 5
         self.MAX_QUESTIONS_PER_SESSION = 12
         self.DEFAULT_QUESTION_TIME_LIMIT = 300  # 5 minutes per question
-        self.USE_LANGGRAPH_AGENT = True  # Feature flag for new conversational agent
+        self.USE_LANGGRAPH_AGENT = True  # Feature flag for new conversational agent  # Feature flag for new conversational agent
+
+    @classmethod
+    async def create(cls, db_session: AsyncSession):
+        """
+        Async factory method to create a FreemiumAssessmentService instance.
+        This properly initializes the async AssessmentAgent.
+        """
+        from services.assessment_agent import AssessmentAgent
+        
+        # Create the AssessmentAgent using its async factory method
+        assessment_agent = await AssessmentAgent.create(db_session)
+        
+        # Create and return the FreemiumAssessmentService instance
+        instance = cls(db_session, assessment_agent)
+        return instance
 
     async def create_session(
         self,
@@ -111,7 +126,9 @@ class FreemiumAssessmentService:
             await self.db.refresh(session)
 
             # Use LangGraph agent if enabled, otherwise use traditional approach
-            if self.USE_LANGGRAPH_AGENT:
+            use_langgraph = self.USE_LANGGRAPH_AGENT
+            
+            if use_langgraph:
                 # Initialize LangGraph assessment agent state
                 initial_context = {
                     "business_type": business_type,
@@ -121,30 +138,48 @@ class FreemiumAssessmentService:
                 }
 
                 # Start assessment with LangGraph agent
-                agent_state = await self.assessment_agent.start_assessment(
-                    session_id=str(session.id),
-                    lead_id=str(lead_id),
-                    initial_context=initial_context
-                )
+                try:
+                    agent_state = await self.assessment_agent.start_assessment(
+                        session_id=str(session.id),
+                        lead_id=str(lead_id),
+                        initial_context=initial_context
+                    )
+                except Exception as langgraph_error:
+                    import traceback
+                    logger.error(f"LangGraph agent failed with error: {str(langgraph_error)}")
+                    logger.error(f"Traceback: {traceback.format_exc()}")
+                    logger.warning("Falling back to traditional approach")
+                    use_langgraph = False
+                    agent_state = None
 
-                # Store agent state in session
-                session.ai_responses = {
-                    "agent_state": "active",
-                    "current_phase": agent_state.get("current_phase", "introduction").value if hasattr(agent_state.get("current_phase", "introduction"), 'value') else str(agent_state.get("current_phase", "introduction")),
-                    "questions_generated": len(agent_state.get("questions_asked", [])),
-                    "total_questions_planned": agent_state.get("total_questions_planned", self.MAX_QUESTIONS_PER_SESSION),
-                    "using_langgraph": True,
-                    "generation_timestamp": datetime.utcnow().isoformat()
-                }
+                if agent_state:
+                    # Store agent state in session
+                    # Safely get current_phase value
+                    current_phase = agent_state.get("current_phase", "introduction")
+                    if hasattr(current_phase, 'value'):
+                        current_phase_str = current_phase.value
+                    else:
+                        current_phase_str = str(current_phase)
+                    
+                    session.ai_responses = {
+                        "agent_state": "active",
+                        "current_phase": current_phase_str,
+                        "questions_generated": len(agent_state.get("questions_asked", [])) if "questions_asked" in agent_state else 0,
+                        "total_questions_planned": agent_state.get("total_questions_planned", self.MAX_QUESTIONS_PER_SESSION),
+                        "using_langgraph": True,
+                        "generation_timestamp": datetime.utcnow().isoformat()
+                    }
 
-                # Extract first question from agent messages
-                messages = agent_state.get("messages", [])
-                if messages and len(messages) > 0:
-                    # Last message should be the introduction/first question
-                    session.current_question_id = "agent_intro"
-                    session.total_questions = agent_state.get("total_questions_planned", self.MIN_QUESTIONS_FOR_RESULTS)
-
-            else:
+                    # Extract first question from agent messages
+                    messages = agent_state.get("messages", [])
+                    if messages and len(messages) > 0:
+                        # Last message should be the introduction/first question
+                        session.current_question_id = "agent_intro"
+                        session.total_questions = agent_state.get("total_questions_planned", self.MIN_QUESTIONS_FOR_RESULTS)
+                else:
+                    use_langgraph = False
+            
+            if not use_langgraph:
                 # Generate initial AI questions based on business context (traditional approach)
                 initial_questions = await self._generate_initial_questions(
                     session_id=session.id,
@@ -154,8 +189,9 @@ class FreemiumAssessmentService:
                     personalization_data=personalization_data
                 )
 
-                # Store questions in session
+                # Store questions in session - INCLUDING the actual questions!
                 session.ai_responses = {
+                    "questions": initial_questions,  # Store the actual questions
                     "questions_generated": len(initial_questions),
                     "total_questions_planned": self.MAX_QUESTIONS_PER_SESSION,
                     "personalization_applied": bool(personalization_data),
@@ -232,12 +268,26 @@ class FreemiumAssessmentService:
                     "timestamp": datetime.utcnow().isoformat()
                 }
 
-                # Update progress from agent state
-                session.questions_answered = agent_state.get("questions_answered", session.questions_answered + 1)
+                # Update progress - always increment as we've processed an answer
+                session.questions_answered = session.questions_answered + 1
                 session.progress_percentage = (session.questions_answered / max(session.total_questions, self.MIN_QUESTIONS_FOR_RESULTS)) * 100
 
                 # Check if assessment is complete
-                completion_status = "completed" if agent_state.get("current_phase") == "completion" else "in_progress"
+                # The phase might be an enum or string, so handle both cases
+                current_phase = agent_state.get("current_phase")
+                if hasattr(current_phase, 'value'):
+                    phase_value = current_phase.value
+                else:
+                    phase_value = str(current_phase)
+                
+                # Only mark as completed if we have enough questions AND the phase is completion
+                questions_answered = session.questions_answered
+                is_completion_phase = phase_value.lower() in ["completion", "completed"]
+                has_enough_answers = questions_answered >= self.MIN_QUESTIONS_FOR_RESULTS
+                
+                completion_status = "completed" if (is_completion_phase and has_enough_answers) else "in_progress"
+                
+                logger.info(f"Assessment status check: phase={phase_value}, answered={questions_answered}, min_required={self.MIN_QUESTIONS_FOR_RESULTS}, status={completion_status}")
                 next_question = None
 
                 # Extract next question from agent messages if not complete
@@ -502,11 +552,19 @@ class FreemiumAssessmentService:
             }.get(confidence, 1.0)
 
             # Adjust for question complexity (look up in question bank if available)
-            result = await self.db.execute(select(AIQuestionBank).where(AIQuestionBank.question_id == question_id))
-            question = result.scalar_one_or_none()
-            if question:
-                difficulty_multiplier = question.difficulty_level / 5.0  # Scale 1-10 to 0.2-2.0
-                base_score = int(base_score * difficulty_multiplier)
+            # Only try to look up if question_id looks like a UUID
+            import uuid
+            try:
+                # Try to parse as UUID
+                uuid.UUID(question_id)
+                result = await self.db.execute(select(AIQuestionBank).where(AIQuestionBank.id == question_id))
+                question = result.scalar_one_or_none()
+                if question:
+                    difficulty_multiplier = question.difficulty_level / 5.0  # Scale 1-10 to 0.2-2.0
+                    base_score = int(base_score * difficulty_multiplier)
+            except (ValueError, TypeError):
+                # Not a UUID, skip database lookup for dynamic questions
+                logger.debug(f"Skipping question bank lookup for non-UUID question_id: {question_id}")
 
             final_score = int(base_score * confidence_multiplier)
 

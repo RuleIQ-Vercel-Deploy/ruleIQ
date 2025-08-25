@@ -27,7 +27,7 @@ from api.clients.base_api_client import APICredentials, AuthType
 from config.logging_config import get_logger
 
 logger = get_logger(__name__)
-router = APIRouter(prefix="/foundation/evidence", tags=["Foundation Evidence Collection"])
+router = APIRouter()
 
 
 # Request/Response Models

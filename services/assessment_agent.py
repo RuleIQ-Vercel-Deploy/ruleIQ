@@ -18,8 +18,13 @@ import uuid
 from typing import Dict, List, Optional, Any, TypedDict, Annotated
 from enum import Enum
 
-from langgraph.graph import StateGraph, add_messages
+from langgraph.graph import StateGraph, add_messages, END
 from langgraph.checkpoint.memory import MemorySaver
+from langgraph.checkpoint.postgres.aio import AsyncPostgresSaver
+import asyncio
+from typing import Optional, Iterator, AsyncIterator, Tuple, Any
+import os
+from config.settings import get_settings
 from langchain_core.messages import HumanMessage, AIMessage
 from langchain_core.tracers.context import tracing_v2_enabled
 from langsmith import traceable
@@ -83,6 +88,7 @@ class AssessmentState(TypedDict):
     fallback_mode: bool
 
 
+
 class AssessmentAgent:
     """
     LangGraph-based conversational assessment agent.
@@ -92,20 +98,103 @@ class AssessmentAgent:
         self.db = db_session
         self.assistant = ComplianceAssistant(db_session)
         self.circuit_breaker = AICircuitBreaker()
-        self.checkpointer = MemorySaver()
+        
+        # Initialize persistent checkpointer
+        self.checkpointer = self._initialize_checkpointer()
 
         # Configuration
         self.MIN_QUESTIONS = 5
         self.MAX_QUESTIONS = 12
         self.CONFIDENCE_THRESHOLD = 0.7
+        self.RECURSION_LIMIT = 50  # Add recursion limit configuration
 
         # Configure LangSmith tracing if enabled
         self._configure_tracing()
 
         # Build the graph
         self.graph = self._build_graph()
+        # Compile without recursion_limit as it's not supported in this version
         self.app = self.graph.compile(checkpointer=self.checkpointer)
 
+    @classmethod
+    async def create(cls, db_session):
+        """
+        Async factory method to create an AssessmentAgent instance.
+        This is needed because we need to await the async checkpointer initialization.
+        """
+        instance = cls.__new__(cls)
+        instance.db = db_session
+        instance.assistant = ComplianceAssistant(db_session)
+        instance.circuit_breaker = AICircuitBreaker()
+        
+        # Initialize persistent checkpointer asynchronously
+        instance.checkpointer = await instance._initialize_checkpointer()
+
+        # Configuration
+        instance.MIN_QUESTIONS = 5
+        instance.MAX_QUESTIONS = 12
+        instance.CONFIDENCE_THRESHOLD = 0.7
+        instance.RECURSION_LIMIT = 50  # Add recursion limit configuration
+
+        # Configure LangSmith tracing if enabled
+        instance._configure_tracing()
+
+        # Build the graph
+        instance.graph = instance._build_graph()
+        # Compile without recursion_limit as it's not supported in this version
+        instance.app = instance.graph.compile(checkpointer=instance.checkpointer)
+        
+        return instance
+
+    async def _initialize_checkpointer(self):
+        """
+        Initialize the async checkpointer for state persistence.
+        Uses the official AsyncPostgresSaver from langgraph.checkpoint.postgres.aio.
+        """
+        try:
+            # Get database URL from settings
+            settings = get_settings()
+            database_url = settings.database_url
+            
+            if database_url:
+                # Convert asyncpg URL to psycopg format if needed
+                if "asyncpg" in database_url:
+                    database_url = database_url.replace("postgresql+asyncpg://", "postgresql://")
+                
+                # Import psycopg for PostgreSQL connection
+                import psycopg
+                from psycopg.rows import dict_row
+                
+                # Create connection with proper parameters for AsyncPostgresSaver
+                # AsyncPostgresSaver expects a psycopg connection with autocommit and dict_row
+                conn = await psycopg.AsyncConnection.connect(
+                    database_url,
+                    autocommit=True,
+                    row_factory=dict_row
+                )
+                
+                # Use the official AsyncPostgresSaver with the connection
+                checkpointer = AsyncPostgresSaver(conn)
+                
+                # Ensure the checkpoint tables exist
+                await checkpointer.setup()
+                logger.info("Async checkpoint tables created or verified")
+                logger.info("Initialized official AsyncPostgresSaver for persistent state storage")
+                
+                # Store connection to prevent it from being garbage collected
+                self._db_conn = conn
+                
+                return checkpointer
+            else:
+                # Fallback to in-memory storage for development
+                logger.warning("DATABASE_URL not found, using in-memory checkpointer (state won't persist between requests)")
+                return MemorySaver()
+                
+        except Exception as e:
+            logger.error(f"Failed to initialize AsyncPostgresSaver: {e}")
+            logger.warning("Falling back to in-memory checkpointer")
+            return MemorySaver()
+    
     def _configure_tracing(self):
         """Configure LangSmith tracing for observability."""
         # Check if tracing is enabled via environment variables
@@ -144,11 +233,18 @@ class AssessmentAgent:
         # Define edges
         graph.set_entry_point("introduction")
 
-        graph.add_edge("introduction", "generate_question")
-        graph.add_edge("generate_question", "process_answer")
-        graph.add_edge("process_answer", "analyze_context")
-        graph.add_edge("analyze_context", "determine_next")
-
+        # Modified flow: introduction → analyze_context → generate first question
+        graph.add_edge("introduction", "analyze_context")
+        graph.add_edge("analyze_context", "generate_question")
+        
+        # After generating a question, we should END and wait for user input
+        # The process_answer node should only be triggered when we have actual user input
+        # For now, we'll end after generating the question
+        graph.add_edge("generate_question", END)
+        
+        # These edges would be used when processing actual user answers
+        # graph.add_edge("process_answer", "determine_next")
+        
         # Conditional routing from determine_next
         graph.add_conditional_edges(
             "determine_next",
@@ -631,15 +727,112 @@ Would you like to schedule a demo to see how we can help address your specific n
         )
 
         # Run the introduction node with tracing context
-        config = {"configurable": {"thread_id": initial_state["thread_id"]}}
+        # Add recursion_limit to config to prevent infinite loops
+        config = {
+            "configurable": {"thread_id": initial_state["thread_id"]},
+            "recursion_limit": self.RECURSION_LIMIT
+        }
 
-        # Fixed: Remove metadata parameter that's not supported in newer LangSmith
+        try:
+            # Fixed: Remove metadata parameter that's not supported in newer LangSmith
+            with tracing_v2_enabled(
+                project_name=os.getenv("LANGCHAIN_PROJECT", "ruleiq-assessment"),
+                tags=["assessment_start", f"session:{session_id}"]
+            ):
+                # Use async invoke now that we have AsyncPostgresSaver wrapper
+                result = await self.app.ainvoke(initial_state, config)
+
+            return result
+            
+        except NotImplementedError as e:
+            logger.error(f"PostgresSaver NotImplementedError in start_assessment: {e}")
+            logger.error("This indicates LangGraph async/sync compatibility issues with PostgresSaver")
+            
+            # Try fallback without checkpointer state persistence
+            try:
+                logger.warning("Attempting fallback execution without state persistence")
+                # Create a temporary app without checkpointer for this request
+                fallback_app = self.graph.compile()  # No checkpointer
+                result = await fallback_app.ainvoke(initial_state, config)
+                logger.info("Fallback execution successful - but state won't persist")
+                return result
+            except Exception as fallback_error:
+                logger.error(f"Fallback execution also failed: {fallback_error}")
+                raise Exception(f"Assessment failed due to checkpointer issues: {str(e)}")
+                
+        except Exception as e:
+            logger.error(f"Unexpected error in start_assessment: {e}")
+            logger.error(f"Error type: {type(e).__name__}")
+            import traceback
+            logger.error(f"Traceback: {traceback.format_exc()}")
+            raise
+
+    async def process_user_answer(
+        self,
+        session_id: str,
+        answer: str,
+        current_state: AssessmentState
+    ) -> AssessmentState:
+        """
+        Process a user's answer and continue the assessment flow.
+        
+        Args:
+            session_id: Session identifier
+            answer: User's answer to the previous question
+            current_state: Current assessment state
+            
+        Returns:
+            Updated assessment state
+        """
+        # Add user answer as a message
+        current_state["messages"].append(HumanMessage(content=answer))
+        
+        # Create a new graph that starts from process_answer
+        graph = StateGraph(AssessmentState)
+        
+        # Add all nodes
+        graph.add_node("process_answer", self._process_answer_node)
+        graph.add_node("determine_next", self._determine_next_node)
+        graph.add_node("generate_question", self._generate_question_node)
+        graph.add_node("generate_results", self._generate_results_node)
+        graph.add_node("completion", self._completion_node)
+        
+        # Set entry point to process the answer
+        graph.set_entry_point("process_answer")
+        
+        # Define flow
+        graph.add_edge("process_answer", "determine_next")
+        
+        # Conditional routing
+        graph.add_conditional_edges(
+            "determine_next",
+            self._route_next_step,
+            {
+                "continue": "generate_question",
+                "complete": "generate_results",
+                "error": "completion"
+            }
+        )
+        
+        graph.add_edge("generate_question", END)
+        graph.add_edge("generate_results", "completion")
+        graph.add_edge("completion", END)
+        
+        # Compile the graph
+        app = graph.compile(checkpointer=self.checkpointer)
+        
+        # Run with the current state and recursion limit
+        config = {
+            "configurable": {"thread_id": current_state["thread_id"]},
+            "recursion_limit": self.RECURSION_LIMIT
+        }
+        
         with tracing_v2_enabled(
             project_name=os.getenv("LANGCHAIN_PROJECT", "ruleiq-assessment"),
-            tags=["assessment_start", f"session:{session_id}"]
+            tags=["process_answer", f"session:{session_id}"]
         ):
-            result = await self.app.ainvoke(initial_state, config)
-
+            result = await app.ainvoke(current_state, config)
+        
         return result
 
     @traceable(
@@ -673,13 +866,131 @@ Would you like to schedule a demo to see how we can help address your specific n
             additional_kwargs={"confidence": confidence}
         )
 
+        # Try to get existing state from checkpointer first
+        try:
+            # Get the current state from the checkpointer
+            checkpoint_tuple = self.checkpointer.get_tuple(config)
+            
+            if checkpoint_tuple and checkpoint_tuple.checkpoint:
+                # The checkpoint is a dict containing the actual state data
+                checkpoint_data = checkpoint_tuple.checkpoint
+                
+                # Check if it's a string (the error case) or a dict (expected)
+                if isinstance(checkpoint_data, str):
+                    logger.error(f"Checkpoint returned string instead of dict: {checkpoint_data}")
+                    raise ValueError("Invalid checkpoint format")
+                
+                # Get the channel values which contains our state
+                if "channel_values" in checkpoint_data:
+                    # This is the correct structure
+                    existing_state = checkpoint_data["channel_values"]
+                elif "values" in checkpoint_data:
+                    # Alternative structure
+                    existing_state = checkpoint_data["values"]
+                else:
+                    # The checkpoint might BE the state directly
+                    existing_state = checkpoint_data
+                
+                # Ensure we have messages list
+                if "messages" not in existing_state:
+                    existing_state["messages"] = []
+                
+                existing_state["messages"].append(user_message)
+                
+                # Increment questions answered
+                existing_state["questions_answered"] = existing_state.get("questions_answered", 0) + 1
+                
+                # Update fallback mode if needed
+                existing_state["fallback_mode"] = not self.circuit_breaker.is_model_available("gemini-2.5-flash")
+                
+                # Ensure current_phase is an enum value
+                if "current_phase" in existing_state:
+                    phase_value = existing_state["current_phase"]
+                    if isinstance(phase_value, str):
+                        # Convert string to enum
+                        try:
+                            existing_state["current_phase"] = AssessmentPhase(phase_value)
+                        except ValueError:
+                            existing_state["current_phase"] = AssessmentPhase.BUSINESS_CONTEXT
+                
+                logger.info(f"Retrieved existing state for session {session_id}: phase={existing_state.get('current_phase')}, answered={existing_state.get('questions_answered')}")
+                
+                # Check if we should complete the assessment
+                if existing_state["questions_answered"] >= self.MIN_QUESTIONS:
+                    # Determine if we have enough information
+                    if self._has_sufficient_information(existing_state):
+                        existing_state["current_phase"] = AssessmentPhase.COMPLETION
+                        existing_state["assessment_complete"] = True
+                        logger.info(f"Assessment ready for completion: {session_id}")
+                
+                initial_state = existing_state
+            else:
+                logger.warning(f"No existing state found for session {session_id}, creating new state")
+                # Create initial state with all required fields if no state exists
+                initial_state = {
+                    "messages": [user_message],
+                    "questions_asked": [],  # Initialize as empty list if not present
+                    "questions_answered": 1,  # This is the first answer
+                    "total_questions_planned": self.MAX_QUESTIONS,
+                    "current_phase": AssessmentPhase.BUSINESS_CONTEXT,  # Use enum value
+                    "confidence_scores": [],
+                    "assessment_complete": False,
+                    "final_score": 0.0,
+                    "recommendations": [],
+                    "thread_id": f"thread_{session_id}",
+                    "session_id": session_id,
+                    "lead_id": "",  # Will be set by the graph
+                    "business_profile": {},
+                    "compliance_needs": [],
+                    "identified_risks": [],
+                    "next_question_context": {},
+                    "follow_up_needed": False,
+                    "expertise_level": "intermediate",
+                    "compliance_score": 0.0,
+                    "risk_level": "medium",
+                    "gaps_identified": [],
+                    "fallback_mode": not self.circuit_breaker.is_model_available("gemini-2.5-flash"),
+                    "should_continue": True,
+                    "error_count": 0
+                }
+        except Exception as e:
+            logger.error(f"Error retrieving state from checkpointer: {e}")
+            # Fallback to creating new state
+            initial_state = {
+                "messages": [user_message],
+                "questions_asked": [],
+                "questions_answered": 1,
+                "total_questions_planned": self.MAX_QUESTIONS,
+                "current_phase": AssessmentPhase.BUSINESS_CONTEXT,
+                "confidence_scores": [],
+                "assessment_complete": False,
+                "final_score": 0.0,
+                "recommendations": [],
+                "thread_id": f"thread_{session_id}",
+                "session_id": session_id,
+                "lead_id": "",
+                "business_profile": {},
+                "compliance_needs": [],
+                "identified_risks": [],
+                "next_question_context": {},
+                "follow_up_needed": False,
+                "expertise_level": "intermediate",
+                "compliance_score": 0.0,
+                "risk_level": "medium",
+                "gaps_identified": [],
+                "fallback_mode": not self.circuit_breaker.is_model_available("gemini-2.5-flash"),
+                "should_continue": True,
+                "error_count": 0
+            }
+
         # Fixed: Remove metadata parameter that's not supported in newer LangSmith
         with tracing_v2_enabled(
             project_name=os.getenv("LANGCHAIN_PROJECT", "ruleiq-assessment"),
             tags=["assessment_response", f"session:{session_id}"]
         ):
+            # Pass the full state, not just messages
             result = await self.app.ainvoke(
-                {"messages": [user_message]},
+                initial_state,
                 config
             )
 

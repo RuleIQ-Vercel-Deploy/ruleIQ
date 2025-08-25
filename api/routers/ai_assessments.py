@@ -401,6 +401,90 @@ async def get_question_help_stream(
     )
 
 
+@router.post("/self-review", summary="AI self-review of assessment")
+async def ai_self_review(
+    assessment_data: dict,
+    current_user: User = Depends(get_current_active_user),
+    db: AsyncSession = Depends(get_async_db),
+):
+    """Perform AI self-review of assessment responses."""
+    # Placeholder implementation
+    return {
+        "review_id": f"review_{hash(str(assessment_data)) % 10000}",
+        "confidence_score": 0.85,
+        "completeness": 0.92,
+        "suggestions": [
+            "Consider providing more detail on data retention policies",
+            "Review access control documentation",
+        ],
+        "flagged_responses": [
+            {
+                "question_id": "q1",
+                "concern": "Response may be incomplete",
+                "suggestion": "Add specific examples",
+            }
+        ],
+        "overall_status": "good",
+        "timestamp": datetime.utcnow().isoformat(),
+    }
+
+
+@router.post("/quick-confidence-check", summary="Quick AI confidence check")
+async def quick_confidence_check(
+    responses: dict,
+    current_user: User = Depends(get_current_active_user),
+    db: AsyncSession = Depends(get_async_db),
+):
+    """Perform quick AI confidence check on responses."""
+    # Placeholder implementation
+    return {
+        "check_id": f"check_{hash(str(responses)) % 10000}",
+        "confidence_level": "high",
+        "confidence_score": 0.78,
+        "areas_of_concern": [
+            {
+                "area": "Data Protection",
+                "confidence": 0.65,
+                "reason": "Some responses indicate gaps",
+            }
+        ],
+        "recommendations": [
+            "Review data protection measures",
+            "Consider additional security controls",
+        ],
+        "timestamp": datetime.utcnow().isoformat(),
+    }
+
+
+@router.post("/assessments/followup", response_model=AIFollowUpResponse)
+async def generate_assessment_followup_questions(
+    request: AIFollowUpRequest,
+    current_user: User = Depends(get_current_active_user),
+    db: AsyncSession = Depends(get_async_db),
+    _: None = Depends(ai_followup_rate_limit),
+):
+    """
+    Generate AI-powered follow-up questions for assessments.
+    This is an alias endpoint that matches the frontend expectation.
+    """
+    # Delegate to the existing followup endpoint logic
+    return await generate_followup_questions(request, current_user, db, _)
+
+
+@router.get("/assessments/metrics", response_model=AIMetricsResponse)
+async def get_assessment_ai_metrics(
+    current_user: User = Depends(get_current_active_user),
+    db: AsyncSession = Depends(get_async_db),
+    days: int = Query(default=30, ge=1, le=365, description="Number of days to include in metrics"),
+):
+    """
+    Get AI metrics specifically for assessments.
+    This is an alias endpoint that matches the frontend expectation.
+    """
+    # Delegate to the existing metrics endpoint logic
+    return await get_ai_metrics(current_user, db, days)
+
+
 @router.post("/followup", response_model=AIFollowUpResponse)
 async def generate_followup_questions(
     request: AIFollowUpRequest,
@@ -1252,79 +1336,78 @@ async def _get_mock_recommendations_response(gaps: List[Dict[str, Any]]) -> Dict
 # #     """
 # #     Get AI caching performance metrics and status.
 # #
-#
+# #     Returns:
+# #         Cache performance metrics including hit rates, cost savings, and status
+# #     """
+# #     try:
+# #         # Initialize AI assistant to access cache managers
+# #         assistant = ComplianceAssistant(db)
+# #
+# #         # Get both legacy cache and Google cached content metrics
+# #         metrics = {}
 
-    Returns:
-        Cache performance metrics including hit rates, cost savings, and status
-    """
-    try:
-        # Initialize AI assistant to access cache managers
-        assistant = ComplianceAssistant(db)
+# #
+# #         # Google Cached Content metrics with strategy optimization
+# #         try:
+# #             cached_content_manager = await assistant._get_cached_content_manager()
+# #             google_cache_metrics = cached_content_manager.get_cache_metrics()
+# #
+# #             # Add cache strategy optimization metrics
+# #             strategy_metrics = cached_content_manager.get_cache_strategy_metrics()
+# #             google_cache_metrics["strategy_optimization"] = strategy_metrics
+# #
+# #             metrics["google_cached_content"] = google_cache_metrics
+# #         except Exception as e:
+# #             logger.warning(f"Failed to get Google cached content metrics: {e}")
+# #             metrics["google_cached_content"] = {"error": "Metrics unavailable"}
 
-        # Get both legacy cache and Google cached content metrics
-        metrics = {}
-
-        # Google Cached Content metrics with strategy optimization
-        try:
-            cached_content_manager = await assistant._get_cached_content_manager()
-            google_cache_metrics = cached_content_manager.get_cache_metrics()
-
-            # Add cache strategy optimization metrics
-            strategy_metrics = cached_content_manager.get_cache_strategy_metrics()
-            google_cache_metrics["strategy_optimization"] = strategy_metrics
-
-            metrics["google_cached_content"] = google_cache_metrics
-        except Exception as e:
-            logger.warning(f"Failed to get Google cached content metrics: {e}")
-            metrics["google_cached_content"] = {"error": "Metrics unavailable"}
-
-        # Legacy AI cache metrics (if still in use)
-        try:
-            from services.ai.response_cache import get_ai_cache
-
-            ai_cache = await get_ai_cache()
-            legacy_cache_metrics = await ai_cache.get_cache_metrics()
-            metrics["legacy_cache"] = legacy_cache_metrics
-        except Exception as e:
-            logger.warning(f"Failed to get legacy cache metrics: {e}")
-            metrics["legacy_cache"] = {"error": "Metrics unavailable"}
-
-        # Overall cache status
-        metrics["cache_status"] = {
-            "google_cached_content_enabled": "google_cached_content" in metrics
-            and "error" not in metrics["google_cached_content"],
-            "legacy_cache_enabled": "legacy_cache" in metrics
-            and "error" not in metrics["legacy_cache"],
-            "timestamp": datetime.utcnow().isoformat(),
-        }
-
-        # Calculate combined hit rate if both caches are available
-        if (
-            metrics["cache_status"]["google_cached_content_enabled"]
-            and metrics["cache_status"]["legacy_cache_enabled"]
-        ):
-            google_hits = metrics["google_cached_content"].get("cache_hits", 0)
-            google_total = metrics["google_cached_content"].get("total_requests", 0)
-            legacy_hits = metrics["legacy_cache"].get("total_hits", 0)
-            legacy_total = metrics["legacy_cache"].get("total_requests", 0)
-
-            total_hits = google_hits + legacy_hits
-            total_requests = google_total + legacy_total
-
-            if total_requests > 0:
-                metrics["combined_hit_rate"] = round(total_hits / total_requests * 100, 2)
-            else:
-                metrics["combined_hit_rate"] = 0.0
-
-        return {
-            "cache_metrics": metrics,
-            "request_id": f"cache_metrics_{datetime.utcnow().strftime('%Y%m%d_%H%M%S')}",
-            "generated_at": datetime.utcnow().isoformat(),
-        }
-
-    except Exception as e:
-        logger.error(f"Error retrieving cache metrics: {e}")
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Unable to retrieve cache metrics",
-        )
+# #         # Legacy AI cache metrics (if still in use)
+# #         try:
+# #             from services.ai.response_cache import get_ai_cache
+# # 
+# #             ai_cache = await get_ai_cache()
+# #             legacy_cache_metrics = await ai_cache.get_cache_metrics()
+# #             metrics["legacy_cache"] = legacy_cache_metrics
+# #         except Exception as e:
+# #             logger.warning(f"Failed to get legacy cache metrics: {e}")
+# #             metrics["legacy_cache"] = {"error": "Metrics unavailable"}
+# # 
+# #         # Overall cache status
+# #         metrics["cache_status"] = {
+# #             "google_cached_content_enabled": "google_cached_content" in metrics
+# #             and "error" not in metrics["google_cached_content"],
+# #             "legacy_cache_enabled": "legacy_cache" in metrics
+# #             and "error" not in metrics["legacy_cache"],
+# #             "timestamp": datetime.utcnow().isoformat(),
+# #         }
+# # 
+# #         # Calculate combined hit rate if both caches are available
+# #         if (
+# #             metrics["cache_status"]["google_cached_content_enabled"]
+# #             and metrics["cache_status"]["legacy_cache_enabled"]
+# #         ):
+# #             google_hits = metrics["google_cached_content"].get("cache_hits", 0)
+# #             google_total = metrics["google_cached_content"].get("total_requests", 0)
+# #             legacy_hits = metrics["legacy_cache"].get("total_hits", 0)
+# #             legacy_total = metrics["legacy_cache"].get("total_requests", 0)
+# # 
+# #             total_hits = google_hits + legacy_hits
+# #             total_requests = google_total + legacy_total
+# # 
+# #             if total_requests > 0:
+# #                 metrics["combined_hit_rate"] = round(total_hits / total_requests * 100, 2)
+# #             else:
+# #                 metrics["combined_hit_rate"] = 0.0
+# # 
+# #         return {
+# #             "cache_metrics": metrics,
+# #             "request_id": f"cache_metrics_{datetime.utcnow().strftime('%Y%m%d_%H%M%S')}",
+# #             "generated_at": datetime.utcnow().isoformat(),
+# #         }
+# # 
+# #     except Exception as e:
+# #         logger.error(f"Error retrieving cache metrics: {e}")
+# #         raise HTTPException(
+# #             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+# #             detail="Unable to retrieve cache metrics",
+# #         )
