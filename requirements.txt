@@ -68,3 +68,6 @@ dnspython>=2.0.0
 bleach>=6.0.0
 orjson>=3.8.0
 pytest-cov>=4.0.0
+
+# AI Libraries
+mistralai==1.2.5

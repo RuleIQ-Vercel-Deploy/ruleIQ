@@ -89,12 +89,23 @@ RATE_LIMITS = {
 
 # Model Configuration
 MODEL_CONFIG = {
+    "embedding_model": "mistral-embed",  # Mistral embeddings
     "primary_model": "gemini-1.5-pro",     # Aligned with ruleIQ
     "fallback_model": "gpt-4o-mini",      # Aligned with ruleIQ
     "streaming_models": ["gemini-1.5-pro", "gpt-4o"],
     "json_mode_models": ["gpt-4o", "gpt-4o-mini"],
     "max_tokens": 4000,
     "temperature": 0.1,
+}
+
+# RAG Configuration  
+RAG_CONFIG = {
+    "chunk_size": 1000,
+    "chunk_overlap": 200,
+    "max_results": 10,
+    "min_relevance_score": 0.5,
+    "enable_reranking": True,
+    "cache_ttl_hours": 24,
 }
 
 # Compliance Frameworks (UK focus aligned with ruleIQ)

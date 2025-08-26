@@ -18,7 +18,7 @@ services:
 
   celery_worker:
     build: .
-    command: celery -A celery_app worker --loglevel=debug --concurrency=2 --pool=solo --traceback --queues=evidence,compliance,notifications,reports
+    command: celery -A celery_app worker --loglevel=debug --concurrency=2 --pool=solo --queues=evidence,compliance,notifications,reports
     env_file:
       - .env.local
     environment:

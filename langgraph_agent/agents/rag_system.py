@@ -83,7 +83,7 @@ class DocumentMetadata:
     last_accessed: Optional[datetime] = None
 
     # Company and access control
-    company_id: UUID
+    company_id: UUID = field(default_factory=UUID)
     access_level: str = "company"  # company, department, user
     tags: List[str] = field(default_factory=list)
 

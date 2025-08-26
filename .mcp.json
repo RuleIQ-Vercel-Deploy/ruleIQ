@@ -13,17 +13,11 @@
         "--directory",
         "/home/omar/serena",
         "serena",
-        "start-mcp-server"
+        "start-mcp-server",
+        "--project",
+        "/home/omar/Documents/ruleIQ"
       ]
     },
-    //"ruleiq-ruleIQ": {
-    //  "command": "npx",
-    //  "args": [
-    //  "-y",
-    //    "@sequa-ai/sequa-mcp@latest",
-    //    "https://mcp.sequa.ai/v1/o/omar/p/ruleiq/r/github+OmarA1-Bakri+ruleIQ/code-assistant"
-    //  ]
-    //},
     "superdesign": {
       "command": "node",
       "args": [

@@ -1,0 +1,102 @@
+#!/bin/bash
+# Fix custom RAG system
+
+cat << 'EOF'
+═══════════════════════════════════════════════════════════════
+ISSUE #2: Complex Custom RAG System
+═══════════════════════════════════════════════════════════════
+
+PROBLEM: Over-engineered custom RAG instead of standard LangChain components
+
+FILES TO CHECK:
+- Any file with "rag", "retrieval", "embedding", "vector" in the name
+- services/rag_service.py
+- langgraph_agent/retrieval/
+
+REPLACE CUSTOM RAG WITH THIS:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+from langchain.embeddings import OpenAIEmbeddings
+from langchain.vectorstores import FAISS
+from langchain.retrievers import MultiQueryRetriever, EnsembleRetriever
+from langchain.retrievers.document_compressors import CohereRerank
+from langchain.retrievers import ContextualCompressionRetriever
+from langchain.chat_models import ChatOpenAI
+
+class StandardRAG:
+    """Replace all custom RAG with this."""
+    
+    def __init__(self, vector_store_path: str = "./vectors"):
+        # Standard embeddings (not custom)
+        self.embeddings = OpenAIEmbeddings(
+            model="text-embedding-3-small"
+        )
+        
+        # Load existing vectors
+        self.vector_store = FAISS.load_local(
+            vector_store_path, 
+            self.embeddings,
+            allow_dangerous_deserialization=True
+        )
+        
+        # Multi-query for better recall (not custom query expansion)
+        base_retriever = self.vector_store.as_retriever(
+            search_kwargs={"k": 20}
+        )
+        
+        self.multi_query = MultiQueryRetriever.from_llm(
+            retriever=base_retriever,
+            llm=ChatOpenAI(temperature=0)
+        )
+        
+        # Reranking (not custom scoring)
+        compressor = CohereRerank(
+            model="rerank-english-v2.0",
+            top_n=5
+        )
+        
+        self.retriever = ContextualCompressionRetriever(
+            base_compressor=compressor,
+            base_retriever=self.multi_query
+        )
+    
+    async def retrieve(self, query: str) -> list:
+        """Simple retrieval - no custom logic."""
+        docs = await self.retriever.aget_relevant_documents(query)
+        return [
+            {
+                "content": doc.page_content,
+                "metadata": doc.metadata,
+                "score": doc.metadata.get("relevance_score", 0.0)
+            }
+            for doc in docs
+        ]
+
+INTEGRATE WITH LANGGRAPH:
+━━━━━━━━━━━━━━━━━━━━━━━━
+def create_rag_node(rag_service: StandardRAG):
+    """RAG node for LangGraph."""
+    
+    async def rag_node(state: GraphState) -> GraphState:
+        query = state.get("messages", [])[-1].get("content", "")
+        
+        if query:
+            docs = await rag_service.retrieve(query)
+            state["documents"].extend(docs)
+            state["metadata"]["retrieval_count"] = len(docs)
+        
+        return state
+    
+    return rag_node
+
+# In your graph:
+rag_service = StandardRAG()
+graph.add_node("retrieve", create_rag_node(rag_service))
+
+DELETE THESE PATTERNS:
+━━━━━━━━━━━━━━━━━━━━━
+- Custom embedding functions
+- Custom similarity calculations  
+- Custom reranking algorithms
+- Manual vector operations
+- Custom query expansion logic
+EOF

@@ -14,8 +14,6 @@ services:
       - ALLOWED_ORIGINS=${ALLOWED_ORIGINS}
       - FERNET_KEY=${FERNET_KEY}
     depends_on:
-      db:
-        condition: service_healthy
       redis:
         condition: service_healthy
     restart: unless-stopped
@@ -39,8 +37,6 @@ services:
       - GOOGLE_API_KEY=${GOOGLE_API_KEY}
       - FERNET_KEY=${FERNET_KEY}
     depends_on:
-      db:
-        condition: service_healthy
       redis:
         condition: service_healthy
     restart: unless-stopped
@@ -58,27 +54,9 @@ services:
       - GOOGLE_API_KEY=${GOOGLE_API_KEY}
       - FERNET_KEY=${FERNET_KEY}
     depends_on:
-      db:
-        condition: service_healthy
       redis:
         condition: service_healthy
     restart: unless-stopped
-    networks:
-      - compliancegpt-network
-
-  db:
-    image: postgres:15-alpine
-    environment:
-      - POSTGRES_DB=${POSTGRES_DB}
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER}"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
     networks:
       - compliancegpt-network
 
@@ -110,7 +88,6 @@ services:
       - compliancegpt-network
 
 volumes:
-  postgres_data:
   redis_data:
 
 networks:

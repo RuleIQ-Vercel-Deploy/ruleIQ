@@ -1,0 +1,50 @@
+#!/bin/bash
+# Check what needs fixing in RuleIQ
+
+cd /home/omar/Documents/ruleIQ
+
+echo "═══════════════════════════════════════════════════════════════"
+echo "           RuleIQ LangGraph Issues Check                      "
+echo "═══════════════════════════════════════════════════════════════"
+echo ""
+
+echo "🔍 Issue #1: Underutilized LangGraph Features"
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo -n "Checking for Annotated fields: "
+grep -r "Annotated\[" --include="*.py" 2>/dev/null | wc -l | xargs -I {} echo "{} found"
+
+echo -n "Checking for conditional edges: "
+grep -r "add_conditional_edges" --include="*.py" 2>/dev/null | wc -l | xargs -I {} echo "{} found"
+
+echo -n "Checking for checkpointing: "
+grep -r "SqliteSaver\|PostgresSaver" --include="*.py" 2>/dev/null | wc -l | xargs -I {} echo "{} found"
+echo ""
+
+echo "🔍 Issue #2: Complex Custom RAG System"
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo -n "Custom RAG functions: "
+grep -r "custom.*rag\|rag.*custom" -i --include="*.py" 2>/dev/null | wc -l | xargs -I {} echo "{} found"
+
+echo -n "LangChain RAG components: "
+grep -r "MultiQueryRetriever\|EnsembleRetriever\|CohereRerank" --include="*.py" 2>/dev/null | wc -l | xargs -I {} echo "{} found"
+echo ""
+
+echo "🔍 Issue #3: Celery Usage"
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo -n "Celery imports: "
+grep -r "from celery\|import celery" --include="*.py" 2>/dev/null | wc -l | xargs -I {} echo "{} found"
+
+echo -n "Celery tasks: "
+grep -r "@celery.*task\|\.delay(\|\.apply_async(" --include="*.py" 2>/dev/null | wc -l | xargs -I {} echo "{} found"
+
+if [ -f "celery_app.py" ]; then
+    echo "❌ celery_app.py exists - needs migration"
+fi
+echo ""
+
+echo "═══════════════════════════════════════════════════════════════"
+echo "To fix issues, run:"
+echo "  /fix-langgraph  - Fix state management & LangGraph features"
+echo "  /fix-rag        - Replace custom RAG with LangChain"
+echo "  /fix-celery     - Migrate Celery to LangGraph persistence"
+echo "═══════════════════════════════════════════════════════════════"

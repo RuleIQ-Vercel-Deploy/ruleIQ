@@ -1,0 +1,623 @@
+{
+  "timestamp": "20250826_043712",
+  "nodes": [
+    {
+      "id": 0,
+      "labels": [
+        "Domain"
+      ],
+      "properties": {
+        "id": "privacy",
+        "description": "Data privacy and protection",
+        "name": "Privacy"
+      }
+    },
+    {
+      "id": 1,
+      "labels": [
+        "Domain"
+      ],
+      "properties": {
+        "id": "security",
+        "description": "Information security and cybersecurity",
+        "name": "Security"
+      }
+    },
+    {
+      "id": 2,
+      "labels": [
+        "Domain"
+      ],
+      "properties": {
+        "id": "governance",
+        "description": "Corporate governance and compliance",
+        "name": "Governance"
+      }
+    },
+    {
+      "id": 3,
+      "labels": [
+        "Domain"
+      ],
+      "properties": {
+        "id": "financial",
+        "description": "Financial compliance and reporting",
+        "name": "Financial"
+      }
+    },
+    {
+      "id": 4,
+      "labels": [
+        "Domain"
+      ],
+      "properties": {
+        "id": "operational",
+        "description": "Operational compliance and standards",
+        "name": "Operational"
+      }
+    },
+    {
+      "id": 5,
+      "labels": [
+        "Jurisdiction"
+      ],
+      "properties": {
+        "id": "us",
+        "name": "United States",
+        "code": "US"
+      }
+    },
+    {
+      "id": 6,
+      "labels": [
+        "Jurisdiction"
+      ],
+      "properties": {
+        "id": "eu",
+        "name": "European Union",
+        "code": "EU"
+      }
+    },
+    {
+      "id": 7,
+      "labels": [
+        "Jurisdiction"
+      ],
+      "properties": {
+        "id": "uk",
+        "name": "United Kingdom",
+        "code": "UK"
+      }
+    },
+    {
+      "id": 8,
+      "labels": [
+        "Jurisdiction"
+      ],
+      "properties": {
+        "id": "ca",
+        "name": "Canada",
+        "code": "CA"
+      }
+    },
+    {
+      "id": 9,
+      "labels": [
+        "Jurisdiction"
+      ],
+      "properties": {
+        "id": "global",
+        "name": "Global",
+        "code": "GLOBAL"
+      }
+    },
+    {
+      "id": 10,
+      "labels": [
+        "Regulation"
+      ],
+      "properties": {
+        "id": "gdpr",
+        "name": "GDPR",
+        "effective_date": "2018-05-25",
+        "full_name": "General Data Protection Regulation"
+      }
+    },
+    {
+      "id": 11,
+      "labels": [
+        "Regulation"
+      ],
+      "properties": {
+        "id": "ccpa",
+        "name": "CCPA",
+        "effective_date": "2020-01-01",
+        "full_name": "California Consumer Privacy Act"
+      }
+    },
+    {
+      "id": 12,
+      "labels": [
+        "Regulation"
+      ],
+      "properties": {
+        "id": "hipaa",
+        "name": "HIPAA",
+        "effective_date": "1996-08-21",
+        "full_name": "Health Insurance Portability and Accountability Act"
+      }
+    },
+    {
+      "id": 13,
+      "labels": [
+        "Regulation"
+      ],
+      "properties": {
+        "id": "iso27001",
+        "name": "ISO 27001",
+        "effective_date": "2013-10-01",
+        "full_name": "ISO/IEC 27001 Information Security Management"
+      }
+    },
+    {
+      "id": 14,
+      "labels": [
+        "Regulation"
+      ],
+      "properties": {
+        "id": "soc2",
+        "name": "SOC 2",
+        "effective_date": "2017-01-01",
+        "full_name": "Service Organization Control 2"
+      }
+    },
+    {
+      "id": 15,
+      "labels": [
+        "Regulation"
+      ],
+      "properties": {
+        "id": "pci_dss",
+        "name": "PCI DSS",
+        "effective_date": "2004-12-01",
+        "full_name": "Payment Card Industry Data Security Standard"
+      }
+    },
+    {
+      "id": 16,
+      "labels": [
+        "Regulation"
+      ],
+      "properties": {
+        "id": "sox",
+        "name": "SOX",
+        "effective_date": "2002-07-30",
+        "full_name": "Sarbanes-Oxley Act"
+      }
+    },
+    {
+      "id": 17,
+      "labels": [
+        "Regulation"
+      ],
+      "properties": {
+        "id": "mifid2",
+        "name": "MiFID II",
+        "effective_date": "2018-01-03",
+        "full_name": "Markets in Financial Instruments Directive II"
+      }
+    },
+    {
+      "id": 18,
+      "labels": [
+        "Requirement"
+      ],
+      "properties": {
+        "id": "gdpr_consent",
+        "article": "Article 7",
+        "description": "Organizations must obtain freely given, specific, informed consent",
+        "name": "Consent Requirements"
+      }
+    },
+    {
+      "id": 19,
+      "labels": [
+        "Requirement"
+      ],
+      "properties": {
+        "id": "gdpr_dpo",
+        "article": "Article 37",
+        "description": "Designate a DPO when processing operations require regular monitoring",
+        "name": "Data Protection Officer"
+      }
+    },
+    {
+      "id": 20,
+      "labels": [
+        "Requirement"
+      ],
+      "properties": {
+        "id": "gdpr_breach",
+        "article": "Article 33",
+        "description": "Notify supervisory authority within 72 hours of breach awareness",
+        "name": "Breach Notification"
+      }
+    },
+    {
+      "id": 21,
+      "labels": [
+        "Requirement"
+      ],
+      "properties": {
+        "id": "iso_risk",
+        "article": "Clause 6.1",
+        "description": "Identify and assess information security risks",
+        "name": "Risk Assessment"
+      }
+    },
+    {
+      "id": 22,
+      "labels": [
+        "Requirement"
+      ],
+      "properties": {
+        "id": "iso_access",
+        "article": "A.9",
+        "description": "Limit access to information and information processing facilities",
+        "name": "Access Control"
+      }
+    },
+    {
+      "id": 23,
+      "labels": [
+        "Requirement"
+      ],
+      "properties": {
+        "id": "soc2_security",
+        "article": "CC6",
+        "description": "Protection against unauthorized access",
+        "name": "Security Principle"
+      }
+    },
+    {
+      "id": 24,
+      "labels": [
+        "Requirement"
+      ],
+      "properties": {
+        "id": "soc2_availability",
+        "article": "A1",
+        "description": "System availability for operation and use",
+        "name": "Availability Principle"
+      }
+    },
+    {
+      "id": 25,
+      "labels": [
+        "Control"
+      ],
+      "properties": {
+        "id": "ctrl_consent_mgmt",
+        "description": "Automated consent collection and management",
+        "name": "Consent Management System",
+        "type": "Technical"
+      }
+    },
+    {
+      "id": 26,
+      "labels": [
+        "Control"
+      ],
+      "properties": {
+        "id": "ctrl_access_mgmt",
+        "description": "Role-based access control implementation",
+        "name": "Access Management System",
+        "type": "Technical"
+      }
+    },
+    {
+      "id": 27,
+      "labels": [
+        "Control"
+      ],
+      "properties": {
+        "id": "ctrl_breach_proc",
+        "description": "Documented breach notification process",
+        "name": "Breach Response Procedure",
+        "type": "Administrative"
+      }
+    },
+    {
+      "id": 28,
+      "labels": [
+        "Control"
+      ],
+      "properties": {
+        "id": "ctrl_risk_assess",
+        "description": "Regular risk assessment and treatment",
+        "name": "Risk Assessment Process",
+        "type": "Administrative"
+      }
+    },
+    {
+      "id": 29,
+      "labels": [
+        "Control"
+      ],
+      "properties": {
+        "id": "ctrl_monitoring",
+        "description": "24/7 system availability monitoring",
+        "name": "System Monitoring",
+        "type": "Technical"
+      }
+    },
+    {
+      "id": 30,
+      "labels": [
+        "Metric"
+      ],
+      "properties": {
+        "id": "metric_consent_rate",
+        "name": "Consent Collection Rate",
+        "target": 100,
+        "type": "Percentage"
+      }
+    },
+    {
+      "id": 31,
+      "labels": [
+        "Metric"
+      ],
+      "properties": {
+        "id": "metric_breach_time",
+        "name": "Breach Notification Time",
+        "target": 72,
+        "type": "Hours"
+      }
+    },
+    {
+      "id": 32,
+      "labels": [
+        "Metric"
+      ],
+      "properties": {
+        "id": "metric_access_review",
+        "name": "Access Review Frequency",
+        "target": 90,
+        "type": "Days"
+      }
+    },
+    {
+      "id": 33,
+      "labels": [
+        "Metric"
+      ],
+      "properties": {
+        "id": "metric_uptime",
+        "name": "System Uptime",
+        "target": 99.9,
+        "type": "Percentage"
+      }
+    },
+    {
+      "id": 34,
+      "labels": [
+        "Metric"
+      ],
+      "properties": {
+        "id": "metric_risk_review",
+        "name": "Risk Review Frequency",
+        "target": 180,
+        "type": "Days"
+      }
+    }
+  ],
+  "relationships": [
+    {
+      "type": "BELONGS_TO",
+      "properties": {},
+      "start_id": 10,
+      "end_id": 0
+    },
+    {
+      "type": "APPLIES_IN",
+      "properties": {},
+      "start_id": 10,
+      "end_id": 6
+    },
+    {
+      "type": "BELONGS_TO",
+      "properties": {},
+      "start_id": 11,
+      "end_id": 0
+    },
+    {
+      "type": "APPLIES_IN",
+      "properties": {},
+      "start_id": 11,
+      "end_id": 5
+    },
+    {
+      "type": "BELONGS_TO",
+      "properties": {},
+      "start_id": 12,
+      "end_id": 0
+    },
+    {
+      "type": "APPLIES_IN",
+      "properties": {},
+      "start_id": 12,
+      "end_id": 5
+    },
+    {
+      "type": "BELONGS_TO",
+      "properties": {},
+      "start_id": 13,
+      "end_id": 1
+    },
+    {
+      "type": "APPLIES_IN",
+      "properties": {},
+      "start_id": 13,
+      "end_id": 9
+    },
+    {
+      "type": "BELONGS_TO",
+      "properties": {},
+      "start_id": 14,
+      "end_id": 1
+    },
+    {
+      "type": "APPLIES_IN",
+      "properties": {},
+      "start_id": 14,
+      "end_id": 5
+    },
+    {
+      "type": "BELONGS_TO",
+      "properties": {},
+      "start_id": 15,
+      "end_id": 1
+    },
+    {
+      "type": "APPLIES_IN",
+      "properties": {},
+      "start_id": 15,
+      "end_id": 9
+    },
+    {
+      "type": "BELONGS_TO",
+      "properties": {},
+      "start_id": 16,
+      "end_id": 3
+    },
+    {
+      "type": "APPLIES_IN",
+      "properties": {},
+      "start_id": 16,
+      "end_id": 5
+    },
+    {
+      "type": "BELONGS_TO",
+      "properties": {},
+      "start_id": 17,
+      "end_id": 3
+    },
+    {
+      "type": "APPLIES_IN",
+      "properties": {},
+      "start_id": 17,
+      "end_id": 6
+    },
+    {
+      "type": "REQUIRED_BY",
+      "properties": {},
+      "start_id": 18,
+      "end_id": 10
+    },
+    {
+      "type": "REQUIRED_BY",
+      "properties": {},
+      "start_id": 19,
+      "end_id": 10
+    },
+    {
+      "type": "REQUIRED_BY",
+      "properties": {},
+      "start_id": 20,
+      "end_id": 10
+    },
+    {
+      "type": "REQUIRED_BY",
+      "properties": {},
+      "start_id": 21,
+      "end_id": 13
+    },
+    {
+      "type": "REQUIRED_BY",
+      "properties": {},
+      "start_id": 22,
+      "end_id": 13
+    },
+    {
+      "type": "REQUIRED_BY",
+      "properties": {},
+      "start_id": 23,
+      "end_id": 14
+    },
+    {
+      "type": "REQUIRED_BY",
+      "properties": {},
+      "start_id": 24,
+      "end_id": 14
+    },
+    {
+      "type": "SATISFIES",
+      "properties": {},
+      "start_id": 25,
+      "end_id": 18
+    },
+    {
+      "type": "SATISFIES",
+      "properties": {},
+      "start_id": 26,
+      "end_id": 22
+    },
+    {
+      "type": "SATISFIES",
+      "properties": {},
+      "start_id": 26,
+      "end_id": 23
+    },
+    {
+      "type": "SATISFIES",
+      "properties": {},
+      "start_id": 27,
+      "end_id": 20
+    },
+    {
+      "type": "SATISFIES",
+      "properties": {},
+      "start_id": 28,
+      "end_id": 21
+    },
+    {
+      "type": "SATISFIES",
+      "properties": {},
+      "start_id": 29,
+      "end_id": 24
+    },
+    {
+      "type": "MEASURES",
+      "properties": {},
+      "start_id": 30,
+      "end_id": 25
+    },
+    {
+      "type": "MEASURES",
+      "properties": {},
+      "start_id": 31,
+      "end_id": 27
+    },
+    {
+      "type": "MEASURES",
+      "properties": {},
+      "start_id": 32,
+      "end_id": 26
+    },
+    {
+      "type": "MEASURES",
+      "properties": {},
+      "start_id": 33,
+      "end_id": 29
+    },
+    {
+      "type": "MEASURES",
+      "properties": {},
+      "start_id": 34,
+      "end_id": 28
+    }
+  ],
+  "node_count": 35,
+  "relationship_count": 34
+}

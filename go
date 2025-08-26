@@ -45,7 +45,7 @@ Activating ruleIQ project in Serena:
 mcp__serena__activate_project ruleIQ
 
 Reading project documentation:
-cat /home/omar/Documents/ruleIQ/CLAUDE.md | head -50
+cat /home/omar/Documents/ruleIQ/CLAUDE.md
 
 Checking current Archon tasks:
 mcp__archon__list_tasks filter_by="status" filter_value="todo"
