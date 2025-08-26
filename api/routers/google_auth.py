@@ -25,7 +25,6 @@ from services.auth_service import auth_service
 settings = get_settings()
 router = APIRouter(tags=["Google OAuth"])
 
-
 class GoogleUserInfo(BaseModel):
     """Google user information from OAuth response"""
     id: str
@@ -36,13 +35,11 @@ class GoogleUserInfo(BaseModel):
     family_name: str
     picture: str
 
-
 class GoogleAuthResponse(BaseModel):
     """Response from Google OAuth login"""
     user: UserResponse
     tokens: Token
     is_new_user: bool
-
 
 @router.get("/login")
 async def google_login(request: Request):
@@ -79,7 +76,6 @@ async def google_login(request: Request):
     )
 
     return RedirectResponse(url=google_auth_url)
-
 
 @router.get("/callback")
 async def google_callback(
@@ -201,7 +197,6 @@ async def google_callback(
     redirect_url = f"http://localhost:3000/auth/callback?access_token={access_token}&refresh_token={refresh_token}&new_user={is_new_user}"
 
     return RedirectResponse(url=redirect_url)
-
 
 @router.post("/mobile-login", response_model=GoogleAuthResponse)
 async def google_mobile_login(

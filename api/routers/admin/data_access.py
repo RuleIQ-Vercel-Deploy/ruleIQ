@@ -19,15 +19,12 @@ from api.dependencies.rbac_auth import (
 from database.db_setup import get_db
 from services.data_access_service import DataAccessService
 
-
-router = APIRouter(prefix="/data-access", tags=["Data Access Management"])
-
+router = APIRouter(prefix="/api/v1/data-access", tags=["Data Access Management"])
 
 class DataAccessRequest(BaseModel):
     user_id: UUID
     access_type: str  # 'own_data', 'organization_data', 'all_data'
     business_profile_id: Optional[UUID] = None
-
 
 class DataAccessResponse(BaseModel):
     id: str
@@ -38,13 +35,11 @@ class DataAccessResponse(BaseModel):
     granted_by: Optional[str] = None
     is_active: bool
 
-
 class UserDataAccessInfo(BaseModel):
     user_id: str
     email: str
     access_level: str
     accessible_profiles: List[str]
-
 
 @router.post("/grant", response_model=DataAccessResponse)
 async def grant_data_access(
@@ -81,7 +76,6 @@ async def grant_data_access(
             detail=str(e)
         )
 
-
 @router.delete("/revoke")
 async def revoke_data_access(
     user_id: UUID,
@@ -106,7 +100,6 @@ async def revoke_data_access(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Data access record not found"
         )
-
 
 @router.get("/user/{user_id}", response_model=UserDataAccessInfo)
 async def get_user_data_access(
@@ -151,7 +144,6 @@ async def get_user_data_access(
         accessible_profiles=[str(profile_id) for profile_id in accessible_profiles]
     )
 
-
 @router.get("/levels")
 async def list_access_levels(
     current_user: UserWithRoles = Depends(require_permission("admin_audit"))
@@ -175,7 +167,6 @@ async def list_access_levels(
             }
         ]
     }
-
 
 @router.get("/audit")
 async def audit_data_access(

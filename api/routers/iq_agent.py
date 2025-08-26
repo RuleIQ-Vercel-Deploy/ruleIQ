@@ -43,12 +43,11 @@ from services.ai.exceptions import (
 # Set up logging
 logger = logging.getLogger(__name__)
 
-router = APIRouter(prefix="", tags=["IQ Agent - GraphRAG Intelligence"])
+router = APIRouter(prefix="/api/v1/", tags=["IQ Agent - GraphRAG Intelligence"])
 
 # Global IQ agent instance (initialized on startup)
 _iq_agent: Optional[IQComplianceAgent] = None
 _neo4j_service: Optional[Neo4jGraphRAGService] = None
-
 
 async def get_iq_agent() -> IQComplianceAgent:
     """Get or create IQ agent instance"""
@@ -73,7 +72,6 @@ async def get_iq_agent() -> IQComplianceAgent:
 
     return _iq_agent
 
-
 async def get_neo4j_service() -> Neo4jGraphRAGService:
     """Get Neo4j service instance"""
     global _neo4j_service
@@ -91,7 +89,6 @@ async def get_neo4j_service() -> Neo4jGraphRAGService:
             )
 
     return _neo4j_service
-
 
 @router.post(
     "/query",
@@ -181,7 +178,6 @@ async def query_compliance_analysis(
             detail="Internal server error during compliance analysis"
         )
 
-
 @router.post(
     "/memory/store",
     response_model=MemoryStoreResponse,
@@ -227,7 +223,6 @@ async def store_compliance_memory(
             detail=f"Failed to store memory: {str(e)}"
         )
 
-
 @router.post(
     "/memory/retrieve",
     response_model=MemoryRetrievalResponseWrapper,
@@ -272,7 +267,6 @@ async def retrieve_compliance_memories(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Failed to retrieve memories: {str(e)}"
         )
-
 
 @router.post(
     "/graph/initialize",
@@ -329,7 +323,6 @@ async def initialize_compliance_graph_endpoint(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Failed to initialize graph: {str(e)}"
         )
-
 
 @router.get(
     "/health",
@@ -427,7 +420,6 @@ async def iq_agent_health_check(
             message=f"Health check failed: {str(e)}"
         )
 
-
 @router.get(
     "/status",
     summary="IQ Agent Status Summary",
@@ -461,7 +453,6 @@ async def iq_agent_status():
             "error": str(e)
         }
 
-
 # Background task functions
 
 async def _log_query_metrics(
@@ -479,7 +470,6 @@ async def _log_query_metrics(
     except Exception as e:
         logger.error(f"Failed to log query metrics: {str(e)}")
 
-
 async def _initialize_graph_background(
     clear_existing: bool = False,
     load_sample_data: bool = True
@@ -492,7 +482,6 @@ async def _initialize_graph_background(
 
     except Exception as e:
         logger.error(f"Background graph initialization failed: {str(e)}")
-
 
 # Cleanup function for application shutdown
 async def cleanup_iq_agent() -> None:

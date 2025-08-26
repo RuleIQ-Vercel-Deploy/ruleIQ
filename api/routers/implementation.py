@@ -21,7 +21,6 @@ from services.implementation_service import (
 
 router = APIRouter()
 
-
 @router.post("/plans", response_model=ImplementationPlanResponse, status_code=201)
 async def create_plan(
     plan_data: ImplementationPlanCreate,
@@ -63,7 +62,6 @@ async def create_plan(
 
     return plan_dict
 
-
 @router.get("/plans", response_model=ImplementationPlanListResponse)
 async def list_plans(
     current_user: User = Depends(get_current_active_user), db: AsyncSession = Depends(get_async_db)
@@ -71,10 +69,9 @@ async def list_plans(
     plans = await list_implementation_plans(db, current_user)
     return {"plans": plans}
 
-
-@router.get("/plans/{plan_id}", response_model=ImplementationPlanResponse)
+@router.get("/plans/{id}", response_model=ImplementationPlanResponse)
 async def get_plan(
-    plan_id: UUID,
+    id: UUID,
     current_user: User = Depends(get_current_active_user),
     db: AsyncSession = Depends(get_async_db),
 ):
@@ -120,11 +117,10 @@ async def get_plan(
 
     return plan_dict
 
-
-@router.patch("/plans/{plan_id}/tasks/{task_id}")
+@router.patch("/plans/{id}/tasks/{id}")
 async def update_task(
-    plan_id: UUID,
-    task_id: str,
+    id: UUID,
+    id: str,
     task_update: ImplementationTaskUpdate,
     current_user: User = Depends(get_current_active_user),
     db: AsyncSession = Depends(get_async_db),
@@ -134,8 +130,6 @@ async def update_task(
         raise HTTPException(status_code=404, detail="Implementation plan not found")
     return {"message": "Task updated", "plan_id": plan_id, "task_id": task_id}
 
-
-@router.get("/recommendations", summary="Get implementation recommendations")
 async def get_implementation_recommendations(
     framework: str = None,
     current_user: User = Depends(get_current_active_user),
@@ -188,7 +182,6 @@ async def get_implementation_recommendations(
         "automation_opportunities": 2,
         "generated_at": datetime.utcnow().isoformat()
     }
-
 
 @router.get("/resources/{frameworkId}", summary="Get implementation resources")
 async def get_implementation_resources(
@@ -261,7 +254,6 @@ async def get_implementation_resources(
         "total_resources": 7,
         "last_updated": datetime.utcnow().isoformat()
     }
-
 
 @router.get("/plans/{planId}/analytics", summary="Get plan analytics")
 async def get_implementation_plan_analytics(

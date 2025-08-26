@@ -29,7 +29,6 @@ from config.logging_config import get_logger
 logger = get_logger(__name__)
 router = APIRouter()
 
-
 # Request/Response Models
 class AWSConfigurationRequest(BaseModel):
     auth_type: str  # "access_key" or "role_assumption"
@@ -39,11 +38,9 @@ class AWSConfigurationRequest(BaseModel):
     external_id: Optional[str] = None
     region: str = "us-east-1"
 
-
 class OktaConfigurationRequest(BaseModel):
     domain: str
     api_token: str
-
 
 class GoogleWorkspaceConfigurationRequest(BaseModel):
     domain: str
@@ -51,13 +48,11 @@ class GoogleWorkspaceConfigurationRequest(BaseModel):
     client_secret: str
     refresh_token: str
 
-
 class MicrosoftConfigurationRequest(BaseModel):
     tenant_id: str
     client_id: str
     client_secret: str
     refresh_token: Optional[str] = None
-
 
 class FoundationEvidenceRequest(BaseModel):
     framework_id: str
@@ -66,7 +61,6 @@ class FoundationEvidenceRequest(BaseModel):
     collection_mode: str = "immediate"  # "immediate", "scheduled", "streaming"
     quality_requirements: Optional[Dict[str, Any]] = None
 
-
 class EvidenceCollectionResponse(BaseModel):
     collection_id: str
     status: str
@@ -74,7 +68,6 @@ class EvidenceCollectionResponse(BaseModel):
     estimated_duration: str
     evidence_types: List[str]
     created_at: datetime
-
 
 class EvidenceCollectionStatus(BaseModel):
     collection_id: str
@@ -88,7 +81,6 @@ class EvidenceCollectionStatus(BaseModel):
     current_activity: str
     errors: List[str]
 
-
 class CollectedEvidence(BaseModel):
     evidence_id: str
     evidence_type: str
@@ -99,7 +91,6 @@ class CollectedEvidence(BaseModel):
     quality_score: float
     collected_at: datetime
     data_summary: Dict[str, Any]
-
 
 # AWS Configuration Endpoints
 @router.post("/aws/configure")
@@ -179,7 +170,6 @@ async def configure_aws_integration(
         logger.error(f"Error configuring AWS integration for user {str(current_user.id)}: {e}")
         raise HTTPException(status_code=500, detail=f"Configuration failed: {str(e)}")
 
-
 @router.post("/okta/configure")
 async def configure_okta_integration(
     config: OktaConfigurationRequest,
@@ -229,7 +219,6 @@ async def configure_okta_integration(
     except Exception as e:
         logger.error(f"Error configuring Okta integration for user {str(current_user.id)}: {e}")
         raise HTTPException(status_code=500, detail=f"Configuration failed: {str(e)}")
-
 
 @router.post("/google/configure")
 async def configure_google_workspace_integration(
@@ -289,7 +278,6 @@ async def configure_google_workspace_integration(
         )
         raise HTTPException(status_code=500, detail=f"Configuration failed: {str(e)}")
 
-
 @router.post("/microsoft/configure")
 async def configure_microsoft_integration(
     config: MicrosoftConfigurationRequest,
@@ -345,7 +333,6 @@ async def configure_microsoft_integration(
     except Exception as e:
         logger.error(f"Error configuring Microsoft 365 integration for user {str(current_user.id)}: {e}")
         raise HTTPException(status_code=500, detail=f"Configuration failed: {str(e)}")
-
 
 # Evidence Collection Endpoints
 @router.post("/collect", response_model=EvidenceCollectionResponse)
@@ -432,7 +419,6 @@ async def start_foundation_evidence_collection(
         logger.error(f"Error starting evidence collection for user {str(current_user.id)}: {e}")
         raise HTTPException(status_code=500, detail=f"Failed to start collection: {str(e)}")
 
-
 @router.get("/collect/{collection_id}/status", response_model=EvidenceCollectionStatus)
 async def get_collection_status(
     collection_id: str,
@@ -479,7 +465,6 @@ async def get_collection_status(
     except Exception as e:
         logger.error(f"Error getting collection status {collection_id}: {e}")
         raise HTTPException(status_code=500, detail=f"Failed to get status: {str(e)}")
-
 
 @router.get("/collect/{collection_id}/results")
 async def get_collection_results(
@@ -534,8 +519,6 @@ async def get_collection_results(
         logger.error(f"Error getting collection results {collection_id}: {e}")
         raise HTTPException(status_code=500, detail=f"Failed to get results: {str(e)}")
 
-
-@router.get("/health")
 async def check_foundation_integrations_health(
     current_user: User = Depends(get_current_active_user), db: AsyncSession = Depends(get_async_db)
 ):
@@ -599,7 +582,6 @@ async def check_foundation_integrations_health(
     except Exception as e:
         logger.error(f"Error checking foundation integrations health: {e}")
         raise HTTPException(status_code=500, detail=f"Health check failed: {str(e)}")
-
 
 # All helper functions have been moved to database.services.integration_service module
 # The router now properly imports and uses those functions

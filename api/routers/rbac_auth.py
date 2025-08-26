@@ -26,21 +26,17 @@ from database.db_setup import get_db
 from database.user import User
 from services.rbac_service import RBACService
 
-
 router = APIRouter(tags=["RBAC Authentication"])
-
 
 class LoginRequest(BaseModel):
     email: str
     password: str
-
 
 class TokenResponse(BaseModel):
     access_token: str
     refresh_token: str
     token_type: str = "bearer"
     expires_in: int = ACCESS_TOKEN_EXPIRE_MINUTES * 60
-
 
 class UserInfoResponse(BaseModel):
     id: str
@@ -51,18 +47,15 @@ class UserInfoResponse(BaseModel):
     permissions: List[str]
     accessible_frameworks: List[Dict]
 
-
 class RoleAssignmentRequest(BaseModel):
     user_id: UUID
     role_id: UUID
     expires_at: Optional[str] = None
 
-
 class RoleAssignmentResponse(BaseModel):
     success: bool
     message: str
     assignment_id: Optional[str] = None
-
 
 @router.post(
     "/login",
@@ -121,7 +114,6 @@ async def login_with_roles(
         expires_in=ACCESS_TOKEN_EXPIRE_MINUTES * 60
     )
 
-
 @router.post(
     "/login-form",
     response_model=TokenResponse,
@@ -174,7 +166,6 @@ async def login_with_json(
         expires_in=ACCESS_TOKEN_EXPIRE_MINUTES * 60
     )
 
-
 @router.get(
     "/me",
     response_model=UserInfoResponse
@@ -194,7 +185,6 @@ async def get_current_user_info(
         permissions=current_user.permissions,
         accessible_frameworks=current_user.accessible_frameworks
     )
-
 
 @router.post(
     "/refresh",
@@ -250,7 +240,6 @@ async def refresh_access_token(
         expires_in=ACCESS_TOKEN_EXPIRE_MINUTES * 60
     )
 
-
 # Admin endpoints for role management
 @router.post(
     "/admin/assign-role",
@@ -293,7 +282,6 @@ async def assign_role_to_user(
             detail=str(e)
         )
 
-
 @router.delete(
     "/admin/revoke-role",
     response_model=RoleAssignmentResponse,
@@ -326,7 +314,6 @@ async def revoke_role_from_user(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Role assignment not found"
         )
-
 
 @router.get(
     "/admin/user-roles/{user_id}",
@@ -361,7 +348,6 @@ async def get_user_roles(
         "accessible_frameworks": accessible_frameworks
     }
 
-
 @router.post(
     "/admin/cleanup-expired-roles",
     dependencies=[Depends(require_permission("admin_roles"))]
@@ -386,7 +372,6 @@ async def cleanup_expired_roles(
         "background_task": True
     }
 
-
 @router.get(
     "/permissions",
     dependencies=[Depends(get_current_active_user_with_roles)]
@@ -401,7 +386,6 @@ async def list_user_permissions(
         "permissions": current_user.permissions,
         "roles": [role["name"] for role in current_user.roles]
     }
-
 
 @router.get(
     "/framework-access",

@@ -20,7 +20,6 @@ router = APIRouter()
 
 # Field mapping no longer needed - column names match API field names after migration
 
-
 @router.post("/", response_model=BusinessProfileResponse, status_code=status.HTTP_201_CREATED)
 async def create_business_profile(
     profile: BusinessProfileCreate,
@@ -77,7 +76,6 @@ async def create_business_profile(
         await db.refresh(db_profile)
         return db_profile
 
-
 @router.get("/", response_model=BusinessProfileResponse)
 async def get_business_profile(
     current_user: UserWithRoles = Depends(require_permission("user_list")),
@@ -91,7 +89,6 @@ async def get_business_profile(
             status_code=status.HTTP_404_NOT_FOUND, detail="Business profile not found"
         )
     return profile
-
 
 @router.get("/{id}", response_model=BusinessProfileResponse)
 async def get_business_profile_by_id(
@@ -122,7 +119,6 @@ async def get_business_profile_by_id(
         )
 
     return profile
-
 
 @router.put("/", response_model=BusinessProfileResponse)
 async def update_business_profile(
@@ -166,7 +162,6 @@ async def update_business_profile(
     await db.refresh(profile)
 
     return profile
-
 
 @router.put("/{id}", response_model=BusinessProfileResponse)
 async def update_business_profile_by_id(
@@ -226,7 +221,6 @@ async def update_business_profile_by_id(
 
     return profile
 
-
 @router.delete("/{id}")
 async def delete_business_profile_by_id(
     profile_id: UUID,
@@ -259,7 +253,6 @@ async def delete_business_profile_by_id(
     await db.commit()
 
     return {"message": "Business profile deleted successfully"}
-
 
 @router.get("/list", summary="List all business profiles")
 async def list_business_profiles(
@@ -295,7 +288,6 @@ async def list_business_profiles(
         "limit": limit,
         "offset": offset,
     }
-
 
 @router.get("/{id}/compliance-status", summary="Get compliance status for profile")
 async def get_profile_compliance_status(
@@ -347,7 +339,6 @@ async def get_profile_compliance_status(
         "action_items": 5,
     }
 
-
 @router.get("/{id}/team", summary="Get team members for profile")
 async def get_profile_team(
     profile_id: UUID,
@@ -391,7 +382,6 @@ async def get_profile_team(
         "total_members": 1,
         "pending_invites": 0,
     }
-
 
 @router.post("/{id}/invite", summary="Invite team member to profile")
 async def invite_team_member(
@@ -440,7 +430,6 @@ async def invite_team_member(
         "invited_at": datetime.utcnow().isoformat(),
         "expires_at": "2024-01-22T00:00:00Z",
     }
-
 
 @router.get("/{id}/activity", summary="Get activity log for profile")
 async def get_profile_activity(
@@ -502,7 +491,6 @@ async def get_profile_activity(
         "total": 3,
         "limit": limit,
     }
-
 
 @router.patch("/{id}", response_model=BusinessProfileResponse)
 async def patch_business_profile(
@@ -574,11 +562,9 @@ async def patch_business_profile(
 
     return profile
 
-
-
-@router.get("/{profileId}/compliance", summary="Get compliance status for business profile")
+@router.get("/{id}/compliance", summary="Get compliance status for business profile")
 async def get_profile_compliance(
-    profileId: str,
+    id: str,
     current_user: UserWithRoles = Depends(require_permission("user_view")),
     db: AsyncSession = Depends(get_async_db),
 ):

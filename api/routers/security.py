@@ -14,25 +14,21 @@ from database.user import User
 
 router = APIRouter()
 
-
 # Request/Response Models
 class RoleCheckRequest(BaseModel):
     resource: str
     action: str
     context: Dict[str, Any] = {}
 
-
 class SecurityTestRequest(BaseModel):
     test_type: str
     parameters: Dict[str, Any] = {}
-
 
 class SecurityTestResponse(BaseModel):
     test_passed: bool
     vulnerabilities: List[Dict[str, Any]]
     recommendations: List[str]
     risk_level: str
-
 
 @router.get("/role-based-access-control")
 async def role_based_access_control(
@@ -75,7 +71,6 @@ async def role_based_access_control(
         }
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"RBAC check failed: {str(e)}")
-
 
 @router.post("/business-logic-vulnerabilities")
 async def business_logic_vulnerabilities(
@@ -135,7 +130,6 @@ async def business_logic_vulnerabilities(
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Security test failed: {str(e)}")
 
-
 @router.get("/security-status")
 async def security_status(current_user: User = Depends(get_current_active_user)):
     """
@@ -156,7 +150,6 @@ async def security_status(current_user: User = Depends(get_current_active_user))
         }
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Security status check failed: {str(e)}")
-
 
 @router.get("/rate-limit-test", dependencies=[Depends(rate_limit(requests_per_minute=5))])
 async def rate_limit_test(current_user: User = Depends(get_current_active_user)):

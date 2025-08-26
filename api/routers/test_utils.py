@@ -13,12 +13,10 @@ from database import User
 
 router = APIRouter()
 
-
 def is_test_environment() -> bool:
     """Check if we're running in a test environment."""
     env = os.getenv("ENVIRONMENT", "production").lower()
     return env in ["development", "test", "testing", "local"]
-
 
 @router.delete("/cleanup-test-users")
 async def cleanup_test_users(
@@ -87,7 +85,6 @@ async def cleanup_test_users(
             detail=f"Failed to cleanup test users: {str(e)}"
         )
 
-
 @router.post("/create-test-user")
 async def create_test_user(
     email: str,
@@ -138,7 +135,6 @@ async def create_test_user(
         "email": db_user.email,
         "is_active": db_user.is_active
     }
-
 
 @router.post("/clear-rate-limits")
 async def clear_rate_limits():

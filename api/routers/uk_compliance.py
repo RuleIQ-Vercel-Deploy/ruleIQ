@@ -18,9 +18,7 @@ from services.compliance_loader import UKComplianceLoader, GeographicValidator
 from api.dependencies.auth import get_current_active_user
 from api.middleware.rate_limiter import RateLimited
 
-
 router = APIRouter(tags=["UK Compliance"])
-
 
 @router.get(
     "/frameworks",
@@ -95,7 +93,6 @@ async def get_frameworks(
         category=category
     )
 
-
 @router.get(
     "/frameworks/{framework_id}",
     response_model=FrameworkResponse,
@@ -131,7 +128,6 @@ async def get_framework(
         created_at=framework.created_at.isoformat(),
         updated_at=framework.updated_at.isoformat()
     )
-
 
 @router.post(
     "/frameworks/load",
@@ -202,7 +198,6 @@ async def load_frameworks(
         errors=result.errors,
         total_processed=result.total_processed
     )
-
 
 @router.put(
     "/frameworks/{framework_id}",
@@ -278,7 +273,6 @@ async def update_framework(
         created_at=framework.created_at.isoformat(),
         updated_at=framework.updated_at.isoformat()
     )
-
 
 @router.delete(
     "/frameworks/{framework_id}",

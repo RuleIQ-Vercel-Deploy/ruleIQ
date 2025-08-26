@@ -19,14 +19,13 @@ logger = logging.getLogger(__name__)
 
 # Create router with clear identification
 router = APIRouter(
-    prefix="/api/v1/secrets-vault",
+    prefix="/api/v1/api/v1/secrets-vault",
     tags=["🔐 Secrets Vault"],
     responses={
         404: {"description": "SecretsVault not found"},
         500: {"description": "Vault operation failed"},
     },
 )
-
 
 class VaultHealthResponse(BaseModel):
     """SecretsVault health check response model"""
@@ -38,7 +37,6 @@ class VaultHealthResponse(BaseModel):
     message: str
     timestamp: Optional[str] = None
 
-
 class VaultStatusResponse(BaseModel):
     """SecretsVault status response model"""
     vault_available: bool
@@ -46,7 +44,6 @@ class VaultStatusResponse(BaseModel):
     configuration: Dict[str, Any]
     health: Dict[str, Any]
     integration_active: bool
-
 
 async def get_vault_health(
     current_user: User = Depends(get_current_active_user)
@@ -83,7 +80,6 @@ async def get_vault_health(
                 "vault_type": "Multi-Platform SecretsVault"
             }
         )
-
 
 @router.get("/status", response_model=VaultStatusResponse, summary="🔐 SecretsVault Status")
 async def get_vault_status(
@@ -148,7 +144,6 @@ async def get_vault_status(
                 "message": f"Failed to get SecretsVault status: {str(e)}",
             }
         )
-
 
 async def test_vault_connection(
     current_user: User = Depends(get_current_active_user)
@@ -226,7 +221,6 @@ async def test_vault_connection(
                 "vault_type": "Multi-Platform SecretsVault"
             }
         )
-
 
 async def get_vault_config(
     current_user: User = Depends(get_current_active_user)

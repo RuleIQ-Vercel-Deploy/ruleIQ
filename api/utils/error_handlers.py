@@ -9,7 +9,6 @@ from pydantic import ValidationError
 
 logger = logging.getLogger(__name__)
 
-
 class RuleIQException(Exception):
     """Base exception class for ruleIQ application."""
 
@@ -26,7 +25,6 @@ class RuleIQException(Exception):
         self.status_code = status_code
         self.details = details or {}
 
-
 class ValidationException(RuleIQException):
     """Exception for validation errors."""
 
@@ -38,7 +36,6 @@ class ValidationException(RuleIQException):
             details=details,
         )
 
-
 class AuthenticationException(RuleIQException):
     """Exception for authentication errors."""
 
@@ -49,7 +46,6 @@ class AuthenticationException(RuleIQException):
             status_code=status.HTTP_401_UNAUTHORIZED,
         )
 
-
 class AuthorizationException(RuleIQException):
     """Exception for authorization errors."""
 
@@ -57,7 +53,6 @@ class AuthorizationException(RuleIQException):
         super().__init__(
             message=message, error_code="AUTHORIZATION_ERROR", status_code=status.HTTP_403_FORBIDDEN
         )
-
 
 class ResourceNotFoundException(RuleIQException):
     """Exception for resource not found errors."""
@@ -74,7 +69,6 @@ class ResourceNotFoundException(RuleIQException):
             details={"resource": resource, "identifier": identifier},
         )
 
-
 class DatabaseException(RuleIQException):
     """Exception for database-related errors."""
 
@@ -86,7 +80,6 @@ class DatabaseException(RuleIQException):
             details=details,
         )
 
-
 class IntegrationException(RuleIQException):
     """Exception for third-party integration errors."""
 
@@ -97,7 +90,6 @@ class IntegrationException(RuleIQException):
             status_code=status.HTTP_502_BAD_GATEWAY,
             details={"service": service, **(details or {})},
         )
-
 
 class RateLimitException(RuleIQException):
     """Exception for rate limiting errors."""
@@ -114,7 +106,6 @@ class RateLimitException(RuleIQException):
             details=details,
         )
 
-
 class SecurityException(RuleIQException):
     """Exception for security-related errors."""
 
@@ -125,7 +116,6 @@ class SecurityException(RuleIQException):
             status_code=status.HTTP_403_FORBIDDEN,
             details=details,
         )
-
 
 class ErrorHandler:
     """Centralized error handling for the application."""
@@ -241,7 +231,6 @@ class ErrorHandler:
 
         return sanitize_dict(details)
 
-
 async def global_exception_handler(request: Request, exception: Exception) -> JSONResponse:
     """Global exception handler for FastAPI."""
 
@@ -262,7 +251,6 @@ async def global_exception_handler(request: Request, exception: Exception) -> JS
     status_code = error_response["error"]["status_code"]
 
     return JSONResponse(status_code=status_code, content=error_response)
-
 
 class ValidationUtils:
     """Utility functions for validation and error handling."""
@@ -304,7 +292,6 @@ class ValidationUtils:
 
         return value
 
-
 class SecurityErrorHandler:
     """Security-focused error handling."""
 
@@ -332,7 +319,6 @@ class SecurityErrorHandler:
         logger.warning("Rate limit exceeded", extra={"retry_after": retry_after})
         raise RateLimitException(retry_after)
 
-
 # Error response templates
 ERROR_TEMPLATES = {
     "DATABASE_CONNECTION_FAILED": {
@@ -356,7 +342,6 @@ ERROR_TEMPLATES = {
         "status_code": status.HTTP_409_CONFLICT,
     },
 }
-
 
 def create_error_template(
     code: str, message: str, status_code: int, details: Optional[Dict[str, Any]] = None

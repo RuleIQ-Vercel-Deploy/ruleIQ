@@ -26,7 +26,6 @@ logger = get_logger(__name__)
 
 router = APIRouter(tags=["AI Cost Management"])
 
-
 # Request/Response Models
 class CostTrackingRequest(BaseModel):
     """Request model for tracking AI usage costs."""
@@ -42,7 +41,6 @@ class CostTrackingRequest(BaseModel):
     error_occurred: bool = Field(False, description="Whether an error occurred")
     metadata: Optional[Dict[str, Any]] = Field(None, description="Additional metadata")
 
-
 class CostTrackingResponse(BaseModel):
     """Response model for cost tracking."""
     usage_id: str = Field(..., description="Unique usage identifier")
@@ -51,13 +49,11 @@ class CostTrackingResponse(BaseModel):
     cost_per_token: Decimal = Field(..., description="Cost per token")
     timestamp: datetime = Field(..., description="Timestamp of usage")
 
-
 class BudgetConfigRequest(BaseModel):
     """Request model for budget configuration."""
     daily_limit: Optional[Decimal] = Field(None, ge=0, description="Daily budget limit in USD")
     monthly_limit: Optional[Decimal] = Field(None, ge=0, description="Monthly budget limit in USD")
     service_limits: Optional[Dict[str, Decimal]] = Field(None, description="Per-service budget limits")
-
 
 class BudgetStatusResponse(BaseModel):
     """Response model for budget status."""
@@ -70,7 +66,6 @@ class BudgetStatusResponse(BaseModel):
     alert_level: str = Field(..., description="Alert level (normal, warning, critical)")
     projected_monthly_cost: Decimal = Field(..., description="Projected end-of-month cost")
 
-
 class AlertResponse(BaseModel):
     """Response model for budget alerts."""
     alert_type: str = Field(..., description="Type of alert")
@@ -81,7 +76,6 @@ class AlertResponse(BaseModel):
     service_name: Optional[str] = Field(None, description="Service name if service-specific")
     timestamp: datetime = Field(..., description="Alert timestamp")
 
-
 class OptimizationResponse(BaseModel):
     """Response model for optimization recommendations."""
     strategy: str = Field(..., description="Optimization strategy")
@@ -90,7 +84,6 @@ class OptimizationResponse(BaseModel):
     confidence_score: float = Field(..., description="Confidence in recommendation (0-1)")
     implementation_effort: str = Field(..., description="Implementation effort (low/medium/high)")
     priority: str = Field(..., description="Priority level (low/medium/high)")
-
 
 class CostAnalyticsResponse(BaseModel):
     """Response model for cost analytics."""
@@ -103,7 +96,6 @@ class CostAnalyticsResponse(BaseModel):
     model_breakdown: Dict[str, Dict[str, Any]] = Field(..., description="Cost breakdown by model")
     hourly_breakdown: Optional[Dict[str, Decimal]] = Field(None, description="Hourly cost breakdown")
 
-
 class CostTrendsResponse(BaseModel):
     """Response model for cost trends."""
     trends: List[Dict[str, Any]] = Field(..., description="Cost trends over time")
@@ -111,14 +103,12 @@ class CostTrendsResponse(BaseModel):
     seasonal_patterns: Dict[str, float] = Field(..., description="Seasonal usage patterns")
     anomalies: List[Dict[str, Any]] = Field(..., description="Cost anomalies detected")
 
-
 class ModelRoutingRequest(BaseModel):
     """Request model for intelligent model routing."""
     task_description: str = Field(..., description="Description of the task")
     task_type: str = Field(..., description="Type of task")
     max_cost_per_request: Optional[Decimal] = Field(None, description="Maximum cost constraint")
     quality_requirements: Optional[str] = Field(None, description="Quality requirements")
-
 
 class ModelRoutingResponse(BaseModel):
     """Response model for model routing recommendations."""
@@ -128,13 +118,11 @@ class ModelRoutingResponse(BaseModel):
     reasoning: str = Field(..., description="Reasoning for recommendation")
     complexity_score: float = Field(..., description="Task complexity score")
 
-
 # Initialize services
 cost_manager = AICostManager()
 cost_tracker = CostTrackingService()
 budget_service = BudgetAlertService()
 optimization_service = CostOptimizationService()
-
 
 @router.post(
     "/track",
@@ -188,7 +176,6 @@ async def track_ai_usage(
             detail=f"Failed to track usage: {str(e)}"
         )
 
-
 @router.get(
     "/analytics/daily",
     response_model=CostAnalyticsResponse,
@@ -234,7 +221,6 @@ async def get_daily_cost_analytics(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Failed to retrieve analytics: {str(e)}"
         )
-
 
 @router.get(
     "/analytics/trends",
@@ -294,7 +280,6 @@ async def get_cost_trends(
             detail=f"Failed to retrieve trends: {str(e)}"
         )
 
-
 @router.post(
     "/budget/configure",
     status_code=status.HTTP_200_OK,
@@ -332,7 +317,6 @@ async def configure_budget(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Failed to configure budget: {str(e)}"
         )
-
 
 @router.get(
     "/budget/status",
@@ -401,7 +385,6 @@ async def get_budget_status():
             detail=f"Failed to retrieve budget status: {str(e)}"
         )
 
-
 @router.get(
     "/alerts",
     response_model=List[AlertResponse],
@@ -439,7 +422,6 @@ async def get_budget_alerts():
             detail=f"Failed to retrieve alerts: {str(e)}"
         )
 
-
 @router.get(
     "/optimization/recommendations",
     response_model=List[OptimizationResponse],
@@ -475,7 +457,6 @@ async def get_optimization_recommendations():
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Failed to retrieve recommendations: {str(e)}"
         )
-
 
 @router.post(
     "/routing/select-model",
@@ -522,7 +503,6 @@ async def select_optimal_model(request: ModelRoutingRequest):
             detail=f"Failed to select model: {str(e)}"
         )
 
-
 @router.get(
     "/reports/monthly",
     dependencies=[
@@ -558,7 +538,6 @@ async def generate_monthly_report(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Failed to generate report: {str(e)}"
         )
-
 
 @router.get(
     "/usage/by-service",
@@ -625,7 +604,6 @@ async def get_usage_by_service(
             detail=f"Failed to retrieve service usage: {str(e)}"
         )
 
-
 @router.get(
     "/health",
     dependencies=[Depends(RateLimited(requests=60, window=60))]
@@ -659,7 +637,6 @@ async def cost_monitoring_health():
             "error": str(e),
             "timestamp": datetime.now().isoformat()
         }
-
 
 @router.delete(
     "/cache/clear",

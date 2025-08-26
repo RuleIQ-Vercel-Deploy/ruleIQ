@@ -18,7 +18,6 @@ from services.readiness_service import (
 
 router = APIRouter()
 
-
 @router.get("/assessment")
 async def get_readiness_assessment(
     framework_id: Optional[UUID] = None,
@@ -78,7 +77,6 @@ async def get_readiness_assessment(
 
     return assessment_dict
 
-
 @router.get("/history")
 async def get_assessment_history(
     framework_id: Optional[UUID] = None,
@@ -87,7 +85,6 @@ async def get_assessment_history(
 ):
     history = get_historical_assessments(current_user, framework_id, limit)
     return history
-
 
 @router.post("/report")
 async def generate_report(
@@ -110,7 +107,6 @@ async def generate_report(
         )
     else:
         return report_data
-
 
 @router.post("/reports", status_code=201)
 async def generate_compliance_report_endpoint(
@@ -140,7 +136,6 @@ async def generate_compliance_report_endpoint(
         "format": report_request.format,
     }
 
-
 @router.get("/reports/{report_id}/download")
 async def download_compliance_report(
     report_id: str, current_user: User = Depends(get_current_active_user)
@@ -155,7 +150,6 @@ async def download_compliance_report(
         "content_type": "application/pdf",
         "size": 1024,
     }
-
 
 @router.get("/{business_profile_id}", summary="Get readiness assessment for business profile")
 async def get_readiness_by_profile(
@@ -183,7 +177,6 @@ async def get_readiness_by_profile(
         "last_assessed": "2024-01-15T10:00:00Z",
         "next_assessment_due": "2024-02-15T10:00:00Z",
     }
-
 
 @router.get("/gaps/{business_profile_id}", summary="Get compliance gaps for business profile")
 async def get_compliance_gaps(
@@ -215,7 +208,6 @@ async def get_compliance_gaps(
         "critical_gaps": 1,
         "estimated_total_effort": "3 weeks",
     }
-
 
 @router.post("/roadmap", summary="Generate compliance roadmap")
 async def generate_compliance_roadmap(
@@ -269,7 +261,6 @@ async def generate_compliance_roadmap(
         "created_at": "2024-01-15T10:00:00Z",
     }
 
-
 @router.post("/quick-assessment", summary="Perform quick readiness assessment")
 async def quick_readiness_assessment(
     assessment_request: dict,
@@ -308,7 +299,6 @@ async def quick_readiness_assessment(
         "assessment_date": "2024-01-15T10:00:00Z",
     }
 
-
 @router.get("/trends/{business_profile_id}", summary="Get readiness trends")
 async def get_readiness_trends(
     business_profile_id: str,
@@ -345,7 +335,6 @@ async def get_readiness_trends(
             "Overall compliance posture strengthening",
         ],
     }
-
 
 @router.get("/benchmarks", summary="Get industry benchmarks")
 async def get_industry_benchmarks(

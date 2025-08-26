@@ -201,3 +201,5 @@ celerybeat-schedule*
 # Legacy and migration folders
 frontend/legacy/
 results.json
+postman/environment-doppler-synced.json
+postman/newman-environment-doppler.json

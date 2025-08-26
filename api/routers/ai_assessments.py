@@ -46,8 +46,7 @@ from services.ai.exceptions import (
 # Set up logging
 logger = logging.getLogger(__name__)
 
-router = APIRouter(prefix="", tags=["AI Assessment Assistant"])
-
+router = APIRouter(prefix="/api/v1/", tags=["AI Assessment Assistant"])
 
 # Request/Response Models
 class AIHelpRequest(BaseModel):
@@ -56,7 +55,6 @@ class AIHelpRequest(BaseModel):
     framework_id: str
     section_id: Optional[str] = None
     user_context: Optional[Dict[str, Any]] = None
-
 
 class AIHelpResponse(BaseModel):
     guidance: str
@@ -67,13 +65,11 @@ class AIHelpResponse(BaseModel):
     request_id: str
     generated_at: str
 
-
 class AIFollowUpRequest(BaseModel):
     framework_id: str
     current_answers: Dict[str, Any]
     business_context: Optional[Dict[str, Any]] = None
     max_questions: int = Field(default=3, ge=1, le=10)
-
 
 class AIFollowUpQuestion(BaseModel):
     id: str
@@ -83,19 +79,16 @@ class AIFollowUpQuestion(BaseModel):
     reasoning: str
     priority: str
 
-
 class AIFollowUpResponse(BaseModel):
     questions: List[AIFollowUpQuestion]
     total_generated: int
     request_id: str
     generated_at: str
 
-
 class AIAnalysisRequest(BaseModel):
     assessment_results: Dict[str, Any]
     framework_id: str
     business_profile_id: str
-
 
 class Gap(BaseModel):
     id: str
@@ -105,7 +98,6 @@ class Gap(BaseModel):
     impact: str
     current_state: str
     target_state: str
-
 
 class Recommendation(BaseModel):
     id: str
@@ -117,7 +109,6 @@ class Recommendation(BaseModel):
     resources: Optional[List[str]] = None
     implementation_steps: Optional[List[str]] = None
 
-
 class AIAnalysisResponse(BaseModel):
     gaps: List[Gap]
     recommendations: List[Recommendation]
@@ -127,14 +118,12 @@ class AIAnalysisResponse(BaseModel):
     request_id: str
     generated_at: str
 
-
 class AIRecommendationRequest(BaseModel):
     gaps: List[Dict[str, Any]]
     business_profile: Dict[str, Any]
     existing_policies: Optional[List[str]] = None
     industry_context: Optional[str] = None
     timeline_preferences: Optional[str] = "standard"
-
 
 class ImplementationPhase(BaseModel):
     phase_number: int
@@ -143,12 +132,10 @@ class ImplementationPhase(BaseModel):
     tasks: List[str]
     dependencies: List[str]
 
-
 class ImplementationPlan(BaseModel):
     phases: List[ImplementationPhase]
     total_timeline_weeks: int
     resource_requirements: List[str]
-
 
 class AIRecommendationResponse(BaseModel):
     recommendations: List[Recommendation]
@@ -157,7 +144,6 @@ class AIRecommendationResponse(BaseModel):
     request_id: str
     generated_at: str
 
-
 class AIFeedbackRequest(BaseModel):
     interaction_id: str
     helpful: bool
@@ -165,14 +151,12 @@ class AIFeedbackRequest(BaseModel):
     comments: Optional[str] = None
     improvement_suggestions: Optional[List[str]] = None
 
-
 class AIMetricsResponse(BaseModel):
     response_times: Dict[str, float]
     accuracy_score: float
     user_satisfaction: float
     total_interactions: int
     quota_usage: Dict[str, Any]
-
 
 # Streaming Response Models
 class StreamingChunk(BaseModel):
@@ -185,7 +169,6 @@ class StreamingChunk(BaseModel):
     )
     timestamp: str = Field(default_factory=lambda: datetime.utcnow().isoformat())
 
-
 class StreamingMetadata(BaseModel):
     """Metadata for streaming response."""
 
@@ -194,7 +177,6 @@ class StreamingMetadata(BaseModel):
     business_profile_id: str
     started_at: str
     stream_type: str  # "analysis", "recommendations", "help"
-
 
 # Helper function to get business profile
 async def get_user_business_profile(
@@ -221,9 +203,7 @@ async def get_user_business_profile(
 
     return profile
 
-
 # AI Assessment Endpoints
-
 
 @router.post("/{framework_id}/help", response_model=AIHelpResponse)
 async def get_question_help(
@@ -310,7 +290,6 @@ async def get_question_help(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Unable to provide AI assistance at this time",
         )
-
 
 @router.post("/{framework_id}/help/stream")
 async def get_question_help_stream(
@@ -400,7 +379,6 @@ async def get_question_help_stream(
         },
     )
 
-
 @router.post("/self-review", summary="AI self-review of assessment")
 async def ai_self_review(
     assessment_data: dict,
@@ -428,7 +406,6 @@ async def ai_self_review(
         "timestamp": datetime.utcnow().isoformat(),
     }
 
-
 @router.post("/quick-confidence-check", summary="Quick AI confidence check")
 async def quick_confidence_check(
     responses: dict,
@@ -455,7 +432,6 @@ async def quick_confidence_check(
         "timestamp": datetime.utcnow().isoformat(),
     }
 
-
 @router.post("/assessments/followup", response_model=AIFollowUpResponse)
 async def generate_assessment_followup_questions(
     request: AIFollowUpRequest,
@@ -470,7 +446,6 @@ async def generate_assessment_followup_questions(
     # Delegate to the existing followup endpoint logic
     return await generate_followup_questions(request, current_user, db, _)
 
-
 @router.get("/assessments/metrics", response_model=AIMetricsResponse)
 async def get_assessment_ai_metrics(
     current_user: User = Depends(get_current_active_user),
@@ -483,7 +458,6 @@ async def get_assessment_ai_metrics(
     """
     # Delegate to the existing metrics endpoint logic
     return await get_ai_metrics(current_user, db, days)
-
 
 @router.post("/followup", response_model=AIFollowUpResponse)
 async def generate_followup_questions(
@@ -582,7 +556,6 @@ async def generate_followup_questions(
             detail="Unable to generate follow-up questions at this time",
         )
 
-
 @router.post("/analysis", response_model=AIAnalysisResponse)
 async def analyze_assessment_results(
     request: AIAnalysisRequest,
@@ -664,7 +637,6 @@ async def analyze_assessment_results(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Unable to analyze assessment results at this time",
         )
-
 
 @router.post("/analysis/stream")
 async def analyze_assessment_results_stream(
@@ -752,8 +724,6 @@ async def analyze_assessment_results_stream(
         },
     )
 
-
-@router.post("/recommendations", response_model=AIRecommendationResponse)
 async def generate_personalized_recommendations(
     request: AIRecommendationRequest,
     current_user: User = Depends(get_current_active_user),
@@ -833,7 +803,6 @@ async def generate_personalized_recommendations(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Unable to generate recommendations at this time",
         )
-
 
 @router.post("/recommendations/stream")
 async def generate_personalized_recommendations_stream(
@@ -924,7 +893,6 @@ async def generate_personalized_recommendations_stream(
         },
     )
 
-
 @router.post("/feedback")
 async def submit_ai_feedback(
     request: AIFeedbackRequest,
@@ -957,8 +925,6 @@ async def submit_ai_feedback(
             detail="Unable to submit feedback at this time",
         )
 
-
-@router.get("/metrics", response_model=AIMetricsResponse)
 async def get_ai_metrics(
     current_user: User = Depends(get_current_active_user),
     db: AsyncSession = Depends(get_async_db),
@@ -998,7 +964,6 @@ async def get_ai_metrics(
             detail="Unable to retrieve AI metrics at this time",
         )
 
-
 @router.get("/rate-limit-stats")
 async def get_rate_limit_statistics(current_user: User = Depends(get_current_active_user)):
     """
@@ -1034,7 +999,6 @@ async def get_rate_limit_statistics(current_user: User = Depends(get_current_act
             detail="Failed to retrieve rate limit statistics",
         )
 
-
 # Helper methods for AI service integration
 async def _get_mock_guidance_response(question_text: str, framework: str) -> Dict[str, Any]:
     """Mock AI guidance response - replace with actual AI service call"""
@@ -1056,7 +1020,6 @@ async def _get_mock_guidance_response(question_text: str, framework: str) -> Dic
         "generated_at": datetime.utcnow().isoformat(),
     }
 
-
 async def _get_mock_help_response(question_text: str, framework: str) -> Dict[str, Any]:
     """Mock AI help response for fallback scenarios"""
     return {
@@ -1072,7 +1035,6 @@ async def _get_mock_help_response(question_text: str, framework: str) -> Dict[st
         "request_id": f"mock_help_{framework}_{hash(question_text) % 10000}",
         "generated_at": datetime.utcnow().isoformat(),
     }
-
 
 async def _get_mock_followup_response(framework: str, answers: Dict[str, Any]) -> Dict[str, Any]:
     """Mock follow-up questions response - replace with actual AI service call"""
@@ -1098,11 +1060,8 @@ async def _get_mock_followup_response(framework: str, answers: Dict[str, Any]) -
         "generated_at": datetime.utcnow().isoformat(),
     }
 
-
 # AI Health and Circuit Breaker Endpoints
 
-
-@router.get("/health")
 async def get_ai_service_health(
     current_user: User = Depends(get_current_active_user), db: AsyncSession = Depends(get_async_db)
 ) -> Dict[str, Any]:
@@ -1135,7 +1094,6 @@ async def get_ai_service_health(
             detail="Failed to retrieve AI service health",
         )
 
-
 # REMOVED: Duplicate endpoint
 # REMOVED: Duplicate endpoint
 # # @router.get("/circuit-breaker/status")
@@ -1164,7 +1122,6 @@ async def get_ai_service_health(
             detail="Failed to retrieve circuit breaker status",
         )
 
-
 # REMOVED: Duplicate endpoint
 # REMOVED: Duplicate endpoint
 # # @router.post("/circuit-breaker/reset")
@@ -1184,7 +1141,7 @@ async def get_ai_service_health(
 
         return {
             "status": "success",
-            "message": f"Circuit breaker reset for model: {model_name}",
+            "message": f"Circuit breaker reset for model: {model}",
             "timestamp": datetime.utcnow().isoformat(),
         }
 
@@ -1195,8 +1152,7 @@ async def get_ai_service_health(
             detail="Failed to reset circuit breaker",
         )
 
-
-@router.get("/models/{model_name}/health")
+@router.get("/models/{model}/health")
 async def get_model_health(
     model_name: str,
     current_user: User = Depends(get_current_active_user),
@@ -1227,7 +1183,6 @@ async def get_model_health(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Failed to retrieve model health",
         )
-
 
 async def _get_mock_analysis_response(
     framework: str, assessment_results: Dict[str, Any]
@@ -1283,7 +1238,6 @@ async def _get_mock_analysis_response(
         "generated_at": datetime.utcnow().isoformat(),
     }
 
-
 async def _get_mock_recommendations_response(gaps: List[Dict[str, Any]]) -> Dict[str, Any]:
     """Mock recommendations response - replace with actual AI service call"""
     return {
@@ -1325,7 +1279,6 @@ async def _get_mock_recommendations_response(gaps: List[Dict[str, Any]]) -> Dict
         "request_id": f"recommendations_{hash(str(gaps)) % 10000}",
         "generated_at": datetime.utcnow().isoformat(),
     }
-
 
 # REMOVED: Duplicate endpoint
 # REMOVED: Duplicate endpoint

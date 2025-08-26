@@ -8,7 +8,6 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-
 class APIVersioning:
     """API versioning support for backward compatibility."""
 
@@ -100,7 +99,6 @@ class APIVersioning:
             }
         return None
 
-
 class VersionMiddleware:
     """FastAPI middleware for API versioning."""
 
@@ -141,7 +139,6 @@ class VersionMiddleware:
 
         return response
 
-
 # Global API versioning instance
 api_versioning = APIVersioning()
 
@@ -157,7 +154,6 @@ api_versioning.mark_deprecated("/api/v1/evidence/bulk-upload", "v1", "/api/v2/ev
 
 api_versioning.mark_deprecated("/api/v1/assessments/create", "v1", "/api/v2/assessments")
 
-
 def version_route(version: str):
     """Decorator for version-specific routes."""
 
@@ -166,7 +162,6 @@ def version_route(version: str):
         return func
 
     return decorator
-
 
 class VersionRouter:
     """Router that handles version-specific endpoints."""
@@ -187,7 +182,6 @@ class VersionRouter:
     def get_routes(self, version: str) -> List[Dict[str, Any]]:
         """Get all routes for a specific version."""
         return self.routes.get(version, [])
-
 
 # Version-specific response schemas
 VERSION_RESPONSE_SCHEMAS = {
@@ -215,11 +209,9 @@ VERSION_RESPONSE_SCHEMAS = {
     },
 }
 
-
 def get_response_schema(version: str, resource_type: str) -> Dict[str, str]:
     """Get response schema for specific version and resource."""
     return VERSION_RESPONSE_SCHEMAS.get(version, {}).get(resource_type, {})
-
 
 # Migration helpers
 class MigrationHelper:
@@ -234,7 +226,6 @@ class MigrationHelper:
     def v1_to_v2_assessment(v1_data: Dict[str, Any]) -> Dict[str, Any]:
         """Convert v1 assessment format to v2."""
         return {**v1_data, "ai_insights": {}, "recommendations": [], "risk_score": None}
-
 
 # Usage example:
 # from api.middleware.api_versioning import api_versioning, version_route

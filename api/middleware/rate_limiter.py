@@ -4,7 +4,6 @@ from typing import Dict, Tuple
 from fastapi import HTTPException, Request, status
 from fastapi.responses import JSONResponse
 
-
 class RateLimiter:
     def __init__(self, requests_per_minute: int = 60) -> None:
         self.requests_per_minute = requests_per_minute
@@ -51,7 +50,6 @@ class RateLimiter:
         }
         self._last_cleanup = current_time
 
-
 # Global rate limiter instances - configured based on environment
 from config.settings import get_settings  # noqa: E402
 
@@ -67,8 +65,6 @@ else:
 
 # Create a strict rate limiter for testing rate limiting functionality
 strict_test_limiter = RateLimiter(requests_per_minute=4)  # Very strict for testing
-
-
 
 async def rate_limit_middleware(request: Request, call_next):
     """General rate limiting middleware"""
@@ -117,7 +113,6 @@ async def rate_limit_middleware(request: Request, call_next):
 
     return response
 
-
 def auth_rate_limit():
     """Dependency for auth endpoint rate limiting"""
 
@@ -143,7 +138,6 @@ def auth_rate_limit():
 
     return check_limit
 
-
 def rate_limit(requests_per_minute: int = 60):
     """Create a custom rate limit dependency with specified limit."""
     custom_limiter = RateLimiter(requests_per_minute=requests_per_minute)
@@ -165,7 +159,6 @@ def rate_limit(requests_per_minute: int = 60):
             )
 
     return check_custom_limit
-
 
 class RateLimited:
     """Rate limiting dependency class for FastAPI endpoints"""

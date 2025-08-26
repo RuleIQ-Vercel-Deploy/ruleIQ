@@ -20,9 +20,7 @@ from services.ai.policy_generator import PolicyGenerator, TemplateProcessor
 from api.dependencies.auth import get_current_active_user
 from api.middleware.rate_limiter import RateLimited
 
-
 router = APIRouter(tags=["AI Policy Generation"])
-
 
 @router.post(
     "/generate-policy",
@@ -84,7 +82,6 @@ async def generate_policy(
             detail=f"Policy generation failed: {str(e)}"
         )
 
-
 @router.put(
     "/refine-policy",
     response_model=PolicyRefinementResponse,
@@ -129,7 +126,6 @@ async def refine_policy(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Policy refinement failed: {str(e)}"
         )
-
 
 @router.get(
     "/policy-templates",
@@ -231,7 +227,6 @@ async def get_policy_templates(
         supported_languages=["en-GB", "en-US"]
     )
 
-
 @router.get(
     "/metrics",
     response_model=PolicyGenerationMetrics,
@@ -293,7 +288,6 @@ async def get_ai_metrics():
         monthly_cost_trend=[65.20, 58.05, 52.30, 48.15]
     )
 
-
 @router.post(
     "/validate-policy",
     dependencies=[
@@ -333,7 +327,6 @@ async def validate_policy(
             detail=f"Policy validation failed: {str(e)}"
         )
 
-
 async def _log_generation_metrics(
     result: PolicyGenerationResponse,
     framework_id: str,
@@ -360,7 +353,6 @@ async def _log_generation_metrics(
         f"time={result.generation_time_ms}ms, "
         f"cost=${result.estimated_cost or 0:.3f}"
     )
-
 
 # Background task for policy generation analytics
 @router.post(

@@ -22,7 +22,6 @@ from database.user import User
 
 router = APIRouter()
 
-
 @router.get("/", summary="Get dashboard overview")
 async def get_dashboard(
     current_user: User = Depends(get_current_active_user),
@@ -61,7 +60,6 @@ async def get_dashboard(
             "integration_status": "healthy",
         },
     }
-
 
 @router.get("/widgets", summary="Get dashboard widgets")
 async def get_dashboard_widgets(
@@ -125,7 +123,6 @@ async def get_dashboard_widgets(
         },
     }
 
-
 @router.get("/notifications", summary="Get dashboard notifications")
 async def get_dashboard_notifications(
     limit: int = 10,
@@ -176,7 +173,6 @@ async def get_dashboard_notifications(
         "total": len(notifications),
         "unread_count": sum(1 for n in notifications if not n["read"]),
     }
-
 
 @router.get("/quick-actions", summary="Get quick actions")
 async def get_quick_actions(
@@ -242,8 +238,6 @@ async def get_quick_actions(
         ],
     }
 
-
-@router.get("/recommendations", summary="Get personalized recommendations")
 async def get_recommendations(
     current_user: User = Depends(get_current_active_user),
     db: AsyncSession = Depends(get_async_db),

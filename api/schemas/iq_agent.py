@@ -15,7 +15,6 @@ from pydantic import Field
 
 from api.schemas.base import BaseSchema, StandardResponse
 
-
 class ComplianceQueryRequest(BaseSchema):
     """Request schema for compliance queries to IQ agent"""
 
@@ -44,7 +43,6 @@ class ComplianceQueryRequest(BaseSchema):
         description="Whether to include actionable recommendations"
     )
 
-
 class GraphContext(BaseSchema):
     """Graph analysis context from IQ's GraphRAG processing"""
 
@@ -61,7 +59,6 @@ class GraphContext(BaseSchema):
         ...,
         description="Number of learning insights applied"
     )
-
 
 class ComplianceSummary(BaseSchema):
     """High-level compliance status summary"""
@@ -88,7 +85,6 @@ class ComplianceSummary(BaseSchema):
         max_items=5
     )
 
-
 class ActionPlan(BaseSchema):
     """Individual action in compliance plan"""
 
@@ -101,7 +97,6 @@ class ActionPlan(BaseSchema):
     cost_estimate: float = Field(..., description="Estimated implementation cost")
     timeline: str = Field(..., description="Estimated timeline")
     graph_reference: str = Field(..., description="Reference to graph node/relationship")
-
 
 class ComplianceArtifacts(BaseSchema):
     """Detailed compliance analysis artifacts"""
@@ -119,7 +114,6 @@ class ComplianceArtifacts(BaseSchema):
         description="Risk assessment details"
     )
 
-
 class ComplianceEvidence(BaseSchema):
     """Evidence of compliance controls and execution"""
 
@@ -136,7 +130,6 @@ class ComplianceEvidence(BaseSchema):
         description="Number of metrics updated"
     )
 
-
 class NextAction(BaseSchema):
     """Next recommended action"""
 
@@ -144,7 +137,6 @@ class NextAction(BaseSchema):
     priority: str = Field(..., description="Priority level")
     owner: str = Field(..., description="Responsible party")
     graph_reference: str = Field(..., description="Graph reference")
-
 
 class IQAgentResponse(BaseSchema):
     """Complete IQ agent response with GraphRAG analysis"""
@@ -178,7 +170,6 @@ class IQAgentResponse(BaseSchema):
         description="Natural language response from IQ"
     )
 
-
 class MemoryStoreRequest(BaseSchema):
     """Request to store memory in IQ's knowledge base"""
 
@@ -202,7 +193,6 @@ class MemoryStoreRequest(BaseSchema):
         description="Tags for memory categorization"
     )
 
-
 class MemoryRetrievalRequest(BaseSchema):
     """Request to retrieve memories from IQ's knowledge base"""
 
@@ -223,7 +213,6 @@ class MemoryRetrievalRequest(BaseSchema):
         le=1.0
     )
 
-
 class MemoryNode(BaseSchema):
     """Individual memory node structure"""
 
@@ -235,7 +224,6 @@ class MemoryNode(BaseSchema):
     access_count: int = Field(..., description="Number of times accessed")
     tags: List[str] = Field(..., description="Memory tags")
     confidence_score: float = Field(..., description="Confidence score")
-
 
 class MemoryRetrievalResponse(BaseSchema):
     """Response from memory retrieval operation"""
@@ -262,7 +250,6 @@ class MemoryRetrievalResponse(BaseSchema):
         description="Overall confidence in results"
     )
 
-
 class GraphInitializationRequest(BaseSchema):
     """Request to initialize compliance graph"""
 
@@ -274,7 +261,6 @@ class GraphInitializationRequest(BaseSchema):
         default=True,
         description="Whether to load sample compliance data"
     )
-
 
 class GraphInitializationResponse(BaseSchema):
     """Response from graph initialization"""
@@ -290,7 +276,6 @@ class GraphInitializationResponse(BaseSchema):
         description="Number of relationships created"
     )
     message: str = Field(..., description="Status message")
-
 
 class HealthCheckResponse(BaseSchema):
     """IQ agent health check response"""
@@ -309,7 +294,6 @@ class HealthCheckResponse(BaseSchema):
         default=None,
         description="Time of last query processed"
     )
-
 
 # Response type aliases for FastAPI
 ComplianceQueryResponse = StandardResponse[IQAgentResponse]

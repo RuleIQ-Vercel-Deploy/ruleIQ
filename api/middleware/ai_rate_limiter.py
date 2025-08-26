@@ -22,7 +22,6 @@ from database.user import User
 
 settings = get_settings()
 
-
 class AIRateLimiter:
     """Advanced rate limiter specifically designed for AI endpoints."""
 
@@ -97,13 +96,11 @@ class AIRateLimiter:
         remaining = self.requests_per_minute - len(user_requests)
         return max(0, remaining)
 
-
 # AI-specific rate limiters with different limits
 ai_help_limiter = AIRateLimiter(requests_per_minute=10, burst_allowance=2)
 ai_followup_limiter = AIRateLimiter(requests_per_minute=5, burst_allowance=1)
 ai_analysis_limiter = AIRateLimiter(requests_per_minute=3, burst_allowance=1)
 ai_recommendations_limiter = AIRateLimiter(requests_per_minute=3, burst_allowance=1)
-
 
 def create_ai_rate_limit_dependency(limiter: AIRateLimiter, operation_name: str):
     """Create a FastAPI dependency for AI rate limiting."""
@@ -158,7 +155,6 @@ def create_ai_rate_limit_dependency(limiter: AIRateLimiter, operation_name: str)
 
     return ai_rate_limit_check
 
-
 # Create specific dependencies for each AI operation
 ai_help_rate_limit = create_ai_rate_limit_dependency(ai_help_limiter, "help")
 ai_followup_rate_limit = create_ai_rate_limit_dependency(ai_followup_limiter, "followup")
@@ -167,14 +163,12 @@ ai_recommendations_rate_limit = create_ai_rate_limit_dependency(
     ai_recommendations_limiter, "recommendations"
 )
 
-
 async def add_rate_limit_headers(request: Request, response):
     """Middleware to add rate limit headers to responses."""
     if hasattr(request.state, "rate_limit_headers"):
         for header, value in request.state.rate_limit_headers.items():
             response.headers[header] = value
     return response
-
 
 class AIRateLimitStats:
     """Statistics and monitoring for AI rate limiting."""
@@ -213,10 +207,8 @@ class AIRateLimitStats:
             "requests_per_minute": ((self.total_requests / uptime * 60) if uptime > 0 else 0),
         }
 
-
 # Global stats instance
 ai_rate_limit_stats = AIRateLimitStats()
-
 
 def get_ai_rate_limit_stats() -> Dict:
     """Get AI rate limiting statistics."""

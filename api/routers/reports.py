@@ -22,7 +22,6 @@ from database.user import User
 
 router = APIRouter()
 
-
 # Pydantic models for requests/responses
 class ReportRequest(BaseModel):
     name: str
@@ -31,13 +30,11 @@ class ReportRequest(BaseModel):
     parameters: Dict[str, Any]
     schedule: Optional[str] = None  # cron expression for scheduled reports
 
-
 class ReportTemplate(BaseModel):
     name: str
     description: str
     type: str
     parameters: Dict[str, Any]
-
 
 @router.get("/", summary="List all reports")
 async def list_reports(
@@ -76,8 +73,6 @@ async def list_reports(
         "offset": offset,
     }
 
-
-@router.post("/generate", summary="Generate a new report")
 async def generate_report(
     report_request: ReportRequest,
     current_user: User = Depends(get_current_active_user),
@@ -99,10 +94,9 @@ async def generate_report(
         "message": "Report generation initiated",
     }
 
-
-@router.get("/{reportId}", summary="Get report details")
+@router.get("/{id}", summary="Get report details")
 async def get_report(
-    reportId: str,
+    id: str,
     current_user: User = Depends(get_current_active_user),
     db: AsyncSession = Depends(get_async_db),
 ):
@@ -124,13 +118,12 @@ async def get_report(
         "completed_at": "2024-01-15T10:02:00Z",
         "size": 2048000,
         "pages": 45,
-        "download_url": f"/api/v1/reports/{reportId}/download",
+        "download_url": f"/api/v1/reports/{id}/download",
     }
 
-
-@router.get("/{reportId}/download", summary="Download report")
+@router.get("/{id}/download", summary="Download report")
 async def download_report(
-    reportId: str,
+    id: str,
     current_user: User = Depends(get_current_active_user),
     db: AsyncSession = Depends(get_async_db),
 ):
@@ -139,16 +132,15 @@ async def download_report(
     # In a real implementation, this would return the actual file
     return {
         "report_id": reportId,
-        "download_url": f"https://storage.example.com/reports/{reportId}.pdf",
+        "download_url": f"https://storage.example.com/reports/{id}.pdf",
         "expires_at": "2024-01-15T11:00:00Z",
         "content_type": "application/pdf",
         "filename": "GDPR_Compliance_Report_Q1_2024.pdf",
     }
 
-
-@router.delete("/{reportId}", summary="Delete report")
+@router.delete("/{id}", summary="Delete report")
 async def delete_report(
-    reportId: str,
+    id: str,
     current_user: User = Depends(get_current_active_user),
     db: AsyncSession = Depends(get_async_db),
 ):
@@ -160,7 +152,6 @@ async def delete_report(
         "message": "Report deleted successfully",
         "deleted_at": datetime.utcnow().isoformat(),
     }
-
 
 @router.get("/templates/list", summary="List report templates")
 async def list_report_templates(
@@ -196,7 +187,6 @@ async def list_report_templates(
         "total": 3,
     }
 
-
 @router.post("/templates", summary="Create report template")
 async def create_report_template(
     template: ReportTemplate,
@@ -218,7 +208,6 @@ async def create_report_template(
         "created_at": datetime.utcnow().isoformat(),
         "created_by": current_user.email,
     }
-
 
 @router.post("/preview", summary="Preview report")
 async def preview_report(
@@ -253,7 +242,6 @@ async def preview_report(
         },
     }
 
-
 @router.post("/schedule", summary="Schedule report generation")
 async def schedule_report(
     schedule_request: dict,
@@ -278,7 +266,6 @@ async def schedule_report(
         "next_run": "2024-01-22T00:00:00Z",
         "created_at": datetime.utcnow().isoformat(),
     }
-
 
 @router.get("/history/{period}", summary="Get report history")
 async def get_report_history(
@@ -315,7 +302,6 @@ async def get_report_history(
             },
         ],
     }
-
 
 @router.post("/upload", summary="Upload external report")
 async def upload_report(

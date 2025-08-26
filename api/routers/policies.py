@@ -11,7 +11,6 @@ from services.policy_service import generate_compliance_policy, get_policy_by_id
 
 router = APIRouter()
 
-
 @router.post("/generate", status_code=201)
 async def generate_policy(
     request: PolicyGenerateRequest,
@@ -53,14 +52,12 @@ async def generate_policy(
         ],
     }
 
-
 @router.get("/", response_model=PolicyListResponse)
 async def list_policies(
     current_user: User = Depends(get_current_active_user), db: AsyncSession = Depends(get_async_db)
 ):
     policies = await get_user_policies(db, current_user.id)
     return {"policies": policies}
-
 
 @router.get("/{id}", response_model=GeneratedPolicyResponse)
 async def get_policy(
@@ -72,7 +69,6 @@ async def get_policy(
     if not policy:
         raise HTTPException(status_code=404, detail="Policy not found")
     return policy
-
 
 @router.patch("/{id}/status")
 async def update_policy_status(
@@ -99,12 +95,10 @@ async def update_policy_status(
         "approved": status_update.get("approved", False),
     }
 
-
 @router.put("/{id}/approve")
 async def approve_policy(policy_id: UUID, current_user: User = Depends(get_current_active_user)):
     # Implementation for policy approval
     return {"message": "Policy approved", "policy_id": policy_id}
-
 
 @router.post("/{id}/regenerate-section")
 async def regenerate_policy_section(
@@ -123,7 +117,6 @@ async def regenerate_policy_section(
         "content": f"Regenerated content for {section_name} section",
         "message": f"Section '{section_name}' regenerated successfully"
     }
-
 
 @router.get("/templates")
 async def get_policy_templates(
@@ -159,7 +152,6 @@ async def get_policy_templates(
         "total": 3
     }
 
-
 @router.post("/{id}/clone")
 async def clone_policy(
     policy_id: UUID,
@@ -177,7 +169,6 @@ async def clone_policy(
         "status": "draft",
         "message": f"Policy cloned successfully as '{new_name}'"
     }
-
 
 @router.get("/{id}/versions")
 async def get_policy_versions(

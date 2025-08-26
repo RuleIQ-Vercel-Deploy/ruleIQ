@@ -19,7 +19,6 @@ from core.exceptions import ApplicationException
 
 logger = get_logger(__name__)
 
-
 async def error_handler_middleware(request: Request, call_next):
     """
     Global error handling middleware.

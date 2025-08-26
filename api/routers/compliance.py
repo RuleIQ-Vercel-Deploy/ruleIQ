@@ -17,7 +17,6 @@ from services.evidence_service import EvidenceService
 
 router = APIRouter()
 
-
 @router.get("/status", response_model=ComplianceStatusResponse)
 async def get_compliance_status(
     current_user: User = Depends(get_current_active_user), db: AsyncSession = Depends(get_async_db)
@@ -194,7 +193,6 @@ async def get_compliance_status(
         # Log the error in a real application
         raise HTTPException(status_code=500, detail=f"Failed to retrieve compliance status: {e!s}")
 
-
 @router.get("/status/{framework_id}", response_model=ComplianceStatusResponse)
 async def get_framework_compliance_status(
     framework_id: str,
@@ -214,7 +212,6 @@ async def get_framework_compliance_status(
     # For now, we'll return the overall status
     # In production, this would filter by specific framework
     return await get_compliance_status(current_user, db)
-
 
 @router.post("/tasks")
 async def create_compliance_task(
@@ -236,10 +233,9 @@ async def create_compliance_task(
         "updated_at": datetime.utcnow().isoformat()
     }
 
-
-@router.patch("/tasks/{task_id}")
+@router.patch("/tasks/{id}")
 async def update_compliance_task(
-    task_id: str,
+    id: str,
     update_data: dict,
     current_user: User = Depends(get_current_active_user),
     db: AsyncSession = Depends(get_async_db)
@@ -254,7 +250,6 @@ async def update_compliance_task(
         "priority": update_data.get("priority", "medium"),
         "updated_at": datetime.utcnow().isoformat()
     }
-
 
 @router.post("/risks")
 async def create_compliance_risk(
@@ -276,7 +271,6 @@ async def create_compliance_risk(
         "created_at": datetime.utcnow().isoformat()
     }
 
-
 @router.patch("/risks/{risk_id}")
 async def update_compliance_risk(
     risk_id: str,
@@ -296,7 +290,6 @@ async def update_compliance_risk(
         "mitigation_plan": update_data.get("mitigation_plan"),
         "updated_at": datetime.utcnow().isoformat()
     }
-
 
 @router.get("/timeline")
 async def get_compliance_timeline(
@@ -343,8 +336,6 @@ async def get_compliance_timeline(
         "progress_percentage": 45
     }
 
-
-@router.get("/dashboard")
 async def get_compliance_dashboard(
     current_user: User = Depends(get_current_active_user),
     db: AsyncSession = Depends(get_async_db)
@@ -375,7 +366,6 @@ async def get_compliance_dashboard(
             "forecast": "on_track"
         }
     }
-
 
 @router.post("/certificate/generate")
 async def generate_compliance_certificate(

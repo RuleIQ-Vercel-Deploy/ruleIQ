@@ -21,9 +21,7 @@ from database.db_setup import get_async_db, get_db
 from database.user import User
 from services.rbac_service import RBACService
 
-
 logger = logging.getLogger(__name__)
-
 
 class UserWithRoles:
     """
@@ -86,7 +84,6 @@ class UserWithRoles:
             "accessible_frameworks": self.accessible_frameworks
         }
 
-
 def create_access_token_with_roles(user_id: UUID, roles: List[Dict], permissions: List[str]) -> str:
     """
     Create access token with embedded role and permission claims.
@@ -115,7 +112,6 @@ def create_access_token_with_roles(user_id: UUID, roles: List[Dict], permissions
 
     return create_access_token(token_data)
 
-
 def create_refresh_token_with_roles(user_id: UUID) -> str:
     """
     Create refresh token (roles will be re-evaluated on refresh).
@@ -127,7 +123,6 @@ def create_refresh_token_with_roles(user_id: UUID) -> str:
         JWT refresh token
     """
     return create_refresh_token({"sub": str(user_id)})
-
 
 async def get_current_user_with_roles(
     token: Optional[str] = Depends(oauth2_scheme),
@@ -181,7 +176,6 @@ async def get_current_user_with_roles(
     except NotAuthenticatedException:
         return None
 
-
 async def get_current_active_user_with_roles(
     current_user: Optional[UserWithRoles] = Depends(get_current_user_with_roles)
 ) -> UserWithRoles:
@@ -212,7 +206,6 @@ async def get_current_active_user_with_roles(
 
     return current_user
 
-
 def require_permission(permission: str):
     """
     Dependency factory for requiring specific permissions.
@@ -235,7 +228,6 @@ def require_permission(permission: str):
 
     return check_permission
 
-
 def require_any_permission(permissions: List[str]):
     """
     Dependency factory for requiring any of the specified permissions.
@@ -257,7 +249,6 @@ def require_any_permission(permissions: List[str]):
         return current_user
 
     return check_permissions
-
 
 def require_all_permissions(permissions: List[str]):
     """
@@ -282,7 +273,6 @@ def require_all_permissions(permissions: List[str]):
 
     return check_permissions
 
-
 def require_role(role: str):
     """
     Dependency factory for requiring specific roles.
@@ -305,7 +295,6 @@ def require_role(role: str):
 
     return check_role
 
-
 def require_any_role(roles: List[str]):
     """
     Dependency factory for requiring any of the specified roles.
@@ -327,7 +316,6 @@ def require_any_role(roles: List[str]):
         return current_user
 
     return check_roles
-
 
 def require_framework_access(framework_id: str, access_level: str = "read"):
     """
@@ -352,7 +340,6 @@ def require_framework_access(framework_id: str, access_level: str = "read"):
 
     return check_framework_access
 
-
 def check_framework_access_permission(user: UserWithRoles, framework_id: str, required_level: str = "read") -> bool:
     """
     Check if user has access to a specific framework with the required level.
@@ -374,7 +361,6 @@ def check_framework_access_permission(user: UserWithRoles, framework_id: str, re
             return user_level_value >= required_level_value
 
     return False
-
 
 def require_framework_access_level(framework_id: str, access_level: str = "read"):
     """
@@ -398,7 +384,6 @@ def require_framework_access_level(framework_id: str, access_level: str = "read"
         return current_user
 
     return check_access
-
 
 class RBACMiddleware:
     """
@@ -430,7 +415,6 @@ class RBACMiddleware:
                 return user.has_any_permission(required_permissions)
 
         return True  # Allow access to unprotected paths
-
 
 # Backwards compatibility aliases
 get_current_user = get_current_user_with_roles

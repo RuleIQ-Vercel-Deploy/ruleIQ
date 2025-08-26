@@ -21,9 +21,7 @@ from api.dependencies.rbac_auth import (
 from database.db_setup import get_db
 from services.rbac_service import RBACService
 
-
 logger = logging.getLogger(__name__)
-
 
 class RBACMiddleware(BaseHTTPMiddleware):
     """
@@ -475,7 +473,6 @@ class RBACMiddleware(BaseHTTPMiddleware):
         except Exception as e:
             logger.error(f"Failed to log access failure: {e}")
 
-
 class RBACRouteProtector:
     """
     Decorator-based route protection for specific endpoints.
@@ -530,7 +527,6 @@ class RBACRouteProtector:
         """
         func._admin_only = True
         return func
-
 
 # Convenience decorators for common permission patterns
 def require_admin(func):

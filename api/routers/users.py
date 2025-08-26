@@ -13,7 +13,6 @@ from database.db_setup import get_db
 
 router = APIRouter()
 
-
 # REMOVED: Duplicate endpoint
 # REMOVED: Duplicate endpoint
 # # @router.get("/me", response_model=UserResponse)
@@ -22,14 +21,11 @@ router = APIRouter()
 # #
 #
 
-
 @router.get("/profile", response_model=UserResponse)
 async def get_user_profile(current_user: User = Depends(get_current_active_user)):
     """Get user profile - alias for /me endpoint for compatibility"""
     return current_user
 
-
-@router.get("/dashboard")
 async def get_user_dashboard(
     current_user: User = Depends(get_current_active_user), db: AsyncSession = Depends(get_async_db)
 ) -> Dict[str, Any]:
@@ -127,7 +123,6 @@ async def get_user_dashboard(
     }
 
     return dashboard_data
-
 
 @router.put("/me/deactivate")
 async def deactivate_account(

@@ -31,8 +31,6 @@ logger = get_logger(__name__)
 
 router = APIRouter()
 
-
-@router.post("/plans", response_model=CollectionPlanResponse)
 async def create_collection_plan(
     plan_request: CollectionPlanCreate,
     db: AsyncSession = Depends(get_async_db),
@@ -154,10 +152,9 @@ async def create_collection_plan(
         logger.error(f"Error creating collection plan: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
-
-@router.get("/plans/{plan_id}", response_model=CollectionPlanResponse)
+@router.get("/plans/{id}", response_model=CollectionPlanResponse)
 async def get_collection_plan(
-    plan_id: str,
+    id: str,
     db: AsyncSession = Depends(get_async_db),
     current_user: User = Depends(get_current_active_user),
 ):
@@ -204,8 +201,6 @@ async def get_collection_plan(
         created_at=plan.created_at,
     )
 
-
-@router.get("/plans", response_model=List[CollectionPlanSummary])
 async def list_collection_plans(
     framework: Optional[str] = Query(None, description="Filter by framework"),
     status: Optional[str] = Query(None, description="Filter by status"),
@@ -253,10 +248,9 @@ async def list_collection_plans(
 
     return user_plans
 
-
-@router.get("/plans/{plan_id}/priority-tasks", response_model=List[EvidenceTaskResponse])
+@router.get("/plans/{id}/priority-tasks", response_model=List[EvidenceTaskResponse])
 async def get_priority_tasks(
-    plan_id: str,
+    id: str,
     limit: int = Query(5, ge=1, le=20, description="Number of tasks to return"),
     db: AsyncSession = Depends(get_async_db),
     current_user: User = Depends(get_current_active_user),
@@ -296,11 +290,10 @@ async def get_priority_tasks(
         for task in priority_tasks
     ]
 
-
-@router.patch("/plans/{plan_id}/tasks/{task_id}", response_model=EvidenceTaskResponse)
+@router.patch("/plans/{id}/tasks/{id}", response_model=EvidenceTaskResponse)
 async def update_task_status(
-    plan_id: str,
-    task_id: str,
+    id: str,
+    id: str,
     status_update: TaskStatusUpdate,
     db: AsyncSession = Depends(get_async_db),
     current_user: User = Depends(get_current_active_user),
@@ -348,7 +341,6 @@ async def update_task_status(
             )
 
     raise HTTPException(status_code=404, detail="Task not found")
-
 
 @router.get("/automation-recommendations/{framework}")
 async def get_automation_recommendations(

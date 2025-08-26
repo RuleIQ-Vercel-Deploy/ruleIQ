@@ -11,7 +11,6 @@ from services.framework_service import get_framework_by_id, get_relevant_framewo
 
 router = APIRouter()
 
-
 @router.get("/", response_model=List[ComplianceFrameworkResponse])
 async def list_frameworks(
     current_user: UserWithRoles = Depends(require_permission("user_list")),
@@ -42,7 +41,6 @@ async def list_frameworks(
         )
         for fw in active_frameworks
     ]
-
 
 @router.get("/recommendations", response_model=List[FrameworkRecommendation])
 async def get_framework_recommendations(
@@ -75,7 +73,6 @@ async def get_framework_recommendations(
             )
 
     return accessible_recommendations
-
 
 @router.get("/recommendations/{business_profile_id}", response_model=List[FrameworkRecommendation])
 async def get_framework_recommendations_for_profile(
@@ -110,7 +107,6 @@ async def get_framework_recommendations_for_profile(
 
     return accessible_recommendations
 
-
 @router.get("/all-public", response_model=List[ComplianceFrameworkResponse])
 async def list_all_public_frameworks(
     current_user: UserWithRoles = Depends(require_permission("user_list")),
@@ -138,7 +134,6 @@ async def list_all_public_frameworks(
         )
         for fw in frameworks
     ]
-
 
 @router.get("/{id}", response_model=ComplianceFrameworkResponse)
 async def get_framework(
@@ -181,7 +176,6 @@ async def get_framework(
         controls=controls,
     )
 
-
 @router.get("/{framework_id}/controls")
 async def get_framework_controls(
     framework_id: UUID,
@@ -217,7 +211,6 @@ async def get_framework_controls(
         ],
         "total": 3
     }
-
 
 @router.get("/{framework_id}/implementation-guide")
 async def get_framework_implementation_guide(
@@ -259,7 +252,6 @@ async def get_framework_implementation_guide(
         }
     }
 
-
 @router.get("/{framework_id}/compliance-status")
 async def get_framework_compliance_status(
     framework_id: UUID,
@@ -281,7 +273,6 @@ async def get_framework_compliance_status(
         "last_assessment": "2024-01-15T10:00:00Z",
         "next_review": "2024-04-15T10:00:00Z"
     }
-
 
 @router.post("/compare")
 async def compare_frameworks(
@@ -312,7 +303,6 @@ async def compare_frameworks(
         },
         "recommendation": "Consider implementing both frameworks in phases"
     }
-
 
 @router.get("/{framework_id}/maturity-assessment")
 async def get_framework_maturity_assessment(

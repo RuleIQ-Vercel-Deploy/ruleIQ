@@ -22,18 +22,15 @@ from database.user import User
 
 router = APIRouter()
 
-
 # Pydantic models for requests/responses
 class PaymentMethodRequest(BaseModel):
     type: str  # card, bank_account, etc.
     details: Dict[str, Any]
     is_default: Optional[bool] = False
 
-
 class CouponApplyRequest(BaseModel):
     coupon_code: str
     subscription_id: Optional[str] = None
-
 
 @router.post("/subscription/cancel", summary="Cancel subscription")
 async def cancel_subscription(
@@ -55,7 +52,6 @@ async def cancel_subscription(
         "message": "Subscription cancelled successfully",
     }
 
-
 @router.post("/subscription/reactivate", summary="Reactivate subscription")
 async def reactivate_subscription(
     reactivation_data: Dict[str, Any],
@@ -74,7 +70,6 @@ async def reactivate_subscription(
         "message": "Subscription reactivated successfully",
     }
 
-
 @router.post("/payment-methods", summary="Add payment method")
 async def add_payment_method(
     payment_method: PaymentMethodRequest,
@@ -91,7 +86,6 @@ async def add_payment_method(
         "created_at": datetime.utcnow().isoformat(),
         "message": "Payment method added successfully",
     }
-
 
 @router.get("/invoices", summary="Get invoices")
 async def get_invoices(
@@ -128,7 +122,6 @@ async def get_invoices(
         "offset": offset,
     }
 
-
 @router.get("/invoices/upcoming", summary="Get upcoming invoice")
 async def get_upcoming_invoice(
     current_user: User = Depends(get_current_active_user),
@@ -159,7 +152,6 @@ async def get_upcoming_invoice(
         },
     }
 
-
 @router.post("/coupons/apply", summary="Apply coupon")
 async def apply_coupon(
     coupon_data: CouponApplyRequest,
@@ -186,7 +178,6 @@ async def apply_coupon(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Invalid or expired coupon code",
         )
-
 
 @router.get("/subscription/limits", summary="Get subscription limits")
 async def get_subscription_limits(

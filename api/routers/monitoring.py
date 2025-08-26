@@ -18,7 +18,6 @@ from database.user import User
 
 router = APIRouter()
 
-
 @router.get("/database/status", summary="Get database status")
 async def get_database_status(
     current_user: User = Depends(get_current_active_user),
@@ -42,10 +41,9 @@ async def get_database_status(
         "timestamp": datetime.utcnow().isoformat(),
     }
 
-
-@router.patch("/alerts/{alertId}/resolve", summary="Resolve alert")
+@router.patch("/alerts/{id}/resolve", summary="Resolve alert")
 async def resolve_alert(
-    alertId: str,
+    id: str,
     resolution_data: Dict[str, Any],
     current_user: User = Depends(get_current_active_user),
     db: AsyncSession = Depends(get_async_db),
@@ -62,7 +60,6 @@ async def resolve_alert(
         "resolved_at": datetime.utcnow().isoformat(),
         "notes": notes,
     }
-
 
 @router.get("/metrics", summary="Get system metrics")
 async def get_system_metrics(
@@ -93,7 +90,6 @@ async def get_system_metrics(
         },
         "timestamp": datetime.utcnow().isoformat(),
     }
-
 
 @router.get("/api-performance", summary="Get API performance metrics")
 async def get_api_performance(
@@ -129,7 +125,6 @@ async def get_api_performance(
         "timestamp": datetime.utcnow().isoformat(),
     }
 
-
 @router.get("/error-logs", summary="Get error logs")
 async def get_error_logs(
     limit: int = 100,
@@ -159,7 +154,6 @@ async def get_error_logs(
         "limit": limit,
     }
 
-
 @router.get("/health", summary="Health check")
 async def health_check():
     """Basic health check endpoint - no authentication required."""
@@ -171,7 +165,6 @@ async def health_check():
         "service": "ruleIQ API",
         "version": "1.0.0",
     }
-
 
 @router.get("/audit-logs", summary="Get audit logs")
 async def get_audit_logs(

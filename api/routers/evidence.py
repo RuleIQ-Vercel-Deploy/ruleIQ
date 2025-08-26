@@ -48,7 +48,6 @@ logger = get_logger(__name__)
 
 router = APIRouter()
 
-
 @router.post("/", status_code=201, response_model=EvidenceResponse)
 async def create_new_evidence(
     evidence_data: EvidenceCreate,
@@ -79,7 +78,6 @@ async def create_new_evidence(
     )
     # Convert EvidenceItem to expected response format
     return EvidenceService._convert_evidence_item_to_response(evidence)
-
 
 @router.get("/")
 async def list_evidence(
@@ -130,7 +128,6 @@ async def list_evidence(
         # Return simple list for backward compatibility
         return results
 
-
 @router.get("/stats", response_model=EvidenceStatisticsResponse)
 async def get_evidence_statistics(
     db: AsyncSession = Depends(get_async_db),
@@ -139,7 +136,6 @@ async def get_evidence_statistics(
     """Get evidence statistics for the current user."""
     stats = await EvidenceService.get_evidence_statistics(db=db, user_id=UUID(str(str(current_user.id))))
     return stats
-
 
 @router.get("/search", response_model=EvidenceSearchResponse)
 async def search_evidence_items(
@@ -186,7 +182,6 @@ async def search_evidence_items(
         "page_size": page_size,
     }
 
-
 @router.post("/validate", response_model=EvidenceValidationResult)
 async def validate_evidence_quality(
     evidence_data: dict,
@@ -204,7 +199,6 @@ async def validate_evidence_quality(
             "Include version control information",
         ],
     }
-
 
 @router.get("/requirements/{framework_id}", response_model=EvidenceRequirementsResponse)
 async def get_evidence_requirements(
@@ -231,7 +225,6 @@ async def get_evidence_requirements(
         },
     ]
     return {"requirements": requirements}
-
 
 @router.post("/requirements", response_model=EvidenceRequirementsResponse)
 async def identify_evidence_requirements(
@@ -261,7 +254,6 @@ async def identify_evidence_requirements(
     ]
     return {"requirements": requirements}
 
-
 @router.get("/{id}", response_model=EvidenceResponse)
 async def get_evidence_details(
     evidence_id: UUID,
@@ -280,7 +272,6 @@ async def get_evidence_details(
 
     # Convert EvidenceItem to expected response format
     return EvidenceService._convert_evidence_item_to_response(evidence)
-
 
 @router.put("/{id}", response_model=EvidenceResponse)
 async def update_evidence_item(
@@ -307,7 +298,6 @@ async def update_evidence_item(
     # Convert EvidenceItem to expected response format
     return EvidenceService._convert_evidence_item_to_response(evidence)
 
-
 @router.patch("/{id}", response_model=EvidenceResponse)
 async def update_evidence_status(
     evidence_id: UUID,
@@ -333,7 +323,6 @@ async def update_evidence_status(
     # Convert EvidenceItem to expected response format
     return EvidenceService._convert_evidence_item_to_response(evidence)
 
-
 @router.delete("/{id}", status_code=204)
 async def delete_evidence_item(
     evidence_id: UUID,
@@ -349,7 +338,6 @@ async def delete_evidence_item(
         raise HTTPException(status_code=404, detail="Evidence not found")
     elif status == "unauthorized":
         raise HTTPException(status_code=403, detail="Access denied")
-
 
 @router.post("/bulk-update", response_model=EvidenceBulkUpdateResponse)
 async def bulk_update_evidence_status(
@@ -371,7 +359,6 @@ async def bulk_update_evidence_status(
         failed_count=failed_count,
         failed_ids=failed_ids if failed_ids else None,
     )
-
 
 @router.post("/{id}/automation", response_model=EvidenceAutomationResponse)
 async def configure_evidence_automation(
@@ -398,7 +385,6 @@ async def configure_evidence_automation(
         "test_connection": True,
         "next_collection": "2024-01-02T00:00:00Z",
     }
-
 
 @router.post("/{id}/upload", response_model=EvidenceResponse)
 async def upload_evidence_file_route(
@@ -493,7 +479,6 @@ async def upload_evidence_file_route(
 
     return response
 
-
 @router.get("/dashboard/{framework_id}", response_model=EvidenceDashboardResponse)
 async def get_evidence_dashboard(
     framework_id: UUID,
@@ -506,9 +491,7 @@ async def get_evidence_dashboard(
     )
     return dashboard_data
 
-
 # AI Classification Endpoints
-
 
 @router.post("/{id}/classify", response_model=EvidenceClassificationResponse)
 async def classify_evidence_with_ai(
@@ -572,7 +555,6 @@ async def classify_evidence_with_ai(
     except Exception as e:
         logger.error(f"Error classifying evidence {id}: {e}", exc_info=True)
         raise HTTPException(status_code=500, detail="Classification failed")
-
 
 @router.post("/classify/bulk", response_model=BulkClassificationResponse)
 async def bulk_classify_evidence(
@@ -686,7 +668,6 @@ async def bulk_classify_evidence(
         logger.error(f"Error in bulk classification: {e}", exc_info=True)
         raise HTTPException(status_code=500, detail="Bulk classification failed")
 
-
 @router.post("/{id}/control-mapping", response_model=ControlMappingResponse)
 async def get_control_mapping_suggestions(
     evidence_id: UUID,
@@ -757,7 +738,6 @@ async def get_control_mapping_suggestions(
             f"Error getting control mappings for evidence {id}: {e}", exc_info=True
         )
         raise HTTPException(status_code=500, detail="Control mapping failed")
-
 
 @router.get("/classification/stats", response_model=ClassificationStatsResponse)
 async def get_classification_statistics(
@@ -830,9 +810,7 @@ async def get_classification_statistics(
         logger.error(f"Error getting classification statistics: {e}", exc_info=True)
         raise HTTPException(status_code=500, detail="Failed to get classification statistics")
 
-
 # Quality Analysis Endpoints
-
 
 @router.get("/{id}/quality-analysis", response_model=QualityAnalysisResponse)
 async def get_evidence_quality_analysis(
@@ -919,7 +897,6 @@ async def get_evidence_quality(
         current_user=current_user
     )
 
-
 @router.post("/{id}/duplicate-detection", response_model=DuplicateDetectionResponse)
 async def detect_evidence_duplicates(
     evidence_id: UUID,
@@ -970,7 +947,6 @@ async def detect_evidence_duplicates(
         logger.error(f"Error detecting duplicates for evidence {id}: {e}", exc_info=True)
         raise HTTPException(status_code=500, detail="Duplicate detection failed")
 
-
 @router.post("/duplicate-detection/batch", response_model=BatchDuplicateDetectionResponse)
 async def batch_duplicate_detection(
     request: BatchDuplicateDetectionRequest,
@@ -1013,7 +989,6 @@ async def batch_duplicate_detection(
     except Exception as e:
         logger.error(f"Error in batch duplicate detection: {e}", exc_info=True)
         raise HTTPException(status_code=500, detail="Batch duplicate detection failed")
-
 
 @router.get("/quality/benchmark", response_model=QualityBenchmarkResponse)
 async def get_quality_benchmark(
@@ -1096,7 +1071,6 @@ async def get_quality_benchmark(
     except Exception as e:
         logger.error(f"Error getting quality benchmark: {e}", exc_info=True)
         raise HTTPException(status_code=500, detail="Quality benchmarking failed")
-
 
 @router.get("/quality/trends", response_model=QualityTrendResponse)
 async def get_quality_trends(

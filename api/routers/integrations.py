@@ -25,13 +25,11 @@ from database.models.integrations import Integration
 logger = get_logger(__name__)
 router = APIRouter()
 
-
 # Pydantic models for requests/responses
 class IntegrationCredentials(BaseModel):
     provider: str
     credentials: Dict[str, Any]
     settings: Optional[Dict[str, Any]] = None
-
 
 class IntegrationResponse(BaseModel):
     provider: str
@@ -41,11 +39,9 @@ class IntegrationResponse(BaseModel):
     last_sync_at: Optional[datetime] = None
     last_sync_status: Optional[str] = None
 
-
 class IntegrationListResponse(BaseModel):
     available_providers: List[Dict[str, Any]]
     configured_integrations: List[IntegrationResponse]
-
 
 # A simple integration factory would be better, but for now, we can use a dummy instance
 # to access the encryption/decryption methods which don't depend on the provider specifics.
@@ -68,13 +64,11 @@ class GenericIntegration(BaseIntegration):
     async def get_available_evidence_types(self) -> List:
         return []
 
-
 # Available integration providers (simplified for now)
 AVAILABLE_PROVIDERS = {
     "google_workspace": {"name": "Google Workspace"},
     "microsoft_365": {"name": "Microsoft 365"},
 }
-
 
 @router.post(
     "/connect", response_model=IntegrationResponse, summary="Connect or Update Integration"
@@ -160,7 +154,6 @@ async def connect_integration(
         )
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
 
-
 @router.delete(
     "/{provider}", summary="Disconnect integration", status_code=status.HTTP_204_NO_CONTENT
 )
@@ -201,7 +194,6 @@ async def disconnect_integration(
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Database operation failed."
         )
-
 
 @router.get(
     "/{provider}/status", response_model=IntegrationResponse, summary="Get integration status"
@@ -246,7 +238,6 @@ async def get_integration_status(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Database operation failed."
         )
 
-
 @router.get("/", summary="List all available integrations")
 async def list_integrations(
     current_user: User = Depends(get_current_active_user),
@@ -262,7 +253,6 @@ async def list_integrations(
         "configured_count": 0,
     }
 
-
 @router.get("/connected", summary="Get connected integrations")
 async def get_connected_integrations(
     current_user: User = Depends(get_current_active_user),
@@ -274,7 +264,6 @@ async def get_connected_integrations(
         "connected_integrations": [],
         "total": 0,
     }
-
 
 @router.post("/{integrationId}/test", summary="Test integration connection")
 async def test_integration(
@@ -290,7 +279,6 @@ async def test_integration(
         "message": "Connection test successful",
         "timestamp": datetime.utcnow().isoformat(),
     }
-
 
 @router.get("/{integrationId}/sync-history", summary="Get sync history")
 async def get_sync_history(
@@ -319,7 +307,6 @@ async def get_sync_history(
         "total_syncs": 2,
     }
 
-
 @router.post("/{integrationId}/webhooks", summary="Configure webhooks")
 async def configure_webhooks(
     integrationId: str,
@@ -339,7 +326,6 @@ async def configure_webhooks(
         "status": "configured",
         "message": "Webhook configured successfully",
     }
-
 
 @router.get("/{integrationId}/logs", summary="Get integration logs")
 async def get_integration_logs(
@@ -367,7 +353,6 @@ async def get_integration_logs(
         ],
         "total_logs": 2,
     }
-
 
 @router.post("/oauth/callback", summary="Handle OAuth callback")
 async def oauth_callback(

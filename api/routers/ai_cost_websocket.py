@@ -22,23 +22,19 @@ logger = get_logger(__name__)
 
 router = APIRouter(tags=["AI Cost WebSocket"])
 
-
 class WebSocketMessage(BaseModel):
     """Base WebSocket message structure."""
     type: str
     timestamp: str
     data: Dict[str, Any]
 
-
 class CostUpdateMessage(WebSocketMessage):
     """Real-time cost update message."""
     type: str = "cost_update"
 
-
 class BudgetAlertMessage(WebSocketMessage):
     """Budget alert message."""
     type: str = "budget_alert"
-
 
 class ConnectionManager:
     """Manages WebSocket connections for real-time cost monitoring."""
@@ -243,10 +239,8 @@ class ConnectionManager:
             }
         }
 
-
 # Global connection manager
 connection_manager = ConnectionManager()
-
 
 @router.websocket("/realtime-dashboard")
 async def realtime_cost_dashboard(
@@ -301,7 +295,6 @@ async def realtime_cost_dashboard(
     finally:
         if connection_id:
             await connection_manager.disconnect(connection_id)
-
 
 @router.websocket("/budget-alerts")
 async def budget_alerts_websocket(
@@ -360,7 +353,6 @@ async def budget_alerts_websocket(
         if connection_id:
             await connection_manager.disconnect(connection_id)
 
-
 @router.websocket("/service-monitoring/{service_name}")
 async def service_cost_monitoring(
     websocket: WebSocket,
@@ -412,7 +404,6 @@ async def service_cost_monitoring(
         if connection_id:
             await connection_manager.disconnect(connection_id)
 
-
 async def handle_websocket_message(connection_id: str, message: Dict[str, Any]) -> None:
     """Handle incoming WebSocket messages."""
 
@@ -436,7 +427,6 @@ async def handle_websocket_message(connection_id: str, message: Dict[str, Any]) 
         # Update last ping time
         if connection_id in connection_manager.active_connections:
             connection_manager.active_connections[connection_id]["last_ping"] = datetime.now()
-
 
 async def send_current_stats(connection_id: str) -> None:
     """Send current cost statistics to connection."""
@@ -466,7 +456,6 @@ async def send_current_stats(connection_id: str) -> None:
     except Exception as e:
         logger.error(f"Failed to send current stats: {str(e)}")
 
-
 async def send_cost_forecast(connection_id: str) -> None:
     """Send cost forecast to connection."""
 
@@ -494,7 +483,6 @@ async def send_cost_forecast(connection_id: str) -> None:
 
     except Exception as e:
         logger.error(f"Failed to send cost forecast: {str(e)}")
-
 
 async def send_service_initial_data(connection_id: str, service_name: str) -> None:
     """Send initial data for service monitoring."""
@@ -544,7 +532,6 @@ async def send_service_initial_data(connection_id: str, service_name: str) -> No
     except Exception as e:
         logger.error(f"Failed to send service initial data: {str(e)}")
 
-
 async def send_service_stats(connection_id: str, service_name: str) -> None:
     """Send current service statistics."""
 
@@ -571,7 +558,6 @@ async def send_service_stats(connection_id: str, service_name: str) -> None:
 
     except Exception as e:
         logger.error(f"Failed to send service stats: {str(e)}")
-
 
 # Background task for broadcasting cost updates
 async def broadcast_cost_updates() -> None:
@@ -605,10 +591,8 @@ async def broadcast_cost_updates() -> None:
             logger.error(f"Error in broadcast cost updates: {str(e)}")
             await asyncio.sleep(60)  # Wait longer on error
 
-
 # Background task management for WebSocket cost updates
 _background_task: Optional[asyncio.Task] = None
-
 
 async def start_websocket_background_tasks() -> None:
     """Start background tasks for WebSocket cost monitoring.
@@ -622,7 +606,6 @@ async def start_websocket_background_tasks() -> None:
         logger.info("Started WebSocket cost monitoring background task")
     else:
         logger.warning("WebSocket background task already running")
-
 
 async def stop_websocket_background_tasks() -> None:
     """Stop background tasks for WebSocket cost monitoring.
@@ -639,7 +622,6 @@ async def stop_websocket_background_tasks() -> None:
             pass
         logger.info("Stopped WebSocket cost monitoring background task")
 
-
 # HTTP endpoint to manually start/stop background tasks (for development)
 @router.post("/admin/background-tasks/start")
 async def start_background_tasks():
@@ -647,20 +629,17 @@ async def start_background_tasks():
     await start_websocket_background_tasks()
     return {"message": "Background tasks started"}
 
-
 @router.post("/admin/background-tasks/stop") 
 async def stop_background_tasks():
     """Stop WebSocket background tasks manually."""
     await stop_websocket_background_tasks()
     return {"message": "Background tasks stopped"}
 
-
 # HTTP endpoints for WebSocket management
 @router.get("/connections/stats")
 async def get_connection_stats():
     """Get statistics about active WebSocket connections."""
     return connection_manager.get_connection_stats()
-
 
 @router.post("/broadcast/alert")
 async def broadcast_budget_alert(alert_data: Dict[str, Any]):
@@ -676,7 +655,6 @@ async def broadcast_budget_alert(alert_data: Dict[str, Any]):
     await connection_manager.broadcast(alert_message, "budget_alerts")
 
     return {"message": "Alert broadcasted successfully"}
-
 
 @router.post("/broadcast/cost-spike")
 async def broadcast_cost_spike(spike_data: Dict[str, Any]):

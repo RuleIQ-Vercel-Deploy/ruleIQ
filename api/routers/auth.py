@@ -26,19 +26,15 @@ from config.logging_config import get_logger
 
 logger = get_logger(__name__)
 
-
 class LoginRequest(BaseModel):
     email: str
     password: str
 
-
 router = APIRouter()
-
 
 class RegisterResponse(BaseModel):
     user: UserResponse
     tokens: Token
-
 
 @router.post(
     "/register",
@@ -97,7 +93,6 @@ async def register(user: UserCreate, db: Session = Depends(get_db)):
         tokens=Token(access_token=access_token, refresh_token=refresh_token, token_type="bearer"),
     )
 
-
 @router.post("/token", response_model=Token, dependencies=[Depends(auth_rate_limit())])
 async def login_for_access_token(
     form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)
@@ -125,7 +120,6 @@ async def login_for_access_token(
 
     return {"access_token": access_token, "refresh_token": refresh_token, "token_type": "bearer"}
 
-
 @router.post("/login", response_model=Token, dependencies=[Depends(auth_rate_limit())])
 async def login(login_data: LoginRequest, db: Session = Depends(get_db)):
     """Login endpoint - accepts JSON data for compatibility with tests"""
@@ -149,7 +143,6 @@ async def login(login_data: LoginRequest, db: Session = Depends(get_db)):
     await auth_service.create_user_session(user, access_token, metadata={"login_method": "json"})
 
     return {"access_token": access_token, "refresh_token": refresh_token, "token_type": "bearer"}
-
 
 @router.post("/refresh", response_model=Token, dependencies=[Depends(auth_rate_limit())])
 async def refresh_token(refresh_request: dict, db: Session = Depends(get_db)):
@@ -181,7 +174,6 @@ async def refresh_token(refresh_request: dict, db: Session = Depends(get_db)):
         "refresh_token": new_refresh_token,
         "token_type": "bearer",
     }
-
 
 @router.get("/me")
 async def get_current_user(db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)):
@@ -257,7 +249,6 @@ async def get_current_user(db: Session = Depends(get_db), token: str = Depends(o
         "assessment_permissions": [p for p in permissions if 'assessment' in p.lower()]
     }
 
-
 @router.post("/logout")
 async def logout(request: Request, token: str = Depends(oauth2_scheme)):
     """Logout endpoint that blacklists the current token and invalidates sessions."""
@@ -284,7 +275,6 @@ async def logout(request: Request, token: str = Depends(oauth2_scheme)):
             pass
 
     return {"message": "Successfully logged out"}
-
 
 @router.post("/assign-default-role")
 async def assign_default_role(

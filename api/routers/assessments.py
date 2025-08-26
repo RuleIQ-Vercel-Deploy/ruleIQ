@@ -18,30 +18,24 @@ from api.schemas.models import (
 )
 from services.assessment_service import AssessmentService
 
-
 class QuickAssessmentRequest(BaseModel):
     business_profile_id: str
     assessment_type: str
     industry_standard: bool
 
-
 class FrameworkInfo(BaseModel):
     name: str
     description: str = ""
-
 
 class QuickRecommendation(BaseModel):
     framework: FrameworkInfo
     priority: str = "medium"
     description: str = ""
 
-
 class QuickAssessmentResponse(BaseModel):
     recommendations: List[QuickRecommendation]
 
-
 router = APIRouter()
-
 
 @router.post("/quick", response_model=QuickAssessmentResponse)
 async def quick_assessment(
@@ -90,7 +84,6 @@ async def quick_assessment(
 
     return QuickAssessmentResponse(recommendations=recommendations)
 
-
 @router.get("/", response_model=List[AssessmentSessionResponse])
 async def list_assessments(
     current_user: UserWithRoles = Depends(require_permission("assessment_list")),
@@ -100,7 +93,6 @@ async def list_assessments(
     assessment_service = AssessmentService()
     sessions = await assessment_service.get_user_assessment_sessions(db, current_user)
     return sessions
-
 
 @router.post("/", response_model=AssessmentSessionResponse, status_code=status.HTTP_201_CREATED)
 async def create_assessment(
@@ -114,7 +106,6 @@ async def create_assessment(
         db, current_user, session_data.session_type, session_data.business_profile_id
     )
     return session
-
 
 @router.post(
     "/start", response_model=AssessmentSessionResponse, status_code=status.HTTP_201_CREATED
@@ -130,7 +121,6 @@ async def start_assessment(
     )
     return session
 
-
 @router.get("/current", response_model=AssessmentSessionResponse)
 async def get_current_session(
     current_user: UserWithRoles = Depends(require_permission("assessment_list")),
@@ -144,7 +134,6 @@ async def get_current_session(
         )
     return session
 
-
 @router.get("/questions/{stage}", response_model=List[AssessmentQuestion])
 async def get_questions(
     stage: int,
@@ -153,7 +142,6 @@ async def get_questions(
     assessment_service = AssessmentService()
     questions = assessment_service.get_assessment_questions(current_user, stage)
     return questions
-
 
 @router.put("/{id}/response")
 async def update_response(
@@ -167,7 +155,6 @@ async def update_response(
         db, current_user, session_id, response_data.question_id, response_data.response
     )
     return session
-
 
 @router.post("/{id}/responses")
 async def update_responses(
@@ -192,7 +179,6 @@ async def update_responses(
     )
     return session
 
-
 @router.get("/{id}", response_model=AssessmentSessionResponse)
 async def get_assessment_session(
     session_id: UUID,
@@ -207,7 +193,6 @@ async def get_assessment_session(
             status_code=status.HTTP_404_NOT_FOUND, detail="Assessment session not found"
         )
     return session
-
 
 @router.get("/{id}/recommendations")
 async def get_assessment_recommendations(
@@ -255,7 +240,6 @@ async def get_assessment_recommendations(
 
     return {"recommendations": recommendations}
 
-
 @router.post("/{id}/complete", response_model=AssessmentSessionResponse)
 async def complete_assessment(
     session_id: UUID,
@@ -265,7 +249,6 @@ async def complete_assessment(
     assessment_service = AssessmentService()
     session = await assessment_service.complete_assessment_session(db, current_user, session_id)
     return session
-
 
 @router.patch("/{id}", response_model=AssessmentSessionResponse)
 async def update_assessment(
@@ -285,7 +268,6 @@ async def update_assessment(
     # Placeholder implementation - update session fields
     # In a real implementation, this would update the session in the database
     return session
-
 
 @router.get("/{id}/results", response_model=dict)
 async def get_assessment_results(

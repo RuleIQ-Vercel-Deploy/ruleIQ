@@ -4,9 +4,9 @@ FastAPI router for Freemium Assessment Strategy endpoints.
 Implements the email-gated AI assessment funnel with 5 core endpoints:
 1. POST /freemium/leads - Email capture and UTM tracking
 2. POST /freemium/sessions - Start AI assessment session
-3. GET /freemium/sessions/{session_token} - Get session progress
-4. POST /freemium/sessions/{session_token}/answers - Submit answers
-5. GET /freemium/sessions/{session_token}/results - Get assessment results
+3. GET /freemium/sessions/{token} - Get session progress
+4. POST /freemium/sessions/{token}/answers - Submit answers
+5. GET /freemium/sessions/{token}/results - Get assessment results
 
 Following ruleIQ patterns: Rate limiting, RBAC middleware, field mappers, error handling.
 """
@@ -35,14 +35,13 @@ logger = get_logger(__name__)
 
 # Create router with prefix and tags
 router = APIRouter(
-    prefix="/freemium",
+    prefix="/api/v1/freemium",
     tags=["Freemium Assessment"],
     responses={
         429: {"description": "Rate limit exceeded"},
         500: {"description": "Internal server error"},
     },
 )
-
 
 # ============================================================================
 # REQUEST/RESPONSE SCHEMAS
@@ -74,7 +73,6 @@ class LeadCaptureRequest(BaseModel):
     marketing_consent: bool = Field(default=False)
     newsletter_subscribed: bool = Field(default=True)
 
-
 class SessionStartRequest(BaseModel):
     """Schema for starting an assessment session."""
     lead_email: EmailStr
@@ -87,7 +85,6 @@ class SessionStartRequest(BaseModel):
     compliance_frameworks: Optional[List[str]] = Field(default_factory=list)
     priority_areas: Optional[List[str]] = Field(default_factory=list)
 
-
 class AnswerSubmissionRequest(BaseModel):
     """Schema for submitting assessment answers."""
     question_id: str
@@ -95,7 +92,6 @@ class AnswerSubmissionRequest(BaseModel):
     answer_confidence: Optional[str] = Field(None, pattern="^(low|medium|high)$")
     time_spent_seconds: Optional[int] = Field(None, ge=0)
     skip_reason: Optional[str] = Field(None, max_length=200)
-
 
 class LeadResponse(BaseModel):
     """Response schema for lead capture."""
@@ -118,7 +114,6 @@ class LeadResponse(BaseModel):
             lead_status=obj.lead_status,
             created_at=obj.created_at
         )
-
 
 class SessionResponse(BaseModel):
     """Response schema for assessment sessions."""
@@ -167,7 +162,6 @@ class SessionResponse(BaseModel):
             created_at=obj.created_at
         )
 
-
 class QuestionResponse(BaseModel):
     """Response schema for AI-generated questions."""
     question_id: str
@@ -180,7 +174,6 @@ class QuestionResponse(BaseModel):
 
     class Config:
         from_attributes = True
-
 
 class AssessmentResultsResponse(BaseModel):
     """Response schema for assessment results."""
@@ -201,7 +194,6 @@ class AssessmentResultsResponse(BaseModel):
 
     class Config:
         from_attributes = True
-
 
 # ============================================================================
 # ENDPOINT IMPLEMENTATIONS
@@ -309,7 +301,6 @@ async def capture_lead(
             detail="Failed to capture lead information"
         )
 
-
 @router.post(
     "/sessions",
     response_model=SessionResponse,
@@ -393,9 +384,8 @@ async def start_assessment_session(
             detail="Failed to start assessment session"
         )
 
-
 @router.get(
-    "/sessions/{session_token}",
+    "/sessions/{token}",
     response_model=SessionResponse,
     summary="Get assessment session progress",
     description="Retrieve current session state, progress, and next question",
@@ -440,15 +430,14 @@ async def get_session_progress(
     except HTTPException:
         raise
     except Exception as e:
-        logger.error(f"Error retrieving session {session_token}: {str(e)}")
+        logger.error(f"Error retrieving session {token}: {str(e)}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Failed to retrieve session progress"
         )
 
-
 @router.post(
-    "/sessions/{session_token}/answers",
+    "/sessions/{token}/answers",
     response_model=dict,
     summary="Submit assessment answers",
     description="Submit answers and get next AI-generated question with scoring",
@@ -531,16 +520,15 @@ async def submit_assessment_answer(
     except HTTPException:
         raise
     except Exception as e:
-        logger.error(f"Error processing answer for session {session_token}: {str(e)}")
+        logger.error(f"Error processing answer for session {token}: {str(e)}")
         await db.rollback()
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Failed to process assessment answer"
         )
 
-
 @router.get(
-    "/sessions/{session_token}/results",
+    "/sessions/{token}/results",
     response_model=AssessmentResultsResponse,
     summary="Get AI assessment results",
     description="Generate comprehensive assessment results with AI insights and conversion opportunities",
@@ -623,12 +611,11 @@ async def get_assessment_results(
     except HTTPException:
         raise
     except Exception as e:
-        logger.error(f"Error generating results for session {session_token}: {str(e)}")
+        logger.error(f"Error generating results for session {token}: {str(e)}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Failed to generate assessment results"
         )
-
 
 # ============================================================================
 # HEALTH CHECK AND UTILITY ENDPOINTS

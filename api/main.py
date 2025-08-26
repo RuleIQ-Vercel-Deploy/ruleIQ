@@ -71,7 +71,6 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     """
@@ -118,7 +117,6 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
 
     logger.info("ruleIQ API shutdown complete")
 
-
 # Create FastAPI app
 app = FastAPI(
     title="ruleIQ API",
@@ -155,48 +153,47 @@ app.middleware("http")(security_headers_middleware)
 app.middleware("http")(rate_limit_middleware)
 
 # Include all routers
-app.include_router(auth.router, prefix="/api/v1/auth", tags=["authentication"])
-app.include_router(users.router, prefix="/api/v1/users", tags=["users"])
-app.include_router(assessments.router, prefix="/api/v1/assessments", tags=["assessments"])
-app.include_router(ai_assessments.router, prefix="/api/v1/ai-assessments", tags=["ai-assessments"])
+app.include_router(auth.router, prefix="/api/v1/api/v1/auth", tags=["authentication"])
+app.include_router(users.router, prefix="/api/v1/api/v1/users", tags=["users"])
+app.include_router(assessments.router, prefix="/api/v1/api/v1/assessments", tags=["assessments"])
+app.include_router(ai_assessments.router, prefix="/api/v1/api/v1/ai-assessments", tags=["ai-assessments"])
 app.include_router(
-    ai_optimization.router, prefix="/api/v1/ai-optimization", tags=["ai-optimization"]
+    ai_optimization.router, prefix="/api/v1/api/v1/ai-optimization", tags=["ai-optimization"]
 )
 app.include_router(
-    business_profiles.router, prefix="/api/v1/business-profiles", tags=["business-profiles"]
+    business_profiles.router, prefix="/api/v1/api/v1/business-profiles", tags=["business-profiles"]
 )
-app.include_router(chat.router, prefix="/api/v1/chat", tags=["chat"])
-app.include_router(compliance.router, prefix="/api/v1/compliance", tags=["compliance"])
-app.include_router(evidence.router, prefix="/api/v1/evidence", tags=["evidence"])
+app.include_router(chat.router, prefix="/api/v1/api/v1/chat", tags=["chat"])
+app.include_router(compliance.router, prefix="/api/v1/api/v1/compliance", tags=["compliance"])
+app.include_router(evidence.router, prefix="/api/v1/api/v1/evidence", tags=["evidence"])
 app.include_router(
-    evidence_collection.router, prefix="/api/v1/evidence-collection", tags=["evidence-collection"]
+    evidence_collection.router, prefix="/api/v1/api/v1/evidence-collection", tags=["evidence-collection"]
 )
 app.include_router(
-    foundation_evidence.router, prefix="/api/v1/foundation-evidence", tags=["foundation-evidence"]
+    foundation_evidence.router, prefix="/api/v1/api/v1/foundation-evidence", tags=["foundation-evidence"]
 )
-app.include_router(frameworks.router, prefix="/api/v1/frameworks", tags=["frameworks"])
-app.include_router(implementation.router, prefix="/api/v1/implementation", tags=["implementation"])
-app.include_router(integrations.router, prefix="/api/v1/integrations", tags=["integrations"])
-app.include_router(iq_agent.router, prefix="/api/v1/iq", tags=["iq-agent", "graphrag"])
-app.include_router(monitoring.router, prefix="/api/v1/monitoring", tags=["monitoring"])
-app.include_router(policies.router, prefix="/api/v1/policies", tags=["policies"])
-app.include_router(readiness.router, prefix="/api/v1/readiness", tags=["readiness"])
-app.include_router(reporting.router, prefix="/api/v1/reporting", tags=["reporting"])
-app.include_router(security.router, prefix="/api/v1/security", tags=["security"])
+app.include_router(frameworks.router, prefix="/api/v1/api/v1/frameworks", tags=["frameworks"])
+app.include_router(implementation.router, prefix="/api/v1/api/v1/implementation", tags=["implementation"])
+app.include_router(integrations.router, prefix="/api/v1/api/v1/integrations", tags=["integrations"])
+app.include_router(iq_agent.router, prefix="/api/v1/api/v1/iq", tags=["iq-agent", "graphrag"])
+app.include_router(monitoring.router, prefix="/api/v1/api/v1/monitoring", tags=["monitoring"])
+app.include_router(policies.router, prefix="/api/v1/api/v1/policies", tags=["policies"])
+app.include_router(readiness.router, prefix="/api/v1/api/v1/readiness", tags=["readiness"])
+app.include_router(reporting.router, prefix="/api/v1/api/v1/reporting", tags=["reporting"])
+app.include_router(security.router, prefix="/api/v1/api/v1/security", tags=["security"])
 
 # Missing AI and other routers
-app.include_router(ai_policy.router, prefix="/api/v1/ai", tags=["ai", "policy"])
-app.include_router(ai_cost_monitoring.router, prefix="/api/v1/ai", tags=["ai", "cost-monitoring"])
-app.include_router(ai_cost_websocket.router, prefix="/api/v1/ai", tags=["ai", "websocket"])
-app.include_router(freemium.router, prefix="/api/v1/freemium", tags=["freemium"])
-app.include_router(rbac_auth.router, prefix="/api/v1/rbac", tags=["rbac", "authentication"])
-app.include_router(uk_compliance.router, prefix="/api/v1/uk-compliance", tags=["compliance", "uk"])
+app.include_router(ai_policy.router, prefix="/api/v1/api/v1/ai", tags=["ai", "policy"])
+app.include_router(ai_cost_monitoring.router, prefix="/api/v1/api/v1/ai", tags=["ai", "cost-monitoring"])
+app.include_router(ai_cost_websocket.router, prefix="/api/v1/api/v1/ai", tags=["ai", "websocket"])
+app.include_router(freemium.router, prefix="/api/v1/api/v1/freemium", tags=["freemium"])
+app.include_router(rbac_auth.router, prefix="/api/v1/api/v1/rbac", tags=["rbac", "authentication"])
+app.include_router(uk_compliance.router, prefix="/api/v1/api/v1/uk-compliance", tags=["compliance", "uk"])
 
 # Admin routers
-app.include_router(user_management.router, prefix="/api/admin", tags=["admin", "user-management"])
-app.include_router(data_access.router, prefix="/api/admin", tags=["admin", "data-access"])
-app.include_router(token_management.router, prefix="/api/admin", tags=["admin", "token-management"])
-
+app.include_router(user_management.router, prefix="/api/v1/api/admin", tags=["admin", "user-management"])
+app.include_router(data_access.router, prefix="/api/v1/api/admin", tags=["admin", "data-access"])
+app.include_router(token_management.router, prefix="/api/v1/api/admin", tags=["admin", "token-management"])
 
 # Global exception handlers
 @app.exception_handler(HTTPException)
@@ -213,7 +210,6 @@ async def http_exception_handler(request: Request, exc: HTTPException) -> JSONRe
         },
     )
 
-
 @app.exception_handler(SQLAlchemyError)
 async def sqlalchemy_exception_handler(request: Request, exc: SQLAlchemyError) -> JSONResponse:
     """Handle database exceptions"""
@@ -228,7 +224,6 @@ async def sqlalchemy_exception_handler(request: Request, exc: SQLAlchemyError) -
             }
         },
     )
-
 
 @app.exception_handler(Exception)
 async def general_exception_handler(request: Request, exc: Exception) -> JSONResponse:
@@ -245,19 +240,14 @@ async def general_exception_handler(request: Request, exc: Exception) -> JSONRes
         },
     )
 
-
 # Health check endpoints
-@app.get("/health")
 async def health_check() -> Dict[str, Any]:
     """Basic health check endpoint"""
     return {"status": "healthy", "timestamp": time.time(), "version": "1.0.0"}
 
-
-@app.get("/api/v1/health")
 async def api_health_check() -> Dict[str, Any]:
     """API v1 health check endpoint"""
     return {"status": "healthy", "timestamp": time.time(), "version": "1.0.0", "api_version": "v1"}
-
 
 @app.get("/api/v1/health/detailed")
 async def api_health_detailed() -> Dict[str, Any]:
@@ -295,7 +285,6 @@ async def api_health_detailed() -> Dict[str, Any]:
         },
     }
 
-
 @app.get("/health/ready")
 async def readiness_check() -> Dict[str, Any]:
     """Readiness check with database connectivity"""
@@ -313,7 +302,6 @@ async def readiness_check() -> Dict[str, Any]:
         if db is not None:
             db.close()
 
-
 @app.get("/health/live")
 async def liveness_check() -> Dict[str, Any]:
     """Liveness check for container orchestration"""
@@ -322,7 +310,6 @@ async def liveness_check() -> Dict[str, Any]:
         "timestamp": time.time(),
         "uptime": time.time() - (getattr(app.state, "start_time", time.time())),
     }
-
 
 # Root endpoint
 @app.get("/")
@@ -336,13 +323,11 @@ async def root() -> Dict[str, Any]:
         "health": "/health",
     }
 
-
 # Startup event to set start time
 @app.on_event("startup")
 async def startup_event() -> None:
     """Set application start time"""
     app.state.start_time = time.time()
-
 
 # Diagnostic endpoint for JWT configuration (remove in production)
 @app.get("/debug/config")
@@ -359,7 +344,6 @@ async def debug_config():
         "JWT_SECRET_env": os.getenv("JWT_SECRET")[:10] if os.getenv("JWT_SECRET") else None,
     }
 
-
 # Configuration validation
 def validate_configuration() -> None:
     """Validate critical configuration settings"""
@@ -375,7 +359,6 @@ def validate_configuration() -> None:
 
     if missing_vars:
         raise ValueError(f"Missing required environment variables: {missing_vars}")
-
 
 if __name__ == "__main__":
     uvicorn.run(

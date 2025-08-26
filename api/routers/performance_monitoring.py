@@ -291,7 +291,6 @@ async def get_system_metrics(
         logger.error(f"Error getting system metrics: {e}")
         raise HTTPException(status_code=500, detail="Failed to get system metrics")
 
-@router.get("/recommendations", response_model=List[OptimizationRecommendation])
 @monitor_performance("performance_recommendations")
 async def get_optimization_recommendations(
     current_user: User = Depends(get_current_active_user)
@@ -374,7 +373,6 @@ async def configure_performance_alerts(
         logger.error(f"Error configuring performance alerts: {e}")
         raise HTTPException(status_code=500, detail="Failed to configure alerts")
 
-@router.get("/health")
 async def performance_monitoring_health():
     """
     Health check for performance monitoring system.

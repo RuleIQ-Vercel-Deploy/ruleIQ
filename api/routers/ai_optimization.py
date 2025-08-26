@@ -19,7 +19,6 @@ from services.ai.circuit_breaker import AICircuitBreaker
 
 router = APIRouter()
 
-
 # Request/Response Models
 class ModelSelectionRequest(BaseModel):
     task_type: str
@@ -27,12 +26,10 @@ class ModelSelectionRequest(BaseModel):
     prefer_speed: bool = False
     context: Dict[str, Any] = {}
 
-
 class ModelHealthResponse(BaseModel):
     models: Dict[str, Any]
     timestamp: str
     overall_status: str
-
 
 class PerformanceMetricsResponse(BaseModel):
     response_times: Dict[str, float]
@@ -40,10 +37,8 @@ class PerformanceMetricsResponse(BaseModel):
     token_usage: Dict[str, int]
     cost_metrics: Dict[str, float]
 
-
 # Initialize circuit breaker
 circuit_breaker = AICircuitBreaker()
-
 
 @router.post("/model-selection")
 async def model_selection(
@@ -69,7 +64,6 @@ async def model_selection(
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Model selection failed: {str(e)}")
 
-
 @router.get("/model-health")
 async def model_health_check(current_user: User = Depends(get_current_active_user)):
     """Check health status of all AI models."""
@@ -82,7 +76,6 @@ async def model_health_check(current_user: User = Depends(get_current_active_use
         }
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Health check failed: {str(e)}")
-
 
 @router.get("/performance-metrics")
 async def performance_metrics(current_user: User = Depends(get_current_active_user)):
@@ -105,7 +98,6 @@ async def performance_metrics(current_user: User = Depends(get_current_active_us
             "token_usage": {"total": 10000, "gemini-2.5-flash": 6000, "gemini-2.5-pro": 4000},
             "cost_metrics": {"total_cost": 5.0, "optimization_savings": 1.2},
         }
-
 
 @router.post("/model-fallback-chain")
 async def model_fallback_chain(
@@ -134,7 +126,6 @@ async def model_fallback_chain(
         }
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Fallback chain failed: {str(e)}")
-
 
 @router.get("/circuit-breaker/status")
 async def get_circuit_breaker_status(
@@ -169,7 +160,6 @@ async def get_circuit_breaker_status(
             detail="Failed to retrieve circuit breaker status",
         )
 
-
 @router.post("/circuit-breaker/reset")
 async def reset_circuit_breaker(
     model_name: str = Query(..., description="Model name to reset circuit breaker for"),
@@ -190,7 +180,7 @@ async def reset_circuit_breaker(
 
         if success:
             return {
-                "message": f"Circuit breaker reset successfully for model: {model_name}",
+                "message": f"Circuit breaker reset successfully for model: {model}",
                 "model_name": model_name,
                 "new_state": "CLOSED",
                 "timestamp": "2024-01-01T00:00:00Z",
@@ -198,7 +188,7 @@ async def reset_circuit_breaker(
         else:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
-                detail=f"Model '{model_name}' not found or circuit breaker reset failed",
+                detail=f"Model '{model}' not found or circuit breaker reset failed",
             )
     except HTTPException:
         raise
