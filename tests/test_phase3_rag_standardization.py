@@ -141,9 +141,9 @@ class TestStandardizedRAG:
 
 
 # Temporarily disabled until dependency issues resolved
-"""
+# Start of commented section
 class TestRAGAdapter:
-    Test the backward compatibility adapter."""
+    '''Test the backward compatibility adapter.'''
     
     @pytest.fixture
     def company_id(self):

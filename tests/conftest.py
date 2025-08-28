@@ -10,6 +10,8 @@ import psycopg
 from psycopg.rows import dict_row
 from langgraph.checkpoint.postgres import PostgresSaver
 from contextlib import contextmanager
+from sqlalchemy import create_engine, event
+from sqlalchemy.orm import sessionmaker, Session
 
 
 @pytest.fixture(scope="session")
@@ -141,6 +143,86 @@ def clean_test_db(postgres_connection):
         postgres_connection.commit()
 
 
+@pytest.fixture
+def db_session():
+    """
+    Provide a SQLAlchemy database session for testing.
+    This fixture creates a clean session for each test and ensures proper cleanup.
+    """
+    # Get database URL from environment or use test default
+    # IMPORTANT: Using port 5433 for test database to avoid conflicts
+    # Priority: TEST_DATABASE_URL > DATABASE_URL > default
+    database_url = os.getenv(
+        "TEST_DATABASE_URL",
+        os.getenv(
+            "DATABASE_URL",
+            "postgresql://postgres:postgres@localhost:5433/compliance_test"
+        )
+    )
+    
+    # Skip if test database not reachable
+    if "localhost:5433" not in database_url and not os.getenv("TEST_DATABASE_URL"):
+        pytest.skip("PostgreSQL test database not configured")
+    
+    # IMPORTANT: Override DATABASE_URL for the database module
+    # This ensures the database module uses our test database
+    original_db_url = os.environ.get("DATABASE_URL")
+    os.environ["DATABASE_URL"] = database_url
+    print(f"DEBUG: Setting DATABASE_URL to: {database_url}")
+    print(f"DEBUG: Original DATABASE_URL was: {original_db_url}")
+    
+    try:
+        # Create engine
+        engine = create_engine(database_url)
+        
+        # Create tables if they don't exist
+        from database import Base
+        Base.metadata.create_all(bind=engine)
+        
+        # Create session factory
+        SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+        
+        # Create session for test
+        session = SessionLocal()
+        
+        # Track created objects for cleanup
+        created_objects = []
+        
+        # Override session.add to track objects
+        original_add = session.add
+        def tracking_add(instance):
+            created_objects.append(instance)
+            return original_add(instance)
+        session.add = tracking_add
+        
+        yield session
+        
+        # Cleanup: Delete all objects created in this test
+        session.rollback()  # Roll back any uncommitted changes
+        
+        # Delete tracked objects
+        for obj in reversed(created_objects):
+            try:
+                if obj in session:
+                    session.delete(obj)
+            except:
+                pass  # Object might already be deleted
+        
+        try:
+            session.commit()  # Commit deletions
+        except:
+            session.rollback()  # If deletion fails, rollback
+        
+        session.close()
+        
+    finally:
+        # Restore original DATABASE_URL if it existed
+        if original_db_url is not None:
+            os.environ["DATABASE_URL"] = original_db_url
+        elif "DATABASE_URL" in os.environ:
+            del os.environ["DATABASE_URL"]
+
+
 # Mark slow tests
 def pytest_configure(config):
     """Register custom markers."""
@@ -153,3 +235,12 @@ def pytest_configure(config):
     config.addinivalue_line(
         "markers", "requires_db: mark test as requiring database connection"
     )
+
+
+def assert_api_response_security(response):
+    """Assert API response has proper security headers."""
+    # Check for security headers
+    assert "X-Content-Type-Options" in response.headers
+    assert response.headers["X-Content-Type-Options"] == "nosniff"
+    # Additional security checks can be added here
+    pass

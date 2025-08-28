@@ -25,10 +25,10 @@ from fastapi.testclient import TestClient
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from api.main import app
-from services.ai.circuit_breaker import CircuitBreaker, CircuitState
+from services.ai.circuit_breaker import AICircuitBreaker as CircuitBreaker, CircuitState
 from services.ai.assistant import ComplianceAssistant
 from config.settings import settings
-from tests.conftest import create_test_user
+from tests.utils.auth_test_utils import TestAuthManager
 
 
 @pytest.mark.integration
@@ -45,7 +45,8 @@ class TestAIServiceIntegration:
     @pytest.fixture
     async def auth_headers(self, async_db):
         """Create authentication headers"""
-        user = await create_test_user(async_db, email="ai.integration@test.com")
+        auth_manager = TestAuthManager()
+        user = auth_manager.create_test_user(email="ai.integration@test.com", username="ai.integration@test.com".split("@")[0])
         from api.dependencies.auth import create_access_token
         token = create_access_token(data={"sub": user.email})
         return {"Authorization": f"Bearer {token}"}
@@ -218,7 +219,8 @@ class TestDatabaseIntegration:
 
     @pytest.fixture
     async def auth_headers(self, async_db):
-        user = await create_test_user(async_db, email="db.integration@test.com")
+        auth_manager = TestAuthManager()
+        user = auth_manager.create_test_user(email="db.integration@test.com", username="db.integration@test.com".split("@")[0])
         from api.dependencies.auth import create_access_token
         token = create_access_token(data={"sub": user.email})
         return {"Authorization": f"Bearer {token}"}
@@ -334,7 +336,8 @@ class TestRedisIntegration:
 
     @pytest.fixture
     async def auth_headers(self, async_db):
-        user = await create_test_user(async_db, email="redis.integration@test.com")
+        auth_manager = TestAuthManager()
+        user = auth_manager.create_test_user(email="redis.integration@test.com", username="redis.integration@test.com".split("@")[0])
         from api.dependencies.auth import create_access_token
         token = create_access_token(data={"sub": user.email})
         return {"Authorization": f"Bearer {token}"}
@@ -534,7 +537,8 @@ class TestFileStorageIntegration:
 
     @pytest.fixture
     async def auth_headers(self, async_db):
-        user = await create_test_user(async_db, email="storage.test@example.com")
+        auth_manager = TestAuthManager()
+        user = auth_manager.create_test_user(email="storage.test@example.com", username="storage.test@example.com".split("@")[0])
         from api.dependencies.auth import create_access_token
         token = create_access_token(data={"sub": user.email})
         return {"Authorization": f"Bearer {token}"}
@@ -629,7 +633,8 @@ class TestThirdPartyAPIIntegration:
 
     @pytest.fixture
     async def auth_headers(self, async_db):
-        user = await create_test_user(async_db, email="api.integration@test.com")
+        auth_manager = TestAuthManager()
+        user = auth_manager.create_test_user(email="api.integration@test.com", username="api.integration@test.com".split("@")[0])
         from api.dependencies.auth import create_access_token
         token = create_access_token(data={"sub": user.email})
         return {"Authorization": f"Bearer {token}"}

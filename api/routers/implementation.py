@@ -117,10 +117,10 @@ async def get_plan(
 
     return plan_dict
 
-@router.patch("/plans/{id}/tasks/{id}")
+@router.patch("/plans/{plan_id}/tasks/{task_id}")
 async def update_task(
-    id: UUID,
-    id: str,
+    plan_id: UUID,
+    task_id: str,
     task_update: ImplementationTaskUpdate,
     current_user: User = Depends(get_current_active_user),
     db: AsyncSession = Depends(get_async_db),

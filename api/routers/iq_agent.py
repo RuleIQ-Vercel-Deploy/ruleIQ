@@ -43,7 +43,7 @@ from services.ai.exceptions import (
 # Set up logging
 logger = logging.getLogger(__name__)
 
-router = APIRouter(prefix="/api/v1/", tags=["IQ Agent - GraphRAG Intelligence"])
+router = APIRouter(prefix="/api/v1", tags=["IQ Agent - GraphRAG Intelligence"])
 
 # Global IQ agent instance (initialized on startup)
 _iq_agent: Optional[IQComplianceAgent] = None

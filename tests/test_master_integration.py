@@ -21,8 +21,8 @@ from langgraph.checkpoint.postgres.aio import AsyncPostgresSaver
 from langgraph_agent.graph.master_integration_graph import MasterIntegrationGraph
 from langgraph_agent.graph.enhanced_state import WorkflowStatus
 from langgraph_agent.agents.rag_system import RAGConfig
-from langgraph_agent.core.neo4j_service import Neo4jService
-from langgraph_agent.services.supabase_service import SupabaseService
+from langgraph_agent.core.neo4j_service import Neo4jGraphRAGService as Neo4jService
+# from langgraph_agent.services.supabase_service import SupabaseService  # Not implemented
 
 
 # Test configuration

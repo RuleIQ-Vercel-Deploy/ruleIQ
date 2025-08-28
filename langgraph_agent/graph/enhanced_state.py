@@ -270,6 +270,14 @@ class EnhancedComplianceState(TypedDict):
     last_error_time: Optional[datetime]
     last_successful_node: Optional[str]
     updated_at: Optional[datetime]
+    
+    # Evidence collection fields
+    evidence_items: List[Dict[str, Any]]
+    evidence_status: Dict[str, str]
+    evidence_scores: Dict[str, float]
+    evidence_validation_results: List[Dict[str, Any]]
+    evidence_collection_state: str  # "init", "collecting", "validating", "complete"
+    actor: str  # Current actor/node processing the state
 
 
 def create_enhanced_initial_state(

@@ -4,6 +4,8 @@ Tests for Freemium Assessment database models.
 Following ALWAYS_READ_FIRST protocol: Test-first development mandate.
 These tests define the exact interfaces and behavior required for the freemium models.
 """
+import os
+
 import uuid
 from datetime import datetime, timedelta
 from decimal import Decimal
@@ -39,7 +41,7 @@ class TestAssessmentLead:
         # Assert
         assert lead.id is not None
         assert lead.email == email
-        assert lead.consent_marketing is True
+        assert lead.marketing_consent is True
         assert lead.lead_score == 0
         assert lead.created_at is not None
         assert lead.updated_at is not None
@@ -49,7 +51,7 @@ class TestAssessmentLead:
         # Arrange
         lead_data = {
             "email": "utm.test@example.com",
-            "consent_marketing": True,
+            "marketing_consent": True,
             "utm_source": "google",
             "utm_medium": "cpc",
             "utm_campaign": "freemium_launch",
@@ -74,7 +76,7 @@ class TestAssessmentLead:
         # Arrange
         email = "duplicate@example.com"
         lead1 = AssessmentLead(email=email, marketing_consent=True)
-        lead2 = AssessmentLead(email=email, consent_marketing=False)
+        lead2 = AssessmentLead(email=email, marketing_consent=False)
 
         # Act & Assert
         db_session.add(lead1)
@@ -117,8 +119,8 @@ class TestFreemiumAssessmentSession:
         # Act
         session = FreemiumAssessmentSession(
             lead_id=lead.id,
-            business_type="technology",
-            company_size="11-50",
+            assessment_type="technology_compliance",
+            status="started"
         )
         db_session.add(session)
         db_session.commit()
@@ -126,9 +128,8 @@ class TestFreemiumAssessmentSession:
         # Assert
         assert session.id is not None
         assert session.lead_id == lead.id
-        assert session.business_type == "technology"
-        assert session.company_size == "11-50"
-        assert session.completion_status == "started"
+        assert session.assessment_type == "technology_compliance"
+        assert session.status == "started"
         assert session.session_token is not None
         assert len(session.session_token) >= 32  # Secure token length
         assert session.expires_at is not None
@@ -143,7 +144,7 @@ class TestFreemiumAssessmentSession:
 
         session = FreemiumAssessmentSession(
             lead_id=lead.id,
-            business_type="healthcare"
+            assessment_type="healthcare_compliance"
         )
 
         # Act
@@ -152,7 +153,7 @@ class TestFreemiumAssessmentSession:
             "risk_level": "medium",
             "recommendations": ["Implement GDPR compliance", "Update privacy policy"]
         }
-        session.user_answers = {
+        session.questions_data = {
             "handles_personal_data": True,
             "data_retention_policy": False,
             "staff_training": "annually"
@@ -163,7 +164,7 @@ class TestFreemiumAssessmentSession:
 
         # Assert
         assert session.ai_responses["risk_level"] == "medium"
-        assert session.user_answers["handles_personal_data"] is True
+        assert session.questions_data["handles_personal_data"] is True
         assert len(session.ai_responses["recommendations"]) == 2
 
     def test_assessment_session_expiration(self, db_session):
@@ -176,7 +177,7 @@ class TestFreemiumAssessmentSession:
         # Act - Create session with custom expiration
         session = FreemiumAssessmentSession(
             lead_id=lead.id,
-            business_type="finance",
+            assessment_type="finance_compliance",
             expires_at=datetime.utcnow() + timedelta(hours=2)
         )
         db_session.add(session)
@@ -297,7 +298,7 @@ class TestConversionEvent:
         db_session.add(lead)
         db_session.commit()
 
-        session = FreemiumAssessmentSession(lead_id=lead.id, business_type="retail")
+        session = FreemiumAssessmentSession(lead_id=lead.id, assessment_type="retail")
         db_session.add(session)
         db_session.commit()
 
@@ -332,8 +333,8 @@ class TestFreemiumModelRelationships:
         db_session.commit()
 
         # Act - Create multiple sessions for same lead
-        session1 = FreemiumAssessmentSession(lead_id=lead.id, business_type="tech")
-        session2 = FreemiumAssessmentSession(lead_id=lead.id, business_type="finance")
+        session1 = FreemiumAssessmentSession(lead_id=lead.id, assessment_type="tech_compliance")
+        session2 = FreemiumAssessmentSession(lead_id=lead.id, assessment_type="finance_compliance")
 
         db_session.add_all([session1, session2])
         db_session.commit()
@@ -350,7 +351,7 @@ class TestFreemiumModelRelationships:
         db_session.add(lead)
         db_session.commit()
 
-        session = FreemiumAssessmentSession(lead_id=lead.id, business_type="education")
+        session = FreemiumAssessmentSession(lead_id=lead.id, assessment_type="education_compliance")
         event = LeadScoringEvent(
             lead_id=lead.id,
             event_type="test",

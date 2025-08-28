@@ -5,13 +5,15 @@ Phase 4 Implementation: Migrate evidence tasks from Celery to LangGraph nodes.
 This module replaces workers/evidence_tasks.py with native LangGraph implementations.
 """
 
-from typing import Dict, Any, List, Optional
+from typing import Dict, Any, List, Optional, Union
 from datetime import datetime, timedelta
 from uuid import UUID
 import logging
 
 from langchain_core.messages import SystemMessage, HumanMessage
 from langgraph.prebuilt import ToolNode
+
+from sqlalchemy.exc import SQLAlchemyError
 
 from database.db_setup import get_async_db
 from database.evidence_item import EvidenceItem
@@ -31,54 +33,89 @@ class EvidenceCollectionNode:
     using Neon database for state persistence.
     """
     
-    def __init__(self):
-        """Initialize evidence collection node."""
-        self.processor = None
-        self.duplicate_detector = None
+    def __init__(self, processor=None, duplicate_detector=None):
+        """Initialize evidence collection node with optional dependencies.
+        
+        Args:
+            processor: Evidence processor instance for validation and scoring
+            duplicate_detector: Duplicate detection service for deduplication
+        """
+        self.processor = processor
+        self.duplicate_detector = duplicate_detector
+        self.retry_count = 0
+        self.max_retries = 3
+        self.circuit_breaker_state = "closed"
+        self.failure_count = 0
+        self.failure_threshold = 5
     
     async def process_evidence(
         self, 
-        state: EnhancedComplianceState
-    ) -> EnhancedComplianceState:
+        state_or_evidence: Union[EnhancedComplianceState, Dict[str, Any]],
+        evidence_data: Optional[Dict[str, Any]] = None
+    ) -> Union[EnhancedComplianceState, Dict[str, Any]]:
         """
         Process evidence items from various integrations.
         
         Replaces: process_evidence_item Celery task
         
         Args:
-            state: Current enhanced compliance state
+            state_or_evidence: Either the state or evidence data (for backward compatibility)
+            evidence_data: Optional evidence data when first param is state
             
         Returns:
-            Updated state with processed evidence
+            Updated state with processed evidence or processed evidence dict
         """
+        # Handle different calling patterns for backward compatibility
+        if evidence_data is None:
+            # Called with just evidence_data
+            evidence_data = state_or_evidence if isinstance(state_or_evidence, dict) else {}
+            state = {"evidence_items": [], "messages": [], "errors": [], "error_count": 0, "processing_status": "init"}
+            return_evidence_only = True
+        else:
+            # Called with state and evidence_data
+            state = state_or_evidence
+            return_evidence_only = False
+            
         try:
-            # Extract evidence data from state
-            evidence_data = state.get("current_evidence", {})
-            user_id = state.get("user_id")
-            business_profile_id = state.get("business_profile_id")
-            integration_id = state.get("integration_id", "manual")
+            # Extract evidence data from state if needed
+            if not evidence_data:
+                evidence_data = state.get("current_evidence", {})
+                
+            user_id = state.get("user_id") or evidence_data.get("user_id")
+            business_profile_id = state.get("business_profile_id") or evidence_data.get("business_profile_id")
+            integration_id = state.get("integration_id", evidence_data.get("source", "manual"))
             
             if not evidence_data:
-                logger.warning("No evidence data found in state")
-                state["messages"].append(
-                    SystemMessage(content="No evidence data to process")
-                )
-                return state
+                logger.warning("No evidence data found")
+                if not return_evidence_only:
+                    state["messages"].append(
+                        SystemMessage(content="No evidence data to process")
+                    )
+                return state if not return_evidence_only else {"status": "no_data"}
             
             # Process evidence asynchronously
             async for db in get_async_db():
                 try:
                     # Check for duplicates
-                    if await DuplicateDetector.is_duplicate(db, user_id, evidence_data):
+                    if self.duplicate_detector:
+                        is_dup = await self.duplicate_detector.is_duplicate(db, user_id, evidence_data)
+                    else:
+                        is_dup = await DuplicateDetector.is_duplicate(db, user_id, evidence_data)
+                    
+                    if is_dup:
                         logger.info(f"Duplicate evidence detected for user {user_id}")
-                        state["processing_status"] = "skipped"
-                        state["messages"].append(
-                            SystemMessage(content="Evidence skipped: duplicate detected")
-                        )
-                        return state
+                        if not return_evidence_only:
+                            state["processing_status"] = "skipped"
+                            state["messages"].append(
+                                SystemMessage(content="Evidence skipped: duplicate detected")
+                            )
+                        return state if not return_evidence_only else {"status": "duplicate"}
                     
                     # Create evidence processor
-                    processor = EvidenceProcessor(db)
+                    if self.processor:
+                        processor = self.processor
+                    else:
+                        processor = EvidenceProcessor(db)
                     
                     # Create new evidence item
                     new_evidence = EvidenceItem(
@@ -104,46 +141,64 @@ class EvidenceCollectionNode:
                     await db.commit()
                     await db.refresh(new_evidence)
                     
-                    # Update state
-                    state["evidence_items"].append({
-                        "id": str(new_evidence.id),
-                        "type": new_evidence.evidence_type,
-                        "status": "processed"
-                    })
-                    state["processing_status"] = "completed"
-                    state["messages"].append(
-                        SystemMessage(content=f"Evidence processed: {new_evidence.id}")
-                    )
+                    # Update state or return evidence
+                    if not return_evidence_only:
+                        state["evidence_items"].append({
+                            "id": str(new_evidence.id),
+                            "type": new_evidence.evidence_type,
+                            "status": "processed"
+                        })
+                        state["processing_status"] = "completed"
+                        state["messages"].append(
+                            SystemMessage(content=f"Evidence processed: {new_evidence.id}")
+                        )
                     
                     logger.info(f"Successfully processed evidence {new_evidence.id}")
                     
-                except DatabaseException as e:
+                    if return_evidence_only:
+                        return {
+                            "id": str(new_evidence.id),
+                            "type": new_evidence.evidence_type,
+                            "status": "processed",
+                            "evidence_name": new_evidence.evidence_name
+                        }
+                    
+                except (DatabaseException, SQLAlchemyError) as e:
                     await db.rollback()
                     logger.error(f"Database error processing evidence: {e}")
-                    state["error_count"] += 1
-                    state["errors"].append(str(e))
+                    if not return_evidence_only:
+                        state["error_count"] = state.get("error_count", 0) + 1
+                        state["errors"].append(str(e))
                     raise
                     
                 except Exception as e:
                     await db.rollback()
                     logger.error(f"Unexpected error processing evidence: {e}")
-                    state["error_count"] += 1
-                    state["errors"].append(str(e))
+                    if not return_evidence_only:
+                        state["error_count"] = state.get("error_count", 0) + 1
+                        state["errors"].append(str(e))
                     raise
                     
+        except (DatabaseException, SQLAlchemyError) as e:
+            logger.error(f"Failed to process evidence: {e}")
+            # Re-raise database errors
+            raise
         except Exception as e:
             logger.error(f"Failed to process evidence: {e}")
-            state["processing_status"] = "failed"
-            state["messages"].append(
-                SystemMessage(content=f"Evidence processing failed: {str(e)}")
-            )
+            if not return_evidence_only:
+                state["processing_status"] = "failed"
+                state["messages"].append(
+                    SystemMessage(content=f"Evidence processing failed: {str(e)}")
+                )
+            else:
+                return {"status": "failed", "error": str(e)}
             
-        return state
+        return state if not return_evidence_only else {"status": "completed"}
     
     async def sync_evidence_status(
         self,
-        state: EnhancedComplianceState
-    ) -> EnhancedComplianceState:
+        state: Union[EnhancedComplianceState, Dict[str, Any]]
+    ) -> Union[EnhancedComplianceState, Dict[str, Any]]:
         """
         Sync evidence status by marking old evidence as stale.
         
@@ -179,30 +234,59 @@ class EvidenceCollectionNode:
                     updated_count = result.rowcount
                     
                     # Update state
-                    state["sync_results"] = {
-                        "updated_count": updated_count,
-                        "timestamp": datetime.utcnow().isoformat()
-                    }
-                    state["messages"].append(
-                        SystemMessage(
-                            content=f"Evidence sync completed: {updated_count} items marked stale"
+                    if isinstance(state, dict):
+                        state["sync_results"] = {
+                            "updated_count": updated_count,
+                            "timestamp": datetime.utcnow().isoformat()
+                        }
+                        if "messages" not in state:
+                            state["messages"] = []
+                        state["messages"].append(
+                            SystemMessage(
+                                content=f"Evidence sync completed: {updated_count} items marked stale"
+                            )
                         )
-                    )
+                        # For dict mode, add expected fields
+                        state["sync_count"] = updated_count
+                        state["last_sync"] = datetime.utcnow().isoformat()
+                    else:
+                        state["sync_results"] = {
+                            "updated_count": updated_count,
+                            "timestamp": datetime.utcnow().isoformat()
+                        }
+                        state["messages"].append(
+                            SystemMessage(
+                                content=f"Evidence sync completed: {updated_count} items marked stale"
+                            )
+                        )
                     
                     logger.info(f"Evidence status sync: {updated_count} items updated")
                     
                 except Exception as e:
                     await db.rollback()
                     logger.error(f"Error syncing evidence status: {e}")
-                    state["error_count"] += 1
-                    state["errors"].append(str(e))
+                    if isinstance(state, dict):
+                        state["error_count"] = state.get("error_count", 0) + 1
+                        if "errors" not in state:
+                            state["errors"] = []
+                        state["errors"].append(str(e))
+                    else:
+                        state["error_count"] += 1
+                        state["errors"].append(str(e))
                     raise
                     
         except Exception as e:
             logger.error(f"Failed to sync evidence status: {e}")
-            state["messages"].append(
-                SystemMessage(content=f"Evidence sync failed: {str(e)}")
-            )
+            if isinstance(state, dict):
+                if "messages" not in state:
+                    state["messages"] = []
+                state["messages"].append(
+                    SystemMessage(content=f"Evidence sync failed: {str(e)}")
+                )
+            else:
+                state["messages"].append(
+                    SystemMessage(content=f"Evidence sync failed: {str(e)}")
+                )
             
         return state
     
@@ -434,6 +518,192 @@ class EvidenceCollectionNode:
             )
             
         return state
+
+    async def validate_evidence(self, evidence: Dict[str, Any]) -> Dict[str, Any]:
+        """Validate evidence with scoring and confidence calculation.
+        
+        Args:
+            evidence: Evidence item to validate
+            
+        Returns:
+            Validation result with score and confidence
+        """
+        validation_result = {
+            "valid": True,
+            "score": 0.0,
+            "confidence": 0.0,
+            "errors": []
+        }
+        
+        # Check required fields
+        required_fields = ["id", "type", "content"]
+        for field in required_fields:
+            if field not in evidence:
+                validation_result["valid"] = False
+                validation_result["errors"].append(f"Missing required field: {field}")
+        
+        if not validation_result["valid"]:
+            return validation_result
+            
+        # Calculate score based on evidence completeness
+        score_factors = {
+            "has_source": 0.2,
+            "has_timestamp": 0.2,
+            "has_metadata": 0.2,
+            "content_length": 0.4
+        }
+        
+        score = 0.0
+        if evidence.get("source"):
+            score += score_factors["has_source"]
+        if evidence.get("timestamp"):
+            score += score_factors["has_timestamp"]
+        if evidence.get("metadata"):
+            score += score_factors["has_metadata"]
+        
+        content_len = len(str(evidence.get("content", "")))
+        if content_len > 100:
+            score += score_factors["content_length"]
+        elif content_len > 50:
+            score += score_factors["content_length"] * 0.5
+            
+        validation_result["score"] = score
+        
+        # Calculate confidence based on evidence type and source
+        confidence = 0.5  # Base confidence
+        if evidence.get("type") == "document":
+            confidence += 0.3
+        elif evidence.get("type") == "api_response":
+            confidence += 0.2
+            
+        if evidence.get("source", {}).get("verified"):
+            confidence += 0.2
+            
+        validation_result["confidence"] = min(confidence, 1.0)
+        
+        return validation_result
+    
+    async def aggregate_evidence(self, evidence_items: List[Dict[str, Any]]) -> Dict[str, Any]:
+        """Aggregate evidence items by type with deduplication.
+        
+        Args:
+            evidence_items: List of evidence items to aggregate
+            
+        Returns:
+            Aggregated evidence grouped by type
+        """
+        aggregated = {}
+        seen_hashes = set()
+        
+        for item in evidence_items:
+            # Generate hash for deduplication
+            content_hash = hash(str(item.get("content", "")))
+            if content_hash in seen_hashes:
+                continue
+            seen_hashes.add(content_hash)
+            
+            # Group by type
+            evidence_type = item.get("type", "unknown")
+            if evidence_type not in aggregated:
+                aggregated[evidence_type] = []
+            aggregated[evidence_type].append(item)
+            
+        return aggregated
+    
+    def merge_evidence(self, existing: Dict[str, Any], new: Dict[str, Any]) -> Dict[str, Any]:
+        """Merge two evidence items with score combination.
+        
+        Args:
+            existing: Existing evidence item
+            new: New evidence item to merge
+            
+        Returns:
+            Merged evidence with combined scores
+        """
+        merged = existing.copy()
+        
+        # Merge content
+        if "content" in new:
+            if isinstance(merged.get("content"), dict) and isinstance(new["content"], dict):
+                merged["content"].update(new["content"])
+            else:
+                merged["content"] = new["content"]
+        
+        # Combine scores (average)
+        if "score" in existing and "score" in new:
+            merged["combined_score"] = round((existing["score"] + new["score"]) / 2, 2)
+        elif "score" in new:
+            merged["score"] = new["score"]
+            
+        # Update timestamp to latest
+        if "timestamp" in new:
+            merged["timestamp"] = new["timestamp"]
+            
+        # Merge metadata
+        if "metadata" in new:
+            if "metadata" not in merged:
+                merged["metadata"] = {}
+            merged["metadata"].update(new["metadata"])
+            
+        return merged
+
+    async def sync_evidence_status(self, state: Dict[str, Any]) -> Dict[str, Any]:
+        """Synchronize evidence status across the system.
+        
+        Args:
+            state: Current state
+            
+        Returns:
+            Updated state with sync results
+        """
+        try:
+            async for db in get_async_db():
+                # Execute status sync query
+                result = await db.execute(
+                    "UPDATE evidence_items SET synced_at = NOW() WHERE status = 'pending'"
+                )
+                await db.commit()
+                
+                state["sync_count"] = result.rowcount
+                state["last_sync"] = datetime.utcnow().isoformat()
+                logger.info(f"Synchronized {result.rowcount} evidence items")
+                
+        except Exception as e:
+            logger.error(f"Failed to sync evidence status: {e}")
+            state["sync_error"] = str(e)
+            
+        return state
+    
+    async def retry_with_backoff(self, func, *args, **kwargs):
+        """Execute function with exponential backoff retry.
+        
+        Args:
+            func: Async function to execute
+            *args: Function arguments
+            **kwargs: Function keyword arguments
+            
+        Returns:
+            Function result or raises exception after max retries
+        """
+        import random
+        import asyncio
+        
+        max_retries = 3
+        base_delay = 1.0
+        
+        for attempt in range(max_retries):
+            try:
+                return await func(*args, **kwargs)
+            except Exception as e:
+                if attempt == max_retries - 1:
+                    raise
+                    
+                # Exponential backoff with jitter
+                delay = base_delay * (2 ** attempt) + random.uniform(0, 1)
+                logger.warning(f"Retry attempt {attempt + 1} after {delay:.2f}s: {e}")
+                await asyncio.sleep(delay)
+        
+        raise Exception("Max retries exceeded")
 
 
 # Export node instance

@@ -288,3 +288,26 @@ def test_states_fixture():
         "review": create_test_state(TestScenario.REVIEW_NEEDED),
         "retry": create_test_state(TestScenario.RETRY_REQUIRED)
     }
+
+
+def create_compliance_context(company_name: str = "Test Company", framework: str = "SOC2") -> Dict[str, Any]:
+    """Create a compliance context for testing.
+    
+    Args:
+        company_name: Name of the company
+        framework: Compliance framework
+        
+    Returns:
+        Dictionary containing compliance context
+    """
+    return {
+        "company_name": company_name,
+        "framework": framework,
+        "industry": "Technology",
+        "size": "Medium",
+        "risk_level": "Medium",
+        "metadata": {
+            "created_at": datetime.utcnow().isoformat(),
+            "source": "test_fixture"
+        }
+    }

@@ -22,10 +22,13 @@ from fastapi.testclient import TestClient
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from api.main import app
-from database.models import Assessment, Evidence, User
-from services.ai.circuit_breaker import CircuitBreaker, CircuitState
+from database.assessment_session import AssessmentSession as Assessment
+from database.models.evidence import Evidence
+from database.user import User
+from services.ai.circuit_breaker import AICircuitBreaker as CircuitBreaker, CircuitState
 from services.ai.assistant import ComplianceAssistant
-from tests.conftest import create_test_user, create_test_assessment
+from tests.utils.auth_test_utils import TestAuthManager
+# create_test_assessment is not implemented yet
 
 
 @pytest.mark.integration
@@ -47,7 +50,8 @@ class TestComprehensiveAPIWorkflows:
     @pytest.fixture
     async def test_user_with_token(self, async_db: AsyncSession):
         """Create test user with valid authentication token"""
-        user = await create_test_user(async_db, 
+        auth_manager = TestAuthManager()
+        user = auth_manager.create_test_user( 
                                      email="integration@test.com",
                                      role="business_user")
         

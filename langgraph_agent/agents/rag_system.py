@@ -62,6 +62,34 @@ class RetrievalStrategy(str, Enum):
 
 
 @dataclass
+class RAGConfig:
+    """Configuration for RAG system."""
+    chunk_size: int = 1000
+    chunk_overlap: int = 200
+    retrieval_strategy: RetrievalStrategy = RetrievalStrategy.HYBRID
+    top_k: int = 5
+    similarity_threshold: float = 0.7
+    use_reranking: bool = True
+    max_context_length: int = 4000
+    temperature: float = 0.7
+    model_name: str = "gpt-4"
+    embedding_model: str = "text-embedding-ada-002"
+    collection_name: str = "compliance_docs"
+    metadata_filters: Optional[Dict[str, Any]] = None
+    
+    def __post_init__(self):
+        """Validate configuration after initialization."""
+        if self.chunk_size <= 0:
+            raise ValueError("chunk_size must be positive")
+        if self.chunk_overlap >= self.chunk_size:
+            raise ValueError("chunk_overlap must be less than chunk_size")
+        if not 0 <= self.similarity_threshold <= 1:
+            raise ValueError("similarity_threshold must be between 0 and 1")
+        if self.top_k <= 0:
+            raise ValueError("top_k must be positive")
+
+
+@dataclass
 class DocumentMetadata:
     """Comprehensive document metadata."""
 

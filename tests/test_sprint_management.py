@@ -13,7 +13,7 @@ from unittest.mock import patch, MagicMock
 import sys
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from sprint_management import (
+from scripts.sprint_management import (
     SprintManager, Sprint, UserStory, Task, Priority, StoryStatus, TaskType,
     AcceptanceCriteria
 )

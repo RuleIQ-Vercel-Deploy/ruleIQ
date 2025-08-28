@@ -328,6 +328,37 @@ class Settings(BaseSettings):
     )
 
     # ===================================================================
+    # MONITORING & OBSERVABILITY - 🔐 Secured via SecretsVault
+    # ===================================================================
+    sentry_dsn: Optional[str] = Field(
+        default_factory=lambda: get_secret_or_env(SecretKeys.SENTRY_DSN if SECRETS_VAULT_AVAILABLE else "sentry_dsn", "SENTRY_DSN"),
+        description="Sentry DSN for error tracking (🔐 from SecretsVault)"
+    )
+    enable_sentry: bool = Field(default=True, description="Enable Sentry integration")
+    enable_metrics: bool = Field(default=True, description="Enable metrics collection")
+    enable_health_checks: bool = Field(default=True, description="Enable health check endpoints")
+    slow_request_threshold: float = Field(default=1.0, description="Slow request warning threshold (seconds)")
+    log_level: LogLevel = Field(default=LogLevel.INFO, description="Application log level")
+    
+    # Performance monitoring
+    enable_performance_monitoring: bool = Field(default=True, description="Enable performance monitoring")
+    traces_sample_rate: float = Field(default=0.1, description="Sentry traces sample rate (0.0-1.0)")
+    profiles_sample_rate: float = Field(default=0.1, description="Sentry profiles sample rate (0.0-1.0)")
+    
+    # Health check thresholds
+    disk_warning_threshold: float = Field(default=80.0, description="Disk usage warning threshold (%)")
+    disk_critical_threshold: float = Field(default=90.0, description="Disk usage critical threshold (%)")
+    memory_warning_threshold: float = Field(default=85.0, description="Memory usage warning threshold (%)")
+    memory_critical_threshold: float = Field(default=95.0, description="Memory usage critical threshold (%)")
+    
+    # Monitoring endpoints
+    enable_debug_endpoints: bool = Field(
+        default_factory=lambda: os.getenv("ENVIRONMENT", "development") == "development",
+        description="Enable debug endpoints (auto-disabled in production)"
+    )
+    metrics_endpoint_enabled: bool = Field(default=True, description="Enable Prometheus metrics endpoint")
+
+    # ===================================================================
     # FEATURE FLAGS
     # ===================================================================
     agentic_assessments_enabled: bool = Field(default=False, description="Enable agentic assessments")

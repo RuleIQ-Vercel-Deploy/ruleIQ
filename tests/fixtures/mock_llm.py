@@ -287,3 +287,9 @@ def create_deterministic_llm(scenario: str = "default") -> MockLLM:
 def mock_llm_fixture():
     """Pytest fixture for mock LLM."""
     return create_deterministic_llm("default")
+
+
+# Factory function for creating mock LLMs
+def mock_llm_factory(scenario: str = "default"):
+    """Factory function for creating mock LLMs with different scenarios."""
+    return create_deterministic_llm(scenario)

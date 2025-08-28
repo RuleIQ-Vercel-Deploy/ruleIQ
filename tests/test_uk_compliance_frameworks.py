@@ -6,7 +6,7 @@ Following Agent Operating Protocol: Tests first, implementation after approval.
 
 import pytest
 from datetime import datetime
-from database.models.compliance_framework import ComplianceFramework
+from database.compliance_framework import ComplianceFramework
 from services.compliance_loader import UKComplianceLoader
 from api.schemas.compliance import UKFrameworkSchema
 

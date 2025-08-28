@@ -49,7 +49,7 @@ class TestCredentialEncryption:
             encryption = CredentialEncryption()
 
             test_credentials = {
-                "access_key_id": "AKIAIOSFODNN7EXAMPLE",
+                "access_key_id": "MOCK_AWS_ACCESS_KEY",
                 "secret_access_key": "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY",
                 "region": "us-east-1",
             }

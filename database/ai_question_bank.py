@@ -68,10 +68,15 @@ class AIQuestionBank(Base):
         super().__init__(**kwargs)
         if not self.context_tags:
             self.context_tags = []
-        if self.difficulty_level < 1:
-            self.difficulty_level = 1
-        elif self.difficulty_level > 10:
-            self.difficulty_level = 10
+        # Only validate difficulty_level if it's explicitly set
+        if self.difficulty_level is not None:
+            if self.difficulty_level < 1:
+                self.difficulty_level = 1
+            elif self.difficulty_level > 10:
+                self.difficulty_level = 10
+        else:
+            # Apply default if not set
+            self.difficulty_level = 5
 
     def add_context_tag(self, tag: str) -> None:
         """Add a context tag to the question."""

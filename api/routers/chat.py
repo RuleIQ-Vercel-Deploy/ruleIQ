@@ -1117,10 +1117,10 @@ async def get_next_priority_tasks(
         logger.error(f"Error getting next priority tasks: {e}")
         raise HTTPException(status_code=500, detail="Failed to get next priority tasks")
 
-@router.post("/smart-evidence/update-task/{id}/{id}")
+@router.post("/smart-evidence/update-task/{plan_id}/{task_id}")
 async def update_evidence_task_status(
-    id: str,
-    id: str,
+    plan_id: str,
+    task_id: str,
     status: str = Query(..., description="New task status"),
     completion_notes: Optional[str] = Query(None, description="Completion notes"),
     current_user: User = Depends(get_current_active_user),

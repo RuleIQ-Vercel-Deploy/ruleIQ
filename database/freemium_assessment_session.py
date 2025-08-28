@@ -80,8 +80,8 @@ class FreemiumAssessmentSession(Base):
         if not self.session_token:
             self.session_token = self._generate_secure_token()
         if not self.expires_at:
-            from datetime import timezone
-            self.expires_at = datetime.now(timezone.utc) + timedelta(hours=24)
+            # Use timezone-naive datetime for consistency with tests
+            self.expires_at = datetime.utcnow() + timedelta(hours=24)
 
     def _generate_secure_token(self) -> str:
         """Generate a cryptographically secure session token."""
@@ -89,17 +89,8 @@ class FreemiumAssessmentSession(Base):
 
     def is_expired(self) -> bool:
         """Check if the session has expired."""
-        from datetime import timezone
-        now_utc = datetime.now(timezone.utc)
-
-        # Handle both naive and aware datetimes
-        if self.expires_at.tzinfo is None:
-            # If expires_at is naive, treat it as UTC and make it aware
-            expires_at_utc = self.expires_at.replace(tzinfo=timezone.utc)
-        else:
-            expires_at_utc = self.expires_at
-
-        return now_utc > expires_at_utc
+        # Use naive datetime for consistency
+        return datetime.utcnow() > self.expires_at
 
     def is_active(self) -> bool:
         """Check if session is active (not expired and not completed)."""

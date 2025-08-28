@@ -152,9 +152,9 @@ async def create_collection_plan(
         logger.error(f"Error creating collection plan: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
-@router.get("/plans/{id}", response_model=CollectionPlanResponse)
+@router.get("/plans/{plan_id}", response_model=CollectionPlanResponse)
 async def get_collection_plan(
-    id: str,
+    plan_id: str,
     db: AsyncSession = Depends(get_async_db),
     current_user: User = Depends(get_current_active_user),
 ):
@@ -248,9 +248,9 @@ async def list_collection_plans(
 
     return user_plans
 
-@router.get("/plans/{id}/priority-tasks", response_model=List[EvidenceTaskResponse])
+@router.get("/plans/{plan_id}/priority-tasks", response_model=List[EvidenceTaskResponse])
 async def get_priority_tasks(
-    id: str,
+    plan_id: str,
     limit: int = Query(5, ge=1, le=20, description="Number of tasks to return"),
     db: AsyncSession = Depends(get_async_db),
     current_user: User = Depends(get_current_active_user),
@@ -290,10 +290,10 @@ async def get_priority_tasks(
         for task in priority_tasks
     ]
 
-@router.patch("/plans/{id}/tasks/{id}", response_model=EvidenceTaskResponse)
+@router.patch("/plans/{plan_id}/tasks/{task_id}", response_model=EvidenceTaskResponse)
 async def update_task_status(
-    id: str,
-    id: str,
+    plan_id: str,
+    task_id: str,
     status_update: TaskStatusUpdate,
     db: AsyncSession = Depends(get_async_db),
     current_user: User = Depends(get_current_active_user),

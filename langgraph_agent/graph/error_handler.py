@@ -356,6 +356,45 @@ class ErrorHandlerNode:
         state["next_node"] = state.get("current_node", "router")
         
         return state
+
+    async def handle_error(self, state: Dict[str, Any], error: Exception) -> Dict[str, Any]:
+        """
+        Handle an error and update state accordingly.
+        
+        Args:
+            state: Current state dictionary
+            error: The exception that occurred
+            
+        Returns:
+            Updated state with error information
+        """
+        error_info = {
+            "error": str(error),
+            "error_type": type(error).__name__,
+            "timestamp": datetime.now().isoformat()
+        }
+        
+        # Add error to state's error list
+        if "errors" not in state:
+            state["errors"] = []
+        state["errors"].append(error_info)
+        
+        # Update error count
+        state["error_count"] = state.get("error_count", 0) + 1
+        
+        # Determine if we should retry
+        retry_count = state.get("retry_count", 0)
+        max_retries = state.get("max_retries", self.max_retries)
+        
+        if retry_count < max_retries:
+            state["retry_count"] = retry_count + 1
+            state["task_status"] = "pending"  # Reset to pending for retry
+            logger.info(f"Error handled, will retry. Attempt {retry_count + 1}/{max_retries}")
+        else:
+            state["task_status"] = "failed"
+            logger.error(f"Max retries ({max_retries}) reached, marking as failed")
+            
+        return state
     
     async def _activate_fallback(self, state: EnhancedComplianceState) -> EnhancedComplianceState:
         """

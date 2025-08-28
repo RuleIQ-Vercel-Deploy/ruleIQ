@@ -41,7 +41,7 @@ from api.routers import (
     policies,
     readiness,
     rbac_auth,
-    reporting,
+    reports,
     security,
     uk_compliance,
     users,
@@ -63,6 +63,8 @@ from database import (
 from config.settings import settings
 from monitoring.sentry import init_sentry
 from config.ai_config import ai_config
+from app.core.monitoring.setup import configure_from_settings
+from app.core.monitoring.shutdown import get_shutdown_manager
 
 # Configure logging
 logging.basicConfig(
@@ -147,6 +149,13 @@ app.add_middleware(
 # Add compression
 app.add_middleware(GZipMiddleware, minimum_size=1000)
 
+# Configure comprehensive monitoring (includes middleware, error handlers, metrics, etc.)
+configure_from_settings(app)
+
+# Setup graceful shutdown
+shutdown_manager = get_shutdown_manager()
+shutdown_manager.install_signal_handlers()
+
 # Add custom middleware
 app.middleware("http")(error_handler_middleware)
 app.middleware("http")(security_headers_middleware)
@@ -179,7 +188,7 @@ app.include_router(iq_agent.router, prefix="/api/v1/api/v1/iq", tags=["iq-agent"
 app.include_router(monitoring.router, prefix="/api/v1/api/v1/monitoring", tags=["monitoring"])
 app.include_router(policies.router, prefix="/api/v1/api/v1/policies", tags=["policies"])
 app.include_router(readiness.router, prefix="/api/v1/api/v1/readiness", tags=["readiness"])
-app.include_router(reporting.router, prefix="/api/v1/api/v1/reporting", tags=["reporting"])
+app.include_router(reports.router, prefix="/api/v1/api/v1/reports", tags=["reports"])
 app.include_router(security.router, prefix="/api/v1/api/v1/security", tags=["security"])
 
 # Missing AI and other routers

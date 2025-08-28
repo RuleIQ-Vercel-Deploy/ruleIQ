@@ -20,7 +20,8 @@ from pydantic import BaseModel, ValidationError
 
 from api.main import app
 from api.schemas import *  # Import all API schemas
-from tests.conftest import create_test_user
+from tests.utils.auth_test_utils import TestAuthManager
+# Use TestAuthManager.create_test_user instead
 
 
 @pytest.mark.contract
@@ -42,7 +43,8 @@ class TestAPIContractValidation:
     @pytest.fixture
     async def auth_headers(self, async_db):
         """Create authentication headers"""
-        user = await create_test_user(async_db, email="contract@test.com")
+        auth_manager = TestAuthManager()
+        user = auth_manager.create_test_user(email="contract@test.com", username="contractuser")
         from api.dependencies.auth import create_access_token
         token = create_access_token(data={"sub": user.email})
         return {"Authorization": f"Bearer {token}"}

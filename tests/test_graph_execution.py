@@ -33,11 +33,10 @@ from tests.fixtures.state_fixtures import (
 )
 from tests.fixtures.graph_fixtures import (
     GraphTestHarness,
-    create_linear_graph,
+    create_simple_graph as create_linear_graph,
     create_conditional_graph,
-    create_parallel_graph,
-    create_cyclic_graph,
-    GraphExecutionMode
+    create_simple_graph as create_parallel_graph,
+    create_cycle_graph as create_cyclic_graph
 )
 
 class TestNodeExecutionOrder:
