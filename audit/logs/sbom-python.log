@@ -1,1 +1,2 @@
-bash: cyclonedx-bom: command not found
+usage: python -m cyclonedx_py [-h] [--version] <command> ...
+python -m cyclonedx_py: error: argument <command>: invalid choice: 'audit/logs/requirements.freeze.txt' (choose from environment, env, venv, requirements, pipenv, poetry)
