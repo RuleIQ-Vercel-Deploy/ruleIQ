@@ -1,0 +1,18 @@
+
+> ruleiq-frontend@1.0.0 lint /home/ubuntu/repos/ruleIQ/frontend
+> next lint
+
+@next/bundle-analyzer not installed, skipping bundle analysis
+[@sentry/nextjs] ACTION REQUIRED: To instrument navigations, the Sentry SDK requires you to export an `onRouterTransitionStart` hook from your `instrumentation-client.(js|ts)` file. You can do so by adding `export const onRouterTransitionStart = Sentry.captureRouterTransitionStart;` to the file.
+(node:23236) ESLintIgnoreWarning: The ".eslintignore" file is no longer supported. Switch to using the "ignores" property in "eslint.config.js": https://eslint.org/docs/latest/use/configure/migration-guide#ignoring-files
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+ ⚠ The Next.js plugin was not detected in your ESLint configuration. See https://nextjs.org/docs/app/api-reference/config/eslint#migrating-existing-config
+
+./app/(auth)/signup/page.tsx
+77:1  Warning: Unused eslint-disable directive (no problems were reported from 'no-unused-vars').
+
+./src/config/env.ts
+63:1  Warning: Unused eslint-disable directive (no problems were reported from 'no-unused-vars').
+
+info  - Need to disable some ESLint rules? Learn more here: https://nextjs.org/docs/app/api-reference/config/eslint#disabling-rules

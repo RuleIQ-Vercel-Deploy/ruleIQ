@@ -285,3 +285,4 @@ tsc.log
 SBOMs generated:
 
 Unavailable tools on this VM: trivy, gitleaks, dockle (apt packages not found). Will propose CI additions in Phase 5.
+SBOMs now:
