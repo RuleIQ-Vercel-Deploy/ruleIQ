@@ -10,7 +10,6 @@ from typing import Dict, Any, Optional
 from uuid import uuid4
 
 from langgraph.graph import StateGraph, END
-from langgraph.graph.graph import CompiledGraph
 from langgraph.checkpoint.postgres import PostgresSaver
 import psycopg
 from psycopg.rows import dict_row
@@ -71,7 +70,7 @@ async def setup_postgresql_checkpointer() -> PostgresSaver:
         raise
 
 
-def build_integrated_graph(checkpointer: Optional[PostgresSaver] = None) -> CompiledGraph:
+def build_integrated_graph(checkpointer: Optional[PostgresSaver] = None):
     """
     Build complete integrated graph with ALL nodes from ALL phases.
     
@@ -288,7 +287,7 @@ async def error_handler_node(state: UnifiedComplianceState) -> UnifiedCompliance
     return state
 
 
-async def create_and_initialize_graph() -> CompiledGraph:
+async def create_and_initialize_graph():
     """
     Create and initialize the complete graph with proper async setup.
     
@@ -305,7 +304,7 @@ async def create_and_initialize_graph() -> CompiledGraph:
 
 
 # For synchronous contexts that need the graph
-def get_graph_sync() -> CompiledGraph:
+def get_graph_sync():
     """
     Get a compiled graph in synchronous context.
     Note: This won't have checkpointing enabled.

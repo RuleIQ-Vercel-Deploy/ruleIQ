@@ -2,6 +2,13 @@
 
 **Purpose**: Maximize Claude Code's performance when working with the ruleIQ codebase.
 
+## 🔐 CRITICAL: Secrets Management
+**ALL SECRETS ARE STORED IN DOPPLER** - Never use local .env files for secrets!
+- Access secrets with: `doppler secrets get SECRET_NAME --plain`
+- Active config: `doppler configs` (usually dev/dev_personal)
+- DO NOT modify .env.local or other env files - they're only fallbacks
+- For Neo4j and all other passwords: Always check Doppler first
+
 **AUTOMATIC SERENA CHECK - Required at session start:**
 
 ```bash

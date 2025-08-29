@@ -69,7 +69,7 @@ class UnifiedComplianceState(TypedDict):
     metadata: Dict[str, Any]
     created_at: datetime
     updated_at: datetime
-    checkpoint_id: Optional[str]
+    workflow_checkpoint_id: Optional[str]
     thread_id: str
     
     # Additional tracking fields
@@ -196,7 +196,7 @@ def create_unified_initial_state(
         metadata=metadata or {},
         created_at=datetime.now(),
         updated_at=datetime.now(),
-        checkpoint_id=None,
+        workflow_checkpoint_id=None,
         thread_id=thread_id,
         
         # Additional tracking

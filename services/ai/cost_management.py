@@ -85,25 +85,13 @@ class ModelCostConfig:
         return input_cost + output_cost
 
     @classmethod
-    def get_gemini_config(cls, model_name: str = "gemini-1.5-pro") -> "ModelCostConfig":
-        """Get cost configuration for Gemini models."""
+    def get_gemini_config(cls, model_name: str = "gemini-2.5-pro") -> "ModelCostConfig":
+        """Get cost configuration for Gemini models.
+        
+        **DO NOT CHANGE THESE MODEL NAMES WITHOUT EXPRESS PERMISSION**
+        **THESE ARE THE CORRECT GEMINI 2.5 MODELS AS OF JANUARY 2025**
+        """
         configs = {
-            "gemini-1.5-pro": cls(
-                model_name="gemini-1.5-pro",
-                provider="google",
-                input_cost_per_million=Decimal("3.50"),
-                output_cost_per_million=Decimal("10.50"),
-                context_window=1_048_576,
-                max_output_tokens=8192
-            ),
-            "gemini-1.5-flash": cls(
-                model_name="gemini-1.5-flash",
-                provider="google",
-                input_cost_per_million=Decimal("0.075"),
-                output_cost_per_million=Decimal("0.30"),
-                context_window=1_048_576,
-                max_output_tokens=8192
-            ),
             "gemini-2.5-pro": cls(
                 model_name="gemini-2.5-pro",
                 provider="google",
@@ -119,9 +107,34 @@ class ModelCostConfig:
                 output_cost_per_million=Decimal("0.30"),
                 context_window=1_048_576,
                 max_output_tokens=8192
+            ),
+            "gemini-2.5-flash-lite": cls(
+                model_name="gemini-2.5-flash-lite",
+                provider="google",
+                input_cost_per_million=Decimal("0.03"),  # Even cheaper than flash
+                output_cost_per_million=Decimal("0.10"),
+                context_window=1_048_576,
+                max_output_tokens=8192
+            ),
+            # Legacy models kept for backward compatibility only
+            "gemini-1.5-pro": cls(
+                model_name="gemini-1.5-pro",
+                provider="google",
+                input_cost_per_million=Decimal("3.50"),
+                output_cost_per_million=Decimal("10.50"),
+                context_window=1_048_576,
+                max_output_tokens=8192
+            ),
+            "gemini-1.5-flash": cls(
+                model_name="gemini-1.5-flash",
+                provider="google",
+                input_cost_per_million=Decimal("0.075"),
+                output_cost_per_million=Decimal("0.30"),
+                context_window=1_048_576,
+                max_output_tokens=8192
             )
         }
-        return configs.get(model_name, configs["gemini-1.5-pro"])
+        return configs.get(model_name, configs["gemini-2.5-pro"])
 
     @classmethod
     def get_openai_config(cls, model_name: str = "gpt-4-turbo") -> "ModelCostConfig":
@@ -1167,7 +1180,11 @@ class IntelligentModelRouter:
         task_type: str,
         max_cost_per_request: Optional[Decimal] = None
     ) -> Dict[str, Any]:
-        """Select optimal model based on task complexity and cost constraints."""
+        """Select optimal model based on task complexity and cost constraints.
+        
+        **DO NOT CHANGE MODEL NAMES WITHOUT EXPRESS PERMISSION**
+        **USES GEMINI 2.5 MODELS: gemini-2.5-flash-lite, gemini-2.5-flash, gemini-2.5-pro**
+        """
 
         # Simple complexity scoring based on task description length and type
         complexity_score = len(task_description.split()) / 100  # Normalize by word count
@@ -1177,13 +1194,13 @@ class IntelligentModelRouter:
         elif task_type in ["chat_assistance", "simple_qa"]:
             complexity_score += 0.1
 
-        # Route based on complexity
+        # Route based on complexity - USING GEMINI 2.5 MODELS
         if complexity_score < 0.3:
-            recommended_models = ["gemini-1.5-flash", "gpt-3.5-turbo"]
+            recommended_models = ["gemini-2.5-flash-lite", "gpt-3.5-turbo"]
         elif complexity_score > 0.7:
-            recommended_models = ["gemini-1.5-pro", "gpt-4-turbo"]
+            recommended_models = ["gemini-2.5-pro", "gpt-4-turbo"]
         else:
-            recommended_models = ["gemini-1.5-flash", "gemini-1.5-pro"]
+            recommended_models = ["gemini-2.5-flash", "gemini-2.5-pro"]
 
         # Filter by cost constraint if provided
         if max_cost_per_request:
@@ -1198,7 +1215,7 @@ class IntelligentModelRouter:
             recommended_models = filtered_models or recommended_models
 
         return {
-            "model": recommended_models[0] if recommended_models else "gemini-1.5-flash",
+            "model": recommended_models[0] if recommended_models else "gemini-2.5-flash",
             "alternatives": recommended_models[1:],
             "complexity_score": complexity_score,
             "reasoning": f"Selected based on task complexity ({complexity_score:.2f}) and cost constraints"

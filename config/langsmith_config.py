@@ -26,9 +26,21 @@ LANGCHAIN_ENDPOINT=https://api.smith.langchain.com
 """
 
 import os
-from typing import Optional, Dict, Any
+import time
+from typing import Optional, Dict, Any, List
 from functools import wraps
 from config.logging_config import get_logger
+
+# Import tracing context manager if LangSmith is configured
+try:
+    from langchain_core.tracers.context import tracing_v2_enabled
+except ImportError:
+    # If langchain_core is not installed, provide a no-op context manager
+    from contextlib import contextmanager
+    
+    @contextmanager
+    def tracing_v2_enabled(**kwargs):
+        yield
 
 logger = get_logger(__name__)
 
@@ -159,73 +171,263 @@ class LangSmithConfig:
 
         return tags
 
+    @staticmethod
+    def add_custom_tags(tags: List[str], **custom_tags) -> List[str]:
+        """
+        Add custom tags for enhanced filtering in LangSmith UI.
+        
+        Args:
+            tags: Existing tags list
+            **custom_tags: Custom tag key-value pairs
+            
+        Returns:
+            Enhanced tags list
+            
+        Usage:
+            tags = LangSmithConfig.add_custom_tags(
+                tags,
+                environment="production",
+                version="1.2.0",
+                customer="enterprise",
+                priority="high"
+            )
+        """
+        enhanced_tags = tags.copy()
+        
+        # Add custom tags in key:value format
+        for key, value in custom_tags.items():
+            if value is not None:
+                enhanced_tags.append(f"{key}:{value}")
+        
+        # Add automatic tags based on context
+        import os
+        
+        # Environment tag
+        env = os.getenv("ENVIRONMENT", "development")
+        enhanced_tags.append(f"env:{env}")
+        
+        # Version tag if available
+        version = os.getenv("APP_VERSION")
+        if version:
+            enhanced_tags.append(f"version:{version}")
+        
+        # Performance tier tag based on environment
+        if env == "production":
+            enhanced_tags.append("tier:critical")
+        elif env == "staging":
+            enhanced_tags.append("tier:important")
+        else:
+            enhanced_tags.append("tier:standard")
+        
+        return enhanced_tags
+    
+    @staticmethod
+    def create_filter_query(
+        session_id: Optional[str] = None,
+        user_id: Optional[str] = None,
+        phase: Optional[str] = None,
+        status: Optional[str] = None,
+        date_range: Optional[tuple] = None
+    ) -> Dict[str, Any]:
+        """
+        Create a filter query for LangSmith traces.
+        
+        Args:
+            session_id: Filter by session
+            user_id: Filter by user
+            phase: Filter by workflow phase
+            status: Filter by status (success/error)
+            date_range: Tuple of (start_date, end_date)
+            
+        Returns:
+            Filter query dictionary for LangSmith API
+        """
+        query = {}
+        
+        if session_id:
+            query["tags"] = query.get("tags", [])
+            query["tags"].append(f"session:{session_id}")
+        
+        if user_id:
+            query["tags"] = query.get("tags", [])
+            query["tags"].append(f"user:{user_id}")
+        
+        if phase:
+            query["tags"] = query.get("tags", [])
+            query["tags"].append(f"phase:{phase}")
+        
+        if status:
+            query["metadata.status"] = status
+        
+        if date_range:
+            start_date, end_date = date_range
+            query["date_range"] = {
+                "start": start_date.isoformat() if hasattr(start_date, 'isoformat') else start_date,
+                "end": end_date.isoformat() if hasattr(end_date, 'isoformat') else end_date
+            }
+        
+        return query
+
+    @staticmethod
+    def _extract_metadata(args: tuple, kwargs: dict) -> Dict[str, Any]:
+        """
+        Extract metadata from function arguments.
+        
+        Args:
+            args: Function positional arguments
+            kwargs: Function keyword arguments
+            
+        Returns:
+            Dictionary of extracted metadata
+        """
+        metadata = {}
+        
+        # Extract from kwargs
+        if "state" in kwargs and isinstance(kwargs["state"], dict):
+            state = kwargs["state"]
+            if "session_id" in state:
+                metadata["session_id"] = state["session_id"]
+            if "current_phase" in state:
+                metadata["current_phase"] = state["current_phase"]
+            if "user_id" in state:
+                metadata["user_id"] = state["user_id"]
+        
+        # Extract from args (first arg might be state)
+        if args and isinstance(args[0], dict):
+            state = args[0]
+            if "session_id" in state and "session_id" not in metadata:
+                metadata["session_id"] = state["session_id"]
+            if "current_phase" in state and "current_phase" not in metadata:
+                metadata["current_phase"] = state["current_phase"]
+            if "user_id" in state and "user_id" not in metadata:
+                metadata["user_id"] = state["user_id"]
+        
+        return metadata
+    
+    @staticmethod
+    def _generate_tags(operation: str, metadata: Dict[str, Any]) -> List[str]:
+        """
+        Generate tags from operation and metadata.
+        
+        Args:
+            operation: Operation name
+            metadata: Metadata dictionary
+            
+        Returns:
+            List of tags for tracing
+        """
+        tags = [operation]
+        
+        # Add session tag
+        if "session_id" in metadata:
+            tags.append(f"session:{metadata['session_id']}")
+        
+        # Add phase tag
+        if "current_phase" in metadata:
+            tags.append(f"phase:{metadata['current_phase']}")
+        
+        # Add user tag
+        if "user_id" in metadata:
+            tags.append(f"user:{metadata['user_id']}")
+        
+        # Add operation-specific tags
+        if "." in operation:
+            parts = operation.split(".")
+            tags.append(f"{parts[0]}.{parts[1]}")
+        
+        return tags
+
 
 def with_langsmith_tracing(
     operation: str,
     include_input: bool = True,
-    include_output: bool = True
+    include_output: bool = True,
+    custom_name: Optional[str] = None
 ):
     """
-    Decorator to add LangSmith tracing to async functions.
+    Enhanced decorator for adding LangSmith tracing to async functions.
     
     Args:
         operation: Name of the operation being traced
-        include_input: Whether to include function inputs in trace
-        include_output: Whether to include function output in trace
-    
-    Usage:
-        @with_langsmith_tracing("generate_question")
-        async def my_function(self, arg1, arg2):
-            ...
+        include_input: Whether to include function inputs in metadata
+        include_output: Whether to include function outputs in metadata
+        custom_name: Optional custom name for the run (overrides operation)
+        
+    Returns:
+        Decorated function with LangSmith tracing
     """
     def decorator(func):
         @wraps(func)
         async def wrapper(*args, **kwargs):
             if not LangSmithConfig.is_tracing_enabled():
-                # Tracing disabled, just run the function
                 return await func(*args, **kwargs)
-
-            from langchain_core.tracers.context import tracing_v2_enabled
-
-            # Extract useful context if available
-            metadata = {}
-            tags = [operation]
-
-            # Try to extract session_id from kwargs or args
-            if "session_id" in kwargs:
-                metadata["session_id"] = kwargs["session_id"]
-                tags.append(f"session:{kwargs['session_id']}")
-
-            if "state" in kwargs and isinstance(kwargs["state"], dict):
-                if "session_id" in kwargs["state"]:
-                    metadata["session_id"] = kwargs["state"]["session_id"]
-                    tags.append(f"session:{kwargs['state']['session_id']}")
-                if "current_phase" in kwargs["state"]:
-                    tags.append(f"phase:{kwargs['state']['current_phase']}")
-
-            # Add function inputs to metadata if requested
+            
+            # Extract metadata from function parameters
+            metadata = LangSmithConfig._extract_metadata(args, kwargs)
+            
+            # Add function information
+            metadata["operation"] = operation
+            metadata["function"] = func.__name__
+            metadata["module"] = func.__module__
+            
+            # Include inputs if requested
             if include_input:
                 metadata["inputs"] = {
-                    "args": str(args)[:500],  # Truncate for brevity
+                    "args": str(args)[:500],  # Limit size
                     "kwargs": str(kwargs)[:500]
                 }
-
-            # Run function with tracing
-            with tracing_v2_enabled(
-                project_name=LangSmithConfig.get_project_name(),
-                tags=tags,
-                metadata=metadata
-            ):
-                result = await func(*args, **kwargs)
-
-                # Add output to metadata if requested
-                if include_output and result:
-                    metadata["output_type"] = type(result).__name__
-                    if isinstance(result, dict):
-                        metadata["output_keys"] = list(result.keys())
-
-                return result
-
+            
+            # Generate tags
+            tags = LangSmithConfig._generate_tags(operation, metadata)
+            
+            # Use custom name if provided, otherwise use operation
+            run_name = custom_name if custom_name else operation
+            
+            # Track performance
+            start_time = time.perf_counter()
+            
+            # Create mutable metadata container for updates
+            final_metadata = metadata.copy()
+            
+            try:
+                # Execute function with tracing
+                with tracing_v2_enabled(
+                    project_name=LangSmithConfig.get_project_name(),
+                    tags=tags,
+                    metadata=final_metadata,
+                    run_name=run_name
+                ):
+                    result = await func(*args, **kwargs)
+                    
+                    # Calculate execution time
+                    execution_time = time.perf_counter() - start_time
+                    
+                    # Update metadata with execution details
+                    final_metadata["execution_time_seconds"] = execution_time
+                    final_metadata["status"] = "success"
+                    
+                    # Include output if requested
+                    if include_output:
+                        final_metadata["output"] = str(result)[:500] if result else None
+                    
+                    logger.debug(
+                        f"Traced {operation} - {func.__name__} "
+                        f"(execution_time: {execution_time:.3f}s)"
+                    )
+                    
+                    return result
+                    
+            except Exception as e:
+                # Track error in metadata
+                execution_time = time.perf_counter() - start_time
+                final_metadata["execution_time_seconds"] = execution_time
+                final_metadata["status"] = "error"
+                final_metadata["error"] = str(e)
+                final_metadata["error_type"] = type(e).__name__
+                
+                logger.error(f"Error in traced function {func.__name__}: {str(e)}")
+                raise
+        
         return wrapper
     return decorator
 

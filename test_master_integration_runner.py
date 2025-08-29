@@ -23,9 +23,9 @@ os.environ["DATABASE_URL"] = os.getenv(
     "DATABASE_URL",
     "postgresql://neondb_owner:npg_s0JhnfGNy3Ze@ep-sweet-truth-a89at3wo-pooler.eastus2.azure.neon.tech/neondb?sslmode=require"
 )
-os.environ["NEO4J_URI"] = os.getenv("NEO4J_URI", "bolt://localhost:7687")
+os.environ["NEO4J_URI"] = os.getenv("NEO4J_URI", "bolt://localhost:7688")
 os.environ["NEO4J_USERNAME"] = os.getenv("NEO4J_USERNAME", "neo4j")
-os.environ["NEO4J_PASSWORD"] = os.getenv("NEO4J_PASSWORD", "test")
+os.environ["NEO4J_PASSWORD"] = os.getenv("NEO4J_PASSWORD", "ruleiq123")
 
 # Import after environment setup
 from langgraph_agent.graph.master_integration_graph import MasterIntegrationGraph

@@ -92,9 +92,10 @@ class TestSyncEvidenceStatusFull:
         # Should handle error and update state
         result = await node.sync_evidence_status(state)
         
-        # Check error handling - sync_evidence_status doesn't rollback, just logs error
-        assert "sync_error" in result
-        assert "Connection lost" in result["sync_error"]
+        # Check error handling - sync_evidence_status adds to errors list
+        assert result["error_count"] == 1
+        assert len(result["errors"]) == 1
+        assert "Connection lost" in result["errors"][0]
 
     @patch('langgraph_agent.nodes.evidence_nodes.get_async_db')
     async def test_sync_evidence_status_no_updates(self, mock_get_db):

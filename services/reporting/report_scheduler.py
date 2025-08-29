@@ -56,7 +56,7 @@ class ReportScheduler:
             res = await self.db.execute(
                 select(ReportSchedule)
                 .where(ReportSchedule.id == schedule_id)
-                .options(selectinload(ReportSchedule.user))
+                .options(selectinload(ReportSchedule.owner))
             )
             schedule = res.scalars().first()
             if not schedule:
@@ -71,7 +71,7 @@ class ReportScheduler:
             res = await self.db.execute(
                 select(ReportSchedule)
                 .where(ReportSchedule.active)
-                .options(selectinload(ReportSchedule.user))
+                .options(selectinload(ReportSchedule.owner))
             )
             return res.scalars().all()
         except SQLAlchemyError as e:

@@ -1,6 +1,6 @@
 # Doppler Secrets Management Verification Report
 
-**Generated**: 2025-08-27T06:42:47.067293
+**Generated**: 2025-08-28T15:08:19.202450
 **Project**: ruleiq
 
 ## 1. Executive Summary

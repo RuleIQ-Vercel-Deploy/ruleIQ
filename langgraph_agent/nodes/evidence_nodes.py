@@ -14,13 +14,17 @@ from langchain_core.messages import SystemMessage, HumanMessage
 from langgraph.prebuilt import ToolNode
 
 from sqlalchemy.exc import SQLAlchemyError
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from database.db_setup import get_async_db
 from database.evidence_item import EvidenceItem
 from services.automation.duplicate_detector import DuplicateDetector
+from langgraph_agent.utils.cost_tracking import track_node_cost
 from services.automation.evidence_processor import EvidenceProcessor
 from core.exceptions import BusinessLogicException, DatabaseException
 from langgraph_agent.graph.enhanced_state import EnhancedComplianceState
+from langgraph_agent.graph.unified_state import UnifiedComplianceState
+from config.langsmith_config import with_langsmith_tracing
 
 logger = logging.getLogger(__name__)
 
@@ -48,6 +52,7 @@ class EvidenceCollectionNode:
         self.failure_count = 0
         self.failure_threshold = 5
     
+    @with_langsmith_tracing("evidence.process")
     async def process_evidence(
         self, 
         state_or_evidence: Union[EnhancedComplianceState, Dict[str, Any]],
@@ -195,9 +200,50 @@ class EvidenceCollectionNode:
             
         return state if not return_evidence_only else {"status": "completed"}
     
+    @with_langsmith_tracing("evidence.cleanup_stale")
+    async def cleanup_stale_evidence(
+        self, 
+        db: AsyncSession,
+        cutoff_days: int = 90
+    ) -> int:
+        """
+        Mark evidence older than cutoff_days as rejected.
+        
+        This is a pure database operation extracted for testability.
+        
+        Args:
+            db: Database session
+            cutoff_days: Number of days after which evidence is considered stale
+            
+        Returns:
+            Number of records updated
+        """
+        from sqlalchemy import update
+        
+        # Calculate cutoff date
+        cutoff_date = datetime.utcnow() - timedelta(days=cutoff_days)
+        
+        # Update stale evidence
+        stmt = (
+            update(EvidenceItem)
+            .where(
+                EvidenceItem.status == "collected",
+                EvidenceItem.collected_at < cutoff_date
+            )
+            .values(status="rejected")  # Mark old evidence as rejected
+            .execution_options(synchronize_session=False)
+        )
+        
+        result = await db.execute(stmt)
+        await db.commit()
+        
+        return result.rowcount
+    
+    @with_langsmith_tracing("evidence.sync_status")
     async def sync_evidence_status(
         self,
-        state: Union[EnhancedComplianceState, Dict[str, Any]]
+        state: Union[EnhancedComplianceState, Dict[str, Any]],
+        cutoff_days: int = 90
     ) -> Union[EnhancedComplianceState, Dict[str, Any]]:
         """
         Sync evidence status by marking old evidence as stale.
@@ -206,6 +252,7 @@ class EvidenceCollectionNode:
         
         Args:
             state: Current enhanced compliance state
+            cutoff_days: Number of days after which evidence is considered stale (default: 90)
             
         Returns:
             Updated state with sync results
@@ -213,25 +260,8 @@ class EvidenceCollectionNode:
         try:
             async for db in get_async_db():
                 try:
-                    # Calculate cutoff date (90 days old)
-                    cutoff_date = datetime.utcnow() - timedelta(days=90)
-                    
-                    # Update stale evidence
-                    from sqlalchemy import update
-                    stmt = (
-                        update(EvidenceItem)
-                        .where(
-                            EvidenceItem.status == "collected",
-                            EvidenceItem.collected_at < cutoff_date
-                        )
-                        .values(status="rejected")  # Mark old evidence as rejected
-                        .execution_options(synchronize_session=False)
-                    )
-                    
-                    result = await db.execute(stmt)
-                    await db.commit()
-                    
-                    updated_count = result.rowcount
+                    # Call the extracted cleanup method
+                    updated_count = await self.cleanup_stale_evidence(db, cutoff_days)
                     
                     # Update state
                     if isinstance(state, dict):
@@ -290,6 +320,7 @@ class EvidenceCollectionNode:
             
         return state
     
+    @with_langsmith_tracing("evidence.check_expiry")
     async def check_evidence_expiry(
         self,
         state: EnhancedComplianceState
@@ -377,6 +408,7 @@ class EvidenceCollectionNode:
             
         return state
     
+    @with_langsmith_tracing("evidence.collect_integrations")
     async def collect_all_integrations(
         self,
         state: EnhancedComplianceState
@@ -445,6 +477,7 @@ class EvidenceCollectionNode:
             
         return state
     
+    @with_langsmith_tracing("evidence.process_pending")
     async def process_pending_evidence(
         self,
         state: EnhancedComplianceState
@@ -519,6 +552,7 @@ class EvidenceCollectionNode:
             
         return state
 
+    @with_langsmith_tracing("evidence.validate")
     async def validate_evidence(self, evidence: Dict[str, Any]) -> Dict[str, Any]:
         """Validate evidence with scoring and confidence calculation.
         
@@ -583,6 +617,7 @@ class EvidenceCollectionNode:
         
         return validation_result
     
+    @with_langsmith_tracing("evidence.aggregate")
     async def aggregate_evidence(self, evidence_items: List[Dict[str, Any]]) -> Dict[str, Any]:
         """Aggregate evidence items by type with deduplication.
         
@@ -647,8 +682,8 @@ class EvidenceCollectionNode:
             
         return merged
 
-    async def sync_evidence_status(self, state: Dict[str, Any]) -> Dict[str, Any]:
-        """Synchronize evidence status across the system.
+    async def sync_evidence_timestamps(self, state: Dict[str, Any]) -> Dict[str, Any]:
+        """Synchronize evidence timestamps across the system.
         
         Args:
             state: Current state
@@ -706,5 +741,26 @@ class EvidenceCollectionNode:
         raise Exception("Max retries exceeded")
 
 
-# Export node instance
-evidence_node = EvidenceCollectionNode()
+# Create node instance
+_evidence_collection_instance = EvidenceCollectionNode()
+
+# Export node instance for backward compatibility
+evidence_node = _evidence_collection_instance
+
+# Create a wrapper function for use in LangGraph workflows
+@with_langsmith_tracing("evidence.collection_node")
+@track_node_cost(node_name="evidence_collection", model_name="gpt-4")
+async def evidence_collection_node(state: UnifiedComplianceState) -> UnifiedComplianceState:
+    """
+    Evidence collection node wrapper for LangGraph integration.
+    
+    This function wraps the EvidenceCollectionNode instance to provide
+    a standard function interface for the LangGraph workflow.
+    
+    Args:
+        state: Current workflow state
+        
+    Returns:
+        Updated workflow state with evidence processing results
+    """
+    return await _evidence_collection_instance.process_evidence(state)

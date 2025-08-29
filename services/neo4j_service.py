@@ -23,9 +23,9 @@ class Neo4jGraphRAGService:
 
     def __init__(self) -> None:
         self.driver: Optional[Driver] = None
-        self.uri = os.getenv("NEO4J_URI", "bolt://localhost:7687")
+        self.uri = os.getenv("NEO4J_URI", "bolt://localhost:7688")
         self.username = os.getenv("NEO4J_USERNAME", "neo4j")
-        self.password = os.getenv("NEO4J_PASSWORD", "please_change")
+        self.password = os.getenv("NEO4J_PASSWORD", "ruleiq123")
         self.database = os.getenv("NEO4J_DATABASE", "neo4j")
         self.executor = ThreadPoolExecutor(max_workers=10)
 

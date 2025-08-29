@@ -1,10 +1,10 @@
 {
-  "timestamp": "2025-08-27T06:42:47.067293",
+  "timestamp": "2025-08-28T15:08:19.202450",
   "project": "ruleiq",
   "verification_results": [
     {
       "secret_name": "ALLOWED_ORIGINS",
-      "timestamp": "2025-08-27T06:42:47.286533",
+      "timestamp": "2025-08-28T15:08:19.672765",
       "accessible": true,
       "format_valid": true,
       "value_present": true,
@@ -16,7 +16,7 @@
     },
     {
       "secret_name": "API_HOST",
-      "timestamp": "2025-08-27T06:42:47.577023",
+      "timestamp": "2025-08-28T15:08:20.104839",
       "accessible": true,
       "format_valid": true,
       "value_present": true,
@@ -27,7 +27,7 @@
     },
     {
       "secret_name": "API_PORT",
-      "timestamp": "2025-08-27T06:42:47.958556",
+      "timestamp": "2025-08-28T15:08:20.775523",
       "accessible": true,
       "format_valid": true,
       "value_present": true,
@@ -39,7 +39,7 @@
     },
     {
       "secret_name": "API_VERSION",
-      "timestamp": "2025-08-27T06:42:48.768841",
+      "timestamp": "2025-08-28T15:08:21.280146",
       "accessible": true,
       "format_valid": true,
       "value_present": true,
@@ -50,7 +50,7 @@
     },
     {
       "secret_name": "API_WORKERS",
-      "timestamp": "2025-08-27T06:42:49.097362",
+      "timestamp": "2025-08-28T15:08:21.976183",
       "accessible": true,
       "format_valid": true,
       "value_present": true,
@@ -62,7 +62,7 @@
     },
     {
       "secret_name": "APP_NAME",
-      "timestamp": "2025-08-27T06:42:49.632482",
+      "timestamp": "2025-08-28T15:08:22.831981",
       "accessible": true,
       "format_valid": true,
       "value_present": true,
@@ -74,7 +74,7 @@
     },
     {
       "secret_name": "APP_URL",
-      "timestamp": "2025-08-27T06:42:50.040303",
+      "timestamp": "2025-08-28T15:08:23.338556",
       "accessible": true,
       "format_valid": true,
       "value_present": true,
@@ -86,7 +86,7 @@
     },
     {
       "secret_name": "APP_VERSION",
-      "timestamp": "2025-08-27T06:42:50.562673",
+      "timestamp": "2025-08-28T15:08:23.747196",
       "accessible": true,
       "format_valid": true,
       "value_present": true,
@@ -97,7 +97,7 @@
     },
     {
       "secret_name": "CELERY_BROKER_URL",
-      "timestamp": "2025-08-27T06:42:50.783137",
+      "timestamp": "2025-08-28T15:08:24.240347",
       "accessible": true,
       "format_valid": true,
       "value_present": true,
@@ -109,7 +109,7 @@
     },
     {
       "secret_name": "CELERY_RESULT_BACKEND",
-      "timestamp": "2025-08-27T06:42:51.097291",
+      "timestamp": "2025-08-28T15:08:24.598843",
       "accessible": true,
       "format_valid": true,
       "value_present": true,
@@ -121,7 +121,7 @@
     },
     {
       "secret_name": "CORS_ALLOWED_ORIGINS",
-      "timestamp": "2025-08-27T06:42:51.750407",
+      "timestamp": "2025-08-28T15:08:25.062945",
       "accessible": true,
       "format_valid": true,
       "value_present": true,
@@ -133,7 +133,7 @@
     },
     {
       "secret_name": "DATABASE_URL",
-      "timestamp": "2025-08-27T06:42:52.029364",
+      "timestamp": "2025-08-28T15:08:25.450334",
       "accessible": true,
       "format_valid": true,
       "value_present": true,
@@ -145,7 +145,7 @@
     },
     {
       "secret_name": "DB_MAX_OVERFLOW",
-      "timestamp": "2025-08-27T06:42:52.802387",
+      "timestamp": "2025-08-28T15:08:25.849737",
       "accessible": true,
       "format_valid": true,
       "value_present": true,
@@ -157,7 +157,7 @@
     },
     {
       "secret_name": "DB_POOL_RECYCLE",
-      "timestamp": "2025-08-27T06:42:53.063194",
+      "timestamp": "2025-08-28T15:08:26.196841",
       "accessible": true,
       "format_valid": true,
       "value_present": true,
@@ -169,7 +169,7 @@
     },
     {
       "secret_name": "DB_POOL_SIZE",
-      "timestamp": "2025-08-27T06:42:53.419996",
+      "timestamp": "2025-08-28T15:08:27.155441",
       "accessible": true,
       "format_valid": true,
       "value_present": true,
@@ -181,7 +181,7 @@
     },
     {
       "secret_name": "DB_POOL_TIMEOUT",
-      "timestamp": "2025-08-27T06:42:53.708606",
+      "timestamp": "2025-08-28T15:08:27.451549",
       "accessible": true,
       "format_valid": true,
       "value_present": true,
@@ -193,7 +193,7 @@
     },
     {
       "secret_name": "DEBUG",
-      "timestamp": "2025-08-27T06:42:54.009210",
+      "timestamp": "2025-08-28T15:08:27.785049",
       "accessible": true,
       "format_valid": true,
       "value_present": true,
@@ -204,7 +204,7 @@
     },
     {
       "secret_name": "DOPPLER_CONFIG",
-      "timestamp": "2025-08-27T06:42:54.355261",
+      "timestamp": "2025-08-28T15:08:28.022469",
       "accessible": true,
       "format_valid": true,
       "value_present": true,
@@ -216,7 +216,7 @@
     },
     {
       "secret_name": "DOPPLER_ENVIRONMENT",
-      "timestamp": "2025-08-27T06:42:54.686731",
+      "timestamp": "2025-08-28T15:08:28.478192",
       "accessible": true,
       "format_valid": true,
       "value_present": true,
@@ -228,7 +228,7 @@
     },
     {
       "secret_name": "DOPPLER_PROJECT",
-      "timestamp": "2025-08-27T06:42:55.058595",
+      "timestamp": "2025-08-28T15:08:28.711847",
       "accessible": true,
       "format_valid": true,
       "value_present": true,
@@ -240,7 +240,7 @@
     },
     {
       "secret_name": "ENABLE_AI_FEATURES",
-      "timestamp": "2025-08-27T06:42:55.311103",
+      "timestamp": "2025-08-28T15:08:29.224124",
       "accessible": true,
       "format_valid": true,
       "value_present": true,
@@ -251,7 +251,7 @@
     },
     {
       "secret_name": "ENABLE_EMAIL_NOTIFICATIONS",
-      "timestamp": "2025-08-27T06:42:55.643383",
+      "timestamp": "2025-08-28T15:08:29.522687",
       "accessible": true,
       "format_valid": true,
       "value_present": true,
@@ -262,7 +262,7 @@
     },
     {
       "secret_name": "ENABLE_FILE_UPLOAD",
-      "timestamp": "2025-08-27T06:42:55.942236",
+      "timestamp": "2025-08-28T15:08:29.779241",
       "accessible": true,
       "format_valid": true,
       "value_present": true,
@@ -273,7 +273,7 @@
     },
     {
       "secret_name": "ENABLE_OAUTH",
-      "timestamp": "2025-08-27T06:42:56.268942",
+      "timestamp": "2025-08-28T15:08:30.015914",
       "accessible": true,
       "format_valid": true,
       "value_present": true,
@@ -284,7 +284,7 @@
     },
     {
       "secret_name": "ENCRYPTION_KEY",
-      "timestamp": "2025-08-27T06:42:56.752111",
+      "timestamp": "2025-08-28T15:08:30.537525",
       "accessible": true,
       "format_valid": true,
       "value_present": true,
@@ -297,7 +297,7 @@
     },
     {
       "secret_name": "ENVIRONMENT",
-      "timestamp": "2025-08-27T06:42:56.981636",
+      "timestamp": "2025-08-28T15:08:30.898627",
       "accessible": true,
       "format_valid": true,
       "value_present": true,
@@ -309,7 +309,7 @@
     },
     {
       "secret_name": "FERNET_KEY",
-      "timestamp": "2025-08-27T06:42:57.565594",
+      "timestamp": "2025-08-28T15:08:31.215975",
       "accessible": true,
       "format_valid": true,
       "value_present": true,
@@ -322,7 +322,7 @@
     },
     {
       "secret_name": "GOOGLE_AI_API_KEY",
-      "timestamp": "2025-08-27T06:42:57.934749",
+      "timestamp": "2025-08-28T15:08:31.543008",
       "accessible": true,
       "format_valid": true,
       "value_present": true,
@@ -335,7 +335,7 @@
     },
     {
       "secret_name": "JWT_ACCESS_TOKEN_EXPIRE_MINUTES",
-      "timestamp": "2025-08-27T06:42:58.345128",
+      "timestamp": "2025-08-28T15:08:31.842612",
       "accessible": true,
       "format_valid": true,
       "value_present": true,
@@ -347,7 +347,7 @@
     },
     {
       "secret_name": "JWT_ALGORITHM",
-      "timestamp": "2025-08-27T06:42:58.731423",
+      "timestamp": "2025-08-28T15:08:32.112460",
       "accessible": true,
       "format_valid": true,
       "value_present": true,
@@ -359,7 +359,7 @@
     },
     {
       "secret_name": "JWT_REFRESH_TOKEN_EXPIRE_DAYS",
-      "timestamp": "2025-08-27T06:42:59.202616",
+      "timestamp": "2025-08-28T15:08:32.419908",
       "accessible": true,
       "format_valid": true,
       "value_present": true,
@@ -371,7 +371,7 @@
     },
     {
       "secret_name": "JWT_SECRET_KEY",
-      "timestamp": "2025-08-27T06:42:59.554901",
+      "timestamp": "2025-08-28T15:08:32.734436",
       "accessible": true,
       "format_valid": true,
       "value_present": true,
@@ -384,7 +384,7 @@
     },
     {
       "secret_name": "LANGCHAIN_API_KEY",
-      "timestamp": "2025-08-27T06:42:59.824753",
+      "timestamp": "2025-08-28T15:08:32.979658",
       "accessible": true,
       "format_valid": true,
       "value_present": true,
@@ -397,7 +397,7 @@
     },
     {
       "secret_name": "NEO4J_DATABASE",
-      "timestamp": "2025-08-27T06:43:00.096018",
+      "timestamp": "2025-08-28T15:08:33.328024",
       "accessible": true,
       "format_valid": true,
       "value_present": true,
@@ -409,7 +409,7 @@
     },
     {
       "secret_name": "NEO4J_PASSWORD",
-      "timestamp": "2025-08-27T06:43:00.611008",
+      "timestamp": "2025-08-28T15:08:33.606720",
       "accessible": true,
       "format_valid": true,
       "value_present": true,
@@ -422,7 +422,7 @@
     },
     {
       "secret_name": "NEO4J_URI",
-      "timestamp": "2025-08-27T06:43:01.137058",
+      "timestamp": "2025-08-28T15:08:34.119985",
       "accessible": true,
       "format_valid": true,
       "value_present": true,
@@ -434,7 +434,7 @@
     },
     {
       "secret_name": "NEO4J_USERNAME",
-      "timestamp": "2025-08-27T06:43:01.456036",
+      "timestamp": "2025-08-28T15:08:34.555113",
       "accessible": true,
       "format_valid": true,
       "value_present": true,
@@ -446,7 +446,7 @@
     },
     {
       "secret_name": "NEXT_PUBLIC_API_URL",
-      "timestamp": "2025-08-27T06:43:01.926882",
+      "timestamp": "2025-08-28T15:08:34.832634",
       "accessible": true,
       "format_valid": true,
       "value_present": true,
@@ -458,7 +458,7 @@
     },
     {
       "secret_name": "NEXT_PUBLIC_STACK_PROJECT_ID",
-      "timestamp": "2025-08-27T06:43:02.316652",
+      "timestamp": "2025-08-28T15:08:35.157613",
       "accessible": true,
       "format_valid": true,
       "value_present": true,
@@ -470,7 +470,7 @@
     },
     {
       "secret_name": "NEXT_PUBLIC_STACK_PUBLISHABLE_CLIENT_KEY",
-      "timestamp": "2025-08-27T06:43:02.591639",
+      "timestamp": "2025-08-28T15:08:35.414422",
       "accessible": true,
       "format_valid": true,
       "value_present": true,
@@ -483,7 +483,7 @@
     },
     {
       "secret_name": "OPENAI_API_KEY",
-      "timestamp": "2025-08-27T06:43:02.924209",
+      "timestamp": "2025-08-28T15:08:35.662422",
       "accessible": true,
       "format_valid": true,
       "value_present": true,
@@ -496,7 +496,7 @@
     },
     {
       "secret_name": "REDIS_DB",
-      "timestamp": "2025-08-27T06:43:03.360383",
+      "timestamp": "2025-08-28T15:08:36.036324",
       "accessible": true,
       "format_valid": true,
       "value_present": true,
@@ -508,7 +508,7 @@
     },
     {
       "secret_name": "REDIS_HOST",
-      "timestamp": "2025-08-27T06:43:03.865680",
+      "timestamp": "2025-08-28T15:08:36.451937",
       "accessible": true,
       "format_valid": true,
       "value_present": true,
@@ -519,7 +519,7 @@
     },
     {
       "secret_name": "REDIS_PORT",
-      "timestamp": "2025-08-27T06:43:04.106428",
+      "timestamp": "2025-08-28T15:08:36.815695",
       "accessible": true,
       "format_valid": true,
       "value_present": true,
@@ -531,7 +531,7 @@
     },
     {
       "secret_name": "REDIS_URL",
-      "timestamp": "2025-08-27T06:43:04.891547",
+      "timestamp": "2025-08-28T15:08:37.192603",
       "accessible": true,
       "format_valid": true,
       "value_present": true,
@@ -543,7 +543,7 @@
     },
     {
       "secret_name": "SECRET_KEY",
-      "timestamp": "2025-08-27T06:43:05.306243",
+      "timestamp": "2025-08-28T15:08:37.461401",
       "accessible": true,
       "format_valid": true,
       "value_present": true,
@@ -556,7 +556,7 @@
     },
     {
       "secret_name": "STACK_SECRET_SERVER_KEY",
-      "timestamp": "2025-08-27T06:43:05.540586",
+      "timestamp": "2025-08-28T15:08:37.715593",
       "accessible": true,
       "format_valid": true,
       "value_present": true,
@@ -569,7 +569,7 @@
     },
     {
       "secret_name": "TEST_DATABASE_URL",
-      "timestamp": "2025-08-27T06:43:05.812256",
+      "timestamp": "2025-08-28T15:08:38.017076",
       "accessible": true,
       "format_valid": true,
       "value_present": true,
@@ -581,7 +581,7 @@
     },
     {
       "secret_name": "TEST_USER_EMAIL",
-      "timestamp": "2025-08-27T06:43:06.106041",
+      "timestamp": "2025-08-28T15:08:38.474379",
       "accessible": true,
       "format_valid": true,
       "value_present": true,
@@ -593,7 +593,7 @@
     },
     {
       "secret_name": "TEST_USER_PASSWORD",
-      "timestamp": "2025-08-27T06:43:06.359141",
+      "timestamp": "2025-08-28T15:08:38.774445",
       "accessible": true,
       "format_valid": true,
       "value_present": true,

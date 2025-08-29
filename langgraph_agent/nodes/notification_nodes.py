@@ -31,6 +31,7 @@ from core.exceptions import (
 from database.db_setup import get_async_db
 from database.user import User
 from langgraph_agent.graph.error_handler import ErrorHandlerNode
+from langgraph_agent.utils.cost_tracking import track_node_cost
 
 logger = logging.getLogger(__name__)
 
@@ -1024,3 +1025,22 @@ class EnhancedNotificationNode:
 
 # Maintain backward compatibility
 NotificationTaskNode = EnhancedNotificationNode
+
+
+# Create a wrapper function for integration with the graph
+@track_node_cost(node_name="notification", track_tokens=False)
+async def notification_node(state: Dict[str, Any]) -> Dict[str, Any]:
+    """
+    Main notification node wrapper for LangGraph integration.
+    
+    This function wraps the EnhancedNotificationNode for use in the 
+    LangGraph workflow.
+    
+    Args:
+        state: Current workflow state
+        
+    Returns:
+        Updated state after notification processing
+    """
+    # Use the singleton NotificationTaskNode instance
+    return await NotificationTaskNode(state)

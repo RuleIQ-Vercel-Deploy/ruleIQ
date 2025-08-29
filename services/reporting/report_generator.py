@@ -211,7 +211,7 @@ class ReportGenerator:
             )
             policies_res = await self.db.execute(
                 select(func.count(GeneratedPolicy.id)).where(
-                    GeneratedPolicy.business_profile_id == profile_id
+                    GeneratedPolicy.business_profil == profile_id
                 )
             )
 

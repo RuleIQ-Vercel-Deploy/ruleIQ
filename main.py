@@ -23,6 +23,7 @@ from api.routers import (
     dashboard,  # Added missing dashboard import
     evidence,
     evidence_collection,
+    feedback,  # Human-in-the-loop feedback system
     foundation_evidence,
     frameworks,
     freemium,
@@ -236,6 +237,7 @@ app.include_router(security.router, prefix="/api/v1/security", tags=["Security"]
 app.include_router(secrets_vault.router, tags=["🔐 Secrets Vault"])
 app.include_router(chat.router, prefix="/api/v1/chat", tags=["AI Assistant"])
 app.include_router(ai_cost_monitoring.router, prefix="/api/v1/ai/cost", tags=["AI Cost Monitoring"])
+app.include_router(feedback.router, prefix="/api/v1/feedback", tags=["Human Feedback"])
 app.include_router(ai_cost_websocket.router, prefix="/api/v1/ai/cost-websocket", tags=["AI Cost WebSocket"])
 app.include_router(ai_policy.router, prefix="/api/v1/ai/policies", tags=["AI Policy Generation"])
 app.include_router(performance_monitoring.router, prefix="/api/v1/performance", tags=["Performance Monitoring"])

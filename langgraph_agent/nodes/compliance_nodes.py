@@ -9,11 +9,13 @@ from typing import Dict, Any, List, Optional
 from uuid import uuid4
 
 from langgraph_agent.graph.unified_state import UnifiedComplianceState
-from services.neo4j_service import get_neo4j_session
+from langgraph_agent.utils.cost_tracking import track_node_cost
+from services.neo4j_service import get_neo4j_service
 
 logger = logging.getLogger(__name__)
 
 
+@track_node_cost(node_name="compliance_check", model_name="gpt-4")
 async def compliance_check_node(state: UnifiedComplianceState) -> UnifiedComplianceState:
     """
     Complete compliance check implementation.
@@ -108,6 +110,7 @@ async def compliance_check_node(state: UnifiedComplianceState) -> UnifiedComplia
     return state
 
 
+@track_node_cost(node_name="extract_requirements", track_tokens=False)
 def extract_requirements_from_rag(documents: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
     """
     Extract compliance requirements from RAG documents.
@@ -139,6 +142,7 @@ def extract_requirements_from_rag(documents: List[Dict[str, Any]]) -> List[Dict[
     return requirements
 
 
+@track_node_cost(node_name="check_compliance_status", model_name="gpt-4")
 async def check_compliance_status(
     company_id: str,
     regulation: str,
@@ -163,63 +167,78 @@ async def check_compliance_status(
     violations = []
     
     try:
-        async with get_neo4j_session() as session:
-            # Query for company's obligations and evidence
-            query = """
-            MATCH (c:Company {id: $company_id})
-            OPTIONAL MATCH (c)-[:SUBJECT_TO]->(r:Regulation {name: $regulation})
-            OPTIONAL MATCH (r)-[:CONTAINS]->(o:Obligation)
-            OPTIONAL MATCH (c)-[:HAS_EVIDENCE]->(e:Evidence)-[:SATISFIES]->(o)
-            RETURN o, collect(DISTINCT e) as evidence
-            """
-            
-            result = await session.run(
-                query,
-                company_id=company_id,
-                regulation=regulation
-            )
-            
-            async for record in result:
-                if record["o"]:
-                    obligation = record["o"]
-                    evidence = record["evidence"]
-                    
-                    ob_data = {
-                        "id": obligation.get("id", str(uuid4())),
-                        "title": obligation.get("title", "Unknown Obligation"),
-                        "description": obligation.get("description", ""),
-                        "satisfied": len(evidence) > 0,
-                        "evidence": [e.get("id") for e in evidence if e],
-                        "evidence_count": len(evidence),
-                        "regulation": regulation
-                    }
-                    
-                    obligations.append(ob_data)
-                    
-                    if not ob_data["satisfied"]:
-                        violations.append(ob_data)
-            
-            # Calculate compliance metrics
-            total_obligations = len(obligations)
-            satisfied_obligations = len([o for o in obligations if o["satisfied"]])
-            compliance_score = (satisfied_obligations / total_obligations * 100) if total_obligations > 0 else 100
-            
-            logger.info(
-                f"Compliance check complete: {satisfied_obligations}/{total_obligations} "
-                f"obligations satisfied ({compliance_score:.1f}%)"
-            )
-            
+        neo4j_service = await get_neo4j_service()
+        if not neo4j_service or not neo4j_service.driver:
+            logger.error("Neo4j service not available")
             return {
-                "obligations": obligations,
-                "violations": violations,
-                "total_obligations": total_obligations,
-                "satisfied_obligations": satisfied_obligations,
-                "compliance_score": compliance_score,
-                "regulation": regulation,
-                "company_id": company_id,
+                "obligations": [],
+                "violations": [],
+                "total_obligations": 0,
+                "satisfied_obligations": 0,
+                "compliance_score": 0,
+                "error": "Database service not available",
                 "timestamp": datetime.now().isoformat()
             }
             
+        # Query for company's obligations and evidence
+        query = """
+        MATCH (c:Company {id: $company_id})
+        OPTIONAL MATCH (c)-[:SUBJECT_TO]->(r:Regulation {name: $regulation})
+        OPTIONAL MATCH (r)-[:CONTAINS]->(o:Obligation)
+        OPTIONAL MATCH (c)-[:HAS_EVIDENCE]->(e:Evidence)-[:SATISFIES]->(o)
+        RETURN o, collect(DISTINCT e) as evidence
+        """
+        
+        result = await neo4j_service.execute_query(
+            query,
+            parameters={
+                "company_id": company_id,
+                "regulation": regulation
+            },
+            read_only=True
+        )
+        
+        for record in result:
+            if record.get("o"):
+                obligation = record["o"]
+                evidence = record.get("evidence", [])
+                
+                ob_data = {
+                    "id": obligation.get("id", str(uuid4())),
+                    "title": obligation.get("title", "Unknown Obligation"),
+                    "description": obligation.get("description", ""),
+                    "satisfied": len(evidence) > 0,
+                    "evidence": [e.get("id") for e in evidence if e],
+                    "evidence_count": len(evidence),
+                    "regulation": regulation
+                }
+                
+                obligations.append(ob_data)
+                
+                if not ob_data["satisfied"]:
+                    violations.append(ob_data)
+        
+        # Calculate compliance metrics
+        total_obligations = len(obligations)
+        satisfied_obligations = len([o for o in obligations if o["satisfied"]])
+        compliance_score = (satisfied_obligations / total_obligations * 100) if total_obligations > 0 else 100
+        
+        logger.info(
+            f"Compliance check complete: {satisfied_obligations}/{total_obligations} "
+            f"obligations satisfied ({compliance_score:.1f}%)"
+        )
+        
+        return {
+            "obligations": obligations,
+            "violations": violations,
+            "total_obligations": total_obligations,
+            "satisfied_obligations": satisfied_obligations,
+            "compliance_score": compliance_score,
+            "regulation": regulation,
+            "company_id": company_id,
+            "timestamp": datetime.now().isoformat()
+        }
+        
     except Exception as e:
         logger.error(f"Error querying Neo4j for compliance status: {e}")
         
