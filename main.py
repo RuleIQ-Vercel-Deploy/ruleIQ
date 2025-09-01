@@ -15,6 +15,7 @@ from api.routers import (
     ai_cost_websocket,
     ai_optimization,
     ai_policy,
+    api_keys,  # API key management for B2B integrations
     assessments,
     auth,
     business_profiles,
@@ -42,6 +43,7 @@ from api.routers import (
     test_utils,
     uk_compliance,
     users,
+    webhooks,  # Webhook handlers with signature verification
 )
 from api.routers.admin import admin_router
 from api.routers import rbac_auth
@@ -198,10 +200,55 @@ from api.middleware.rate_limiter import rate_limit_middleware
 
 app.middleware("http")(rate_limit_middleware)
 
-# Security headers
-from api.middleware.security_headers import security_headers_middleware
+# Security headers (using comprehensive middleware)
+# from api.middleware.security_headers import security_headers_middleware
+# app.middleware("http")(security_headers_middleware)
 
-app.middleware("http")(security_headers_middleware)
+# Comprehensive Security Middleware
+from middleware.security_middleware import SecurityMiddleware
+from middleware.security_headers import SecurityHeadersMiddleware
+
+# Add comprehensive security headers middleware
+app.add_middleware(
+    SecurityHeadersMiddleware,
+    csp_enabled=True,
+    cors_enabled=False,  # Already handled by CORSMiddleware
+    nonce_enabled=True,
+    report_uri="/api/security/csp-report"
+)
+
+# Add integrated security middleware (auth, authz, audit, encryption, SQL protection)
+security_middleware = SecurityMiddleware(
+    app=app,
+    enable_auth=False,  # Already handled by existing auth dependencies
+    enable_authz=False,  # Already handled by RBACMiddleware
+    enable_audit=True,  # Enhanced audit logging
+    enable_encryption=True,  # Field-level encryption
+    enable_sql_protection=True,  # SQL injection protection
+    public_paths=[
+        "/docs",
+        "/openapi.json",
+        "/health",
+        "/api/v1/auth/login",
+        "/api/v1/auth/register",
+        "/api/v1/freemium/leads",
+        "/api/v1/freemium/sessions"
+    ]
+)
+app.middleware("http")(security_middleware)
+
+# Add rate limit headers from request.state to responses
+@app.middleware("http")
+async def add_rate_limit_headers_middleware(request: Request, call_next):
+    """Add rate limit headers from request.state to responses."""
+    response = await call_next(request)
+    
+    # Add rate limit headers if they were set by rate limit dependencies
+    if hasattr(request.state, "rate_limit_headers"):
+        for header, value in request.state.rate_limit_headers.items():
+            response.headers[header] = value
+    
+    return response
 
 # Include routers
 app.include_router(auth.router, prefix="/api/v1/auth", tags=["Authentication"])
@@ -212,6 +259,10 @@ app.include_router(
     business_profiles.router, prefix="/api/v1/business-profiles", tags=["Business Profiles"]
 )
 app.include_router(assessments.router, prefix="/api/v1/assessments", tags=["Assessments"])
+# Usage tracking dashboard for SMB owners
+from api.routers import usage_dashboard, audit_export
+app.include_router(usage_dashboard.router, prefix="/api/v1", tags=["Usage Dashboard"])
+app.include_router(audit_export.router, prefix="/api/v1", tags=["Audit Export"])
 app.include_router(freemium.router, prefix="/api/v1", tags=["Freemium Assessment"])
 # New consolidated AI assessments namespace
 app.include_router(ai_assessments.router, prefix="/api/v1/ai", tags=["AI Assessment Assistant"])
@@ -234,6 +285,8 @@ app.include_router(dashboard.router, prefix="/api/v1/dashboard", tags=["Dashboar
 app.include_router(payment.router, prefix="/api/v1/payments", tags=["Payments"])
 app.include_router(monitoring.router, prefix="/api/v1/monitoring", tags=["Monitoring"])
 app.include_router(security.router, prefix="/api/v1/security", tags=["Security"])
+app.include_router(api_keys.router, tags=["API Keys"])
+app.include_router(webhooks.router, tags=["Webhooks"])
 app.include_router(secrets_vault.router, tags=["🔐 Secrets Vault"])
 app.include_router(chat.router, prefix="/api/v1/chat", tags=["AI Assistant"])
 app.include_router(ai_cost_monitoring.router, prefix="/api/v1/ai/cost", tags=["AI Cost Monitoring"])

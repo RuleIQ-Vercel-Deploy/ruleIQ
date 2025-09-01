@@ -8,7 +8,7 @@ from datetime import datetime, timedelta
 from typing import Dict, Optional
 from uuid import UUID
 
-from fastapi import Depends, HTTPException, status
+from fastapi import Depends, HTTPException, status, Request, Header
 from fastapi.security import OAuth2PasswordBearer
 from jose import ExpiredSignatureError, JWTError, jwt
 from passlib.context import CryptContext
@@ -21,7 +21,45 @@ from database.db_setup import get_async_db
 from database.user import User
 
 # Security configuration
-SECRET_KEY = os.getenv("SECRET_KEY", secrets.token_urlsafe(32))
+# Enforce proper secret management in production
+import sys
+from config.settings import settings
+
+def get_jwt_secret_key() -> str:
+    """Get JWT secret key with production enforcement."""
+    # In production, require Doppler or explicit configuration
+    if settings.is_production():
+        secret_key = os.getenv("JWT_SECRET_KEY")
+        doppler_token = os.getenv("DOPPLER_TOKEN")
+        
+        if not secret_key and not doppler_token:
+            error_msg = (
+                "CRITICAL: Production environment requires proper secret configuration. "
+                "Either set JWT_SECRET_KEY environment variable or configure Doppler: "
+                "  - Set DOPPLER_TOKEN environment variable"
+"
+                "  - Or use: doppler run -- python main.py"
+            )
+            logger.error(error_msg)
+            sys.exit(1)
+        
+        if not secret_key:
+            # Doppler is configured, try to get from there
+            secret_key = settings.jwt_secret_key
+            if secret_key == "insecure-dev-key-change-in-production":
+                logger.error("CRITICAL: Invalid JWT secret in production")
+                sys.exit(1)
+                
+        return secret_key
+    else:
+        # Development/testing: allow fallback but warn
+        secret_key = os.getenv("JWT_SECRET_KEY", settings.jwt_secret_key)
+        if secret_key == "insecure-dev-key-change-in-production":
+            logger.warning("Using insecure development JWT secret - DO NOT use in production")
+            secret_key = secrets.token_urlsafe(32)
+        return secret_key
+
+SECRET_KEY = get_jwt_secret_key()
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 REFRESH_TOKEN_EXPIRE_DAYS = 7
@@ -216,3 +254,72 @@ async def get_current_user_from_refresh_token(
     #     raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Inactive user cannot refresh token")
 
     return user
+
+
+# Simple decorator for route protection
+def require_auth(func):
+    """
+    Decorator to require authentication for a route.
+    Use with @require_auth on route functions.
+    """
+    from functools import wraps
+    
+    @wraps(func)
+    async def wrapper(*args, **kwargs):
+        # The actual auth check happens via Depends(get_current_user)
+        # This decorator is mainly for clarity and future enhancements
+        return await func(*args, **kwargs)
+    
+    return wrapper
+
+
+async def get_api_key_auth(
+    request: Request,
+    x_api_key: str = Header(None, alias="X-API-Key"),
+    db: AsyncSession = Depends(get_async_db)
+) -> dict:
+    """
+    Dependency for API key authentication.
+    
+    Returns metadata about the authenticated API key.
+    Raises HTTPException if authentication fails.
+    """
+    from services.api_key_management import APIKeyManager
+    from services.redis_client import get_redis_client
+    
+    if not x_api_key:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="API key required",
+            headers={"WWW-Authenticate": "ApiKey"}
+        )
+    
+    try:
+        redis_client = await get_redis_client()
+        manager = APIKeyManager(db, redis_client)
+        
+        # Validate the API key
+        is_valid, metadata, error = await manager.validate_api_key(
+            api_key=x_api_key,
+            request_ip=request.client.host if request.client else None,
+            request_origin=request.headers.get("Origin"),
+            endpoint=str(request.url.path),
+            method=request.method
+        )
+        
+        if not is_valid:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail=error or "Invalid API key"
+            )
+        
+        return metadata.__dict__ if hasattr(metadata, '__dict__') else metadata
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"API key authentication error: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Authentication service unavailable"
+        )

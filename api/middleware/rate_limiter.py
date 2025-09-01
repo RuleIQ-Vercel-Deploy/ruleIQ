@@ -133,8 +133,23 @@ def auth_rate_limit():
             raise HTTPException(
                 status_code=status.HTTP_429_TOO_MANY_REQUESTS,
                 detail=f"Too many authentication attempts. Try again in {retry_after} seconds",
-                headers={"Retry-After": str(retry_after)},
+                headers={
+                    "Retry-After": str(retry_after),
+                    "X-RateLimit-Limit": str(auth_limiter.requests_per_minute),
+                    "X-RateLimit-Remaining": "0",
+                    "X-RateLimit-Reset": str(int(time.time()) + retry_after),
+                },
             )
+        
+        # Add rate limit headers to successful responses
+        remaining = auth_limiter.requests_per_minute - len(
+            auth_limiter.requests.get(client_ip, [])
+        )
+        request.state.rate_limit_headers = {
+            "X-RateLimit-Limit": str(auth_limiter.requests_per_minute),
+            "X-RateLimit-Remaining": str(max(0, remaining)),
+            "X-RateLimit-Reset": str(int(time.time()) + 60),
+        }
 
     return check_limit
 
@@ -155,8 +170,23 @@ def rate_limit(requests_per_minute: int = 60):
             raise HTTPException(
                 status_code=status.HTTP_429_TOO_MANY_REQUESTS,
                 detail=f"Rate limit exceeded: {requests_per_minute} requests per minute. Try again in {retry_after} seconds",
-                headers={"Retry-After": str(retry_after)},
+                headers={
+                    "Retry-After": str(retry_after),
+                    "X-RateLimit-Limit": str(requests_per_minute),
+                    "X-RateLimit-Remaining": "0",
+                    "X-RateLimit-Reset": str(int(time.time()) + retry_after),
+                },
             )
+        
+        # Add rate limit headers to successful responses
+        remaining = requests_per_minute - len(
+            custom_limiter.requests.get(client_ip, [])
+        )
+        request.state.rate_limit_headers = {
+            "X-RateLimit-Limit": str(requests_per_minute),
+            "X-RateLimit-Remaining": str(max(0, remaining)),
+            "X-RateLimit-Reset": str(int(time.time()) + 60),
+        }
 
     return check_custom_limit
 

@@ -5,7 +5,7 @@ Provides endpoints for role-based access control, security testing, and vulnerab
 """
 
 from typing import Any, Dict, List
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, Request
 from pydantic import BaseModel
 
 from api.dependencies.auth import get_current_active_user
@@ -163,3 +163,62 @@ async def rate_limit_test(current_user: User = Depends(get_current_active_user))
         "timestamp": "2024-01-01T00:00:00Z",
         "rate_limit": "5 requests per minute",
     }
+
+# Initialize CSP violation handler
+from middleware.security_headers import CSPViolationHandler
+from datetime import datetime
+import json
+
+# Global handler instance with in-memory storage
+csp_handler = CSPViolationHandler()
+
+@router.post("/csp-report", status_code=204, include_in_schema=False)
+async def handle_csp_violation(request: Request):
+    """
+    Handle Content Security Policy violation reports
+    
+    This endpoint receives CSP violation reports from browsers when content
+    violates the configured Content Security Policy.
+    """
+    return await csp_handler.handle_violation(request)
+
+
+@router.get("/csp-violations", response_model=Dict[str, Any])
+async def get_csp_violations(
+    current_user: User = Depends(get_current_active_user)
+):
+    """
+    Get CSP violation summary (Admin only)
+    
+    Returns a summary of Content Security Policy violations including:
+    - Total violation count
+    - Violations grouped by directive
+    - Violations grouped by blocked URI
+    - Recent violations
+    """
+    # Check if user has admin role
+    if current_user.role != "admin":
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Only administrators can view CSP violations"
+        )
+    return csp_handler.get_violations_summary()
+
+
+@router.delete("/csp-violations", response_model=Dict[str, str])
+async def clear_csp_violations(
+    current_user: User = Depends(get_current_active_user)
+):
+    """
+    Clear CSP violation history (Admin only)
+    
+    Clears all stored CSP violation reports from memory.
+    """
+    # Check if user has admin role
+    if current_user.role != "admin":
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Only administrators can clear CSP violations"
+        )
+    csp_handler.violations.clear()
+    return {"message": "CSP violation history cleared successfully"}
