@@ -16,7 +16,7 @@ from services.api_key_management import (
 )
 from api.dependencies.auth import get_current_active_user
 from database.user import User
-from services.redis_client import get_redis_client
+from database.redis_client import get_redis_client
 
 
 router = APIRouter(
