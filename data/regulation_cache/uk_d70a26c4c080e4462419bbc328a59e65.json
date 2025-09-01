@@ -1,0 +1,566 @@
+{
+  "success": true,
+  "url": "https://www.legislation.gov.uk/ukpga/2021/31/data.xml",
+  "fetched_at": "2025-08-31T18:15:58.451679",
+  "metadata": {
+    "title": "Telecommunications (Security) Act 2021",
+    "description": "",
+    "type": "",
+    "year": "",
+    "number": ""
+  },
+  "requirements": [
+    {
+      "id": "section-1",
+      "text": "1\n\n\n1\n\nThe Communications Act 2003 is amended as follows.\n\n\n\n2\n\nFor sections 105A to 105D substitute\u2014\n\n\nDuty to take security measures\n\n105A\n\n\n1\n\nThe provider of a public electronic communications network or a public electronic communications service must take such measures as are appropriate and proportionate for the purposes of\u2014\n\na\n\nidentifying the risks of security compromises occurring;\n\n\n\nb\n\nreducing the risks of security compromises occurring; and\n\n\n\nc\n\npreparing for the occurrence of secu",
+      "type": "mandatory",
+      "keywords": [
+        "security",
+        "consent"
+      ]
+    },
+    {
+      "id": "",
+      "text": "105A\n\n\n1\n\nThe provider of a public electronic communications network or a public electronic communications service must take such measures as are appropriate and proportionate for the purposes of\u2014\n\na\n\nidentifying the risks of security compromises occurring;\n\n\n\nb\n\nreducing the risks of security compromises occurring; and\n\n\n\nc\n\npreparing for the occurrence of security compromises.\n\n\n\n\n\n2\n\nIn this Chapter \u201csecurity compromise\u201d, in relation to a public electronic communications network or a public e",
+      "type": "mandatory",
+      "keywords": [
+        "security",
+        "consent"
+      ]
+    },
+    {
+      "id": "",
+      "text": "105B\n\n\n1\n\nThe Secretary of State may by regulations provide that the provider of a public electronic communications network or a public electronic communications service must take specified measures or measures of a specified description.\n\n\n\n2\n\nA measure or description of measure may be specified only if the Secretary of State considers that taking that measure or a measure of that description would be appropriate and proportionate for a purpose mentioned in section 105A(1).\n\n\n\n3\n\nIn this sectio",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "section-2",
+      "text": "2\n\nAfter section 105B of the Communications Act 2003 insert\u2014\n\n\nDuty to take measures in response to security compromises\n\n105C\n\n\n1\n\nThis section applies where a security compromise occurs in relation to a public electronic communications network or a public electronic communications service.\n\n\n\n2\n\nThe provider of the network or service must take such measures as are appropriate and proportionate for the purpose of preventing adverse effects (on the network or service or otherwise) arising from t",
+      "type": "mandatory",
+      "keywords": [
+        "security"
+      ]
+    },
+    {
+      "id": "",
+      "text": "105C\n\n\n1\n\nThis section applies where a security compromise occurs in relation to a public electronic communications network or a public electronic communications service.\n\n\n\n2\n\nThe provider of the network or service must take such measures as are appropriate and proportionate for the purpose of preventing adverse effects (on the network or service or otherwise) arising from the security compromise.\n\n\n\n3\n\nIf the security compromise has an adverse effect on the network or service, the provider of ",
+      "type": "mandatory",
+      "keywords": [
+        "security"
+      ]
+    },
+    {
+      "id": "",
+      "text": "105D\n\n\n1\n\nThe Secretary of State may by regulations provide that, where a security compromise of a specified description occurs in relation to a public electronic communications network or a public electronic communications service, the provider of the network or service must take specified measures or measures of a specified description.\n\n\n\n2\n\nA measure or description of measure may be specified under subsection (1) only if the Secretary of State considers that taking that measure or a measure ",
+      "type": "mandatory",
+      "keywords": [
+        "security"
+      ]
+    },
+    {
+      "id": "section-3",
+      "text": "3\n\nAfter section 105D of the Communications Act 2003 insert\u2014\n\n\nCodes of practice about security measures etc\n\n105E\n\nThe Secretary of State may\u2014\n\na\n\nissue codes of practice giving guidance as to the measures to be taken under sections 105A to 105D by the provider of a public electronic communications network or a public electronic communications service;\n\n\n\nb\n\nrevise a code of practice issued under this section and issue the code as revised;\n\n\n\nc\n\nwithdraw a code of practice issued under this sec",
+      "type": "mandatory",
+      "keywords": [
+        "security",
+        "audit"
+      ]
+    },
+    {
+      "id": "",
+      "text": "105F\n\n\n1\n\nBefore issuing a code of practice under section 105E the Secretary of State\u2014\n\na\n\nmust publish a draft of\u2014\n\ni\n\nthe code; or\n\n\n\nii\n\nwhere relevant, the revisions of the existing code;\n\n\n\n\n\nb\n\nmust consult the following about the draft\u2014\n\ni\n\nOFCOM;\n\n\n\nii\n\nproviders of public electronic communications networks to whom the draft would apply;\n\n\n\niii\n\nproviders of public electronic communications services to whom the draft would apply; and\n\n\n\niv\n\nsuch other persons as the Secretary of State co",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "",
+      "text": "105G\n\n\n1\n\nBefore withdrawing a code of practice under section 105E the Secretary of State must\u2014\n\na\n\npublish notice of the proposal to withdraw the code; and\n\n\n\nb\n\nconsult the following about the proposal\u2014\n\ni\n\nOFCOM;\n\n\n\nii\n\nproviders of public electronic communications networks to whom the code applies;\n\n\n\niii\n\nproviders of public electronic communications services to whom the code applies; and\n\n\n\niv\n\nsuch other persons as the Secretary of State considers appropriate.\n\n\n\n\n\n\n\n2\n\nWhere the Secretar",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "",
+      "text": "105H\n\n\n1\n\nA failure by the provider of a public electronic communications network or a public electronic communications service to act in accordance with a provision of a code of practice does not of itself make the provider liable to legal proceedings before a court or tribunal.\n\n\n\n2\n\nIn any legal proceedings before a court or tribunal, the court or tribunal must take into account a provision of a code of practice in determining any question arising in the proceedings if\u2014\n\na\n\nthe question relat",
+      "type": "mandatory",
+      "keywords": [
+        "security",
+        "audit"
+      ]
+    },
+    {
+      "id": "",
+      "text": "105I\n\n\n1\n\nThis section applies where OFCOM have reasonable grounds for suspecting that the provider of a public electronic communications network or a public electronic communications service is failing, or has failed, to act in accordance with a provision of a code of practice issued under section 105E.\n\n\n\n2\n\nOFCOM may give a notification to the provider that\u2014\n\na\n\nspecifies the provision of the code of practice;\n\n\n\nb\n\nspecifies the respects in which the provider is suspected to be failing, or t",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "section-4",
+      "text": "4\n\n\n1\n\nThe Communications Act 2003 is amended as follows.\n\n\n\n2\n\nAfter section 105I insert\u2014\n\n\nDuty to inform users of risk of security compromise\n\n105J\n\n\n1\n\nThis section applies where there is a significant risk of a security compromise occurring in relation to a public electronic communications network or a public electronic communications service.\n\n\n\n2\n\nThe provider of the network or service must take such steps as are reasonable and proportionate for the purpose of bringing the relevant inform",
+      "type": "mandatory",
+      "keywords": [
+        "security",
+        "reporting"
+      ]
+    },
+    {
+      "id": "",
+      "text": "105J\n\n\n1\n\nThis section applies where there is a significant risk of a security compromise occurring in relation to a public electronic communications network or a public electronic communications service.\n\n\n\n2\n\nThe provider of the network or service must take such steps as are reasonable and proportionate for the purpose of bringing the relevant information, expressed in clear and plain language, to the attention of persons who use the network or service and may be adversely affected by the secu",
+      "type": "mandatory",
+      "keywords": [
+        "security",
+        "reporting"
+      ]
+    },
+    {
+      "id": "",
+      "text": "105K\n\n\n1\n\nThe provider of a public electronic communications network or a public electronic communications service must inform OFCOM as soon as reasonably practicable of\u2014\n\na\n\nany security compromise that has a significant effect on the operation of the network or service;\n\n\n\nb\n\nany security compromise within section 105A(2)(b) that puts any person in a position to be able to bring about a further security compromise that would have a significant effect on the operation of the network or service.",
+      "type": "mandatory",
+      "keywords": [
+        "security",
+        "reporting"
+      ]
+    },
+    {
+      "id": "",
+      "text": "105L\n\n\n1\n\nThis section applies where OFCOM consider that\u2014\n\na\n\nthere is a risk of a security compromise occurring in relation to a public electronic communications network or public electronic communications service; or\n\n\n\nb\n\na security compromise has occurred in relation to a public electronic communications network or public electronic communications service.\n\n\n\n\n\n2\n\nOFCOM must inform the Secretary of State of the risk of or (as the case may be) the occurrence of the security compromise if they",
+      "type": "mandatory",
+      "keywords": [
+        "security",
+        "reporting"
+      ]
+    },
+    {
+      "id": "section-5",
+      "text": "5\n\nAfter section 105L of the Communications Act 2003 insert\u2014\n\n\nGeneral duty of OFCOM to ensure compliance with security duties\n\n105M\n\nOFCOM must seek to ensure that providers of public electronic communications networks and public electronic communications services comply with the duties imposed on them by or under sections 105A to 105D, 105J and 105K.",
+      "type": "mandatory",
+      "keywords": [
+        "security"
+      ]
+    },
+    {
+      "id": "",
+      "text": "105M\n\nOFCOM must seek to ensure that providers of public electronic communications networks and public electronic communications services comply with the duties imposed on them by or under sections 105A to 105D, 105J and 105K.",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "section-6",
+      "text": "6\n\n\n1\n\nThe Communications Act 2003 is amended as follows.\n\n\n\n2\n\nAfter section 105M insert\u2014\n\n\nPower of OFCOM to assess compliance with security duties\n\n105N\n\n\n1\n\nOFCOM may carry out, or arrange for another person to carry out, an assessment of whether the provider of a public electronic communications network or a public electronic communications service is complying or has complied with a duty imposed on the provider by or under any of sections 105A to 105D, 105J and 105K.\n\n\n\n2\n\nWhere an assessm",
+      "type": "mandatory",
+      "keywords": [
+        "security",
+        "reporting",
+        "audit"
+      ]
+    },
+    {
+      "id": "",
+      "text": "105N\n\n\n1\n\nOFCOM may carry out, or arrange for another person to carry out, an assessment of whether the provider of a public electronic communications network or a public electronic communications service is complying or has complied with a duty imposed on the provider by or under any of sections 105A to 105D, 105J and 105K.\n\n\n\n2\n\nWhere an assessment under this section is carried out, the provider of the network or service concerned must\u2014\n\na\n\nco-operate with the assessment; and\n\n\n\nb\n\npay the cos",
+      "type": "mandatory",
+      "keywords": [
+        "audit"
+      ]
+    },
+    {
+      "id": "",
+      "text": "105O\n\n\n1\n\nThis section applies for the purposes of an assessment under section 105N in respect of the provider of a public electronic communications network or a public electronic communications service.\n\n\n\n2\n\nOFCOM may by notice (\u201can assessment notice\u201d) impose on the provider a duty to do any of the following things\u2014\n\na\n\ncarry out specified tests or tests of a specified description in relation to the network or service;\n\n\n\nb\n\nmake arrangements of a specified description for another person to ca",
+      "type": "mandatory",
+      "keywords": [
+        "security",
+        "reporting",
+        "audit"
+      ]
+    },
+    {
+      "id": "",
+      "text": "105P\n\n\n1\n\nThis section applies where\u2014\n\na\n\nan assessment notice is given under section 105O to the provider of a public electronic communications network or a public electronic communications service;\n\n\n\nb\n\nthe notice states that, in OFCOM\u2019s opinion, it is necessary for the provider to comply with a duty imposed by the notice urgently;\n\n\n\nc\n\nthe notice gives OFCOM\u2019s reasons for reaching that opinion; and\n\n\n\nd\n\nthe notice provides information about the right of the provider to make an application ",
+      "type": "mandatory",
+      "keywords": [
+        "reporting",
+        "audit"
+      ]
+    },
+    {
+      "id": "",
+      "text": "105Q\n\n\n1\n\nThis section applies where an assessment notice given under section 105O to a provider of a public electronic communications network or a public electronic communications service contains a statement under section 105P(1)(b).\n\n\n\n2\n\nThe provider may apply to the court for either or both of the following\u2014\n\na\n\nthe disapplication of the statement in relation to some or all of the duties imposed by the notice;\n\n\n\nb\n\na change to the time at which, or period within which, a duty imposed by th",
+      "type": "mandatory",
+      "keywords": [
+        "audit"
+      ]
+    },
+    {
+      "id": "",
+      "text": "105R\n\nEvery report under paragraph 12 of the Schedule to the Office of Communications Act 2002 (OFCOM\u2019s annual report) must include a statement of the number of occasions during the financial year to which the report relates on which premises have been entered in pursuance of a duty imposed under section 105O(2)(d).",
+      "type": "mandatory",
+      "keywords": [
+        "reporting"
+      ]
+    },
+    {
+      "id": "section-7",
+      "text": "7\n\n\n1\n\nThe Communications Act 2003 is amended as follows.\n\n\n\n2\n\nAfter section 105R insert\u2014\n\n\nEnforcement of security duties\n\n105S\n\n\n1\n\nSections 96A to 100, 102 and 103 apply in relation to a contravention of a security duty as they apply in relation to a contravention of a condition set under section 45, other than an SMP apparatus condition.\n\n\n\n2\n\nThis section is subject to section 105T (enforcement of security duties: amount of penalties).\n\n\n\n3\n\nIn this section \u201csecurity duty\u201d means a duty imp",
+      "type": "mandatory",
+      "keywords": [
+        "security",
+        "reporting"
+      ]
+    },
+    {
+      "id": "",
+      "text": "105S\n\n\n1\n\nSections 96A to 100, 102 and 103 apply in relation to a contravention of a security duty as they apply in relation to a contravention of a condition set under section 45, other than an SMP apparatus condition.\n\n\n\n2\n\nThis section is subject to section 105T (enforcement of security duties: amount of penalties).\n\n\n\n3\n\nIn this section \u201csecurity duty\u201d means a duty imposed by or under any of sections 105A to 105D, 105I to 105K, 105L(6), (7)(c) and (8), 105N(2)(a) and 105O.",
+      "type": "mandatory",
+      "keywords": [
+        "security"
+      ]
+    },
+    {
+      "id": "",
+      "text": "105T\n\n\n1\n\nIn its application in relation to a contravention of a security duty, other than a security duty imposed by section 105I, section 96B(5) has effect as if the maximum penalty specified were \u00a3100,000 per day.\n\n\n\n2\n\nIn its application in relation to a contravention of a security duty imposed by section 105I, section 96B(5) has effect as if the maximum penalty specified were \u00a350,000 per day.\n\n\n\n3\n\nIn its application in relation to a contravention of a security duty imposed by section 105I,",
+      "type": "mandatory",
+      "keywords": [
+        "security"
+      ]
+    },
+    {
+      "id": "",
+      "text": "105U\n\n\n1\n\nThis section applies where\u2014\n\na\n\nOFCOM determine that there are reasonable grounds for believing that the provider of a public electronic communications network or a public electronic communications service is contravening or has contravened a duty imposed by or under any of sections 105A to 105D;\n\n\n\nb\n\nOFCOM either have not commenced, or have commenced but not completed, enforcement action in connection with the contravention;\n\n\n\nc\n\nOFCOM determine that there are reasonable grounds for",
+      "type": "mandatory",
+      "keywords": [
+        "security"
+      ]
+    },
+    {
+      "id": "",
+      "text": "105V\n\n\n1\n\nThis section applies where\u2014\n\na\n\nthe provider of a public electronic communications network or a public electronic communications service has been given a notification under section 105U;\n\n\n\nb\n\nOFCOM have allowed the provider an opportunity to make representations about the matters notified; and\n\n\n\nc\n\nthe period allowed for the making of representations has expired.\n\n\n\n\n\n2\n\nOFCOM may\u2014\n\na\n\ndirect the provider to take the interim steps or any of the interim steps specified in the notifica",
+      "type": "mandatory",
+      "keywords": [
+        "security",
+        "reporting"
+      ]
+    },
+    {
+      "id": "section-8",
+      "text": "8\n\nAfter section 105V of the Communications Act 2003 insert\u2014\n\n\nCivil liability for breach of security duties\n\n105W\n\n\n1\n\nA duty imposed by or under any of sections 105A to 105D and 105J on a provider of a public electronic communications network or a public electronic communications service is a duty owed to every person who may be affected by a contravention of the duty.\n\n\n\n2\n\nSubsections (3) and (4) apply where a duty is owed by virtue of subsection (1) to a person.\n\n\n\n3\n\nA breach of the duty t",
+      "type": "mandatory",
+      "keywords": [
+        "security",
+        "consent"
+      ]
+    },
+    {
+      "id": "",
+      "text": "105W\n\n\n1\n\nA duty imposed by or under any of sections 105A to 105D and 105J on a provider of a public electronic communications network or a public electronic communications service is a duty owed to every person who may be affected by a contravention of the duty.\n\n\n\n2\n\nSubsections (3) and (4) apply where a duty is owed by virtue of subsection (1) to a person.\n\n\n\n3\n\nA breach of the duty that causes that person to sustain loss or damage is actionable at the suit or instance of that person.\n\n\n\n4\n\nA",
+      "type": "mandatory",
+      "keywords": [
+        "consent"
+      ]
+    },
+    {
+      "id": "section-9",
+      "text": "9\n\nAfter section 105W of the Communications Act 2003 insert\u2014\n\n\nRelationship between security duties and certain other duties etc\n\n105X\n\n\n1\n\nA security duty imposed on a provider of a public electronic communications network or a public electronic communications service does not apply in so far as compliance with the duty would\u2014\n\na\n\nresult in a failure by the provider to comply with a duty or prohibition imposed by or under an enactment mentioned in section 105A(4);\n\n\n\nb\n\nprevent the provider fro",
+      "type": "mandatory",
+      "keywords": [
+        "security"
+      ]
+    },
+    {
+      "id": "",
+      "text": "105X\n\n\n1\n\nA security duty imposed on a provider of a public electronic communications network or a public electronic communications service does not apply in so far as compliance with the duty would\u2014\n\na\n\nresult in a failure by the provider to comply with a duty or prohibition imposed by or under an enactment mentioned in section 105A(4);\n\n\n\nb\n\nprevent the provider from giving effect to a warrant or authorisation that has been issued or given under an enactment mentioned in section 105A(4);\n\n\n\nc\n",
+      "type": "mandatory",
+      "keywords": [
+        "security"
+      ]
+    },
+    {
+      "id": "section-10",
+      "text": "10\n\n\n1\n\nThe Communications Act 2003 is amended as follows.\n\n\n\n2\n\nAfter section 105X insert\u2014\n\n\nStatement of policy on ensuring compliance with security duties\n\n105Y\n\n\n1\n\nOFCOM must prepare and publish a statement of their general policy with respect to the exercise of their functions under sections 105I and 105M to 105V.\n\n\n\n2\n\nOFCOM may from time to time revise that statement as they think fit.\n\n\n\n3\n\nWhere OFCOM make or revise their statement of policy under this section, they must publish that s",
+      "type": "mandatory",
+      "keywords": [
+        "security"
+      ]
+    },
+    {
+      "id": "",
+      "text": "105Y\n\n\n1\n\nOFCOM must prepare and publish a statement of their general policy with respect to the exercise of their functions under sections 105I and 105M to 105V.\n\n\n\n2\n\nOFCOM may from time to time revise that statement as they think fit.\n\n\n\n3\n\nWhere OFCOM make or revise their statement of policy under this section, they must publish that statement or (as the case may be) the revised statement in such manner as they consider appropriate for bringing it to the attention of the persons who, in thei",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "section-11",
+      "text": "11\n\n\n1\n\nThe Communications Act 2003 is amended as follows.\n\n\n\n2\n\nAfter section 105Y insert\u2014\n\n\nOFCOM reports on security\n\n105Z\n\n\n1\n\nAs soon as practicable after the end of each reporting period OFCOM must prepare and send to the Secretary of State a report for the period (a \u201csecurity report\u201d).\n\n\n\n2\n\nA security report must contain such information and advice as OFCOM consider may best serve the purpose mentioned in subsection (3).\n\n\n\n3\n\nThe purpose is to assist the Secretary of State in the formul",
+      "type": "mandatory",
+      "keywords": [
+        "data_protection",
+        "security",
+        "reporting"
+      ]
+    },
+    {
+      "id": "",
+      "text": "105Z\n\n\n1\n\nAs soon as practicable after the end of each reporting period OFCOM must prepare and send to the Secretary of State a report for the period (a \u201csecurity report\u201d).\n\n\n\n2\n\nA security report must contain such information and advice as OFCOM consider may best serve the purpose mentioned in subsection (3).\n\n\n\n3\n\nThe purpose is to assist the Secretary of State in the formulation of policy in relation to the security of public electronic communications networks and public electronic communicat",
+      "type": "mandatory",
+      "keywords": [
+        "data_protection",
+        "security",
+        "reporting"
+      ]
+    },
+    {
+      "id": "section-12",
+      "text": "12\n\n\n1\n\nThe Communications Act 2003 is amended as follows.\n\n\n\n2\n\nIn section 24B (provision of information to assist in formulation of policy) after subsection (2) insert\u2014\n\n\n3\n\nBut subsection (2) does not prevent OFCOM providing the Secretary of State with any information that they consider may assist the Secretary of State in the formulation of policy in relation to the security of public electronic communications networks or public electronic communications services.\n\n\n\n\n\n\n3\n\nIn section 135 (po",
+      "type": "mandatory",
+      "keywords": [
+        "security",
+        "reporting",
+        "retention"
+      ]
+    },
+    {
+      "id": "section-14",
+      "text": "14\n\n\n1\n\nThe Secretary of State must carry out reviews of the impact and effectiveness of sections 1 to 13.\n\n\n\n2\n\nAfter each review the Secretary of State must publish a report of the review and lay a copy before Parliament.\n\n\n\n3\n\nThe reports must be published not more than 5 years apart.\n\n\n\n4\n\nThe first report must be published within the period of 5 years beginning with the day on which this Act is passed.",
+      "type": "mandatory",
+      "keywords": [
+        "reporting",
+        "audit"
+      ]
+    },
+    {
+      "id": "section-15",
+      "text": "15\n\n\n1\n\nThe Communications Act 2003 is amended as follows.\n\n\n\n2\n\nAfter section 105Z insert\u2014\n\n\nSecurity of public electronic communications networks and services: designated vendor directions\n\nDesignated vendor directions\n\n105Z1\n\n\n1\n\nThe Secretary of State may give a direction under this section (\u201ca designated vendor direction\u201d) to a public communications provider.\n\n\n\n2\n\nThe Secretary of State may give a designated vendor direction only if the Secretary of State considers that\u2014\n\na\n\nthe direction ",
+      "type": "mandatory",
+      "keywords": [
+        "security",
+        "audit"
+      ]
+    },
+    {
+      "id": "",
+      "text": "105Z1\n\n\n1\n\nThe Secretary of State may give a direction under this section (\u201ca designated vendor direction\u201d) to a public communications provider.\n\n\n\n2\n\nThe Secretary of State may give a designated vendor direction only if the Secretary of State considers that\u2014\n\na\n\nthe direction is necessary in the interests of national security; and\n\n\n\nb\n\nthe requirements imposed by the direction are proportionate to what is sought to be achieved by the direction.\n\n\n\n\n\n3\n\nA designated vendor direction may impose ",
+      "type": "mandatory",
+      "keywords": [
+        "security"
+      ]
+    },
+    {
+      "id": "",
+      "text": "105Z2\n\n\n1\n\nThis section makes further provision about the requirements that may be imposed by a designated vendor direction on a public communications provider.\n\n\n\n2\n\nThe requirements may include, among other things\u2014\n\na\n\nrequirements prohibiting or restricting the use of goods, services or facilities supplied, provided or made available by a designated vendor specified in the direction;\n\n\n\nb\n\nrequirements prohibiting the installation of such goods or the taking up of such services or facilities;",
+      "type": "mandatory",
+      "keywords": [
+        "security"
+      ]
+    },
+    {
+      "id": "",
+      "text": "105Z3\n\n\n1\n\nBefore giving a designated vendor direction, the Secretary of State must consult\u2014\n\na\n\nthe public communications provider or providers which would be subject to the proposed direction, and\n\n\n\nb\n\nthe person or persons who would be specified as a designated vendor or vendors in the proposed direction in accordance with section 105Z1(3),\n\n\nso far as it is reasonably practicable to do so.\n\n\n\n2\n\nThe requirement in subsection (1) does not apply if or to the extent that the Secretary of State",
+      "type": "mandatory",
+      "keywords": [
+        "security"
+      ]
+    },
+    {
+      "id": "",
+      "text": "105Z4\n\n\n1\n\nWhere a designated vendor direction is given to a public communications provider, the Secretary of State must send a copy of the direction to the designated vendor or vendors specified in the direction, if or to the extent that it is reasonably practicable to do so.\n\n\n\n2\n\nThe requirement in subsection (1) does not apply, in the case of a designated vendor, if the Secretary of State considers that sending a copy of the direction to that designated vendor would be contrary to the intere",
+      "type": "mandatory",
+      "keywords": [
+        "security"
+      ]
+    },
+    {
+      "id": "",
+      "text": "105Z5\n\n\n1\n\nThe Secretary of State must review a designated vendor direction from time to time.\n\n\n\n2\n\nThe Secretary of State may\u2014\n\na\n\nvary a designated vendor direction;\n\n\n\nb\n\nrevoke a designated vendor direction (whether wholly or in part).\n\n\n\n\n\n3\n\nThe Secretary of State may vary a designated vendor direction only if\u2014\n\na\n\nthe Secretary of State considers that the direction as varied is necessary in the interests of national security; and\n\n\n\nb\n\nthe Secretary of State considers that the requiremen",
+      "type": "mandatory",
+      "keywords": [
+        "security",
+        "audit"
+      ]
+    },
+    {
+      "id": "",
+      "text": "105Z6\n\n\n1\n\nThe Secretary of State must give notice of a variation of a designated vendor direction under section 105Z5 to the public communications provider or providers subject to the direction as varied.\n\n\n\n2\n\nThe notice of variation must specify\u2014\n\na\n\nhow the direction is varied;\n\n\n\nb\n\nthe reasons for the variation;\n\n\n\nc\n\nthe time at which the variation, or each of them, comes into force.\n\n\n\n\n\n3\n\nThe requirement in subsection (2)(b) does not apply if or to the extent that the Secretary of Stat",
+      "type": "mandatory",
+      "keywords": [
+        "security"
+      ]
+    }
+  ],
+  "penalties": [
+    {
+      "type": "financial",
+      "amount": "\u00a3100,000",
+      "context": "powers of ofcom to enforce compliance with security duties\n\n7\n\n\n1\n\nthe communications act 2003 is amended as follows.\n\n\n\n2\n\nafter section 105r insert\u2014\n\n\nenforcement of security duties\n\n105s\n\n\n1\n\nsecti"
+    },
+    {
+      "type": "financial",
+      "amount": "\u00a350,000",
+      "context": "powers of ofcom to enforce compliance with security duties\n\n7\n\n\n1\n\nthe communications act 2003 is amended as follows.\n\n\n\n2\n\nafter section 105r insert\u2014\n\n\nenforcement of security duties\n\n105s\n\n\n1\n\nsecti"
+    },
+    {
+      "type": "financial",
+      "amount": "\u00a310 million",
+      "context": "powers of ofcom to enforce compliance with security duties\n\n7\n\n\n1\n\nthe communications act 2003 is amended as follows.\n\n\n\n2\n\nafter section 105r insert\u2014\n\n\nenforcement of security duties\n\n105s\n\n\n1\n\nsecti"
+    },
+    {
+      "type": "financial",
+      "amount": "\u00a3100,000",
+      "context": "enforcement of security duties: amount of penalties\n\n105t\n\n\n1\n\nin its application in relation to a contravention of a security duty, other than a security duty imposed by section 105i, section 96b(5) "
+    },
+    {
+      "type": "financial",
+      "amount": "\u00a350,000",
+      "context": "enforcement of security duties: amount of penalties\n\n105t\n\n\n1\n\nin its application in relation to a contravention of a security duty, other than a security duty imposed by section 105i, section 96b(5) "
+    },
+    {
+      "type": "financial",
+      "amount": "\u00a310 million",
+      "context": "enforcement of security duties: amount of penalties\n\n105t\n\n\n1\n\nin its application in relation to a contravention of a security duty, other than a security duty imposed by section 105i, section 96b(5) "
+    },
+    {
+      "type": "financial",
+      "amount": "\u00a350,000",
+      "context": "monitoring directions: inspection notices\n\n19\n\n\n1\n\nthe communications act 2003 is amended as follows.\n\n\n\n2\n\nafter section 105z13 insert\u2014\n\n\npower of ofcom to give inspection notices\n\n105z14\n\n\n1\n\nthis s"
+    },
+    {
+      "type": "financial",
+      "amount": "\u00a310 million",
+      "context": "monitoring directions: inspection notices\n\n19\n\n\n1\n\nthe communications act 2003 is amended as follows.\n\n\n\n2\n\nafter section 105z13 insert\u2014\n\n\npower of ofcom to give inspection notices\n\n105z14\n\n\n1\n\nthis s"
+    },
+    {
+      "type": "financial",
+      "amount": "\u00a350,000",
+      "context": "inspection notices: enforcement of compliance\n\n105z17\n\n\n1\n\nsections 96a to 100, 102 and 103 apply in relation to\u2014\n\na\n\na contravention of a duty imposed by an inspection notice, or\n\n\n\nb\n\na contraventio"
+    },
+    {
+      "type": "financial",
+      "amount": "\u00a310 million",
+      "context": "inspection notices: enforcement of compliance\n\n105z17\n\n\n1\n\nsections 96a to 100, 102 and 103 apply in relation to\u2014\n\na\n\na contravention of a duty imposed by an inspection notice, or\n\n\n\nb\n\na contraventio"
+    },
+    {
+      "type": "financial",
+      "amount": "\u00a3100,000",
+      "context": "power of secretary of state to enforce compliance with designated vendor directions etc\n\n20\n\nafter section 105z17 of the communications act 2003 insert\u2014\n\n\nnotification of contravention\n\n105z18\n\n\n1\n\nwh"
+    },
+    {
+      "type": "financial",
+      "amount": "\u00a310 million",
+      "context": "power of secretary of state to enforce compliance with designated vendor directions etc\n\n20\n\nafter section 105z17 of the communications act 2003 insert\u2014\n\n\nnotification of contravention\n\n105z18\n\n\n1\n\nwh"
+    },
+    {
+      "type": "financial",
+      "amount": "\u00a350,000",
+      "context": "power of secretary of state to enforce compliance with designated vendor directions etc\n\n20\n\nafter section 105z17 of the communications act 2003 insert\u2014\n\n\nnotification of contravention\n\n105z18\n\n\n1\n\nwh"
+    },
+    {
+      "type": "financial",
+      "amount": "\u00a3100,000",
+      "context": "amount of penalty\n\n105z19\n\n\n1\n\nthe amount of a penalty that may be specified in a notification under section 105z18 is such amount as the secretary of state determines to be\u2014\n\na\n\nappropriate; and\n\n\n\nb"
+    },
+    {
+      "type": "financial",
+      "amount": "\u00a310 million",
+      "context": "amount of penalty\n\n105z19\n\n\n1\n\nthe amount of a penalty that may be specified in a notification under section 105z18 is such amount as the secretary of state determines to be\u2014\n\na\n\nappropriate; and\n\n\n\nb"
+    },
+    {
+      "type": "financial",
+      "amount": "\u00a350,000",
+      "context": "amount of penalty\n\n105z19\n\n\n1\n\nthe amount of a penalty that may be specified in a notification under section 105z18 is such amount as the secretary of state determines to be\u2014\n\na\n\nappropriate; and\n\n\n\nb"
+    },
+    {
+      "type": "financial",
+      "amount": "\u00a310 million",
+      "context": "requirement not to disclose\n\n22\n\nafter section 105z24 of the communications act 2003 insert\u2014\n\n\nrequirement not to disclose\n\n105z25\n\n\n1\n\nthe secretary of state may require a public communications provi"
+    },
+    {
+      "type": "financial",
+      "amount": "\u00a350,000",
+      "context": "requirement not to disclose\n\n22\n\nafter section 105z24 of the communications act 2003 insert\u2014\n\n\nrequirement not to disclose\n\n105z25\n\n\n1\n\nthe secretary of state may require a public communications provi"
+    },
+    {
+      "type": "financial",
+      "amount": "\u00a310 million",
+      "context": "enforcement of requirement not to disclose\n\n105z26\n\n\n1\n\nsections 105z18, 105z19(1) to (3), 105z20 and 105z21 apply in relation to a contravention by a person of a requirement not to disclose imposed u"
+    },
+    {
+      "type": "financial",
+      "amount": "\u00a350,000",
+      "context": "enforcement of requirement not to disclose\n\n105z26\n\n\n1\n\nsections 105z18, 105z19(1) to (3), 105z20 and 105z21 apply in relation to a contravention by a person of a requirement not to disclose imposed u"
+    },
+    {
+      "type": "financial",
+      "amount": "\u00a310 million",
+      "context": "power of secretary of state to require information etc\n\n23\n\nafter section 105z26 of the communications act 2003 insert\u2014\n\n\npower of secretary of state to require information etc\n\n105z27\n\n\n1\n\nthe secret"
+    },
+    {
+      "type": "financial",
+      "amount": "\u00a350,000",
+      "context": "power of secretary of state to require information etc\n\n23\n\nafter section 105z26 of the communications act 2003 insert\u2014\n\n\npower of secretary of state to require information etc\n\n105z27\n\n\n1\n\nthe secret"
+    },
+    {
+      "type": "financial",
+      "amount": "\u00a310 million",
+      "context": "enforcement of information requirements etc\n\n105z29\n\n\n1\n\nsections 105z18, 105z19(1) to (3), 105z20 and 105z21 apply in relation to a contravention by a person of a requirement under section 105z27 as "
+    },
+    {
+      "type": "financial",
+      "amount": "\u00a350,000",
+      "context": "enforcement of information requirements etc\n\n105z29\n\n\n1\n\nsections 105z18, 105z19(1) to (3), 105z20 and 105z21 apply in relation to a contravention by a person of a requirement under section 105z27 as "
+    },
+    {
+      "type": "financial",
+      "amount": "\u00a350,000",
+      "context": "further amendment concerning penalties\n\n24\n\nafter section 139 of the communications act 2003 insert\u2014\n\n\nhigher penalties for certain contraventions\n\n139za\n\n\n1\n\nthis section applies where\u2014\n\na\n\na person "
+    },
+    {
+      "type": "financial",
+      "amount": "\u00a310 million",
+      "context": "further amendment concerning penalties\n\n24\n\nafter section 139 of the communications act 2003 insert\u2014\n\n\nhigher penalties for certain contraventions\n\n139za\n\n\n1\n\nthis section applies where\u2014\n\na\n\na person "
+    },
+    {
+      "type": "financial",
+      "amount": "\u00a350,000",
+      "context": "higher penalties for certain contraventions\n\n139za\n\n\n1\n\nthis section applies where\u2014\n\na\n\na person is given a notification under section 138 which specifies a proposed penalty; and\n\n\n\nb\n\nthe condition i"
+    },
+    {
+      "type": "financial",
+      "amount": "\u00a310 million",
+      "context": "higher penalties for certain contraventions\n\n139za\n\n\n1\n\nthis section applies where\u2014\n\na\n\na person is given a notification under section 138 which specifies a proposed penalty; and\n\n\n\nb\n\nthe condition i"
+    }
+  ],
+  "enforcement": {
+    "authority": [
+      "Secretary of State"
+    ],
+    "powers": [
+      "3\n\nAfter section 105D of the Communications Act 2003 insert\u2014\n\n\nCodes of practice about security measures etc\n\n105E\n\nThe Secretary of State may\u2014\n\na\n\nissue codes of practice giving guidance as to the me",
+      "105H\n\n\n1\n\nA failure by the provider of a public electronic communications network or a public electronic communications service to act in accordance with a provision of a code of practice does not of ",
+      "6\n\n\n1\n\nThe Communications Act 2003 is amended as follows.\n\n\n\n2\n\nAfter section 105M insert\u2014\n\n\nPower of OFCOM to assess compliance with security duties\n\n105N\n\n\n1\n\nOFCOM may carry out, or arrange for ano",
+      "105O\n\n\n1\n\nThis section applies for the purposes of an assessment under section 105N in respect of the provider of a public electronic communications network or a public electronic communications servi",
+      "7\n\n\n1\n\nThe Communications Act 2003 is amended as follows.\n\n\n\n2\n\nAfter section 105R insert\u2014\n\n\nEnforcement of security duties\n\n105S\n\n\n1\n\nSections 96A to 100, 102 and 103 apply in relation to a contraven",
+      "105S\n\n\n1\n\nSections 96A to 100, 102 and 103 apply in relation to a contravention of a security duty as they apply in relation to a contravention of a condition set under section 45, other than an SMP a",
+      "105U\n\n\n1\n\nThis section applies where\u2014\n\na\n\nOFCOM determine that there are reasonable grounds for believing that the provider of a public electronic communications network or a public electronic communi",
+      "105V\n\n\n1\n\nThis section applies where\u2014\n\na\n\nthe provider of a public electronic communications network or a public electronic communications service has been given a notification under section 105U;\n\n\n\n",
+      "19\n\n\n1\n\nThe Communications Act 2003 is amended as follows.\n\n\n\n2\n\nAfter section 105Z13 insert\u2014\n\n\nPower of OFCOM to give inspection notices\n\n105Z14\n\n\n1\n\nThis section applies where the Secretary of State",
+      "105Z14\n\n\n1\n\nThis section applies where the Secretary of State has given OFCOM a monitoring direction relating to a public communications provider (and the monitoring direction has not been revoked).\n\n",
+      "105Z15\n\n\n1\n\nAn inspection notice must provide information about the consequences of failing to comply with a duty imposed by the notice.\n\n\n\n2\n\nAn inspection notice may by further notice\u2014\n\na\n\nbe revoke",
+      "105Z17\n\n\n1\n\nSections 96A to 100, 102 and 103 apply in relation to\u2014\n\na\n\na contravention of a duty imposed by an inspection notice, or\n\n\n\nb\n\na contravention of the duty imposed by section 105Z15(3),\n\n\na",
+      "20\n\nAfter section 105Z17 of the Communications Act 2003 insert\u2014\n\n\nNotification of contravention\n\n105Z18\n\n\n1\n\nWhere the Secretary of State determines that there are reasonable grounds for believing tha",
+      "105Z20\n\n\n1\n\nThis section applies where\u2014\n\na\n\na public communications provider has been given a notification under section 105Z18;\n\n\n\nb\n\nthe Secretary of State has allowed the provider an opportunity to",
+      "105Z21\n\n\n1\n\nThis section applies where a sum is payable to the Secretary of State as a penalty under section 105Z20.\n\n\n\n2\n\nIn England and Wales, the penalty is recoverable as if it were payable under ",
+      "21\n\n\n1\n\nThe Communications Act 2003 is amended as follows.\n\n\n\n2\n\nAfter section 105Z21 insert\u2014\n\n\nUrgent enforcement direction\n\n105Z22\n\n\n1\n\nThe Secretary of State may give a direction under this section",
+      "105Z22\n\n\n1\n\nThe Secretary of State may give a direction under this section (\u201can urgent enforcement direction\u201d) to a person if the Secretary of State determines that\u2014\n\na\n\nthere are reasonable grounds f",
+      "105Z23\n\n\n1\n\nAs soon as reasonably practicable after giving an urgent enforcement direction, the Secretary of State must\u2014\n\na\n\nconfirm the direction; or\n\n\n\nb\n\nrevoke the direction (see section 105Z24).\n",
+      "105Z24\n\n\n1\n\nA person who is given an urgent enforcement direction must comply with it, whether or not it has been confirmed (unless it is revoked).\n\n\n\n2\n\nThe duty is enforceable in civil proceedings b",
+      "22\n\nAfter section 105Z24 of the Communications Act 2003 insert\u2014\n\n\nRequirement not to disclose\n\n105Z25\n\n\n1\n\nThe Secretary of State may require a public communications provider which has been given a de",
+      "105Z25\n\n\n1\n\nThe Secretary of State may require a public communications provider which has been given a designated vendor direction or a designated vendor who has been sent a copy under section 105Z4 n",
+      "23\n\nAfter section 105Z26 of the Communications Act 2003 insert\u2014\n\n\nPower of Secretary of State to require information etc\n\n105Z27\n\n\n1\n\nThe Secretary of State may require a person falling within subsect"
+    ],
+    "procedures": []
+  },
+  "dates": [],
+  "controls": [
+    "consent_management",
+    "access_control",
+    "data_minimization"
+  ],
+  "xml_length": 248230
+}

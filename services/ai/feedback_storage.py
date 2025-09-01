@@ -106,7 +106,7 @@ class FeedbackStorage:
             # Convert feedback items to dictionaries
             feedback_data = []
             for feedback in self._feedback_cache.values():
-                feedback_data.append(feedback.model_dump())
+                feedback_data.append(feedback.to_dict() if hasattr(feedback, 'to_dict') else feedback.__dict__)
             
             # Write to temporary file first
             temp_file = feedback_file.with_suffix('.tmp')
@@ -172,7 +172,7 @@ class FeedbackStorage:
         """
         feedback = self._feedback_cache.get(feedback_id)
         if feedback:
-            return feedback.model_dump()
+            return feedback.to_dict() if hasattr(feedback, 'to_dict') else feedback.__dict__
         return None
     
     async def get_feedback_by_run(self, run_id: str) -> List[Dict[str, Any]]:
@@ -188,7 +188,7 @@ class FeedbackStorage:
         feedback_items = []
         for feedback in self._feedback_cache.values():
             if feedback.run_id == run_id:
-                feedback_items.append(feedback.model_dump())
+                feedback_items.append(feedback.to_dict() if hasattr(feedback, 'to_dict') else feedback.__dict__)
         
         return feedback_items
     
@@ -205,7 +205,7 @@ class FeedbackStorage:
         feedback_items = []
         for feedback in self._feedback_cache.values():
             if feedback.user_id == user_id:
-                feedback_items.append(feedback.model_dump())
+                feedback_items.append(feedback.to_dict() if hasattr(feedback, 'to_dict') else feedback.__dict__)
         
         return feedback_items
     
@@ -239,7 +239,7 @@ class FeedbackStorage:
             # Filter feedback by date if specified
             feedback_items = []
             for feedback in self._feedback_cache.values():
-                feedback_dict = feedback.model_dump()
+                feedback_dict = feedback.to_dict() if hasattr(feedback, 'to_dict') else feedback.__dict__
                 item_date = datetime.fromisoformat(
                     feedback_dict.get("timestamp", datetime.utcnow().isoformat())
                 )
@@ -376,7 +376,7 @@ class FeedbackStorage:
             # Find items to remove
             items_to_remove = []
             for feedback_id, feedback in self._feedback_cache.items():
-                feedback_dict = feedback.model_dump()
+                feedback_dict = feedback.to_dict() if hasattr(feedback, 'to_dict') else feedback.__dict__
                 item_date = datetime.fromisoformat(
                     feedback_dict.get("timestamp", datetime.utcnow().isoformat())
                 )

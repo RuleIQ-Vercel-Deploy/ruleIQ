@@ -16,7 +16,7 @@ class RegCitation(BaseModel):
     notes: Optional[str] = Field(None, description="Additional notes about the citation")
 
 
-class SourceMeta(BaseModel):
+class SourceMetaOld(BaseModel):
     """Metadata about the source of data."""
     
     source_kind: str = Field(..., description="Type of source (e.g., regulatory_document, manual)")
@@ -56,3 +56,36 @@ class ExpectedOutcome(BaseModel):
         if not v or not v.strip():
             raise ValueError("outcome_code is required")
         return v
+
+
+# Additional classes for document ingestion
+class SourceMeta(BaseModel):
+    """Source metadata for golden dataset documents."""
+    
+    origin: str = Field(..., description="Original source URL or identifier")
+    domain: str = Field(..., description="Domain of the source")
+    trust_score: float = Field(0.5, ge=0.0, le=1.0, description="Trust score between 0 and 1")
+    sha256: str = Field(..., description="SHA256 hash of content")
+    fetched_at: Optional[datetime] = Field(None, description="When the document was fetched")
+
+
+class GoldenDoc(BaseModel):
+    """Golden dataset document schema."""
+    
+    doc_id: str = Field(..., description="Unique document identifier")
+    content: str = Field(..., description="Document content")
+    source_meta: SourceMeta = Field(..., description="Source metadata")
+    reg_citations: Optional[list] = Field(None, description="Regulatory citations")
+    expected_outcomes: Optional[list] = Field(None, description="Expected outcomes")
+
+
+class GoldenChunk(BaseModel):
+    """Golden dataset chunk schema."""
+    
+    chunk_id: str = Field(..., description="Unique chunk identifier")
+    doc_id: str = Field(..., description="Parent document ID")
+    chunk_index: int = Field(..., description="Chunk index in document")
+    content: str = Field(..., description="Chunk content")
+    source_meta: SourceMeta = Field(..., description="Source metadata")
+    reg_citations: Optional[list] = Field(None, description="Regulatory citations")
+    expected_outcomes: Optional[list] = Field(None, description="Expected outcomes")

@@ -365,6 +365,10 @@ class Settings(BaseSettings):
     ai_policy_generation_enabled: bool = Field(default=True, description="Enable AI policy generation")
     advanced_analytics_enabled: bool = Field(default=True, description="Enable advanced analytics")
     integration_sync_enabled: bool = Field(default=True, description="Enable integration sync")
+    
+    # Security Settings
+    audit_log_retention_days: int = Field(default=90, description="Number of days to retain audit logs")
+    real_time_security_alerts: bool = Field(default=True, description="Enable real-time security alerts")
 
     # ===================================================================
     # VALIDATION METHODS

@@ -1,0 +1,204 @@
+{
+  "document_to_regulation": {
+    "uk_aaaeed38bb1ca56cd1bc5ae9c096f7d0.json": "Competition Act",
+    "uk_36dd5966c1ebf595678570a9706ff194.json": "Equality Act",
+    "uk_bbdd0cebba9e97e133f9d65b6c00815b.json": "GDPR/DPA",
+    "uk_0503da4c18ed6162b7b2965703095c05.json": "FCA",
+    "uk_b13cc1ec4ebac227af48d837093d167c.json": "Bribery Act",
+    "uk_a17dbcfd6a213901f0afaa1d75f21447.json": "Terrorism Act",
+    "uk_4e0aaddf3bd7475ae6323baaa591e197.json": "Competition Act",
+    "uk_9972d5fd32f9ab76e204190b26be0a4c.json": "FCA",
+    "uk_5061b52c7264baf790c8e298bdfb16ec.json": "FCA",
+    "uk_e43224f5ca46a50c5519664fc10054ed.json": "FCA",
+    "uk_55a3a03f46ab55d8bfdf1d51bd45a465.json": "GDPR/DPA",
+    "uk_ec8f288a12331491d58600fa46c03e0c.json": "FCA",
+    "uk_84cc293fea5fab04f3d0ab50672ca2a9.json": "UK Act 1999/31",
+    "uk_bbebb55ab953afb4fc3331716aebee99.json": "Modern Slavery Act",
+    "uk_1c551e0d3668eb7978c8eaa112cf7968.json": "FCA",
+    "uk_b7f717c8007a186e67b7e91ceba09aa4.json": "UK SI 2011/99",
+    "uk_b68dd1a37e099c3e5368511e6d0e6b58.json": "Competition Act",
+    "uk_ecc84326f57ea9a5af48081a510dd7a7.json": "UK Act 1986/53",
+    "uk_a584120fe3e7ea98f743e648424182ee.json": "UK Act 1990/18",
+    "uk_30662460bac3df2340c527315dea3622.json": "Companies Act",
+    "uk_a2e16e995499a4ed62ada22d6705e3d2.json": "GDPR/DPA",
+    "uk_4b79635888269eb10ad301333016f878.json": "Criminal Justice Act",
+    "uk_d26e1f0a38d427a2fd062595713d8f27.json": "FCA",
+    "uk_5cae196e5246f90721c84e0ae0b2ade4.json": "FCA",
+    "uk_5c0a7e072649e4179a22749b05ab1f60.json": "FCA",
+    "uk_3e0569466400e728acd9684050aab39e.json": "GDPR/DPA",
+    "uk_fb433854f4b38603ff56a8058946d2ae.json": "Pensions Act",
+    "uk_329a03da6a59d552a3b5b2c95baba888.json": "FCA",
+    "uk_c3796f05714919c069ddcca7e784b68b.json": "MLR",
+    "uk_03cf3a633831a04bf533444ce9027e0b.json": "GDPR/DPA",
+    "uk_811c3cac3be32d6625e1129e72d641d1.json": "UK Act 2012/7",
+    "uk_5e314743d7ba80f65403a77f4fd2dd41.json": "Pensions Act",
+    "uk_d70a26c4c080e4462419bbc328a59e65.json": "PECR",
+    "uk_66750cb9ad761658d009062aea93576f.json": "Companies Act",
+    "uk_d48d3b8868ba36564baf73fdca612149.json": "FCA",
+    "uk_f49594058e8eaa64b7a1f4e4ca0c999a.json": "Economic Crime Act"
+  },
+  "regulation_summary": {
+    "Competition Act": {
+      "name": "Competition Act",
+      "document_count": 3,
+      "total_obligations": 77,
+      "urls": [
+        "https://www.legislation.gov.uk/ukpga/2015/15/data.xml",
+        "https://www.legislation.gov.uk/ukpga/2002/40/data.xml",
+        "https://www.legislation.gov.uk/ukpga/1998/41/data.xml"
+      ]
+    },
+    "Equality Act": {
+      "name": "Equality Act",
+      "document_count": 1,
+      "total_obligations": 22,
+      "urls": [
+        "https://www.legislation.gov.uk/ukpga/2010/15/data.xml"
+      ]
+    },
+    "GDPR/DPA": {
+      "name": "GDPR/DPA",
+      "document_count": 5,
+      "total_obligations": 153,
+      "urls": [
+        "https://www.legislation.gov.uk/uksi/2018/506/data.xml",
+        "https://www.legislation.gov.uk/uksi/2017/692/data.xml",
+        "https://www.legislation.gov.uk/ukpga/2023/50/data.xml",
+        "https://www.legislation.gov.uk/ukpga/2018/12/data.xml",
+        "https://www.legislation.gov.uk/ukpga/2016/25/data.xml"
+      ]
+    },
+    "FCA": {
+      "name": "FCA",
+      "document_count": 11,
+      "total_obligations": 306,
+      "urls": [
+        "https://www.legislation.gov.uk/ukpga/2000/8/data.xml",
+        "https://www.legislation.gov.uk/eur/2012/648/data.xml",
+        "https://www.legislation.gov.uk/eur/2017/1129/data.xml",
+        "https://www.legislation.gov.uk/eur/2014/600/data.xml",
+        "https://www.legislation.gov.uk/ukpga/2002/29/data.xml",
+        "https://www.legislation.gov.uk/uksi/2005/1529/data.xml",
+        "https://www.legislation.gov.uk/eur/2016/1011/data.xml",
+        "https://www.legislation.gov.uk/eur/2014/596/data.xml",
+        "https://www.legislation.gov.uk/eur/2015/2365/data.xml",
+        "https://www.legislation.gov.uk/ukpga/2021/22/data.xml",
+        "https://www.legislation.gov.uk/uksi/2017/752/data.xml"
+      ]
+    },
+    "Bribery Act": {
+      "name": "Bribery Act",
+      "document_count": 1,
+      "total_obligations": 9,
+      "urls": [
+        "https://www.legislation.gov.uk/ukpga/2010/23/data.xml"
+      ]
+    },
+    "Terrorism Act": {
+      "name": "Terrorism Act",
+      "document_count": 1,
+      "total_obligations": 3,
+      "urls": [
+        "https://www.legislation.gov.uk/ukpga/2006/35/data.xml"
+      ]
+    },
+    "UK Act 1999/31": {
+      "name": "UK Act 1999/31",
+      "document_count": 1,
+      "total_obligations": 7,
+      "urls": [
+        "https://www.legislation.gov.uk/ukpga/1999/31/data.xml"
+      ]
+    },
+    "Modern Slavery Act": {
+      "name": "Modern Slavery Act",
+      "document_count": 1,
+      "total_obligations": 24,
+      "urls": [
+        "https://www.legislation.gov.uk/ukpga/2015/30/data.xml"
+      ]
+    },
+    "UK SI 2011/99": {
+      "name": "UK SI 2011/99",
+      "document_count": 1,
+      "total_obligations": 34,
+      "urls": [
+        "https://www.legislation.gov.uk/uksi/2011/99/data.xml"
+      ]
+    },
+    "UK Act 1986/53": {
+      "name": "UK Act 1986/53",
+      "document_count": 1,
+      "total_obligations": 35,
+      "urls": [
+        "https://www.legislation.gov.uk/ukpga/1986/53/data.xml"
+      ]
+    },
+    "UK Act 1990/18": {
+      "name": "UK Act 1990/18",
+      "document_count": 1,
+      "total_obligations": 13,
+      "urls": [
+        "https://www.legislation.gov.uk/ukpga/1990/18/data.xml"
+      ]
+    },
+    "Companies Act": {
+      "name": "Companies Act",
+      "document_count": 2,
+      "total_obligations": 58,
+      "urls": [
+        "https://www.legislation.gov.uk/ukpga/2006/46/data.xml",
+        "https://www.legislation.gov.uk/ukpga/2022/10/data.xml"
+      ]
+    },
+    "Criminal Justice Act": {
+      "name": "Criminal Justice Act",
+      "document_count": 1,
+      "total_obligations": 34,
+      "urls": [
+        "https://www.legislation.gov.uk/ukpga/2017/22/data.xml"
+      ]
+    },
+    "Pensions Act": {
+      "name": "Pensions Act",
+      "document_count": 2,
+      "total_obligations": 51,
+      "urls": [
+        "https://www.legislation.gov.uk/ukpga/2021/1/data.xml",
+        "https://www.legislation.gov.uk/ukpga/2015/4/data.xml"
+      ]
+    },
+    "MLR": {
+      "name": "MLR",
+      "document_count": 1,
+      "total_obligations": 26,
+      "urls": [
+        "https://www.legislation.gov.uk/ukpga/2018/13/data.xml"
+      ]
+    },
+    "UK Act 2012/7": {
+      "name": "UK Act 2012/7",
+      "document_count": 1,
+      "total_obligations": 42,
+      "urls": [
+        "https://www.legislation.gov.uk/ukpga/2012/7/data.xml"
+      ]
+    },
+    "PECR": {
+      "name": "PECR",
+      "document_count": 1,
+      "total_obligations": 45,
+      "urls": [
+        "https://www.legislation.gov.uk/ukpga/2021/31/data.xml"
+      ]
+    },
+    "Economic Crime Act": {
+      "name": "Economic Crime Act",
+      "document_count": 1,
+      "total_obligations": 29,
+      "urls": [
+        "https://www.legislation.gov.uk/ukpga/2022/46/data.xml"
+      ]
+    }
+  }
+}

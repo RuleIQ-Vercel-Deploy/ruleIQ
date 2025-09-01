@@ -5,6 +5,7 @@ AI Policy Generation schemas for API validation.
 from typing import Dict, List, Optional, Any
 from pydantic import BaseModel, Field, validator
 from enum import Enum
+from datetime import datetime
 
 
 class PolicyType(str, Enum):
@@ -180,3 +181,39 @@ class PolicyGenerationMetrics(BaseModel):
 
     cost_savings_percentage: float = Field(ge=0.0, le=100.0, default=0.0)
     monthly_cost_trend: List[float] = Field(default_factory=list)
+
+
+# Streaming Response Models
+class PolicyStreamingChunk(BaseModel):
+    """Individual chunk of streaming policy generation data."""
+    
+    chunk_id: str = Field(..., description="Unique identifier for this chunk")
+    content: str = Field(..., description="Text content of this chunk")
+    chunk_type: str = Field(
+        default="content", 
+        description="Type of chunk: content, metadata, section_header, complete, error"
+    )
+    section_name: Optional[str] = Field(
+        None, 
+        description="Name of the policy section being generated"
+    )
+    timestamp: str = Field(default_factory=lambda: datetime.utcnow().isoformat())
+    progress: Optional[float] = Field(
+        None, 
+        ge=0.0, 
+        le=1.0, 
+        description="Progress percentage (0.0 to 1.0)"
+    )
+
+
+class PolicyStreamingMetadata(BaseModel):
+    """Metadata for streaming policy generation response."""
+    
+    session_id: str = Field(..., description="Unique session identifier")
+    policy_type: PolicyType = Field(..., description="Type of policy being generated")
+    framework_id: str = Field(..., description="Framework ID for the policy")
+    organization_name: str = Field(..., description="Organization name")
+    started_at: str = Field(default_factory=lambda: datetime.utcnow().isoformat())
+    stream_type: str = Field(default="policy_generation", description="Type of stream")
+    estimated_sections: int = Field(default=5, description="Estimated number of sections")
+    provider: str = Field(default="google", description="AI provider being used")

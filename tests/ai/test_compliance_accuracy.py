@@ -32,14 +32,12 @@ class TestComplianceAccuracy:
     @pytest.mark.asyncio
     async def test_gdpr_basic_questions_accuracy(
         self,
-        async_db_session,
+        db_session,
         mock_ai_client,
         gdpr_golden_dataset,
-        async_sample_user,
-        async_sample_business_profile,
     ):
         """Test AI accuracy on basic GDPR questions"""
-        assistant = ComplianceAssistant(async_db_session)
+        assistant = ComplianceAssistant(db_session)
 
         basic_questions = [q for q in gdpr_golden_dataset if q["difficulty"] == "basic"]
         correct_answers = 0
@@ -62,9 +60,9 @@ class TestComplianceAccuracy:
 
                 response, metadata = await assistant.process_message(
                     conversation_id=uuid4(),
-                    user=async_sample_user,
+                    user=None,
                     message=question_data["question"],
-                    business_profile_id=async_sample_business_profile.id,
+                    business_profile_id=uuid4(),
                 )
 
                 # Check if response contains expected keywords
@@ -80,14 +78,13 @@ class TestComplianceAccuracy:
     @pytest.mark.asyncio
     async def test_gdpr_intermediate_questions_accuracy(
         self,
-        async_db_session,
+        db_session,
         mock_ai_client,
         gdpr_golden_dataset,
-        async_sample_user,
-        async_sample_business_profile,
+
     ):
         """Test AI accuracy on intermediate GDPR questions"""
-        assistant = ComplianceAssistant(async_db_session)
+        assistant = ComplianceAssistant(db_session)
 
         intermediate_questions = [
             q for q in gdpr_golden_dataset if q["difficulty"] == "intermediate"
@@ -111,9 +108,9 @@ class TestComplianceAccuracy:
 
                 response, metadata = await assistant.process_message(
                     conversation_id=uuid4(),
-                    user=async_sample_user,
+                    user=None,
                     message=question_data["question"],
-                    business_profile_id=async_sample_business_profile.id,
+                    business_profile_id=uuid4(),
                 )
 
                 if self._validate_response_accuracy(response, question_data):
@@ -128,14 +125,13 @@ class TestComplianceAccuracy:
     @pytest.mark.asyncio
     async def test_gdpr_advanced_questions_accuracy(
         self,
-        async_db_session,
+        db_session,
         mock_ai_client,
         gdpr_golden_dataset,
-        async_sample_user,
-        async_sample_business_profile,
+
     ):
         """Test AI accuracy on advanced GDPR questions"""
-        assistant = ComplianceAssistant(async_db_session)
+        assistant = ComplianceAssistant(db_session)
 
         advanced_questions = [q for q in gdpr_golden_dataset if q["difficulty"] == "advanced"]
         correct_answers = 0
@@ -157,9 +153,9 @@ class TestComplianceAccuracy:
 
                 response, metadata = await assistant.process_message(
                     conversation_id=uuid4(),
-                    user=async_sample_user,
+                    user=None,
                     message=question_data["question"],
-                    business_profile_id=async_sample_business_profile.id,
+                    business_profile_id=uuid4(),
                 )
 
                 if self._validate_response_accuracy(response, question_data):
@@ -174,14 +170,13 @@ class TestComplianceAccuracy:
     @pytest.mark.asyncio
     async def test_source_citation_accuracy(
         self,
-        async_db_session,
+        db_session,
         mock_ai_client,
         gdpr_golden_dataset,
-        async_sample_user,
-        async_sample_business_profile,
+
     ):
         """Test that AI responses include accurate source citations"""
-        assistant = ComplianceAssistant(async_db_session)
+        assistant = ComplianceAssistant(db_session)
 
         questions_with_sources = [q for q in gdpr_golden_dataset if "source" in q]
         correct_citations = 0
@@ -208,9 +203,9 @@ class TestComplianceAccuracy:
 
                 response, metadata = await assistant.process_message(
                     conversation_id=uuid4(),
-                    user=async_sample_user,
+                    user=None,
                     message=question_data["question"],
-                    business_profile_id=async_sample_business_profile.id,
+                    business_profile_id=uuid4(),
                 )
 
                 # Check if response includes correct source citation
@@ -227,14 +222,13 @@ class TestComplianceAccuracy:
     @pytest.mark.asyncio
     async def test_response_completeness(
         self,
-        async_db_session,
+        db_session,
         mock_ai_client,
         gdpr_golden_dataset,
-        async_sample_user,
-        async_sample_business_profile,
+
     ):
         """Test that AI responses are comprehensive and complete"""
-        assistant = ComplianceAssistant(async_db_session)
+        assistant = ComplianceAssistant(db_session)
 
         for question_data in gdpr_golden_dataset[:5]:  # Test subset for performance
             mock_response = self._generate_comprehensive_response(question_data)
@@ -252,9 +246,9 @@ class TestComplianceAccuracy:
 
                 response, metadata = await assistant.process_message(
                     conversation_id=uuid4(),
-                    user=async_sample_user,
+                    user=None,
                     message=question_data["question"],
-                    business_profile_id=async_sample_business_profile.id,
+                    business_profile_id=uuid4(),
                 )
 
                 # Check response completeness criteria
@@ -267,14 +261,13 @@ class TestComplianceAccuracy:
     @pytest.mark.asyncio
     async def test_framework_specific_terminology(
         self,
-        async_db_session,
+        db_session,
         mock_ai_client,
         gdpr_golden_dataset,
-        async_sample_user,
-        async_sample_business_profile,
+
     ):
         """Test that AI uses correct framework-specific terminology"""
-        assistant = ComplianceAssistant(async_db_session)
+        assistant = ComplianceAssistant(db_session)
 
         gdpr_terminology = [
             "data subject",
@@ -302,9 +295,9 @@ class TestComplianceAccuracy:
 
                 response, metadata = await assistant.process_message(
                     conversation_id=uuid4(),
-                    user=async_sample_user,
+                    user=None,
                     message=question_data["question"],
-                    business_profile_id=async_sample_business_profile.id,
+                    business_profile_id=uuid4(),
                 )
 
                 # Check that response uses appropriate GDPR terminology
@@ -324,14 +317,13 @@ class TestComplianceAccuracy:
     @pytest.mark.asyncio
     async def test_consistency_across_similar_questions(
         self,
-        async_db_session,
+        db_session,
         mock_ai_client,
         gdpr_golden_dataset,
-        async_sample_user,
-        async_sample_business_profile,
+
     ):
         """Test that AI provides consistent answers to similar questions"""
-        assistant = ComplianceAssistant(async_db_session)
+        assistant = ComplianceAssistant(db_session)
 
         # Group questions by category
         categories = {}
@@ -363,9 +355,9 @@ class TestComplianceAccuracy:
 
                     response, metadata = await assistant.process_message(
                         conversation_id=uuid4(),
-                        user=async_sample_user,
+                        user=None,
                         message=question_data["question"],
-                        business_profile_id=async_sample_business_profile.id,
+                        business_profile_id=uuid4(),
                     )
                     responses.append(response)
 
@@ -377,14 +369,13 @@ class TestComplianceAccuracy:
     @pytest.mark.asyncio
     async def test_regulatory_compliance_alignment(
         self,
-        async_db_session,
+        db_session,
         mock_ai_client,
         gdpr_golden_dataset,
-        async_sample_user,
-        async_sample_business_profile,
+
     ):
         """Test that AI responses align with current regulatory requirements"""
-        assistant = ComplianceAssistant(async_db_session)
+        assistant = ComplianceAssistant(db_session)
 
         # Test that responses don't contradict regulatory requirements
         regulatory_violations = [
@@ -411,9 +402,9 @@ class TestComplianceAccuracy:
 
                 response, metadata = await assistant.process_message(
                     conversation_id=uuid4(),
-                    user=async_sample_user,
+                    user=None,
                     message=question_data["question"],
-                    business_profile_id=async_sample_business_profile.id,
+                    business_profile_id=uuid4(),
                 )
 
                 # Check that response doesn't contain regulatory violations
@@ -562,10 +553,10 @@ class TestFrameworkCoverage:
 
     @pytest.mark.asyncio
     async def test_framework_identification_accuracy(
-        self, async_db_session, mock_ai_client, async_sample_user, async_sample_business_profile
+        self, db_session, mock_ai_client
     ):
         """Test AI accurately identifies relevant compliance frameworks"""
-        assistant = ComplianceAssistant(async_db_session)
+        assistant = ComplianceAssistant(db_session)
 
         framework_test_cases = [
             {
@@ -605,9 +596,9 @@ class TestFrameworkCoverage:
 
                 response, metadata = await assistant.process_message(
                     conversation_id=uuid4(),
-                    user=async_sample_user,
+                    user=None,
                     message=test_case["question"],
-                    business_profile_id=async_sample_business_profile.id,
+                    business_profile_id=uuid4(),
                 )
 
                 # Verify correct frameworks are identified
@@ -618,10 +609,10 @@ class TestFrameworkCoverage:
 
     @pytest.mark.asyncio
     async def test_cross_framework_guidance(
-        self, async_db_session, mock_ai_client, async_sample_user, async_sample_business_profile
+        self, db_session, mock_ai_client
     ):
         """Test AI provides guidance when multiple frameworks apply"""
-        assistant = ComplianceAssistant(async_db_session)
+        assistant = ComplianceAssistant(db_session)
 
         multi_framework_question = (
             "We're a fintech company processing EU customer data. What compliance frameworks apply?"
@@ -652,9 +643,9 @@ class TestFrameworkCoverage:
 
             response, metadata = await assistant.process_message(
                 conversation_id=uuid4(),
-                user=async_sample_user,
+                user=None,
                 message=multi_framework_question,
-                business_profile_id=async_sample_business_profile.id,
+                business_profile_id=uuid4(),
             )
 
             # Check that multiple frameworks are mentioned

@@ -6,14 +6,13 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import Session
 
 from api.dependencies.database import get_async_db
-from api.dependencies.rbac_auth import (
-    UserWithRoles,
-    require_permission
-)
-from services.data_access_service import DataAccessService
+from api.dependencies.auth import get_current_user, require_auth
+from services.data_access import DataAccess
+from services.security.audit_logging import AuditLoggingService as AuditLogger
 from database.db_setup import get_db
 from api.schemas.models import BusinessProfileCreate, BusinessProfileResponse, BusinessProfileUpdate
 from database.business_profile import BusinessProfile
+from database.user import User
 from utils.input_validation import validate_business_profile_update, ValidationError
 
 router = APIRouter()
@@ -21,9 +20,10 @@ router = APIRouter()
 # Field mapping no longer needed - column names match API field names after migration
 
 @router.post("/", response_model=BusinessProfileResponse, status_code=status.HTTP_201_CREATED)
+@require_auth
 async def create_business_profile(
     profile: BusinessProfileCreate,
-    current_user: UserWithRoles = Depends(require_permission("user_create")),
+    current_user = Depends(get_current_user),
     db: AsyncSession = Depends(get_async_db),
 ):
     # Check if profile already exists
@@ -77,8 +77,9 @@ async def create_business_profile(
         return db_profile
 
 @router.get("/", response_model=BusinessProfileResponse)
+@require_auth
 async def get_business_profile(
-    current_user: UserWithRoles = Depends(require_permission("user_list")),
+    current_user = Depends(get_current_user),
     db: AsyncSession = Depends(get_async_db)
 ):
     stmt = select(BusinessProfile).where(BusinessProfile.user_id == current_user.id)
@@ -91,40 +92,38 @@ async def get_business_profile(
     return profile
 
 @router.get("/{id}", response_model=BusinessProfileResponse)
+@require_auth
 async def get_business_profile_by_id(
     id: UUID,
-    current_user: UserWithRoles = Depends(require_permission("user_list")),
+    current_user = Depends(get_current_user),
     db: AsyncSession = Depends(get_async_db),
     sync_db: Session = Depends(get_db),
 ):
-    """Get a specific business profile by ID - access controlled by RBAC data visibility."""
-    # First get the profile to check ownership
-    stmt = select(BusinessProfile).where(BusinessProfile.id == id)
-    result = await db.execute(stmt)
-    profile = result.scalars().first()
-
-    if not profile:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="Business profile not found"
-        )
-
-    # Check data access permissions
-    data_access_service = DataAccessService(sync_db)
-    if not data_access_service.can_access_business_profile(
-        current_user, id, profile.user_id
-    ):
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Access denied: Insufficient permissions to view this profile"
-        )
-
+    """Get a specific business profile by ID - ownership check for SMBs."""
+    # Use our simple data access layer for ownership check
+    profile = await DataAccess.ensure_owner_async(
+        db, BusinessProfile, id, current_user, "business profile"
+    )
+    
+    # Log access for compliance
+    audit_service = AuditLogger(sync_db)
+    await audit_service.log_data_access(
+        user_id=str(current_user.id),
+        resource="business_profile",
+        resource_id=str(id),
+        action="read",
+        db=sync_db
+    )
+    
     return profile
 
 @router.put("/", response_model=BusinessProfileResponse)
+@require_auth
 async def update_business_profile(
     profile_update: BusinessProfileUpdate,
-    current_user: UserWithRoles = Depends(require_permission("user_update")),
+    current_user = Depends(get_current_user),
     db: AsyncSession = Depends(get_async_db),
+    sync_db: Session = Depends(get_db),
 ):
     stmt = select(BusinessProfile).where(BusinessProfile.user_id == current_user.id)
     result = await db.execute(stmt)
@@ -164,33 +163,19 @@ async def update_business_profile(
     return profile
 
 @router.put("/{id}", response_model=BusinessProfileResponse)
+@require_auth
 async def update_business_profile_by_id(
     profile_id: UUID,
     profile_update: BusinessProfileUpdate,
-    current_user: UserWithRoles = Depends(require_permission("user_update")),
+    current_user = Depends(get_current_user),
     db: AsyncSession = Depends(get_async_db),
     sync_db: Session = Depends(get_db),
 ):
-    """Update a specific business profile by ID - access controlled by RBAC data visibility."""
-    # First get the profile to check ownership
-    stmt = select(BusinessProfile).where(BusinessProfile.id == profile_id)
-    result = await db.execute(stmt)
-    profile = result.scalars().first()
-
-    if not profile:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="Business profile not found"
-        )
-
-    # Check data access permissions
-    data_access_service = DataAccessService(sync_db)
-    if not data_access_service.can_access_business_profile(
-        current_user, profile_id, profile.user_id
-    ):
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Access denied: Insufficient permissions to update this profile"
-        )
+    """Update a specific business profile by ID - SMB ownership check."""
+    # Ensure ownership with our simple model
+    profile = await DataAccess.ensure_owner_async(
+        db, BusinessProfile, profile_id, current_user, "business profile"
+    )
 
     update_data = profile_update.model_dump(exclude_unset=True)
     # Remove fields that are not in the BusinessProfile model
@@ -215,6 +200,17 @@ async def update_business_profile_by_id(
         if key in ALLOWED_FIELDS:
             setattr(profile, key, value)
 
+    # Log the update for compliance
+    audit_service = AuditLogger(sync_db)
+    await audit_service.log_data_access(
+        user_id=str(current_user.id),
+        resource="business_profile",
+        resource_id=str(profile_id),
+        action="update",
+        metadata={"changed_fields": list(validated_data.keys())},
+        db=sync_db
+    )
+
     # The updated_at field is automatically handled by the database
     await db.commit()
     await db.refresh(profile)
@@ -222,55 +218,44 @@ async def update_business_profile_by_id(
     return profile
 
 @router.delete("/{id}")
+@require_auth
 async def delete_business_profile_by_id(
     profile_id: UUID,
-    current_user: UserWithRoles = Depends(require_permission("user_delete")),
+    current_user = Depends(get_current_user),
     db: AsyncSession = Depends(get_async_db),
     sync_db: Session = Depends(get_db),
 ):
-    """Delete a specific business profile by ID - access controlled by RBAC data visibility."""
-    # First get the profile to check ownership
-    stmt = select(BusinessProfile).where(BusinessProfile.id == profile_id)
-    result = await db.execute(stmt)
-    profile = result.scalars().first()
-
-    if not profile:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="Business profile not found"
-        )
-
-    # Check data access permissions
-    data_access_service = DataAccessService(sync_db)
-    if not data_access_service.can_access_business_profile(
-        current_user, profile_id, profile.user_id
-    ):
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Access denied: Insufficient permissions to delete this profile"
-        )
-
-    await db.delete(profile)
-    await db.commit()
+    """Delete a specific business profile by ID - SMB ownership check."""
+    # Use our simple delete_owned method
+    await DataAccess.delete_owned_async(
+        db, BusinessProfile, profile_id, current_user, "business profile"
+    )
+    
+    # Log deletion for compliance
+    audit_service = AuditLogger(sync_db)
+    await audit_service.log_data_access(
+        user_id=str(current_user.id),
+        resource="business_profile",
+        resource_id=str(profile_id),
+        action="delete",
+        db=sync_db
+    )
 
     return {"message": "Business profile deleted successfully"}
 
 @router.get("/list", summary="List all business profiles")
+@require_auth
 async def list_business_profiles(
     limit: int = 10,
     offset: int = 0,
-    current_user: UserWithRoles = Depends(require_permission("user_list")),
+    current_user = Depends(get_current_user),
     db: AsyncSession = Depends(get_async_db),
-    sync_db: Session = Depends(get_db),
 ):
-    """List all business profiles accessible to the current user."""
-    # Get profiles based on user's data visibility permissions
-    data_access_service = DataAccessService(sync_db)
-    
-    # For now, return user's own profile(s)
-    # In a real implementation, this would check organization membership
-    stmt = select(BusinessProfile).where(BusinessProfile.user_id == current_user.id)
-    result = await db.execute(stmt)
-    profiles = result.scalars().all()
+    """List all business profiles owned by the current user (SMB model)."""
+    # For SMBs, users only see their own profiles
+    profiles = await DataAccess.list_owned_async(
+        db, BusinessProfile, current_user, limit, offset
+    )
     
     return {
         "profiles": [
@@ -290,32 +275,28 @@ async def list_business_profiles(
     }
 
 @router.get("/{id}/compliance-status", summary="Get compliance status for profile")
+@require_auth
 async def get_profile_compliance_status(
     profile_id: UUID,
-    current_user: UserWithRoles = Depends(require_permission("user_list")),
+    current_user = Depends(get_current_user),
     db: AsyncSession = Depends(get_async_db),
     sync_db: Session = Depends(get_db),
 ):
     """Get compliance status for a specific business profile."""
-    # First get the profile to check ownership
-    stmt = select(BusinessProfile).where(BusinessProfile.id == profile_id)
-    result = await db.execute(stmt)
-    profile = result.scalars().first()
+    # Ensure ownership
+    profile = await DataAccess.ensure_owner_async(
+        db, BusinessProfile, profile_id, current_user, "business profile"
+    )
 
-    if not profile:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="Business profile not found"
-        )
-
-    # Check data access permissions
-    data_access_service = DataAccessService(sync_db)
-    if not data_access_service.can_access_business_profile(
-        current_user, profile_id, profile.user_id
-    ):
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Access denied: Insufficient permissions to view this profile"
-        )
+    # Log access for compliance
+    audit_service = AuditLogger(sync_db)
+    await audit_service.log_data_access(
+        user_id=str(current_user.id),
+        resource="compliance_status",
+        resource_id=str(profile_id),
+        action="read",
+        db=sync_db
+    )
 
     # Placeholder implementation
     return {
@@ -340,34 +321,20 @@ async def get_profile_compliance_status(
     }
 
 @router.get("/{id}/team", summary="Get team members for profile")
+@require_auth
 async def get_profile_team(
     profile_id: UUID,
-    current_user: UserWithRoles = Depends(require_permission("user_list")),
+    current_user = Depends(get_current_user),
     db: AsyncSession = Depends(get_async_db),
-    sync_db: Session = Depends(get_db),
 ):
-    """Get team members associated with a business profile."""
-    # First get the profile to check ownership
-    stmt = select(BusinessProfile).where(BusinessProfile.id == profile_id)
-    result = await db.execute(stmt)
-    profile = result.scalars().first()
+    """Get team members associated with a business profile (SMB: typically 1-5 users)."""
+    # Ensure ownership
+    profile = await DataAccess.ensure_owner_async(
+        db, BusinessProfile, profile_id, current_user, "business profile"
+    )
 
-    if not profile:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="Business profile not found"
-        )
-
-    # Check data access permissions
-    data_access_service = DataAccessService(sync_db)
-    if not data_access_service.can_access_business_profile(
-        current_user, profile_id, profile.user_id
-    ):
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Access denied: Insufficient permissions to view this profile"
-        )
-
-    # Placeholder implementation
+    # For SMBs, team is typically just the owner
+    # Future: can add simple team invites without complex roles
     return {
         "profile_id": str(profile_id),
         "team_members": [
@@ -384,35 +351,32 @@ async def get_profile_team(
     }
 
 @router.post("/{id}/invite", summary="Invite team member to profile")
+@require_auth
 async def invite_team_member(
     profile_id: UUID,
     invite_data: dict,
-    current_user: UserWithRoles = Depends(require_permission("user_create")),
+    current_user = Depends(get_current_user),
     db: AsyncSession = Depends(get_async_db),
     sync_db: Session = Depends(get_db),
 ):
-    """Invite a team member to a business profile."""
-    # First get the profile to check ownership
-    stmt = select(BusinessProfile).where(BusinessProfile.id == profile_id)
-    result = await db.execute(stmt)
-    profile = result.scalars().first()
+    """Invite a team member to a business profile (future feature for SMBs)."""
+    # Ensure ownership
+    profile = await DataAccess.ensure_owner_async(
+        db, BusinessProfile, profile_id, current_user, "business profile"
+    )
 
-    if not profile:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="Business profile not found"
-        )
+    # Log the invite attempt
+    audit_service = AuditLogger(sync_db)
+    await audit_service.log_data_access(
+        user_id=str(current_user.id),
+        resource="team_invite",
+        resource_id=str(profile_id),
+        action="create",
+        metadata={"invited_email": invite_data.get("email", "")},
+        db=sync_db
+    )
 
-    # Check data access permissions
-    data_access_service = DataAccessService(sync_db)
-    if not data_access_service.can_access_business_profile(
-        current_user, profile_id, profile.user_id
-    ):
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Access denied: Insufficient permissions to invite to this profile"
-        )
-
-    # Placeholder implementation
+    # Placeholder implementation - future feature for SMB team collaboration
     email = invite_data.get("email", "")
     role = invite_data.get("role", "viewer")
     
@@ -429,38 +393,25 @@ async def invite_team_member(
         "invited_by": current_user.email,
         "invited_at": datetime.utcnow().isoformat(),
         "expires_at": "2024-01-22T00:00:00Z",
+        "note": "Team invites coming soon for SMB collaboration"
     }
 
 @router.get("/{id}/activity", summary="Get activity log for profile")
+@require_auth
 async def get_profile_activity(
     profile_id: UUID,
     limit: int = 20,
-    current_user: UserWithRoles = Depends(require_permission("user_list")),
+    current_user = Depends(get_current_user),
     db: AsyncSession = Depends(get_async_db),
     sync_db: Session = Depends(get_db),
 ):
     """Get activity log for a business profile."""
-    # First get the profile to check ownership
-    stmt = select(BusinessProfile).where(BusinessProfile.id == profile_id)
-    result = await db.execute(stmt)
-    profile = result.scalars().first()
+    # Ensure ownership
+    profile = await DataAccess.ensure_owner_async(
+        db, BusinessProfile, profile_id, current_user, "business profile"
+    )
 
-    if not profile:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="Business profile not found"
-        )
-
-    # Check data access permissions
-    data_access_service = DataAccessService(sync_db)
-    if not data_access_service.can_access_business_profile(
-        current_user, profile_id, profile.user_id
-    ):
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Access denied: Insufficient permissions to view this profile"
-        )
-
-    # Placeholder implementation
+    # Future: pull from actual audit log
     from datetime import datetime
     
     return {
@@ -493,33 +444,19 @@ async def get_profile_activity(
     }
 
 @router.patch("/{id}", response_model=BusinessProfileResponse)
+@require_auth
 async def patch_business_profile(
     profile_id: UUID,
     profile_update: BusinessProfileUpdate,
-    current_user: UserWithRoles = Depends(require_permission("user_update")),
+    current_user = Depends(get_current_user),
     db: AsyncSession = Depends(get_async_db),
     sync_db: Session = Depends(get_db),
 ):
-    """Update a specific business profile by ID with partial data - access controlled by RBAC."""
-    # First get the profile to check ownership
-    stmt = select(BusinessProfile).where(BusinessProfile.id == profile_id)
-    result = await db.execute(stmt)
-    profile = result.scalars().first()
-
-    if not profile:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="Business profile not found"
-        )
-
-    # Check data access permissions
-    data_access_service = DataAccessService(sync_db)
-    if not data_access_service.can_access_business_profile(
-        current_user, profile_id, profile.user_id
-    ):
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Access denied: Insufficient permissions to update this profile"
-        )
+    """Update a specific business profile by ID with partial data - SMB ownership check."""
+    # Ensure ownership
+    profile = await DataAccess.ensure_owner_async(
+        db, BusinessProfile, profile_id, current_user, "business profile"
+    )
 
     update_data = profile_update.model_dump(exclude_unset=True)
     # Remove fields that are not in the BusinessProfile model
@@ -556,6 +493,17 @@ async def patch_business_profile(
         if key in ALLOWED_FIELDS:
             setattr(profile, key, value)
 
+    # Log the patch for compliance
+    audit_service = AuditLogger(sync_db)
+    await audit_service.log_data_access(
+        user_id=str(current_user.id),
+        resource="business_profile",
+        resource_id=str(profile_id),
+        action="update",
+        metadata={"changed_fields": list(validated_data.keys())},
+        db=sync_db
+    )
+
     # The updated_at field is automatically handled by the database
     await db.commit()
     await db.refresh(profile)
@@ -563,15 +511,32 @@ async def patch_business_profile(
     return profile
 
 @router.get("/{id}/compliance", summary="Get compliance status for business profile")
+@require_auth
 async def get_profile_compliance(
-    id: str,
-    current_user: UserWithRoles = Depends(require_permission("user_view")),
+    id: UUID,
+    current_user = Depends(get_current_user),
     db: AsyncSession = Depends(get_async_db),
+    sync_db: Session = Depends(get_db),
 ):
     """Get compliance status for a specific business profile."""
+    # Ensure ownership
+    profile = await DataAccess.ensure_owner_async(
+        db, BusinessProfile, id, current_user, "business profile"
+    )
+    
+    # Log access for compliance
+    audit_service = AuditLogger(sync_db)
+    await audit_service.log_data_access(
+        user_id=str(current_user.id),
+        resource="compliance_report",
+        resource_id=str(id),
+        action="view",
+        db=sync_db
+    )
+    
     # Placeholder implementation
     return {
-        "profile_id": profileId,
+        "profile_id": str(id),
         "compliance_status": {
             "gdpr": {
                 "score": 75,

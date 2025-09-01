@@ -396,3 +396,6 @@ def get_engine_info() -> Dict[str, Any]:
 _get_configured_database_urls = DatabaseConfig.get_database_urls
 _init_sync_db = _init_sync_db  # Keep for backward compatibility
 _init_async_db = _init_async_db  # Keep for backward compatibility
+
+# Export async session maker for use in security services
+async_session_maker = _ASYNC_SESSION_LOCAL

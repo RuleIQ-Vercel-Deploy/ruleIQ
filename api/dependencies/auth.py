@@ -28,7 +28,7 @@ from config.settings import settings
 def get_jwt_secret_key() -> str:
     """Get JWT secret key with production enforcement."""
     # In production, require Doppler or explicit configuration
-    if settings.is_production():
+    if settings.is_production:
         secret_key = os.getenv("JWT_SECRET_KEY")
         doppler_token = os.getenv("DOPPLER_TOKEN")
         
@@ -36,8 +36,7 @@ def get_jwt_secret_key() -> str:
             error_msg = (
                 "CRITICAL: Production environment requires proper secret configuration. "
                 "Either set JWT_SECRET_KEY environment variable or configure Doppler: "
-                "  - Set DOPPLER_TOKEN environment variable"
-"
+                "  - Set DOPPLER_TOKEN environment variable "
                 "  - Or use: doppler run -- python main.py"
             )
             logger.error(error_msg)

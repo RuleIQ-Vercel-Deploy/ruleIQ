@@ -100,6 +100,76 @@ def postgres_connection(postgres_test_url):
         pytest.skip(f"PostgreSQL connection failed: {e}")
 
 
+@pytest.fixture
+def db_session():
+    """
+    Provide a SQLAlchemy session for database tests.
+    Creates a fresh database session for each test and rolls back changes after.
+    """
+    # Get database URL from environment
+    database_url = os.getenv("DATABASE_URL") or os.getenv("TEST_DATABASE_URL")
+    
+    # Skip if no database is available
+    if not database_url:
+        pytest.skip("No database URL configured")
+    
+    try:
+        # Import here to avoid circular imports
+        from database import Base
+        
+        # Convert to SQLAlchemy format
+        sqlalchemy_url = database_url
+        
+        # Handle asyncpg URLs - convert to psycopg2
+        if "+asyncpg" in sqlalchemy_url:
+            sqlalchemy_url = sqlalchemy_url.replace("+asyncpg", "+psycopg2")
+        elif "postgresql://" in sqlalchemy_url and "+" not in sqlalchemy_url:
+            sqlalchemy_url = sqlalchemy_url.replace("postgresql://", "postgresql+psycopg2://")
+        
+        # Remove SSL parameters that cause issues with psycopg2
+        if "sslmode=" in sqlalchemy_url:
+            from urllib.parse import urlparse, urlunparse, parse_qs, urlencode
+            parts = urlparse(sqlalchemy_url)
+            query_params = parse_qs(parts.query)
+            query_params.pop("sslmode", None)
+            query_params.pop("channel_binding", None)
+            new_query = urlencode(query_params, doseq=True)
+            sqlalchemy_url = urlunparse(parts._replace(query=new_query))
+        
+        # Add SSL args if needed
+        connect_args = {}
+        if "azure" in sqlalchemy_url or "neon" in sqlalchemy_url:
+            connect_args = {"sslmode": "require"}
+        
+        engine = create_engine(sqlalchemy_url, connect_args=connect_args)
+        
+        # Create all tables
+        Base.metadata.create_all(bind=engine)
+        
+        # Create session factory
+        SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+        
+        # Create session for test
+        session = SessionLocal()
+        
+        # Start a transaction that will be rolled back
+        connection = engine.connect()
+        transaction = connection.begin()
+        
+        # Configure the session to use our connection
+        session.bind = connection
+        
+        yield session
+        
+        # Rollback the transaction
+        session.close()
+        transaction.rollback()
+        connection.close()
+        
+    except Exception as e:
+        pytest.skip(f"Database session creation failed: {e}")
+
+
 @contextmanager
 def temporary_env_var(key: str, value: str):
     """
@@ -143,85 +213,6 @@ def clean_test_db(postgres_connection):
         postgres_connection.commit()
 
 
-@pytest.fixture
-def db_session():
-    """
-    Provide a SQLAlchemy database session for testing.
-    This fixture creates a clean session for each test and ensures proper cleanup.
-    """
-    # Get database URL from environment or use test default
-    # IMPORTANT: Using port 5433 for test database to avoid conflicts
-    # Priority: TEST_DATABASE_URL > DATABASE_URL > default
-    database_url = os.getenv(
-        "TEST_DATABASE_URL",
-        os.getenv(
-            "DATABASE_URL",
-            "postgresql://postgres:postgres@localhost:5433/compliance_test"
-        )
-    )
-    
-    # Skip if test database not reachable
-    if "localhost:5433" not in database_url and not os.getenv("TEST_DATABASE_URL"):
-        pytest.skip("PostgreSQL test database not configured")
-    
-    # IMPORTANT: Override DATABASE_URL for the database module
-    # This ensures the database module uses our test database
-    original_db_url = os.environ.get("DATABASE_URL")
-    os.environ["DATABASE_URL"] = database_url
-    print(f"DEBUG: Setting DATABASE_URL to: {database_url}")
-    print(f"DEBUG: Original DATABASE_URL was: {original_db_url}")
-    
-    try:
-        # Create engine
-        engine = create_engine(database_url)
-        
-        # Create tables if they don't exist
-        from database import Base
-        Base.metadata.create_all(bind=engine)
-        
-        # Create session factory
-        SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-        
-        # Create session for test
-        session = SessionLocal()
-        
-        # Track created objects for cleanup
-        created_objects = []
-        
-        # Override session.add to track objects
-        original_add = session.add
-        def tracking_add(instance):
-            created_objects.append(instance)
-            return original_add(instance)
-        session.add = tracking_add
-        
-        yield session
-        
-        # Cleanup: Delete all objects created in this test
-        session.rollback()  # Roll back any uncommitted changes
-        
-        # Delete tracked objects
-        for obj in reversed(created_objects):
-            try:
-                if obj in session:
-                    session.delete(obj)
-            except:
-                pass  # Object might already be deleted
-        
-        try:
-            session.commit()  # Commit deletions
-        except:
-            session.rollback()  # If deletion fails, rollback
-        
-        session.close()
-        
-    finally:
-        # Restore original DATABASE_URL if it existed
-        if original_db_url is not None:
-            os.environ["DATABASE_URL"] = original_db_url
-        elif "DATABASE_URL" in os.environ:
-            del os.environ["DATABASE_URL"]
-
 
 # Mark slow tests
 def pytest_configure(config):
@@ -244,3 +235,52 @@ def assert_api_response_security(response):
     assert response.headers["X-Content-Type-Options"] == "nosniff"
     # Additional security checks can be added here
     pass
+
+
+@pytest.fixture
+def client():
+    """Create a test client for FastAPI application."""
+    from fastapi.testclient import TestClient
+    from main import app
+    
+    with TestClient(app) as test_client:
+        yield test_client
+
+
+@pytest.fixture
+def authenticated_headers():
+    """Create authenticated headers for testing."""
+    # Mock JWT token for testing
+    return {
+        "Authorization": "Bearer test_token_12345",
+        "Content-Type": "application/json"
+    }
+
+
+@pytest.fixture
+def sample_business_profile():
+    """Create a sample business profile for testing."""
+    from unittest.mock import MagicMock
+    
+    profile = MagicMock()
+    profile.id = "550e8400-e29b-41d4-a716-446655440000"
+    profile.name = "Test Business"
+    profile.industry = "Technology"
+    profile.size = "Small"
+    profile.location = "US"
+    
+    return profile
+
+
+@pytest.fixture
+def sample_user():
+    """Create a sample user for testing."""
+    from unittest.mock import MagicMock
+    
+    user = MagicMock()
+    user.id = "123e4567-e89b-12d3-a456-426614174000"
+    user.email = "test@example.com"
+    user.name = "Test User"
+    user.is_active = True
+    
+    return user

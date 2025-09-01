@@ -19,6 +19,13 @@ from api.schemas.ai_policy import (
 from services.ai.policy_generator import PolicyGenerator, TemplateProcessor
 from api.dependencies.auth import get_current_active_user
 from api.middleware.rate_limiter import RateLimited
+from services.rate_limiting import RateLimitService
+from database.user import User
+from sqlalchemy.ext.asyncio import AsyncSession
+from database.db_setup import get_async_db
+import logging
+
+logger = logging.getLogger(__name__)
 
 router = APIRouter(tags=["AI Policy Generation"])
 
@@ -34,14 +41,18 @@ router = APIRouter(tags=["AI Policy Generation"])
 async def generate_policy(
     request: PolicyGenerationRequest,
     background_tasks: BackgroundTasks,
-    db: Session = Depends(get_db)
+    current_user: User = Depends(get_current_active_user),
+    db: Session = Depends(get_db),
+    async_db: AsyncSession = Depends(get_async_db)
 ):
     """
     Generate compliance policy using AI with dual provider fallback.
 
-    Requires authentication. Limited to 20 requests per minute per user.
+    Requires authentication. Limited to 20 requests per minute and 5 per day per user.
     Uses Google AI (primary) with OpenAI fallback for reliability.
     """
+    # Check daily rate limit
+    await RateLimitService.check_rate_limit(async_db, current_user, "ai_policy_generation")
     # Validate framework exists
     framework = db.query(ComplianceFramework)\
         .filter(ComplianceFramework.id == request.framework_id)\
@@ -66,6 +77,18 @@ async def generate_policy(
         # Generate policy
         result = generator.generate_policy(request, framework)
 
+        # Track usage for rate limiting
+        await RateLimitService.track_usage(
+            async_db,
+            current_user,
+            "ai_policy_generation",
+            metadata={
+                "framework_id": str(request.framework_id),
+                "framework_name": framework.name,
+                "provider": result.provider_used
+            }
+        )
+
         # Log metrics in background
         background_tasks.add_task(
             _log_generation_metrics,
@@ -82,6 +105,141 @@ async def generate_policy(
             detail=f"Policy generation failed: {str(e)}"
         )
 
+@router.post(
+    "/generate-policy/stream",
+    status_code=status.HTTP_200_OK,
+    dependencies=[
+        Depends(get_current_active_user),
+        Depends(RateLimited(requests=20, window=60))  # AI endpoint rate limiting
+    ]
+)
+async def generate_policy_stream(
+    request: PolicyGenerationRequest,
+    current_user: User = Depends(get_current_active_user),
+    db: Session = Depends(get_db),
+    async_db: AsyncSession = Depends(get_async_db)
+):
+    """
+    Stream AI policy generation in real-time using Server-Sent Events.
+    
+    Provides real-time streaming of policy sections as they are generated,
+    allowing for progressive display in the UI. Uses dual provider fallback
+    (Google AI primary, OpenAI secondary) for reliability.
+    
+    Returns:
+        StreamingResponse with text/event-stream content type
+    """
+    from fastapi.responses import StreamingResponse
+    from api.schemas.ai_policy import PolicyStreamingChunk, PolicyStreamingMetadata
+    import uuid
+
+    # Check daily rate limit
+    await RateLimitService.check_rate_limit(async_db, current_user, "ai_policy_generation")
+
+    # Validate framework exists
+    framework = db.query(ComplianceFramework)\
+        .filter(ComplianceFramework.id == request.framework_id)\
+        .first()
+
+    if not framework:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Framework not found: {request.framework_id}"
+        )
+
+    if not framework.is_active:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Framework is not active: {framework.name}"
+        )
+
+    async def generate_policy_stream_events():
+        """Generate SSE events for policy streaming."""
+        session_id = str(uuid.uuid4())
+
+        try:
+            # Send initial metadata
+            metadata = PolicyStreamingMetadata(
+                session_id=session_id,
+                policy_type=request.policy_type,
+                framework_id=str(request.framework_id),
+                organization_name=request.business_context.organization_name,
+                stream_type="policy_generation"
+            )
+
+            metadata_chunk = PolicyStreamingChunk(
+                chunk_id=f"{session_id}-metadata",
+                content=metadata.json(),
+                chunk_type="metadata"
+            )
+            yield f"data: {metadata_chunk.json()}\n\n"
+
+            # Initialize policy generator
+            generator = PolicyGenerator()
+
+            # Stream policy generation
+            chunk_count = 0
+            async for chunk_data in generator.generate_policy_stream(request, framework):
+                chunk_count += 1
+
+                if chunk_data["type"] == "content":
+                    chunk = PolicyStreamingChunk(
+                        chunk_id=f"{session_id}-{chunk_count}",
+                        content=chunk_data["content"],
+                        chunk_type="content",
+                        progress=chunk_data.get("progress")
+                    )
+                    yield f"data: {chunk.json()}\n\n"
+
+                elif chunk_data["type"] == "complete":
+                    # Track usage for rate limiting
+                    await RateLimitService.track_usage(
+                        async_db,
+                        current_user,
+                        "ai_policy_generation",
+                        metadata={
+                            "framework_id": str(request.framework_id),
+                            "framework_name": framework.name,
+                            "provider": chunk_data.get("provider", "unknown"),
+                            "streaming": True
+                        }
+                    )
+
+                    completion_chunk = PolicyStreamingChunk(
+                        chunk_id=f"{session_id}-complete",
+                        content="Policy generation completed successfully",
+                        chunk_type="complete",
+                        progress=1.0
+                    )
+                    yield f"data: {completion_chunk.json()}\n\n"
+
+                elif chunk_data["type"] == "error":
+                    error_chunk = PolicyStreamingChunk(
+                        chunk_id=f"{session_id}-error",
+                        content=chunk_data["error"],
+                        chunk_type="error"
+                    )
+                    yield f"data: {error_chunk.json()}\n\n"
+
+        except Exception as e:
+            logger.error(f"Error in streaming policy generation: {e}")
+            error_chunk = PolicyStreamingChunk(
+                chunk_id=f"{session_id}-error",
+                content=str(e),
+                chunk_type="error"
+            )
+            yield f"data: {error_chunk.json()}\n\n"
+
+    return StreamingResponse(
+        generate_policy_stream_events(),
+        media_type="text/event-stream",
+        headers={
+            "Cache-Control": "no-cache",
+            "Connection": "keep-alive",
+            "X-Accel-Buffering": "no",  # Disable nginx buffering
+        }
+    )
+
 @router.put(
     "/refine-policy",
     response_model=PolicyRefinementResponse,
@@ -92,13 +250,17 @@ async def generate_policy(
 )
 async def refine_policy(
     request: PolicyRefinementRequest,
-    db: Session = Depends(get_db)
+    current_user: User = Depends(get_current_active_user),
+    db: Session = Depends(get_db),
+    async_db: AsyncSession = Depends(get_async_db)
 ):
     """
     Refine existing policy based on feedback.
 
-    Requires authentication. Limited to 30 requests per minute per user.
+    Requires authentication. Limited to 30 requests per minute and 5 per day per user.
     """
+    # Check daily rate limit (refinements count towards policy generation limit)
+    await RateLimitService.check_rate_limit(async_db, current_user, "ai_policy_generation")
     # Validate framework exists
     framework = db.query(ComplianceFramework)\
         .filter(ComplianceFramework.id == request.framework_id)\
@@ -117,6 +279,18 @@ async def refine_policy(
             request.original_policy,
             request.feedback,
             framework
+        )
+
+        # Track usage for rate limiting (refinements count towards policy limit)
+        await RateLimitService.track_usage(
+            async_db,
+            current_user,
+            "ai_policy_generation",
+            metadata={
+                "framework_id": str(request.framework_id),
+                "framework_name": framework.name,
+                "action": "refinement"
+            }
         )
 
         return result
@@ -298,13 +472,17 @@ async def get_ai_metrics():
 async def validate_policy(
     policy_content: str,
     framework_id: str,
-    db: Session = Depends(get_db)
+    current_user: User = Depends(get_current_active_user),
+    db: Session = Depends(get_db),
+    async_db: AsyncSession = Depends(get_async_db)
 ):
     """
     Validate policy against framework requirements.
 
-    Requires authentication. Limited to 50 requests per minute.
+    Requires authentication. Limited to 50 requests per minute and 20 per day.
     """
+    # Check daily rate limit for compliance checks
+    await RateLimitService.check_rate_limit(async_db, current_user, "ai_compliance_check")
     framework = db.query(ComplianceFramework)\
         .filter(ComplianceFramework.id == framework_id)\
         .first()
@@ -319,6 +497,19 @@ async def validate_policy(
 
     try:
         validation_result = generator.validate_uk_policy(policy_content, framework)
+
+        # Track usage for compliance check rate limiting
+        await RateLimitService.track_usage(
+            async_db,
+            current_user,
+            "ai_compliance_check",
+            metadata={
+                "framework_id": str(framework_id),
+                "framework_name": framework.name,
+                "action": "policy_validation"
+            }
+        )
+
         return validation_result
 
     except Exception as e:

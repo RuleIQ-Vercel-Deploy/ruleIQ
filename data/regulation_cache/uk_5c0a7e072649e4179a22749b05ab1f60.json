@@ -1,0 +1,558 @@
+{
+  "success": true,
+  "url": "https://www.legislation.gov.uk/ukpga/2002/29/data.xml",
+  "fetched_at": "2025-08-31T18:15:35.479577",
+  "metadata": {
+    "title": "Proceeds of Crime Act 2002",
+    "description": "An Act to establish the Assets Recovery Agency and make provision about the appointment of its Director and his functions (including Revenue functions), to provide for confiscation orders in relation to persons who benefit from criminal conduct and for restraint orders to prohibit dealing with property, to allow the recovery of property which is or represents property obtained through unlawful conduct or which is intended to be used in unlawful conduct, to make provision about money laundering, to make provision about investigations relating to benefit from criminal conduct or to property which is or represents property obtained through unlawful conduct or to money laundering, to make provision to give effect to overseas requests and orders made where property is found or believed to be obtained through criminal conduct, and for connected purposes.",
+    "type": "",
+    "year": "",
+    "number": ""
+  },
+  "requirements": [
+    {
+      "id": "section-2A",
+      "text": "2A1A relevant authority must exercise its functions under this Act in the way which it considers is best calculated to contribute to the reduction of crime.2In this section  \u201ca relevant authority\u201d means\u2014athe National Crime Agency,bthe Director of Public Prosecutions,cthe Director of Public Prosecutions for Northern Ireland,d. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ...ethe Director of the Serious Fraud Office.fHer Majesty's Revenue and Customs, orgthe Financial Conduct Auth",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "section-2B",
+      "text": "2B1. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .2Anything which  the National Crime Agency  is authorised or required to do under this Act (whether directly or through its staff) may be done by a person providing services under arrangements made by  that Agency  if the person is authorised by that Agency (whether generally or specifically) for that purpose.3. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "section-2C",
+      "text": "2C1Anything which the Director of Public Prosecutions is authorised or required to do under, or in relation to, Part 5 or 8 of this Act may be done by a member of his staff if the member of staff is authorised by the Director (generally or specifically) for that purpose.2Anything which ... the Director of the Serious Fraud Office is authorised or required to do under, or in relation to, Part 2, 4,  5, 7  or 8 of this Act may be done by a member of his staff if the member of staff is authorised b",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "section-3",
+      "text": "31The   National Crime Agency   must  provide  a system for the accreditation of financial investigators.2The system of accreditation must include provision for\u2014athe monitoring of the performance of accredited financial investigators, andbthe withdrawal of accreditation from any person who contravenes or fails to comply with any condition subject to which he was accredited , andcsecuring that decisions under that system which concern\u2014ithe grant or withdrawal of accreditations, oriithe monitoring",
+      "type": "mandatory",
+      "keywords": [
+        "audit"
+      ]
+    },
+    {
+      "id": "section-6",
+      "text": "61The Crown Court must proceed under this section if the following two conditions are satisfied.2The first condition is that a defendant falls within any of the following paragraphs\u2014ahe is convicted of an offence or offences in proceedings before the Crown Court;bhe is committed to the Crown Court for sentence in respect of an offence or offences under section 3, 4 or 6 section 3, 3A, 3B, 3C, 4, 4A or 6  of the Sentencing Act any provision of sections 14 to 20 of the Sentencing Code;che is commi",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "section-7",
+      "text": "71The recoverable amount for the purposes of section 6 is an amount equal to the defendant\u2019s benefit from the conduct concerned.2But if the defendant shows that the available amount is less than that benefit the recoverable amount is\u2014athe available amount, orba nominal amount, if the available amount is nil.3But if section 6(6) or 6(6A)  applies the recoverable amount is such amount as\u2014athe court believes is just, butbdoes not exceed the amount found under subsection (1) or (2) (as the case may ",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "section-8",
+      "text": "81If the court is proceeding under section 6 this section applies for the purpose of\u2014adeciding whether the defendant has benefited from conduct, andbdeciding his benefit from the conduct.2The court must\u2014atake account of conduct occurring up to the time it makes its decision;btake account of property obtained up to that time.3Subsection (4) applies if\u2014athe conduct concerned is general criminal conduct,ba confiscation order mentioned in subsection (5) has at an earlier time been made against the d",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "section-10",
+      "text": "101If the court decides under section 6 that the defendant has a criminal lifestyle it must make the following four assumptions for the purpose of\u2014adeciding whether he has benefited from his general criminal conduct, andbdeciding his benefit from the conduct.2The first assumption is that any property transferred to the defendant at any time after the relevant day was obtained by him\u2014aas a result of his general criminal conduct, andbat the earliest time he appears to have held it.3The second assu",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "section-10A",
+      "text": "10A1Where it appears to a court making a confiscation order that\u2014athere is property held by the defendant that is likely to be realised or otherwise used to satisfy the order, andba person other than the defendant holds, or may hold, an interest in the property,the court may, if it thinks it appropriate to do so, determine the extent (at the time the confiscation order is made) of the defendant's interest in the property.2The court must not exercise the power conferred by subsection (1) unless i",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "section-11",
+      "text": "111Unless subsection (2) applies, the full amount ordered to be paid under a confiscation order must be paid on the day on which the order is made.2If the court making the confiscation order is satisfied that the defendant is unable to pay the full amount on that day, it may make an order requiring whatever cannot be paid on that day to be paid\u2014ain a specified period, orbin specified periods each of which relates to a specified amount.3A specified period\u2014amust start with the day on which the con",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "section-12",
+      "text": "121If  any amount required to be paid  by a person under a confiscation order is not paid when it is required to be paid, he  must pay interest on that amount  for the period for which it remains unpaid.2The rate of interest is the same rate as that for the time being specified in section 17 of the Judgments Act 1838 (c. 110) (interest on civil judgment debts).3If\u2014aan application has been made under section 11(4) for a specified period to be extended,bthe application has not been determined by t",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "section-13",
+      "text": "131If the court makes a confiscation order it must proceed as mentioned in subsections (2) and (4) in respect of the offence or offences concerned.2The court must take account of the confiscation order before\u2014ait imposes a fine on the defendant, orbit makes an order falling within subsection (3).3These orders fall within this subsection\u2014aan order involving payment by the defendant, other than an order under  section 46 of the Sentencing Code  (criminal courts charge) or   a priority order;ban or",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "section-13A",
+      "text": "13A1This section applies where the court makes a confiscation order.2The court may make such order as it believes is appropriate for the purpose of ensuring that the confiscation order is effective (a  \u201ccompliance order\u201d).3The court must consider whether to make a compliance order\u2014aon the making of the confiscation order, andbif it does not make a compliance order then, at any later time (while the confiscation order is still in effect) on the application of the prosecutor.4In considering whethe",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "section-14",
+      "text": "141The court may\u2014aproceed under section 6 before it sentences the defendant for the offence (or any of the offences) concerned, orbpostpone proceedings under section 6 for a specified period.2A period of postponement may be extended.3A period of postponement (including one as extended) must not end after the permitted period ends.4But subsection (3) does not apply if there are exceptional circumstances.5The permitted period is the period of two years starting with the date of conviction.6But if\u2014",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "section-15",
+      "text": "151If the court postpones proceedings under section 6 it may proceed to sentence the defendant for the offence (or any of the offences) concerned.2In sentencing the defendant for the offence (or any of the offences) concerned in the postponement period the court must not\u2014aimpose a fine on him,bmake an order falling within section 13(3), ...cmake an order for the payment of compensation under  Chapter 2 of Part 7 of the Sentencing Code  , ...camake an order for the payment of a surcharge under  s",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "section-16",
+      "text": "161If the court is proceeding under section 6 in a case where section 6(3)(a) applies, the prosecutor ... must give the court a statement of information within the period the court orders.2If the court is proceeding under section 6 in a case where section 6(3)(b) applies and it orders the prosecutor to give it a statement of information, the prosecutor must give it such a statement within the period the court orders.3If the prosecutor ... believes the defendant has a criminal lifestyle the state",
+      "type": "mandatory",
+      "keywords": [
+        "reporting"
+      ]
+    },
+    {
+      "id": "section-18",
+      "text": "181This section applies if\u2014athe court is proceeding under section 6 in a case where section 6(3)(a) applies, orbit is proceeding under section 6 in a case where section 6(3)(b) applies or it is considering whether to proceed.2For the purpose of obtaining information to help it in carrying out its functions                           (including functions under section 10A)  the court may at any time order the defendant to give it information specified in the order.3An order under this section may ",
+      "type": "mandatory",
+      "keywords": [
+        "reporting"
+      ]
+    },
+    {
+      "id": "section-18A",
+      "text": "18A1This section applies if the court\u2014ais considering whether to make a determination under section 10A of the extent of the defendant's interest in any property, orbis deciding what determination to make (if the court has decided to make a determination under that section).In this section  \u201cinterested person\u201d means a person (other than the defendant) who the court thinks is or may be a person holding an interest in the property.2For the purpose of obtaining information to help it in carrying ou",
+      "type": "mandatory",
+      "keywords": [
+        "reporting"
+      ]
+    },
+    {
+      "id": "section-19",
+      "text": "191This section applies if\u2014athe first condition in section 6 is satisfied but no court has proceeded under that section,bthere is evidence which was not available to the prosecutor on the relevant date,cbefore the end of the period of six years starting with the date of conviction the prosecutor ... applies to the Crown Court to consider the evidence, anddafter considering the evidence the court believes it is appropriate for it to proceed under section 6.2If this section applies the court must ",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "section-20",
+      "text": "201This section applies if the following two conditions are satisfied.2The first condition is that in proceeding under section 6 the court has decided that\u2014athe defendant has a criminal lifestyle but has not benefited from his general criminal conduct, orbthe defendant does not have a criminal lifestyle and has not benefited from his particular criminal conduct.3. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .4... the second condition is that\u2014athere is evidence which was not avail",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "section-21",
+      "text": "211This section applies if\u2014aa court has made a confiscation order,bthere is evidence which was not available to the prosecutor ... at the relevant time,cthe prosecutor ... believes that if the court were to find the amount of the defendant\u2019s benefit in pursuance of this section it would exceed the relevant amount,dbefore the end of the period of six years starting with the date of conviction the prosecutor ... applies to the Crown Court to consider the evidence, andeafter considering the evidenc",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "section-22",
+      "text": "221This section applies if\u2014aa court has made a confiscation order,bthe amount required to be paid was the amount found under section 7(2), andcan applicant falling within subsection (2) applies to the Crown Court to make a new calculation of the available amount.2These applicants fall within this subsection\u2014athe prosecutor;b. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .ca receiver appointed under section 50 ....3In a case where this section applies the court must make the new ca",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "section-23",
+      "text": "231This section applies if\u2014aa court has made a confiscation order, andbthe defendant                       or the prosecutor , or a receiver appointed under section 50 ..., applies to the Crown Court to vary the order under this section.2In such a case the court must calculate the available amount, and in doing so it must apply section 9 as if references to the time the confiscation order is made were to the time of the calculation and as if references to the date of the confiscation order were ",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "section-24",
+      "text": "241This section applies if\u2014aa court has made a confiscation order,bthe designated officer for a magistrates' court applies to the Crown Court for the discharge of the order, andcthe amount remaining to be paid under the order is less than \u00a31,000.2In such a case the court must calculate the available amount, and in doing so it must apply section 9 as if references to the time the confiscation order is made were to the time of the calculation and as if references to the date of the confiscation or",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "section-26",
+      "text": "261This section applies if\u2014athe court proceeds under section 6 in pursuance of section 19 or 20, orbthe prosecutor ... applies under section 21.2In such a case\u2014athe prosecutor ... must give the court a statement of information within the period the court orders;bsection 16 applies accordingly (with appropriate modifications where the prosecutor ... applies under section 21);csection 17 applies accordingly;dsection 18 applies as it applies in the circumstances mentioned in section 18(1).",
+      "type": "mandatory",
+      "keywords": [
+        "reporting"
+      ]
+    },
+    {
+      "id": "section-27",
+      "text": "271This section applies if the following two conditions are satisfied.2The first condition is that a defendant falls within any of the following paragraphs\u2014ahe absconds and, either before or after doing so, he is convicted of an offence or offences in proceedings before the Crown Court;bhe absconds after being committed to the Crown Court for sentence in respect of an offence or offences under  any provision of sections 14 to 20 of the Sentencing Code;che absconds after being committed to the Cr",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "section-28",
+      "text": "281This section applies if the following two conditions are satisfied.2The first condition is that\u2014aproceedings for an offence or offences are started against a defendant but are not concluded,bhe absconds, andcthe period of  three months  (starting with the day the court believes he absconded) has ended.3The second condition is that\u2014athe prosecutor ... applies to the Crown Court to proceed under this section, andbthe court believes it is appropriate for it to do so.4If this section applies the ",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "section-29",
+      "text": "291This section applies if\u2014athe court makes a confiscation order under section 6 as applied by section 28,bthe defendant ceases to be an absconder,che is convicted of an offence (or any of the offences) mentioned in section 28(2)(a),dhe believes that the amount required to be paid was too large (taking the circumstances prevailing when the amount was found for the purposes of the order), andebefore the end of the relevant period he applies to the Crown Court to consider the evidence on which his",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "section-30",
+      "text": "301Subsection (2) applies if\u2014athe court makes a confiscation order under section 6 as applied by section 28,bthe defendant is later tried for the offence or offences concerned and acquitted on all counts, andche applies to the Crown Court to discharge the order.2In such a case the court must discharge the order.3Subsection (4) applies if\u2014athe court makes a confiscation order under section 6 as applied by section 28,bthe defendant ceases to be an absconder,csubsection (1)(b) does not apply, anddh",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "section-32",
+      "text": "321On an appeal under section 31(1) the Court of Appeal may confirm, quash or vary the confiscation order.2On an appeal under section 31(2) the Court of Appeal may confirm the decision, or if it believes the decision was wrong it may\u2014aitself proceed under section 6 (ignoring subsections (1) to (3)), orbdirect the Crown Court to proceed afresh under section 6.2AOn an appeal under section 31(4) the Court of Appeal may\u2014aconfirm the determination, orbmake such order as it believes is appropriate.3In",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "section-33",
+      "text": "331An appeal lies to the  Supreme Court  from a decision of the Court of Appeal on an appeal under section 31.2An appeal under this section lies at the instance of\u2014athe defendant or the prosecutor (except where paragraph (b) applies);bif the proceedings in the Court of Appeal were proceedings on an appeal under section 31(4), any person who was a party to those proceedings.3On an appeal from a decision of the Court of Appeal to confirm, vary or make a confiscation order the  Supreme Court  may c",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "section-38",
+      "text": "381Subsection (2) applies if\u2014aa warrant committing the defendant to prison or detention is issued for a default in payment of an amount ordered to be paid under a confiscation order in respect of an offence or offences, andbat the time the warrant is issued the defendant is liable to serve a term of custody in respect of the offence (or any of the offences).2In such a case the term of imprisonment or of detention under section 108 of  the Powers of Criminal Courts (Sentencing) Act 2000  (detenti",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "section-39",
+      "text": "391Subsection (2) applies if\u2014aa court varies a confiscation order under section 21, 22, 23, 29, 32 or 33,bthe effect of the variation is to vary the maximum period applicable in relation to the order under  section 35(2A), andcthe result is that that maximum period is less than the term of imprisonment or detention fixed in respect of the order under  section 129(3) of the Sentencing Code.2In such a case the court must fix a reduced term of imprisonment or detention in respect of the confiscatio",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "section-41",
+      "text": "411If any condition set out in section 40 is satisfied the Crown Court may make an order (a restraint order) prohibiting any specified person from dealing with any realisable property held by him.2A restraint order may provide that it applies\u2014ato all realisable property held by the specified person whether or not the property is described in the order;bto realisable property transferred to the specified person after the order is made.2AA restraint order must be made subject to an exception enabl",
+      "type": "mandatory",
+      "keywords": [
+        "reporting"
+      ]
+    }
+  ],
+  "penalties": [
+    {
+      "type": "financial",
+      "amount": "\u00a310,000",
+      "context": "enforcement as fines\n                  351this section applies if a court\u2014amakes a confiscation order, andb. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .2 sections 129(1) to (3) and ("
+    },
+    {
+      "type": "financial",
+      "amount": "\u00a310,000",
+      "context": "enforcement as fines\n                  351this section applies if a court\u2014amakes a confiscation order, andb. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .2 sections 129(1) to (3) and ("
+    },
+    {
+      "type": "financial",
+      "amount": "\u00a3500,0005",
+      "context": "enforcement as fines\n                  351this section applies if a court\u2014amakes a confiscation order, andb. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .2 sections 129(1) to (3) and ("
+    },
+    {
+      "type": "criminal",
+      "description": "Imprisonment up to 6 month",
+      "context": "enforcement as fines\n                  351this section applies if a court\u2014amakes a confiscation order, andb. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .2 sections 129(1) to (3) and ("
+    },
+    {
+      "type": "financial",
+      "amount": "\u00a35,000,",
+      "context": "money671this section applies to money which\u2014ais held by a person, andbis held in an account maintained by him with a relevant financial institution.2this section also applies to money which is held by"
+    },
+    {
+      "type": "financial",
+      "amount": "\u00a35000",
+      "context": "criminal lifestyle751a defendant has a criminal lifestyle if (and only if) the following condition is satisfied.2the condition is that the offence (or any of the offences) concerned satisfies any of t"
+    },
+    {
+      "type": "criminal",
+      "description": "Imprisonment up to 3 month",
+      "context": "breach of compliance order97c1this section applies where\u2014aa compliance order has been made in relation to an accused, andbit appears to the court that the accused has failed to comply with the complia"
+    },
+    {
+      "type": "financial",
+      "amount": "\u00a310,000",
+      "context": "application of provisions about fine enforcement1181the provisions of the procedure act specified in subsection (2) apply, with the qualifications mentioned in that subsection, in relation to a confis"
+    },
+    {
+      "type": "financial",
+      "amount": "\u00a310,000",
+      "context": "application of provisions about fine enforcement1181the provisions of the procedure act specified in subsection (2) apply, with the qualifications mentioned in that subsection, in relation to a confis"
+    },
+    {
+      "type": "financial",
+      "amount": "\u00a3500,0005",
+      "context": "application of provisions about fine enforcement1181the provisions of the procedure act specified in subsection (2) apply, with the qualifications mentioned in that subsection, in relation to a confis"
+    },
+    {
+      "type": "criminal",
+      "description": "Imprisonment up to 3 month",
+      "context": "application of provisions about fine enforcement1181the provisions of the procedure act specified in subsection (2) apply, with the qualifications mentioned in that subsection, in relation to a confis"
+    },
+    {
+      "type": "financial",
+      "amount": "\u00a31000",
+      "context": "criminal lifestyle1421an accused has a criminal lifestyle if (and only if) the offence (or any of the offences) concerned satisfies any of these tests\u2014ait is specified in schedule 4;bit constitutes co"
+    },
+    {
+      "type": "financial",
+      "amount": "\u00a310,000",
+      "context": "enforcement as fines etc1851this section applies if a court makes a confiscation order.2section 35(1)(c), ... (4) and (5) of the criminal justice act (northern ireland) 1945 (c. 15) (functions of cour"
+    },
+    {
+      "type": "financial",
+      "amount": "\u00a310,000",
+      "context": "enforcement as fines etc1851this section applies if a court makes a confiscation order.2section 35(1)(c), ... (4) and (5) of the criminal justice act (northern ireland) 1945 (c. 15) (functions of cour"
+    },
+    {
+      "type": "financial",
+      "amount": "\u00a3500,0005",
+      "context": "enforcement as fines etc1851this section applies if a court makes a confiscation order.2section 35(1)(c), ... (4) and (5) of the criminal justice act (northern ireland) 1945 (c. 15) (functions of cour"
+    },
+    {
+      "type": "criminal",
+      "description": "Imprisonment up to 6 month",
+      "context": "enforcement as fines etc1851this section applies if a court makes a confiscation order.2section 35(1)(c), ... (4) and (5) of the criminal justice act (northern ireland) 1945 (c. 15) (functions of cour"
+    },
+    {
+      "type": "financial",
+      "amount": "\u00a35,000,",
+      "context": "money  2151this section applies to money which\u2014ais held by a person, andbis held in an account maintained by him with a relevant financial institution.2this section also applies to money which is held"
+    },
+    {
+      "type": "financial",
+      "amount": "\u00a35000",
+      "context": "criminal lifestyle2231a defendant has a criminal lifestyle if (and only if) the following condition is satisfied.2the condition is that the offence (or any of the offences) concerned satisfies any of "
+    },
+    {
+      "type": "criminal",
+      "description": "Imprisonment up to 14 year",
+      "context": "penalties3341a person guilty of an offence under section 327, 328 or 329 is liable\u2014aon summary conviction, to imprisonment for a term not exceeding six months or to a fine not exceeding the statutory "
+    },
+    {
+      "type": "financial",
+      "amount": "\u00a35,000",
+      "context": "information  orders339zh1a magistrates' court or (in scotland) the sheriff may, on an application made by a relevant person, make  an  information order if satisfied that one of conditions 1 to 4  is "
+    },
+    {
+      "type": "criminal",
+      "description": "Imprisonment up to 6 month",
+      "context": "certain offences in relation to execution of search and seizure warrants356a1a person commits an offence if the person assaults an appropriate person who is acting in the exercise of a power conferred"
+    },
+    {
+      "type": "criminal",
+      "description": "Imprisonment up to 2 year",
+      "context": "offence362e1a person commits an offence if, in purported compliance with a requirement imposed by an unexplained wealth order, the person\u2014amakes a statement that the person knows to be false or mislea"
+    },
+    {
+      "type": "criminal",
+      "description": "Imprisonment up to 12 month",
+      "context": "offence396e1a person commits an offence if, in purported compliance with a requirement imposed by an unexplained wealth order, the person\u2014amakes a statement that the person knows to be false or mislea"
+    },
+    {
+      "type": "criminal",
+      "description": "Imprisonment up to 6 month",
+      "context": "certain offences in relation to financial investigators453a1a person commits an offence if he assaults an accredited financial investigator who is acting in the exercise of a relevant power.2a person "
+    },
+    {
+      "type": "criminal",
+      "description": "Imprisonment up to 6 month",
+      "context": "certain offences in relation to sfo officers453b1a person commits an offence if the person assaults an sfo officer who is acting in the exercise of a relevant power.2a person commits an offence if the"
+    },
+    {
+      "type": "criminal",
+      "description": "Imprisonment up to 12 month",
+      "context": "obstruction offence in relation to immigration officers453c1a person commits an offence if the person resists or wilfully obstructs an immigration officer who is acting in the exercise of a relevant p"
+    }
+  ],
+  "enforcement": {
+    "authority": [
+      "Secretary of State",
+      "Prudential Regulation Authority",
+      "Financial Conduct Authority"
+    ],
+    "powers": [
+      "351This section applies if a court\u2014amakes a confiscation order, andb. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .2 Sections 129(1) to (3) and (5) and 132(1) to (4) of the Sentencing ",
+      "381Subsection (2) applies if\u2014aa warrant committing the defendant to prison or detention is issued for a default in payment of an amount ordered to be paid under a confiscation order in respect of an o",
+      "47G1This section has effect for the purposes of sections 47C, 47D, 47E and 47F.2The appropriate approval, in relation to the exercise of a power by an appropriate officer, means the approval of a just",
+      "491If the court appoints a receiver under section 48 it may act under this section on the application of the person who applied for the restraint order.2The court may by order confer on the receiver t",
+      "511If the court appoints a receiver under section 50 it may act under this section on the application of the prosecutor.2The court may by order confer on the receiver the following powers in relation ",
+      "581Subsections (2) to (4) apply if a court makes a restraint order.2No distress may be levied , and no power to use the procedure in Schedule 12 to the Tribunals, Courts and Enforcement Act 2007 (taki",
+      "591Subsections (2) to (4) apply if a court makes an order under section 50 appointing a receiver in respect of any realisable property.2No distress may be levied , and no power to use the procedure in",
+      "1181The provisions of the Procedure Act specified in subsection (2) apply, with the qualifications mentioned in that subsection, in relation to a confiscation order as if the amount ordered to be paid",
+      "127G1This section has effect for the purposes of sections 127C, 127D, 127E and 127F.2The appropriate approval, in relation to the exercise of a power by an appropriate officer, means the approval of t",
+      "1871Subsection (2) applies if\u2014aa warrant committing the defendant to prison or detention is issued for a default in payment of an amount ordered to be paid under a confiscation order in respect of an ",
+      "195G1This section has effect for the purposes of sections 195C, 195D, 195E and 195F.2The appropriate approval, in relation to the exercise of a power by an appropriate officer, means the approval of a",
+      "195S1The Secretary of State must make a code of practice in connection with\u2014athe carrying out by  officers of Revenue and Customs , immigration officers and SFO officers    of the functions conferred ",
+      "195T1The Department of Justice must make a code of practice in connection with\u2014athe carrying out by constables and accredited financial investigators of the functions conferred by sections 195C to 195",
+      "1971If the court appoints a receiver under section 196 it may act under this section on the application of the person who applied for the restraint order.2The court may by order confer on the receiver",
+      "1991If the court appoints a receiver under section 198 it may act under this section on the application of the prosecutor.2The court may by order confer on the receiver the following powers in relatio",
+      "2401This Part has effect for the purposes of\u2014aenabling the enforcement authority to recover, in civil proceedings before the High Court or Court of Session, property which is, or represents, property ",
+      "2431Proceedings for a recovery order may be taken by the enforcement authority in the High Court against any person who the authority thinks holds recoverable property.2The enforcement authority must ",
+      "2441Proceedings for a recovery order may be taken by the enforcement authority in the Court of Session against any person who the authority thinks holds recoverable property.2The enforcement authority",
+      "245ZA1This section applies if, in proceedings under this Chapter for a recovery order, the enforcement authority applies under section 266(8ZA) for decree of removing and warrant for ejection in relat",
+      "245A1Where the enforcement authority may take proceedings for a recovery order in the High Court, the authority may apply to the court for a property freezing order (whether before or after starting t",
+      "245C1The power to vary a property freezing order includes (in particular) power to make exclusions as follows\u2014apower to exclude property from the order, andbpower, otherwise than by excluding property",
+      "245D1While a property freezing order has effect\u2014athe court may stay any action, execution or other legal process in respect of the property to which the order applies, andbno distress may be levied, a",
+      "245E1Subsection (2) applies if\u2014athe High Court makes a property freezing order on an application by an enforcement authority, andbthe authority applies to the court to proceed under subsection (2)\n\n\t\t",
+      "245F1If the High Court appoints a receiver under section 245E on an application by an enforcement authority, the court may act under this section on the application of the authority.2The court may by ",
+      "2461Where the enforcement authority may take proceedings for a recovery order in the High Court, the authority may apply to the court for an interim receiving order (whether before or after starting t",
+      "2521An interim receiving order must, subject to any exclusions made in accordance with this section, prohibit any person to whose property the order applies from dealing with the property.2Exclusions ",
+      "2531While an interim receiving order has effect\u2014athe court may stay any action, execution or other legal process in respect of the property to which the order applies,bno distress may be levied , and ",
+      "2541If the court decides that any property to which an interim receiving order applies is neither recoverable property nor associated property, it must vary the order so as to exclude it.2The court ma",
+      "2551An interim receiving order must require the interim receiver to inform the enforcement authority and the court as soon as reasonably practicable if he thinks that\u2014aany property to which the order ",
+      "255A1Where the enforcement authority may take proceedings for a recovery order in the Court of Session, the authority may apply to the court for a prohibitory property order (whether before or after s",
+      "255C1The power to vary a prohibitory property order includes (in particular) power to make exclusions as follows\u2014apower to exclude property from the order, andbpower, otherwise than by excluding prope",
+      "255E1On the application of the enforcement authority the Court of Session may, in relation to moveable recoverable property to which a prohibitory property order applies (whether generally or to such ",
+      "255F1On the application of the enforcement authority, the Court of Session may, in relation to the property mentioned in subsection (2), grant warrant for inhibition against any person specified in a ",
+      "255G1Subsection (2) applies if\u2014athe Court of Session makes a prohibitory property order on an application by an enforcement authority, andbthe authority applies to the court to proceed under subsectio",
+      "255H1If the Court of Session appoints a PPO receiver under section 255G on an application by an enforcement authority, the court may act under this section on the application of the authority.2The cou",
+      "2561Where the enforcement authority may take proceedings for a recovery order in the Court of Session, the authority may apply to the court for an interim administration order (whether before or after",
+      "2581On the application of the enforcement authority, the Court of Session may, in relation to the property mentioned in subsection (2), grant warrant for inhibition against any person specified in an ",
+      "2611An interim administration order must, subject to any exclusions made in accordance with this section, prohibit any person to whose property the order applies from dealing with the property.2Exclus",
+      "2631If the court decides that any property to which an interim administration order applies is neither recoverable property nor associated property, it must vary the order so as to exclude it.2The cou",
+      "2641An interim administration order must require the interim administrator to inform the enforcement authority and the court as soon as reasonably practicable if he thinks that\u2014aany property to which ",
+      "2651On the application of the enforcement authority or the interim administrator the Court of Session may, in relation to moveable recoverable property to which an interim administration order applies",
+      "2661If in proceedings under this Chapter the court is satisfied that any property is recoverable, the court must make a recovery order.2The recovery order must vest the recoverable property in the tru",
+      "2671The trustee for civil recovery is a person appointed by the court to give effect to a recovery order.2The enforcement authority must nominate a suitably qualified person for appointment as the tru",
+      "2711Where\u2014athis section applies, andbthe enforcement authority (on the one hand) and the person who holds the associated property or who is the excepted joint owner (on the other) agree,the recovery o",
+      "2721Where this section applies, the court may make the following provision if\u2014athere is no agreement under section 271, andbthe court thinks it just and equitable to do so.2The recovery order may prov",
+      "2731This section applies to recoverable property consisting of rights under a pension scheme.2A recovery order in respect of the property must, instead of vesting the property in the trustee for civil",
+      "2771This section applies where recoverable property to which proceedings under this Chapter relate includes rights under a pension scheme.2An order made under section 276\u2014amay not stay (in Scotland, s",
+      "2781This section applies if the enforcement authority seeks a recovery order\u2014ain respect of both property which is or represents property obtained through unlawful conduct and related property, orbin ",
+      "2791Subsections (2) and (3) give examples of the satisfaction of the enforcement authority\u2019s right to recover the original property.2If\u2014athere is a disposal, other than a part disposal, of the origina",
+      "2801 Subsection (2) applies to sums which are in the hands of the trustee for civil recovery if they are\u2014asums which represent the realised proceeds of property which was vested in the trustee for civ",
+      "282B1This section applies if\u2014athe property freezing conditions are met in relation to property,bthe property is not property to which a recovery order applies, andcan enforcement authority ... believe",
+      "282F1This section applies if\u2014aa recovery order ... has effect in relation to property, andbthe enforcement authority or the trustee for civil recovery believes that the property is in a country outsid",
+      "2831If, in the case of any property to which a property freezing order, an interim receiving order, a prohibitory property order or an interim administration order has at any time applied, the court d",
+      "286A1The Lord Chancellor may by regulations specify the required conditions for the purposes of section 245C(5) or 252(4).2A required condition may (in particular)\u2014arestrict who may receive sums relea",
+      "2871At any time when an order specifying an amount for the purposes of this section has effect, the enforcement authority may not start proceedings for a recovery order unless the authority reasonably",
+      "2901The powers conferred by section 289 may be exercised only with the appropriate approval unless, in the circumstances, it is not practicable to obtain that approval before exercising the power.2The",
+      "2951While the  officer of Revenue and Customs                       , constable , SFO officer  or accredited financial investigator  continues to have reasonable grounds for his suspicion, cash seized",
+      "297A1Subsection (2) applies while any cash is detained in pursuance of an order under section 295(2) made by a magistrates' court in England and Wales or Northern Ireland.2A senior officer may give a ",
+      "303E1The powers conferred by section 303C may be exercised only with the appropriate approval unless, in the circumstances, it is not practicable to obtain that approval before exercising the power.2T",
+      "303L1The period for which property seized under section 303J, or any part of that property, may be detained may be extended by an order made\u2014ain England and Wales or Northern Ireland, by a magistrates",
+      "303Z11This section applies if an enforcement officer has reasonable grounds for suspecting that money held in an account maintained with a relevant financial institution\u2014ais recoverable property, orbi",
+      "303Z21The power to apply for an account freezing order is not exercisable if the money in relation to which the enforcement officer's suspicion exists is less in amount than the minimum amount.2An enf",
+      "303Z41The relevant court may at any time vary or set aside an account freezing order on an application made by\u2014aan enforcement officer, orbany person affected by the order.2But an enforcement officer ",
+      "303Z91This section applies while an account freezing order made by a magistrates' court has effect.In this section the account to which the order applies is  \u201cthe frozen account\u201d.2A senior officer may",
+      "303Z111An account forfeiture notice lapses if\u2014aan objection is made within the period for objecting specified in the notice under section 303Z9(4)(c),ban application is made under section 303Z14 for t",
+      "303Z141This section applies while an account freezing order has effect.In this section the account to which the account freezing order applies is  \u201cthe frozen account\u201d.2An application for the forfeitu",
+      "303Z201In this Part\u2014a\u201ccryptoasset\u201d means a cryptographically secured digital representation of value or contractual rights that uses a form of distributed ledger technology and can be transferred, sto",
+      "303Z211If an enforcement officer\u2014ais lawfully on any premises, andbhas reasonable grounds for suspecting that there is on the premises a cryptoasset-related item,the enforcement officer may search for",
+      "303Z231The powers conferred by section 303Z21 may be exercised only with the appropriate approval unless, in the circumstances, it is not practicable to obtain that approval before exercising the powe",
+      "303Z241As soon as possible after the end of each financial year, the appointed person must prepare a report for that year.2\u201cFinancial year\u201d means\u2014athe period beginning with the day on which this secti",
+      "303Z261An enforcement officer may seize any item of property if the enforcement officer has reasonable grounds for suspecting that the item is a cryptoasset-related item.2If an enforcement officer is ",
+      "303Z271Property seized under section 303Z26 may be detained for an initial period of 48 hours.2Subsection (1) authorises the detention of property only for so long as an enforcement officer continues ",
+      "303Z281The period for which property seized under section 303Z26 may be detained may be extended by an order made\u2014ain England and Wales or Northern Ireland, by a magistrates\u2019 court;bin Scotland, by th",
+      "303Z291An enforcement officer may seize cryptoassets if the enforcement officer has reasonable grounds for suspecting that the cryptoassets are recoverable property or intended by any person for use i",
+      "303Z311Cryptoassets seized under section 303Z29 may be detained for an initial period of 48 hours.2Subsection (1) authorises the detention of property only for so long as an enforcement officer contin",
+      "303Z321The period for which cryptoassets seized under section 303Z29 may be detained may be extended by an order made\u2014ain England and Wales or Northern Ireland, by a magistrates\u2019 court;bin Scotland, b",
+      "303Z331An enforcement officer must arrange for any item of property seized under section 303Z26 to be safely stored throughout the period during which it is detained under this Chapter.2An enforcement",
+      "303Z341This section applies while any cryptoasset or other item of property is detained under this Chapter.2A magistrates\u2019 court or (in Scotland) the sheriff may direct the release of the whole or any",
+      "303Z361This section applies if an enforcement officer has reasonable grounds for suspecting that cryptoassets held in a crypto wallet administered by a UK-connected cryptoasset service provider\u2014aare r",
+      "303Z371This section applies where an application for a crypto wallet freezing order is made under section 303Z36 in relation to a crypto wallet.2The relevant court may make the order if satisfied that",
+      "303Z381The relevant court may at any time vary or set aside a crypto wallet freezing order on an application made by\u2014aan enforcement officer, orbany person affected by the order.2But an enforcement of",
+      "303Z411This section applies\u2014awhile any cryptoassets are detained under Chapter 3C, orbwhile a crypto wallet freezing order made under section 303Z37 has effect.2An application for the forfeiture of so",
+      "303Z421Subsection (2) applies where an application is made under section 303Z41 for the forfeiture of any cryptoassets detained under Chapter 3C.2The cryptoassets are to continue to be detained under ",
+      "303Z481This section applies where any cryptoasset or other item of property is forfeited under this Chapter.2An enforcement officer must\u2014arealise the property, orbmake arrangements for its realisation",
+      "303Z541Subsection (2) applies while any cryptoassets are detained in pursuance of an order under section 303Z30 or 303Z32 (including where cryptoassets are subject to forfeiture proceedings).2A person",
+      "303Z551This section applies while a crypto wallet freezing order under section 303Z37 has effect (including where cryptoassets held in a crypto wallet that is subject to a crypto wallet freezing order",
+      "303Z571This section applies where cryptoassets are converted into money in accordance with an order under section 303Z54.2The proceeds of the conversion (the \u201cconverted cryptoassets\u201d) may be detained ",
+      "303Z581This section applies where cryptoassets held in a crypto wallet subject to a crypto wallet freezing order are converted into money in accordance with an order under section 303Z55.2The proceeds",
+      "303Z591This section applies while any converted cryptoassets are detained under section 303Z57 or 303Z58.2The relevant court may direct the release of the whole or any part of the converted cryptoasse",
+      "303Z621Converted cryptoassets detained under section 303Z57 and forfeited under section 303Z60, and any accrued interest on them, must be applied as follows\u2014afirst, they must be applied in making any ",
+      "303Z661In this Chapter\u2014\u201cconverted cryptoassets\u201d is to be read in accordance with sections 303Z57 and 303Z58;\u201ccrypto wallet freezing order\u201d has the same meaning as in Chapter 3D (see section 303Z36);\u201ce",
+      "3161In this Part\u2014\u201caccount forfeiture notice\u201d (in Chapter 3B) has the meaning given by section 303Z9(3),\u201caccount freezing order\u201d\n\t\t\t\t\t\t\t\t\t\t(in Chapter 3B) account forfeiture notice  \u201d (in Chapter 3B) h",
+      "3261Criminal conduct is conduct which\u2014aconstitutes an offence in any part of the United Kingdom, orbwould constitute an offence in any part of the United Kingdom if it occurred there.2But criminal con",
+      "3271A person commits an offence if he\u2014aconceals criminal property;bdisguises criminal property;cconverts criminal property;dtransfers criminal property;eremoves criminal property from England and Wale",
+      "3281A person commits an offence if he enters into or becomes concerned in an arrangement which he knows or suspects facilitates (by whatever means) the acquisition, retention, use or control of crimin",
+      "3291A person commits an offence if he\u2014aacquires criminal property;buses criminal property;chas possession of criminal property.2But a person does not commit such an offence if\u2014ahe makes an authorised ",
+      "3301A person commits an offence if the conditions in subsections (2) to (4) are satisfied.2The first condition is that he\u2014aknows or suspects, orbhas reasonable grounds for knowing or suspecting,that a",
+      "333D1A person does not commit an offence under section 333A if the disclosure is\u2014a\nto the authority that is the supervisory authority for that person by virtue of  the Money Laundering, Terrorist Fina",
+      "333E1For the purposes of sections 333A to 333D, Schedule 9 has effect for determining\u2014awhat is a business in the regulated sector, andbwhat is a supervisory authority.2In those sections\u2014\u201ccredit instit",
+      "336D1This section provides for the meaning of terms used in sections 336A to 336C (and in this section).2\u201cThe court\u201d means\u2014ain relation to England and Wales or Northern Ireland, the Crown Court;bin re",
+      "339ZF1A relevant disclosure made in good faith does not breach\u2014aan obligation of confidence owed by the person making the disclosure, orbany other restriction on the disclosure of information,however ",
+      "362A1The High Court may, on an application made by an enforcement authority, make an unexplained wealth order in respect of any property if the court is satisfied that each of the requirements for the",
+      "362D1This section applies in a case where, before the end of the response period (as defined by section 362C(4)),  the respondent and the specified responsible officer (if any) between them comply, or",
+      "362DA1The High Court may, on an application made by the enforcement authority, extend the determination period if satisfied that\u2014athe enforcement authority is working diligently and expeditiously towa",
+      "362G1An unexplained wealth order has effect in spite of any restriction on the disclosure of information (however imposed).2But subsections (1) to (5) of section 361 (rights in connection with privile",
+      "362I1An application for an unexplained wealth order may be made without notice.2Rules of court may make provision as to the practice and procedure to be followed in connection with proceedings relatin",
+      "362IA1The Secretary of State must prepare and publish a report in respect of each relevant period setting out\u2014athe number of unexplained wealth orders made by the High Court in England and Wales durin",
+      "362J1This section applies where the High Court makes an unexplained wealth order in respect of any property.2The court may make an interim freezing order in respect of the property if the court consid",
+      "362K1The High Court may at any time vary or discharge an interim freezing order.2The High Court must discharge an interim freezing order, so far as it has effect in relation to any property, in each o",
+      "362M1While an interim freezing order has effect\u2014athe High Court may stay any action, execution or other legal process in respect of the property to which the order applies, andbno distress may be levi",
+      "362N1This section applies where the High Court makes an interim freezing order on an application by an enforcement authority.2The court may, on an application by the enforcement authority, by order ap",
+      "362O1If the High Court appoints a receiver under section 362N on an application by an enforcement authority, the court may act under this section on the application of the authority.2The court may by ",
+      "362R1Where an interim freezing order in respect of any property is discharged, the person to whom the property belongs may make an application to the High Court for the payment of compensation.2The ap",
+      "362S1This section applies if\u2014athe High Court makes an unexplained wealth order in respect of any property,bit appears to the enforcement authority that the risk mentioned in section 362J(2) applies in",
+      "362U1This section applies in the following cases\u2014aan enforcement authority has made an application for an unexplained wealth order under section 362A;ban enforcement authority has made an application ",
+      "3781In relation to a confiscation investigation these are appropriate officers\u2014aa National Crime Agency officer;ban accredited financial investigator;ca constable;caan SFO officer;dan officer of Reven",
+      "396D1This section applies in a case where  the respondent and the specified responsible officer (if any) between them comply, or purport to comply, with all of the  requirements imposed by an unexplai",
+      "4161These expressions are to be construed in accordance with these provisions of this Part\u2014civil recovery investigation: section 341(2) and (3)confiscation investigation: section 341(1) cryptoasset in",
+      "4431Her Majesty may by Order in Council make provision\u2014afor an order made by a court under Part 2 to be enforced in Scotland or Northern Ireland;bfor an order made by a court under Part 3 to be enforc",
+      "4441Her Majesty may by Order in Council\u2014amake provision for a prohibition on dealing with property which is the subject of an external request;bmake provision for the realisation of property for the p",
+      "445A1The relevant Minister must prepare a report about the arrangements in place between\u2014athe government of the United Kingdom, andbthe government of each relevant territory,for the sharing of benefic",
+      "4511Proceedings for a specified offence may be started by  the Director of Public Prosecutions  or by order of the Commissioners for Her Majesty\u2019s Revenue and Customs (the Commissioners).2Where procee",
+      "31An administrator\u2014amay, if appointed under section 125, andbmust, if appointed under section 128(3),as soon as practicable take possession of the realisable property and of the documents mentioned in",
+      "31Power to\u2014aenter any premises in the United Kingdom to which the interim order applies, andbtake any of the following steps.2Those steps are\u2014ato carry out a search for or inspection of anything descr",
+      "11A business is in the regulated sector to the extent that it consists of\u2014athe acceptance by a credit institution of deposits or other repayable funds from the public, or the granting by a credit inst",
+      "21A business is not in the regulated sector to the extent that it consists of\u2014athe issuing of withdrawable share capital within the limit set by  section 24 of the Co-operative and Community Benefit S",
+      "11In section 18 of the Civil Jurisdiction and Judgments Act 1982 (enforcement of United Kingdom judgments in other parts of the United Kingdom) in subsection (3) (exceptions) insert after paragraph (c",
+      "281The Proceeds of Crime (Scotland) Act 1995 is amended as follows.2The following provisions in the Act shall cease to have effect\u2014aPart I, except section 2(7);bin section 28, subsections (1)(a) and ("
+    ],
+    "procedures": []
+  },
+  "dates": [
+    {
+      "type": "deadline",
+      "date": "2 May 2022",
+      "context": "362E1A person commits an offence if, in purported compliance with a requirement imposed by an unexplained wealth order, the person\u2014amakes a statement "
+    },
+    {
+      "type": "deadline",
+      "date": "29 December 1986",
+      "context": "4181If a person is  made  bankrupt in England and Wales the powers referred to in subsection (2) must not be exercised in relation to the property ref"
+    },
+    {
+      "type": "deadline",
+      "date": "29 December 1986",
+      "context": "4191This section applies if a person who is  made  bankrupt in England and Wales has made a tainted gift (whether directly or indirectly).2No order ma"
+    },
+    {
+      "type": "deadline",
+      "date": "1 October 1991",
+      "context": "4241If a person is adjudged bankrupt in Northern Ireland the powers referred to in subsection (2) must not be exercised in relation to the property re"
+    },
+    {
+      "type": "deadline",
+      "date": "1 October 1991",
+      "context": "4251This section applies if a person who is adjudged bankrupt in Northern Ireland has made a tainted gift (whether directly or indirectly).2No order m"
+    },
+    {
+      "type": "deadline",
+      "date": "29 December 1986",
+      "context": "4261In this section \u201ccompany\u201d means any company which may be wound up under the 1986 Act.2If an order for the winding up of a company is made or it pa"
+    },
+    {
+      "type": "deadline",
+      "date": "29 December 1986",
+      "context": "4271In this section \u201ccompany\u201d means any company which may be wound up under the 1986 Act.2This section applies if\u2014aan order for the winding up of a co"
+    },
+    {
+      "type": "deadline",
+      "date": "1 October 1991",
+      "context": "4281In this section \u201ccompany\u201d means any company which may be wound up under the 1989 Order.2If an order for the winding up of a company is made or it "
+    },
+    {
+      "type": "deadline",
+      "date": "1 July 2019",
+      "context": "445A1The relevant Minister must prepare a report about the arrangements in place between\u2014athe government of the United Kingdom, andbthe government of "
+    }
+  ],
+  "controls": [
+    "encryption",
+    "consent_management",
+    "audit_logging",
+    "data_minimization",
+    "training",
+    "security_testing",
+    "access_control",
+    "incident_response"
+  ],
+  "xml_length": 11321894
+}

@@ -264,6 +264,177 @@ class PolicyGenerator:
         # Both providers failed - return template-based fallback
         return self._generate_fallback_policy(request, framework, start_time)
 
+    async def generate_policy_stream(
+        self,
+        request: "PolicyGenerationRequest",
+        framework: "ComplianceFramework"
+    ):
+        """
+        Generate policy with streaming support for real-time updates.
+        
+        Yields chunks of the policy as they are generated, allowing for
+        real-time display in the UI.
+        """
+        import uuid
+
+        session_id = str(uuid.uuid4())
+
+        # Yield initial metadata
+        yield {
+            "type": "metadata",
+            "session_id": session_id,
+            "policy_type": request.policy_type,
+            "framework_id": str(framework.id),
+            "organization_name": request.business_context.organization_name,
+            "provider": self.primary_provider
+        }
+
+        # Build the prompt
+        prompt = self._build_policy_prompt(request, framework)
+
+        # Track if we successfully streamed
+        stream_success = False
+        
+        # Try primary provider first
+        if self.primary_provider == "google" and self.google_client:
+            try:
+                async for chunk in self._stream_with_google(prompt, request):
+                    yield chunk
+                stream_success = True
+            except Exception as e:
+                logger.warning(f"Google streaming failed: {e}, trying fallback")
+                # Don't yield error yet, try fallback first
+        elif self.primary_provider == "openai" and self.openai_client:
+            try:
+                async for chunk in self._stream_with_openai(prompt, request):
+                    yield chunk
+                stream_success = True
+            except Exception as e:
+                logger.warning(f"OpenAI streaming failed: {e}, trying fallback")
+        
+        # If primary failed, try fallback provider
+        if not stream_success:
+            # Determine fallback provider (opposite of primary)
+            if self.primary_provider == "google" and self.openai_client:
+                try:
+                    async for chunk in self._stream_with_openai(prompt, request):
+                        yield chunk
+                    stream_success = True
+                except Exception as e:
+                    logger.error(f"OpenAI fallback streaming failed: {e}")
+            elif self.primary_provider == "openai" and self.google_client:
+                try:
+                    async for chunk in self._stream_with_google(prompt, request):
+                        yield chunk
+                    stream_success = True
+                except Exception as e:
+                    logger.error(f"Google fallback streaming failed: {e}")
+        
+        # If all streaming failed, try non-streaming fallback
+        if not stream_success:
+            try:
+                # Fallback to non-streaming if streaming not available
+                policy_response = self.generate_policy(request, framework)
+
+                # Simulate streaming by breaking the policy into sections
+                sections = policy_response.policy_content.split('\n\n')
+                for i, section in enumerate(sections):
+                    yield {
+                        "type": "content",
+                        "content": section + "\n\n",
+                        "progress": (i + 1) / len(sections)
+                    }
+                stream_success = True
+                
+            except Exception as e:
+                logger.error(f"All policy generation methods failed: {e}")
+                yield {
+                    "type": "error",
+                    "error": str(e)
+                }
+                return
+
+        # Yield completion chunk if successful
+        if stream_success:
+            yield {
+                "type": "complete",
+                "message": "Policy generation completed successfully"
+            }
+
+    async def _stream_with_google(self, prompt: str, request: "PolicyGenerationRequest"):
+        """Stream policy generation using Google AI."""
+        try:
+            import google.generativeai as genai
+
+            model = genai.GenerativeModel('gemini-pro')
+
+            # Generate with streaming
+            response = model.generate_content(
+                prompt,
+                stream=True,
+                generation_config=genai.GenerationConfig(
+                    temperature=0.7,
+                    top_p=0.9,
+                    max_output_tokens=4000,
+                )
+            )
+
+            accumulated_text = ""
+            chunk_count = 0
+
+            for chunk in response:
+                if chunk.text:
+                    chunk_count += 1
+                    accumulated_text += chunk.text
+
+                    # Yield content chunks
+                    yield {
+                        "type": "content",
+                        "content": chunk.text,
+                        "chunk_id": f"google-{chunk_count}",
+                        "progress": min(chunk_count * 0.1, 0.95)  # Estimate progress
+                    }
+
+        except Exception as e:
+            logger.error(f"Google streaming error: {e}")
+            raise
+
+    async def _stream_with_openai(self, prompt: str, request: "PolicyGenerationRequest"):
+        """Stream policy generation using OpenAI."""
+        try:
+            # Create streaming completion
+            stream = await self.openai_client.chat.completions.create(
+                model="gpt-4-turbo-preview",
+                messages=[
+                    {"role": "system", "content": "You are a compliance policy expert."},
+                    {"role": "user", "content": prompt}
+                ],
+                temperature=0.7,
+                max_tokens=4000,
+                stream=True
+            )
+
+            chunk_count = 0
+            accumulated_text = ""
+
+            async for chunk in stream:
+                if chunk.choices[0].delta.content:
+                    chunk_count += 1
+                    content = chunk.choices[0].delta.content
+                    accumulated_text += content
+
+                    # Yield content chunks
+                    yield {
+                        "type": "content",
+                        "content": content,
+                        "chunk_id": f"openai-{chunk_count}",
+                        "progress": min(chunk_count * 0.05, 0.95)  # Estimate progress
+                    }
+
+        except Exception as e:
+            logger.error(f"OpenAI streaming error: {e}")
+            raise
+
     def _generate_with_google(
         self,
         request: PolicyGenerationRequest,

@@ -22,6 +22,7 @@ from database.user import User
 from database.rbac import Role
 from services.auth_service import auth_service
 from services.rbac_service import RBACService
+from services.security_alerts import SecurityAlertService
 from config.logging_config import get_logger
 
 logger = get_logger(__name__)
@@ -95,16 +96,66 @@ async def register(user: UserCreate, db: Session = Depends(get_db)):
 
 @router.post("/token", response_model=Token, dependencies=[Depends(auth_rate_limit())])
 async def login_for_access_token(
-    form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)
+    request: Request,
+    form_data: OAuth2PasswordRequestForm = Depends(), 
+    db: Session = Depends(get_db)
 ):
+    # Get IP address and user agent for security tracking
+    ip_address = request.client.host if request.client else "unknown"
+    user_agent = request.headers.get("user-agent", "unknown")
+    
     # Authenticate user
     user = db.query(User).filter(User.email == form_data.username).first()
-    if not user or not verify_password(form_data.password, user.hashed_password):
+    
+    if not user:
+        # Log failed attempt for non-existent user (don't reveal user doesn't exist)
+        logger.warning(f"Login attempt for non-existent user: {form_data.username} from IP: {ip_address}")
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Incorrect email or password",
             headers={"WWW-Authenticate": "Bearer"},
         )
+    
+    # Check password
+    if not verify_password(form_data.password, user.hashed_password):
+        # Log failed login attempt and check if alert needed
+        try:
+            # Convert to async session for security service
+            from sqlalchemy.ext.asyncio import AsyncSession
+            from database.db_setup import async_session_maker
+            
+            async with async_session_maker() as async_db:
+                await SecurityAlertService.log_and_check_login_attempt(
+                    db=async_db,
+                    user=user,
+                    success=False,
+                    ip_address=ip_address,
+                    user_agent=user_agent
+                )
+        except Exception as e:
+            logger.error(f"Failed to log security event: {e}")
+        
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Incorrect email or password",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    
+    # Successful login - log it
+    try:
+        from sqlalchemy.ext.asyncio import AsyncSession
+        from database.db_setup import async_session_maker
+        
+        async with async_session_maker() as async_db:
+            await SecurityAlertService.log_and_check_login_attempt(
+                db=async_db,
+                user=user,
+                success=True,
+                ip_address=ip_address,
+                user_agent=user_agent
+            )
+    except Exception as e:
+        logger.error(f"Failed to log successful login: {e}")
 
     # Create tokens
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
@@ -114,23 +165,75 @@ async def login_for_access_token(
 
     # Create session for tracking
     await auth_service.create_user_session(
-        user, access_token, metadata={"login_method": "form_data"}
+        user, access_token, metadata={"login_method": "form_data", "ip": ip_address}
     )
     refresh_token = create_refresh_token(data={"sub": str(user.id)})
 
     return {"access_token": access_token, "refresh_token": refresh_token, "token_type": "bearer"}
 
 @router.post("/login", response_model=Token, dependencies=[Depends(auth_rate_limit())])
-async def login(login_data: LoginRequest, db: Session = Depends(get_db)):
+async def login(
+    request: Request,
+    login_data: LoginRequest, 
+    db: Session = Depends(get_db)
+):
     """Login endpoint - accepts JSON data for compatibility with tests"""
+    # Get IP address and user agent for security tracking
+    ip_address = request.client.host if request.client else "unknown"
+    user_agent = request.headers.get("user-agent", "unknown")
+    
     # Authenticate user
     user = db.query(User).filter(User.email == login_data.email).first()
-    if not user or not verify_password(login_data.password, user.hashed_password):
+    
+    if not user:
+        # Log failed attempt for non-existent user (don't reveal user doesn't exist)
+        logger.warning(f"Login attempt for non-existent user: {login_data.email} from IP: {ip_address}")
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid credentials",
             headers={"WWW-Authenticate": "Bearer"},
         )
+    
+    # Check password
+    if not verify_password(login_data.password, user.hashed_password):
+        # Log failed login attempt and check if alert needed
+        try:
+            # Convert to async session for security service
+            from sqlalchemy.ext.asyncio import AsyncSession
+            from database.db_setup import async_session_maker
+            
+            async with async_session_maker() as async_db:
+                await SecurityAlertService.log_and_check_login_attempt(
+                    db=async_db,
+                    user=user,
+                    success=False,
+                    ip_address=ip_address,
+                    user_agent=user_agent
+                )
+        except Exception as e:
+            logger.error(f"Failed to log security event: {e}")
+        
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid credentials",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    
+    # Successful login - log it
+    try:
+        from sqlalchemy.ext.asyncio import AsyncSession
+        from database.db_setup import async_session_maker
+        
+        async with async_session_maker() as async_db:
+            await SecurityAlertService.log_and_check_login_attempt(
+                db=async_db,
+                user=user,
+                success=True,
+                ip_address=ip_address,
+                user_agent=user_agent
+            )
+    except Exception as e:
+        logger.error(f"Failed to log successful login: {e}")
 
     # Create tokens
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
@@ -140,7 +243,9 @@ async def login(login_data: LoginRequest, db: Session = Depends(get_db)):
     refresh_token = create_refresh_token(data={"sub": str(user.id)})
 
     # Create session for tracking
-    await auth_service.create_user_session(user, access_token, metadata={"login_method": "json"})
+    await auth_service.create_user_session(
+        user, access_token, metadata={"login_method": "json", "ip": ip_address}
+    )
 
     return {"access_token": access_token, "refresh_token": refresh_token, "token_type": "bearer"}
 

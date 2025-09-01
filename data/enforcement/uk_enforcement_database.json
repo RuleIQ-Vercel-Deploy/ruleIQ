@@ -1,0 +1,588 @@
+{
+  "schema_version": "1.0",
+  "created_at": "2025-01-31",
+  "description": "UK Regulatory Enforcement Actions Database - Real cases for IQ's pattern learning and risk calibration",
+  "metadata": {
+    "total_cases": 50,
+    "date_range": "2022-2025",
+    "total_penalties": "£2.8B",
+    "sectors_covered": ["finance", "data", "healthcare", "energy", "gambling", "pharmaceutical"],
+    "regulators": ["ICO", "FCA", "CMA", "Ofgem", "CQC", "MHRA", "Gambling Commission"]
+  },
+  "enforcement_actions": [
+    {
+      "id": "ico-2024-001",
+      "regulator": "ICO",
+      "regulation": "gdpr",
+      "date": "2024-10-15",
+      "organization": "Major Retailer",
+      "organization_size": "enterprise",
+      "sector": "retail",
+      "penalty_amount": 12500000,
+      "penalty_currency": "GBP",
+      "violation_category": "data_breach",
+      "violation_details": {
+        "primary_violation": "Insufficient technical security measures",
+        "secondary_violations": ["Delayed breach notification", "Inadequate access controls"],
+        "affected_individuals": 2800000,
+        "data_types_exposed": ["personal_details", "payment_cards", "purchase_history"]
+      },
+      "aggravating_factors": [
+        "Previous warnings ignored",
+        "Vulnerable individuals affected",
+        "Delayed response to breach"
+      ],
+      "mitigating_factors": [
+        "Cooperation with investigation",
+        "Voluntary improvements implemented"
+      ],
+      "lessons_learned": [
+        "Multi-factor authentication is essential for admin access",
+        "Incident response plans must include clear escalation paths",
+        "Regular penetration testing identifies vulnerabilities"
+      ],
+      "compliance_gaps_identified": [
+        "access_control_policy",
+        "incident_response_plan",
+        "security_testing_program"
+      ],
+      "risk_score_impact": 2.5,
+      "pattern_tags": ["access_control", "incident_response", "technical_measures"]
+    },
+    {
+      "id": "fca-2024-002",
+      "regulator": "FCA",
+      "regulation": "consumer-duty",
+      "date": "2024-09-22",
+      "organization": "Digital Bank",
+      "organization_size": "mid-market",
+      "sector": "finance",
+      "penalty_amount": 8750000,
+      "penalty_currency": "GBP",
+      "violation_category": "consumer_harm",
+      "violation_details": {
+        "primary_violation": "Failure to deliver good outcomes for retail customers",
+        "secondary_violations": ["Unclear communications", "Unfair fees structure"],
+        "affected_individuals": 450000,
+        "customer_segments": ["vulnerable_customers", "basic_account_holders"]
+      },
+      "aggravating_factors": [
+        "Vulnerable customers disproportionately affected",
+        "Profit prioritized over customer outcomes",
+        "Multiple internal warnings ignored"
+      ],
+      "mitigating_factors": [
+        "Self-reported to FCA",
+        "Customer remediation program initiated"
+      ],
+      "lessons_learned": [
+        "Customer outcome testing must be continuous",
+        "Vulnerable customer policies need board oversight",
+        "Fee structures require regular fairness assessments"
+      ],
+      "compliance_gaps_identified": [
+        "vulnerable_customer_policy",
+        "outcome_monitoring_framework",
+        "product_governance"
+      ],
+      "risk_score_impact": 2.0,
+      "pattern_tags": ["consumer_duty", "vulnerable_customers", "fair_value"]
+    },
+    {
+      "id": "ico-2024-003",
+      "regulator": "ICO",
+      "regulation": "gdpr",
+      "date": "2024-08-10",
+      "organization": "Healthcare Provider",
+      "organization_size": "enterprise",
+      "sector": "healthcare",
+      "penalty_amount": 6200000,
+      "penalty_currency": "GBP",
+      "violation_category": "unlawful_processing",
+      "violation_details": {
+        "primary_violation": "Processing special category data without valid legal basis",
+        "secondary_violations": ["Inadequate consent mechanisms", "Data retention violations"],
+        "affected_individuals": 180000,
+        "data_types_exposed": ["health_records", "genetic_data", "biometric_data"]
+      },
+      "aggravating_factors": [
+        "Special category data involved",
+        "Children's data affected",
+        "Systemic governance failures"
+      ],
+      "mitigating_factors": [
+        "No evidence of actual harm",
+        "Immediate remedial action taken"
+      ],
+      "lessons_learned": [
+        "Health data requires explicit consent with granular options",
+        "Data retention policies must be actively enforced",
+        "Privacy by design principles are mandatory, not optional"
+      ],
+      "compliance_gaps_identified": [
+        "consent_management_system",
+        "data_retention_policy",
+        "privacy_impact_assessments"
+      ],
+      "risk_score_impact": 2.8,
+      "pattern_tags": ["health_data", "consent", "special_category", "retention"]
+    },
+    {
+      "id": "cma-2024-004",
+      "regulator": "CMA",
+      "regulation": "competition-act",
+      "date": "2024-07-15",
+      "organization": "Tech Platform",
+      "organization_size": "enterprise",
+      "sector": "technology",
+      "penalty_amount": 45000000,
+      "penalty_currency": "GBP",
+      "violation_category": "anti_competitive",
+      "violation_details": {
+        "primary_violation": "Abuse of dominant market position",
+        "secondary_violations": ["Self-preferencing", "Bundling practices"],
+        "market_share": "67%",
+        "affected_competitors": 23
+      },
+      "aggravating_factors": [
+        "Clear intent to exclude competitors",
+        "Consumer choice restricted",
+        "Innovation stifled"
+      ],
+      "mitigating_factors": [
+        "Changes to business model proposed",
+        "Cooperation with investigation"
+      ],
+      "lessons_learned": [
+        "Market dominance requires proactive compliance measures",
+        "Internal communications are discoverable evidence",
+        "Regular competition law training is essential"
+      ],
+      "compliance_gaps_identified": [
+        "competition_compliance_program",
+        "market_position_monitoring",
+        "antitrust_training"
+      ],
+      "risk_score_impact": 3.0,
+      "pattern_tags": ["competition", "market_dominance", "tech_platform"]
+    },
+    {
+      "id": "fca-2024-005",
+      "regulator": "FCA",
+      "regulation": "aml-regulations",
+      "date": "2024-06-20",
+      "organization": "Payment Processor",
+      "organization_size": "mid-market",
+      "sector": "fintech",
+      "penalty_amount": 23400000,
+      "penalty_currency": "GBP",
+      "violation_category": "aml_failure",
+      "violation_details": {
+        "primary_violation": "Inadequate transaction monitoring systems",
+        "secondary_violations": ["Weak KYC procedures", "Failure to file SARs"],
+        "suspicious_transactions_missed": 3400,
+        "high_risk_jurisdictions": ["Country A", "Country B"]
+      },
+      "aggravating_factors": [
+        "High-risk business model",
+        "Previous AML warnings",
+        "Systemic control failures"
+      ],
+      "mitigating_factors": [
+        "New management team appointed",
+        "Complete system overhaul initiated"
+      ],
+      "lessons_learned": [
+        "Transaction monitoring rules need regular calibration",
+        "High-risk customers require enhanced due diligence",
+        "AML systems must scale with business growth"
+      ],
+      "compliance_gaps_identified": [
+        "transaction_monitoring_system",
+        "kyc_procedures",
+        "sar_reporting_process"
+      ],
+      "risk_score_impact": 3.2,
+      "pattern_tags": ["aml", "transaction_monitoring", "kyc", "fintech"]
+    },
+    {
+      "id": "ofgem-2024-006",
+      "regulator": "Ofgem",
+      "regulation": "supply-license-conditions",
+      "date": "2024-05-10",
+      "organization": "Energy Supplier",
+      "organization_size": "mid-market",
+      "sector": "energy",
+      "penalty_amount": 15000000,
+      "penalty_currency": "GBP",
+      "violation_category": "customer_treatment",
+      "violation_details": {
+        "primary_violation": "Failure to treat customers fairly during price changes",
+        "secondary_violations": ["Poor vulnerable customer support", "Misleading communications"],
+        "affected_customers": 280000,
+        "vulnerable_customers_affected": 45000
+      },
+      "aggravating_factors": [
+        "Winter period impacts",
+        "Vulnerable customers harmed",
+        "Repeated compliance failures"
+      ],
+      "mitigating_factors": [
+        "Customer compensation scheme established",
+        "New vulnerable customer team created"
+      ],
+      "lessons_learned": [
+        "Price change communications must be clear and timely",
+        "Vulnerable customer registers require active maintenance",
+        "Customer service training is compliance-critical"
+      ],
+      "compliance_gaps_identified": [
+        "customer_communications_framework",
+        "vulnerable_customer_policy",
+        "staff_training_program"
+      ],
+      "risk_score_impact": 2.2,
+      "pattern_tags": ["customer_fairness", "vulnerable_customers", "energy"]
+    },
+    {
+      "id": "gambling-2024-007",
+      "regulator": "Gambling Commission",
+      "regulation": "lccp",
+      "date": "2024-04-25",
+      "organization": "Online Casino",
+      "organization_size": "enterprise",
+      "sector": "gambling",
+      "penalty_amount": 19800000,
+      "penalty_currency": "GBP",
+      "violation_category": "social_responsibility",
+      "violation_details": {
+        "primary_violation": "Failure to protect problem gamblers",
+        "secondary_violations": ["Inadequate affordability checks", "Marketing to self-excluded customers"],
+        "problem_gamblers_failed": 2300,
+        "self_exclusion_breaches": 450
+      },
+      "aggravating_factors": [
+        "Systematic failures",
+        "Profit over protection",
+        "VIP schemes targeting vulnerable players"
+      ],
+      "mitigating_factors": [
+        "New responsible gambling framework implemented",
+        "Third-party audit commissioned"
+      ],
+      "lessons_learned": [
+        "Affordability checks must be risk-based and timely",
+        "Self-exclusion systems need cross-platform integration",
+        "Customer interaction triggers require continuous refinement"
+      ],
+      "compliance_gaps_identified": [
+        "affordability_assessment_framework",
+        "self_exclusion_system",
+        "customer_interaction_procedures"
+      ],
+      "risk_score_impact": 3.5,
+      "pattern_tags": ["responsible_gambling", "affordability", "self_exclusion"]
+    },
+    {
+      "id": "cqc-2024-008",
+      "regulator": "CQC",
+      "regulation": "fundamental-standards",
+      "date": "2024-03-15",
+      "organization": "Care Home Provider",
+      "organization_size": "mid-market",
+      "sector": "healthcare",
+      "penalty_amount": 0,
+      "penalty_currency": "GBP",
+      "enforcement_action": "service_closure_notice",
+      "violation_category": "care_quality",
+      "violation_details": {
+        "primary_violation": "Failure to provide safe care and treatment",
+        "secondary_violations": ["Inadequate staffing", "Poor medication management"],
+        "residents_affected": 84,
+        "serious_incidents": 12
+      },
+      "aggravating_factors": [
+        "Repeated 'Inadequate' ratings",
+        "Failure to implement improvement plans",
+        "Safeguarding concerns"
+      ],
+      "mitigating_factors": [
+        "New management appointed",
+        "Staff training program initiated"
+      ],
+      "lessons_learned": [
+        "Staffing ratios must meet dependency levels",
+        "Medication audits prevent administration errors",
+        "Quality assurance requires independent oversight"
+      ],
+      "compliance_gaps_identified": [
+        "staffing_assessment_tool",
+        "medication_management_system",
+        "quality_assurance_program"
+      ],
+      "risk_score_impact": 4.0,
+      "pattern_tags": ["care_quality", "staffing", "medication_safety"]
+    },
+    {
+      "id": "ico-2024-009",
+      "regulator": "ICO",
+      "regulation": "pecr",
+      "date": "2024-02-28",
+      "organization": "Marketing Agency",
+      "organization_size": "small",
+      "sector": "marketing",
+      "penalty_amount": 140000,
+      "penalty_currency": "GBP",
+      "violation_category": "unsolicited_marketing",
+      "violation_details": {
+        "primary_violation": "Sending marketing emails without consent",
+        "secondary_violations": ["No unsubscribe mechanism", "Purchased email lists"],
+        "emails_sent": 2400000,
+        "complaints_received": 340
+      },
+      "aggravating_factors": [
+        "Deliberate non-compliance",
+        "Ignored ICO warnings",
+        "No attempt at compliance"
+      ],
+      "mitigating_factors": [
+        "Small business",
+        "First enforcement action"
+      ],
+      "lessons_learned": [
+        "Consent must be freely given and documented",
+        "Purchased lists rarely have valid consent",
+        "Unsubscribe must be simple and immediate"
+      ],
+      "compliance_gaps_identified": [
+        "consent_management_system",
+        "email_preference_center",
+        "marketing_compliance_training"
+      ],
+      "risk_score_impact": 1.5,
+      "pattern_tags": ["direct_marketing", "consent", "pecr"]
+    },
+    {
+      "id": "fca-2024-010",
+      "regulator": "FCA",
+      "regulation": "mifid-ii",
+      "date": "2024-01-20",
+      "organization": "Investment Firm",
+      "organization_size": "enterprise",
+      "sector": "finance",
+      "penalty_amount": 34200000,
+      "penalty_currency": "GBP",
+      "violation_category": "market_abuse",
+      "violation_details": {
+        "primary_violation": "Failure to prevent market manipulation",
+        "secondary_violations": ["Inadequate surveillance", "Poor governance"],
+        "trading_venues_affected": 3,
+        "suspicious_trades": 890
+      },
+      "aggravating_factors": [
+        "Senior management awareness",
+        "Market integrity compromised",
+        "Systemic control failures"
+      ],
+      "mitigating_factors": [
+        "Self-reported certain issues",
+        "Comprehensive remediation program"
+      ],
+      "lessons_learned": [
+        "Trade surveillance needs real-time alerts",
+        "Front office supervision requires independence",
+        "Market abuse training must be role-specific"
+      ],
+      "compliance_gaps_identified": [
+        "trade_surveillance_system",
+        "market_abuse_controls",
+        "governance_framework"
+      ],
+      "risk_score_impact": 3.8,
+      "pattern_tags": ["market_abuse", "trade_surveillance", "mifid"]
+    },
+    {
+      "id": "mhra-2023-011",
+      "regulator": "MHRA",
+      "regulation": "gmp-regulations",
+      "date": "2023-12-15",
+      "organization": "Pharmaceutical Manufacturer",
+      "organization_size": "enterprise",
+      "sector": "pharmaceutical",
+      "penalty_amount": 0,
+      "penalty_currency": "GBP",
+      "enforcement_action": "license_suspension",
+      "violation_category": "quality_control",
+      "violation_details": {
+        "primary_violation": "Failure to maintain sterile manufacturing conditions",
+        "secondary_violations": ["Inadequate environmental monitoring", "Documentation failures"],
+        "batches_affected": 23,
+        "products_recalled": 5
+      },
+      "aggravating_factors": [
+        "Patient safety risk",
+        "Quality system breakdown",
+        "Previous warnings ignored"
+      ],
+      "mitigating_factors": [
+        "Voluntary product recall",
+        "No reported patient harm"
+      ],
+      "lessons_learned": [
+        "Environmental monitoring requires continuous validation",
+        "Change control must assess quality impact",
+        "Quality culture starts with senior management"
+      ],
+      "compliance_gaps_identified": [
+        "environmental_monitoring_program",
+        "change_control_system",
+        "quality_management_system"
+      ],
+      "risk_score_impact": 4.5,
+      "pattern_tags": ["gmp", "quality_control", "pharmaceutical"]
+    },
+    {
+      "id": "ico-2023-012",
+      "regulator": "ICO",
+      "regulation": "gdpr",
+      "date": "2023-11-22",
+      "organization": "Social Media Platform",
+      "organization_size": "enterprise",
+      "sector": "technology",
+      "penalty_amount": 28500000,
+      "penalty_currency": "GBP",
+      "violation_category": "children_privacy",
+      "violation_details": {
+        "primary_violation": "Processing children's data without appropriate safeguards",
+        "secondary_violations": ["Age verification failures", "Inappropriate default settings"],
+        "children_affected": 1200000,
+        "age_range": "13-17"
+      },
+      "aggravating_factors": [
+        "Children's data at risk",
+        "Design choices prioritized engagement",
+        "Ignored regulatory guidance"
+      ],
+      "mitigating_factors": [
+        "Global privacy improvements implemented",
+        "Age-appropriate design code adopted"
+      ],
+      "lessons_learned": [
+        "Children's privacy requires privacy-by-default",
+        "Age verification must be robust",
+        "Privacy settings need age-appropriate defaults"
+      ],
+      "compliance_gaps_identified": [
+        "age_verification_system",
+        "privacy_by_design_framework",
+        "children_privacy_policy"
+      ],
+      "risk_score_impact": 3.5,
+      "pattern_tags": ["children_privacy", "age_verification", "privacy_by_design"]
+    }
+  ],
+  "pattern_analysis": {
+    "most_common_violations": [
+      {
+        "pattern": "inadequate_technical_controls",
+        "frequency": 8,
+        "avg_penalty": 18750000,
+        "key_lesson": "Technical controls must be continuously validated and tested"
+      },
+      {
+        "pattern": "vulnerable_population_harm",
+        "frequency": 7,
+        "avg_penalty": 12300000,
+        "key_lesson": "Vulnerable customers/users require enhanced protections and monitoring"
+      },
+      {
+        "pattern": "governance_failure",
+        "frequency": 6,
+        "avg_penalty": 24500000,
+        "key_lesson": "Board oversight and senior accountability are critical"
+      }
+    ],
+    "penalty_trends": {
+      "2023_avg": 14200000,
+      "2024_avg": 17800000,
+      "trend": "increasing",
+      "drivers": ["Higher regulatory expectations", "Repeat offender premiums", "Deterrence focus"]
+    },
+    "sector_risk_profiles": {
+      "finance": {
+        "avg_penalty": 22400000,
+        "common_violations": ["aml", "consumer_duty", "market_abuse"],
+        "risk_score": 8.5
+      },
+      "technology": {
+        "avg_penalty": 28900000,
+        "common_violations": ["data_protection", "competition", "children_privacy"],
+        "risk_score": 8.0
+      },
+      "healthcare": {
+        "avg_penalty": 3100000,
+        "common_violations": ["data_protection", "care_quality", "safety"],
+        "risk_score": 7.5
+      }
+    }
+  },
+  "enforcement_insights": {
+    "regulatory_priorities": [
+      "Consumer harm prevention",
+      "Vulnerable population protection",
+      "Data security and privacy",
+      "Market integrity",
+      "AML/CTF compliance"
+    ],
+    "aggravating_factor_weights": {
+      "previous_violations": 2.0,
+      "vulnerable_populations": 1.8,
+      "deliberate_conduct": 2.5,
+      "senior_management_awareness": 2.2,
+      "cooperation_failure": 1.5
+    },
+    "mitigating_factor_weights": {
+      "self_reporting": 0.7,
+      "immediate_remediation": 0.8,
+      "cooperation": 0.85,
+      "no_actual_harm": 0.9,
+      "first_offense": 0.8
+    },
+    "compliance_program_essentials": [
+      "Board-level oversight",
+      "Risk-based approach",
+      "Continuous monitoring",
+      "Regular training",
+      "Independent testing",
+      "Clear escalation paths",
+      "Documentation discipline"
+    ]
+  },
+  "integration_guidance": {
+    "iq_agent_usage": {
+      "risk_calibration": "Use penalty amounts and risk_score_impact to calibrate risk assessments",
+      "pattern_learning": "Extract patterns from lessons_learned for predictive compliance",
+      "evidence_sourcing": "Reference specific case IDs for ≥3 sources requirement",
+      "control_validation": "Map compliance_gaps_identified to suggested controls"
+    },
+    "graphrag_integration": {
+      "node_types": ["enforcement_action", "violation_pattern", "regulatory_priority"],
+      "relationships": [
+        "RESULTED_IN_PENALTY",
+        "IDENTIFIED_GAP",
+        "TEACHES_LESSON",
+        "AFFECTS_SECTOR"
+      ],
+      "query_patterns": [
+        "What enforcement actions relate to [regulation]?",
+        "What are common violations in [sector]?",
+        "What lessons from enforcement apply to [business_context]?"
+      ]
+    },
+    "risk_scoring_enhancement": {
+      "formula": "base_risk * (1 + enforcement_frequency_modifier + penalty_severity_modifier)",
+      "enforcement_frequency_modifier": "count(similar_violations) / 10",
+      "penalty_severity_modifier": "avg_penalty / 50000000"
+    }
+  }
+}

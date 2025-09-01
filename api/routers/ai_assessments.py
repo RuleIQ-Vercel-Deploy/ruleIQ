@@ -23,6 +23,7 @@ from sqlalchemy.future import select
 from api.dependencies.auth import get_current_active_user
 from database.user import User
 from api.dependencies.database import get_async_db
+from services.rate_limiting import RateLimitService
 from api.middleware.ai_rate_limiter import (
     ai_analysis_rate_limit,
     ai_followup_rate_limit,
@@ -46,7 +47,7 @@ from services.ai.exceptions import (
 # Set up logging
 logger = logging.getLogger(__name__)
 
-router = APIRouter(prefix="/api/v1", tags=["AI Assessment Assistant"])
+router = APIRouter(tags=["AI Assessment Assistant"])
 
 # Request/Response Models
 class AIHelpRequest(BaseModel):
@@ -178,28 +179,27 @@ class StreamingMetadata(BaseModel):
     started_at: str
     stream_type: str  # "analysis", "recommendations", "help"
 
-# Helper function to get business profile
+# Helper function to get business profile with ownership check
 async def get_user_business_profile(
     user: User, db: AsyncSession, business_profile_id: Optional[str] = None
 ) -> BusinessProfile:
-    """Get business profile for the current user."""
+    """Get business profile for the current user with ownership check."""
+    from services.data_access import DataAccess
+    
     if business_profile_id:
-        # Get specific business profile
-        result = await db.execute(
-            select(BusinessProfile).where(
-                BusinessProfile["id"] == business_profile_id, BusinessProfile.user_id == str(user["id"])
-            )
+        # Get specific business profile with ownership check
+        profile = await DataAccess.ensure_owner_async(
+            db, BusinessProfile, UUID(business_profile_id), user, "business profile"
         )
-        profile = result.scalars().first()
     else:
         # Get user's default business profile
         result = await db.execute(
-            select(BusinessProfile).where(BusinessProfile.user_id == str(user["id"]))
+            select(BusinessProfile).where(BusinessProfile.user_id == user.id)
         )
         profile = result.scalars().first()
-
-    if not profile:
-        raise NotFoundException("Business profile", business_profile_id or str(user["id"]))
+        
+        if not profile:
+            raise NotFoundException("Business profile", str(user.id))
 
     return profile
 
@@ -211,7 +211,6 @@ async def get_question_help(
     request: AIHelpRequest,
     current_user: User = Depends(get_current_active_user),
     db: AsyncSession = Depends(get_async_db),
-    _: None = Depends(ai_help_rate_limit),
 ):
     """
     Get AI-powered help for a specific assessment question.
@@ -219,6 +218,9 @@ async def get_question_help(
     Provides contextual guidance, related topics, and follow-up suggestions
     based on the question, framework, and user's business context.
     """
+    # Check rate limit
+    await RateLimitService.check_rate_limit(db, current_user, "ai_assessment")
+    
     try:
         # Get business profile for context
         profile = await get_user_business_profile(current_user, db)
@@ -236,6 +238,12 @@ async def get_question_help(
             user_context=request.user_context or {},
         )
 
+        # Track usage for rate limiting
+        await RateLimitService.track_usage(
+            db, current_user, "ai_assessment",
+            metadata={"framework_id": framework_id, "question_id": request.question_id}
+        )
+        
         # Record request for statistics
         ai_rate_limit_stats.record_request("help", rate_limited=False)
 
@@ -817,7 +825,10 @@ async def generate_personalized_recommendations_stream(
     Provides real-time streaming recommendations based on identified compliance gaps.
     Returns Server-Sent Events (SSE) for real-time updates including implementation
     steps and prioritized action items.
+    Limited to 15 recommendations per day per user.
     """
+    # Check daily rate limit
+    await RateLimitService.check_rate_limit(db, current_user, "ai_recommendation")
 
     async def generate_recommendations_stream():
         try:
@@ -865,6 +876,18 @@ async def generate_personalized_recommendations_stream(
                 chunk_id="complete", content="Recommendations complete", chunk_type="complete"
             )
             yield f"data: {completion_chunk.model_dump_json()}\n\n"
+            
+            # Track usage for rate limiting after successful completion
+            await RateLimitService.track_usage(
+                db,
+                current_user,
+                "ai_recommendation",
+                metadata={
+                    "framework_id": getattr(request, "framework_id", "unknown"),
+                    "business_profile_id": str(profile.id),
+                    "chunks_generated": chunk_counter
+                }
+            )
 
         except AIServiceException as e:
             logger.error(f"AI service error in streaming recommendations: {e}")

@@ -1,0 +1,270 @@
+{
+  "success": true,
+  "url": "https://www.legislation.gov.uk/ukpga/2021/22/data.xml",
+  "fetched_at": "2025-08-31T18:15:44.228410",
+  "metadata": {
+    "title": "Financial Services Act 2021",
+    "description": "An Act to make provision about financial services and markets; to make provision about debt respite schemes; to make provision about Help-to-Save accounts; and for connected purposes.",
+    "type": "",
+    "year": "",
+    "number": ""
+  },
+  "requirements": [
+    {
+      "id": "section-3",
+      "text": "31The Treasury may by regulations revoke provisions of the Capital Requirements Regulation relating to the matters listed in subsection (2).2The matters are\u2014adeductions from Common Equity Tier 1 items;bthe following aspects of the standardised approach to credit risk\u2014iexposure value;iirisk weights for exposures to institutions;iiiexposures to corporates;ivexposures secured by mortgages on immovable property;vretail exposures;visubordinated debt and equity exposures;viithe use of credit assessmen",
+      "type": "mandatory",
+      "keywords": [
+        "reporting",
+        "audit"
+      ]
+    },
+    {
+      "id": "section-5",
+      "text": "51In Schedule 3\u2014aPart 1 inserts Part 9D of the Financial Services and Markets Act 2000 (prudential regulation of credit institutions etc),bPart 2 amends the Prudential Regulation Authority's powers under Part 12B of that Act (approval of certain holding companies),cPart 3 contains minor and consequential amendments, anddPart 4 contains transitional provision.2Subsections (3) to (5) apply where a provision of the Capital Requirements Regulation, or of an instrument made under that Regulation, has",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "section-9",
+      "text": "91Article 21 of the Benchmarks Regulation (mandatory administration of a critical benchmark) is amended as follows.2In paragraph 3, for  \u201cfive years\u201d substitute \u201c\n                  10 years\n                \u201d.3After paragraph 3 insert\u20143AIf the FCA decides to compel the administrator to continue publishing the benchmark under paragraph 3, the FCA must assess the capability of the benchmark to measure the underlying market or economic reality, taking into account, among other things, the procedure ",
+      "type": "mandatory",
+      "keywords": [
+        "audit"
+      ]
+    },
+    {
+      "id": "",
+      "text": "3AIf the FCA decides to compel the administrator to continue publishing the benchmark under paragraph 3, the FCA must assess the capability of the benchmark to measure the underlying market or economic reality, taking into account, among other things, the procedure established by the administrator in accordance with Article 28(1).",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "",
+      "text": "3BAfter making its assessment under paragraph 3A, the FCA must give the administrator\u2014aa written notice stating that it considers that the benchmark is not representative of the market or economic reality that it is intended to measure or that the representativeness of the benchmark is at risk, orba written notice stating that it considers that the representativeness of the benchmark is not at risk.",
+      "type": "mandatory",
+      "keywords": [
+        "audit"
+      ]
+    },
+    {
+      "id": "",
+      "text": "3CThe FCA must make its assessment under paragraph 3A, and give the notice under paragraph 3B, before the end of the period of 28 days beginning with the day on which the FCA notifies the administrator of its decision to compel the administrator to continue publishing the benchmark.",
+      "type": "mandatory",
+      "keywords": [
+        "audit"
+      ]
+    },
+    {
+      "id": "section-10",
+      "text": "10In the Benchmarks Regulation, after Article 21 insert\u2014\n                  Article 21A\n                Prohibition on new use where administrator to cease providing critical benchmark1Where the FCA has completed an assessment of a critical benchmark under Article 21(2), the FCA may, by publishing a notice, prohibit some or all new use of the benchmark by supervised entities.2In paragraph 1, the reference to new use of a benchmark is to doing the following on or after the day on which the prohibi",
+      "type": "mandatory",
+      "keywords": [
+        "reporting",
+        "audit"
+      ]
+    },
+    {
+      "id": "",
+      "text": "6A notice under this Article must\u2014agive reasons for the prohibition,bspecify when the prohibition is to take effect,cexplain how the FCA has taken account of the relevant policy statement (see Article 23F), anddprovide any further information that the FCA considers appropriate for assisting supervised entities to understand the prohibition.",
+      "type": "mandatory",
+      "keywords": [
+        "reporting"
+      ]
+    },
+    {
+      "id": "",
+      "text": "7A notice under this Article must be published in the manner that appears to the FCA to be best calculated to bring it to the attention of\u2014asupervised entities, andbthe public.",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "",
+      "text": "8The FCA\u2014amust give a copy of a notice under this Article to the Treasury before publishing it, andbmay charge a reasonable fee for providing a person with a copy of a notice published under this Article.",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "section-11",
+      "text": "111In Article 3(1) of the Benchmarks Regulation (definitions)\u2014aafter point (10) insert\u201410A\u2018supervised third country contributor\u2019 means a supervised third country entity that contributes input data to an administrator located in the United Kingdom;, andbafter point (17) insert\u201417A\u2018supervised third country entity\u2019 means an entity that would be a supervised entity by virtue of point (a) of the definition of that term (CRR firm that is a credit institution) but for the fact that it does not have its",
+      "type": "mandatory",
+      "keywords": [
+        "reporting",
+        "consent",
+        "audit"
+      ]
+    },
+    {
+      "id": "",
+      "text": "2An administrator of a critical benchmark must submit to the FCA an assessment of the capability of the benchmark to measure the underlying market or economic reality\u2014aat the end of the period of two years beginning with the day on which the benchmark became a critical benchmark, andbat the end of each subsequent two year period.",
+      "type": "mandatory",
+      "keywords": [
+        "audit"
+      ]
+    },
+    {
+      "id": "",
+      "text": "6If a supervised contributor or a supervised third country contributor intends to cease contributing input data to a critical benchmark\u2014athe contributor must notify the benchmark administrator promptly in writing, andbthe notification must state the date on which it intends to cease contributing, which must be after the end of the period of 15 weeks beginning with the first working day after the day on which it gives the notification.",
+      "type": "mandatory",
+      "keywords": [
+        "reporting"
+      ]
+    },
+    {
+      "id": "",
+      "text": "7If an administrator of a benchmark is notified under paragraph 6, it must\u2014ainform the FCA promptly, stating the date on which the notification was given, andbsubmit to the FCA an assessment of the implications of the contributor's withdrawal for the capability of the benchmark to measure the underlying market or economic reality.",
+      "type": "mandatory",
+      "keywords": [
+        "reporting",
+        "audit"
+      ]
+    },
+    {
+      "id": "",
+      "text": "8An assessment under paragraph 7(b) must be submitted to the FCA before the end of the period of 14 days beginning with the first working day after the day on which the notification under paragraph 6 was given.",
+      "type": "mandatory",
+      "keywords": [
+        "audit"
+      ]
+    },
+    {
+      "id": "",
+      "text": "9An administrator of a critical benchmark that is required to provide an assessment under this Article must not change the market or economic reality intended to be measured by the benchmark (as defined in the benchmark statement referred to in Article 27) during the assessment period, unless the FCA gives it written permission to do so.",
+      "type": "mandatory",
+      "keywords": [
+        "consent",
+        "audit"
+      ]
+    },
+    {
+      "id": "",
+      "text": "1Where the FCA receives an assessment by a benchmark administrator under Article 22A within the period specified by or under that Article, the FCA must make its own assessment of the capability of the benchmark to measure the underlying market or economic reality, taking into account, among other things\u2014athe procedure established by the administrator in accordance with Article 28(1), andbthe administrator's assessment.",
+      "type": "mandatory",
+      "keywords": [
+        "audit"
+      ]
+    },
+    {
+      "id": "",
+      "text": "2If a benchmark administrator does not submit an assessment under Article 22A within the period specified by or under that Article, the FCA may make its own assessment of the capability of the benchmark to measure the underlying market or economic reality and, if it does so\u2014amust take into account the procedure established by the administrator in accordance with Article 28(1), andbmay take into account, among other things, an assessment submitted by the administrator after the end of the specifi",
+      "type": "mandatory",
+      "keywords": [
+        "audit"
+      ]
+    },
+    {
+      "id": "",
+      "text": "3After making its assessment under this Article, the FCA must give the benchmark administrator\u2014aa written notice stating that it considers that the benchmark is not representative of the market or economic reality that it is intended to measure or that the representativeness of the benchmark is at risk, orba written notice stating that it considers that the representativeness of the benchmark is not at risk.",
+      "type": "mandatory",
+      "keywords": [
+        "audit"
+      ]
+    },
+    {
+      "id": "",
+      "text": "4Where the administrator's assessment was made under Article 22A(7)(b) (contributor intends to cease contributing input data), the FCA must make its assessment under paragraph 1 or 2, and give the notice under paragraph 3, before the end of the period of 28 days beginning with the first working day after the day on which the administrator was notified under Article 22A(6).",
+      "type": "mandatory",
+      "keywords": [
+        "audit"
+      ]
+    },
+    {
+      "id": "section-13",
+      "text": "13In the Benchmarks Regulation, after Article 23 insert\u2014\n                  Article 23A\n                Designation of certain critical benchmarks1If the FCA gives the administrator of a critical benchmark a notice under Article 21(3B)(a) or Article 22B(3)(a) (benchmark unrepresentative or representativeness at risk), the FCA must, before the end of the period of 21 days beginning with the day on which it gave the notice\u2014aconsider whether it is appropriate for the FCA to designate the benchmark u",
+      "type": "mandatory",
+      "keywords": [
+        "reporting"
+      ]
+    },
+    {
+      "id": "",
+      "text": "1If the FCA gives the administrator of a critical benchmark a notice under Article 21(3B)(a) or Article 22B(3)(a) (benchmark unrepresentative or representativeness at risk), the FCA must, before the end of the period of 21 days beginning with the day on which it gave the notice\u2014aconsider whether it is appropriate for the FCA to designate the benchmark under this Article, andbif it proposes to do so, inform the benchmark administrator by written notice.",
+      "type": "mandatory",
+      "keywords": [
+        "reporting"
+      ]
+    },
+    {
+      "id": "",
+      "text": "3A notice under paragraph 1(b) must\u2014aexplain when the FCA proposes that the designation of the benchmark should take effect,bgive reasons for the FCA's proposed decision, andcstate that the administrator may make written representations to the FCA during the period of 14 days beginning with the day on which the notice is given.",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "",
+      "text": "4If, after considering any representations made in accordance with paragraph 3(c), the FCA decides to designate the benchmark under this Article, it must give the administrator a written notice of its decision.",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "",
+      "text": "5A notice under paragraph 4 must\u2014astate when the designation of the benchmark takes effect,bgive reasons for the FCA's decision,cexplain how the FCA has taken account of the relevant policy statement (see Article 23F),dstate that the prohibition on use of the benchmark under Article 23B will take effect when the designation of the benchmark takes effect, unless the FCA exercises its powers under Article 23B(2) or 23C,einform the administrator of its right to refer the decision to the Upper Tribu",
+      "type": "mandatory",
+      "keywords": [
+        "reporting"
+      ]
+    }
+  ],
+  "penalties": [],
+  "enforcement": {
+    "authority": [
+      "PRA",
+      "Secretary of State",
+      "Financial Conduct Authority",
+      "Prudential Regulation Authority",
+      "FCA"
+    ],
+    "powers": [
+      "56In regulation 6(2) (enforcement)\u2014ain sub-paragraph (a) omit  \u201cwhich is a PRA-authorised person within the meaning of section 2B(5) of the 2000 Act\u201d, andbin sub-paragraph (b), for  \u201cany other institu",
+      "18In paragraph 20(4) of Schedule 1ZA (enforcement costs), after paragraph (b) insert\u2014baits powers under section 143S (Part 9C prohibition orders),.",
+      "9In Article 29 (use of a benchmark), after paragraph 1 insert\u20141AParagraph 1 does not enable a supervised entity to use a benchmark in the United Kingdom in breach of a prohibition under Article 21A or",
+      "1BThe use of a benchmark by a supervised entity for a financial contract, financial instrument or investment fund in breach of a prohibition under Article 21A or 23B does not affect the validity or en",
+      "551Contravention of a requirement imposed under this Part of this Schedule does not\u2014amake a person guilty of an offence,bmake a transaction void or unenforceable, orcgive rise to a right of action for",
+      "9In section 224 (scheme manager's power to inspect documents held by Official Receiver etc), before subsection (4A) insert\u20144ZABut a person is not to be regarded as a relevant person in relation to a r",
+      "1In Chapter 5 of Part 17 of the Financial Services and Markets Act 2000 (recognised overseas schemes), before section 272 (and the italic heading before that section) insert\u2014Schemes authorised in appr",
+      "271O1The FCA may revoke an order made under section 271A in relation to a collective investment scheme at the request of the scheme's operator.2If the FCA decides to do so, it must give written notice",
+      "61Article 47 (equivalence determination) is amended as follows.2For paragraph 1 substitute\u20141The Treasury may by regulations determine that the legal and supervisory arrangements of a third country ens",
+      "1The Treasury may by regulations determine that the legal and supervisory arrangements of a third country ensure all of the following\u2014athat firms authorised in that third country to provide investment",
+      "1BThe prudential, organisational and business conduct framework of a third country may be considered to have equivalent effect where that framework fulfils all of the following conditions\u2014afirms provi",
+      "5The FCA must\u2014amonitor the regulatory and supervisory developments, the enforcement practices and other relevant market developments in third countries for which determinations made by the Treasury in",
+      "81Article 49 (withdrawal of registration) is amended as follows.2For the heading substitute\u2014 \u201c\n                    Temporary prohibitions and restrictions and withdrawal of registration\n              ",
+      "A1The FCA may temporarily prohibit a third-country firm from providing investment services, or performing investment activities, in the United Kingdom, or place temporary restrictions on a third-count"
+    ],
+    "procedures": []
+  },
+  "dates": [
+    {
+      "type": "deadline",
+      "date": "1 January 2022",
+      "context": "291The Financial Conduct Authority must carry out a public consultation about whether it should make general rules providing that authorised persons o"
+    },
+    {
+      "type": "deadline",
+      "date": "1 August 2022",
+      "context": "291The Financial Conduct Authority must carry out a public consultation about whether it should make general rules providing that authorised persons o"
+    },
+    {
+      "type": "deadline",
+      "date": "31 December 2026",
+      "context": "381In this section  \u201cthe PRIIPs Regulation\u201d means Regulation (EU) No. 1286/2014 of the European Parliament and of the Council of 26 November 2014 on k"
+    },
+    {
+      "type": "deadline",
+      "date": "1 January 2022",
+      "context": "22In relation to the making of Part 9C rules that are made on or before 1 January 2022\u2014aparagraph (c) of section 143G(1) of the Financial Services and"
+    },
+    {
+      "type": "deadline",
+      "date": "1 January 2022",
+      "context": "25In relation to the making of CRR rules or section 192XA rules that are made on or before 1 January 2022\u2014aparagraph (d) of section 144C(1) of the Fin"
+    }
+  ],
+  "controls": [
+    "consent_management",
+    "data_minimization",
+    "security_testing",
+    "access_control",
+    "incident_response"
+  ],
+  "xml_length": 1124542
+}
